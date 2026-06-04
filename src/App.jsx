@@ -578,7 +578,7 @@ function LearnScreen({C}){
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db}){
+function ProfileScreen({C,user,dark,setDark,db,onReset}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
@@ -640,12 +640,19 @@ function ProfileScreen({C,user,dark,setDark,db}){
             </div>
           ))}
         </div>
+
+        {/* Réinitialiser le profil */}
+        <button onClick={()=>{ if(confirm("Réinitialiser ton profil ? Tu repasseras par l'onboarding.")) onReset&&onReset(); }}
+          style={{marginTop:22,width:"100%",padding:"13px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
+          ↺ Réinitialiser le profil
+        </button>
+        <div style={{marginTop:10,textAlign:"center",fontSize:10,color:C.t3,lineHeight:1.5}}>
+          Ton profil est sauvegardé sur cet appareil —<br/>l'onboarding ne réapparaîtra qu'après réinitialisation.
+        </div>
       </div>
     </div>
   );
 }
-
-// ─── Bottom Nav ───────────────────────────────────────────────────────────────
 const TABS=[{id:"home",kanji:"家",label:"Home"},{id:"explore",kanji:"探",label:"Explorer"},{id:"scenarios",kanji:"場",label:"Scénarios"},{id:"learn",kanji:"学",label:"Apprendre"},{id:"profile",kanji:"人",label:"Profil"}];
 function BottomNav({C,active,onChange}){
   return(
@@ -727,6 +734,26 @@ function Splash({onDone}){
 }
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
+// Persistence helpers (localStorage) — safe wrappers
+const STORE_KEY = "isekaid_profile_v1";
+const THEME_KEY = "isekaid_theme_v1";
+function loadProfile(){
+  try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
+  catch { return null; }
+}
+function saveProfile(u){
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(u)); } catch {}
+}
+function clearProfile(){
+  try { localStorage.removeItem(STORE_KEY); } catch {}
+}
+function loadTheme(){
+  try { return localStorage.getItem(THEME_KEY) === "dark"; } catch { return false; }
+}
+function saveTheme(isDark){
+  try { localStorage.setItem(THEME_KEY, isDark ? "dark" : "light"); } catch {}
+}
+
 export default function IsekaidApp(){
   const [screen,setScreen]=useState("splash");
   const [tab,setTab]=useState("home");
@@ -735,15 +762,43 @@ export default function IsekaidApp(){
   const [db,setDb]=useState(null);
   const C=dark?DARK:LIGHT;
 
-  // Load from imported JSON — no fetch needed
-  useEffect(()=>{ setDb(DATA); },[]);
+  // Load data + saved profile/theme on startup
+  useEffect(()=>{
+    setDb(DATA);
+    setDark(loadTheme());
+    const saved = loadProfile();
+    if(saved) setUser(saved); // profile exists — we'll skip onboarding after splash
+  },[]);
+
+  // Persist theme whenever it changes
+  useEffect(()=>{ saveTheme(dark); },[dark]);
+
+  // When splash finishes: skip onboarding if a profile is already saved
+  const afterSplash = ()=>{
+    setScreen(loadProfile() ? "app" : "onboarding");
+  };
+
+  // Save profile at end of onboarding
+  const completeOnboarding = (u)=>{
+    saveProfile(u);
+    setUser(u);
+    setScreen("app");
+  };
+
+  // Reset profile (called from Profile screen)
+  const resetProfile = ()=>{
+    clearProfile();
+    setUser(null);
+    setScreen("onboarding");
+    setTab("home");
+  };
 
   return(
     <div style={{width:"100%",height:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"#080604",fontFamily:"'Noto Sans JP','Helvetica Neue',sans-serif"}}>
       <style>{CSS}</style>
       <div style={{width:"min(100vw,390px)",height:"min(100vh,844px)",position:"relative",overflow:"hidden",borderRadius:"clamp(0px,calc((100vw - 390px)*999),44px)",background:C.bg,boxShadow:"0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,0,0,.08)",transition:"background .3s"}}>
-        {screen==="splash"     &&<Splash onDone={()=>setScreen("onboarding")}/>}
-        {screen==="onboarding" &&<Onboarding onComplete={u=>{setUser(u);setScreen("app");}}/>}
+        {screen==="splash"     &&<Splash onDone={afterSplash}/>}
+        {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
@@ -751,7 +806,7 @@ export default function IsekaidApp(){
               {tab==="explore"   &&<ExploreScreen   C={C} db={db}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C}/>}
               {tab==="learn"     &&<LearnScreen     C={C}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile}/>}
             </div>
             <BottomNav C={C} active={tab} onChange={setTab}/>
           </>
