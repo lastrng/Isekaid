@@ -350,8 +350,10 @@ function HomeScreen({C,user,db}){
   );
 }
 
-// ─── Other screens (unchanged) ────────────────────────────────────────────────
-function ExploreScreen({C}){
+// ─── Other screens ────────────────────────────────────────────────────────────
+function ExploreScreen({C,db}){
+  const [view,setView] = useState(null);
+  if(view==="traditions") return <TraditionsScreen C={C} db={db}/>;
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
@@ -359,17 +361,171 @@ function ExploreScreen({C}){
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>文化を探す</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Découvrir la culture japonaise</div>
         <div style={{display:"flex",flexDirection:"column",gap:11}}>
-          {EXPLORE_MODS.map((m,i)=>(
-            <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14}}>
-              <span style={{fontSize:28,flexShrink:0}}>{m.emoji}</span>
-              <div><div style={{fontSize:14,color:C.text,marginBottom:3}}>{m.title}</div><div style={{fontSize:12,color:C.t2}}>{m.sub}</div></div>
-              <div style={{marginLeft:"auto",fontSize:16,color:C.t3}}>›</div>
+          {EXPLORE_MODS.map((m,i)=>{
+            const active = m.title==="Traditions";
+            return(
+              <div key={i} onClick={()=>active&&setView("traditions")} style={{background:C.s1,border:`1px solid ${active?"rgba(201,70,61,0.3)":C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:active?"pointer":"default",transition:"all .2s"}}>
+                <span style={{fontSize:28,flexShrink:0}}>{m.emoji}</span>
+                <div style={{flex:1}}><div style={{fontSize:14,color:C.text,marginBottom:3}}>{m.title}</div><div style={{fontSize:12,color:C.t2}}>{m.sub}</div></div>
+                {active
+                  ? <span style={{fontSize:10,padding:"3px 10px",background:"rgba(201,70,61,0.1)",border:"1px solid rgba(201,70,61,0.25)",borderRadius:20,color:C.red,whiteSpace:"nowrap"}}>Disponible</span>
+                  : <span style={{fontSize:11,color:C.t3}}>Bientôt</span>}
+                <div style={{fontSize:16,color:C.t3}}>›</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Traditions : calendrier annuel ──────────────────────────────────────────
+const SEASONS = [
+  {id:"printemps", label:"Printemps", jp:"春", emoji:"🌸", color:"#D98BA8", months:"Mars – Mai"},
+  {id:"été",       label:"Été",       jp:"夏", emoji:"🎆", color:"#5B9BD5", months:"Juin – Août"},
+  {id:"automne",   label:"Automne",   jp:"秋", emoji:"🍁", color:"#C97D3C", months:"Sept – Nov"},
+  {id:"hiver",     label:"Hiver",     jp:"冬", emoji:"❄️", color:"#7B9BB5", months:"Déc – Fév"},
+];
+
+function TraditionDetail({C,t,onBack}){
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
+      {/* Hero */}
+      <div style={{padding:"50px 20px 24px",background:`linear-gradient(160deg,rgba(201,70,61,0.1) 0%,transparent 90%)`,position:"relative"}}>
+        <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:6,marginBottom:20}}>
+          ‹ Calendrier
+        </button>
+        <div style={{fontSize:54,marginBottom:8}}>{t.emoji}</div>
+        <div style={{fontSize:11,color:C.red,letterSpacing:".2em",marginBottom:6,textTransform:"uppercase"}}>{t.mois}</div>
+        <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{t.nom}</div>
+        <div style={{fontSize:15,color:C.t3,fontFamily:"'Noto Serif JP',serif",marginBottom:10}}>{t.nom_jp}</div>
+        <div style={{fontSize:14,color:C.t2,fontStyle:"italic",lineHeight:1.5}}>{t.tagline}</div>
+      </div>
+
+      <div style={{padding:"4px 20px 110px",display:"flex",flexDirection:"column",gap:18}}>
+        {/* Histoire */}
+        <div>
+          <div style={{fontSize:10,color:C.red,letterSpacing:".2em",marginBottom:10,textTransform:"uppercase"}}>📜 Histoire & origine</div>
+          <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{t.histoire}</p>
+        </div>
+
+        {/* Rituels */}
+        <div>
+          <div style={{fontSize:10,color:C.red,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>⛩️ Rituels traditionnels</div>
+          <div style={{display:"flex",flexDirection:"column",gap:9}}>
+            {t.rituels.map((r,i)=>(
+              <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:10}}>
+                <span style={{minWidth:22,height:22,borderRadius:"50%",background:"rgba(201,70,61,0.12)",color:C.red,fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{i+1}</span>
+                <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{r}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Comment la vivre */}
+        <div style={{padding:"16px 16px",background:"rgba(78,128,96,0.06)",border:`1px solid rgba(78,128,96,0.18)`,borderRadius:12}}>
+          <div style={{fontSize:10,color:C.green,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>🌿 Comment la vivre aujourd'hui</div>
+          <div style={{display:"flex",flexDirection:"column",gap:8}}>
+            {t.comment_vivre.map((c,i)=>(
+              <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+                <span style={{color:C.green,fontSize:13,flexShrink:0}}>◈</span>
+                <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{c}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Gastronomie */}
+        <div style={{padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,display:"flex",gap:12,alignItems:"flex-start"}}>
+          <span style={{fontSize:22,flexShrink:0}}>🍱</span>
+          <div>
+            <div style={{fontSize:10,color:C.gold,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Gastronomie associée</div>
+            <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.55}}>{t.gastronomie}</p>
+          </div>
+        </div>
+
+        {/* Lieu phare */}
+        <div style={{padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderLeft:`3px solid ${C.red}`,borderRadius:"0 10px 10px 0",display:"flex",gap:12,alignItems:"flex-start"}}>
+          <span style={{fontSize:22,flexShrink:0}}>📍</span>
+          <div>
+            <div style={{fontSize:10,color:C.red,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Où la vivre au Japon</div>
+            <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.55}}>{t.lieu_phare}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TraditionsScreen({C,db}){
+  const [season,setSeason] = useState("printemps");
+  const [selected,setSelected] = useState(null);
+  const traditions = db?.traditions || [];
+
+  if(selected) return <TraditionDetail C={C} t={selected} onBack={()=>setSelected(null)}/>;
+
+  const seasonData = SEASONS.find(s=>s.id===season);
+  const filtered = traditions.filter(t=>t.saison===season);
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+      <div style={{padding:"50px 20px 12px"}}>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>暦 · TRADITIONS</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>年中行事</div>
+        <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Le calendrier des traditions japonaises</div>
+      </div>
+
+      {/* Season selector */}
+      <div style={{display:"flex",gap:8,padding:"0 20px 18px",overflowX:"auto"}}>
+        {SEASONS.map(s=>{
+          const on=s.id===season;
+          return(
+            <button key={s.id} onClick={()=>setSeason(s.id)} style={{
+              flexShrink:0,padding:"10px 16px",borderRadius:14,cursor:"pointer",
+              background:on?`${s.color}22`:C.s1,
+              border:`1px solid ${on?s.color:C.border}`,
+              display:"flex",flexDirection:"column",alignItems:"center",gap:3,minWidth:74,transition:"all .2s"
+            }}>
+              <span style={{fontSize:20}}>{s.emoji}</span>
+              <span style={{fontSize:12,color:on?C.text:C.t2,fontWeight:on?500:400}}>{s.label}</span>
+              <span style={{fontSize:8,color:C.t3,letterSpacing:".05em"}}>{s.months}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Season banner */}
+      <div style={{margin:"0 20px 16px",padding:"16px 18px",borderRadius:14,background:`linear-gradient(120deg,${seasonData.color}1f 0%,transparent 100%)`,border:`1px solid ${seasonData.color}33`,display:"flex",alignItems:"center",gap:14}}>
+        <div style={{fontSize:34,fontFamily:"'Noto Serif JP',serif",color:seasonData.color}}>{seasonData.jp}</div>
+        <div>
+          <div style={{fontSize:15,color:C.text,fontWeight:500}}>{seasonData.label}</div>
+          <div style={{fontSize:11,color:C.t3}}>{filtered.length} traditions à découvrir</div>
+        </div>
+      </div>
+
+      {/* Tradition cards */}
+      <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
+        {filtered.map((t,i)=>(
+          <div key={i} onClick={()=>setSelected(t)} style={{
+            background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px 16px",
+            display:"flex",alignItems:"center",gap:14,cursor:"pointer",transition:"all .2s",animation:"fadeUp .4s ease"
+          }}>
+            <span style={{fontSize:32,flexShrink:0}}>{t.emoji}</span>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
+                <span style={{fontSize:15,color:C.text,fontWeight:500}}>{t.nom}</span>
+                <span style={{fontSize:12,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{t.nom_jp}</span>
+              </div>
+              <div style={{fontSize:12,color:C.t2,lineHeight:1.45,marginBottom:5}}>{t.tagline}</div>
+              <span style={{fontSize:10,padding:"2px 9px",background:`${seasonData.color}1a`,border:`1px solid ${seasonData.color}40`,borderRadius:20,color:seasonData.color}}>{t.mois}</span>
             </div>
-          ))}
-        </div>
-        <div style={{marginTop:16,padding:"15px",textAlign:"center",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12}}>
-          <div style={{fontSize:11,color:C.t3}}>Contenu complet bientôt 🌸</div>
-        </div>
+            <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>
+          </div>
+        ))}
+        {filtered.length===0 && (
+          <div style={{padding:"24px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>
+        )}
       </div>
     </div>
   );
@@ -592,7 +748,7 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db}/>}
-              {tab==="explore"   &&<ExploreScreen   C={C}/>}
+              {tab==="explore"   &&<ExploreScreen   C={C} db={db}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C}/>}
               {tab==="learn"     &&<LearnScreen     C={C}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db}/>}
