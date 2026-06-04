@@ -1,110 +1,1143 @@
 {
   "expressions": [
-    {"expression":"いただきます","romaji":"Itadakimasu","traduction":"Je reçois humblement","contexte":"Dit avant chaque repas, ce mot exprime la gratitude envers tout ce qui a contribué à la nourriture — la nature, les agriculteurs, les cuisiniers. C'est bien plus qu'un simple 'bon appétit'.","exemple_jp":"さあ、食べましょう。いただきます！","exemple_fr":"Allez, mangeons. Itadakimasu !","emoji":"🍱"},
-    {"expression":"木漏れ日","romaji":"Komorebi","traduction":"Lumière filtrant à travers les feuilles","contexte":"Ce mot désigne ce moment visuel où la lumière du soleil se glisse entre les feuilles des arbres. Il n'existe aucun équivalent direct en français.","exemple_jp":"森の木漏れ日がとても美しい。","exemple_fr":"Le komorebi dans la forêt est vraiment magnifique.","emoji":"🌿"},
-    {"expression":"お疲れ様です","romaji":"Otsukaresama desu","traduction":"Tu as travaillé dur, merci","contexte":"Expression clé du monde professionnel japonais. Elle reconnaît les efforts de quelqu'un et s'utilise en arrivant au bureau, en partant, ou pour remercier un collègue.","exemple_jp":"今日もお疲れ様です！","exemple_fr":"Encore merci pour ton travail aujourd'hui !","emoji":"💼"},
-    {"expression":"一期一会","romaji":"Ichigo ichie","traduction":"Une fois, une rencontre","contexte":"Philosophie du thé selon laquelle chaque rencontre est unique et ne se reproduira jamais exactement. Elle invite à être pleinement présent dans chaque moment partagé.","exemple_jp":"この出会いを一期一会として大切にしよう。","exemple_fr":"Chérissons cette rencontre comme un moment unique.","emoji":"🍵"},
-    {"expression":"仕方がない","romaji":"Shikata ga nai","traduction":"On n'y peut rien","contexte":"Expression de résilience tranquille face à ce qu'on ne peut changer. Ni résignation amère ni indifférence, mais une forme d'acceptation sereine et mature.","exemple_jp":"電車が遅れた。仕方がない、待つしかない。","exemple_fr":"Le train est en retard. On n'y peut rien, il faut attendre.","emoji":"🌊"},
-    {"expression":"頑張ります","romaji":"Ganbarimasu","traduction":"Je vais faire de mon mieux","contexte":"Bien plus qu'un simple 'j'essaierai', c'est une promesse de mobiliser toute son énergie. On l'utilise avant un défi, un examen, une compétition — c'est un engagement.","exemple_jp":"試験前に：頑張ります！","exemple_fr":"Avant l'examen : Je vais tout donner !","emoji":"💪"},
-    {"expression":"もったいない","romaji":"Mottainai","traduction":"Quel gâchis","contexte":"Concept profond qui exprime le regret face au gaspillage. Il résume à lui seul une philosophie du respect des ressources, très ancrée dans la culture japonaise.","exemple_jp":"食べ物を捨てるなんて、もったいない！","exemple_fr":"Jeter de la nourriture, quel gâchis !","emoji":"♻️"},
-    {"expression":"なるほど","romaji":"Naruhodo","traduction":"Ah je vois / Effectivement","contexte":"Réaction très naturelle dans une conversation japonaise pour montrer qu'on comprend et qu'on suit. C'est un signal d'écoute active, pas seulement d'accord.","exemple_jp":"なるほど、そういうことか！","exemple_fr":"Ah je vois, c'est donc ça !","emoji":"💡"},
-    {"expression":"よろしくお願いします","romaji":"Yoroshiku onegaishimasu","traduction":"Je compte sur vous","contexte":"Expression indispensable qui ouvre et ferme les relations au Japon — en se présentant, en commençant un projet, en demandant un service. Elle établit un lien de confiance mutuelle.","exemple_jp":"これからよろしくお願いします。","exemple_fr":"Je compte sur vous pour la suite.","emoji":"🤝"},
-    {"expression":"懐かしい","romaji":"Natsukashii","traduction":"Nostalgie douce et chaleureuse","contexte":"Ce mot exprime la nostalgie positive, celle qui réchauffe le cœur en évoquant de bons souvenirs. Différent de la tristesse du passé, c'est une douce mélancolie.","exemple_jp":"この歌を聴くと懐かしい気持ちになる。","exemple_fr":"Cette chanson me donne un sentiment de douce nostalgie.","emoji":"🌸"},
-    {"expression":"ただいま","romaji":"Tadaima","traduction":"Je suis rentré","contexte":"Dit en franchissant la porte de chez soi, suivi de 'okaerinasai' par la famille. Ce rituel simple ancre le foyer comme un lieu de retour et de chaleur.","exemple_jp":"ただいま！— おかえりなさい！","exemple_fr":"Je suis rentré ! — Bienvenue à la maison !","emoji":"🏠"},
-    {"expression":"間","romaji":"Ma","traduction":"L'intervalle, le vide porteur","contexte":"Concept esthétique qui valorise l'espace entre les choses — le silence entre deux notes, le vide dans une pièce, la pause dans une conversation. Le 'ma' n'est pas un manque, c'est une présence.","exemple_jp":"この部屋の間がとても心地よい。","exemple_fr":"Le 'ma' de cette pièce est très apaisant.","emoji":"🪷"},
-    {"expression":"すみません","romaji":"Sumimasen","traduction":"Excusez-moi / Pardon","contexte":"Mot universel qui sert à attirer l'attention, s'excuser, ou même remercier quelqu'un qui a fait un effort pour vous. Indispensable dans tout lieu public.","exemple_jp":"すみません、駅はどこですか？","exemple_fr":"Excusez-moi, où est la gare ?","emoji":"🗣️"},
-    {"expression":"物の哀れ","romaji":"Mono no aware","traduction":"La pathos des choses","contexte":"Sensibilité japonaise à la beauté impermanente des choses — une fleur qui tombe, le coucher du soleil, la fin d'un été. C'est une mélancolie douce qui rend les choses précieuses.","exemple_jp":"桜の散る様子に物の哀れを感じる。","exemple_fr":"Je ressens le mono no aware en voyant les pétales tomber.","emoji":"🍂"},
-    {"expression":"大丈夫","romaji":"Daijoubu","traduction":"Ça va / Pas de problème","contexte":"Mot ultra-polyvalent : peut rassurer ('je vais bien'), refuser poliment ('non merci'), ou confirmer ('c'est bon'). Le ton et le contexte en précisent le sens.","exemple_jp":"転んだの？大丈夫？— うん、大丈夫！","exemple_fr":"Tu es tombé ? Ça va ? — Oui, ça va !","emoji":"👌"},
-    {"expression":"わびさび","romaji":"Wabi-sabi","traduction":"Beauté de l'imparfait et de l'impermanent","contexte":"Esthétique japonaise qui trouve la beauté dans ce qui est simple, usé, incomplet ou éphémère. Un bol de thé ébréché, une maison en bois ancienne — leur imperfection est leur beauté.","exemple_jp":"古い茶碗のわびさびが好きだ。","exemple_fr":"J'aime le wabi-sabi de ce vieux bol à thé.","emoji":"🏚️"},
-    {"expression":"縁","romaji":"En","traduction":"Destin, lien invisible entre les personnes","contexte":"Le concept d'en désigne les liens invisibles qui unissent les personnes — les rencontres, les relations, les hasards. Croire en l'en, c'est croire que les connexions ont un sens.","exemple_jp":"これも何かの縁ですね。","exemple_fr":"C'est sans doute un signe du destin.","emoji":"🔴"},
-    {"expression":"空気を読む","romaji":"Kuuki wo yomu","traduction":"Lire l'atmosphère","contexte":"Compétence sociale fondamentale au Japon : percevoir ce que les autres ressentent sans qu'ils le disent. Quelqu'un qui 'ne lit pas l'atmosphère' peut vite être perçu comme maladroit.","exemple_jp":"空気を読んで、その話題には触れなかった。","exemple_fr":"J'ai senti l'ambiance et j'ai évité d'aborder ce sujet.","emoji":"🌫️"},
-    {"expression":"粋","romaji":"Iki","traduction":"Élégance sobre et raffinée","contexte":"Idéal esthétique d'Edo désignant une élégance discrète, spontanée, sans ostentation. L'iki, c'est le chic sans effort apparent, la beauté qui ne se montre pas mais se ressent.","exemple_jp":"あの人の着こなしは粋だね。","exemple_fr":"Sa façon de s'habiller, c'est vraiment iki.","emoji":"👘"},
-    {"expression":"甘え","romaji":"Amae","traduction":"Dépendance affectueuse bienveillante","contexte":"Concept psychologique central dans les relations japonaises : se laisser aller à la bienveillance de l'autre, compter sur lui sans gêne. Acceptable et même sain dans les relations proches.","exemple_jp":"子供は親に甘えるものだ。","exemple_fr":"Il est naturel qu'un enfant s'abandonne à l'amour de ses parents.","emoji":"🤗"},
-    {"expression":"侘び","romaji":"Wabi","traduction":"Beauté de la solitude et de la simplicité","contexte":"Dimension du wabi-sabi centrée sur l'austérité sereine — vivre simplement, trouver la beauté dans le dénuement, apprécier ce qui est sobre et naturel.","exemple_jp":"この茶室には侘びの精神が宿っている。","exemple_fr":"Cet espace de thé incarne l'esprit du wabi.","emoji":"🍃"},
-    {"expression":"道","romaji":"Dō","traduction":"La voie, le chemin de maîtrise","contexte":"Suffixe qui transforme une pratique en voie spirituelle : Judo, Kendo, Chado (thé), Shodo (calligraphie). Le 'do' implique une quête de perfection qui ne finit jamais.","exemple_jp":"彼は剣道の道を歩んでいる。","exemple_fr":"Il suit la voie du kendo.","emoji":"⛩️"},
-    {"expression":"侘茶","romaji":"Wabi-cha","traduction":"Cérémonie du thé dans la simplicité","contexte":"Style de cérémonie du thé développé par Sen no Rikyu qui valorise l'imperfection, les ustensiles simples et l'espace humble. Une révolution esthétique qui a changé le Japon.","exemple_jp":"利休の侘茶の精神は今も生きている。","exemple_fr":"L'esprit du wabi-cha de Rikyu vit encore aujourd'hui.","emoji":"🏺"},
-    {"expression":"木漏れ日","romaji":"Ko-dama","traduction":"Esprit qui hante les vieux arbres","contexte":"Dans le shinto, les ko-dama sont des esprits divins qui habitent les arbres très anciens. On les reconnaît au fait que les forêts où ils vivent produisent un écho particulier quand on frappe des mains.","exemple_jp":"古い森にはコダマが宿ると言われている。","exemple_fr":"On dit que des esprits ko-dama habitent les vieilles forêts.","emoji":"🌳"},
-    {"expression":"岡目八目","romaji":"Okame hachimoku","traduction":"Un observateur voit mieux que celui qui joue","contexte":"Proverbe issu du jeu de go : celui qui regarde une partie de l'extérieur voit huit coups d'avance par rapport aux joueurs. Un rappel de la valeur du recul et de la perspective.","exemple_jp":"岡目八目というから、君の意見を聞かせて。","exemple_fr":"Comme dit le proverbe, donne-moi ton avis extérieur.","emoji":"🎯"},
-    {"expression":"七転び八起き","romaji":"Nana korobi ya oki","traduction":"Tomber sept fois, se relever huit","contexte":"L'un des proverbes les plus célèbres du Japon, qui incarne l'esprit de résilience. Peu importe le nombre de chutes — ce qui compte, c'est de se relever à chaque fois.","exemple_jp":"七転び八起き、あきらめないで！","exemple_fr":"Tomber sept fois, se relever huit — n'abandonne pas !","emoji":"🌅"},
-    {"expression":"花鳥風月","romaji":"Kachōfūgetsu","traduction":"Fleur, oiseau, vent, lune","contexte":"Expression poétique qui désigne la beauté de la nature dans sa diversité. C'est l'idéal contemplatif japonais — trouver la paix et l'inspiration dans l'observation du monde naturel.","exemple_jp":"花鳥風月を楽しむ旅に出たい。","exemple_fr":"Je voudrais partir en voyage pour contempler la beauté naturelle.","emoji":"🌙"},
-    {"expression":"以心伝心","romaji":"Ishin denshin","traduction":"Transmission de cœur à cœur, sans mots","contexte":"La communication silencieuse entre deux personnes qui se comprennent profondément. Un idéal relationnel japonais où les mots deviennent superflus quand la connexion est assez profonde.","exemple_jp":"長年の友との会話は以心伝心だ。","exemple_fr":"Avec mon ami de longue date, nous nous comprenons sans même parler.","emoji":"💫"},
-    {"expression":"温故知新","romaji":"Onko chishin","traduction":"Honorer le passé pour comprendre le présent","contexte":"Concept confucéen au cœur de la culture japonaise : étudier et respecter les traditions anciennes permet de créer quelque chose de nouveau et pertinent. L'innovation naît du respect du passé.","exemple_jp":"温故知新の精神で新しいプロジェクトに取り組む。","exemple_fr":"En honorant le passé, nous créons quelque chose de nouveau.","emoji":"📜"},
-    {"expression":"初心忘るべからず","romaji":"Shoshin wasuru bekarazu","traduction":"Ne jamais oublier l'esprit du débutant","contexte":"Enseignement zen fondamental : garder la fraîcheur et l'humilité du débutant, même après des années d'expérience. L'expert qui pense tout savoir ne peut plus rien apprendre.","exemple_jp":"初心忘るべからず — 常に謙虚でいること。","exemple_fr":"Ne jamais oublier l'esprit du débutant — rester toujours humble.","emoji":"🌱"}
+    {
+      "expression": "いただきます",
+      "romaji": "Itadakimasu",
+      "traduction": "Je reçois humblement",
+      "contexte": "Dit avant chaque repas, ce mot exprime la gratitude envers tout ce qui a contribué à la nourriture — la nature, les agriculteurs, les cuisiniers. C'est bien plus qu'un simple 'bon appétit'.",
+      "exemple_jp": "さあ、食べましょう。いただきます！",
+      "exemple_fr": "Allez, mangeons. Itadakimasu !",
+      "emoji": "🍱"
+    },
+    {
+      "expression": "木漏れ日",
+      "romaji": "Komorebi",
+      "traduction": "Lumière filtrant à travers les feuilles",
+      "contexte": "Ce mot désigne ce moment visuel où la lumière du soleil se glisse entre les feuilles des arbres. Il n'existe aucun équivalent direct en français.",
+      "exemple_jp": "森の木漏れ日がとても美しい。",
+      "exemple_fr": "Le komorebi dans la forêt est vraiment magnifique.",
+      "emoji": "🌿"
+    },
+    {
+      "expression": "お疲れ様です",
+      "romaji": "Otsukaresama desu",
+      "traduction": "Tu as travaillé dur, merci",
+      "contexte": "Expression clé du monde professionnel japonais. Elle reconnaît les efforts de quelqu'un et s'utilise en arrivant au bureau, en partant, ou pour remercier un collègue.",
+      "exemple_jp": "今日もお疲れ様です！",
+      "exemple_fr": "Encore merci pour ton travail aujourd'hui !",
+      "emoji": "💼"
+    },
+    {
+      "expression": "一期一会",
+      "romaji": "Ichigo ichie",
+      "traduction": "Une fois, une rencontre",
+      "contexte": "Philosophie du thé selon laquelle chaque rencontre est unique et ne se reproduira jamais exactement. Elle invite à être pleinement présent dans chaque moment partagé.",
+      "exemple_jp": "この出会いを一期一会として大切にしよう。",
+      "exemple_fr": "Chérissons cette rencontre comme un moment unique.",
+      "emoji": "🍵"
+    },
+    {
+      "expression": "仕方がない",
+      "romaji": "Shikata ga nai",
+      "traduction": "On n'y peut rien",
+      "contexte": "Expression de résilience tranquille face à ce qu'on ne peut changer. Ni résignation amère ni indifférence, mais une forme d'acceptation sereine et mature.",
+      "exemple_jp": "電車が遅れた。仕方がない、待つしかない。",
+      "exemple_fr": "Le train est en retard. On n'y peut rien, il faut attendre.",
+      "emoji": "🌊"
+    },
+    {
+      "expression": "頑張ります",
+      "romaji": "Ganbarimasu",
+      "traduction": "Je vais faire de mon mieux",
+      "contexte": "Bien plus qu'un simple 'j'essaierai', c'est une promesse de mobiliser toute son énergie. On l'utilise avant un défi, un examen, une compétition — c'est un engagement.",
+      "exemple_jp": "試験前に：頑張ります！",
+      "exemple_fr": "Avant l'examen : Je vais tout donner !",
+      "emoji": "💪"
+    },
+    {
+      "expression": "もったいない",
+      "romaji": "Mottainai",
+      "traduction": "Quel gâchis",
+      "contexte": "Concept profond qui exprime le regret face au gaspillage. Il résume à lui seul une philosophie du respect des ressources, très ancrée dans la culture japonaise.",
+      "exemple_jp": "食べ物を捨てるなんて、もったいない！",
+      "exemple_fr": "Jeter de la nourriture, quel gâchis !",
+      "emoji": "♻️"
+    },
+    {
+      "expression": "なるほど",
+      "romaji": "Naruhodo",
+      "traduction": "Ah je vois / Effectivement",
+      "contexte": "Réaction très naturelle dans une conversation japonaise pour montrer qu'on comprend et qu'on suit. C'est un signal d'écoute active, pas seulement d'accord.",
+      "exemple_jp": "なるほど、そういうことか！",
+      "exemple_fr": "Ah je vois, c'est donc ça !",
+      "emoji": "💡"
+    },
+    {
+      "expression": "よろしくお願いします",
+      "romaji": "Yoroshiku onegaishimasu",
+      "traduction": "Je compte sur vous",
+      "contexte": "Expression indispensable qui ouvre et ferme les relations au Japon — en se présentant, en commençant un projet, en demandant un service. Elle établit un lien de confiance mutuelle.",
+      "exemple_jp": "これからよろしくお願いします。",
+      "exemple_fr": "Je compte sur vous pour la suite.",
+      "emoji": "🤝"
+    },
+    {
+      "expression": "懐かしい",
+      "romaji": "Natsukashii",
+      "traduction": "Nostalgie douce et chaleureuse",
+      "contexte": "Ce mot exprime la nostalgie positive, celle qui réchauffe le cœur en évoquant de bons souvenirs. Différent de la tristesse du passé, c'est une douce mélancolie.",
+      "exemple_jp": "この歌を聴くと懐かしい気持ちになる。",
+      "exemple_fr": "Cette chanson me donne un sentiment de douce nostalgie.",
+      "emoji": "🌸"
+    },
+    {
+      "expression": "ただいま",
+      "romaji": "Tadaima",
+      "traduction": "Je suis rentré",
+      "contexte": "Dit en franchissant la porte de chez soi, suivi de 'okaerinasai' par la famille. Ce rituel simple ancre le foyer comme un lieu de retour et de chaleur.",
+      "exemple_jp": "ただいま！— おかえりなさい！",
+      "exemple_fr": "Je suis rentré ! — Bienvenue à la maison !",
+      "emoji": "🏠"
+    },
+    {
+      "expression": "間",
+      "romaji": "Ma",
+      "traduction": "L'intervalle, le vide porteur",
+      "contexte": "Concept esthétique qui valorise l'espace entre les choses — le silence entre deux notes, le vide dans une pièce, la pause dans une conversation. Le 'ma' n'est pas un manque, c'est une présence.",
+      "exemple_jp": "この部屋の間がとても心地よい。",
+      "exemple_fr": "Le 'ma' de cette pièce est très apaisant.",
+      "emoji": "🪷"
+    },
+    {
+      "expression": "すみません",
+      "romaji": "Sumimasen",
+      "traduction": "Excusez-moi / Pardon",
+      "contexte": "Mot universel qui sert à attirer l'attention, s'excuser, ou même remercier quelqu'un qui a fait un effort pour vous. Indispensable dans tout lieu public.",
+      "exemple_jp": "すみません、駅はどこですか？",
+      "exemple_fr": "Excusez-moi, où est la gare ?",
+      "emoji": "🗣️"
+    },
+    {
+      "expression": "物の哀れ",
+      "romaji": "Mono no aware",
+      "traduction": "La pathos des choses",
+      "contexte": "Sensibilité japonaise à la beauté impermanente des choses — une fleur qui tombe, le coucher du soleil, la fin d'un été. C'est une mélancolie douce qui rend les choses précieuses.",
+      "exemple_jp": "桜の散る様子に物の哀れを感じる。",
+      "exemple_fr": "Je ressens le mono no aware en voyant les pétales tomber.",
+      "emoji": "🍂"
+    },
+    {
+      "expression": "大丈夫",
+      "romaji": "Daijoubu",
+      "traduction": "Ça va / Pas de problème",
+      "contexte": "Mot ultra-polyvalent : peut rassurer ('je vais bien'), refuser poliment ('non merci'), ou confirmer ('c'est bon'). Le ton et le contexte en précisent le sens.",
+      "exemple_jp": "転んだの？大丈夫？— うん、大丈夫！",
+      "exemple_fr": "Tu es tombé ? Ça va ? — Oui, ça va !",
+      "emoji": "👌"
+    },
+    {
+      "expression": "わびさび",
+      "romaji": "Wabi-sabi",
+      "traduction": "Beauté de l'imparfait et de l'impermanent",
+      "contexte": "Esthétique japonaise qui trouve la beauté dans ce qui est simple, usé, incomplet ou éphémère. Un bol de thé ébréché, une maison en bois ancienne — leur imperfection est leur beauté.",
+      "exemple_jp": "古い茶碗のわびさびが好きだ。",
+      "exemple_fr": "J'aime le wabi-sabi de ce vieux bol à thé.",
+      "emoji": "🏚️"
+    },
+    {
+      "expression": "縁",
+      "romaji": "En",
+      "traduction": "Destin, lien invisible entre les personnes",
+      "contexte": "Le concept d'en désigne les liens invisibles qui unissent les personnes — les rencontres, les relations, les hasards. Croire en l'en, c'est croire que les connexions ont un sens.",
+      "exemple_jp": "これも何かの縁ですね。",
+      "exemple_fr": "C'est sans doute un signe du destin.",
+      "emoji": "🔴"
+    },
+    {
+      "expression": "空気を読む",
+      "romaji": "Kuuki wo yomu",
+      "traduction": "Lire l'atmosphère",
+      "contexte": "Compétence sociale fondamentale au Japon : percevoir ce que les autres ressentent sans qu'ils le disent. Quelqu'un qui 'ne lit pas l'atmosphère' peut vite être perçu comme maladroit.",
+      "exemple_jp": "空気を読んで、その話題には触れなかった。",
+      "exemple_fr": "J'ai senti l'ambiance et j'ai évité d'aborder ce sujet.",
+      "emoji": "🌫️"
+    },
+    {
+      "expression": "粋",
+      "romaji": "Iki",
+      "traduction": "Élégance sobre et raffinée",
+      "contexte": "Idéal esthétique d'Edo désignant une élégance discrète, spontanée, sans ostentation. L'iki, c'est le chic sans effort apparent, la beauté qui ne se montre pas mais se ressent.",
+      "exemple_jp": "あの人の着こなしは粋だね。",
+      "exemple_fr": "Sa façon de s'habiller, c'est vraiment iki.",
+      "emoji": "👘"
+    },
+    {
+      "expression": "甘え",
+      "romaji": "Amae",
+      "traduction": "Dépendance affectueuse bienveillante",
+      "contexte": "Concept psychologique central dans les relations japonaises : se laisser aller à la bienveillance de l'autre, compter sur lui sans gêne. Acceptable et même sain dans les relations proches.",
+      "exemple_jp": "子供は親に甘えるものだ。",
+      "exemple_fr": "Il est naturel qu'un enfant s'abandonne à l'amour de ses parents.",
+      "emoji": "🤗"
+    },
+    {
+      "expression": "侘び",
+      "romaji": "Wabi",
+      "traduction": "Beauté de la solitude et de la simplicité",
+      "contexte": "Dimension du wabi-sabi centrée sur l'austérité sereine — vivre simplement, trouver la beauté dans le dénuement, apprécier ce qui est sobre et naturel.",
+      "exemple_jp": "この茶室には侘びの精神が宿っている。",
+      "exemple_fr": "Cet espace de thé incarne l'esprit du wabi.",
+      "emoji": "🍃"
+    },
+    {
+      "expression": "道",
+      "romaji": "Dō",
+      "traduction": "La voie, le chemin de maîtrise",
+      "contexte": "Suffixe qui transforme une pratique en voie spirituelle : Judo, Kendo, Chado (thé), Shodo (calligraphie). Le 'do' implique une quête de perfection qui ne finit jamais.",
+      "exemple_jp": "彼は剣道の道を歩んでいる。",
+      "exemple_fr": "Il suit la voie du kendo.",
+      "emoji": "⛩️"
+    },
+    {
+      "expression": "侘茶",
+      "romaji": "Wabi-cha",
+      "traduction": "Cérémonie du thé dans la simplicité",
+      "contexte": "Style de cérémonie du thé développé par Sen no Rikyu qui valorise l'imperfection, les ustensiles simples et l'espace humble. Une révolution esthétique qui a changé le Japon.",
+      "exemple_jp": "利休の侘茶の精神は今も生きている。",
+      "exemple_fr": "L'esprit du wabi-cha de Rikyu vit encore aujourd'hui.",
+      "emoji": "🏺"
+    },
+    {
+      "expression": "木漏れ日",
+      "romaji": "Ko-dama",
+      "traduction": "Esprit qui hante les vieux arbres",
+      "contexte": "Dans le shinto, les ko-dama sont des esprits divins qui habitent les arbres très anciens. On les reconnaît au fait que les forêts où ils vivent produisent un écho particulier quand on frappe des mains.",
+      "exemple_jp": "古い森にはコダマが宿ると言われている。",
+      "exemple_fr": "On dit que des esprits ko-dama habitent les vieilles forêts.",
+      "emoji": "🌳"
+    },
+    {
+      "expression": "岡目八目",
+      "romaji": "Okame hachimoku",
+      "traduction": "Un observateur voit mieux que celui qui joue",
+      "contexte": "Proverbe issu du jeu de go : celui qui regarde une partie de l'extérieur voit huit coups d'avance par rapport aux joueurs. Un rappel de la valeur du recul et de la perspective.",
+      "exemple_jp": "岡目八目というから、君の意見を聞かせて。",
+      "exemple_fr": "Comme dit le proverbe, donne-moi ton avis extérieur.",
+      "emoji": "🎯"
+    },
+    {
+      "expression": "七転び八起き",
+      "romaji": "Nana korobi ya oki",
+      "traduction": "Tomber sept fois, se relever huit",
+      "contexte": "L'un des proverbes les plus célèbres du Japon, qui incarne l'esprit de résilience. Peu importe le nombre de chutes — ce qui compte, c'est de se relever à chaque fois.",
+      "exemple_jp": "七転び八起き、あきらめないで！",
+      "exemple_fr": "Tomber sept fois, se relever huit — n'abandonne pas !",
+      "emoji": "🌅"
+    },
+    {
+      "expression": "花鳥風月",
+      "romaji": "Kachōfūgetsu",
+      "traduction": "Fleur, oiseau, vent, lune",
+      "contexte": "Expression poétique qui désigne la beauté de la nature dans sa diversité. C'est l'idéal contemplatif japonais — trouver la paix et l'inspiration dans l'observation du monde naturel.",
+      "exemple_jp": "花鳥風月を楽しむ旅に出たい。",
+      "exemple_fr": "Je voudrais partir en voyage pour contempler la beauté naturelle.",
+      "emoji": "🌙"
+    },
+    {
+      "expression": "以心伝心",
+      "romaji": "Ishin denshin",
+      "traduction": "Transmission de cœur à cœur, sans mots",
+      "contexte": "La communication silencieuse entre deux personnes qui se comprennent profondément. Un idéal relationnel japonais où les mots deviennent superflus quand la connexion est assez profonde.",
+      "exemple_jp": "長年の友との会話は以心伝心だ。",
+      "exemple_fr": "Avec mon ami de longue date, nous nous comprenons sans même parler.",
+      "emoji": "💫"
+    },
+    {
+      "expression": "温故知新",
+      "romaji": "Onko chishin",
+      "traduction": "Honorer le passé pour comprendre le présent",
+      "contexte": "Concept confucéen au cœur de la culture japonaise : étudier et respecter les traditions anciennes permet de créer quelque chose de nouveau et pertinent. L'innovation naît du respect du passé.",
+      "exemple_jp": "温故知新の精神で新しいプロジェクトに取り組む。",
+      "exemple_fr": "En honorant le passé, nous créons quelque chose de nouveau.",
+      "emoji": "📜"
+    },
+    {
+      "expression": "初心忘るべからず",
+      "romaji": "Shoshin wasuru bekarazu",
+      "traduction": "Ne jamais oublier l'esprit du débutant",
+      "contexte": "Enseignement zen fondamental : garder la fraîcheur et l'humilité du débutant, même après des années d'expérience. L'expert qui pense tout savoir ne peut plus rien apprendre.",
+      "exemple_jp": "初心忘るべからず — 常に謙虚でいること。",
+      "exemple_fr": "Ne jamais oublier l'esprit du débutant — rester toujours humble.",
+      "emoji": "🌱"
+    }
   ],
   "culture": [
-    {"titre":"Le konbini, temple de la vie quotidienne","contenu":"Les convenience stores japonais (7-Eleven, FamilyMart, Lawson) sont bien plus que des épiceries — on y paie ses factures, envoie des colis, imprime des documents, mange chaud à toute heure. Ouverts 24h/24, 365 jours par an, ils sont devenus une institution nationale.","insight":"Le konbini révèle l'obsession japonaise pour la commodité, la qualité et l'efficacité — même un onigiri emballé est une expérience gustative soignée.","tag":"Vie quotidienne","emoji":"🏪"},
-    {"titre":"Hanami : l'art de contempler les cerisiers","contenu":"Chaque printemps, le Japon est traversé par un 'front des cerisiers' suivi à la télévision comme une météo nationale. Des millions de Japonais s'installent sous les sakura pour pique-niquer, boire du saké et célébrer la beauté fugace des fleurs.","insight":"Hanami incarne le mono no aware : la beauté est d'autant plus précieuse qu'elle est éphémère. Les fleurs ne durent qu'une semaine — et c'est pour ça qu'on les chérit.","tag":"Traditions","emoji":"🌸"},
-    {"titre":"L'étiquette du bain japonais","contenu":"Dans un onsen ou un sentō, on se lave soigneusement avant d'entrer dans l'eau. Le bain commun ne sert pas à se laver mais à se détendre et se régénérer. Parler fort ou plonger avec une serviette est très mal vu.","insight":"Le bain japonais est un rituel de purification autant que de socialisation — un espace de confiance et de vulnérabilité partagée.","tag":"Traditions","emoji":"♨️"},
-    {"titre":"Honne et tatemae : la double vérité","contenu":"Au Japon, on distingue le honne (ses vrais sentiments) du tatemae (ce qu'on montre publiquement). Dire 'non' directement étant souvent impoli, on préférera des formulations comme 'c'est un peu difficile' pour exprimer un refus.","insight":"Cette dualité n'est pas de la malhonnêteté — c'est une forme de respect et d'harmonie sociale. Comprendre ce code est la clé pour vraiment communiquer au Japon.","tag":"Social","emoji":"🎭"},
-    {"titre":"Les 5 millions de distributeurs automatiques","contenu":"Le Japon compte plus de 5 millions de vending machines — soit un pour 23 habitants. On y trouve boissons chaudes ou froides, soupes, fleurs, parapluies, cravates, et même des œufs frais.","insight":"La densité de vending machines révèle une confiance sociale profonde — ces machines ne sont quasiment jamais vandalisées, même la nuit dans des ruelles isolées.","tag":"Vie quotidienne","emoji":"🤖"},
-    {"titre":"L'art du cadeau : noshi et furoshiki","contenu":"Offrir un cadeau au Japon est un rituel codifié : soigneusement emballé dans un furoshiki, accompagné d'un noshi, remis à deux mains avec une légère inclinaison. Le destinataire l'ouvre rarement devant vous.","insight":"L'emballage est presque plus important que le contenu — il traduit le soin et le respect que vous portez à la personne.","tag":"Social","emoji":"🎁"},
-    {"titre":"Le silence dans les transports en commun","contenu":"Dans les trains et métros japonais, on parle à voix basse ou on ne parle pas. Les appels téléphoniques sont proscrits dans les wagons. Les passagers lisent, écoutent avec des écouteurs, ou somnolent dans un calme étonnant.","insight":"Ce silence collectif n'est pas de la froideur : c'est une forme de respect de l'espace mental d'autrui, une façon de dire 'je reconnais ta présence en la respectant'.","tag":"Social","emoji":"🚄"},
-    {"titre":"Setsubun : chasser les démons à coups de haricots","contenu":"Le 3 février, les Japonais lancent des haricots de soja en criant 'Oni wa soto, fuku wa uchi !' (Démons dehors, bonheur dedans !). On mange ensuite un nombre de haricots égal à son âge pour s'assurer bonne santé et chance.","insight":"Setsubun marque le début du printemps selon l'ancien calendrier — c'est une purification symbolique pour renouveler l'énergie de l'espace domestique.","tag":"Traditions","emoji":"👹"},
-    {"titre":"L'inclinaison : un langage corporel complet","contenu":"L'inclinaison du corps (ojigi) exprime tout : un petit signe de tête dit bonjour, 30° montrent du respect, 45° de la gratitude sincère, 90° les excuses les plus profondes. Elle se pratique dans la rue, au téléphone, même en voiture.","insight":"L'ojigi encode hiérarchie, émotion et statut dans un geste silencieux — une grammaire corporelle que les Japonais maîtrisent intuitivement depuis l'enfance.","tag":"Social","emoji":"🙇"},
-    {"titre":"Tanabata : la fête des étoiles amantes","contenu":"Le 7 juillet, les Japonais écrivent leurs vœux sur des tanzaku (papiers colorés) suspendus à des branches de bambou. La fête célèbre la rencontre annuelle de deux étoiles — Vega et Altaïr — séparées par la Voie lactée.","insight":"Tanabata invite chacun à nommer ses désirs et à les confier au ciel — une pratique méditative habillée en fête populaire et colorée.","tag":"Traditions","emoji":"⭐"},
-    {"titre":"Le shokunin : la philosophie du maître artisan","contenu":"Le shokunin est l'artisan qui consacre toute sa vie à maîtriser un unique savoir-faire — sculpter des sushis, plier du papier, fabriquer des couteaux. Ce chemin de perfection dure des décennies et est considéré comme un art de vivre.","insight":"Le concept de shokunin redéfinit le travail comme vocation — non pas pour gagner sa vie, mais pour honorer son art et servir autrui avec excellence.","tag":"Vie quotidienne","emoji":"🔪"},
-    {"titre":"Les capsule hotels : dormir dans un alvéole","contenu":"Inventés à Osaka en 1979, les capsule hotels proposent des couchettes individuelles de 2m × 1m × 1m, souvent avec TV et éclairage intégré. Nés pour les salarymen ayant raté le dernier train, ils ont évolué en hébergement tendance.","insight":"La capsule incarne le pragmatisme japonais : maximiser le confort dans un minimum d'espace, sans superflu — espace privé distillé à l'essentiel.","tag":"Vie quotidienne","emoji":"🛸"},
-    {"titre":"Obon : la fête des ancêtres","contenu":"En août, pendant trois jours, les Japonais croient que les esprits de leurs ancêtres reviennent. On allume des lanternes pour les guider, on danse la Bon Odori en cercle, et on prépare leurs plats préférés sur l'autel familial.","insight":"Obon rappelle que la mort n'est pas une rupture définitive dans la vision japonaise — les ancêtres restent présents, protecteurs, et méritent d'être honorés régulièrement.","tag":"Traditions","emoji":"🏮"},
-    {"titre":"Kintsugi : réparer avec de l'or","contenu":"Quand un objet en céramique se brise, le kintsugi consiste à recoller les morceaux avec de la laque dorée — rendant les fissures visibles et belles. L'objet réparé est considéré plus précieux qu'avant.","insight":"Le kintsugi est une philosophie de vie : nos blessures ne nous diminuent pas, elles nous forgent et nous rendent uniques.","tag":"Traditions","emoji":"🏺"},
-    {"titre":"Le meishi : la carte de visite sacrée","contenu":"Échanger des cartes de visite (meishi) est un rituel solennel : on la tend à deux mains, légèrement incliné, en lisant le nom à voix haute. On ne l'écrit pas dessus, ne la froisse pas, et ne la glisse pas dans sa poche.","insight":"La carte de visite est une extension de la personne — la façon dont on la traite dit exactement quelle considération on a pour son interlocuteur.","tag":"Social","emoji":"📇"},
-    {"titre":"Les izakaya : l'âme de la nuit japonaise","contenu":"Les izakaya sont des tavernes où l'on commande de petits plats partagés autour de bières ou de shochu. L'otooshi (amuse-bouche obligatoire à l'arrivée) remplace le couvert — une surprise bienvenue à chaque visite.","insight":"L'izakaya est l'espace où les Japonais peuvent enfin lâcher le tatemae — quelques verres suffisent pour que honne et rires s'échappent librement.","tag":"Gastronomie","emoji":"🍻"},
-    {"titre":"Shintoïsme : le sacré dans le quotidien","contenu":"Le shinto voit des esprits divins (kami) dans chaque élément naturel — une vieille pierre, un arbre centenaire, une cascade. On trouve des petits autels (hokora) au coin des rues, dans les forêts, sur les toits d'immeubles.","insight":"Le shinto rend le sacré accessible et quotidien — pas besoin d'un grand temple pour rencontrer le divin, il est partout où la nature s'exprime.","tag":"Traditions","emoji":"⛩️"},
-    {"titre":"La bento culture : le repas comme soin","contenu":"La bento box japonaise est une forme d'amour silencieux : une mère se lève tôt pour préparer un repas équilibré, coloré et parfois sculpté en formes d'animaux. Le charaben (bento artistique) est un genre en soi.","insight":"Le bento dit sans mots : 'Je t'aime assez pour consacrer mon temps à nourrir ton corps et égayer ton quotidien'. C'est le soin rendu visible.","tag":"Gastronomie","emoji":"🍱"},
-    {"titre":"Nemawashi : préparer le terrain en douceur","contenu":"Avant toute réunion importante, les Japonais pratiquent le nemawashi — des consultations informelles individuelles pour préparer le consensus. Quand la réunion officielle a lieu, la décision est déjà prise.","insight":"Le nemawashi évite les confrontations publiques en traitant les désaccords en privé — la réunion formelle n'est que la confirmation d'un accord déjà construit.","tag":"Social","emoji":"🌳"},
-    {"titre":"Les matsuri : quand la ville devient fête","contenu":"Les festivals japonais (matsuri) sont des événements communautaires où des chars géants portant des divinités sont transportés dans les rues au son des tambours. Hommes et femmes en yukata, odeurs de takoyaki dans les ruelles.","insight":"Le matsuri suspend l'ordre quotidien — pendant quelques jours, le sacré descend dans la rue et rappelle que la communauté est plus grande que l'individu.","tag":"Traditions","emoji":"🎆"},
-    {"titre":"Kotatsu : le meuble qui réunit la famille","contenu":"Le kotatsu est une table basse chauffante recouverte d'une épaisse couverture. En hiver, toute la famille glisse les jambes dessous pour regarder la télé, manger des mandarines et somnoler ensemble.","insight":"Le kotatsu incarne la warmth physique et émotionnelle du foyer japonais — c'est autour de lui que se tissent les liens familiaux les plus quotidiens.","tag":"Vie quotidienne","emoji":"🍊"},
-    {"titre":"La cérémonie du thé : le temps suspendu","contenu":"La cérémonie du thé (chado) suit des règles précises codifiées depuis des siècles : chaque geste — tenir le bol, plier le fukusa, déposer la louche — est prescrit et répété jusqu'à devenir méditation en mouvement.","insight":"La cérémonie du thé est une façon de sortir du temps ordinaire : pendant une heure, rien n'existe que ce moment, ce bol, cet invité. Ichigo ichie.","tag":"Traditions","emoji":"🍵"},
-    {"titre":"L'ikebana : méditation florale","contenu":"L'ikebana (arrangement floral japonais) est une discipline spirituelle et esthétique qui cherche à représenter l'univers dans un vase. Les tiges, les espaces vides et les angles sont aussi importants que les fleurs.","insight":"L'ikebana enseigne la patience, la présence et l'économie de moyens — avec trois fleurs bien placées, on peut évoquer les saisons, la mort et la renaissance.","tag":"Traditions","emoji":"🌺"},
-    {"titre":"La culture de l'excuse sincère","contenu":"Au Japon, s'excuser est un acte profondément sérieux. Une entreprise qui commet une erreur organisera une conférence de presse avec des cadres en inclinaison profonde. L'excuse est publique, sincère, et vise à réparer le tissu social.","insight":"La fréquence des excuses japonaises n'est pas de la faiblesse — c'est la reconnaissance que chaque acte a un impact sur les autres, et que la communauté prime sur l'ego.","tag":"Social","emoji":"🙏"},
-    {"titre":"Ikigai : la raison d'être","contenu":"L'ikigai ('raison de vivre') est l'intersection entre ce qu'on aime, ce en quoi on est doué, ce dont le monde a besoin, et ce pour quoi on peut être payé. Les habitants d'Okinawa, parmi les plus âgés au monde, attribuent leur longévité à un ikigai fort.","insight":"Trouver son ikigai n'est pas un luxe mais une nécessité vitale — les études montrent que les personnes ayant un ikigai fort vivent plus longtemps et en meilleure santé.","tag":"Vie quotidienne","emoji":"🌟"},
-    {"titre":"Noren : le rideau qui sépare deux mondes","contenu":"Le noren est le rideau en tissu suspendu à l'entrée des commerces, restaurants et bains publics japonais. Passer dessous signifie entrer dans un espace différent — plus intime, plus accueillant.","insight":"Au-delà du symbole d'ouverture, le noren représente la réputation de l'établissement. 'Garder le noren propre' signifie honorer la tradition et les ancêtres fondateurs.","tag":"Traditions","emoji":"🏮"},
-    {"titre":"Mottainai : la philosophie anti-gaspillage","contenu":"Le mot mottainai exprime le regret face au gaspillage et implique de réparer, réutiliser et recycler avant de jeter. Cette philosophie ancienne est devenue un mouvement global porté par la Japonaise Wangari Maathai.","insight":"Le Japon a inventé le 'wrapping' d'emballage zéro-déchet il y a des siècles avec le furoshiki — bien avant que la durabilité devienne tendance.","tag":"Vie quotidienne","emoji":"♻️"},
-    {"titre":"Les wagashi : confiseries des saisons","contenu":"Les wagashi (confiseries traditionnelles) changent de forme et de couleur avec les saisons : fleurs de sakura en mars, feuilles d'érable rouges en automne, branches de pin en janvier. Chaque pièce est une sculpture éphémère.","insight":"Les wagashi incarnent la sensibilité japonaise aux saisons — manger une confiserie en forme de cerisier, c'est littéralement intégrer le printemps.","tag":"Gastronomie","emoji":"🌸"},
-    {"titre":"Le Golden Week : la grande transhumance","contenu":"La Golden Week (fin avril-début mai) regroupe quatre jours fériés en une semaine. C'est l'un des rares moments où les Japonais prennent vraiment des vacances — et tout le pays se déplace en même temps, créant des embouteillages épiques.","insight":"La Golden Week révèle le paradoxe japonais : un peuple qui travaille énormément mais qui, quand il s'arrête, le fait tous en même temps et avec une énergie collective extraordinaire.","tag":"Traditions","emoji":"🗾"},
-    {"titre":"Les maneki-neko : la chance à portée de patte","contenu":"Ce chat blanc aux yeux bridés qui lève une patte devant les commerces est le maneki-neko, le 'chat qui appelle'. La patte gauche levée attire les clients, la droite attire la chance et l'argent.","insight":"Le maneki-neko illustre la coexistence au Japon entre superstition populaire et modernité — la tradition animiste shinto se glisse discrètement dans la vie commerciale contemporaine.","tag":"Vie quotidienne","emoji":"🐱"},
-    {"titre":"Shōganai et la culture de la résilience","contenu":"Face au tremblement de terre et tsunami de 2011, les rescapés japonais ont fait la queue pour l'aide alimentaire, remercié les secouristes et refusé de piller. Le monde entier a été stupéfait par cette dignité collective face au chaos.","insight":"Le shōganai n'est pas de la résignation — c'est une force tranquille qui permet de traverser les pires épreuves sans perdre sa dignité ni sa cohésion communautaire.","tag":"Social","emoji":"🌊"},
-    {"titre":"La forêt de bambous d'Arashiyama","contenu":"La forêt de bambous de Sagano, à Kyoto, est classée parmi les sons à protéger par le gouvernement japonais. Le bruit du vent dans les bambous est considéré comme un patrimoine sonore national, tout aussi précieux que les monuments visuels.","insight":"Le Japon est l'un des rares pays à protéger officiellement des paysages sonores — une preuve que la perception sensorielle est aussi culturelle que politique.","tag":"Nature","emoji":"🎋"},
-    {"titre":"Hatsumode : le premier visit au temple","contenu":"Dans les premiers jours de janvier, des millions de Japonais se rendent dans les temples et sanctuaires pour leur première visite de l'année (hatsumode). On y tire des omikuji (prédictions), on achète des amulettes et on prie pour l'année à venir.","insight":"Le hatsumode rappelle que même dans un Japon ultra-moderne, les rituels spirituels structurent le temps collectif — l'entrée dans une nouvelle année reste un acte sacré.","tag":"Traditions","emoji":"🎍"},
-    {"titre":"L'art de plier : origami et furoshiki","contenu":"L'origami transforme une feuille de papier vierge en animal, fleur ou objet — sans colle ni ciseaux. Le furoshiki est son équivalent en tissu, permettant d'emballer n'importe quel objet dans un carré de tissu noué avec élégance.","insight":"Ces deux arts du pliage incarnent le principe japonais de 'faire plus avec moins' — l'économie de moyens comme forme suprême d'intelligence créative.","tag":"Traditions","emoji":"🦢"},
-    {"titre":"Salaryman : le guerrier moderne","contenu":"Le salaryman japonais est une figure culturelle emblématique : costume sombre, cartable, métro bondé à 7h, retours tardifs après les nomikai (soirées d'entreprise obligatoires). Cette culture du présentéisme est aussi respectée que critiquée.","insight":"Le salaryman cristallise la tension japonaise entre dévouement collectif et épanouissement personnel — un débat qui définit les grandes transformations sociales du Japon contemporain.","tag":"Social","emoji":"👔"}
+    {
+      "titre": "Le konbini, temple de la vie quotidienne",
+      "contenu": "Les convenience stores japonais (7-Eleven, FamilyMart, Lawson) sont bien plus que des épiceries — on y paie ses factures, envoie des colis, imprime des documents, mange chaud à toute heure. Ouverts 24h/24, 365 jours par an, ils sont devenus une institution nationale.",
+      "insight": "Le konbini révèle l'obsession japonaise pour la commodité, la qualité et l'efficacité — même un onigiri emballé est une expérience gustative soignée.",
+      "tag": "Vie quotidienne",
+      "emoji": "🏪"
+    },
+    {
+      "titre": "Hanami : l'art de contempler les cerisiers",
+      "contenu": "Chaque printemps, le Japon est traversé par un 'front des cerisiers' suivi à la télévision comme une météo nationale. Des millions de Japonais s'installent sous les sakura pour pique-niquer, boire du saké et célébrer la beauté fugace des fleurs.",
+      "insight": "Hanami incarne le mono no aware : la beauté est d'autant plus précieuse qu'elle est éphémère. Les fleurs ne durent qu'une semaine — et c'est pour ça qu'on les chérit.",
+      "tag": "Traditions",
+      "emoji": "🌸"
+    },
+    {
+      "titre": "L'étiquette du bain japonais",
+      "contenu": "Dans un onsen ou un sentō, on se lave soigneusement avant d'entrer dans l'eau. Le bain commun ne sert pas à se laver mais à se détendre et se régénérer. Parler fort ou plonger avec une serviette est très mal vu.",
+      "insight": "Le bain japonais est un rituel de purification autant que de socialisation — un espace de confiance et de vulnérabilité partagée.",
+      "tag": "Traditions",
+      "emoji": "♨️"
+    },
+    {
+      "titre": "Honne et tatemae : la double vérité",
+      "contenu": "Au Japon, on distingue le honne (ses vrais sentiments) du tatemae (ce qu'on montre publiquement). Dire 'non' directement étant souvent impoli, on préférera des formulations comme 'c'est un peu difficile' pour exprimer un refus.",
+      "insight": "Cette dualité n'est pas de la malhonnêteté — c'est une forme de respect et d'harmonie sociale. Comprendre ce code est la clé pour vraiment communiquer au Japon.",
+      "tag": "Social",
+      "emoji": "🎭"
+    },
+    {
+      "titre": "Les 5 millions de distributeurs automatiques",
+      "contenu": "Le Japon compte plus de 5 millions de vending machines — soit un pour 23 habitants. On y trouve boissons chaudes ou froides, soupes, fleurs, parapluies, cravates, et même des œufs frais.",
+      "insight": "La densité de vending machines révèle une confiance sociale profonde — ces machines ne sont quasiment jamais vandalisées, même la nuit dans des ruelles isolées.",
+      "tag": "Vie quotidienne",
+      "emoji": "🤖"
+    },
+    {
+      "titre": "L'art du cadeau : noshi et furoshiki",
+      "contenu": "Offrir un cadeau au Japon est un rituel codifié : soigneusement emballé dans un furoshiki, accompagné d'un noshi, remis à deux mains avec une légère inclinaison. Le destinataire l'ouvre rarement devant vous.",
+      "insight": "L'emballage est presque plus important que le contenu — il traduit le soin et le respect que vous portez à la personne.",
+      "tag": "Social",
+      "emoji": "🎁"
+    },
+    {
+      "titre": "Le silence dans les transports en commun",
+      "contenu": "Dans les trains et métros japonais, on parle à voix basse ou on ne parle pas. Les appels téléphoniques sont proscrits dans les wagons. Les passagers lisent, écoutent avec des écouteurs, ou somnolent dans un calme étonnant.",
+      "insight": "Ce silence collectif n'est pas de la froideur : c'est une forme de respect de l'espace mental d'autrui, une façon de dire 'je reconnais ta présence en la respectant'.",
+      "tag": "Social",
+      "emoji": "🚄"
+    },
+    {
+      "titre": "Setsubun : chasser les démons à coups de haricots",
+      "contenu": "Le 3 février, les Japonais lancent des haricots de soja en criant 'Oni wa soto, fuku wa uchi !' (Démons dehors, bonheur dedans !). On mange ensuite un nombre de haricots égal à son âge pour s'assurer bonne santé et chance.",
+      "insight": "Setsubun marque le début du printemps selon l'ancien calendrier — c'est une purification symbolique pour renouveler l'énergie de l'espace domestique.",
+      "tag": "Traditions",
+      "emoji": "👹"
+    },
+    {
+      "titre": "L'inclinaison : un langage corporel complet",
+      "contenu": "L'inclinaison du corps (ojigi) exprime tout : un petit signe de tête dit bonjour, 30° montrent du respect, 45° de la gratitude sincère, 90° les excuses les plus profondes. Elle se pratique dans la rue, au téléphone, même en voiture.",
+      "insight": "L'ojigi encode hiérarchie, émotion et statut dans un geste silencieux — une grammaire corporelle que les Japonais maîtrisent intuitivement depuis l'enfance.",
+      "tag": "Social",
+      "emoji": "🙇"
+    },
+    {
+      "titre": "Tanabata : la fête des étoiles amantes",
+      "contenu": "Le 7 juillet, les Japonais écrivent leurs vœux sur des tanzaku (papiers colorés) suspendus à des branches de bambou. La fête célèbre la rencontre annuelle de deux étoiles — Vega et Altaïr — séparées par la Voie lactée.",
+      "insight": "Tanabata invite chacun à nommer ses désirs et à les confier au ciel — une pratique méditative habillée en fête populaire et colorée.",
+      "tag": "Traditions",
+      "emoji": "⭐"
+    },
+    {
+      "titre": "Le shokunin : la philosophie du maître artisan",
+      "contenu": "Le shokunin est l'artisan qui consacre toute sa vie à maîtriser un unique savoir-faire — sculpter des sushis, plier du papier, fabriquer des couteaux. Ce chemin de perfection dure des décennies et est considéré comme un art de vivre.",
+      "insight": "Le concept de shokunin redéfinit le travail comme vocation — non pas pour gagner sa vie, mais pour honorer son art et servir autrui avec excellence.",
+      "tag": "Vie quotidienne",
+      "emoji": "🔪"
+    },
+    {
+      "titre": "Les capsule hotels : dormir dans un alvéole",
+      "contenu": "Inventés à Osaka en 1979, les capsule hotels proposent des couchettes individuelles de 2m × 1m × 1m, souvent avec TV et éclairage intégré. Nés pour les salarymen ayant raté le dernier train, ils ont évolué en hébergement tendance.",
+      "insight": "La capsule incarne le pragmatisme japonais : maximiser le confort dans un minimum d'espace, sans superflu — espace privé distillé à l'essentiel.",
+      "tag": "Vie quotidienne",
+      "emoji": "🛸"
+    },
+    {
+      "titre": "Obon : la fête des ancêtres",
+      "contenu": "En août, pendant trois jours, les Japonais croient que les esprits de leurs ancêtres reviennent. On allume des lanternes pour les guider, on danse la Bon Odori en cercle, et on prépare leurs plats préférés sur l'autel familial.",
+      "insight": "Obon rappelle que la mort n'est pas une rupture définitive dans la vision japonaise — les ancêtres restent présents, protecteurs, et méritent d'être honorés régulièrement.",
+      "tag": "Traditions",
+      "emoji": "🏮"
+    },
+    {
+      "titre": "Kintsugi : réparer avec de l'or",
+      "contenu": "Quand un objet en céramique se brise, le kintsugi consiste à recoller les morceaux avec de la laque dorée — rendant les fissures visibles et belles. L'objet réparé est considéré plus précieux qu'avant.",
+      "insight": "Le kintsugi est une philosophie de vie : nos blessures ne nous diminuent pas, elles nous forgent et nous rendent uniques.",
+      "tag": "Traditions",
+      "emoji": "🏺"
+    },
+    {
+      "titre": "Le meishi : la carte de visite sacrée",
+      "contenu": "Échanger des cartes de visite (meishi) est un rituel solennel : on la tend à deux mains, légèrement incliné, en lisant le nom à voix haute. On ne l'écrit pas dessus, ne la froisse pas, et ne la glisse pas dans sa poche.",
+      "insight": "La carte de visite est une extension de la personne — la façon dont on la traite dit exactement quelle considération on a pour son interlocuteur.",
+      "tag": "Social",
+      "emoji": "📇"
+    },
+    {
+      "titre": "Les izakaya : l'âme de la nuit japonaise",
+      "contenu": "Les izakaya sont des tavernes où l'on commande de petits plats partagés autour de bières ou de shochu. L'otooshi (amuse-bouche obligatoire à l'arrivée) remplace le couvert — une surprise bienvenue à chaque visite.",
+      "insight": "L'izakaya est l'espace où les Japonais peuvent enfin lâcher le tatemae — quelques verres suffisent pour que honne et rires s'échappent librement.",
+      "tag": "Gastronomie",
+      "emoji": "🍻"
+    },
+    {
+      "titre": "Shintoïsme : le sacré dans le quotidien",
+      "contenu": "Le shinto voit des esprits divins (kami) dans chaque élément naturel — une vieille pierre, un arbre centenaire, une cascade. On trouve des petits autels (hokora) au coin des rues, dans les forêts, sur les toits d'immeubles.",
+      "insight": "Le shinto rend le sacré accessible et quotidien — pas besoin d'un grand temple pour rencontrer le divin, il est partout où la nature s'exprime.",
+      "tag": "Traditions",
+      "emoji": "⛩️"
+    },
+    {
+      "titre": "La bento culture : le repas comme soin",
+      "contenu": "La bento box japonaise est une forme d'amour silencieux : une mère se lève tôt pour préparer un repas équilibré, coloré et parfois sculpté en formes d'animaux. Le charaben (bento artistique) est un genre en soi.",
+      "insight": "Le bento dit sans mots : 'Je t'aime assez pour consacrer mon temps à nourrir ton corps et égayer ton quotidien'. C'est le soin rendu visible.",
+      "tag": "Gastronomie",
+      "emoji": "🍱"
+    },
+    {
+      "titre": "Nemawashi : préparer le terrain en douceur",
+      "contenu": "Avant toute réunion importante, les Japonais pratiquent le nemawashi — des consultations informelles individuelles pour préparer le consensus. Quand la réunion officielle a lieu, la décision est déjà prise.",
+      "insight": "Le nemawashi évite les confrontations publiques en traitant les désaccords en privé — la réunion formelle n'est que la confirmation d'un accord déjà construit.",
+      "tag": "Social",
+      "emoji": "🌳"
+    },
+    {
+      "titre": "Les matsuri : quand la ville devient fête",
+      "contenu": "Les festivals japonais (matsuri) sont des événements communautaires où des chars géants portant des divinités sont transportés dans les rues au son des tambours. Hommes et femmes en yukata, odeurs de takoyaki dans les ruelles.",
+      "insight": "Le matsuri suspend l'ordre quotidien — pendant quelques jours, le sacré descend dans la rue et rappelle que la communauté est plus grande que l'individu.",
+      "tag": "Traditions",
+      "emoji": "🎆"
+    },
+    {
+      "titre": "Kotatsu : le meuble qui réunit la famille",
+      "contenu": "Le kotatsu est une table basse chauffante recouverte d'une épaisse couverture. En hiver, toute la famille glisse les jambes dessous pour regarder la télé, manger des mandarines et somnoler ensemble.",
+      "insight": "Le kotatsu incarne la warmth physique et émotionnelle du foyer japonais — c'est autour de lui que se tissent les liens familiaux les plus quotidiens.",
+      "tag": "Vie quotidienne",
+      "emoji": "🍊"
+    },
+    {
+      "titre": "La cérémonie du thé : le temps suspendu",
+      "contenu": "La cérémonie du thé (chado) suit des règles précises codifiées depuis des siècles : chaque geste — tenir le bol, plier le fukusa, déposer la louche — est prescrit et répété jusqu'à devenir méditation en mouvement.",
+      "insight": "La cérémonie du thé est une façon de sortir du temps ordinaire : pendant une heure, rien n'existe que ce moment, ce bol, cet invité. Ichigo ichie.",
+      "tag": "Traditions",
+      "emoji": "🍵"
+    },
+    {
+      "titre": "L'ikebana : méditation florale",
+      "contenu": "L'ikebana (arrangement floral japonais) est une discipline spirituelle et esthétique qui cherche à représenter l'univers dans un vase. Les tiges, les espaces vides et les angles sont aussi importants que les fleurs.",
+      "insight": "L'ikebana enseigne la patience, la présence et l'économie de moyens — avec trois fleurs bien placées, on peut évoquer les saisons, la mort et la renaissance.",
+      "tag": "Traditions",
+      "emoji": "🌺"
+    },
+    {
+      "titre": "La culture de l'excuse sincère",
+      "contenu": "Au Japon, s'excuser est un acte profondément sérieux. Une entreprise qui commet une erreur organisera une conférence de presse avec des cadres en inclinaison profonde. L'excuse est publique, sincère, et vise à réparer le tissu social.",
+      "insight": "La fréquence des excuses japonaises n'est pas de la faiblesse — c'est la reconnaissance que chaque acte a un impact sur les autres, et que la communauté prime sur l'ego.",
+      "tag": "Social",
+      "emoji": "🙏"
+    },
+    {
+      "titre": "Ikigai : la raison d'être",
+      "contenu": "L'ikigai ('raison de vivre') est l'intersection entre ce qu'on aime, ce en quoi on est doué, ce dont le monde a besoin, et ce pour quoi on peut être payé. Les habitants d'Okinawa, parmi les plus âgés au monde, attribuent leur longévité à un ikigai fort.",
+      "insight": "Trouver son ikigai n'est pas un luxe mais une nécessité vitale — les études montrent que les personnes ayant un ikigai fort vivent plus longtemps et en meilleure santé.",
+      "tag": "Vie quotidienne",
+      "emoji": "🌟"
+    },
+    {
+      "titre": "Noren : le rideau qui sépare deux mondes",
+      "contenu": "Le noren est le rideau en tissu suspendu à l'entrée des commerces, restaurants et bains publics japonais. Passer dessous signifie entrer dans un espace différent — plus intime, plus accueillant.",
+      "insight": "Au-delà du symbole d'ouverture, le noren représente la réputation de l'établissement. 'Garder le noren propre' signifie honorer la tradition et les ancêtres fondateurs.",
+      "tag": "Traditions",
+      "emoji": "🏮"
+    },
+    {
+      "titre": "Mottainai : la philosophie anti-gaspillage",
+      "contenu": "Le mot mottainai exprime le regret face au gaspillage et implique de réparer, réutiliser et recycler avant de jeter. Cette philosophie ancienne est devenue un mouvement global porté par la Japonaise Wangari Maathai.",
+      "insight": "Le Japon a inventé le 'wrapping' d'emballage zéro-déchet il y a des siècles avec le furoshiki — bien avant que la durabilité devienne tendance.",
+      "tag": "Vie quotidienne",
+      "emoji": "♻️"
+    },
+    {
+      "titre": "Les wagashi : confiseries des saisons",
+      "contenu": "Les wagashi (confiseries traditionnelles) changent de forme et de couleur avec les saisons : fleurs de sakura en mars, feuilles d'érable rouges en automne, branches de pin en janvier. Chaque pièce est une sculpture éphémère.",
+      "insight": "Les wagashi incarnent la sensibilité japonaise aux saisons — manger une confiserie en forme de cerisier, c'est littéralement intégrer le printemps.",
+      "tag": "Gastronomie",
+      "emoji": "🌸"
+    },
+    {
+      "titre": "Le Golden Week : la grande transhumance",
+      "contenu": "La Golden Week (fin avril-début mai) regroupe quatre jours fériés en une semaine. C'est l'un des rares moments où les Japonais prennent vraiment des vacances — et tout le pays se déplace en même temps, créant des embouteillages épiques.",
+      "insight": "La Golden Week révèle le paradoxe japonais : un peuple qui travaille énormément mais qui, quand il s'arrête, le fait tous en même temps et avec une énergie collective extraordinaire.",
+      "tag": "Traditions",
+      "emoji": "🗾"
+    },
+    {
+      "titre": "Les maneki-neko : la chance à portée de patte",
+      "contenu": "Ce chat blanc aux yeux bridés qui lève une patte devant les commerces est le maneki-neko, le 'chat qui appelle'. La patte gauche levée attire les clients, la droite attire la chance et l'argent.",
+      "insight": "Le maneki-neko illustre la coexistence au Japon entre superstition populaire et modernité — la tradition animiste shinto se glisse discrètement dans la vie commerciale contemporaine.",
+      "tag": "Vie quotidienne",
+      "emoji": "🐱"
+    },
+    {
+      "titre": "Shōganai et la culture de la résilience",
+      "contenu": "Face au tremblement de terre et tsunami de 2011, les rescapés japonais ont fait la queue pour l'aide alimentaire, remercié les secouristes et refusé de piller. Le monde entier a été stupéfait par cette dignité collective face au chaos.",
+      "insight": "Le shōganai n'est pas de la résignation — c'est une force tranquille qui permet de traverser les pires épreuves sans perdre sa dignité ni sa cohésion communautaire.",
+      "tag": "Social",
+      "emoji": "🌊"
+    },
+    {
+      "titre": "La forêt de bambous d'Arashiyama",
+      "contenu": "La forêt de bambous de Sagano, à Kyoto, est classée parmi les sons à protéger par le gouvernement japonais. Le bruit du vent dans les bambous est considéré comme un patrimoine sonore national, tout aussi précieux que les monuments visuels.",
+      "insight": "Le Japon est l'un des rares pays à protéger officiellement des paysages sonores — une preuve que la perception sensorielle est aussi culturelle que politique.",
+      "tag": "Nature",
+      "emoji": "🎋"
+    },
+    {
+      "titre": "Hatsumode : le premier visit au temple",
+      "contenu": "Dans les premiers jours de janvier, des millions de Japonais se rendent dans les temples et sanctuaires pour leur première visite de l'année (hatsumode). On y tire des omikuji (prédictions), on achète des amulettes et on prie pour l'année à venir.",
+      "insight": "Le hatsumode rappelle que même dans un Japon ultra-moderne, les rituels spirituels structurent le temps collectif — l'entrée dans une nouvelle année reste un acte sacré.",
+      "tag": "Traditions",
+      "emoji": "🎍"
+    },
+    {
+      "titre": "L'art de plier : origami et furoshiki",
+      "contenu": "L'origami transforme une feuille de papier vierge en animal, fleur ou objet — sans colle ni ciseaux. Le furoshiki est son équivalent en tissu, permettant d'emballer n'importe quel objet dans un carré de tissu noué avec élégance.",
+      "insight": "Ces deux arts du pliage incarnent le principe japonais de 'faire plus avec moins' — l'économie de moyens comme forme suprême d'intelligence créative.",
+      "tag": "Traditions",
+      "emoji": "🦢"
+    },
+    {
+      "titre": "Salaryman : le guerrier moderne",
+      "contenu": "Le salaryman japonais est une figure culturelle emblématique : costume sombre, cartable, métro bondé à 7h, retours tardifs après les nomikai (soirées d'entreprise obligatoires). Cette culture du présentéisme est aussi respectée que critiquée.",
+      "insight": "Le salaryman cristallise la tension japonaise entre dévouement collectif et épanouissement personnel — un débat qui définit les grandes transformations sociales du Japon contemporain.",
+      "tag": "Social",
+      "emoji": "👔"
+    }
   ],
   "repas": [
-    {"nom_jp":"おにぎり","romaji":"Onigiri","traduction":"Boule de riz","moment":"petit-déjeuner","description":"Triangle de riz blanc emballé dans une feuille de nori, fourré de saumon, thon mayo ou prune umeboshi. Disponible dans tout konbini japonais, c'est le compagnon idéal du matin pressé.","fun_fact":"L'emballage en trois parties du konbini onigiri est une invention géniale : on tire sur une languette et le nori reste croustillant jusqu'à la dernière seconde.","emoji":"🍙"},
-    {"nom_jp":"味噌汁","romaji":"Miso shiru","traduction":"Soupe miso","moment":"petit-déjeuner","description":"Soupe chaude à base de pâte de soja fermentée avec tofu soyeux, algues wakame et ciboule, servie dans un bol laqué. Légère et profonde à la fois, elle réveille doucement les sens.","fun_fact":"La soupe miso est souvent considérée comme un médicament au Japon — ses propriétés fermentées sont associées à la longévité et à la santé intestinale depuis des siècles.","emoji":"🍲"},
-    {"nom_jp":"玉子焼き","romaji":"Tamagoyaki","traduction":"Omelette roulée japonaise","moment":"petit-déjeuner","description":"Fine omelette sucrée-salée roulée en couches successives dans une poêle rectangulaire, servie tranchée en rectangles. Sa texture moelleuse et son goût légèrement sucré en font un incontournable du bento.","fun_fact":"La qualité du tamagoyaki est considérée comme le test ultime du talent d'un chef de sushi — sa préparation demande concentration et précision absolues.","emoji":"🥚"},
-    {"nom_jp":"ラーメン","romaji":"Ramen","traduction":"Nouilles en bouillon","moment":"déjeuner","description":"Bol généreux de nouilles de blé dans un bouillon riche — shoyu, miso, tonkotsu ou shio — garni de chashu, œuf mollet mariné, nori et ciboulette. Chaque région du Japon a son propre ramen.","fun_fact":"À Sapporo, le ramen miso est né d'une erreur d'un chef qui tomba son riz dans la soupe — une heureuse improvisation devenue tradition régionale.","emoji":"🍜"},
-    {"nom_jp":"カレーライス","romaji":"Karē raisu","traduction":"Riz au curry japonais","moment":"déjeuner","description":"Curry épais et doux, très différent de son cousin indien, servi sur du riz japonais avec des morceaux de légumes et de viande. Considéré comme plat national non officiel.","fun_fact":"Les soldats de la Marine japonaise mangent du curry tous les vendredis depuis des décennies — une tradition née pour garder le compte des jours en mer.","emoji":"🍛"},
-    {"nom_jp":"寿司","romaji":"Sushi","traduction":"Riz vinaigré et garnitures","moment":"déjeuner","description":"Petites boulettes de riz assaisonné coiffées de poisson cru, crevettes ou tamago, à tremper délicatement dans la sauce soja avec une pointe de wasabi. Au Japon, la fraîcheur est une religion.","fun_fact":"Le sushi était à l'origine un mode de conservation : le poisson était fermenté plusieurs mois avec du riz. La version actuelle que nous connaissons n'a que deux siècles.","emoji":"🍣"},
-    {"nom_jp":"うどん","romaji":"Udon","traduction":"Épaisses nouilles de blé","moment":"déjeuner","description":"Grosses nouilles blanches et élastiques dans un bouillon dashi léger, accompagnées de tempura, tofu frit ou champignons. Plat réconfortant par excellence, surtout en hiver.","fun_fact":"À Kagawa, la capitale de l'udon, il y a plus de restaurants udon que de feux rouges. Les habitants mangent de l'udon jusqu'à trois fois par jour.","emoji":"🍝"},
-    {"nom_jp":"天ぷら","romaji":"Tempura","traduction":"Friture légère en pâte","moment":"déjeuner","description":"Légumes ou crevettes enrobés dans une pâte ultra-légère et frits dans de l'huile fraîche, servis avec un dipping de dashi, sauce soja et radis râpé. La pâte doit être préparée avec de l'eau glacée.","fun_fact":"La tempura a été introduite au Japon par les missionnaires portugais au XVIe siècle lors des jours de jeûne (Quatuor temporum) — d'où son nom.","emoji":"🦐"},
-    {"nom_jp":"焼き鳥","romaji":"Yakitori","traduction":"Brochettes de poulet grillé","moment":"dîner","description":"Morceaux de poulet grillés sur charbon de bois (binchōtan), nappés de tare ou simplement salés. Servis dans les izakaya, ils sont inséparables d'un verre de bière froide.","fun_fact":"Le binchōtan est un charbon blanc très pur qui brûle sans fumée — il crée une chaleur infrarouge douce qui cuit le yakitori de l'intérieur sans le brûler.","emoji":"🍢"},
-    {"nom_jp":"お好み焼き","romaji":"Okonomiyaki","traduction":"Galette japonaise 'comme tu aimes'","moment":"dîner","description":"Galette épaisse à base de chou, œufs et farine, garnie selon les goûts. Cuite sur une plaque chauffante à table, nappée de sauce okono, mayo japonaise et bonite séchée qui danse dans la vapeur.","fun_fact":"Il existe deux versions rivales : l'okonomiyaki d'Osaka (mélangé) et celui d'Hiroshima (en couches). Les habitants de chaque ville considèrent que leur version est la seule vraie.","emoji":"🥞"},
-    {"nom_jp":"抹茶ラテ","romaji":"Matcha latte","traduction":"Latte au thé matcha","moment":"goûter","description":"Poudre de thé vert matcha émulsionnée dans du lait chaud ou froid, légèrement sucrée. Sa couleur vert vif et son goût umami intense en ont fait un symbole de la culture japonaise mondiale.","fun_fact":"Le vrai matcha de cérémonie est l'un des produits les plus tracés du Japon — chaque lot est identifiable jusqu'à la parcelle de théiers qui l'a produit.","emoji":"🍵"},
-    {"nom_jp":"たこ焼き","romaji":"Takoyaki","traduction":"Boulettes de pieuvre","moment":"goûter","description":"Petites boules de pâte croustillante farcies de morceaux de pieuvre, gingembre mariné et ciboule. Servies brûlantes couvertes de sauce, mayo et katsuobushi qui danse dans la vapeur.","fun_fact":"À Osaka, le takoyaki est une obsession culturelle — les Osakiens possèdent souvent leur propre moule à la maison pour en préparer le week-end en famille.","emoji":"🐙"},
-    {"nom_jp":"どら焼き","romaji":"Dorayaki","traduction":"Deux pancakes au haricot rouge","moment":"goûter","description":"Deux petits pancakes moelleux assemblés autour d'une couche généreuse d'anko (pâte de haricots rouges sucrés). Simple, réconfortant, et universellement aimé des enfants comme des grands.","fun_fact":"Le dorayaki est la friandise préférée de Doraemon, le célèbre chat robot du manga — sa popularité a rendu ce gâteau traditionnel iconique dans le monde entier.","emoji":"🥮"},
-    {"nom_jp":"日本酒","romaji":"Nihonshu","traduction":"Alcool de riz japonais","moment":"dîner","description":"Alcool fermenté à base de riz poli, aux arômes floraux, fruités ou umami. Servi chaud (atsukan) en hiver dans une tokkuri ou frais (rei-shu) dans un verre à pied en été.","fun_fact":"La qualité du sake dépend du taux de polissage du riz : un daiginjo est poli à plus de 50%, ne gardant que le cœur du grain — un processus qui peut durer 48 heures.","emoji":"🍶"},
-    {"nom_jp":"茶碗蒸し","romaji":"Chawanmushi","traduction":"Flan d'œuf cuit à la vapeur","moment":"dîner","description":"Flan savoureux d'œufs et de dashi cuit à la vapeur dans une tasse couverte, avec des morceaux de poulet, kamaboko et champignons shiitake. Sa texture incroyablement soyeuse est un voyage en soi.","fun_fact":"Pour tester si le dashi est de qualité, les chefs japonais trempent un doigt et le goûtent — il doit avoir de la profondeur sans être salé ni trop prononcé.","emoji":"🍮"},
-    {"nom_jp":"ざるそば","romaji":"Zaru soba","traduction":"Soba froid sur plateau d'osier","moment":"déjeuner","description":"Nouilles de sarrasin refroidies servies sur un plateau en bambou avec un tsuyu (bouillon froid) pour tremper, du wasabi et de la ciboule. Élégant, léger, parfait en été.","fun_fact":"Il est de tradition de terminer les restes du tsuyu en versant de l'eau chaude de cuisson des soba dedans — une boisson appelée sobayu, riche en nutriments.","emoji":"🎍"},
-    {"nom_jp":"抹茶アイスクリーム","romaji":"Matcha aisu kuriimu","traduction":"Glace au thé matcha","moment":"goûter","description":"Crème glacée d'un vert intense, au goût légèrement amer et végétal du matcha, souvent servie en cône ou en coupe avec des mochi. Incontournable dans tout parc ou rue commerçante du Japon.","fun_fact":"Le matcha utilisé dans les glaces japonaises est généralement de grade culinaire, différent du matcha de cérémonie — mais sa couleur vibrante est garantie par la teneur en chlorophylle.","emoji":"🍦"},
-    {"nom_jp":"焼き魚","romaji":"Yakizakana","traduction":"Poisson grillé au charbon","moment":"petit-déjeuner","description":"Filet de saumon, maquereau ou brème grillé sur charbon et servi avec du riz blanc, miso et cornichons. Le petit-déjeuner japonais traditionnel — simple, nourrissant et profondément réconfortant.","fun_fact":"Au Japon, il est courant de manger du poisson au petit-déjeuner depuis plus de 1000 ans — une tradition liée aux préceptes bouddhistes qui interdisaient la viande.","emoji":"🐟"},
-    {"nom_jp":"かき氷","romaji":"Kakigōri","traduction":"Glace pilée aux sirops","moment":"goûter","description":"Montagne de glace finement pilée arrosée de sirop de fraise, melon, azuki ou matcha, parfois couronnée de lait concentré et de mochi. Le dessert emblématique de l'été japonais.","fun_fact":"Des boutiques spécialisées en kakigōri à Tokyo utilisent de la glace naturelle taillée dans des lacs de montagne — une pratique qui remonte à l'époque Heian.","emoji":"🧊"},
-    {"nom_jp":"鍋料理","romaji":"Nabe ryōri","traduction":"Fondue japonaise","moment":"dîner","description":"Pot de bouillon frémissant au centre de la table, dans lequel on plonge légumes, tofu, champignons, crevettes et viandes fines. Le nabe est un repas social par excellence — on mange ensemble, au même rythme.","fun_fact":"En japonais, 'nabe wo kakomu' (s'asseoir autour du nabe) est une expression pour désigner un moment de partage intime — le nabe est un vecteur de rapprochement familial.","emoji":"🫕"}
+    {
+      "nom_jp": "おにぎり",
+      "romaji": "Onigiri",
+      "traduction": "Boule de riz",
+      "moment": "petit-déjeuner",
+      "description": "Triangle de riz blanc emballé dans une feuille de nori, fourré de saumon, thon mayo ou prune umeboshi. Disponible dans tout konbini japonais, c'est le compagnon idéal du matin pressé.",
+      "fun_fact": "L'emballage en trois parties du konbini onigiri est une invention géniale : on tire sur une languette et le nori reste croustillant jusqu'à la dernière seconde.",
+      "emoji": "🍙"
+    },
+    {
+      "nom_jp": "味噌汁",
+      "romaji": "Miso shiru",
+      "traduction": "Soupe miso",
+      "moment": "petit-déjeuner",
+      "description": "Soupe chaude à base de pâte de soja fermentée avec tofu soyeux, algues wakame et ciboule, servie dans un bol laqué. Légère et profonde à la fois, elle réveille doucement les sens.",
+      "fun_fact": "La soupe miso est souvent considérée comme un médicament au Japon — ses propriétés fermentées sont associées à la longévité et à la santé intestinale depuis des siècles.",
+      "emoji": "🍲"
+    },
+    {
+      "nom_jp": "玉子焼き",
+      "romaji": "Tamagoyaki",
+      "traduction": "Omelette roulée japonaise",
+      "moment": "petit-déjeuner",
+      "description": "Fine omelette sucrée-salée roulée en couches successives dans une poêle rectangulaire, servie tranchée en rectangles. Sa texture moelleuse et son goût légèrement sucré en font un incontournable du bento.",
+      "fun_fact": "La qualité du tamagoyaki est considérée comme le test ultime du talent d'un chef de sushi — sa préparation demande concentration et précision absolues.",
+      "emoji": "🥚"
+    },
+    {
+      "nom_jp": "ラーメン",
+      "romaji": "Ramen",
+      "traduction": "Nouilles en bouillon",
+      "moment": "déjeuner",
+      "description": "Bol généreux de nouilles de blé dans un bouillon riche — shoyu, miso, tonkotsu ou shio — garni de chashu, œuf mollet mariné, nori et ciboulette. Chaque région du Japon a son propre ramen.",
+      "fun_fact": "À Sapporo, le ramen miso est né d'une erreur d'un chef qui tomba son riz dans la soupe — une heureuse improvisation devenue tradition régionale.",
+      "emoji": "🍜"
+    },
+    {
+      "nom_jp": "カレーライス",
+      "romaji": "Karē raisu",
+      "traduction": "Riz au curry japonais",
+      "moment": "déjeuner",
+      "description": "Curry épais et doux, très différent de son cousin indien, servi sur du riz japonais avec des morceaux de légumes et de viande. Considéré comme plat national non officiel.",
+      "fun_fact": "Les soldats de la Marine japonaise mangent du curry tous les vendredis depuis des décennies — une tradition née pour garder le compte des jours en mer.",
+      "emoji": "🍛"
+    },
+    {
+      "nom_jp": "寿司",
+      "romaji": "Sushi",
+      "traduction": "Riz vinaigré et garnitures",
+      "moment": "déjeuner",
+      "description": "Petites boulettes de riz assaisonné coiffées de poisson cru, crevettes ou tamago, à tremper délicatement dans la sauce soja avec une pointe de wasabi. Au Japon, la fraîcheur est une religion.",
+      "fun_fact": "Le sushi était à l'origine un mode de conservation : le poisson était fermenté plusieurs mois avec du riz. La version actuelle que nous connaissons n'a que deux siècles.",
+      "emoji": "🍣"
+    },
+    {
+      "nom_jp": "うどん",
+      "romaji": "Udon",
+      "traduction": "Épaisses nouilles de blé",
+      "moment": "déjeuner",
+      "description": "Grosses nouilles blanches et élastiques dans un bouillon dashi léger, accompagnées de tempura, tofu frit ou champignons. Plat réconfortant par excellence, surtout en hiver.",
+      "fun_fact": "À Kagawa, la capitale de l'udon, il y a plus de restaurants udon que de feux rouges. Les habitants mangent de l'udon jusqu'à trois fois par jour.",
+      "emoji": "🍝"
+    },
+    {
+      "nom_jp": "天ぷら",
+      "romaji": "Tempura",
+      "traduction": "Friture légère en pâte",
+      "moment": "déjeuner",
+      "description": "Légumes ou crevettes enrobés dans une pâte ultra-légère et frits dans de l'huile fraîche, servis avec un dipping de dashi, sauce soja et radis râpé. La pâte doit être préparée avec de l'eau glacée.",
+      "fun_fact": "La tempura a été introduite au Japon par les missionnaires portugais au XVIe siècle lors des jours de jeûne (Quatuor temporum) — d'où son nom.",
+      "emoji": "🦐"
+    },
+    {
+      "nom_jp": "焼き鳥",
+      "romaji": "Yakitori",
+      "traduction": "Brochettes de poulet grillé",
+      "moment": "dîner",
+      "description": "Morceaux de poulet grillés sur charbon de bois (binchōtan), nappés de tare ou simplement salés. Servis dans les izakaya, ils sont inséparables d'un verre de bière froide.",
+      "fun_fact": "Le binchōtan est un charbon blanc très pur qui brûle sans fumée — il crée une chaleur infrarouge douce qui cuit le yakitori de l'intérieur sans le brûler.",
+      "emoji": "🍢"
+    },
+    {
+      "nom_jp": "お好み焼き",
+      "romaji": "Okonomiyaki",
+      "traduction": "Galette japonaise 'comme tu aimes'",
+      "moment": "dîner",
+      "description": "Galette épaisse à base de chou, œufs et farine, garnie selon les goûts. Cuite sur une plaque chauffante à table, nappée de sauce okono, mayo japonaise et bonite séchée qui danse dans la vapeur.",
+      "fun_fact": "Il existe deux versions rivales : l'okonomiyaki d'Osaka (mélangé) et celui d'Hiroshima (en couches). Les habitants de chaque ville considèrent que leur version est la seule vraie.",
+      "emoji": "🥞"
+    },
+    {
+      "nom_jp": "抹茶ラテ",
+      "romaji": "Matcha latte",
+      "traduction": "Latte au thé matcha",
+      "moment": "goûter",
+      "description": "Poudre de thé vert matcha émulsionnée dans du lait chaud ou froid, légèrement sucrée. Sa couleur vert vif et son goût umami intense en ont fait un symbole de la culture japonaise mondiale.",
+      "fun_fact": "Le vrai matcha de cérémonie est l'un des produits les plus tracés du Japon — chaque lot est identifiable jusqu'à la parcelle de théiers qui l'a produit.",
+      "emoji": "🍵"
+    },
+    {
+      "nom_jp": "たこ焼き",
+      "romaji": "Takoyaki",
+      "traduction": "Boulettes de pieuvre",
+      "moment": "goûter",
+      "description": "Petites boules de pâte croustillante farcies de morceaux de pieuvre, gingembre mariné et ciboule. Servies brûlantes couvertes de sauce, mayo et katsuobushi qui danse dans la vapeur.",
+      "fun_fact": "À Osaka, le takoyaki est une obsession culturelle — les Osakiens possèdent souvent leur propre moule à la maison pour en préparer le week-end en famille.",
+      "emoji": "🐙"
+    },
+    {
+      "nom_jp": "どら焼き",
+      "romaji": "Dorayaki",
+      "traduction": "Deux pancakes au haricot rouge",
+      "moment": "goûter",
+      "description": "Deux petits pancakes moelleux assemblés autour d'une couche généreuse d'anko (pâte de haricots rouges sucrés). Simple, réconfortant, et universellement aimé des enfants comme des grands.",
+      "fun_fact": "Le dorayaki est la friandise préférée de Doraemon, le célèbre chat robot du manga — sa popularité a rendu ce gâteau traditionnel iconique dans le monde entier.",
+      "emoji": "🥮"
+    },
+    {
+      "nom_jp": "日本酒",
+      "romaji": "Nihonshu",
+      "traduction": "Alcool de riz japonais",
+      "moment": "dîner",
+      "description": "Alcool fermenté à base de riz poli, aux arômes floraux, fruités ou umami. Servi chaud (atsukan) en hiver dans une tokkuri ou frais (rei-shu) dans un verre à pied en été.",
+      "fun_fact": "La qualité du sake dépend du taux de polissage du riz : un daiginjo est poli à plus de 50%, ne gardant que le cœur du grain — un processus qui peut durer 48 heures.",
+      "emoji": "🍶"
+    },
+    {
+      "nom_jp": "茶碗蒸し",
+      "romaji": "Chawanmushi",
+      "traduction": "Flan d'œuf cuit à la vapeur",
+      "moment": "dîner",
+      "description": "Flan savoureux d'œufs et de dashi cuit à la vapeur dans une tasse couverte, avec des morceaux de poulet, kamaboko et champignons shiitake. Sa texture incroyablement soyeuse est un voyage en soi.",
+      "fun_fact": "Pour tester si le dashi est de qualité, les chefs japonais trempent un doigt et le goûtent — il doit avoir de la profondeur sans être salé ni trop prononcé.",
+      "emoji": "🍮"
+    },
+    {
+      "nom_jp": "ざるそば",
+      "romaji": "Zaru soba",
+      "traduction": "Soba froid sur plateau d'osier",
+      "moment": "déjeuner",
+      "description": "Nouilles de sarrasin refroidies servies sur un plateau en bambou avec un tsuyu (bouillon froid) pour tremper, du wasabi et de la ciboule. Élégant, léger, parfait en été.",
+      "fun_fact": "Il est de tradition de terminer les restes du tsuyu en versant de l'eau chaude de cuisson des soba dedans — une boisson appelée sobayu, riche en nutriments.",
+      "emoji": "🎍"
+    },
+    {
+      "nom_jp": "抹茶アイスクリーム",
+      "romaji": "Matcha aisu kuriimu",
+      "traduction": "Glace au thé matcha",
+      "moment": "goûter",
+      "description": "Crème glacée d'un vert intense, au goût légèrement amer et végétal du matcha, souvent servie en cône ou en coupe avec des mochi. Incontournable dans tout parc ou rue commerçante du Japon.",
+      "fun_fact": "Le matcha utilisé dans les glaces japonaises est généralement de grade culinaire, différent du matcha de cérémonie — mais sa couleur vibrante est garantie par la teneur en chlorophylle.",
+      "emoji": "🍦"
+    },
+    {
+      "nom_jp": "焼き魚",
+      "romaji": "Yakizakana",
+      "traduction": "Poisson grillé au charbon",
+      "moment": "petit-déjeuner",
+      "description": "Filet de saumon, maquereau ou brème grillé sur charbon et servi avec du riz blanc, miso et cornichons. Le petit-déjeuner japonais traditionnel — simple, nourrissant et profondément réconfortant.",
+      "fun_fact": "Au Japon, il est courant de manger du poisson au petit-déjeuner depuis plus de 1000 ans — une tradition liée aux préceptes bouddhistes qui interdisaient la viande.",
+      "emoji": "🐟"
+    },
+    {
+      "nom_jp": "かき氷",
+      "romaji": "Kakigōri",
+      "traduction": "Glace pilée aux sirops",
+      "moment": "goûter",
+      "description": "Montagne de glace finement pilée arrosée de sirop de fraise, melon, azuki ou matcha, parfois couronnée de lait concentré et de mochi. Le dessert emblématique de l'été japonais.",
+      "fun_fact": "Des boutiques spécialisées en kakigōri à Tokyo utilisent de la glace naturelle taillée dans des lacs de montagne — une pratique qui remonte à l'époque Heian.",
+      "emoji": "🧊"
+    },
+    {
+      "nom_jp": "鍋料理",
+      "romaji": "Nabe ryōri",
+      "traduction": "Fondue japonaise",
+      "moment": "dîner",
+      "description": "Pot de bouillon frémissant au centre de la table, dans lequel on plonge légumes, tofu, champignons, crevettes et viandes fines. Le nabe est un repas social par excellence — on mange ensemble, au même rythme.",
+      "fun_fact": "En japonais, 'nabe wo kakomu' (s'asseoir autour du nabe) est une expression pour désigner un moment de partage intime — le nabe est un vecteur de rapprochement familial.",
+      "emoji": "🫕"
+    }
   ],
   "songs": [
-    {"titre":"Plastic Love","artiste":"Mariya Takeuchi","genre":"City Pop","annee":"1984","histoire":"Sortie discrètement en 1984, cette chanson a resurgi avec force en 2017 grâce à un algorithme YouTube mystérieux qui l'a recommandée à des millions de personnes dans le monde. Sa basse irrésistible et la voix soyeuse de Takeuchi incarnent l'essence du City Pop tokyoïte.","pourquoi_japon":"Plastic Love capture l'âme de Tokyo la nuit — lumineuse, solitaire, magnifiquement superficielle et profondément mélancolique.","youtube_query":"Mariya Takeuchi Plastic Love 1984","emoji":"🌃"},
-    {"titre":"Sukiyaki (上を向いて歩こう)","artiste":"Kyu Sakamoto","genre":"Enka","annee":"1961","histoire":"Première chanson japonaise à atteindre le numéro 1 aux États-Unis en 1963, son vrai titre signifie 'Je marche la tête levée pour que mes larmes ne coulent pas' — une chanson sur la dignité dans la douleur.","pourquoi_japon":"Elle incarne le stoïcisme japonais : sourire au monde même quand le cœur pleure, continuer à avancer la tête haute.","youtube_query":"Kyu Sakamoto Sukiyaki 上を向いて歩こう","emoji":"🌟"},
-    {"titre":"First Love","artiste":"Hikaru Utada","genre":"J-Pop","annee":"1999","histoire":"Album le plus vendu de l'histoire du Japon, First Love a fait d'Utada une icône à 16 ans. La chanson titre est une ballade pure sur les premières amours et la mélancolie du souvenir.","pourquoi_japon":"First Love capture la natsukashii — cette nostalgie douce-amère qui rend les souvenirs d'amour plus beaux dans la distance que dans leur vécu.","youtube_query":"Hikaru Utada First Love official","emoji":"💿"},
-    {"titre":"Idol (アイドル)","artiste":"YOASOBI","genre":"J-Pop","annee":"2023","histoire":"Opening de l'anime Oshi no Ko, cette chanson fracasse tous les records en devenant le premier single japonais à atteindre le top 1 mondial Spotify. Sa production électronique frénétique contraste avec des paroles sur la fausseté de l'image.","pourquoi_japon":"Idol interroge le paradoxe japonais : sourire parfait imposé à ceux dont le rôle est de rendre les autres heureux — une critique intime d'une culture du paraître.","youtube_query":"YOASOBI アイドル Idol official","emoji":"⭐"},
-    {"titre":"Haru yo Koi (春よ、来い)","artiste":"Yumi Matsutoya","genre":"J-Pop","annee":"1994","histoire":"Yumi Matsutoya (Yuming) est à la J-Pop ce que Celine Dion est à la pop francophone. Haru yo Koi, 'Viens, printemps', est une prière musicale au retour du printemps avec des arrangements orchestraux somptueux.","pourquoi_japon":"Yuming a composé des hymnes aux saisons japonaises pendant 50 ans — son amour de kisetsu et de leurs transitions est le fil directeur de toute son œuvre.","youtube_query":"松任谷由実 春よ来い Haru yo Koi","emoji":"🌸"},
-    {"titre":"Calling","artiste":"Hiromi Uehara","genre":"Jazz japonais","annee":"2006","histoire":"Pianiste de jazz prodige, Hiromi Uehara a explosé sur la scène internationale avec une technique stupéfiante et une énergie quasi-électrique. Calling mêle jazz, prog rock et virtuosité dans une performance qui laisse sans voix.","pourquoi_japon":"Hiromi représente l'esprit shokunin appliqué au jazz — des années de discipline jusqu'à la maîtrise totale, puis l'explosion de liberté que seule la rigueur peut libérer.","youtube_query":"Hiromi Uehara Calling live jazz","emoji":"🎷"},
-    {"titre":"Koi (恋)","artiste":"Gen Hoshino","genre":"J-Pop","annee":"2016","histoire":"Opening du drama Nigeru wa Haji da ga Yaku ni Tatsu, cette chanson ensoleillée a engendré le 'Koi Dance' — une chorégraphie devenue virale dans tout le Japon, dansée par des millions de personnes.","pourquoi_japon":"Koi illustre la culture japonaise des 'boom' collectifs — quand quelque chose prend, tout le pays se mobilise avec un enthousiasme coordonné et sincère.","youtube_query":"Gen Hoshino 恋 Koi dance official","emoji":"💃"},
-    {"titre":"Yakusoku no Neverland (約束のネバーランド OP)","artiste":"UVERworld","genre":"Anime OST","annee":"2019","histoire":"Opening de l'anime The Promised Neverland, cette chanson rock puissante construit une tension dramatique parfaite avant chaque épisode. UVERworld est connu pour ses progressions complexes et ses textes philosophiques.","pourquoi_japon":"Les openings d'anime japonais sont un genre musical à part entière — ils condensent toute l'atmosphère d'une série en 90 secondes, un exercice d'économie émotionnelle.","youtube_query":"UVERworld 約束のネバーランド op full","emoji":"🎭"},
-    {"titre":"Furusato (ふるさと)","artiste":"Traditionnel / Reprise Arashi","genre":"Folk japonais","annee":"Traditionnel","histoire":"L'une des chansons les plus connues et aimées du Japon, Furusato ('pays natal') est apprise par tous les enfants japonais. Elle évoque le village d'enfance, les montagnes et la rivière — même pour ceux qui ont grandi en ville.","pourquoi_japon":"Furusato incarne le concept de natsukashii appliqué au lieu — cette nostalgie du pays natal qui habite tout Japonais, réel ou imaginaire.","youtube_query":"ふるさと Furusato Japanese traditional song","emoji":"🏔️"},
-    {"titre":"Rouge (紅)","artiste":"X Japan","genre":"J-Rock","annee":"1989","histoire":"Hymne fondateur du Visual Kei, ce power ballad déchirant de X Japan est né d'une histoire d'amour tragique vécue par le compositeur Yoshiki. La batterie jouée jusqu'au sang lors des concerts est devenue légendaire.","pourquoi_japon":"Rouge capture l'intensité émotionnelle japonaise — cette capacité à ressentir et exprimer la douleur et la beauté avec une égale démesure, sans retenue.","youtube_query":"X Japan 紅 Kurenai live","emoji":"🎸"},
-    {"titre":"Ue wo Muite Arukō","artiste":"Kyu Sakamoto","genre":"J-Pop","annee":"1963","histoire":"Traduite en 40 langues et vendue à plus de 13 millions d'exemplaires dans le monde, cette chanson reste le single japonais le plus vendu à l'international. Elle a été chantée par des astronautes dans l'espace.","pourquoi_japon":"Son universalité vient de sa promesse simple : même dans la douleur, lever la tête. Un message japonais d'une élégance et d'une dignité intemporelles.","youtube_query":"Kyu Sakamoto Ue wo Muite Aruko original","emoji":"🌠"},
-    {"titre":"Renai Circulation (恋愛サーキュレーション)","artiste":"Kana Hanazawa","genre":"Anime OST","annee":"2010","histoire":"Opening de l'arc Nadeko Snake dans Bakemonogatari, cette chanson poppy et légèrement mélancolique est devenue l'un des mèmes musicaux les plus partagés d'internet, transcendant largement son public d'origine.","pourquoi_japon":"La capacité des animes japonais à créer des hymnes qui traversent les cultures illustre le soft power culturel unique du Japon dans le monde contemporain.","youtube_query":"Kana Hanazawa 恋愛サーキュレーション Renai Circulation","emoji":"💗"},
-    {"titre":"Ryūsei (流星)","artiste":"Gen Hoshino","genre":"J-Pop","annee":"2021","histoire":"Une des chansons les plus touchantes de Gen Hoshino, Ryūsei ('étoile filante') aborde le thème du deuil et de l'amour avec une délicatesse rare. Écrite en hommage à un ami disparu, elle a touché des millions de Japonais.","pourquoi_japon":"Ryūsei illustre la façon japonaise d'aborder la mort — avec douceur, métaphores naturelles et la conviction que les liens ne disparaissent pas vraiment.","youtube_query":"Gen Hoshino 流星 Ryūsei MV","emoji":"💫"},
-    {"titre":"Nandemonaiya (なんでもないや)","artiste":"RADWIMPS","genre":"Anime OST","annee":"2016","histoire":"Tiré du film 'Your Name' (Kimi no Na Wa) de Makoto Shinkai, ce titre a accompagné l'un des plus grands succès du cinéma d'animation mondial. Sa mélodie simple cache une profondeur émotionnelle dévastatrice.","pourquoi_japon":"'Your Name' et sa musique ont montré au monde que l'anime peut toucher des thèmes universels — le destin, l'amour, la mémoire — avec une finesse que peu de cinémas atteignent.","youtube_query":"RADWIMPS なんでもないや nandemonaiya your name","emoji":"🎬"},
-    {"titre":"Mayonaka no Door (真夜中のドア)","artiste":"Miki Matsubara","genre":"City Pop","annee":"1979","histoire":"Quasi-inconnue à sa sortie, cette chanson est devenue un phénomène mondial grâce à TikTok et YouTube en 2020. Sa mélodie disco-jazzy et la voix veloutée de Matsubara ont capturé des auditeurs à des milliers de kilomètres du Japon.","pourquoi_japon":"Le revival mondial du City Pop autour de cette chanson montre que la nostalgie japonaise des années 80 résonne universellement — une époque de croissance, de lumières et d'espoir collectif.","youtube_query":"Miki Matsubara 真夜中のドア Stay With Me","emoji":"🚪"}
+    {
+      "titre": "Plastic Love",
+      "artiste": "Mariya Takeuchi",
+      "genre": "City Pop",
+      "annee": "1984",
+      "histoire": "Sortie discrètement en 1984, cette chanson a resurgi avec force en 2017 grâce à un algorithme YouTube mystérieux qui l'a recommandée à des millions de personnes dans le monde. Sa basse irrésistible et la voix soyeuse de Takeuchi incarnent l'essence du City Pop tokyoïte.",
+      "pourquoi_japon": "Plastic Love capture l'âme de Tokyo la nuit — lumineuse, solitaire, magnifiquement superficielle et profondément mélancolique.",
+      "youtube_query": "Mariya Takeuchi Plastic Love 1984",
+      "emoji": "🌃"
+    },
+    {
+      "titre": "Sukiyaki (上を向いて歩こう)",
+      "artiste": "Kyu Sakamoto",
+      "genre": "Enka",
+      "annee": "1961",
+      "histoire": "Première chanson japonaise à atteindre le numéro 1 aux États-Unis en 1963, son vrai titre signifie 'Je marche la tête levée pour que mes larmes ne coulent pas' — une chanson sur la dignité dans la douleur.",
+      "pourquoi_japon": "Elle incarne le stoïcisme japonais : sourire au monde même quand le cœur pleure, continuer à avancer la tête haute.",
+      "youtube_query": "Kyu Sakamoto Sukiyaki 上を向いて歩こう",
+      "emoji": "🌟"
+    },
+    {
+      "titre": "First Love",
+      "artiste": "Hikaru Utada",
+      "genre": "J-Pop",
+      "annee": "1999",
+      "histoire": "Album le plus vendu de l'histoire du Japon, First Love a fait d'Utada une icône à 16 ans. La chanson titre est une ballade pure sur les premières amours et la mélancolie du souvenir.",
+      "pourquoi_japon": "First Love capture la natsukashii — cette nostalgie douce-amère qui rend les souvenirs d'amour plus beaux dans la distance que dans leur vécu.",
+      "youtube_query": "Hikaru Utada First Love official",
+      "emoji": "💿"
+    },
+    {
+      "titre": "Idol (アイドル)",
+      "artiste": "YOASOBI",
+      "genre": "J-Pop",
+      "annee": "2023",
+      "histoire": "Opening de l'anime Oshi no Ko, cette chanson fracasse tous les records en devenant le premier single japonais à atteindre le top 1 mondial Spotify. Sa production électronique frénétique contraste avec des paroles sur la fausseté de l'image.",
+      "pourquoi_japon": "Idol interroge le paradoxe japonais : sourire parfait imposé à ceux dont le rôle est de rendre les autres heureux — une critique intime d'une culture du paraître.",
+      "youtube_query": "YOASOBI アイドル Idol official",
+      "emoji": "⭐"
+    },
+    {
+      "titre": "Haru yo Koi (春よ、来い)",
+      "artiste": "Yumi Matsutoya",
+      "genre": "J-Pop",
+      "annee": "1994",
+      "histoire": "Yumi Matsutoya (Yuming) est à la J-Pop ce que Celine Dion est à la pop francophone. Haru yo Koi, 'Viens, printemps', est une prière musicale au retour du printemps avec des arrangements orchestraux somptueux.",
+      "pourquoi_japon": "Yuming a composé des hymnes aux saisons japonaises pendant 50 ans — son amour de kisetsu et de leurs transitions est le fil directeur de toute son œuvre.",
+      "youtube_query": "松任谷由実 春よ来い Haru yo Koi",
+      "emoji": "🌸"
+    },
+    {
+      "titre": "Calling",
+      "artiste": "Hiromi Uehara",
+      "genre": "Jazz japonais",
+      "annee": "2006",
+      "histoire": "Pianiste de jazz prodige, Hiromi Uehara a explosé sur la scène internationale avec une technique stupéfiante et une énergie quasi-électrique. Calling mêle jazz, prog rock et virtuosité dans une performance qui laisse sans voix.",
+      "pourquoi_japon": "Hiromi représente l'esprit shokunin appliqué au jazz — des années de discipline jusqu'à la maîtrise totale, puis l'explosion de liberté que seule la rigueur peut libérer.",
+      "youtube_query": "Hiromi Uehara Calling live jazz",
+      "emoji": "🎷"
+    },
+    {
+      "titre": "Koi (恋)",
+      "artiste": "Gen Hoshino",
+      "genre": "J-Pop",
+      "annee": "2016",
+      "histoire": "Opening du drama Nigeru wa Haji da ga Yaku ni Tatsu, cette chanson ensoleillée a engendré le 'Koi Dance' — une chorégraphie devenue virale dans tout le Japon, dansée par des millions de personnes.",
+      "pourquoi_japon": "Koi illustre la culture japonaise des 'boom' collectifs — quand quelque chose prend, tout le pays se mobilise avec un enthousiasme coordonné et sincère.",
+      "youtube_query": "Gen Hoshino 恋 Koi dance official",
+      "emoji": "💃"
+    },
+    {
+      "titre": "Yakusoku no Neverland (約束のネバーランド OP)",
+      "artiste": "UVERworld",
+      "genre": "Anime OST",
+      "annee": "2019",
+      "histoire": "Opening de l'anime The Promised Neverland, cette chanson rock puissante construit une tension dramatique parfaite avant chaque épisode. UVERworld est connu pour ses progressions complexes et ses textes philosophiques.",
+      "pourquoi_japon": "Les openings d'anime japonais sont un genre musical à part entière — ils condensent toute l'atmosphère d'une série en 90 secondes, un exercice d'économie émotionnelle.",
+      "youtube_query": "UVERworld 約束のネバーランド op full",
+      "emoji": "🎭"
+    },
+    {
+      "titre": "Furusato (ふるさと)",
+      "artiste": "Traditionnel / Reprise Arashi",
+      "genre": "Folk japonais",
+      "annee": "Traditionnel",
+      "histoire": "L'une des chansons les plus connues et aimées du Japon, Furusato ('pays natal') est apprise par tous les enfants japonais. Elle évoque le village d'enfance, les montagnes et la rivière — même pour ceux qui ont grandi en ville.",
+      "pourquoi_japon": "Furusato incarne le concept de natsukashii appliqué au lieu — cette nostalgie du pays natal qui habite tout Japonais, réel ou imaginaire.",
+      "youtube_query": "ふるさと Furusato Japanese traditional song",
+      "emoji": "🏔️"
+    },
+    {
+      "titre": "Rouge (紅)",
+      "artiste": "X Japan",
+      "genre": "J-Rock",
+      "annee": "1989",
+      "histoire": "Hymne fondateur du Visual Kei, ce power ballad déchirant de X Japan est né d'une histoire d'amour tragique vécue par le compositeur Yoshiki. La batterie jouée jusqu'au sang lors des concerts est devenue légendaire.",
+      "pourquoi_japon": "Rouge capture l'intensité émotionnelle japonaise — cette capacité à ressentir et exprimer la douleur et la beauté avec une égale démesure, sans retenue.",
+      "youtube_query": "X Japan 紅 Kurenai live",
+      "emoji": "🎸"
+    },
+    {
+      "titre": "Ue wo Muite Arukō",
+      "artiste": "Kyu Sakamoto",
+      "genre": "J-Pop",
+      "annee": "1963",
+      "histoire": "Traduite en 40 langues et vendue à plus de 13 millions d'exemplaires dans le monde, cette chanson reste le single japonais le plus vendu à l'international. Elle a été chantée par des astronautes dans l'espace.",
+      "pourquoi_japon": "Son universalité vient de sa promesse simple : même dans la douleur, lever la tête. Un message japonais d'une élégance et d'une dignité intemporelles.",
+      "youtube_query": "Kyu Sakamoto Ue wo Muite Aruko original",
+      "emoji": "🌠"
+    },
+    {
+      "titre": "Renai Circulation (恋愛サーキュレーション)",
+      "artiste": "Kana Hanazawa",
+      "genre": "Anime OST",
+      "annee": "2010",
+      "histoire": "Opening de l'arc Nadeko Snake dans Bakemonogatari, cette chanson poppy et légèrement mélancolique est devenue l'un des mèmes musicaux les plus partagés d'internet, transcendant largement son public d'origine.",
+      "pourquoi_japon": "La capacité des animes japonais à créer des hymnes qui traversent les cultures illustre le soft power culturel unique du Japon dans le monde contemporain.",
+      "youtube_query": "Kana Hanazawa 恋愛サーキュレーション Renai Circulation",
+      "emoji": "💗"
+    },
+    {
+      "titre": "Ryūsei (流星)",
+      "artiste": "Gen Hoshino",
+      "genre": "J-Pop",
+      "annee": "2021",
+      "histoire": "Une des chansons les plus touchantes de Gen Hoshino, Ryūsei ('étoile filante') aborde le thème du deuil et de l'amour avec une délicatesse rare. Écrite en hommage à un ami disparu, elle a touché des millions de Japonais.",
+      "pourquoi_japon": "Ryūsei illustre la façon japonaise d'aborder la mort — avec douceur, métaphores naturelles et la conviction que les liens ne disparaissent pas vraiment.",
+      "youtube_query": "Gen Hoshino 流星 Ryūsei MV",
+      "emoji": "💫"
+    },
+    {
+      "titre": "Nandemonaiya (なんでもないや)",
+      "artiste": "RADWIMPS",
+      "genre": "Anime OST",
+      "annee": "2016",
+      "histoire": "Tiré du film 'Your Name' (Kimi no Na Wa) de Makoto Shinkai, ce titre a accompagné l'un des plus grands succès du cinéma d'animation mondial. Sa mélodie simple cache une profondeur émotionnelle dévastatrice.",
+      "pourquoi_japon": "'Your Name' et sa musique ont montré au monde que l'anime peut toucher des thèmes universels — le destin, l'amour, la mémoire — avec une finesse que peu de cinémas atteignent.",
+      "youtube_query": "RADWIMPS なんでもないや nandemonaiya your name",
+      "emoji": "🎬"
+    },
+    {
+      "titre": "Mayonaka no Door (真夜中のドア)",
+      "artiste": "Miki Matsubara",
+      "genre": "City Pop",
+      "annee": "1979",
+      "histoire": "Quasi-inconnue à sa sortie, cette chanson est devenue un phénomène mondial grâce à TikTok et YouTube en 2020. Sa mélodie disco-jazzy et la voix veloutée de Matsubara ont capturé des auditeurs à des milliers de kilomètres du Japon.",
+      "pourquoi_japon": "Le revival mondial du City Pop autour de cette chanson montre que la nostalgie japonaise des années 80 résonne universellement — une époque de croissance, de lumières et d'espoir collectif.",
+      "youtube_query": "Miki Matsubara 真夜中のドア Stay With Me",
+      "emoji": "🚪"
+    }
+  ],
+  "traditions": [
+    {
+      "id": "hanami",
+      "nom": "Hanami",
+      "nom_jp": "花見",
+      "saison": "printemps",
+      "mois": "Mars – Avril",
+      "emoji": "🌸",
+      "tagline": "Contempler la floraison éphémère des cerisiers",
+      "histoire": "Le hanami remonte à plus de mille ans, à l'époque Heian, où la noblesse composait des poèmes sous les cerisiers en fleurs. À l'origine réservé aux fleurs de prunier (ume), il s'est progressivement centré sur les sakura, devenant une célébration nationale de la beauté fugace.",
+      "rituels": [
+        "S'installer sous les cerisiers sur une bâche bleue",
+        "Pique-niquer avec bentō, saké et wagashi",
+        "Composer ou lire des haïkus",
+        "Admirer les pétales tomber au crépuscule (yozakura la nuit)"
+      ],
+      "comment_vivre": [
+        "Suis le 'front des sakura' annoncé à la météo",
+        "Réserve ta place tôt le matin dans les parcs populaires",
+        "Prépare un bentō de saison aux couleurs printanières",
+        "Prends un moment de silence pour contempler — c'est l'essence du hanami"
+      ],
+      "gastronomie": "Sakura mochi, dango à trois couleurs (hanami dango), saké",
+      "lieu_phare": "Parc d'Ueno (Tokyo), Allée des philosophes (Kyoto), château d'Himeji"
+    },
+    {
+      "id": "hinamatsuri",
+      "nom": "Hinamatsuri",
+      "nom_jp": "雛祭り",
+      "saison": "printemps",
+      "mois": "3 mars",
+      "emoji": "🎎",
+      "tagline": "La fête des poupées, vœux de bonheur pour les filles",
+      "histoire": "Aussi appelée 'fête des filles', cette tradition date de l'époque Edo. Les familles exposent des poupées impériales (hina) sur des gradins recouverts de tissu rouge, représentant l'empereur, l'impératrice et leur cour. À l'origine, on transférait les mauvais esprits sur des poupées en papier jetées à la rivière.",
+      "rituels": [
+        "Disposer les poupées hina sur 5 à 7 niveaux",
+        "Prier pour la santé et le bonheur des filles de la maison",
+        "Ranger les poupées dès le lendemain (superstition de mariage tardif)",
+        "Boire du shirozake (saké doux blanc)"
+      ],
+      "comment_vivre": [
+        "Crée un petit autel même minimaliste avec 2 poupées",
+        "Prépare un chirashizushi coloré en famille",
+        "Décore avec des fleurs de pêcher (momo)",
+        "Partage des hina-arare avec tes proches"
+      ],
+      "gastronomie": "Chirashizushi, hina-arare (crackers de riz colorés), hishimochi, shirozake",
+      "lieu_phare": "Maisons familiales, sanctuaire d'Awashima (Wakayama)"
+    },
+    {
+      "id": "golden-week",
+      "nom": "Golden Week",
+      "nom_jp": "ゴールデンウィーク",
+      "saison": "printemps",
+      "mois": "Fin avril – début mai",
+      "emoji": "🎏",
+      "tagline": "La grande semaine de vacances nationale",
+      "histoire": "Née dans les années 1950, la Golden Week regroupe quatre jours fériés rapprochés : le Jour de Shōwa (29 avril), le Jour de la Constitution (3 mai), le Jour de la Nature (4 mai) et le Jour des Enfants (5 mai). C'est l'une des rares périodes où le Japon s'arrête vraiment.",
+      "rituels": [
+        "Voyager pour retrouver sa famille",
+        "Hisser les koinobori (carpes de tissu) pour le Jour des Enfants",
+        "Prendre des bains au iris (shōbu-yu) le 5 mai",
+        "Profiter des festivals locaux de printemps"
+      ],
+      "comment_vivre": [
+        "Accroche des koinobori chez toi pour le 5 mai",
+        "Planifie une escapade nature",
+        "Prends un bain parfumé aux feuilles de shōbu",
+        "Évite les transports bondés — réserve à l'avance"
+      ],
+      "gastronomie": "Kashiwa mochi (mochi enveloppé de feuille de chêne), chimaki",
+      "lieu_phare": "Tout le Japon — Kyoto, Hakone et les onsen sont prisés"
+    },
+    {
+      "id": "tanabata",
+      "nom": "Tanabata",
+      "nom_jp": "七夕",
+      "saison": "été",
+      "mois": "7 juillet",
+      "emoji": "🎋",
+      "tagline": "La fête des étoiles et des vœux suspendus",
+      "histoire": "Tanabata célèbre la légende d'Orihime (l'étoile Vega) et Hikoboshi (Altaïr), deux amants séparés par la Voie lactée qui ne peuvent se retrouver qu'une fois par an, le 7e jour du 7e mois. Importée de Chine au 8e siècle, la fête s'est enracinée dans la culture populaire japonaise.",
+      "rituels": [
+        "Écrire ses vœux sur des tanzaku (papiers colorés)",
+        "Suspendre les tanzaku à des branches de bambou",
+        "Décorer les rues de banderoles colorées",
+        "Admirer le ciel étoilé"
+      ],
+      "comment_vivre": [
+        "Écris un vœu sincère sur un papier coloré",
+        "Accroche-le à une plante ou une branche chez toi",
+        "Apprends la légende d'Orihime et Hikoboshi",
+        "Lève les yeux vers Vega et Altaïr dans le ciel d'été"
+      ],
+      "gastronomie": "Sōmen (nouilles froides), wagashi en forme d'étoile",
+      "lieu_phare": "Sendai (le plus grand festival), Hiratsuka (Kanagawa)"
+    },
+    {
+      "id": "obon",
+      "nom": "Obon",
+      "nom_jp": "お盆",
+      "saison": "été",
+      "mois": "Mi-août",
+      "emoji": "🏮",
+      "tagline": "Le retour des âmes ancestrales",
+      "histoire": "Obon est une tradition bouddhiste vieille de 500 ans qui honore les esprits des ancêtres. On croit que durant ces trois jours, les âmes des défunts reviennent visiter le monde des vivants. C'est un moment de recueillement familial et de gratitude envers ceux qui nous ont précédés.",
+      "rituels": [
+        "Allumer des lanternes (chōchin) pour guider les âmes",
+        "Danser le Bon Odori en cercle autour d'une tour",
+        "Nettoyer et fleurir les tombes familiales",
+        "Lâcher des lanternes flottantes sur l'eau (tōrō nagashi)"
+      ],
+      "comment_vivre": [
+        "Allume une bougie en mémoire d'un proche disparu",
+        "Prépare un plat qu'aimait un être cher",
+        "Apprends quelques pas de Bon Odori",
+        "Prends un moment de gratitude envers tes ancêtres"
+      ],
+      "gastronomie": "Plats végétariens (shōjin ryōri), fruits de saison offerts aux ancêtres",
+      "lieu_phare": "Kyoto (Daimonji), Tokushima (Awa Odori)"
+    },
+    {
+      "id": "natsu-matsuri",
+      "nom": "Natsu Matsuri",
+      "nom_jp": "夏祭り",
+      "saison": "été",
+      "mois": "Juillet – Août",
+      "emoji": "🎆",
+      "tagline": "Les festivals d'été et leurs feux d'artifice",
+      "histoire": "Les festivals d'été (matsuri) animent chaque quartier du Japon. Issus de rites shintoïstes pour éloigner les épidémies et célébrer les divinités locales, ils mêlent processions de chars sacrés (mikoshi), stands de nourriture (yatai) et spectacles de feux d'artifice (hanabi) qui illuminent les nuits chaudes.",
+      "rituels": [
+        "Porter un yukata léger en coton",
+        "Déambuler entre les stands de yatai",
+        "Pêcher des poissons rouges (kingyo sukui)",
+        "Admirer les hanabi au bord d'une rivière"
+      ],
+      "comment_vivre": [
+        "Porte un yukata ou une tenue légère et estivale",
+        "Goûte aux classiques : takoyaki, yakisoba, kakigōri",
+        "Joue aux jeux traditionnels de stand",
+        "Trouve un spot pour admirer un feu d'artifice"
+      ],
+      "gastronomie": "Takoyaki, yakisoba, kakigōri, pommes d'amour (ringo ame), chocobanana",
+      "lieu_phare": "Festival de Gion (Kyoto), Sumida (Tokyo), Tenjin (Osaka)"
+    },
+    {
+      "id": "tsukimi",
+      "nom": "Tsukimi",
+      "nom_jp": "月見",
+      "saison": "automne",
+      "mois": "Septembre – Octobre",
+      "emoji": "🌕",
+      "tagline": "La contemplation de la lune d'automne",
+      "histoire": "Tsukimi célèbre la pleine lune d'automne, considérée comme la plus belle de l'année. Cette tradition d'origine aristocratique de l'époque Heian honore la récolte et la beauté lunaire. On dit qu'un lapin vit sur la lune et y prépare des mochi.",
+      "rituels": [
+        "Contempler la pleine lune (jūgoya)",
+        "Offrir des tsukimi dango empilés en pyramide",
+        "Décorer avec des herbes de susuki (eulalie)",
+        "Composer des poèmes inspirés par la lune"
+      ],
+      "comment_vivre": [
+        "Trouve un endroit dégagé pour admirer la pleine lune",
+        "Prépare ou achète des dango blancs ronds",
+        "Décore avec des herbes hautes type pampa",
+        "Savoure le silence d'une soirée d'automne"
+      ],
+      "gastronomie": "Tsukimi dango, châtaignes, taro, tsukimi udon (avec œuf 'lune')",
+      "lieu_phare": "Sanctuaires et jardins — Tokyo (Mukōjima), Kyoto (Daikaku-ji)"
+    },
+    {
+      "id": "momiji",
+      "nom": "Momijigari",
+      "nom_jp": "紅葉狩り",
+      "saison": "automne",
+      "mois": "Octobre – Novembre",
+      "emoji": "🍁",
+      "tagline": "La chasse aux feuilles d'érable rouges",
+      "histoire": "Pendant comme automnal du hanami, le momijigari ('chasse aux feuilles rouges') consiste à admirer les érables (momiji) virant au rouge écarlate et or. Pratiqué depuis l'époque Heian, il incarne le mono no aware — la beauté mélancolique de la nature qui change.",
+      "rituels": [
+        "Se promener dans les forêts et temples aux érables",
+        "Photographier les contrastes de couleurs",
+        "Boire un thé chaud en admirant le paysage",
+        "Visiter les illuminations nocturnes (light-up)"
+      ],
+      "comment_vivre": [
+        "Planifie une randonnée quand les feuilles rougissent",
+        "Apporte un thermos de thé vert chaud",
+        "Cherche les reflets des érables dans l'eau",
+        "Visite un temple illuminé en soirée"
+      ],
+      "gastronomie": "Momiji manjū (gâteau en forme de feuille), châtaignes grillées, patate douce",
+      "lieu_phare": "Kyoto (Tōfuku-ji, Arashiyama), Nikkō, Mont Takao"
+    },
+    {
+      "id": "shichi-go-san",
+      "nom": "Shichi-Go-San",
+      "nom_jp": "七五三",
+      "saison": "automne",
+      "mois": "15 novembre",
+      "emoji": "⛩️",
+      "tagline": "La célébration des enfants de 7, 5 et 3 ans",
+      "histoire": "Cette tradition de l'époque Edo célèbre la croissance des enfants aux âges de 3, 5 et 7 ans — chiffres impairs considérés comme chanceux. Les familles se rendent au sanctuaire pour remercier les dieux et prier pour la santé future de leurs enfants.",
+      "rituels": [
+        "Habiller les enfants en kimono traditionnel",
+        "Se rendre au sanctuaire pour une bénédiction",
+        "Acheter des chitose-ame (bonbons de longévité)",
+        "Prendre des photos de famille formelles"
+      ],
+      "comment_vivre": [
+        "Découvre la symbolique des âges impairs",
+        "Admire les enfants en habits traditionnels près des sanctuaires",
+        "Apprends ce qu'est le chitose-ame et sa symbolique de longévité"
+      ],
+      "gastronomie": "Chitose-ame (long bonbon rouge et blanc symbolisant une longue vie)",
+      "lieu_phare": "Sanctuaires Meiji (Tokyo), Fushimi Inari (Kyoto)"
+    },
+    {
+      "id": "omisoka",
+      "nom": "Ōmisoka",
+      "nom_jp": "大晦日",
+      "saison": "hiver",
+      "mois": "31 décembre",
+      "emoji": "🔔",
+      "tagline": "La dernière nuit de l'année",
+      "histoire": "Ōmisoka, le réveillon japonais, est un moment de purification et de transition. À minuit, les temples bouddhistes sonnent 108 fois leurs cloches (joya no kane) pour chasser les 108 désirs terrestres qui, selon le bouddhisme, causent la souffrance humaine.",
+      "rituels": [
+        "Faire le grand ménage de fin d'année (ōsōji)",
+        "Manger des toshikoshi soba à minuit",
+        "Écouter les 108 coups de cloche des temples",
+        "Regarder l'émission télé Kōhaku en famille"
+      ],
+      "comment_vivre": [
+        "Fais un grand nettoyage symbolique de ton espace",
+        "Prépare des nouilles soba pour le réveillon",
+        "Réfléchis aux 108 attachements à laisser derrière toi",
+        "Accueille la nouvelle année dans le calme"
+      ],
+      "gastronomie": "Toshikoshi soba (nouilles de sarrasin de fin d'année)",
+      "lieu_phare": "Temples partout — Chion-in (Kyoto), Zōjō-ji (Tokyo)"
+    },
+    {
+      "id": "hatsumode",
+      "nom": "Hatsumōde",
+      "nom_jp": "初詣",
+      "saison": "hiver",
+      "mois": "1er – 3 janvier",
+      "emoji": "🎍",
+      "tagline": "La première visite au sanctuaire de l'année",
+      "histoire": "Hatsumōde est la première visite au temple ou sanctuaire de la nouvelle année. Des millions de Japonais s'y pressent dans les trois premiers jours de janvier pour prier, remercier et formuler leurs vœux. C'est le rituel le plus suivi du calendrier japonais.",
+      "rituels": [
+        "Prier pour la santé et la prospérité",
+        "Tirer un omikuji (oracle écrit)",
+        "Acheter des omamori (amulettes protectrices)",
+        "Brûler les anciennes amulettes de l'année passée"
+      ],
+      "comment_vivre": [
+        "Formule une intention sincère pour l'année",
+        "Tire un omikuji et noue-le si la prédiction est mauvaise",
+        "Choisis une amulette correspondant à un objectif",
+        "Bois de l'amazake chaud offert dans les sanctuaires"
+      ],
+      "gastronomie": "Osechi ryōri (plats du nouvel an), ozōni (soupe de mochi), amazake",
+      "lieu_phare": "Meiji Jingū (Tokyo), Fushimi Inari (Kyoto), Sumiyoshi Taisha (Osaka)"
+    },
+    {
+      "id": "setsubun",
+      "nom": "Setsubun",
+      "nom_jp": "節分",
+      "saison": "hiver",
+      "mois": "3 février",
+      "emoji": "👹",
+      "tagline": "Chasser les démons pour accueillir le printemps",
+      "histoire": "Setsubun marque la veille du début du printemps selon l'ancien calendrier. Le rituel du mamemaki consiste à lancer des graines de soja grillées pour chasser les démons (oni) et inviter le bonheur. Une purification symbolique avant le renouveau printanier.",
+      "rituels": [
+        "Lancer des graines de soja en criant 'Oni wa soto, fuku wa uchi !'",
+        "Manger un nombre de graines égal à son âge + 1",
+        "Manger un ehō-maki face à la direction porte-bonheur de l'année",
+        "Accrocher une tête de sardine pour repousser les démons"
+      ],
+      "comment_vivre": [
+        "Lance des graines de soja à ta porte en chassant le négatif",
+        "Mange un gros maki sans le couper, en silence, face à la bonne direction",
+        "Réfléchis à ce que tu veux 'chasser' cette année"
+      ],
+      "gastronomie": "Fukumame (graines de soja grillées), ehō-maki (gros maki porte-bonheur)",
+      "lieu_phare": "Temple Sensō-ji (Tokyo), Yoshida (Kyoto), Naritasan"
+    }
   ]
 }
