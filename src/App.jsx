@@ -757,25 +757,20 @@ function saveTheme(isDark){
 export default function IsekaidApp(){
   const [screen,setScreen]=useState("splash");
   const [tab,setTab]=useState("home");
-  const [user,setUser]=useState(null);
-  const [dark,setDark]=useState(false);
+  const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
+  const [dark,setDark]=useState(()=>loadTheme());      // read saved theme immediately
   const [db,setDb]=useState(null);
   const C=dark?DARK:LIGHT;
 
-  // Load data + saved profile/theme on startup
-  useEffect(()=>{
-    setDb(DATA);
-    setDark(loadTheme());
-    const saved = loadProfile();
-    if(saved) setUser(saved); // profile exists — we'll skip onboarding after splash
-  },[]);
+  // Load content data on startup
+  useEffect(()=>{ setDb(DATA); },[]);
 
   // Persist theme whenever it changes
   useEffect(()=>{ saveTheme(dark); },[dark]);
 
-  // When splash finishes: skip onboarding if a profile is already saved
+  // When splash finishes: skip onboarding if a profile is already loaded
   const afterSplash = ()=>{
-    setScreen(loadProfile() ? "app" : "onboarding");
+    setScreen(user ? "app" : "onboarding");
   };
 
   // Save profile at end of onboarding
