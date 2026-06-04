@@ -275,6 +275,53 @@ function StreakSection({C}){
   );
 }
 
+// ─── Slider horizontal (carrousel) ───────────────────────────────────────────
+function Slider({C, children}){
+  const items = Array.isArray(children) ? children.filter(Boolean) : [children];
+  const [idx, setIdx] = useState(0);
+  const ref = useRef(null);
+
+  const onScroll = ()=>{
+    const el = ref.current;
+    if(!el) return;
+    const i = Math.round(el.scrollLeft / el.clientWidth);
+    if(i !== idx) setIdx(i);
+  };
+
+  const goTo = (i)=>{
+    const el = ref.current;
+    if(!el) return;
+    el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
+    setIdx(i);
+  };
+
+  return(
+    <div>
+      <div ref={ref} onScroll={onScroll} style={{
+        display:"flex", overflowX:"auto", scrollSnapType:"x mandatory",
+        gap:0, scrollbarWidth:"none", WebkitOverflowScrolling:"touch",
+        margin:"0 -2px"
+      }}>
+        {items.map((child,i)=>(
+          <div key={i} style={{flex:"0 0 100%", scrollSnapAlign:"center", padding:"0 2px", boxSizing:"border-box"}}>
+            {child}
+          </div>
+        ))}
+      </div>
+      {/* Dots */}
+      <div style={{display:"flex",justifyContent:"center",gap:7,marginTop:13}}>
+        {items.map((_,i)=>(
+          <button key={i} onClick={()=>goTo(i)} aria-label={`Carte ${i+1}`} style={{
+            width: i===idx ? 22 : 7, height:7, borderRadius:4, padding:0, cursor:"pointer",
+            border:"none", background: i===idx ? C.red : C.s3,
+            transition:"all .3s"
+          }}/>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Home ─────────────────────────────────────────────────────────────────────
 function HomeScreen({C,user,db}){
   const [expr,  setExpr]  = useState(null);
@@ -322,13 +369,16 @@ function HomeScreen({C,user,db}){
       </div>
 
       <div style={{padding:"18px 20px 110px"}}>
-        {/* Section 1 — Daily Japan */}
-        <SH C={C} kanji="日" title="Daily Japan" sub="Expression · Culture · Repas" onRefresh={()=>refresh("daily")}/>
-        <div style={{display:"flex",flexDirection:"column",gap:11,marginBottom:28}}>
-          <ExprCard  C={C} data={expr}/>
-          <CultCard  C={C} data={cult}/>
-          <RepasCard C={C} data={repas}/>
-          {!db && (
+        {/* Section 1 — Daily Japan (slider) */}
+        <SH C={C} kanji="日" title="Daily Japan" sub="Glisse pour explorer →" onRefresh={()=>refresh("daily")}/>
+        <div style={{marginBottom:28}}>
+          {db ? (
+            <Slider C={C}>
+              <ExprCard  C={C} data={expr}/>
+              <CultCard  C={C} data={cult}/>
+              <RepasCard C={C} data={repas}/>
+            </Slider>
+          ) : (
             <div style={{padding:"24px",textAlign:"center",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
               <div style={{fontSize:20,marginBottom:8}}>⏳</div>
               <div style={{fontSize:12,color:C.t3}}>Chargement du contenu…</div>
