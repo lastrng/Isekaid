@@ -1139,5 +1139,307 @@
       "gastronomie": "Fukumame (graines de soja grillées), ehō-maki (gros maki porte-bonheur)",
       "lieu_phare": "Temple Sensō-ji (Tokyo), Yoshida (Kyoto), Naritasan"
     }
+  ],
+  "codes_sociaux": [
+    {
+      "id": "honne-tatemae",
+      "titre": "Honne & Tatemae",
+      "nom_jp": "本音と建前",
+      "emoji": "🎭",
+      "categorie": "Communication",
+      "niveau": "Essentiel",
+      "resume": "La distinction entre ce qu'on ressent vraiment et ce qu'on montre en public.",
+      "explication": "Le honne (本音) désigne tes vrais sentiments et désirs, tandis que le tatemae (建前) est la façade sociale que tu présentes pour préserver l'harmonie du groupe. Ce n'est pas vu comme de l'hypocrisie au Japon, mais comme une compétence sociale mature : exprimer ses émotions brutes en public peut déranger l'harmonie collective (wa). Comprendre ce double registre est la clé pour décoder ce qu'un Japonais veut vraiment dire.",
+      "exemples": [
+        "Un collègue dit 'C'est intéressant' (tatemae) alors qu'il pense que l'idée ne marchera pas (honne)",
+        "À la question 'Tu veux un autre verre ?', un 'Je suis déjà bien' poli signifie souvent non",
+        "Après le travail, l'izakaya devient l'espace où le honne peut enfin s'exprimer librement"
+      ],
+      "a_faire": [
+        "Écoute le ton et le contexte autant que les mots",
+        "Accepte qu'un accord poli ne soit pas toujours un vrai oui",
+        "Construis la confiance dans le temps pour accéder au honne"
+      ],
+      "a_eviter": [
+        "Prendre chaque parole au pied de la lettre",
+        "Forcer quelqu'un à donner son avis réel en public",
+        "Te vexer d'un refus indirect — c'est une marque de respect"
+      ]
+    },
+    {
+      "id": "refus-indirect",
+      "titre": "Le refus indirect",
+      "nom_jp": "遠回しの断り",
+      "emoji": "🙅",
+      "categorie": "Communication",
+      "niveau": "Essentiel",
+      "resume": "Au Japon, on dit rarement 'non' frontalement.",
+      "explication": "Refuser directement est perçu comme brutal et risque de faire perdre la face aux deux parties. À la place, les Japonais utilisent des formules d'évitement, des silences, ou des expressions vagues. Le célèbre 'chotto...' (un peu...) laissé en suspens est un refus poli. Savoir reconnaître ces signaux évite bien des malentendus.",
+      "exemples": [
+        "'Chotto muzukashii desu ne...' (c'est un peu difficile) = c'est non",
+        "Un silence prolongé ou une aspiration entre les dents ('sā...') signale une réticence",
+        "'Je vais y réfléchir' (kangaete okimasu) clôt souvent poliment la discussion"
+      ],
+      "a_faire": [
+        "Repère les 'chotto', les hésitations et les silences",
+        "Propose une porte de sortie élégante à ton interlocuteur",
+        "Reformule différemment plutôt que d'insister"
+      ],
+      "a_eviter": [
+        "Demander 'pourquoi ?' face à un refus voilé",
+        "Insister jusqu'à obtenir un oui",
+        "Mettre la personne dans l'embarras en public"
+      ]
+    },
+    {
+      "id": "hierarchie",
+      "titre": "La hiérarchie (senpai/kōhai)",
+      "nom_jp": "先輩・後輩",
+      "emoji": "🎌",
+      "categorie": "Relations",
+      "niveau": "Important",
+      "resume": "Les relations sont structurées par l'ancienneté et le statut.",
+      "explication": "La société japonaise accorde une grande importance au rang : âge, ancienneté, position. Le senpai (aîné/mentor) guide le kōhai (cadet), qui lui doit respect et déférence. Cela se reflète dans le langage (keigo), l'ordre des présentations, qui s'assoit où, et même qui parle en premier en réunion. Connaître sa place dans la hiérarchie n'est pas de la soumission, mais une façon de faire fonctionner le groupe harmonieusement.",
+      "exemples": [
+        "Le kōhai sert à boire au senpai en premier lors d'un repas",
+        "On attend que le supérieur s'asseye ou commence à manger",
+        "Les présentations se font du plus haut au plus bas dans la hiérarchie"
+      ],
+      "a_faire": [
+        "Observe qui prend les décisions et adresse-toi à lui avec déférence",
+        "Laisse les aînés ou supérieurs initier",
+        "Utilise des formules polies avec quelqu'un de rang supérieur"
+      ],
+      "a_eviter": [
+        "Tutoyer ou être trop familier avec un supérieur",
+        "Contredire ouvertement un senpai en public",
+        "Ignorer l'ordre hiérarchique dans les présentations"
+      ]
+    },
+    {
+      "id": "silence",
+      "titre": "La valeur du silence",
+      "nom_jp": "沈黙",
+      "emoji": "🤫",
+      "categorie": "Communication",
+      "niveau": "Important",
+      "resume": "Le silence est une forme de communication, pas un vide à combler.",
+      "explication": "Là où les cultures occidentales voient le silence comme gênant, le Japon le considère comme riche de sens. Le ma (間), l'intervalle, permet de réfléchir, de montrer son sérieux, ou de communiquer ce qui ne peut être dit. Un silence après une proposition peut indiquer la réflexion, le désaccord, ou le respect. Apprendre à le tolérer est essentiel.",
+      "exemples": [
+        "Un silence en réunion peut signifier une réflexion profonde, pas un blocage",
+        "Se taire après une question délicate peut être une réponse en soi",
+        "Dans une conversation, les pauses ne sont pas comblées par politesse"
+      ],
+      "a_faire": [
+        "Laisse des pauses sans te précipiter à les combler",
+        "Interprète le silence selon le contexte",
+        "Utilise le silence pour montrer ton attention"
+      ],
+      "a_eviter": [
+        "Meubler nerveusement chaque blanc",
+        "Interpréter le silence comme un rejet personnel",
+        "Parler par-dessus quelqu'un qui réfléchit"
+      ]
+    },
+    {
+      "id": "cadeaux",
+      "titre": "L'art d'offrir (omiyage)",
+      "nom_jp": "お土産",
+      "emoji": "🎁",
+      "categorie": "Relations",
+      "niveau": "Important",
+      "resume": "Offrir est un rituel social codifié et réciproque.",
+      "explication": "Le don au Japon obéit à des règles précises. L'omiyage (souvenir rapporté de voyage) est quasi obligatoire pour ses collègues. Le cadeau se remet et se reçoit à deux mains, avec une légère inclinaison. On le minimise modestement ('ce n'est rien'). Il ne s'ouvre généralement pas devant le donneur. La réciprocité (okaeshi) est attendue : un cadeau appelle un contre-cadeau de valeur proportionnée.",
+      "exemples": [
+        "Rapporter des sucreries locales à ses collègues après un voyage",
+        "Remettre un cadeau à deux mains en disant 'tsumaranai mono desu ga' (c'est peu de chose)",
+        "Recevoir un cadeau et préparer un okaeshi en retour"
+      ],
+      "a_faire": [
+        "Offre et reçois à deux mains",
+        "Choisis un emballage soigné",
+        "Prévois un contre-cadeau si tu reçois"
+      ],
+      "a_eviter": [
+        "Ouvrir brusquement un cadeau devant le donneur",
+        "Offrir un nombre malchanceux (4 ou 9 objets)",
+        "Refuser sèchement un cadeau"
+      ]
+    },
+    {
+      "id": "meishi",
+      "titre": "L'échange de cartes (meishi)",
+      "nom_jp": "名刺交換",
+      "emoji": "📇",
+      "categorie": "Travail",
+      "niveau": "Professionnel",
+      "resume": "La carte de visite est sacrée dans le monde professionnel.",
+      "explication": "Le meishi est une extension de la personne et de son statut. L'échange suit un protocole : on se lève, on tend sa carte à deux mains face au receveur, légèrement incliné, en énonçant son nom et sa fonction. On reçoit l'autre carte à deux mains, on la lit attentivement, et on la pose respectueusement sur la table durant la réunion — jamais dans la poche arrière.",
+      "exemples": [
+        "Tendre sa carte à deux mains, texte orienté vers le receveur",
+        "Lire la carte reçue avec attention avant de la poser",
+        "Disposer les cartes reçues sur la table selon la place de chacun"
+      ],
+      "a_faire": [
+        "Prépare tes cartes dans un étui dédié",
+        "Reçois et lis chaque carte avec respect",
+        "Tiens-toi droit pendant l'échange"
+      ],
+      "a_eviter": [
+        "Écrire sur une carte reçue devant son propriétaire",
+        "La ranger négligemment dans une poche",
+        "La donner d'une seule main avec désinvolture"
+      ]
+    },
+    {
+      "id": "chaussures",
+      "titre": "Le rituel des chaussures",
+      "nom_jp": "靴を脱ぐ",
+      "emoji": "👟",
+      "categorie": "Quotidien",
+      "niveau": "Essentiel",
+      "resume": "Où, quand et comment se déchausser au Japon.",
+      "explication": "On retire ses chaussures en entrant dans une maison, certains restaurants traditionnels, temples, ryokan et même certaines écoles. La zone d'entrée (genkan) marque la frontière entre le dehors (sale) et le dedans (propre). On enfile souvent des chaussons d'intérieur, et des chaussons spécifiques pour les toilettes. Marcher avec ses chaussures de rue à l'intérieur est une faute grave.",
+      "exemples": [
+        "Se déchausser au genkan et orienter ses chaussures vers la sortie",
+        "Enfiler les chaussons de toilettes et ne pas oublier de les enlever en sortant",
+        "Retirer même les chaussons sur les tatamis (chaussettes uniquement)"
+      ],
+      "a_faire": [
+        "Repère le genkan ou un dénivelé à l'entrée",
+        "Range tes chaussures pointe vers l'extérieur",
+        "Garde des chaussettes propres et présentables"
+      ],
+      "a_eviter": [
+        "Marcher sur les tatamis avec des chaussons",
+        "Oublier les chaussons de toilettes à l'intérieur",
+        "Poser le pied chaussé sur la zone surélevée"
+      ]
+    },
+    {
+      "id": "transports",
+      "titre": "Le savoir-vivre dans les transports",
+      "nom_jp": "電車のマナー",
+      "emoji": "🚄",
+      "categorie": "Quotidien",
+      "niveau": "Essentiel",
+      "resume": "Le calme collectif règne dans les trains et métros.",
+      "explication": "Dans les transports japonais, on respecte le confort sonore de tous. On met son téléphone en mode silencieux (manner mode), on ne passe pas d'appels, on parle à voix basse. On ne mange généralement pas dans les trains urbains. Les files d'attente sur les quais sont scrupuleusement respectées, et on laisse descendre avant de monter. Des sièges prioritaires sont réservés aux personnes âgées, femmes enceintes et handicapées.",
+      "exemples": [
+        "Mettre son téléphone en mode silencieux et ne pas téléphoner",
+        "Faire la queue sur les marques au sol et laisser descendre d'abord",
+        "Retirer son sac à dos pour le porter devant soi quand c'est bondé"
+      ],
+      "a_faire": [
+        "Garde le silence ou parle très doucement",
+        "Respecte les files d'attente au sol",
+        "Cède les sièges prioritaires"
+      ],
+      "a_eviter": [
+        "Téléphoner ou écouter de la musique sans écouteurs",
+        "Manger dans un train de banlieue",
+        "Bousculer pour monter avant la descente"
+      ]
+    },
+    {
+      "id": "baguettes",
+      "titre": "L'étiquette des baguettes",
+      "nom_jp": "箸のマナー",
+      "emoji": "🥢",
+      "categorie": "Quotidien",
+      "niveau": "Important",
+      "resume": "Plusieurs gestes avec les baguettes sont tabous.",
+      "explication": "Les baguettes obéissent à des règles strictes, dont certaines liées aux rites funéraires. Planter ses baguettes verticalement dans le riz évoque l'encens des funérailles. Se passer de la nourriture de baguettes à baguettes rappelle un rite crématoire. Ces gestes sont profondément choquants. D'autres règles relèvent de la simple politesse : ne pas pointer, ne pas planter, utiliser les bouts inversés pour se servir dans un plat commun.",
+      "exemples": [
+        "Poser ses baguettes sur le repose-baguettes (hashioki) entre deux bouchées",
+        "Utiliser l'extrémité opposée pour prendre dans un plat partagé",
+        "Ne jamais planter les baguettes dans le bol de riz"
+      ],
+      "a_faire": [
+        "Pose tes baguettes parallèlement sur le repose-baguettes",
+        "Sers-toi avec le bout inversé dans les plats communs",
+        "Repose-les proprement quand tu ne manges pas"
+      ],
+      "a_eviter": [
+        "Planter les baguettes verticalement dans le riz",
+        "Passer de la nourriture de baguettes à baguettes",
+        "Pointer ou gesticuler avec ses baguettes"
+      ]
+    },
+    {
+      "id": "wa",
+      "titre": "L'harmonie du groupe (wa)",
+      "nom_jp": "和",
+      "emoji": "☯️",
+      "categorie": "Relations",
+      "niveau": "Important",
+      "resume": "Le maintien de l'harmonie collective prime sur l'individu.",
+      "explication": "Le wa (和) — l'harmonie — est une valeur fondatrice de la société japonaise. Préserver l'équilibre et la cohésion du groupe passe souvent avant l'expression individuelle. Cela explique le consensus recherché en réunion (nemawashi), l'évitement des conflits ouverts, et la tendance à ne pas se distinguer. 'Le clou qui dépasse se fait enfoncer', dit le proverbe. Comprendre le wa éclaire une grande partie des comportements sociaux.",
+      "exemples": [
+        "Rechercher le consensus avant une réunion plutôt que débattre publiquement",
+        "Éviter de se mettre en avant ou de contredire frontalement",
+        "Privilégier le 'nous' au 'je' dans le discours"
+      ],
+      "a_faire": [
+        "Privilégie la coopération à la compétition visible",
+        "Exprime tes désaccords avec tact et en privé",
+        "Valorise les réussites collectives"
+      ],
+      "a_eviter": [
+        "Te vanter ou te distinguer ostensiblement",
+        "Créer un conflit ouvert devant le groupe",
+        "Imposer ton avis sans chercher l'adhésion"
+      ]
+    },
+    {
+      "id": "ponctualite",
+      "titre": "La ponctualité absolue",
+      "nom_jp": "時間厳守",
+      "emoji": "⏱️",
+      "categorie": "Travail",
+      "niveau": "Essentiel",
+      "resume": "Être à l'heure, c'est être en avance.",
+      "explication": "Au Japon, la ponctualité est une marque de respect non négociable. Arriver 'à l'heure' signifie souvent arriver 5 à 10 minutes en avance. Les trains partent à la seconde près, et un retard de quelques minutes donne lieu à des excuses formelles. Dans le monde professionnel, être en retard à une réunion est une faute sérieuse qui reflète un manque de considération pour le temps des autres.",
+      "exemples": [
+        "Arriver 10 minutes avant un rendez-vous professionnel",
+        "Les compagnies ferroviaires s'excusent pour un retard de 1 minute",
+        "Prévenir longtemps à l'avance si un retard est inévitable"
+      ],
+      "a_faire": [
+        "Vise toujours quelques minutes d'avance",
+        "Préviens immédiatement en cas d'imprévu",
+        "Anticipe les trajets et correspondances"
+      ],
+      "a_eviter": [
+        "Arriver pile à l'heure ou en retard",
+        "Considérer 5 minutes de retard comme anodin",
+        "Ne pas t'excuser pour un retard"
+      ]
+    },
+    {
+      "id": "argent",
+      "titre": "L'argent et les pourboires",
+      "nom_jp": "お金とチップ",
+      "emoji": "💴",
+      "categorie": "Quotidien",
+      "niveau": "Important",
+      "resume": "Le pourboire n'existe pas, et l'argent se manipule avec soin.",
+      "explication": "Au Japon, laisser un pourboire peut être perçu comme insultant — un service de qualité est la norme attendue, pas une faveur à récompenser. On ne tend pas l'argent directement à la main : un petit plateau (calece) est prévu pour déposer billets et pièces à la caisse. Manipuler l'argent avec respect et discrétion fait partie du savoir-vivre. Le pays reste largement attaché au cash, même si le paiement sans contact progresse.",
+      "exemples": [
+        "Déposer son argent sur le petit plateau plutôt que dans la main",
+        "Ne pas laisser de pourboire au restaurant ou au taxi",
+        "Présenter les billets propres et dans le bon sens"
+      ],
+      "a_faire": [
+        "Utilise le plateau à monnaie quand il est présent",
+        "Garde du cash sur toi, surtout hors des grandes villes",
+        "Manipule l'argent avec soin et discrétion"
+      ],
+      "a_eviter": [
+        "Laisser un pourboire (souvent refusé ou gênant)",
+        "Tendre l'argent froissé directement dans la main",
+        "Supposer que la carte est acceptée partout"
+      ]
+    }
   ]
 }
