@@ -62,6 +62,18 @@ function pickByLevel(arr, level) {
   // For expressions, spread randomly regardless of level for now
   return pick(arr);
 }
+// Deterministic hash from a string → 32-bit int (same string = same number)
+function hashStr(str){
+  let h = 2166136261;
+  for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return Math.abs(h);
+}
+// Pick a stable item for a given day + category (same all day, changes at midnight)
+function pickDaily(arr, dateKey, salt){
+  if(!arr || arr.length===0) return null;
+  const idx = hashStr(dateKey + ":" + salt) % arr.length;
+  return arr[idx];
+}
 
 const JP_MONTHS = ["睦月","如月","弥生","卯月","皐月","水無月","文月","葉月","長月","神無月","霜月","師走"];
 const JP_DAYS   = ["日","月","火","水","木","金","土"];
@@ -124,7 +136,7 @@ function SH({C,kanji,title,sub,onRefresh}){
       </div>
       {onRefresh&&(
         <button onClick={onRefresh} style={{background:"transparent",border:`1px solid ${C.border}`,borderRadius:20,padding:"4px 12px",color:C.t2,fontSize:11,cursor:"pointer",display:"flex",alignItems:"center",gap:4}}>
-          <span style={{fontSize:12}}>↻</span> Nouveau
+          <span style={{fontSize:12}}>↻</span> Découvrir
         </button>
       )}
     </div>
@@ -219,36 +231,50 @@ function SongCard({C,data}){
   );
 }
 
-function StreakSection({C}){
+function StreakSection({C,streak}){
+  const count = streak?.count || 0;
+  const best  = streak?.best  || 0;
   const dow=new Date().getDay(), todayIdx=dow===0?6:dow-1;
   const days=["L","M","M","J","V","S","D"];
+
+  // Next milestone among common targets
+  const milestones=[7,14,30,60,100,365];
+  const nextGoal = milestones.find(m=>m>count) || count;
+  const progress = Math.min(count/nextGoal,1);
+
   return(
     <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
         <div>
           <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:5,textTransform:"uppercase"}}>Streak actuel</div>
           <div style={{display:"flex",alignItems:"baseline",gap:6}}>
-            <span style={{fontSize:42,fontWeight:500,color:C.text,fontFamily:"'Noto Serif JP',serif",lineHeight:1}}>1</span>
-            <span style={{fontSize:13,color:C.t2}}>jour</span>
+            <span style={{fontSize:42,fontWeight:500,color:C.text,fontFamily:"'Noto Serif JP',serif",lineHeight:1}}>{count}</span>
+            <span style={{fontSize:13,color:C.t2}}>jour{count>1?"s":""}</span>
           </div>
-          <div style={{fontSize:11,color:C.t3,marginTop:3}}>Prochain jalon : 7 jours 🎯</div>
+          <div style={{fontSize:11,color:C.t3,marginTop:3}}>
+            {count>=nextGoal ? "Record en cours ! 🎉" : `Prochain jalon : ${nextGoal} jours 🎯`}
+          </div>
         </div>
-        <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(201,70,61,0.08)",border:"1.5px solid rgba(201,70,61,0.22)",display:"flex",alignItems:"center",justifyContent:"center",animation:"glow 2.5s ease infinite"}}>
-          <span style={{fontSize:24}}>🔥</span>
+        <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(201,70,61,0.08)",border:"1.5px solid rgba(201,70,61,0.22)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",animation:count>0?"glow 2.5s ease infinite":"none"}}>
+          <span style={{fontSize:22}}>🔥</span>
         </div>
       </div>
       <div style={{marginBottom:16}}>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-          <span style={{fontSize:10,color:C.t3}}>Vers 7 jours consécutifs</span>
-          <span style={{fontSize:11,color:C.red,fontWeight:500}}>1 / 7</span>
+          <span style={{fontSize:10,color:C.t3}}>Vers {nextGoal} jours consécutifs</span>
+          <span style={{fontSize:11,color:C.red,fontWeight:500}}>{count} / {nextGoal}</span>
         </div>
         <div style={{height:4,background:C.s3,borderRadius:2,overflow:"hidden"}}>
-          <div style={{height:"100%",width:`${(1/7)*100}%`,background:C.red,borderRadius:2}}/>
+          <div style={{height:"100%",width:`${progress*100}%`,background:C.red,borderRadius:2,transition:"width .5s ease"}}/>
         </div>
       </div>
+      {/* Weekly view — fill the last `count` days up to today */}
       <div style={{display:"flex",gap:5,justifyContent:"space-between",marginBottom:18}}>
         {days.map((lbl,i)=>{
-          const done=i<todayIdx, isToday=i===todayIdx;
+          const isToday=i===todayIdx;
+          // a past day this week is "done" if it's within the current streak window
+          const daysAgo = todayIdx - i;
+          const done = daysAgo>0 && daysAgo < count;
           return(
             <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
               <div style={{fontSize:9,color:C.t3}}>{lbl}</div>
@@ -260,16 +286,13 @@ function StreakSection({C}){
           );
         })}
       </div>
-      <div style={{paddingTop:14,borderTop:`1px solid ${C.border}`}}>
-        <div style={{fontSize:9,color:C.t3,letterSpacing:".2em",marginBottom:10,textTransform:"uppercase"}}>Badges à débloquer</div>
-        <div style={{display:"flex",gap:8}}>
-          {[{e:"🎋",l:"7 jours"},{e:"⛩️",l:"Culture x5"},{e:"🗣️",l:"Scénario"}].map((b,i)=>(
-            <div key={i} style={{flex:1,padding:"10px 8px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:10,textAlign:"center",opacity:.65}}>
-              <div style={{fontSize:18,marginBottom:4}}>{b.e}</div>
-              <div style={{fontSize:9,color:C.t3}}>{b.l}</div>
-            </div>
-          ))}
+      {/* Best streak record */}
+      <div style={{paddingTop:14,borderTop:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <span style={{fontSize:16}}>🏆</span>
+          <span style={{fontSize:12,color:C.t2}}>Meilleur streak</span>
         </div>
+        <span style={{fontSize:14,color:C.text,fontWeight:600}}>{best} jour{best>1?"s":""}</span>
       </div>
     </div>
   );
@@ -323,7 +346,7 @@ function Slider({C, children}){
 }
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
-function HomeScreen({C,user,db}){
+function HomeScreen({C,user,db,streak}){
   const [expr,  setExpr]  = useState(null);
   const [cult,  setCult]  = useState(null);
   const [repas, setRepas] = useState(null);
@@ -334,18 +357,24 @@ function HomeScreen({C,user,db}){
   const g = greet(hour, user.name==="Voyageur"?"":user.name);
   const rankLabel = {beginner:"Curious Tourist",intermediate:"Konbini Explorer",advanced:"Tokyo Wanderer"};
 
-  const refresh = (which) => {
+  const today = dayKey();
+
+  // explore=false → fixed content for today (the daily rendez-vous)
+  // explore=true  → random pick (manual "discover more" via ↻)
+  const refresh = (which, explore=false) => {
     if(!db) return;
     if(!which || which==="daily") {
-      setExpr(pick(db.expressions));
-      setCult(pick(db.culture));
-      setRepas(pick(db.repas));
+      setExpr(  explore ? pick(db.expressions) : pickDaily(db.expressions, today, "expr"));
+      setCult(  explore ? pick(db.culture)     : pickDaily(db.culture,     today, "cult"));
+      setRepas( explore ? pick(db.repas)       : pickDaily(db.repas,       today, "repas"));
     }
-    if(!which || which==="song") setSong(pick(db.songs));
+    if(!which || which==="song") {
+      setSong(  explore ? pick(db.songs)       : pickDaily(db.songs,       today, "song"));
+    }
   };
 
   useEffect(() => {
-    if(!loaded.current && db) { loaded.current=true; refresh(); }
+    if(!loaded.current && db) { loaded.current=true; refresh(); } // initial = today's fixed content
   }, [db]);
 
   return(
@@ -357,7 +386,7 @@ function HomeScreen({C,user,db}){
           <div style={{display:"flex",gap:7}}>
             <div style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:20,animation:"glow 2.5s ease infinite"}}>
               <span style={{fontSize:11}}>🔥</span>
-              <span style={{fontSize:11,color:C.text,fontWeight:500}}>1 jour</span>
+              <span style={{fontSize:11,color:C.text,fontWeight:500}}>{streak?.count||0} jour{(streak?.count||0)>1?"s":""}</span>
             </div>
             <div style={{padding:"4px 10px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20}}>
               <span style={{fontSize:10,color:C.t2}}>{rankLabel[user.level]||"Curious Tourist"}</span>
@@ -370,7 +399,7 @@ function HomeScreen({C,user,db}){
 
       <div style={{padding:"18px 20px 110px"}}>
         {/* Section 1 — Daily Japan (slider) */}
-        <SH C={C} kanji="日" title="Daily Japan" sub="Glisse pour explorer →" onRefresh={()=>refresh("daily")}/>
+        <SH C={C} kanji="日" title="Daily Japan" sub="Ta sélection du jour" onRefresh={()=>refresh("daily",true)}/>
         <div style={{marginBottom:28}}>
           {db ? (
             <Slider C={C}>
@@ -387,14 +416,14 @@ function HomeScreen({C,user,db}){
         </div>
 
         {/* Section 2 — Song of the Day */}
-        <SH C={C} kanji="音" title="Song of the Day" sub="Musique japonaise du jour" onRefresh={()=>refresh("song")}/>
+        <SH C={C} kanji="音" title="Song of the Day" sub="Musique japonaise du jour" onRefresh={()=>refresh("song",true)}/>
         <div style={{marginBottom:28}}>
           <SongCard C={C} data={song}/>
         </div>
 
         {/* Section 3 — Streak */}
         <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
-        <StreakSection C={C}/>
+        <StreakSection C={C} streak={streak}/>
       </div>
     </div>
   );
@@ -628,7 +657,7 @@ function LearnScreen({C}){
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,streak}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
@@ -668,7 +697,7 @@ function ProfileScreen({C,user,dark,setDark,db,onReset}){
         )}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18}}>
           {[
-            {v:"1",label:"Streak",emoji:"🔥"},
+            {v:String(streak?.count||0),label:"Streak",emoji:"🔥"},
             {v:total||"—",label:"Contenus",emoji:"📖"},
             {v:lvlL[user.level]||"Débutant",label:"Niveau",emoji:"🎯"},
             {v:goalL[user.goal]||"Immersion",label:"Objectif",emoji:"🗾"},
@@ -804,16 +833,50 @@ function saveTheme(isDark){
   try { localStorage.setItem(THEME_KEY, isDark ? "dark" : "light"); } catch {}
 }
 
+// ─── Streak logic ─────────────────────────────────────────────────────────────
+const STREAK_KEY = "isekaid_streak_v1";
+// Local day key YYYY-MM-DD (no timezone surprises)
+function dayKey(d=new Date()){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+function daysBetween(aKey,bKey){
+  const a=new Date(aKey+"T00:00:00"), b=new Date(bKey+"T00:00:00");
+  return Math.round((b-a)/86400000);
+}
+function loadStreak(){
+  try { const raw=localStorage.getItem(STREAK_KEY); return raw?JSON.parse(raw):null; }
+  catch { return null; }
+}
+// Returns { count, best, last } updated for "today"
+function touchStreak(){
+  const today = dayKey();
+  let s = loadStreak();
+  if(!s || !s.last){
+    s = { count:1, best:1, last:today };
+  } else if(s.last === today){
+    // already counted today — no change
+  } else {
+    const gap = daysBetween(s.last, today);
+    if(gap === 1) s.count += 1;        // consecutive day
+    else if(gap >= 2) s.count = 1;     // streak broken
+    s.last = today;
+    if(s.count > (s.best||0)) s.best = s.count;
+  }
+  try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
+  return s;
+}
+
 export default function IsekaidApp(){
   const [screen,setScreen]=useState("splash");
   const [tab,setTab]=useState("home");
   const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
   const [dark,setDark]=useState(()=>loadTheme());      // read saved theme immediately
   const [db,setDb]=useState(null);
+  const [streak,setStreak]=useState(()=>loadStreak()||{count:0,best:0,last:null});
   const C=dark?DARK:LIGHT;
 
   // Load content data on startup
-  useEffect(()=>{ setDb(DATA); },[]);
+  useEffect(()=>{ setDb(DATA); setStreak(touchStreak()); },[]);
 
   // Persist theme whenever it changes
   useEffect(()=>{ saveTheme(dark); },[dark]);
@@ -847,11 +910,11 @@ export default function IsekaidApp(){
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C}/>}
               {tab==="learn"     &&<LearnScreen     C={C}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak}/>}
             </div>
             <BottomNav C={C} active={tab} onChange={setTab}/>
           </>
