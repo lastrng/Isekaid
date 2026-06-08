@@ -459,6 +459,8 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav}){
 function ExploreScreen({C,db,isFav,toggleFav}){
   const [view,setView] = useState(null);
   if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>;
+  if(view==="codes")      return <CodesScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>;
+  const ROUTES = {"Traditions":"traditions","Codes sociaux":"codes"};
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
@@ -467,9 +469,10 @@ function ExploreScreen({C,db,isFav,toggleFav}){
         <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Découvrir la culture japonaise</div>
         <div style={{display:"flex",flexDirection:"column",gap:11}}>
           {EXPLORE_MODS.map((m,i)=>{
-            const active = m.title==="Traditions";
+            const route = ROUTES[m.title];
+            const active = !!route;
             return(
-              <div key={i} onClick={()=>active&&setView("traditions")} style={{background:C.s1,border:`1px solid ${active?"rgba(201,70,61,0.3)":C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:active?"pointer":"default",transition:"all .2s"}}>
+              <div key={i} onClick={()=>active&&setView(route)} style={{background:C.s1,border:`1px solid ${active?"rgba(201,70,61,0.3)":C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:active?"pointer":"default",transition:"all .2s"}}>
                 <span style={{fontSize:28,flexShrink:0}}>{m.emoji}</span>
                 <div style={{flex:1}}><div style={{fontSize:14,color:C.text,marginBottom:3}}>{m.title}</div><div style={{fontSize:12,color:C.t2}}>{m.sub}</div></div>
                 {active
@@ -480,6 +483,119 @@ function ExploreScreen({C,db,isFav,toggleFav}){
             );
           })}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Codes sociaux ────────────────────────────────────────────────────────────
+const CODE_CATS = [
+  {id:"all",          label:"Tous",          emoji:"🎌"},
+  {id:"Communication",label:"Communication", emoji:"💬"},
+  {id:"Relations",    label:"Relations",     emoji:"🤝"},
+  {id:"Quotidien",    label:"Quotidien",     emoji:"🏠"},
+  {id:"Travail",      label:"Travail",       emoji:"💼"},
+];
+
+function CodeDetail({C,c,onBack,fav,onFav}){
+  const Block = ({title,items,color,icon}) => (
+    <div>
+      <div style={{fontSize:10,color:color,letterSpacing:".18em",marginBottom:11,textTransform:"uppercase"}}>{icon} {title}</div>
+      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+        {items.map((x,i)=>(
+          <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+            <span style={{color:color,fontSize:13,flexShrink:0,lineHeight:1.5}}>{icon==="✅"?"✓":icon==="⚠️"?"✕":"◈"}</span>
+            <span style={{fontSize:13,color:C.t2,lineHeight:1.6}}>{x}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
+      <div style={{padding:"50px 20px 24px",background:`linear-gradient(160deg,rgba(201,70,61,0.1) 0%,transparent 90%)`}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+          <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:6}}>‹ Codes sociaux</button>
+          {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
+        </div>
+        <div style={{fontSize:54,marginBottom:8}}>{c.emoji}</div>
+        <div style={{display:"flex",gap:7,marginBottom:8}}>
+          <span style={{fontSize:9,padding:"3px 9px",background:"rgba(201,70,61,0.1)",border:"1px solid rgba(201,70,61,0.22)",borderRadius:20,color:C.red,letterSpacing:".05em"}}>{c.categorie}</span>
+          <span style={{fontSize:9,padding:"3px 9px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>{c.niveau}</span>
+        </div>
+        <div style={{fontSize:28,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{c.titre}</div>
+        <div style={{fontSize:15,color:C.t3,fontFamily:"'Noto Serif JP',serif",marginBottom:10}}>{c.nom_jp}</div>
+        <div style={{fontSize:14,color:C.t2,fontStyle:"italic",lineHeight:1.5}}>{c.resume}</div>
+      </div>
+
+      <div style={{padding:"4px 20px 110px",display:"flex",flexDirection:"column",gap:20}}>
+        <div>
+          <div style={{fontSize:10,color:C.red,letterSpacing:".2em",marginBottom:10,textTransform:"uppercase"}}>📖 Comprendre</div>
+          <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{c.explication}</p>
+        </div>
+
+        <div style={{padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
+          <Block title="Exemples concrets" items={c.exemples} color={C.gold} icon="◈"/>
+        </div>
+
+        <div style={{padding:"16px",background:"rgba(78,128,96,0.06)",border:"1px solid rgba(78,128,96,0.18)",borderRadius:12}}>
+          <Block title="À faire" items={c.a_faire} color={C.green} icon="✅"/>
+        </div>
+
+        <div style={{padding:"16px",background:"rgba(201,70,61,0.05)",border:"1px solid rgba(201,70,61,0.15)",borderRadius:12}}>
+          <Block title="À éviter" items={c.a_eviter} color={C.red} icon="⚠️"/>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CodesScreen({C,db,isFav,toggleFav}){
+  const [cat,setCat] = useState("all");
+  const [selected,setSelected] = useState(null);
+  const codes = db?.codes_sociaux || [];
+
+  if(selected) return <CodeDetail C={C} c={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("code",selected)} onFav={toggleFav&&(()=>toggleFav("code",selected))}/>;
+
+  const filtered = cat==="all" ? codes : codes.filter(c=>c.categorie===cat);
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+      <div style={{padding:"50px 20px 12px"}}>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>礼 · CODES SOCIAUX</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>暗黙のルール</div>
+        <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Les règles invisibles à connaître</div>
+      </div>
+
+      {/* Category filter */}
+      <div style={{display:"flex",gap:8,padding:"0 20px 18px",overflowX:"auto"}}>
+        {CODE_CATS.map(k=>{
+          const on=k.id===cat;
+          return(
+            <button key={k.id} onClick={()=>setCat(k.id)} style={{flexShrink:0,padding:"9px 14px",borderRadius:20,cursor:"pointer",background:on?"rgba(201,70,61,0.1)":C.s1,border:`1px solid ${on?C.red:C.border}`,color:on?C.red:C.t2,fontSize:12,display:"flex",alignItems:"center",gap:6,transition:"all .2s"}}>
+              <span style={{fontSize:14}}>{k.emoji}</span>{k.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Code cards */}
+      <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
+        {filtered.map((c,i)=>(
+          <div key={i} onClick={()=>setSelected(c)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",animation:"fadeUp .4s ease"}}>
+            <span style={{fontSize:30,flexShrink:0}}>{c.emoji}</span>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
+                <span style={{fontSize:15,color:C.text,fontWeight:500}}>{c.titre}</span>
+                <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{c.nom_jp}</span>
+              </div>
+              <div style={{fontSize:12,color:C.t2,lineHeight:1.45,marginBottom:6}}>{c.resume}</div>
+              <span style={{fontSize:9,padding:"2px 8px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.18)",borderRadius:20,color:C.red}}>{c.categorie}</span>
+            </div>
+            <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>
+          </div>
+        ))}
+        {filtered.length===0 && <div style={{padding:"24px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
       </div>
     </div>
   );
@@ -759,6 +875,7 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav}){
                 repas:{emoji:it.emoji||"🍱", title:it.nom_jp, sub:it.traduction, c:C.green},
                 song:{emoji:it.emoji||"🎵", title:it.titre, sub:it.artiste, c:"#8B6FB0"},
                 tradition:{emoji:it.emoji||"⛩️", title:it.nom, sub:it.mois, c:C.red},
+                code:{emoji:it.emoji||"🎌", title:it.titre, sub:it.categorie, c:C.red},
               }[f.type]||{emoji:"♥",title:"",sub:"",c:C.red};
               return(
                 <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
