@@ -144,11 +144,28 @@ function SH({C,kanji,title,sub,onRefresh}){
 }
 
 // ─── Content cards ────────────────────────────────────────────────────────────
-function ExprCard({C,data}){
+function FavButton({C,active,onClick}){
+  return(
+    <button onClick={onClick} aria-label="Sauvegarder" style={{
+      background:active?"rgba(201,70,61,0.12)":"transparent",
+      border:`1px solid ${active?"rgba(201,70,61,0.35)":C.border}`,
+      borderRadius:20, width:30, height:30, cursor:"pointer", flexShrink:0,
+      display:"flex", alignItems:"center", justifyContent:"center",
+      fontSize:14, lineHeight:1, transition:"all .2s", padding:0
+    }}>
+      <span style={{color:active?C.red:C.t3}}>{active?"♥":"♡"}</span>
+    </button>
+  );
+}
+
+function ExprCard({C,data,fav,onFav}){
   if(!data) return null;
   return(
     <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
-      <div style={{fontSize:10,color:C.gold,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>表現 · Expression du jour {data.emoji}</div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+        <div style={{fontSize:10,color:C.gold,letterSpacing:".2em",textTransform:"uppercase"}}>表現 · Expression du jour {data.emoji}</div>
+        {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
+      </div>
       <div style={{fontSize:34,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2,marginBottom:5}}>{data.expression}</div>
       <div style={{fontSize:12,color:C.gold,fontStyle:"italic",marginBottom:3}}>{data.romaji}</div>
       <div style={{fontSize:14,color:C.t2,fontWeight:500,marginBottom:13}}>{data.traduction}</div>
@@ -162,13 +179,16 @@ function ExprCard({C,data}){
   );
 }
 
-function CultCard({C,data}){
+function CultCard({C,data,fav,onFav}){
   if(!data) return null;
   return(
     <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:11}}>
         <div style={{fontSize:10,color:C.red,letterSpacing:".2em",textTransform:"uppercase"}}>文化 · Culture {data.emoji}</div>
-        <span style={{fontSize:9,padding:"3px 8px",background:`rgba(201,70,61,0.07)`,border:`1px solid rgba(201,70,61,0.2)`,borderRadius:20,color:C.red,whiteSpace:"nowrap",flexShrink:0,marginLeft:8}}>{data.tag}</span>
+        <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
+          <span style={{fontSize:9,padding:"3px 8px",background:`rgba(201,70,61,0.07)`,border:`1px solid rgba(201,70,61,0.2)`,borderRadius:20,color:C.red,whiteSpace:"nowrap"}}>{data.tag}</span>
+          {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
+        </div>
       </div>
       <div style={{fontSize:17,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:11,lineHeight:1.45}}>{data.titre}</div>
       <p style={{fontSize:13,color:C.t2,lineHeight:1.82,marginBottom:13}}>{data.contenu}</p>
@@ -180,11 +200,14 @@ function CultCard({C,data}){
   );
 }
 
-function RepasCard({C,data}){
+function RepasCard({C,data,fav,onFav}){
   if(!data) return null;
   return(
     <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
-      <div style={{fontSize:10,color:C.green,letterSpacing:".2em",marginBottom:11,textTransform:"uppercase"}}>🍱 Repas · {data.moment}</div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:11}}>
+        <div style={{fontSize:10,color:C.green,letterSpacing:".2em",textTransform:"uppercase"}}>🍱 Repas · {data.moment}</div>
+        {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
+      </div>
       <div style={{fontSize:32,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2,marginBottom:5}}>{data.nom_jp} {data.emoji}</div>
       <div style={{fontSize:12,color:C.green,fontStyle:"italic",marginBottom:11}}>{data.romaji} — {data.traduction}</div>
       <p style={{fontSize:13,color:C.t2,lineHeight:1.8,marginBottom:12}}>{data.description}</p>
@@ -196,13 +219,16 @@ function RepasCard({C,data}){
   );
 }
 
-function SongCard({C,data}){
+function SongCard({C,data,fav,onFav}){
   if(!data) return null;
   const ytUrl=`https://www.youtube.com/results?search_query=${encodeURIComponent(data.youtube_query||data.titre+" "+data.artiste)}`;
   return(
     <div style={{borderRadius:14,overflow:"hidden",border:`1px solid ${C.border}`,animation:"fadeUp .4s ease"}}>
       <div style={{background:"linear-gradient(135deg,#221440 0%,#3D1628 55%,#142038 100%)",padding:"20px 18px 18px"}}>
-        <div style={{fontSize:10,color:"rgba(240,230,211,0.5)",letterSpacing:".2em",marginBottom:14,textTransform:"uppercase"}}>🎵 Song of the day {data.emoji}</div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+          <div style={{fontSize:10,color:"rgba(240,230,211,0.5)",letterSpacing:".2em",textTransform:"uppercase"}}>🎵 Song of the day {data.emoji}</div>
+          {onFav&&<button onClick={onFav} aria-label="Sauvegarder" style={{background:fav?"rgba(201,70,61,0.25)":"rgba(255,255,255,0.08)",border:`1px solid ${fav?"rgba(201,70,61,0.5)":"rgba(255,255,255,0.15)"}`,borderRadius:20,width:30,height:30,cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,padding:0,color:fav?"#ff6b5e":"rgba(240,230,211,0.7)"}}>{fav?"♥":"♡"}</button>}
+        </div>
         <div style={{display:"flex",gap:16,alignItems:"center",marginBottom:16}}>
           <div style={{width:62,height:62,borderRadius:"50%",flexShrink:0,background:"radial-gradient(circle at 50%,#0a0a0a 18%,#252525 20%,#1a1a1a 48%,#252525 50%,#0d0d0d 100%)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 18px rgba(0,0,0,.55)",animation:"spin 5s linear infinite"}}>
             <div style={{width:11,height:11,borderRadius:"50%",background:"#C9463D"}}/>
@@ -346,7 +372,7 @@ function Slider({C, children}){
 }
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
-function HomeScreen({C,user,db,streak}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav}){
   const [expr,  setExpr]  = useState(null);
   const [cult,  setCult]  = useState(null);
   const [repas, setRepas] = useState(null);
@@ -403,9 +429,9 @@ function HomeScreen({C,user,db,streak}){
         <div style={{marginBottom:28}}>
           {db ? (
             <Slider C={C}>
-              <ExprCard  C={C} data={expr}/>
-              <CultCard  C={C} data={cult}/>
-              <RepasCard C={C} data={repas}/>
+              <ExprCard  C={C} data={expr}  fav={expr&&isFav("expr",expr)}   onFav={expr&&(()=>toggleFav("expr",expr))}/>
+              <CultCard  C={C} data={cult}  fav={cult&&isFav("cult",cult)}   onFav={cult&&(()=>toggleFav("cult",cult))}/>
+              <RepasCard C={C} data={repas} fav={repas&&isFav("repas",repas)} onFav={repas&&(()=>toggleFav("repas",repas))}/>
             </Slider>
           ) : (
             <div style={{padding:"24px",textAlign:"center",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
@@ -418,7 +444,7 @@ function HomeScreen({C,user,db,streak}){
         {/* Section 2 — Song of the Day */}
         <SH C={C} kanji="音" title="Song of the Day" sub="Musique japonaise du jour" onRefresh={()=>refresh("song",true)}/>
         <div style={{marginBottom:28}}>
-          <SongCard C={C} data={song}/>
+          <SongCard C={C} data={song} fav={song&&isFav("song",song)} onFav={song&&(()=>toggleFav("song",song))}/>
         </div>
 
         {/* Section 3 — Streak */}
@@ -430,9 +456,9 @@ function HomeScreen({C,user,db,streak}){
 }
 
 // ─── Other screens ────────────────────────────────────────────────────────────
-function ExploreScreen({C,db}){
+function ExploreScreen({C,db,isFav,toggleFav}){
   const [view,setView] = useState(null);
-  if(view==="traditions") return <TraditionsScreen C={C} db={db}/>;
+  if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>;
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
@@ -467,14 +493,17 @@ const SEASONS = [
   {id:"hiver",     label:"Hiver",     jp:"冬", emoji:"❄️", color:"#7B9BB5", months:"Déc – Fév"},
 ];
 
-function TraditionDetail({C,t,onBack}){
+function TraditionDetail({C,t,onBack,fav,onFav}){
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
       {/* Hero */}
       <div style={{padding:"50px 20px 24px",background:`linear-gradient(160deg,rgba(201,70,61,0.1) 0%,transparent 90%)`,position:"relative"}}>
-        <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:6,marginBottom:20}}>
-          ‹ Calendrier
-        </button>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+          <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:6}}>
+            ‹ Calendrier
+          </button>
+          {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
+        </div>
         <div style={{fontSize:54,marginBottom:8}}>{t.emoji}</div>
         <div style={{fontSize:11,color:C.red,letterSpacing:".2em",marginBottom:6,textTransform:"uppercase"}}>{t.mois}</div>
         <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{t.nom}</div>
@@ -537,12 +566,12 @@ function TraditionDetail({C,t,onBack}){
   );
 }
 
-function TraditionsScreen({C,db}){
+function TraditionsScreen({C,db,isFav,toggleFav}){
   const [season,setSeason] = useState("printemps");
   const [selected,setSelected] = useState(null);
   const traditions = db?.traditions || [];
 
-  if(selected) return <TraditionDetail C={C} t={selected} onBack={()=>setSelected(null)}/>;
+  if(selected) return <TraditionDetail C={C} t={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("tradition",selected)} onFav={toggleFav&&(()=>toggleFav("tradition",selected))}/>;
 
   const seasonData = SEASONS.find(s=>s.id===season);
   const filtered = traditions.filter(t=>t.saison===season);
@@ -657,7 +686,7 @@ function LearnScreen({C}){
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,streak}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
@@ -709,6 +738,43 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak}){
             </div>
           ))}
         </div>
+
+        {/* Ma collection (favoris) */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11}}>
+          <div style={{fontSize:10,color:C.t3,letterSpacing:".22em",textTransform:"uppercase"}}>Ma collection ♥</div>
+          <span style={{fontSize:11,color:C.t3}}>{favs?.length||0} sauvegardé{(favs?.length||0)>1?"s":""}</span>
+        </div>
+        {(!favs || favs.length===0) ? (
+          <div style={{padding:"22px 16px",textAlign:"center",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,marginBottom:22}}>
+            <div style={{fontSize:22,marginBottom:8}}>♡</div>
+            <div style={{fontSize:12,color:C.t3,lineHeight:1.6}}>Touche le cœur sur une carte<br/>pour la sauvegarder ici</div>
+          </div>
+        ) : (
+          <div style={{display:"flex",flexDirection:"column",gap:9,marginBottom:22}}>
+            {favs.map((f,i)=>{
+              const it=f.item;
+              const meta={
+                expr:{emoji:it.emoji||"🗣️", title:it.expression, sub:it.traduction, c:C.gold},
+                cult:{emoji:it.emoji||"🏮", title:it.titre, sub:it.tag, c:C.red},
+                repas:{emoji:it.emoji||"🍱", title:it.nom_jp, sub:it.traduction, c:C.green},
+                song:{emoji:it.emoji||"🎵", title:it.titre, sub:it.artiste, c:"#8B6FB0"},
+                tradition:{emoji:it.emoji||"⛩️", title:it.nom, sub:it.mois, c:C.red},
+              }[f.type]||{emoji:"♥",title:"",sub:"",c:C.red};
+              return(
+                <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
+                  <span style={{fontSize:22,flexShrink:0}}>{meta.emoji}</span>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:13,color:C.text,fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{meta.title}</div>
+                    <div style={{fontSize:11,color:C.t3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{meta.sub}</div>
+                  </div>
+                  <span style={{fontSize:8,padding:"2px 7px",borderRadius:20,background:`${meta.c}1a`,color:meta.c,letterSpacing:".08em",textTransform:"uppercase",flexShrink:0}}>{f.type}</span>
+                  <button onClick={()=>toggleFav(f.type,it)} aria-label="Retirer" style={{background:"transparent",border:"none",cursor:"pointer",color:C.red,fontSize:15,flexShrink:0,padding:4}}>♥</button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         <div style={{fontSize:10,color:C.t3,letterSpacing:".22em",marginBottom:11,textTransform:"uppercase"}}>Collection de badges</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
           {BADGES.map((b,i)=>(
@@ -866,6 +932,21 @@ function touchStreak(){
   return s;
 }
 
+// ─── Favorites (collection) ───────────────────────────────────────────────────
+const FAV_KEY = "isekaid_favs_v1";
+function loadFavs(){
+  try { const raw=localStorage.getItem(FAV_KEY); return raw?JSON.parse(raw):[]; }
+  catch { return []; }
+}
+function saveFavs(list){
+  try { localStorage.setItem(FAV_KEY, JSON.stringify(list)); } catch {}
+}
+// Build a stable id for any content item
+function favId(type, item){
+  const label = item.expression || item.titre || item.nom_jp || item.nom || "";
+  return `${type}:${label}`;
+}
+
 export default function IsekaidApp(){
   const [screen,setScreen]=useState("splash");
   const [tab,setTab]=useState("home");
@@ -873,6 +954,19 @@ export default function IsekaidApp(){
   const [dark,setDark]=useState(()=>loadTheme());      // read saved theme immediately
   const [db,setDb]=useState(null);
   const [streak,setStreak]=useState(()=>loadStreak()||{count:0,best:0,last:null});
+  const [favs,setFavs]=useState(()=>loadFavs());
+
+  const isFav = (type,item)=> favs.some(f=>f.id===favId(type,item));
+  const toggleFav = (type,item)=>{
+    const id = favId(type,item);
+    setFavs(prev=>{
+      const exists = prev.some(f=>f.id===id);
+      const next = exists ? prev.filter(f=>f.id!==id)
+                          : [{id, type, item, savedAt:Date.now()}, ...prev];
+      saveFavs(next);
+      return next;
+    });
+  };
   const C=dark?DARK:LIGHT;
 
   // Load content data on startup
@@ -910,11 +1004,11 @@ export default function IsekaidApp(){
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak}/>}
-              {tab==="explore"   &&<ExploreScreen   C={C} db={db}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav}/>}
+              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C}/>}
               {tab==="learn"     &&<LearnScreen     C={C}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav}/>}
             </div>
             <BottomNav C={C} active={tab} onChange={setTab}/>
           </>
