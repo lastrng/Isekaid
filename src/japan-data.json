@@ -1145,7 +1145,7 @@
       "nom_jp": "春分の日",
       "saison": "printemps",
       "mois": "~20 mars",
-      "emoji": "�",
+      "emoji": " ",
       "tagline": "L'équinoxe de printemps, entre nature et ancêtres",
       "histoire": "Jour férié national depuis 1948, Shunbun no Hi célèbre l'équinoxe de printemps. Issu d'un ancien rite shinto et bouddhiste (Higan), il marque l'équilibre parfait entre jour et nuit. C'est une période où l'on honore les ancêtres et où l'on célèbre l'arrivée de la nature renaissante.",
       "rituels": [
@@ -2296,6 +2296,248 @@
         "Accepter un compliment avec fierté visible",
         "Survaloriser ton entreprise face à autrui"
       ]
+    }
+  ],
+  "regions": [
+    {
+      "id": "hokkaido",
+      "nom": "Hokkaidō",
+      "nom_jp": "北海道",
+      "emoji": "❄️",
+      "position": "Nord",
+      "couleur": "#5B9BD5",
+      "tagline": "L'île sauvage du Grand Nord",
+      "ambiance": "La plus septentrionale et la plus vaste des îles, Hokkaidō évoque les grands espaces, les hivers neigeux, les sources chaudes fumantes et une nature préservée. Terre du peuple aïnou, elle offre un dépaysement total avec ses fermes laitières, ses champs de lavande et ses paysages volcaniques.",
+      "villes": [
+        "Sapporo",
+        "Hakodate",
+        "Otaru",
+        "Furano"
+      ],
+      "specialites": [
+        "Ramen au miso de Sapporo",
+        "Fruits de mer (crabe, oursin, saumon)",
+        "Produits laitiers et glaces",
+        "Soupe au curry"
+      ],
+      "dialecte": "Hokkaidō-ben — influencé par les parlers du Tōhoku, avec des intonations douces",
+      "incontournables": [
+        "Festival de la neige de Sapporo",
+        "Sources chaudes de Noboribetsu",
+        "Champs de lavande de Furano",
+        "Entrepôts historiques d'Otaru"
+      ],
+      "a_savoir": "Climat froid : prévoir des vêtements chauds même au printemps. La région est réputée pour la qualité exceptionnelle de ses produits frais."
+    },
+    {
+      "id": "tohoku",
+      "nom": "Tōhoku",
+      "nom_jp": "東北",
+      "emoji": "🌾",
+      "position": "Nord-Est de Honshū",
+      "couleur": "#7B9BB5",
+      "tagline": "Le Japon rural authentique",
+      "ambiance": "Région montagneuse et rurale du nord de Honshū, le Tōhoku incarne le Japon traditionnel et préservé : rizières, onsen secrets, festivals spectaculaires et hivers rigoureux. Moins touristique, elle séduit par son authenticité, sa nature généreuse et la chaleur de ses habitants.",
+      "villes": [
+        "Sendai",
+        "Aomori",
+        "Akita",
+        "Morioka"
+      ],
+      "specialites": [
+        "Gyūtan (langue de bœuf grillée) de Sendai",
+        "Wanko soba d'Iwate",
+        "Kiritanpo (riz grillé) d'Akita",
+        "Pommes d'Aomori"
+      ],
+      "dialecte": "Tōhoku-ben — réputé difficile, avec un accent rural marqué parfois surnommé 'zūzū-ben'",
+      "incontournables": [
+        "Festival Nebuta d'Aomori",
+        "Gorges de Geibikei",
+        "Onsen de Ginzan",
+        "Temple Chūson-ji de Hiraizumi"
+      ],
+      "a_savoir": "Région profondément marquée par le tsunami de 2011, aujourd'hui reconstruite. Idéale pour fuir les foules touristiques."
+    },
+    {
+      "id": "kanto",
+      "nom": "Kantō",
+      "nom_jp": "関東",
+      "emoji": "🗼",
+      "position": "Centre-Est de Honshū",
+      "couleur": "#C9463D",
+      "tagline": "Le cœur vibrant du Japon moderne",
+      "ambiance": "Région la plus peuplée du pays, dominée par Tokyo, le Kantō est le centre névralgique économique, culturel et politique. Mégapoles ultramodernes, néons, technologie de pointe et culture pop côtoient temples anciens et jardins paisibles. C'est le Japon du futur qui ne dort jamais.",
+      "villes": [
+        "Tokyo",
+        "Yokohama",
+        "Kamakura",
+        "Nikkō"
+      ],
+      "specialites": [
+        "Monjayaki",
+        "Sushi de style Edo (Edomae)",
+        "Soba de Tokyo",
+        "Ramen tonkotsu-shoyu"
+      ],
+      "dialecte": "Le dialecte de Tokyo est la base du japonais standard (hyōjungo)",
+      "incontournables": [
+        "Quartiers de Shibuya et Shinjuku",
+        "Grand Bouddha de Kamakura",
+        "Sanctuaires de Nikkō",
+        "Baie et Chinatown de Yokohama"
+      ],
+      "a_savoir": "Hub d'arrivée international (aéroports de Narita et Haneda). Transports denses et efficaces, mais foules importantes aux heures de pointe."
+    },
+    {
+      "id": "chubu",
+      "nom": "Chūbu",
+      "nom_jp": "中部",
+      "emoji": "🗻",
+      "position": "Centre de Honshū",
+      "couleur": "#6B8E7F",
+      "tagline": "Les Alpes japonaises et le mont Fuji",
+      "ambiance": "Région centrale montagneuse, le Chūbu abrite le mont Fuji, les majestueuses Alpes japonaises et des villages traditionnels classés à l'UNESCO. Entre stations de ski, villages aux toits de chaume et villes industrielles comme Nagoya, elle marie nature grandiose et savoir-faire ancestral.",
+      "villes": [
+        "Nagoya",
+        "Kanazawa",
+        "Takayama",
+        "Matsumoto"
+      ],
+      "specialites": [
+        "Hitsumabushi (anguille) de Nagoya",
+        "Miso rouge (hatchō miso)",
+        "Or comestible de Kanazawa",
+        "Soba de Shinshū"
+      ],
+      "dialecte": "Nagoya-ben et Hida-ben — variations régionales aux sonorités distinctes",
+      "incontournables": [
+        "Mont Fuji",
+        "Village historique de Shirakawa-gō",
+        "Jardin Kenroku-en de Kanazawa",
+        "Vieille ville de Takayama"
+      ],
+      "a_savoir": "Point de départ pour l'ascension du Fuji (juillet-août). Kanazawa est surnommée la 'petite Kyoto' pour son patrimoine préservé."
+    },
+    {
+      "id": "kansai",
+      "nom": "Kansai",
+      "nom_jp": "関西",
+      "emoji": "⛩️",
+      "position": "Centre-Ouest de Honshū",
+      "couleur": "#C4956A",
+      "tagline": "Le berceau historique et gourmand",
+      "ambiance": "Cœur historique et culturel du Japon, le Kansai abrite les anciennes capitales impériales Kyoto et Nara, et la bouillonnante Osaka, capitale de la gastronomie. Temples millénaires, geishas, cerfs sacrés et humour local : c'est la région la plus riche en patrimoine et en personnalité.",
+      "villes": [
+        "Osaka",
+        "Kyoto",
+        "Nara",
+        "Kobe"
+      ],
+      "specialites": [
+        "Takoyaki et okonomiyaki d'Osaka",
+        "Bœuf de Kobe",
+        "Kaiseki de Kyoto",
+        "Cuisine végétarienne des temples"
+      ],
+      "dialecte": "Kansai-ben — chaleureux, expressif et plein d'humour, très différent du japonais standard",
+      "incontournables": [
+        "Temples et geishas de Kyoto",
+        "Cerfs sacrés de Nara",
+        "Château et quartier Dōtonbori d'Osaka",
+        "Fushimi Inari et ses milliers de torii"
+      ],
+      "a_savoir": "Les habitants du Kansai sont réputés pour leur sens de l'humour et leur convivialité. Osaka se vit comme la 'cuisine du Japon'."
+    },
+    {
+      "id": "chugoku",
+      "nom": "Chūgoku",
+      "nom_jp": "中国",
+      "emoji": "⛩️",
+      "position": "Ouest de Honshū",
+      "couleur": "#9E7A1A",
+      "tagline": "Mémoire et sanctuaires flottants",
+      "ambiance": "À l'extrémité ouest de Honshū, le Chūgoku mêle histoire poignante et beauté spirituelle. Hiroshima porte la mémoire de la paix, tandis que le sanctuaire flottant de Miyajima offre l'une des images les plus iconiques du Japon. Une région contrastée entre côte paisible et montagnes intérieures.",
+      "villes": [
+        "Hiroshima",
+        "Okayama",
+        "Matsue",
+        "Kurashiki"
+      ],
+      "specialites": [
+        "Okonomiyaki de Hiroshima (en couches)",
+        "Huîtres de Miyajima",
+        "Momiji manjū",
+        "Saké de la région"
+      ],
+      "dialecte": "Hiroshima-ben et Izumo-ben — accents de l'ouest aux particularités marquées",
+      "incontournables": [
+        "Mémorial de la Paix de Hiroshima",
+        "Torii flottant de Miyajima",
+        "Jardin Kōraku-en d'Okayama",
+        "Quartier historique de Kurashiki"
+      ],
+      "a_savoir": "Le grand sanctuaire d'Izumo (Izumo Taisha) est l'un des plus anciens et sacrés du Japon, dédié aux liens amoureux."
+    },
+    {
+      "id": "shikoku",
+      "nom": "Shikoku",
+      "nom_jp": "四国",
+      "emoji": "🍃",
+      "position": "Île du Sud-Ouest",
+      "couleur": "#3A6645",
+      "tagline": "L'île du pèlerinage et de la nature",
+      "ambiance": "La plus petite des quatre îles principales, Shikoku est célèbre pour son pèlerinage bouddhiste de 88 temples (ohenro). Authentique et préservée, elle offre des gorges spectaculaires, des ponts de lianes, des onsen historiques et un mode de vie paisible loin de l'agitation urbaine.",
+      "villes": [
+        "Matsuyama",
+        "Takamatsu",
+        "Kōchi",
+        "Tokushima"
+      ],
+      "specialites": [
+        "Sanuki udon de Kagawa",
+        "Katsuo no tataki (bonite) de Kōchi",
+        "Sudachi (agrume) de Tokushima",
+        "Mikan (mandarines)"
+      ],
+      "dialecte": "Tosa-ben, Iyo-ben — dialectes insulaires aux intonations chantantes",
+      "incontournables": [
+        "Pèlerinage des 88 temples",
+        "Onsen Dōgo de Matsuyama (un des plus anciens)",
+        "Gorges et ponts de lianes d'Iya",
+        "Jardin Ritsurin de Takamatsu"
+      ],
+      "a_savoir": "Le pèlerinage ohenro (1200 km) attire chaque année des marcheurs du monde entier, vêtus de blanc. Kagawa est le royaume de l'udon."
+    },
+    {
+      "id": "kyushu-okinawa",
+      "nom": "Kyūshū & Okinawa",
+      "nom_jp": "九州・沖縄",
+      "emoji": "🌺",
+      "position": "Sud du Japon",
+      "couleur": "#D98BA8",
+      "tagline": "Volcans, onsen et tropiques",
+      "ambiance": "Le sud du Japon mêle la terre volcanique de Kyūshū — riche en sources chaudes, en porcelaine et en histoire d'ouverture sur le monde — et l'archipel subtropical d'Okinawa, avec ses plages paradisiaques, sa culture ryūkyū unique et l'une des plus grandes longévités du monde.",
+      "villes": [
+        "Fukuoka",
+        "Nagasaki",
+        "Kagoshima",
+        "Naha (Okinawa)"
+      ],
+      "specialites": [
+        "Ramen tonkotsu de Hakata (Fukuoka)",
+        "Champon de Nagasaki",
+        "Shōchū de patate douce",
+        "Cuisine d'Okinawa (gōyā, sōki soba)"
+      ],
+      "dialecte": "Hakata-ben, et l'uchināguchi d'Okinawa (langue ryūkyū distincte du japonais)",
+      "incontournables": [
+        "Volcan Sakurajima de Kagoshima",
+        "Onsen d'enfer de Beppu",
+        "Patrimoine chrétien de Nagasaki",
+        "Plages et culture ryūkyū d'Okinawa"
+      ],
+      "a_savoir": "Okinawa possède une culture, une cuisine et une langue propres, héritées du royaume des Ryūkyū. Les habitants y sont parmi les plus âgés au monde (ikigai)."
     }
   ]
 }
