@@ -1138,6 +1138,562 @@
       ],
       "gastronomie": "Fukumame (graines de soja grillées), ehō-maki (gros maki porte-bonheur)",
       "lieu_phare": "Temple Sensō-ji (Tokyo), Yoshida (Kyoto), Naritasan"
+    },
+    {
+      "id": "shunbun",
+      "nom": "Shunbun no Hi",
+      "nom_jp": "春分の日",
+      "saison": "printemps",
+      "mois": "~20 mars",
+      "emoji": "�",
+      "tagline": "L'équinoxe de printemps, entre nature et ancêtres",
+      "histoire": "Jour férié national depuis 1948, Shunbun no Hi célèbre l'équinoxe de printemps. Issu d'un ancien rite shinto et bouddhiste (Higan), il marque l'équilibre parfait entre jour et nuit. C'est une période où l'on honore les ancêtres et où l'on célèbre l'arrivée de la nature renaissante.",
+      "rituels": [
+        "Visiter et nettoyer les tombes familiales (ohaka mairi)",
+        "Offrir des botamochi (boulettes de riz aux haricots rouges)",
+        "Admirer les premiers signes du printemps",
+        "Méditer sur l'équilibre et le renouveau"
+      ],
+      "comment_vivre": [
+        "Prends un moment pour honorer la mémoire d'un proche",
+        "Prépare ou goûte des botamochi",
+        "Observe l'équilibre jour/nuit de cette journée",
+        "Fais un nettoyage de printemps symbolique"
+      ],
+      "gastronomie": "Botamochi (mochi enrobés de pâte de haricots rouges)",
+      "lieu_phare": "Temples et cimetières familiaux à travers le Japon"
+    },
+    {
+      "id": "kanbutsue",
+      "nom": "Kanbutsue",
+      "nom_jp": "灌仏会",
+      "saison": "printemps",
+      "mois": "8 avril",
+      "emoji": "🪷",
+      "tagline": "L'anniversaire de Bouddha, fête des fleurs",
+      "histoire": "Aussi appelée Hana Matsuri (fête des fleurs), cette célébration bouddhiste commémore la naissance de Bouddha. Les temples installent un petit pavillon fleuri (hanamidō) abritant une statue du Bouddha enfant, sur laquelle les fidèles versent du thé doux (amacha) en signe de purification.",
+      "rituels": [
+        "Verser de l'amacha (thé d'hortensia doux) sur la statue du Bouddha enfant",
+        "Décorer les temples de fleurs printanières",
+        "Prier pour la paix et la compassion",
+        "Boire de l'amacha pour la santé"
+      ],
+      "comment_vivre": [
+        "Visite un temple bouddhiste si possible",
+        "Découvre la symbolique de la naissance de Bouddha",
+        "Goûte un thé doux en signe de purification"
+      ],
+      "gastronomie": "Amacha (thé doux d'hortensia)",
+      "lieu_phare": "Temples bouddhistes — Sensō-ji (Tokyo), Tōdai-ji (Nara)"
+    },
+    {
+      "id": "kodomo",
+      "nom": "Kodomo no Hi",
+      "nom_jp": "こどもの日",
+      "saison": "printemps",
+      "mois": "5 mai",
+      "emoji": "🎏",
+      "tagline": "La fête des enfants et les carpes volantes",
+      "histoire": "Clôturant la Golden Week, le Jour des Enfants célèbre le bonheur et la santé de tous les enfants. Les familles hissent des koinobori (manches à air en forme de carpe), symbole de force et de persévérance — la carpe remontant les rivières à contre-courant. On expose aussi des armures et casques miniatures de samouraï.",
+      "rituels": [
+        "Hisser des koinobori colorés dans le jardin ou au balcon",
+        "Exposer un casque (kabuto) de samouraï",
+        "Prendre un bain aux feuilles d'iris (shōbu-yu)",
+        "Manger des kashiwa mochi et chimaki"
+      ],
+      "comment_vivre": [
+        "Accroche une carpe koinobori chez toi",
+        "Découvre la symbolique de force de la carpe",
+        "Prends un bain parfumé aux feuilles d'iris",
+        "Réfléchis à la persévérance "
+      ],
+      "gastronomie": "Kashiwa mochi (mochi en feuille de chêne), chimaki",
+      "lieu_phare": "Rivière Tama, Tatebayashi (champ de 5000 koinobori)"
+    },
+    {
+      "id": "gion",
+      "nom": "Gion Matsuri",
+      "nom_jp": "祇園祭",
+      "saison": "été",
+      "mois": "Tout juillet",
+      "emoji": "🏮",
+      "tagline": "Le plus célèbre festival du Japon, à Kyoto",
+      "histoire": "Datant de 869, le Gion Matsuri est l'un des plus grands festivals du Japon, né pour apaiser les dieux lors d'une épidémie. Pendant tout le mois de juillet, Kyoto s'anime, culminant avec le Yamaboko Junkō : une procession de chars monumentaux (certains de 25 mètres et 12 tonnes) richement décorés, classés au patrimoine de l'UNESCO.",
+      "rituels": [
+        "Admirer la grande procession des chars yamaboko",
+        "Déambuler dans les rues fermées aux voitures (yoiyama)",
+        "Porter un yukata pour les soirées de festival",
+        "Goûter aux spécialités des stands de Kyoto"
+      ],
+      "comment_vivre": [
+        "Découvre les chars yamaboko et leur artisanat",
+        "Porte un yukata pour entrer dans l'ambiance",
+        "Explore les ruelles animées de Kyoto en soirée"
+      ],
+      "gastronomie": "Hamo (anguille de mer), spécialités estivales de Kyoto",
+      "lieu_phare": "Kyoto, quartier de Gion et centre-ville"
+    },
+    {
+      "id": "hanabi",
+      "nom": "Hanabi Taikai",
+      "nom_jp": "花火大会",
+      "saison": "été",
+      "mois": "Juillet – Août",
+      "emoji": "🎆",
+      "tagline": "Les grands spectacles de feux d'artifice",
+      "histoire": "Les hanabi taikai (compétitions de feux d'artifice) sont un sommet de l'été japonais. La tradition remonte à l'époque Edo, où les feux servaient à apaiser les âmes des victimes de famines et d'épidémies. Aujourd'hui, des dizaines de milliers de spectateurs se rassemblent au bord des rivières pour admirer des spectacles pouvant compter plus de 20 000 tirs.",
+      "rituels": [
+        "S'installer au bord d'une rivière en yukata",
+        "Pique-niquer en attendant la tombée de la nuit",
+        "Admirer les motifs élaborés (saules, cœurs, fleurs)",
+        "Crier 'Tamaya !' ou 'Kagiya !' d'admiration"
+      ],
+      "comment_vivre": [
+        "Trouve un point de vue dégagé près de l'eau",
+        "Porte un yukata et prends un éventail",
+        "Apporte de quoi pique-niquer",
+        "Savoure le contraste entre lumière et nuit d'été"
+      ],
+      "gastronomie": "Yakisoba, kakigōri, ramune (limonade), pommes d'amour",
+      "lieu_phare": "Sumidagawa (Tokyo), Nagaoka, lac Biwa"
+    },
+    {
+      "id": "umi",
+      "nom": "Umi no Hi",
+      "nom_jp": "海の日",
+      "saison": "été",
+      "mois": "3e lundi de juillet",
+      "emoji": "🌊",
+      "tagline": "Le Jour de la Mer, gratitude maritime",
+      "histoire": "Instauré en 1995, Umi no Hi (Jour de la Mer) honore l'océan et son importance pour le Japon, nation insulaire. C'est le seul jour férié de ce type au monde. Il marque traditionnellement le début de la saison des baignades et des vacances d'été. Les familles affluent vers les plages et les aquariums.",
+      "rituels": [
+        "Aller à la plage ou à la mer",
+        "Visiter un aquarium",
+        "Participer à des événements maritimes locaux",
+        "Remercier symboliquement l'océan"
+      ],
+      "comment_vivre": [
+        "Profite d'une journée près de l'eau",
+        "Découvre la relation du Japon à la mer",
+        "Visite un aquarium si tu es loin des côtes"
+      ],
+      "gastronomie": "Fruits de mer, kakigōri en bord de plage",
+      "lieu_phare": "Plages de Shōnan (Kanagawa), Okinawa"
+    },
+    {
+      "id": "shubun",
+      "nom": "Shūbun no Hi",
+      "nom_jp": "秋分の日",
+      "saison": "automne",
+      "mois": "~23 septembre",
+      "emoji": "🌾",
+      "tagline": "L'équinoxe d'automne et le souvenir des ancêtres",
+      "histoire": "Pendant automnal de Shunbun no Hi, ce jour férié célèbre l'équinoxe d'automne, autre moment d'équilibre parfait entre jour et nuit. Durant cette période de Higan, les familles honorent leurs ancêtres et apprécient la transition vers les couleurs et les récoltes de l'automne.",
+      "rituels": [
+        "Visiter les tombes familiales (ohaka mairi)",
+        "Offrir des ohagi (boulettes de riz aux haricots)",
+        "Apprécier le changement de saison",
+        "Honorer la mémoire des défunts"
+      ],
+      "comment_vivre": [
+        "Prends un moment de gratitude pour tes aînés",
+        "Goûte des ohagi (version automnale du botamochi)",
+        "Observe l'équilibre jour/nuit"
+      ],
+      "gastronomie": "Ohagi (mochi aux haricots rouges, version automne)",
+      "lieu_phare": "Temples et cimetières familiaux"
+    },
+    {
+      "id": "taiku",
+      "nom": "Sports Day",
+      "nom_jp": "体育の日",
+      "saison": "automne",
+      "mois": "2e lundi d'octobre",
+      "emoji": "🏃",
+      "tagline": "La journée nationale du sport",
+      "histoire": "Créé en 1966 pour commémorer les Jeux Olympiques de Tokyo 1964, le Taiiku no Hi (Jour du Sport) célèbre la santé et l'activité physique. Les écoles et communautés organisent des undōkai (fêtes sportives) avec courses, relais et jeux collectifs, dans une ambiance bon enfant qui rassemble familles et quartiers.",
+      "rituels": [
+        "Participer à un undōkai (fête sportive scolaire ou de quartier)",
+        "Courir des relais et jeux d'équipe",
+        "Encourager familles et enfants",
+        "Partager un bentō en plein air"
+      ],
+      "comment_vivre": [
+        "Fais une activité physique en plein air",
+        "Découvre l'esprit collectif des undōkai",
+        "Profite de l'air frais d'automne"
+      ],
+      "gastronomie": "Bentō partagés lors des fêtes sportives",
+      "lieu_phare": "Écoles et parcs à travers le Japon"
+    },
+    {
+      "id": "jidai",
+      "nom": "Jidai Matsuri",
+      "nom_jp": "時代祭",
+      "saison": "automne",
+      "mois": "22 octobre",
+      "emoji": "🏯",
+      "tagline": "Le festival des époques, défilé historique de Kyoto",
+      "histoire": "L'un des trois grands festivals de Kyoto, le Jidai Matsuri ('festival des époques') a été créé en 1895 pour célébrer le 1100e anniversaire de la fondation de la ville. Une procession de plus de 2000 participants en costumes d'époque retrace 1200 ans d'histoire japonaise, du période Meiji jusqu'à l'ère Heian.",
+      "rituels": [
+        "Admirer le grand défilé en costumes historiques",
+        "Reconnaître les différentes époques représentées",
+        "Découvrir l'artisanat des costumes authentiques",
+        "Photographier les personnages historiques"
+      ],
+      "comment_vivre": [
+        "Découvre les grandes époques de l'histoire japonaise",
+        "Observe la précision des costumes d'époque",
+        "Apprends l'histoire de Kyoto, ancienne capitale"
+      ],
+      "gastronomie": "Spécialités automnales de Kyoto, châtaignes",
+      "lieu_phare": "Kyoto, du Palais impérial au sanctuaire Heian"
+    },
+    {
+      "id": "toji",
+      "nom": "Tōji",
+      "nom_jp": "冬至",
+      "saison": "hiver",
+      "mois": "~22 décembre",
+      "emoji": "🍊",
+      "tagline": "Le solstice d'hiver et le bain au yuzu",
+      "histoire": "Tōji marque le solstice d'hiver, la nuit la plus longue de l'année. La tradition veut qu'on prenne un bain au yuzu (yuzu-yu) pour se réchauffer, se purifier et se protéger des rhumes durant l'hiver. On mange aussi de la courge (kabocha), réputée porter chance et santé pendant la saison froide.",
+      "rituels": [
+        "Prendre un bain parfumé au yuzu (yuzu-yu)",
+        "Manger de la courge kabocha",
+        "Se réchauffer en famille",
+        "Célébrer le retour progressif de la lumière"
+      ],
+      "comment_vivre": [
+        "Fais couler un bain chaud avec des agrumes",
+        "Cuisine une courge pour la chance",
+        "Marque symboliquement le retour de la lumière"
+      ],
+      "gastronomie": "Kabocha (courge japonaise), bain au yuzu",
+      "lieu_phare": "Onsen proposant des bains au yuzu, foyers japonais"
+    },
+    {
+      "id": "seijin",
+      "nom": "Seijin no Hi",
+      "nom_jp": "成人の日",
+      "saison": "hiver",
+      "mois": "2e lundi de janvier",
+      "emoji": "👘",
+      "tagline": "La cérémonie de passage à l'âge adulte",
+      "histoire": "Le Seijin no Hi (Jour de la majorité) célèbre les jeunes ayant atteint l'âge adulte dans l'année. Les municipalités organisent des cérémonies (seijinshiki) où les jeunes femmes portent de somptueux kimonos à manches longues (furisode) et les hommes des costumes ou hakama. C'est un rite de passage majeur, riche en photos et en émotion.",
+      "rituels": [
+        "Porter un furisode (kimono à longues manches) ou un hakama",
+        "Assister à la cérémonie municipale",
+        "Prendre des photos formelles en famille",
+        "Se réunir avec ses anciens camarades de classe"
+      ],
+      "comment_vivre": [
+        "Découvre la beauté des furisode",
+        "Réfléchis aux rites de passage vers l'âge adulte",
+        "Admire les tenues traditionnelles dans les rues ce jour-là"
+      ],
+      "gastronomie": "Repas festifs en famille",
+      "lieu_phare": "Mairies et sanctuaires, partout au Japon"
+    },
+    {
+      "id": "valentine",
+      "nom": "Saint-Valentin & White Day",
+      "nom_jp": "バレンタインデー",
+      "saison": "hiver",
+      "mois": "14 février / 14 mars",
+      "emoji": "🍫",
+      "tagline": "Une version japonaise unique de la Saint-Valentin",
+      "histoire": "Au Japon, la Saint-Valentin est inversée : ce sont les femmes qui offrent du chocolat aux hommes. On distingue le giri-choco (chocolat 'd'obligation' pour collègues) du honmei-choco (pour l'être aimé). Un mois plus tard, le 14 mars, le White Day inverse les rôles : les hommes rendent la pareille, souvent avec un cadeau de valeur supérieure.",
+      "rituels": [
+        "Offrir du chocolat le 14 février (des femmes vers les hommes)",
+        "Distinguer giri-choco et honmei-choco",
+        "Rendre un cadeau le White Day (14 mars)",
+        "Préparer parfois des chocolats faits maison"
+      ],
+      "comment_vivre": [
+        "Découvre cette inversion culturelle unique",
+        "Offre un chocolat avec l'intention appropriée",
+        "Note la règle du 'sanbai gaeshi' (rendre au triple)"
+      ],
+      "gastronomie": "Chocolats artisanaux et industriels",
+      "lieu_phare": "Grands magasins et pâtisseries, tout le Japon"
+    },
+    {
+      "id": "ohanami-yozakura",
+      "nom": "Yozakura",
+      "nom_jp": "夜桜",
+      "saison": "printemps",
+      "mois": "Mars – Avril",
+      "emoji": "🌸",
+      "tagline": "Contempler les cerisiers illuminés la nuit",
+      "histoire": "Le yozakura ('cerisiers de nuit') prolonge le hanami après le coucher du soleil. Parcs et allées s'illuminent de lanternes, créant une atmosphère féérique et romantique. Cette pratique remonte à l'époque Edo, où l'aristocratie organisait des fêtes nocturnes sous les pétales éclairés à la lueur des lampions.",
+      "rituels": [
+        "Se promener sous les cerisiers illuminés au crépuscule",
+        "Installer des lanternes (bonbori) le long des allées",
+        "Pique-niquer en soirée avec du saké chaud",
+        "Photographier les reflets des pétales sur l'eau"
+      ],
+      "comment_vivre": [
+        "Cherche un parc proposant des illuminations nocturnes",
+        "Apporte une boisson chaude pour la fraîcheur du soir",
+        "Privilégie l'ambiance contemplative au crépuscule",
+        "Observe le contraste entre la nuit et les pétales clairs"
+      ],
+      "gastronomie": "Saké chaud (atsukan), hanami dango, snacks de yatai",
+      "lieu_phare": "Parc de Ueno (Tokyo), château d'Osaka, Meguro (Tokyo)"
+    },
+    {
+      "id": "shanichi",
+      "nom": "Shanichi",
+      "nom_jp": "社日",
+      "saison": "printemps",
+      "mois": "Mars",
+      "emoji": "🌾",
+      "tagline": "Prier la divinité de la terre pour les récoltes",
+      "histoire": "Le Shanichi est un jour de culte dédié à l'ujigami, la divinité tutélaire de la terre et de l'agriculture. Au printemps, on prie pour de bonnes semailles ; à l'automne, pour remercier de la récolte. Cette tradition agraire d'origine chinoise rythme la vie rurale depuis des siècles.",
+      "rituels": [
+        "Se rendre au sanctuaire local de l'ujigami",
+        "Offrir du saké et du riz à la divinité",
+        "Prier pour la fertilité des terres",
+        "Partager un repas communautaire après le culte"
+      ],
+      "comment_vivre": [
+        "Renseigne-toi sur le sanctuaire protecteur d'un quartier",
+        "Découvre le lien shinto entre terre et divinité",
+        "Apprécie la dimension agricole du calendrier japonais"
+      ],
+      "gastronomie": "Riz nouveau, saké d'offrande (omiki)",
+      "lieu_phare": "Sanctuaires ruraux à travers le Japon"
+    },
+    {
+      "id": "kanamara",
+      "nom": "Hana-matsuri",
+      "nom_jp": "花祭り",
+      "saison": "printemps",
+      "mois": "8 avril",
+      "emoji": "🪷",
+      "tagline": "Célébrer la naissance du Bouddha",
+      "histoire": "Le Hana-matsuri ('fête des fleurs') commémore la naissance de Bouddha Shakyamuni. Les temples érigent un petit pavillon fleuri (hanamido) abritant une statue du Bouddha enfant, sur laquelle les fidèles versent du thé sucré (amacha) en signe de purification et de dévotion.",
+      "rituels": [
+        "Verser du thé doux (amacha) sur la statue du Bouddha enfant",
+        "Décorer le pavillon de fleurs printanières",
+        "Offrir des prières dans les temples bouddhistes",
+        "Boire de l'amacha pour la santé"
+      ],
+      "comment_vivre": [
+        "Visite un temple bouddhiste début avril",
+        "Découvre le geste de purification à l'amacha",
+        "Apprécie la symbolique des fleurs entourant Bouddha"
+      ],
+      "gastronomie": "Amacha (thé d'hortensia sucré), wagashi de saison",
+      "lieu_phare": "Temples bouddhistes — Sensō-ji (Tokyo), temples de Kyoto"
+    },
+    {
+      "id": "mitama",
+      "nom": "Mitama Matsuri",
+      "nom_jp": "みたままつり",
+      "saison": "été",
+      "mois": "Mi-juillet",
+      "emoji": "🏮",
+      "tagline": "Des milliers de lanternes pour honorer les âmes",
+      "histoire": "Le Mitama Matsuri est un festival estival d'honneur aux esprits des défunts, en particulier au sanctuaire Yasukuni de Tokyo. Plus de 30 000 lanternes illuminent les allées, offrant un spectacle saisissant. Né dans l'après-guerre, il mêle recueillement et atmosphère festive.",
+      "rituels": [
+        "Admirer les milliers de lanternes suspendues",
+        "Écrire un message sur une lanterne dédiée",
+        "Participer aux danses et spectacles traditionnels",
+        "Déguster la street food des stands"
+      ],
+      "comment_vivre": [
+        "Cherche un festival de lanternes en juillet",
+        "Apprécie le contraste entre recueillement et fête",
+        "Découvre la symbolique des lanternes-âmes"
+      ],
+      "gastronomie": "Yakisoba, kakigōri, bière de festival",
+      "lieu_phare": "Sanctuaire Yasukuni (Tokyo)"
+    },
+    {
+      "id": "nebuta",
+      "nom": "Nebuta Matsuri",
+      "nom_jp": "ねぶた祭り",
+      "saison": "été",
+      "mois": "Début août",
+      "emoji": "🎐",
+      "tagline": "Les chars-lanternes géants d'Aomori",
+      "histoire": "Le Nebuta Matsuri d'Aomori est l'un des festivals les plus spectaculaires du Japon. D'immenses chars-lanternes en papier washi, représentant guerriers et divinités mythologiques, défilent dans les rues au son des tambours taiko, accompagnés de danseurs haneto bondissants. Classé patrimoine culturel important.",
+      "rituels": [
+        "Défiler avec les chars-lanternes illuminés",
+        "Danser en costume de haneto en criant 'Rassera!'",
+        "Jouer des tambours taiko et des flûtes",
+        "Admirer le travail artisanal des chars en washi"
+      ],
+      "comment_vivre": [
+        "Découvre les vidéos du Nebuta si tu ne peux y aller",
+        "Apprends le cri 'Rassera!' des danseurs",
+        "Admire l'art du papier washi illuminé"
+      ],
+      "gastronomie": "Spécialités d'Aomori, pommes, fruits de mer",
+      "lieu_phare": "Aomori (Tōhoku) — début août"
+    },
+    {
+      "id": "toro-nagashi",
+      "nom": "Tōrō Nagashi",
+      "nom_jp": "灯籠流し",
+      "saison": "été",
+      "mois": "Mi-août",
+      "emoji": "🕯️",
+      "tagline": "Lâcher des lanternes flottantes sur l'eau",
+      "histoire": "Le Tōrō Nagashi clôt souvent les célébrations d'Obon : des lanternes en papier portant le nom des défunts sont déposées sur les rivières et la mer pour guider les âmes ancestrales vers l'au-delà. Le spectacle de centaines de lumières dérivant dans la nuit est d'une beauté mélancolique saisissante.",
+      "rituels": [
+        "Inscrire le nom d'un défunt sur une lanterne",
+        "Déposer délicatement la lanterne sur l'eau",
+        "Observer en silence les lumières dériver",
+        "Prier pour le repos des âmes"
+      ],
+      "comment_vivre": [
+        "Allume une bougie flottante en mémoire d'un proche",
+        "Médite sur le cycle de la vie et de la mort",
+        "Apprécie la beauté du mono no aware dans ce rite"
+      ],
+      "gastronomie": "Plats végétariens d'Obon, fruits offerts aux ancêtres",
+      "lieu_phare": "Hiroshima (Peace Memorial), Arashiyama (Kyoto)"
+    },
+    {
+      "id": "kuri",
+      "nom": "Kuri-hiroi",
+      "nom_jp": "栗拾い",
+      "saison": "automne",
+      "mois": "Septembre – Octobre",
+      "emoji": "🌰",
+      "tagline": "La cueillette des châtaignes d'automne",
+      "histoire": "La récolte des châtaignes (kuri) est une tradition automnale conviviale. Familles et amis se rendent dans les vergers pour ramasser les châtaignes tombées, symbole de l'abondance de la saison. La châtaigne tient une place centrale dans la cuisine d'automne, des plats salés aux wagashi.",
+      "rituels": [
+        "Ramasser les châtaignes dans les vergers",
+        "Cuisiner le kuri gohan (riz aux châtaignes)",
+        "Préparer des wagashi à la châtaigne",
+        "Partager la récolte en famille"
+      ],
+      "comment_vivre": [
+        "Cuisine un riz aux châtaignes de saison",
+        "Goûte le mont-blanc japonais (montblanc au kuri)",
+        "Apprécie l'arrivée des saveurs automnales"
+      ],
+      "gastronomie": "Kuri gohan, montblanc japonais, kuri kinton",
+      "lieu_phare": "Vergers de Nagano, Tanba (Kyoto)"
+    },
+    {
+      "id": "jugoya",
+      "nom": "Otsukimi Dango",
+      "nom_jp": "お月見団子",
+      "saison": "automne",
+      "mois": "Septembre",
+      "emoji": "🍡",
+      "tagline": "Offrir des boulettes à la lune des moissons",
+      "histoire": "Lors de la pleine lune d'automne (jūgoya), on empile des boulettes de riz blanches (tsukimi dango) en pyramide pour honorer la lune et remercier des récoltes. Le chiffre des dango varie selon les régions — souvent 15, en référence au 15e jour lunaire. Une offrande à la fois esthétique et spirituelle.",
+      "rituels": [
+        "Empiler les dango en pyramide vers la lune",
+        "Décorer avec des herbes susuki",
+        "Contempler la pleine lune en silence",
+        "Offrir les dango puis les déguster"
+      ],
+      "comment_vivre": [
+        "Prépare des dango ronds et blancs",
+        "Dispose-les près d'une fenêtre face à la lune",
+        "Accompagne d'herbes hautes décoratives"
+      ],
+      "gastronomie": "Tsukimi dango, taro, edamame, saké",
+      "lieu_phare": "Jardins et maisons à travers le Japon"
+    },
+    {
+      "id": "inoko",
+      "nom": "Inoko",
+      "nom_jp": "亥の子",
+      "saison": "automne",
+      "mois": "Octobre – Novembre",
+      "emoji": "🐗",
+      "tagline": "Le festival du sanglier pour la prospérité",
+      "histoire": "L'Inoko célèbre le jour du sanglier selon le calendrier lunaire, principalement dans l'ouest du Japon. On mange des gâteaux de riz (inoko mochi) pour la santé et la fécondité, et les enfants frappent le sol avec des pierres ou des bottes de paille en chantant, pour bénir les récoltes et éloigner le mal.",
+      "rituels": [
+        "Manger des inoko mochi pour la santé",
+        "Les enfants frappent le sol en chantant",
+        "Allumer le premier feu de l'hiver (kotatsu)",
+        "Prier pour la prospérité de la maison"
+      ],
+      "comment_vivre": [
+        "Découvre cette tradition rurale de l'ouest japonais",
+        "Apprends le lien entre sanglier et fécondité",
+        "Marque symboliquement le début de la saison froide"
+      ],
+      "gastronomie": "Inoko mochi (gâteaux de riz aux sept ingrédients)",
+      "lieu_phare": "Ouest du Japon — Chūgoku, Shikoku"
+    },
+    {
+      "id": "toshikoshi",
+      "nom": "Joya no Kane",
+      "nom_jp": "除夜の鐘",
+      "saison": "hiver",
+      "mois": "31 décembre",
+      "emoji": "🔔",
+      "tagline": "Les 108 cloches qui chassent les désirs",
+      "histoire": "À minuit le 31 décembre, les temples bouddhistes du Japon sonnent leur cloche 108 fois. Ce nombre correspond aux 108 passions et désirs terrestres (bonnō) qui, selon le bouddhisme, sont source de souffrance. Chaque coup en purifie un, permettant d'entrer dans la nouvelle année l'esprit purifié.",
+      "rituels": [
+        "Écouter ou faire sonner les 108 coups de cloche",
+        "Se recueillir dans un temple à minuit",
+        "Réfléchir aux attachements à abandonner",
+        "Accueillir l'année dans le calme et la purification"
+      ],
+      "comment_vivre": [
+        "Écoute une diffusion des cloches à minuit",
+        "Médite sur ce que tu veux laisser derrière toi",
+        "Aborde la nouvelle année en pleine conscience"
+      ],
+      "gastronomie": "Toshikoshi soba, amazake chaud",
+      "lieu_phare": "Temples — Chion-in (Kyoto), Zōjō-ji (Tokyo)"
+    },
+    {
+      "id": "kagami-biraki",
+      "nom": "Kagami Biraki",
+      "nom_jp": "鏡開き",
+      "saison": "hiver",
+      "mois": "11 janvier",
+      "emoji": "🍡",
+      "tagline": "Briser le mochi du nouvel an pour la chance",
+      "histoire": "Le Kagami Biraki ('ouverture du miroir') consiste à briser le kagami mochi — deux galettes de riz empilées surmontées d'une orange — offert aux divinités pendant le nouvel an. On le casse à la main ou au maillet (jamais au couteau, qui évoquerait la coupure des liens), puis on le mange en soupe pour s'attirer santé et fortune.",
+      "rituels": [
+        "Briser le kagami mochi à la main ou au maillet",
+        "Cuisiner les morceaux en zenzai (soupe sucrée)",
+        "Partager le mochi avec la famille",
+        "Remercier les divinités du nouvel an"
+      ],
+      "comment_vivre": [
+        "Prépare une soupe de mochi (zenzai ou ozōni)",
+        "Ne coupe jamais le mochi au couteau (symbolique)",
+        "Découvre la symbolique du kagami mochi"
+      ],
+      "gastronomie": "Zenzai (soupe de haricots rouges sucrée au mochi)",
+      "lieu_phare": "Foyers japonais, dojos d'arts martiaux"
+    },
+    {
+      "id": "sapporo-yuki",
+      "nom": "Festival de la neige",
+      "nom_jp": "さっぽろ雪まつり",
+      "saison": "hiver",
+      "mois": "Février",
+      "emoji": "⛄",
+      "tagline": "Les sculptures de glace monumentales de Sapporo",
+      "histoire": "Le Sapporo Yuki Matsuri, né en 1950, est devenu l'un des plus grands festivals d'hiver au monde. Des sculptures de neige et de glace gigantesques — châteaux, personnages, monuments — envahissent le parc Ōdōri, attirant des millions de visiteurs. Un éblouissant mariage d'art éphémère et de rigueur hivernale.",
+      "rituels": [
+        "Admirer les sculptures de neige monumentales",
+        "Visiter les illuminations nocturnes des œuvres",
+        "Goûter la cuisine d'Hokkaido sur les stands",
+        "Patiner ou glisser sur les installations"
+      ],
+      "comment_vivre": [
+        "Découvre les sculptures emblématiques en images",
+        "Apprécie l'art éphémère de la glace",
+        "Goûte les spécialités d'Hokkaido (ramen, fruits de mer)"
+      ],
+      "gastronomie": "Ramen de Sapporo, fruits de mer, maïs grillé, soupe au lait",
+      "lieu_phare": "Sapporo, Hokkaido — parc Ōdōri, février"
     }
   ],
   "codes_sociaux": [
@@ -1439,6 +1995,306 @@
         "Laisser un pourboire (souvent refusé ou gênant)",
         "Tendre l'argent froissé directement dans la main",
         "Supposer que la carte est acceptée partout"
+      ]
+    },
+    {
+      "id": "aizuchi",
+      "titre": "Les aizuchi (signaux d'écoute)",
+      "nom_jp": "相槌",
+      "emoji": "👂",
+      "categorie": "Communication",
+      "niveau": "Important",
+      "resume": "Ponctuer la conversation de petits sons pour montrer qu'on écoute.",
+      "explication": "Les aizuchi sont ces interjections fréquentes ('hai', 'ee', 'sō desu ne', 'naruhodo') que les Japonais émettent pendant qu'on leur parle. Loin d'interrompre, elles signalent une écoute active et engagée. Leur absence peut être interprétée comme du désintérêt ou de l'inattention. Maîtriser les aizuchi rend toute conversation plus fluide et chaleureuse.",
+      "exemples": [
+        "Hocher la tête en disant 'hai, hai' pendant qu'on vous parle",
+        "Ponctuer d'un 'sō desu ne' pour montrer l'accord",
+        "Émettre un 'hee~' d'étonnement intéressé"
+      ],
+      "a_faire": [
+        "Émets régulièrement de petits signaux d'écoute",
+        "Hoche la tête en rythme avec le locuteur",
+        "Varie tes aizuchi selon l'émotion"
+      ],
+      "a_eviter": [
+        "Rester totalement silencieux et immobile",
+        "Confondre aizuchi et interruption",
+        "En faire trop au point de paraître mécanique"
+      ]
+    },
+    {
+      "id": "keigo",
+      "titre": "Le langage honorifique (keigo)",
+      "nom_jp": "敬語",
+      "emoji": "🗣️",
+      "categorie": "Communication",
+      "niveau": "Professionnel",
+      "resume": "Un système de politesse linguistique à plusieurs niveaux.",
+      "explication": "Le keigo structure le respect dans la langue japonaise via trois registres : le sonkeigo (honorifique, pour élever l'interlocuteur), le kenjōgo (humble, pour s'abaisser soi-même) et le teineigo (poli, neutre). Choisir le bon registre selon le statut de l'interlocuteur est essentiel dans le monde professionnel. C'est subtil et redouté même des Japonais natifs.",
+      "exemples": [
+        "Dire 'irasshaimasu' (sonkeigo) pour le supérieur qui arrive",
+        "Utiliser 'mairimasu' (kenjōgo) pour parler de soi humblement",
+        "Employer '-masu/-desu' (teineigo) avec un inconnu"
+      ],
+      "a_faire": [
+        "Utilise au minimum le registre poli (teineigo)",
+        "Observe comment les locaux s'adressent aux supérieurs",
+        "Apprends quelques formules clés de keigo"
+      ],
+      "a_eviter": [
+        "Tutoyer un client ou un supérieur",
+        "Mélanger les registres au hasard",
+        "Utiliser le langage familier en contexte formel"
+      ]
+    },
+    {
+      "id": "yoroshiku",
+      "titre": "Le pouvoir du 'yoroshiku'",
+      "nom_jp": "よろしく",
+      "emoji": "🤲",
+      "categorie": "Communication",
+      "niveau": "Essentiel",
+      "resume": "Une formule passe-partout qui scelle les relations.",
+      "explication": "'Yoroshiku onegaishimasu' est intraduisible littéralement — c'est une demande de bienveillance future, un 'comptez sur moi / je compte sur vous' qui ouvre toute relation. On l'emploie en se présentant, en confiant une tâche, en rejoignant une équipe. Elle exprime l'engagement mutuel et le désir de bonnes relations. Indispensable au quotidien.",
+      "exemples": [
+        "Conclure une présentation par 'yoroshiku onegaishimasu'",
+        "L'utiliser en confiant un travail à quelqu'un",
+        "La dire en rejoignant un nouveau groupe"
+      ],
+      "a_faire": [
+        "Emploie-la lors des présentations",
+        "Accompagne-la d'une légère inclinaison",
+        "Utilise-la pour sceller un accord ou une collaboration"
+      ],
+      "a_eviter": [
+        "L'oublier lors d'une première rencontre",
+        "La dire sans aucune marque de respect corporel",
+        "La traduire littéralement et te perdre"
+      ]
+    },
+    {
+      "id": "uchi-soto",
+      "titre": "Uchi & Soto (dedans/dehors)",
+      "nom_jp": "内と外",
+      "emoji": "⭕",
+      "categorie": "Relations",
+      "niveau": "Important",
+      "resume": "Le comportement change selon qu'on est dans le groupe ou en dehors.",
+      "explication": "La société japonaise distingue l'uchi (内, le 'dedans' — famille, entreprise, groupe proche) du soto (外, le 'dehors' — les étrangers au groupe). On est plus détendu et direct avec l'uchi, et plus formel et poli avec le soto. Cette frontière mouvante détermine le niveau de langage, les comportements et même les obligations. Comprendre où l'on se situe est crucial.",
+      "exemples": [
+        "Parler humblement de son propre patron face à un client externe",
+        "Être détendu entre collègues, formel face à un partenaire",
+        "Défendre son groupe (uchi) face à l'extérieur"
+      ],
+      "a_faire": [
+        "Identifie si tu es perçu comme uchi ou soto",
+        "Adapte ton niveau de formalité en conséquence",
+        "Respecte les frontières du groupe"
+      ],
+      "a_eviter": [
+        "Te comporter en intime avec un groupe soto",
+        "Critiquer ton propre groupe devant des externes",
+        "Forcer une intimité non accordée"
+      ]
+    },
+    {
+      "id": "giri",
+      "titre": "Le giri (obligation sociale)",
+      "nom_jp": "義理",
+      "emoji": "⚖️",
+      "categorie": "Relations",
+      "niveau": "Important",
+      "resume": "Le devoir moral de réciprocité qui lie les relations.",
+      "explication": "Le giri est le sens du devoir et de l'obligation réciproque envers les autres. Recevoir un cadeau, une faveur ou de l'aide crée une dette morale qu'il faudra honorer. Ce système invisible structure les relations sociales et professionnelles. Le giri-choco (chocolat 'd'obligation' offert à la Saint-Valentin aux collègues) en est un exemple parlant.",
+      "exemples": [
+        "Rendre une faveur reçue dans un délai raisonnable",
+        "Offrir un giri-choco aux collègues à la Saint-Valentin",
+        "Assister au mariage de quelqu'un qui est venu au tien"
+      ],
+      "a_faire": [
+        "Honore les faveurs reçues par réciprocité",
+        "Tiens un équilibre dans les échanges",
+        "Reconnais les dettes sociales"
+      ],
+      "a_eviter": [
+        "Accepter sans jamais rendre",
+        "Ignorer une obligation morale",
+        "Sur-rembourser au point de gêner"
+      ]
+    },
+    {
+      "id": "kuuki",
+      "titre": "Lire l'air (kuuki wo yomu)",
+      "nom_jp": "空気を読む",
+      "emoji": "🌫️",
+      "categorie": "Relations",
+      "niveau": "Essentiel",
+      "resume": "Percevoir l'ambiance non-dite et s'y adapter.",
+      "explication": "'Lire l'air' signifie capter l'atmosphère implicite d'une situation et ajuster son comportement sans qu'on ait à vous l'expliquer. Quelqu'un qui 'ne lit pas l'air' (KY, kuuki yomenai) est perçu comme socialement maladroit. Cette compétence intuitive — savoir quand parler, se taire, proposer ou se retirer — est très valorisée au Japon.",
+      "exemples": [
+        "Comprendre qu'il est temps de partir sans qu'on le dise",
+        "Éviter un sujet sensible en sentant la gêne",
+        "Proposer son aide au bon moment sans qu'on demande"
+      ],
+      "a_faire": [
+        "Observe les réactions non-verbales du groupe",
+        "Ajuste ton comportement à l'ambiance",
+        "Anticipe les besoins non exprimés"
+      ],
+      "a_eviter": [
+        "Imposer ton sujet sans lire la salle",
+        "Ignorer les signaux de gêne",
+        "Être le 'KY' qui casse l'ambiance"
+      ]
+    },
+    {
+      "id": "file-attente",
+      "titre": "L'art de la file d'attente",
+      "nom_jp": "行列",
+      "emoji": "🚶",
+      "categorie": "Quotidien",
+      "niveau": "Essentiel",
+      "resume": "Les files sont ordonnées, patientes et scrupuleusement respectées.",
+      "explication": "Au Japon, faire la queue est un art collectif. On s'aligne sur les marques au sol (quais de métro, arrêts de bus, magasins), on respecte l'ordre d'arrivée sans jamais resquiller, et on attend patiemment, même pour les bonnes affaires ou un restaurant prisé. Cette discipline reflète le respect du collectif et la confiance mutuelle.",
+      "exemples": [
+        "S'aligner sur les marques de quai en attendant le train",
+        "Faire la queue calmement devant un restaurant populaire",
+        "Respecter strictement l'ordre d'arrivée"
+      ],
+      "a_faire": [
+        "Repère et suis les marquages au sol",
+        "Attends ton tour sans impatience visible",
+        "Laisse sortir avant d'entrer"
+      ],
+      "a_eviter": [
+        "Doubler ou resquiller",
+        "Coller la personne devant toi",
+        "Manifester ton impatience bruyamment"
+      ]
+    },
+    {
+      "id": "masque",
+      "titre": "Le masque par civisme",
+      "nom_jp": "マスク",
+      "emoji": "😷",
+      "categorie": "Quotidien",
+      "niveau": "Important",
+      "resume": "Porter un masque est un geste de respect envers les autres.",
+      "explication": "Bien avant la pandémie, le port du masque était courant au Japon. On le porte quand on est enrhumé — non pour se protéger, mais pour protéger les autres de ses microbes. C'est un geste de considération collective. Le masque sert aussi à se préserver du pollen, du froid, ou simplement à préserver son intimité dans l'espace public.",
+      "exemples": [
+        "Porter un masque dès les premiers symptômes de rhume",
+        "En mettre un en période de pollen au printemps",
+        "L'utiliser dans les transports bondés par courtoisie"
+      ],
+      "a_faire": [
+        "Porte un masque si tu es enrhumé",
+        "Vois-le comme un geste pour autrui",
+        "Garde des masques sur toi en cas de besoin"
+      ],
+      "a_eviter": [
+        "Tousser ou éternuer sans protection",
+        "Voir le masque comme une contrainte uniquement personnelle",
+        "Le négliger en cas de symptômes"
+      ]
+    },
+    {
+      "id": "tri-dechets",
+      "titre": "Le tri rigoureux des déchets",
+      "nom_jp": "ゴミの分別",
+      "emoji": "♻️",
+      "categorie": "Quotidien",
+      "niveau": "Important",
+      "resume": "Le tri des ordures suit des règles précises et locales.",
+      "explication": "Le tri des déchets au Japon est étonnamment méticuleux et varie selon les municipalités. Brûlables, non-brûlables, plastiques (PET), canettes, verre, papier... chaque catégorie a son jour de collecte et ses sacs spécifiques. Mal trier peut entraîner le refus de collecte. C'est une responsabilité civique prise très au sérieux par les résidents.",
+      "exemples": [
+        "Séparer les bouteilles PET de leur bouchon et étiquette",
+        "Sortir les brûlables uniquement le bon jour de collecte",
+        "Rincer les emballages avant de les jeter"
+      ],
+      "a_faire": [
+        "Renseigne-toi sur les règles locales de tri",
+        "Respecte les jours de collecte",
+        "Rince et sépare les recyclables"
+      ],
+      "a_eviter": [
+        "Tout jeter dans la même poubelle",
+        "Sortir les déchets le mauvais jour",
+        "Ignorer les consignes municipales"
+      ]
+    },
+    {
+      "id": "nomikai",
+      "titre": "Le nomikai (sorties d'entreprise)",
+      "nom_jp": "飲み会",
+      "emoji": "🍻",
+      "categorie": "Travail",
+      "niveau": "Professionnel",
+      "resume": "Les soirées arrosées entre collègues tissent les liens.",
+      "explication": "Le nomikai est une sortie où collègues et supérieurs boivent ensemble après le travail. C'est un rituel social important : l'alcool relâche le tatemae et permet une communication plus franche (honne). Refuser systématiquement peut nuire à l'intégration. On sert à boire aux autres (jamais à soi-même d'abord), en commençant par le plus haut placé.",
+      "exemples": [
+        "Servir à boire à son supérieur avant de se servir",
+        "Trinquer tous ensemble au 'kanpai' initial",
+        "Parler plus librement qu'au bureau"
+      ],
+      "a_faire": [
+        "Sers les autres avant toi-même",
+        "Attends le 'kanpai' collectif pour boire",
+        "Participe au moins occasionnellement"
+      ],
+      "a_eviter": [
+        "Te servir en premier ou pour toi seul",
+        "Refuser systématiquement les invitations",
+        "Aborder le travail de façon trop rigide"
+      ]
+    },
+    {
+      "id": "hourensou",
+      "titre": "Hō-Ren-Sō (communication d'équipe)",
+      "nom_jp": "報連相",
+      "emoji": "📋",
+      "categorie": "Travail",
+      "niveau": "Professionnel",
+      "resume": "Rapporter, informer, consulter — le triptyque du travail d'équipe.",
+      "explication": "Le Hō-Ren-Sō est un principe de communication professionnelle : Hōkoku (rapporter l'avancement), Renraku (informer les parties concernées) et Sōdan (consulter avant de décider). Ce réflexe de communication constante et transparente évite les erreurs, maintient l'harmonie et reflète le caractère collectif du travail japonais. L'autonomie sans communication est mal vue.",
+      "exemples": [
+        "Rapporter régulièrement l'avancée d'un projet à son chef",
+        "Tenir l'équipe informée de tout changement",
+        "Consulter avant de prendre une décision importante"
+      ],
+      "a_faire": [
+        "Communique l'avancement sans qu'on te le demande",
+        "Informe toutes les parties concernées",
+        "Consulte avant de décider seul"
+      ],
+      "a_eviter": [
+        "Travailler en silence sans rendre compte",
+        "Prendre des décisions unilatérales",
+        "Garder l'information pour toi"
+      ]
+    },
+    {
+      "id": "jisha",
+      "titre": "Humilité envers sa propre entreprise",
+      "nom_jp": "謙遜",
+      "emoji": "🙇",
+      "categorie": "Travail",
+      "niveau": "Professionnel",
+      "resume": "On parle modestement de soi, de son groupe et de son entreprise.",
+      "explication": "Le kenson (humilité) impose de minimiser ses propres mérites et ceux de son groupe face à l'extérieur. On dira 'notre modeste entreprise' (heisha) ou on relativisera ses réussites. Recevoir un compliment se fait en le déclinant poliment plutôt qu'en l'acceptant. Cette modestie rituelle préserve l'harmonie et évite de paraître arrogant.",
+      "exemples": [
+        "Décliner un compliment par 'pas du tout, c'est grâce à l'équipe'",
+        "Désigner sa société par un terme humble (heisha)",
+        "Minimiser ses propres accomplissements"
+      ],
+      "a_faire": [
+        "Accueille les compliments avec modestie",
+        "Valorise le collectif plutôt que toi-même",
+        "Reste humble sur tes réussites"
+      ],
+      "a_eviter": [
+        "Te vanter de tes accomplissements",
+        "Accepter un compliment avec fierté visible",
+        "Survaloriser ton entreprise face à autrui"
       ]
     }
   ]
