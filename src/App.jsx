@@ -460,7 +460,8 @@ function ExploreScreen({C,db,isFav,toggleFav}){
   const [view,setView] = useState(null);
   if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>;
   if(view==="codes")      return <CodesScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>;
-  const ROUTES = {"Traditions":"traditions","Codes sociaux":"codes"};
+  if(view==="regions")    return <RegionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>;
+  const ROUTES = {"Traditions":"traditions","Codes sociaux":"codes","Régions du Japon":"regions"};
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
@@ -483,6 +484,124 @@ function ExploreScreen({C,db,isFav,toggleFav}){
             );
           })}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Régions du Japon ─────────────────────────────────────────────────────────
+function RegionHero({C,r,height=200,children}){
+  return(
+    <div style={{position:"relative",height,borderRadius:16,overflow:"hidden",background:`linear-gradient(145deg, ${r.couleur} 0%, ${r.couleur}99 45%, #1a1410 130%)`}}>
+      {/* Big kanji watermark */}
+      <div style={{position:"absolute",right:-18,bottom:-40,fontSize:170,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:"rgba(255,255,255,0.13)",lineHeight:1,userSelect:"none"}}>{r.nom_jp}</div>
+      {/* Soft light */}
+      <div style={{position:"absolute",inset:0,background:"radial-gradient(circle at 25% 20%, rgba(255,255,255,0.18) 0%, transparent 55%)"}}/>
+      <div style={{position:"relative",height:"100%",padding:"18px",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function RegionDetail({C,r,onBack,fav,onFav}){
+  const Row = ({icon,title,items}) => (
+    <div>
+      <div style={{fontSize:10,color:r.couleur,letterSpacing:".18em",marginBottom:11,textTransform:"uppercase"}}>{icon} {title}</div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+        {items.map((x,i)=>(
+          <span key={i} style={{fontSize:12,padding:"7px 12px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>{x}</span>
+        ))}
+      </div>
+    </div>
+  );
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
+      <div style={{padding:"50px 20px 0"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
+          <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:6}}>‹ Régions</button>
+          {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
+        </div>
+      </div>
+      <div style={{padding:"0 20px"}}>
+        <RegionHero C={C} r={r} height={210}>
+          <div style={{fontSize:40,marginBottom:6}}>{r.emoji}</div>
+          <div style={{fontSize:11,color:"rgba(255,255,255,0.8)",letterSpacing:".2em",marginBottom:4,textTransform:"uppercase"}}>📍 {r.position}</div>
+          <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:400,color:"#fff",lineHeight:1.1}}>{r.nom}</div>
+          <div style={{fontSize:14,color:"rgba(255,255,255,0.9)",fontStyle:"italic",marginTop:4}}>{r.tagline}</div>
+        </RegionHero>
+      </div>
+
+      <div style={{padding:"20px 20px 110px",display:"flex",flexDirection:"column",gap:20}}>
+        <div>
+          <div style={{fontSize:10,color:r.couleur,letterSpacing:".2em",marginBottom:10,textTransform:"uppercase"}}>🌏 Ambiance</div>
+          <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{r.ambiance}</p>
+        </div>
+
+        <Row icon="🏙️" title="Villes principales" items={r.villes}/>
+        <Row icon="🍜" title="Spécialités" items={r.specialites}/>
+
+        <div>
+          <div style={{fontSize:10,color:r.couleur,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>⭐ Incontournables</div>
+          <div style={{display:"flex",flexDirection:"column",gap:9}}>
+            {r.incontournables.map((x,i)=>(
+              <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:10}}>
+                <span style={{minWidth:22,height:22,borderRadius:"50%",background:`${r.couleur}22`,color:r.couleur,fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{i+1}</span>
+                <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{x}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderLeft:`3px solid ${r.couleur}`,borderRadius:"0 10px 10px 0",display:"flex",gap:12,alignItems:"flex-start"}}>
+          <span style={{fontSize:20,flexShrink:0}}>🗣️</span>
+          <div>
+            <div style={{fontSize:10,color:r.couleur,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Dialecte local</div>
+            <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.55}}>{r.dialecte}</p>
+          </div>
+        </div>
+
+        <div style={{padding:"14px 16px",background:`${r.couleur}0f`,border:`1px solid ${r.couleur}33`,borderRadius:12,display:"flex",gap:12,alignItems:"flex-start"}}>
+          <span style={{fontSize:20,flexShrink:0}}>💡</span>
+          <div>
+            <div style={{fontSize:10,color:r.couleur,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Bon à savoir</div>
+            <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.6}}>{r.a_savoir}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RegionsScreen({C,db,isFav,toggleFav}){
+  const [selected,setSelected] = useState(null);
+  const regions = db?.regions || [];
+
+  if(selected) return <RegionDetail C={C} r={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("region",selected)} onFav={toggleFav&&(()=>toggleFav("region",selected))}/>;
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+      <div style={{padding:"50px 20px 16px"}}>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>地 · RÉGIONS</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>日本の地方</div>
+        <div style={{fontSize:13,color:C.t2}}>Les 8 grandes régions du Japon</div>
+      </div>
+      <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:13}}>
+        {regions.map((r,i)=>(
+          <div key={i} onClick={()=>setSelected(r)} style={{cursor:"pointer",animation:"fadeUp .4s ease"}}>
+            <RegionHero C={C} r={r} height={120}>
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between"}}>
+                <div>
+                  <div style={{fontSize:26,marginBottom:2}}>{r.emoji}</div>
+                  <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:400,color:"#fff",lineHeight:1.1}}>{r.nom}</div>
+                  <div style={{fontSize:11,color:"rgba(255,255,255,0.85)",fontStyle:"italic",marginTop:2}}>{r.tagline}</div>
+                </div>
+                <div style={{fontSize:20,color:"rgba(255,255,255,0.7)"}}>›</div>
+              </div>
+            </RegionHero>
+          </div>
+        ))}
+        {regions.length===0 && <div style={{padding:"24px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
       </div>
     </div>
   );
@@ -876,6 +995,7 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav}){
                 song:{emoji:it.emoji||"🎵", title:it.titre, sub:it.artiste, c:"#8B6FB0"},
                 tradition:{emoji:it.emoji||"⛩️", title:it.nom, sub:it.mois, c:C.red},
                 code:{emoji:it.emoji||"🎌", title:it.titre, sub:it.categorie, c:C.red},
+                region:{emoji:it.emoji||"🗾", title:it.nom, sub:it.position, c:C.green},
               }[f.type]||{emoji:"♥",title:"",sub:"",c:C.red};
               return(
                 <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
