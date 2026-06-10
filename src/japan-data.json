@@ -1145,7 +1145,7 @@
       "nom_jp": "春分の日",
       "saison": "printemps",
       "mois": "~20 mars",
-      "emoji": " ",
+      "emoji": "�",
       "tagline": "L'équinoxe de printemps, entre nature et ancêtres",
       "histoire": "Jour férié national depuis 1948, Shunbun no Hi célèbre l'équinoxe de printemps. Issu d'un ancien rite shinto et bouddhiste (Higan), il marque l'équilibre parfait entre jour et nuit. C'est une période où l'on honore les ancêtres et où l'on célèbre l'arrivée de la nature renaissante.",
       "rituels": [
@@ -2538,6 +2538,610 @@
         "Plages et culture ryūkyū d'Okinawa"
       ],
       "a_savoir": "Okinawa possède une culture, une cuisine et une langue propres, héritées du royaume des Ryūkyū. Les habitants y sont parmi les plus âgés au monde (ikigai)."
+    }
+  ],
+  "wiki": [
+    {
+      "mot": "wagashi",
+      "jp": "和菓子",
+      "romaji": "wagashi",
+      "definition": "Confiseries traditionnelles japonaises, souvent à base de pâte de haricots rouges (anko), de riz ou de fruits. Leur forme change selon les saisons.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "onigiri",
+      "jp": "おにぎり",
+      "romaji": "onigiri",
+      "definition": "Boule ou triangle de riz compressé, souvent fourré (saumon, thon, umeboshi) et enveloppé de nori. Snack emblématique des konbini.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "ramen",
+      "jp": "ラーメン",
+      "romaji": "ramen",
+      "definition": "Soupe de nouilles de blé dans un bouillon (shoyu, miso, tonkotsu ou shio), garnie de chashu, œuf mollet, nori et ciboulette.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "sushi",
+      "jp": "寿司",
+      "romaji": "sushi",
+      "definition": "Riz vinaigré (shari) coiffé de poisson cru ou autres garnitures. À ne pas confondre avec les sashimi (poisson seul sans riz).",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "sashimi",
+      "jp": "刺身",
+      "romaji": "sashimi",
+      "definition": "Tranches de poisson ou fruits de mer crus, servies sans riz avec sauce soja, wasabi et gingembre mariné.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "tempura",
+      "jp": "天ぷら",
+      "romaji": "tempura",
+      "definition": "Légumes ou fruits de mer enrobés d'une pâte légère à l'eau glacée et frits. Introduit au Japon par les missionnaires portugais au XVIe siècle.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "yakitori",
+      "jp": "焼き鳥",
+      "romaji": "yakitori",
+      "definition": "Brochettes de poulet grillées sur charbon de bois (binchōtan), nappées de tare ou salées. Incontournables des izakaya.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "okonomiyaki",
+      "jp": "お好み焼き",
+      "romaji": "okonomiyaki",
+      "definition": "Galette épaisse à base de chou, œufs et farine. Le nom signifie 'comme tu aimes'. Deux styles rivaux : Osaka (mélangé) et Hiroshima (en couches).",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "takoyaki",
+      "jp": "たこ焼き",
+      "romaji": "takoyaki",
+      "definition": "Petites boules de pâte farcies de pieuvre, gingembre et ciboule. Spécialité d'Osaka, cuites dans un moule à alvéoles.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "mochi",
+      "jp": "餅",
+      "romaji": "mochi",
+      "definition": "Gâteau de riz gluant, à la texture élastique et moelleuse. Présent dans de nombreuses fêtes : Nouvel an, hanami, tsukimi.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "matcha",
+      "jp": "抹茶",
+      "romaji": "matcha",
+      "definition": "Poudre de thé vert finement moulue, utilisée dans la cérémonie du thé et de nombreux desserts. Goût umami légèrement amer.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "sake",
+      "jp": "酒",
+      "romaji": "sake / nihonshu",
+      "definition": "Alcool de riz fermenté japonais. Peut être servi chaud (atsukan) ou froid (rei-shu). Qualité liée au taux de polissage du riz.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "saké",
+      "jp": "酒",
+      "romaji": "sake",
+      "definition": "Alcool de riz fermenté japonais. Peut être servi chaud (atsukan) ou froid (rei-shu). Qualité liée au taux de polissage du riz.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "miso",
+      "jp": "味噌",
+      "romaji": "miso",
+      "definition": "Pâte fermentée à base de soja, utilisée en soupe ou comme condiment. Il en existe des centaines de variétés selon la région et la durée de fermentation.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "dashi",
+      "jp": "だし",
+      "romaji": "dashi",
+      "definition": "Bouillon de base de la cuisine japonaise, préparé à partir d'algues konbu et de bonite séchée (katsuobushi). Base de la soupe miso et du chawanmushi.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "udon",
+      "jp": "うどん",
+      "romaji": "udon",
+      "definition": "Grosses nouilles blanches de blé, élastiques et moelleuses. Servies chaudes ou froides dans un bouillon dashi. Spécialité de Kagawa.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "soba",
+      "jp": "そば",
+      "romaji": "soba",
+      "definition": "Nouilles de sarrasin fines, servies froides (zaru soba) ou chaudes. Tradition de manger des soba le soir du réveillon (toshikoshi soba).",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "izakaya",
+      "jp": "居酒屋",
+      "romaji": "izakaya",
+      "definition": "Taverne japonaise où l'on commande de petits plats partagés avec des boissons. Espace social où le tatemae se relâche après quelques verres.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "konbini",
+      "jp": "コンビニ",
+      "romaji": "konbini",
+      "definition": "Convenience store japonais (7-Eleven, FamilyMart, Lawson). Ouvert 24h/24, on y mange, paie ses factures, envoie des colis et imprime des documents.",
+      "categorie": "Vie quotidienne"
+    },
+    {
+      "mot": "bento",
+      "jp": "弁当",
+      "romaji": "bentō",
+      "definition": "Repas préparé emporté dans une boîte compartimentée. Au Japon, un bento soigneusement préparé est un acte d'amour et de soin envers l'autre.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "dorayaki",
+      "jp": "どら焼き",
+      "romaji": "dorayaki",
+      "definition": "Deux petits pancakes moelleux garnis d'anko (pâte de haricots rouges sucrée). Friandise préférée de Doraemon.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "anko",
+      "jp": "あんこ",
+      "romaji": "anko",
+      "definition": "Pâte sucrée à base de haricots rouges azuki, utilisée dans de nombreuses pâtisseries japonaises (mochi, dorayaki, taiyaki...).",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "umeboshi",
+      "jp": "梅干し",
+      "romaji": "umeboshi",
+      "definition": "Prune japonaise séchée et marinée, au goût acide et salé intense. Souvent au centre d'un onigiri, considérée comme bonne pour la santé.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "wasabi",
+      "jp": "わさび",
+      "romaji": "wasabi",
+      "definition": "Condiment vert au goût piquant, râpé à partir d'un rhizome. Le vrai wasabi frais est très rare ; la plupart des restaurants servent un mélange raifort-moutarde.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "shōchu",
+      "jp": "焼酎",
+      "romaji": "shōchu",
+      "definition": "Alcool distillé japonais (25-35°), produit à partir de patate douce, orge ou riz. Boisson de prédilection au Kyūshū.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "shochu",
+      "jp": "焼酎",
+      "romaji": "shōchu",
+      "definition": "Alcool distillé japonais (25-35°), produit à partir de patate douce, orge ou riz. Boisson de prédilection au Kyūshū.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "onsen",
+      "jp": "温泉",
+      "romaji": "onsen",
+      "definition": "Source d'eau chaude naturelle volcanique. Bain thérapeutique et rituel de purification. On se lave avant d'entrer — l'onsen n'est pas pour se laver mais pour se détendre.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "sento",
+      "jp": "銭湯",
+      "romaji": "sentō",
+      "definition": "Bain public urbain payant, sans eau thermale naturelle. Espace social de quartier, moins luxueux qu'un onsen mais ancré dans la vie quotidienne.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "sentō",
+      "jp": "銭湯",
+      "romaji": "sentō",
+      "definition": "Bain public urbain payant, sans eau thermale naturelle. Espace social de quartier, moins luxueux qu'un onsen mais ancré dans la vie quotidienne.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "ryokan",
+      "jp": "旅館",
+      "romaji": "ryokan",
+      "definition": "Auberge traditionnelle japonaise avec chambres en tatamis, repas kaiseki servis dans la chambre, yukata et bain commun. Expérience d'un Japon ancien.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "torii",
+      "jp": "鳥居",
+      "romaji": "torii",
+      "definition": "Portail symbolique marquant l'entrée d'un sanctuaire shintoïste. Peint en rouge, il sépare le monde profane du monde sacré. On passe sur le côté, pas au centre.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "shrine",
+      "jp": "神社",
+      "romaji": "jinja",
+      "definition": "Sanctuaire shintoïste dédié à un kami (esprit divin). Reconnaissable à son torii, ses komainu (gardiens lion-chien) et son autel de prière.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "jinja",
+      "jp": "神社",
+      "romaji": "jinja",
+      "definition": "Sanctuaire shintoïste dédié à un kami (esprit divin). Reconnaissable à son torii, ses komainu (gardiens lion-chien) et son autel de prière.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "genkan",
+      "jp": "玄関",
+      "romaji": "genkan",
+      "definition": "Zone d'entrée surélevée d'une maison japonaise où l'on retire ses chaussures. Frontière symbolique entre le dehors (sale) et le dedans (propre).",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "tatami",
+      "jp": "畳",
+      "romaji": "tatami",
+      "definition": "Natte traditionnelle en paille de riz compressée recouverte de jonc. Unité de mesure des pièces japonaises. On marche dessus en chaussettes uniquement.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "kotatsu",
+      "jp": "こたつ",
+      "romaji": "kotatsu",
+      "definition": "Table basse chauffante recouverte d'une couverture épaisse. Meuble emblématique du foyer japonais en hiver, où toute la famille se retrouve.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "fusuma",
+      "jp": "襖",
+      "romaji": "fusuma",
+      "definition": "Porte coulissante opaque en papier washi encadrée de bois, typique des maisons japonaises traditionnelles. Sépare les pièces de manière flexible.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "shoji",
+      "jp": "障子",
+      "romaji": "shōji",
+      "definition": "Panneau coulissant translucide en papier de riz sur cadre en bois. Laisse passer la lumière diffuse, créant une atmosphère apaisante caractéristique.",
+      "categorie": "Lieux"
+    },
+    {
+      "mot": "honne",
+      "jp": "本音",
+      "romaji": "honne",
+      "definition": "Les vrais sentiments et désirs d'une personne, par opposition au tatemae (façade sociale). S'exprime plus librement dans des contextes intimes ou après l'alcool.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "tatemae",
+      "jp": "建前",
+      "romaji": "tatemae",
+      "definition": "La façade sociale présentée en public pour préserver l'harmonie collective. Complément du honne, ce n'est pas de l'hypocrisie mais une forme de respect.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "senpai",
+      "jp": "先輩",
+      "romaji": "senpai",
+      "definition": "Aîné ou mentor dans un groupe (école, travail, club). Le senpai guide son kōhai, qui lui doit respect et déférence. Relation fondamentale de la société japonaise.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "kohai",
+      "jp": "後輩",
+      "romaji": "kōhai",
+      "definition": "Le cadet ou disciple dans la relation senpai/kōhai. Doit respect et déférence à son aîné, en échange de son mentorat et de sa protection.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "kōhai",
+      "jp": "後輩",
+      "romaji": "kōhai",
+      "definition": "Le cadet ou disciple dans la relation senpai/kōhai. Doit respect et déférence à son aîné, en échange de son mentorat et de sa protection.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "wa",
+      "jp": "和",
+      "romaji": "wa",
+      "definition": "L'harmonie collective, valeur fondamentale de la société japonaise. Préserver le wa passe souvent avant l'expression individuelle. 'Le clou qui dépasse se fait enfoncer.'",
+      "categorie": "Société"
+    },
+    {
+      "mot": "giri",
+      "jp": "義理",
+      "romaji": "giri",
+      "definition": "Sens du devoir et d'obligation réciproque envers les autres. Recevoir une faveur crée une dette morale (giri) qu'il faudra honorer. Structure invisible des relations.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "nemawashi",
+      "jp": "根回し",
+      "romaji": "nemawashi",
+      "definition": "Consultations informelles individuelles avant une réunion officielle pour préparer le consensus. La décision est déjà prise quand la réunion commence.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "shokunin",
+      "jp": "職人",
+      "romaji": "shokunin",
+      "definition": "Artisan ou artiste qui consacre toute sa vie à maîtriser un unique savoir-faire. Ce chemin de perfection est considéré comme une vocation spirituelle.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "ikigai",
+      "jp": "生き甲斐",
+      "romaji": "ikigai",
+      "definition": "Raison de vivre, à l'intersection de ce qu'on aime, ce en quoi on excelle, ce dont le monde a besoin et ce pour quoi on peut être payé.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "mottainai",
+      "jp": "もったいない",
+      "romaji": "mottainai",
+      "definition": "Sentiment de regret face au gaspillage. Philosophie du respect des ressources qui incite à réparer, réutiliser et recycler avant de jeter.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "wabi-sabi",
+      "jp": "侘び寂び",
+      "romaji": "wabi-sabi",
+      "definition": "Esthétique japonaise qui trouve la beauté dans l'imparfait, l'impermanent et l'inachevé. Un bol ébréché est plus beau qu'un neuf.",
+      "categorie": "Culture"
+    },
+    {
+      "mot": "mono no aware",
+      "jp": "物の哀れ",
+      "romaji": "mono no aware",
+      "definition": "Sensibilité à la beauté mélancolique de l'impermanence. La conscience que les choses passent rend leur beauté plus intense — comme les cerisiers.",
+      "categorie": "Culture"
+    },
+    {
+      "mot": "kintsugi",
+      "jp": "金継ぎ",
+      "romaji": "kintsugi",
+      "definition": "Art de réparer les céramiques brisées avec de la laque dorée, rendant les fissures visibles et belles. Philosophie : les blessures nous enrichissent.",
+      "categorie": "Culture"
+    },
+    {
+      "mot": "ma",
+      "jp": "間",
+      "romaji": "ma",
+      "definition": "L'espace, l'intervalle, le vide porteur entre les choses. Le silence entre deux notes, la pause dans une conversation — le 'ma' n'est pas un manque, c'est une présence.",
+      "categorie": "Culture"
+    },
+    {
+      "mot": "omakase",
+      "jp": "おまかせ",
+      "romaji": "omakase",
+      "definition": "'Je m'en remets à vous' — formule dite au chef pour lui laisser choisir le menu. Expression de confiance totale en l'expertise de l'artisan.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "omotenashi",
+      "jp": "おもてなし",
+      "romaji": "omotenashi",
+      "definition": "Art de l'hospitalité japonaise — anticiper les besoins de l'autre avant même qu'il les exprime, sans attendre de retour. Incarné dans les ryokan et restaurants haut de gamme.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "keigo",
+      "jp": "敬語",
+      "romaji": "keigo",
+      "definition": "Système de langage honorifique japonais à plusieurs niveaux : sonkeigo (élever l'autre), kenjōgo (s'abaisser soi-même), teineigo (poli neutre).",
+      "categorie": "Société"
+    },
+    {
+      "mot": "hanami",
+      "jp": "花見",
+      "romaji": "hanami",
+      "definition": "Contemplation des fleurs de cerisier au printemps. Tradition millénaire de pique-niquer sous les sakura pour célébrer leur beauté éphémère.",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "matsuri",
+      "jp": "祭り",
+      "romaji": "matsuri",
+      "definition": "Festival japonais, souvent d'origine shintoïste. Processions de chars (mikoshi), stands de yatai, yukata, tambours taiko et feux d'artifice.",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "sakura",
+      "jp": "桜",
+      "romaji": "sakura",
+      "definition": "Cerisier japonais, symbole national du Japon. Sa floraison éphémère (1-2 semaines) incarne le mono no aware — beauté liée à l'impermanence.",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "omikuji",
+      "jp": "おみくじ",
+      "romaji": "omikuji",
+      "definition": "Oracle écrit tiré au sort dans les temples et sanctuaires. Du meilleur au pire : daikichi (grande chance) à kyō (malchance). Si mauvais, on le noue sur place.",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "omamori",
+      "jp": "お守り",
+      "romaji": "omamori",
+      "definition": "Amulette protectrice vendue dans les temples et sanctuaires. Chaque omamori a une fonction : amour, santé, réussite scolaire, sécurité en voiture...",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "obon",
+      "jp": "お盆",
+      "romaji": "obon",
+      "definition": "Fête bouddhiste en août honoring les ancêtres. On croit que les esprits reviennent 3 jours. Lanternes, danse Bon Odori, offrandes sur l'autel familial.",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "yukata",
+      "jp": "浴衣",
+      "romaji": "yukata",
+      "definition": "Kimono léger en coton, porté l'été lors des festivals (matsuri) et dans les ryokan. Plus casual que le kimono de soie, accessible à tous.",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "kimono",
+      "jp": "着物",
+      "romaji": "kimono",
+      "definition": "Vêtement traditionnel japonais en soie, aux motifs saisonniers codifiés. Porter le bon kimono au bon moment est un art en soi.",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "nori",
+      "jp": "海苔",
+      "romaji": "nori",
+      "definition": "Algue marine séchée et pressée en feuilles. Enveloppe les onigiri et makis, garnit les ramen, donne un goût umami caractéristique.",
+      "categorie": "Gastronomie"
+    },
+    {
+      "mot": "omiyage",
+      "jp": "お土産",
+      "romaji": "omiyage",
+      "definition": "Cadeau souvenir rapporté d'un voyage à ses collègues et proches. Quasi obligatoire au Japon — ne pas rapporter d'omiyage après un déplacement est mal vu.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "tanabata",
+      "jp": "七夕",
+      "romaji": "tanabata",
+      "definition": "Fête des étoiles le 7 juillet. On écrit ses vœux sur des tanzaku (papiers colorés) accrochés à des bambous. Célèbre la rencontre de deux étoiles amoureuses.",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "setsubun",
+      "jp": "節分",
+      "romaji": "setsubun",
+      "definition": "Veille du printemps (3 fév). On lance des haricots en criant 'Oni wa soto, fuku wa uchi !' pour chasser les démons et inviter le bonheur.",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "hatsumode",
+      "jp": "初詣",
+      "romaji": "hatsumōde",
+      "definition": "Première visite au temple ou sanctuaire de la nouvelle année. On tire un omikuji, achète des omamori et prie pour la santé et la prospérité.",
+      "categorie": "Traditions"
+    },
+    {
+      "mot": "ikebana",
+      "jp": "生け花",
+      "romaji": "ikebana",
+      "definition": "Art floral japonais — discipline spirituelle qui cherche à représenter l'univers dans un vase. Le vide et les tiges sont aussi importants que les fleurs.",
+      "categorie": "Arts"
+    },
+    {
+      "mot": "origami",
+      "jp": "折り紙",
+      "romaji": "origami",
+      "definition": "Art du pliage de papier — transformer une feuille sans coupe ni colle en animal ou objet. Symbolise l'économie de moyens et la précision japonaise.",
+      "categorie": "Arts"
+    },
+    {
+      "mot": "haiku",
+      "jp": "俳句",
+      "romaji": "haïku",
+      "definition": "Forme poétique de 3 vers (5-7-5 syllabes) capturant un instant de nature ou d'émotion. Le haïku cherche à éveiller une sensation plutôt qu'à la décrire.",
+      "categorie": "Arts"
+    },
+    {
+      "mot": "haïku",
+      "jp": "俳句",
+      "romaji": "haïku",
+      "definition": "Forme poétique de 3 vers (5-7-5 syllabes) capturant un instant de nature ou d'émotion. Le haïku cherche à éveiller une sensation plutôt qu'à la décrire.",
+      "categorie": "Arts"
+    },
+    {
+      "mot": "taiko",
+      "jp": "太鼓",
+      "romaji": "taiko",
+      "definition": "Grand tambour japonais joué lors des festivals et cérémonies. Le jeu de taiko est une discipline physique et spirituelle à part entière.",
+      "categorie": "Arts"
+    },
+    {
+      "mot": "shamisen",
+      "jp": "三味線",
+      "romaji": "shamisen",
+      "definition": "Instrument à 3 cordes pincées, à la sonorité mélancolique et sèche. Associé aux geishas, au kabuki et à la musique traditionnelle des ryokan.",
+      "categorie": "Arts"
+    },
+    {
+      "mot": "fuji",
+      "jp": "富士山",
+      "romaji": "Fuji-san",
+      "definition": "Volcan sacré et symbole national à 3776m. Alpinisme juillet-août. Visible depuis Tokyo par temps clair. 'Fou celui qui ne monte pas le Fuji, fou deux fois celui qui y monte deux fois.'",
+      "categorie": "Nature"
+    },
+    {
+      "mot": "momiji",
+      "jp": "紅葉",
+      "romaji": "momiji / kōyō",
+      "definition": "Érables japonais aux feuilles qui virent au rouge et or en automne. Leur contemplation (momijigari) est le pendant automnal du hanami.",
+      "categorie": "Nature"
+    },
+    {
+      "mot": "ume",
+      "jp": "梅",
+      "romaji": "ume",
+      "definition": "Prunier japonais qui fleurit en février, avant les cerisiers. Ses fleurs blanches ou roses annoncent la fin de l'hiver. Ses fruits donnent l'umeboshi.",
+      "categorie": "Nature"
+    },
+    {
+      "mot": "sugi",
+      "jp": "杉",
+      "romaji": "sugi",
+      "definition": "Cèdre japonais, arbre sacré des forêts de sanctuaires (comme Fushimi Inari). Sa pollen cause des allergies printanières massives au Japon.",
+      "categorie": "Nature"
+    },
+    {
+      "mot": "sensei",
+      "jp": "先生",
+      "romaji": "sensei",
+      "definition": "'Celui qui est né avant' — titre honorifique pour un enseignant, médecin, artiste ou tout expert respecté. Marque le respect pour le savoir transmis.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "san",
+      "jp": "さん",
+      "romaji": "-san",
+      "definition": "Suffixe honorifique neutre (équivalent de M./Mme), accolé au nom de famille. Utiliser le prénom sans suffixe est très familier — à réserver aux amis proches.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "chan",
+      "jp": "ちゃん",
+      "romaji": "-chan",
+      "definition": "Suffixe affectueux pour les enfants, les amis proches ou les animaux. Utilisé entre adultes, il exprime de la tendresse ou de la familiarité.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "kun",
+      "jp": "くん",
+      "romaji": "-kun",
+      "definition": "Suffixe pour les garçons ou jeunes hommes, ou entre pairs masculins proches. Un supérieur peut appeler un subordonné masculin avec -kun.",
+      "categorie": "Société"
+    },
+    {
+      "mot": "geisha",
+      "jp": "芸者",
+      "romaji": "geisha",
+      "definition": "Artiste traditionnelle formée aux arts (musique, danse, conversation). À distinguer des maiko (apprenties). Les vraies geishas sont rares et très respectées.",
+      "categorie": "Culture"
+    },
+    {
+      "mot": "samurai",
+      "jp": "侍",
+      "romaji": "samurai",
+      "definition": "Guerrier de la classe militaire féodale japonaise, régi par le bushidō (code d'honneur). Aboli en 1876, leur influence reste profonde dans la culture japonaise.",
+      "categorie": "Culture"
+    },
+    {
+      "mot": "ninja",
+      "jp": "忍者",
+      "romaji": "ninja",
+      "definition": "Agents spécialisés du Japon médiéval en espionnage, sabotage et assassinat. Leur vrai rôle était celui de mercenaires — bien loin de la légende populaire.",
+      "categorie": "Culture"
     }
   ]
 }
