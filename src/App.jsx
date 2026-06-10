@@ -557,7 +557,8 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
   if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
   if(view==="codes")      return <CodesScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
   if(view==="regions")    return <RegionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
-  const ROUTES = {"Traditions":"traditions","Codes sociaux":"codes","Régions du Japon":"regions"};
+  if(view==="vie")        return <VieScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
+  const ROUTES = {"Traditions":"traditions","Codes sociaux":"codes","Régions du Japon":"regions","Vie quotidienne":"vie"};
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
@@ -580,6 +581,132 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
             );
           })}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Vie quotidienne ──────────────────────────────────────────────────────────
+const VIE_CATS = [
+  {id:"all",        label:"Tous",       emoji:"🏙️"},
+  {id:"Commerces",  label:"Commerces",  emoji:"🏪"},
+  {id:"Transports", label:"Transports", emoji:"🚃"},
+  {id:"Services",   label:"Services",   emoji:"🏤"},
+  {id:"Logement",   label:"Logement",   emoji:"🏠"},
+  {id:"Travail",    label:"Travail",    emoji:"💼"},
+];
+
+function VieDetail({C,v,onBack,fav,onFav,wikiMap,onWikiTap,script}){
+  const wt=(text,style)=><WikiText C={C} text={text} style={style} wikiMap={wikiMap||{}} onWikiTap={onWikiTap}/>;
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
+      <div style={{padding:"50px 20px 24px",background:`linear-gradient(160deg,rgba(123,155,181,0.12) 0%,transparent 90%)`}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+          <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:6}}>‹ Vie quotidienne</button>
+          {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
+        </div>
+        <div style={{fontSize:54,marginBottom:8}}>{v.emoji}</div>
+        <span style={{fontSize:9,padding:"3px 9px",background:"rgba(123,155,181,0.12)",border:"1px solid rgba(123,155,181,0.3)",borderRadius:20,color:"#5B7E9B",letterSpacing:".05em"}}>{v.categorie}</span>
+        <div style={{fontSize:28,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginTop:8,marginBottom:2}}>{v.titre}</div>
+        <div style={{fontSize:15,color:C.t3,fontFamily:"'Noto Serif JP',serif",marginBottom:10}}>{v.nom_jp}</div>
+        <div style={{fontSize:14,color:C.t2,fontStyle:"italic",lineHeight:1.5}}>{v.resume}</div>
+      </div>
+
+      <div style={{padding:"4px 20px 110px",display:"flex",flexDirection:"column",gap:20}}>
+        {/* Description */}
+        <div>
+          <div style={{fontSize:10,color:"#5B7E9B",letterSpacing:".2em",marginBottom:10,textTransform:"uppercase"}}>📖 Comprendre</div>
+          <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{wt(v.description)}</p>
+        </div>
+
+        {/* Infos pratiques */}
+        <div>
+          <div style={{fontSize:10,color:"#5B7E9B",letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>💡 Infos pratiques</div>
+          <div style={{display:"flex",flexDirection:"column",gap:9}}>
+            {(v.infos_pratiques||[]).map((x,i)=>(
+              <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:10}}>
+                <span style={{minWidth:22,height:22,borderRadius:"50%",background:"rgba(123,155,181,0.15)",color:"#5B7E9B",fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{i+1}</span>
+                <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{wt(x)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Vocabulaire utile */}
+        {v.vocabulaire && v.vocabulaire.length>0 && (
+          <div style={{padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
+            <div style={{fontSize:10,color:C.gold,letterSpacing:".18em",marginBottom:12,textTransform:"uppercase"}}>🗣️ Vocabulaire utile</div>
+            <div style={{display:"flex",flexDirection:"column",gap:11}}>
+              {v.vocabulaire.map((w,i)=>(
+                <div key={i} style={{paddingBottom:i<v.vocabulaire.length-1?11:0,borderBottom:i<v.vocabulaire.length-1?`1px solid ${C.border}`:"none"}}>
+                  <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{script==="romaji"?w.romaji:w.jp}</div>
+                  <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:2}}>{script==="romaji"?w.jp:w.romaji}</div>
+                  <div style={{fontSize:12,color:C.t2}}>{w.fr}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Étiquette */}
+        <div style={{padding:"14px 16px",background:"rgba(78,128,96,0.06)",border:"1px solid rgba(78,128,96,0.18)",borderRadius:12,display:"flex",gap:12,alignItems:"flex-start"}}>
+          <span style={{fontSize:20,flexShrink:0}}>🎌</span>
+          <div>
+            <div style={{fontSize:10,color:C.green,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Étiquette & savoir-vivre</div>
+            <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.6}}>{wt(v.etiquette)}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VieScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
+  const [cat,setCat] = useState("all");
+  const [selected,setSelected] = useState(null);
+  const items = db?.vie_quotidienne || [];
+
+  if(selected) return <VieDetail C={C} v={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("vie",selected)} onFav={toggleFav&&(()=>toggleFav("vie",selected))} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
+
+  const filtered = cat==="all" ? items : items.filter(v=>v.categorie===cat);
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+      <div style={{padding:"50px 20px 12px"}}>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>暮 · VIE QUOTIDIENNE</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>日常生活</div>
+        <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Vivre le Japon au jour le jour</div>
+      </div>
+
+      {/* Category filter */}
+      <div style={{display:"flex",gap:8,padding:"0 20px 18px",overflowX:"auto"}}>
+        {VIE_CATS.map(k=>{
+          const on=k.id===cat;
+          return(
+            <button key={k.id} onClick={()=>setCat(k.id)} style={{flexShrink:0,padding:"9px 14px",borderRadius:20,cursor:"pointer",background:on?"rgba(123,155,181,0.15)":C.s1,border:`1px solid ${on?"#5B7E9B":C.border}`,color:on?"#5B7E9B":C.t2,fontSize:12,display:"flex",alignItems:"center",gap:6,transition:"all .2s"}}>
+              <span style={{fontSize:14}}>{k.emoji}</span>{k.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Cards */}
+      <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
+        {filtered.map((v,i)=>(
+          <div key={i} onClick={()=>setSelected(v)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",animation:"fadeUp .4s ease"}}>
+            <span style={{fontSize:30,flexShrink:0}}>{v.emoji}</span>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
+                <span style={{fontSize:15,color:C.text,fontWeight:500}}>{v.titre}</span>
+                <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{v.nom_jp}</span>
+              </div>
+              <div style={{fontSize:12,color:C.t2,lineHeight:1.45,marginBottom:6}}>{v.resume}</div>
+              <span style={{fontSize:9,padding:"2px 8px",background:"rgba(123,155,181,0.1)",border:"1px solid rgba(123,155,181,0.25)",borderRadius:20,color:"#5B7E9B"}}>{v.categorie}</span>
+            </div>
+            <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>
+          </div>
+        ))}
+        {filtered.length===0 && <div style={{padding:"24px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
       </div>
     </div>
   );
@@ -1095,6 +1222,7 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav}){
                 tradition:{emoji:it.emoji||"⛩️", title:it.nom, sub:it.mois, c:C.red},
                 code:{emoji:it.emoji||"🎌", title:it.titre, sub:it.categorie, c:C.red},
                 region:{emoji:it.emoji||"🗾", title:it.nom, sub:it.position, c:C.green},
+                vie:{emoji:it.emoji||"🏙️", title:it.titre, sub:it.categorie, c:"#5B7E9B"},
               }[f.type]||{emoji:"♥",title:"",sub:"",c:C.red};
               return(
                 <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
@@ -1380,4 +1508,4 @@ export default function IsekaidApp(){
       </div>
     </div>
   );
-                     }
+}
