@@ -1,5 +1,5 @@
 import DATA from "./japan-data.json";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 const LIGHT = {
@@ -109,6 +109,8 @@ button{font-family:inherit;}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.65}}
 @keyframes glow{0%,100%{box-shadow:0 0 8px rgba(201,70,61,.18)}50%{box-shadow:0 0 20px rgba(201,70,61,.42)}}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideUp{from{transform:translateX(-50%) translateY(100%)}to{transform:translateX(-50%) translateY(0)}}
+@keyframes slideUp{from{transform:translateX(-50%) translateY(100%)}to{transform:translateX(-50%) translateY(0)}}
 @keyframes p1{0%{transform:translateY(-10px) rotate(0);opacity:0}10%{opacity:.55}90%{opacity:.2}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 @keyframes p2{0%{transform:translateY(-10px) translateX(0) rotate(0);opacity:0}10%{opacity:.4}100%{transform:translateY(110vh) translateX(38px) rotate(-540deg);opacity:0}}
 `;
@@ -143,7 +145,63 @@ function SH({C,kanji,title,sub,onRefresh}){
   );
 }
 
-// ─── Content cards ────────────────────────────────────────────────────────────
+// ─── Wiki system ──────────────────────────────────────────────────────────────
+// Global wiki lookup map, built once from db
+let WIKI_MAP = {};
+function buildWikiMap(wiki) {
+  WIKI_MAP = {};
+  if (!wiki) return;
+  wiki.forEach(e => { WIKI_MAP[e.mot.toLowerCase()] = e; });
+}
+
+// Category colors
+const WIKI_COLORS = {
+  Gastronomie:"#3A6645", Lieux:"#5B9BD5", Société:"#C9463D",
+  Culture:"#8B6FB0", Traditions:"#C4956A", Arts:"#9E7A1A",
+  Nature:"#4E8060", "Vie quotidienne":"#7B9BB5",
+};
+
+// Bottom-sheet wiki panel
+function WikiPanel({C, entry, onClose}) {
+  if (!entry) return null;
+  const color = WIKI_COLORS[entry.categorie] || C.red;
+  return (
+    <>
+      {/* Backdrop */}
+      <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:200,backdropFilter:"blur(2px)"}}/>
+      {/* Sheet */}
+      <div style={{
+        position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)",
+        width:"min(100vw,390px)", zIndex:201,
+        background:C.s1, borderRadius:"20px 20px 0 0",
+        padding:"0 22px 40px", animation:"slideUp .25s ease",
+        boxShadow:"0 -4px 40px rgba(0,0,0,0.25)"
+      }}>
+        {/* Handle */}
+        <div style={{width:36,height:4,borderRadius:2,background:C.s3,margin:"12px auto 18px"}}/>
+        {/* Header */}
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:14}}>
+          <div>
+            <div style={{fontSize:26,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{entry.jp}</div>
+            <div style={{fontSize:12,color:color,fontStyle:"italic",marginBottom:2}}>{entry.romaji}</div>
+            <div style={{fontSize:16,fontWeight:500,color:C.text}}>{entry.mot}</div>
+          </div>
+          <span style={{fontSize:9,padding:"4px 10px",background:`${color}18`,border:`1px solid ${color}44`,borderRadius:20,color,letterSpacing:".1em",marginTop:4}}>{entry.categorie}</span>
+        </div>
+        {/* Divider */}
+        <div style={{height:1,background:C.border,marginBottom:14}}/>
+        {/* Definition */}
+        <p style={{fontSize:14,color:C.t2,lineHeight:1.8,margin:0}}>{entry.definition}</p>
+        {/* Close */}
+        <button onClick={onClose} style={{marginTop:20,width:"100%",padding:"12px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>
+          Fermer
+        </button>
+      </div>
+    </>
+  );
+}
+
+// WikiText: renders text with wiki terms highlighted and tapable
 function FavButton({C,active,onClick}){
   return(
     <button onClick={onClick} aria-label="Sauvegarder" style={{
@@ -158,8 +216,9 @@ function FavButton({C,active,onClick}){
   );
 }
 
-function ExprCard({C,data,fav,onFav}){
+function ExprCard({C,data,fav,onFav,wikiMap,onWikiTap}){
   if(!data) return null;
+  const wt = (text,style) => <WikiText C={C} text={text} style={style} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
   return(
     <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
@@ -169,7 +228,7 @@ function ExprCard({C,data,fav,onFav}){
       <div style={{fontSize:34,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2,marginBottom:5}}>{data.expression}</div>
       <div style={{fontSize:12,color:C.gold,fontStyle:"italic",marginBottom:3}}>{data.romaji}</div>
       <div style={{fontSize:14,color:C.t2,fontWeight:500,marginBottom:13}}>{data.traduction}</div>
-      <div style={{fontSize:13,color:C.t2,lineHeight:1.78,marginBottom:13}}>{data.contexte}</div>
+      <div style={{fontSize:13,color:C.t2,lineHeight:1.78,marginBottom:13}}>{wt(data.contexte)}</div>
       <div style={{padding:"11px 13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:8}}>
         <div style={{fontSize:9,color:C.gold,letterSpacing:".18em",marginBottom:6}}>EXEMPLE</div>
         <div style={{fontSize:13,color:C.text,marginBottom:3}}>{data.exemple_jp}</div>
@@ -179,8 +238,9 @@ function ExprCard({C,data,fav,onFav}){
   );
 }
 
-function CultCard({C,data,fav,onFav}){
+function CultCard({C,data,fav,onFav,wikiMap,onWikiTap}){
   if(!data) return null;
+  const wt = (text,style) => <WikiText C={C} text={text} style={style} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
   return(
     <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:11}}>
@@ -191,17 +251,18 @@ function CultCard({C,data,fav,onFav}){
         </div>
       </div>
       <div style={{fontSize:17,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:11,lineHeight:1.45}}>{data.titre}</div>
-      <p style={{fontSize:13,color:C.t2,lineHeight:1.82,marginBottom:13}}>{data.contenu}</p>
+      <p style={{fontSize:13,color:C.t2,lineHeight:1.82,marginBottom:13}}>{wt(data.contenu)}</p>
       <div style={{padding:"11px 13px",background:C.s2,borderLeft:`3px solid ${C.red}`,borderRadius:"0 7px 7px 0"}}>
         <div style={{fontSize:9,color:C.red,letterSpacing:".18em",marginBottom:4}}>À RETENIR</div>
-        <p style={{fontSize:12,color:C.t2,lineHeight:1.65,margin:0,fontStyle:"italic"}}>{data.insight}</p>
+        <p style={{fontSize:12,color:C.t2,lineHeight:1.65,margin:0,fontStyle:"italic"}}>{wt(data.insight)}</p>
       </div>
     </div>
   );
 }
 
-function RepasCard({C,data,fav,onFav}){
+function RepasCard({C,data,fav,onFav,wikiMap,onWikiTap}){
   if(!data) return null;
+  const wt=(text,style)=><WikiText C={C} text={text} style={style} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
   return(
     <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:11}}>
@@ -210,16 +271,16 @@ function RepasCard({C,data,fav,onFav}){
       </div>
       <div style={{fontSize:32,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2,marginBottom:5}}>{data.nom_jp} {data.emoji}</div>
       <div style={{fontSize:12,color:C.green,fontStyle:"italic",marginBottom:11}}>{data.romaji} — {data.traduction}</div>
-      <p style={{fontSize:13,color:C.t2,lineHeight:1.8,marginBottom:12}}>{data.description}</p>
+      <p style={{fontSize:13,color:C.t2,lineHeight:1.8,marginBottom:12}}>{wt(data.description)}</p>
       <div style={{padding:"11px 13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:8,display:"flex",gap:10,alignItems:"flex-start"}}>
         <span style={{fontSize:15,flexShrink:0}}>💡</span>
-        <p style={{fontSize:12,color:C.t2,margin:0,lineHeight:1.6,fontStyle:"italic"}}>{data.fun_fact}</p>
+        <p style={{fontSize:12,color:C.t2,margin:0,lineHeight:1.6,fontStyle:"italic"}}>{wt(data.fun_fact)}</p>
       </div>
     </div>
   );
 }
 
-function SongCard({C,data,fav,onFav}){
+function SongCard({C,data,fav,onFav,wikiMap,onWikiTap}){
   if(!data) return null;
   const ytUrl=`https://www.youtube.com/results?search_query=${encodeURIComponent(data.youtube_query||data.titre+" "+data.artiste)}`;
   return(
@@ -324,7 +385,30 @@ function StreakSection({C,streak}){
   );
 }
 
-// ─── Slider horizontal (carrousel) ───────────────────────────────────────────
+// ─── Wiki engine ──────────────────────────────────────────────────────────────
+// Build a lookup map from triggers → term (longest first to avoid partial matches)
+function WikiText({C, text, style, wikiMap, onWikiTap}){
+  if (!wikiMap || !text) return <span style={style}>{text}</span>;
+  const segments = parseWikiText(text, wikiMap);
+  return (
+    <span style={style}>
+      {segments.map((seg,i) =>
+        seg.type === "wiki"
+          ? <span key={i} onClick={e=>{e.stopPropagation();onWikiTap&&onWikiTap(seg.term);}}
+              style={{color:C.gold,borderBottom:`1px dotted ${C.gold}`,cursor:"pointer",fontStyle:"inherit"}}>
+              {seg.value}
+            </span>
+          : <span key={i}>{seg.value}</span>
+      )}
+    </span>
+  );
+}
+
+// Bottom-sheet panel showing a wiki term
+const CAT_COLOR = {
+  Gastronomie:"#C9A84C", Lieux:"#4E8060", Culture:"#8B6FB0",
+  Concept:"#5B9BD5", Quotidien:"#C9463D", Fêtes:"#D98BA8",
+};
 function Slider({C, children}){
   const items = Array.isArray(children) ? children.filter(Boolean) : [children];
   const [idx, setIdx] = useState(0);
@@ -377,7 +461,9 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav}){
   const [cult,  setCult]  = useState(null);
   const [repas, setRepas] = useState(null);
   const [song,  setSong]  = useState(null);
+  const [wikiSelected, setWikiSelected] = useState(null);
   const loaded = useRef(false);
+  const wikiMap = useMemo(() => buildWikiMap(db?.wiki), [db?.wiki]);
 
   const {month,day,weekday,hour} = getJPDate();
   const g = greet(hour, user.name==="Voyageur"?"":user.name);
@@ -429,9 +515,9 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav}){
         <div style={{marginBottom:28}}>
           {db ? (
             <Slider C={C}>
-              <ExprCard  C={C} data={expr}  fav={expr&&isFav("expr",expr)}   onFav={expr&&(()=>toggleFav("expr",expr))}/>
-              <CultCard  C={C} data={cult}  fav={cult&&isFav("cult",cult)}   onFav={cult&&(()=>toggleFav("cult",cult))}/>
-              <RepasCard C={C} data={repas} fav={repas&&isFav("repas",repas)} onFav={repas&&(()=>toggleFav("repas",repas))}/>
+              <ExprCard  C={C} data={expr}  fav={expr&&isFav("expr",expr)}   onFav={expr&&(()=>toggleFav("expr",expr))}  wikiMap={wikiMap} onWikiTap={setWikiSelected}/>
+              <CultCard  C={C} data={cult}  fav={cult&&isFav("cult",cult)}   onFav={cult&&(()=>toggleFav("cult",cult))}  wikiMap={wikiMap} onWikiTap={setWikiSelected}/>
+              <RepasCard C={C} data={repas} fav={repas&&isFav("repas",repas)} onFav={repas&&(()=>toggleFav("repas",repas))} wikiMap={wikiMap} onWikiTap={setWikiSelected}/>
             </Slider>
           ) : (
             <div style={{padding:"24px",textAlign:"center",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
@@ -444,18 +530,20 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav}){
         {/* Section 2 — Song of the Day */}
         <SH C={C} kanji="音" title="Song of the Day" sub="Musique japonaise du jour" onRefresh={()=>refresh("song",true)}/>
         <div style={{marginBottom:28}}>
-          <SongCard C={C} data={song} fav={song&&isFav("song",song)} onFav={song&&(()=>toggleFav("song",song))}/>
+          <SongCard C={C} data={song} fav={song&&isFav("song",song)} onFav={song&&(()=>toggleFav("song",song))} wikiMap={wikiMap} onWikiTap={setWikiSelected}/>
         </div>
 
         {/* Section 3 — Streak */}
         <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
         <StreakSection C={C} streak={streak}/>
       </div>
+      {/* Wiki panel */}
+      {wikiSelected && <WikiPanel C={C} entry={wikiSelected} onClose={()=>setWikiSelected(null)}/>}
     </div>
   );
 }
 
-// ─── Other screens ────────────────────────────────────────────────────────────
+// ─── Other screens
 function ExploreScreen({C,db,isFav,toggleFav}){
   const [view,setView] = useState(null);
   if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>;
