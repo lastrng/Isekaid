@@ -468,12 +468,19 @@ function Slider({C, children}){
 }
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
-function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript}){
   const [expr,  setExpr]  = useState(null);
   const [cult,  setCult]  = useState(null);
   const [repas, setRepas] = useState(null);
   const [song,  setSong]  = useState(null);
+  const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const loaded = useRef(false);
+
+  // Auto-alternate streak badge every 3s
+  useEffect(()=>{
+    const t = setInterval(()=> setStreakFlip(f=>!f), 5000);
+    return ()=> clearInterval(t);
+  },[]);
 
   const {month,day,weekday,hour} = getJPDate();
   const g = greet(hour, user.name==="Voyageur"?"":user.name);
@@ -503,20 +510,29 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script})
     <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
       {/* Sticky header */}
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-          <div style={{fontSize:10,color:C.t3,letterSpacing:".2em"}}>{month} {day}日（{weekday}）</div>
-          <div style={{display:"flex",gap:7,alignItems:"center"}}>
-            <div style={{display:"flex",alignItems:"center",gap:3,padding:"3px 8px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:20}}>
-              <span style={{fontSize:11}}>🔥</span>
-              <span style={{fontSize:11,color:C.text,fontWeight:600}}>{streak?.count||0}</span>
+        {/* Row 1 — date + badges alignés */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+          <div>
+            <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:2}}>{month} {day}日（{weekday}）</div>
+            <div style={{fontSize:11,color:C.t2}}>{g.fr}</div>
+          </div>
+          {/* Streak + script toggle alignés */}
+          <div style={{display:"flex",gap:6,alignItems:"center"}}>
+            {/* Streak badge — alterne flamme / titre app */}
+            <div onClick={()=>setStreakFlip(f=>!f)} style={{display:"flex",alignItems:"center",gap:3,padding:"4px 9px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:20,cursor:"pointer",minWidth:44,justifyContent:"center",transition:"all .3s"}}>
+              {streakFlip
+                ? <span style={{fontSize:10,fontFamily:"'Noto Serif JP',serif",color:C.red,fontWeight:500,letterSpacing:".04em"}}>異世界</span>
+                : <><span style={{fontSize:11}}>🔥</span><span style={{fontSize:11,color:C.text,fontWeight:600}}>{streak?.count||0}</span></>
+              }
             </div>
-            <div style={{padding:"3px 9px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20}}>
-              <span style={{fontSize:10,color:C.t2}}>{rankLabel[user.level]||"Curious Tourist"}</span>
-            </div>
+            {/* Script toggle — aligné avec le streak */}
+            <button onClick={toggleScript} style={{padding:"4px 10px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,cursor:"pointer",fontFamily:"'Noto Serif JP',serif",fontSize:12,color:C.t2,lineHeight:1}}>
+              {script==="kanji" ? "あ" : "A"}
+            </button>
           </div>
         </div>
-        <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{g.jp}</div>
-        <div style={{fontSize:13,color:C.t2}}>{g.fr}</div>
+        {/* Row 2 — salutation japonaise */}
+        <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{g.jp}</div>
       </div>
 
       <div style={{padding:"18px 20px 110px"}}>
@@ -1483,23 +1499,13 @@ export default function IsekaidApp(){
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C}/>}
               {tab==="learn"     &&<LearnScreen     C={C}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav}/>}
             </div>
-            {/* Floating kanji/romaji toggle */}
-            <button onClick={toggleScript} aria-label="Basculer kanji / romaji" style={{
-              position:"absolute", top:48, right:16, zIndex:30,
-              width:42, height:42, borderRadius:"50%", cursor:"pointer",
-              background:C.s1, border:`1px solid ${C.border}`,
-              boxShadow:"0 2px 12px rgba(0,0,0,0.15)",
-              display:"flex", alignItems:"center", justifyContent:"center",
-              fontFamily:"'Noto Serif JP',serif", fontSize:15, color:C.text, padding:0
-            }}>
-              {script==="kanji" ? "あ" : "A"}
-            </button>
+            {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
             {/* Global wiki panel — available everywhere */}
             {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
