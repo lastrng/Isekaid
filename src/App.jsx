@@ -607,7 +607,7 @@ function RegionDetail({C,r,onBack,fav,onFav,wikiMap,onWikiTap}){
       <div style={{fontSize:10,color:r.couleur,letterSpacing:".18em",marginBottom:11,textTransform:"uppercase"}}>{icon} {title}</div>
       <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
         {items.map((x,i)=>(
-          <span key={i} style={{fontSize:12,padding:"7px 12px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>{x}</span>
+          <span key={i} style={{fontSize:12,padding:"7px 12px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>{wt(x)}</span>
         ))}
       </div>
     </div>
@@ -644,7 +644,7 @@ function RegionDetail({C,r,onBack,fav,onFav,wikiMap,onWikiTap}){
             {r.incontournables.map((x,i)=>(
               <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:10}}>
                 <span style={{minWidth:22,height:22,borderRadius:"50%",background:`${r.couleur}22`,color:r.couleur,fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{i+1}</span>
-                <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{x}</span>
+                <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{wt(x)}</span>
               </div>
             ))}
           </div>
@@ -722,7 +722,7 @@ function CodeDetail({C,c,onBack,fav,onFav,wikiMap,onWikiTap}){
         {items.map((x,i)=>(
           <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start"}}>
             <span style={{color:color,fontSize:13,flexShrink:0,lineHeight:1.5}}>{icon==="✅"?"✓":icon==="⚠️"?"✕":"◈"}</span>
-            <span style={{fontSize:13,color:C.t2,lineHeight:1.6}}>{x}</span>
+            <span style={{fontSize:13,color:C.t2,lineHeight:1.6}}>{wt(x)}</span>
           </div>
         ))}
       </div>
@@ -859,7 +859,7 @@ function TraditionDetail({C,t,onBack,fav,onFav,wikiMap,onWikiTap}){
             {t.rituels.map((r,i)=>(
               <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:10}}>
                 <span style={{minWidth:22,height:22,borderRadius:"50%",background:"rgba(201,70,61,0.12)",color:C.red,fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{i+1}</span>
-                <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{r}</span>
+                <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{wt(r)}</span>
               </div>
             ))}
           </div>
