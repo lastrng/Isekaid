@@ -505,12 +505,12 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script})
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
           <div style={{fontSize:10,color:C.t3,letterSpacing:".2em"}}>{month} {day}日（{weekday}）</div>
-          <div style={{display:"flex",gap:7}}>
-            <div style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:20,animation:"glow 2.5s ease infinite"}}>
+          <div style={{display:"flex",gap:7,alignItems:"center"}}>
+            <div style={{display:"flex",alignItems:"center",gap:3,padding:"3px 8px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:20}}>
               <span style={{fontSize:11}}>🔥</span>
-              <span style={{fontSize:11,color:C.text,fontWeight:500}}>{streak?.count||0} jour{(streak?.count||0)>1?"s":""}</span>
+              <span style={{fontSize:11,color:C.text,fontWeight:600}}>{streak?.count||0}</span>
             </div>
-            <div style={{padding:"4px 10px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20}}>
+            <div style={{padding:"3px 9px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20}}>
               <span style={{fontSize:10,color:C.t2}}>{rankLabel[user.level]||"Curious Tourist"}</span>
             </div>
           </div>
@@ -1347,9 +1347,9 @@ export default function IsekaidApp(){
   };
 
   return(
-    <div style={{width:"100%",height:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"#080604",fontFamily:"'Noto Sans JP','Helvetica Neue',sans-serif"}}>
+    <div style={{width:"100%",height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:"#080604",fontFamily:"'Noto Sans JP','Helvetica Neue',sans-serif"}}>
       <style>{CSS}</style>
-      <div style={{width:"min(100vw,390px)",height:"min(100vh,844px)",position:"relative",overflow:"hidden",borderRadius:"clamp(0px,calc((100vw - 390px)*999),44px)",background:C.bg,boxShadow:"0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,0,0,.08)",transition:"background .3s"}}>
+      <div style={{width:"min(100vw,390px)",height:"min(100dvh,844px)",position:"relative",overflow:"hidden",borderRadius:"clamp(0px,calc((100vw - 390px)*999),44px)",background:C.bg,boxShadow:"0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,0,0,.08)",transition:"background .3s"}}>
         {screen==="splash"     &&<Splash onDone={afterSplash}/>}
         {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
         {screen==="app"&&user&&(
@@ -1380,4 +1380,4 @@ export default function IsekaidApp(){
       </div>
     </div>
   );
-                   }
+                     }
