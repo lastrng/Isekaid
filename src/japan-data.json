@@ -3143,5 +3143,403 @@
       "definition": "Agents spécialisés du Japon médiéval en espionnage, sabotage et assassinat. Leur vrai rôle était celui de mercenaires — bien loin de la légende populaire.",
       "categorie": "Culture"
     }
+  ],
+  "vie_quotidienne": [
+    {
+      "id": "konbini",
+      "titre": "Le konbini",
+      "nom_jp": "コンビニ",
+      "emoji": "🏪",
+      "categorie": "Commerces",
+      "resume": "Bien plus qu'une supérette : le centre névralgique du quotidien.",
+      "description": "Le konbini (convenience store) est ouvert 24h/24, 7j/7. On y mange (onigiri, bento réchauffé sur place), on y paie ses factures, on y retire de l'argent, on y imprime des documents, on y envoie des colis et on y achète des billets de concert. Les trois géants : 7-Eleven, FamilyMart et Lawson, chacun avec ses produits cultes.",
+      "infos_pratiques": [
+        "Le personnel réchauffe ton bento si tu demandes 'atatamete kudasai'",
+        "Les toilettes sont souvent accessibles gratuitement",
+        "Tu peux y régler tes achats en ligne en espèces (konbini payment)",
+        "Le café frais à 100¥ est étonnamment bon"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "温めますか？",
+          "romaji": "Atatamemasu ka?",
+          "fr": "Je vous le réchauffe ?"
+        },
+        {
+          "jp": "袋いりますか？",
+          "romaji": "Fukuro irimasu ka?",
+          "fr": "Vous voulez un sac ?"
+        },
+        {
+          "jp": "レシートください",
+          "romaji": "Reshīto kudasai",
+          "fr": "Le ticket, s'il vous plaît"
+        }
+      ],
+      "etiquette": "On fait la queue à la ligne marquée au sol, on pose l'argent sur le plateau, et on ne mange pas en marchant devant le magasin (utilise l'espace prévu)."
+    },
+    {
+      "id": "supermarche",
+      "titre": "Le supermarché",
+      "nom_jp": "スーパー",
+      "emoji": "🛒",
+      "categorie": "Commerces",
+      "resume": "Les courses au Japon, entre rituels et découvertes.",
+      "description": "Le supermarché japonais (sūpā) suit ses propres règles : on ne pèse pas ses légumes, on emballe soi-même ses courses sur une table dédiée après la caisse (sakkingu-dai), et les prix baissent le soir avec des stickers de réduction sur les plats préparés — le moment préféré des étudiants et salarymen.",
+      "infos_pratiques": [
+        "Les stickers de réduction (hangaku = -50%) apparaissent en fin de journée",
+        "Le poisson et la viande sont vendus en barquettes précises, souvent par portion",
+        "Des paniers de couleurs différentes indiquent parfois si tu as payé ou non",
+        "L'emballage se fait après la caisse, sur les tables prévues"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "半額",
+          "romaji": "Hangaku",
+          "fr": "Moitié prix"
+        },
+        {
+          "jp": "お会計",
+          "romaji": "O-kaikei",
+          "fr": "L'addition / la caisse"
+        },
+        {
+          "jp": "ポイントカードはありますか？",
+          "romaji": "Pointo kādo wa arimasu ka?",
+          "fr": "Avez-vous la carte de fidélité ?"
+        }
+      ],
+      "etiquette": "On ne goûte jamais avant d'acheter, on manipule les produits avec soin, et on remet son panier proprement à sa place."
+    },
+    {
+      "id": "depachika",
+      "titre": "Le depachika",
+      "nom_jp": "デパ地下",
+      "emoji": "🍱",
+      "categorie": "Commerces",
+      "resume": "Le paradis gastronomique au sous-sol des grands magasins.",
+      "description": "Contraction de 'depāto' (grand magasin) et 'chika' (sous-sol), le depachika est un immense hall gourmet au sous-sol des grands magasins (Isetan, Takashimaya, Mitsukoshi...). Bentos raffinés, wagashi d'artisans, fruits de luxe à offrir et stands de dégustation — une expérience culinaire à part entière.",
+      "infos_pratiques": [
+        "Les invendus sont soldés à partir de 19h environ",
+        "Les melons à 100€ sont des cadeaux de prestige, pas une arnaque",
+        "Beaucoup de stands offrent des échantillons (shishoku)",
+        "Parfait pour composer un pique-nique haut de gamme"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "試食",
+          "romaji": "Shishoku",
+          "fr": "Dégustation gratuite"
+        },
+        {
+          "jp": "これをください",
+          "romaji": "Kore o kudasai",
+          "fr": "Celui-ci, s'il vous plaît"
+        },
+        {
+          "jp": "贈り物用ですか？",
+          "romaji": "Okurimono-yō desu ka?",
+          "fr": "C'est pour offrir ?"
+        }
+      ],
+      "etiquette": "Si on te demande si c'est pour offrir, c'est pour adapter l'emballage — le service d'empaquetage cadeau est un art au Japon."
+    },
+    {
+      "id": "trains",
+      "titre": "Prendre le train",
+      "nom_jp": "電車に乗る",
+      "emoji": "🚃",
+      "categorie": "Transports",
+      "resume": "Le système ferroviaire le plus ponctuel du monde.",
+      "description": "Le train est l'épine dorsale du Japon urbain. Cartes IC rechargeables (Suica, Pasmo, Icoca) pour passer les portiques sans ticket, files marquées au sol sur les quais, wagons réservés aux femmes aux heures de pointe, et silence quasi religieux à bord. Le Shinkansen relie les grandes villes à 320 km/h avec une ponctualité à la seconde.",
+      "infos_pratiques": [
+        "La Suica/Pasmo se recharge aux bornes et fonctionne aussi au konbini",
+        "Évite 7h30-9h : les heures de pointe sont extrêmement denses",
+        "Les sièges prioritaires se libèrent même si le wagon est bondé",
+        "Le dernier train est souvent vers minuit-1h — après c'est taxi ou attendre 5h"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "すみません、降ります",
+          "romaji": "Sumimasen, orimasu",
+          "fr": "Pardon, je descends"
+        },
+        {
+          "jp": "〜行きですか？",
+          "romaji": "~yuki desu ka?",
+          "fr": "Ce train va bien à ~ ?"
+        },
+        {
+          "jp": "終電",
+          "romaji": "Shūden",
+          "fr": "Le dernier train"
+        }
+      ],
+      "etiquette": "Téléphone en silencieux, pas d'appels, on parle bas, on retire son sac à dos, et on laisse descendre avant de monter."
+    },
+    {
+      "id": "taxi",
+      "titre": "Le taxi japonais",
+      "nom_jp": "タクシー",
+      "emoji": "🚕",
+      "categorie": "Transports",
+      "resume": "Portes automatiques et gants blancs.",
+      "description": "Le taxi japonais est une expérience en soi : portes arrière qui s'ouvrent automatiquement (n'y touche pas !), chauffeurs en gants blancs, sièges en dentelle, et une propreté irréprochable. Cher mais d'une fiabilité totale. Indispensable après le dernier train.",
+      "infos_pratiques": [
+        "La porte arrière gauche s'ouvre et se ferme automatiquement",
+        "Le rouge au tableau = libre, le vert = occupé (inverse de l'intuition !)",
+        "Prépare l'adresse écrite en japonais ou sur Google Maps",
+        "Pas de pourboire — jamais"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "ここまでお願いします",
+          "romaji": "Koko made onegai shimasu",
+          "fr": "À cette adresse, s'il vous plaît (en montrant)"
+        },
+        {
+          "jp": "領収書ください",
+          "romaji": "Ryōshūsho kudasai",
+          "fr": "Un reçu, s'il vous plaît"
+        },
+        {
+          "jp": "ここで止めてください",
+          "romaji": "Koko de tomete kudasai",
+          "fr": "Arrêtez-vous ici, s'il vous plaît"
+        }
+      ],
+      "etiquette": "Ne touche pas les portes (le chauffeur les contrôle), donne l'adresse plutôt que des directions, et paie sur le plateau."
+    },
+    {
+      "id": "velo",
+      "titre": "Le vélo au quotidien",
+      "nom_jp": "自転車",
+      "emoji": "🚲",
+      "categorie": "Transports",
+      "resume": "Le mamachari, roi des trajets de quartier.",
+      "description": "Le 'mamachari' (vélo de maman) avec son panier et son siège enfant est omniprésent. On pédale sur les trottoirs (toléré), on gare son vélo dans les parkings dédiés payants, et l'enregistrement antivol est obligatoire. La police vérifie régulièrement la propriété des vélos.",
+      "infos_pratiques": [
+        "Les parkings à vélo près des gares coûtent 100-200¥/jour",
+        "Un vélo acheté doit être enregistré (bōhan tōroku) à ton nom",
+        "Les vélos mal garés sont enlevés par la fourrière municipale",
+        "Lumière obligatoire la nuit, sous peine d'amende"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "駐輪場",
+          "romaji": "Chūrinjō",
+          "fr": "Parking à vélos"
+        },
+        {
+          "jp": "防犯登録",
+          "romaji": "Bōhan tōroku",
+          "fr": "Enregistrement antivol"
+        },
+        {
+          "jp": "レンタサイクル",
+          "romaji": "Rentasaikuru",
+          "fr": "Vélo en location"
+        }
+      ],
+      "etiquette": "On roule lentement sur les trottoirs en cédant le passage aux piétons, et on ne gare jamais son vélo n'importe où."
+    },
+    {
+      "id": "poste",
+      "titre": "La poste & les colis",
+      "nom_jp": "郵便局",
+      "emoji": "📮",
+      "categorie": "Services",
+      "resume": "Takkyubin : la livraison qui change la vie.",
+      "description": "Le système de livraison japonais (takkyūbin, par Yamato ou Sagawa) est d'une efficacité redoutable : on envoie sa valise d'un hôtel à l'autre, on se fait livrer au konbini, et on choisit son créneau de livraison à l'heure près. Les boîtes aux lettres rouges et la poste (yūbinkyoku) gèrent aussi les services bancaires.",
+      "infos_pratiques": [
+        "Envoie ta valise à ton prochain hôtel (~2000¥) et voyage léger",
+        "Les colis ratés se reprogramment en ligne ou au konbini",
+        "La poste japonaise fait aussi banque (Yucho Bank)",
+        "Les konbini acceptent les dépôts de colis takkyūbin"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "宅急便",
+          "romaji": "Takkyūbin",
+          "fr": "Livraison de colis express"
+        },
+        {
+          "jp": "切手",
+          "romaji": "Kitte",
+          "fr": "Timbre"
+        },
+        {
+          "jp": "再配達",
+          "romaji": "Saihaitatsu",
+          "fr": "Nouvelle livraison (après absence)"
+        }
+      ],
+      "etiquette": "Sois présent au créneau choisi — les livreurs japonais sont d'une ponctualité militaire et repartent vite."
+    },
+    {
+      "id": "banque-atm",
+      "titre": "Argent & distributeurs",
+      "nom_jp": "ATM・現金",
+      "emoji": "🏧",
+      "categorie": "Services",
+      "resume": "Le cash reste roi, mais les choses changent.",
+      "description": "Le Japon reste attaché aux espèces, même si le paiement mobile (PayPay, Suica) progresse vite. Les ATM de konbini (surtout 7-Eleven) acceptent les cartes étrangères, contrairement à beaucoup de distributeurs bancaires. Certains ATM ferment la nuit — oui, des distributeurs qui dorment.",
+      "infos_pratiques": [
+        "Les ATM 7-Eleven et Japan Post acceptent les cartes étrangères",
+        "Beaucoup de petits restaurants n'acceptent que le cash",
+        "Garde toujours 10 000¥ de secours sur toi",
+        "Les pièces de 100¥ et 500¥ servent constamment (casiers, distributeurs)"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "現金のみ",
+          "romaji": "Genkin nomi",
+          "fr": "Espèces uniquement"
+        },
+        {
+          "jp": "両替",
+          "romaji": "Ryōgae",
+          "fr": "Change / faire de la monnaie"
+        },
+        {
+          "jp": "引き出し",
+          "romaji": "Hikidashi",
+          "fr": "Retrait"
+        }
+      ],
+      "etiquette": "L'argent se pose sur le plateau à la caisse, jamais directement dans la main, et les billets se donnent propres et non froissés."
+    },
+    {
+      "id": "appartement",
+      "titre": "Vivre en appartement",
+      "nom_jp": "アパート暮らし",
+      "emoji": "🏠",
+      "categorie": "Logement",
+      "resume": "Petits espaces, grandes règles tacites.",
+      "description": "L'appartement japonais type est compact : genkan à l'entrée, salle de bain modulaire (unit bath), machine à laver sur le balcon, et futon ou lit selon les goûts. Les murs sont fins — le silence est une politesse capitale. Le tri des déchets suit un calendrier strict propre à chaque quartier.",
+      "infos_pratiques": [
+        "Le linge sèche dehors le matin, rentré avant le soir",
+        "Pas de bruit après 21-22h : ni machine, ni aspirateur, ni musique forte",
+        "Le calendrier de tri des déchets du quartier est sacré",
+        "La baignoire se partage : on se lave AVANT d'y entrer, l'eau sert à toute la famille"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "大家さん",
+          "romaji": "Ōya-san",
+          "fr": "Le propriétaire"
+        },
+        {
+          "jp": "敷金・礼金",
+          "romaji": "Shikikin / reikin",
+          "fr": "Caution / 'argent de remerciement' (non remboursable)"
+        },
+        {
+          "jp": "騒音",
+          "romaji": "Sōon",
+          "fr": "Nuisance sonore"
+        }
+      ],
+      "etiquette": "On salue ses voisins, on ne fait aucun bruit le soir, et on respecte scrupuleusement les jours de sortie des poubelles."
+    },
+    {
+      "id": "sento-quotidien",
+      "titre": "Le bain public",
+      "nom_jp": "銭湯",
+      "emoji": "♨️",
+      "categorie": "Logement",
+      "resume": "Le rituel du bain partagé de quartier.",
+      "description": "Le sentō est le bain public de quartier, héritier d'une époque où les logements n'avaient pas de salle de bain. On s'y lave assis sur un petit tabouret avant d'entrer dans les bassins chauds. Une expérience sociale et relaxante, cousine urbaine de l'onsen.",
+      "infos_pratiques": [
+        "Compte 400-600¥ l'entrée, serviette en location sur place",
+        "On se lave INTÉGRALEMENT avant d'entrer dans les bassins",
+        "Les tatouages peuvent être refusés (vérifier avant)",
+        "La petite serviette ne touche jamais l'eau du bassin (sur la tête !)"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "男湯・女湯",
+          "romaji": "Otoko-yu / onna-yu",
+          "fr": "Bain hommes / bain femmes"
+        },
+        {
+          "jp": "番台",
+          "romaji": "Bandai",
+          "fr": "Comptoir d'accueil"
+        },
+        {
+          "jp": "かけ湯",
+          "romaji": "Kakeyu",
+          "fr": "Se rincer avant d'entrer"
+        }
+      ],
+      "etiquette": "Nudité obligatoire (pas de maillot), silence relatif, cheveux attachés, et on ne nage pas dans les bassins."
+    },
+    {
+      "id": "bureau",
+      "titre": "La vie de bureau",
+      "nom_jp": "会社員生活",
+      "emoji": "💼",
+      "categorie": "Travail",
+      "resume": "Le quotidien du salaryman et de l'office lady.",
+      "description": "La journée de bureau japonaise a ses rituels : salutation matinale collective (chōrei), déjeuner rapide au bento ou au teishoku, sieste éclair assumée (inemuri), et le fameux 'otsukaresama desu' qui ponctue chaque interaction. Partir avant son chef reste délicat dans les entreprises traditionnelles.",
+      "infos_pratiques": [
+        "'Otsukaresama desu' se dit en croisant un collègue, en partant, au téléphone — partout",
+        "L'inemuri (sieste au bureau) est tolérée : elle prouve qu'on travaille dur",
+        "Le déjeuner dure rarement plus de 30-45 minutes",
+        "Les nomikai du vendredi soir font partie du travail"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "お疲れ様です",
+          "romaji": "Otsukaresama desu",
+          "fr": "Merci pour ton travail (salutation universelle)"
+        },
+        {
+          "jp": "お先に失礼します",
+          "romaji": "Osaki ni shitsurei shimasu",
+          "fr": "Pardon de partir avant vous"
+        },
+        {
+          "jp": "残業",
+          "romaji": "Zangyō",
+          "fr": "Heures supplémentaires"
+        }
+      ],
+      "etiquette": "On dit 'osaki ni shitsurei shimasu' en partant avant les autres, et on ne quitte jamais une réunion avant son supérieur."
+    },
+    {
+      "id": "ecole",
+      "titre": "L'école japonaise",
+      "nom_jp": "日本の学校",
+      "emoji": "🎒",
+      "categorie": "Travail",
+      "resume": "Uniformes, ménage collectif et clubs jusqu'au soir.",
+      "description": "L'école japonaise façonne la société : les élèves nettoient eux-mêmes leur classe (sōji), déjeunent ensemble en classe (kyūshoku), portent l'uniforme dès le collège, et consacrent leurs soirées aux clubs (bukatsu) — sport, musique ou culture. Le randoseru, cartable rigide des écoliers, dure les 6 ans de primaire.",
+      "infos_pratiques": [
+        "Le ménage quotidien par les élèves remplace en partie le personnel d'entretien",
+        "Le kyūshoku (repas scolaire) est équilibré et identique pour tous",
+        "Les clubs (bukatsu) occupent soirées, week-ends et vacances",
+        "Le randoseru coûte 300-600€ et se choisit comme un rite de passage"
+      ],
+      "vocabulaire": [
+        {
+          "jp": "掃除",
+          "romaji": "Sōji",
+          "fr": "Le ménage (de la classe)"
+        },
+        {
+          "jp": "部活",
+          "romaji": "Bukatsu",
+          "fr": "Club scolaire"
+        },
+        {
+          "jp": "給食",
+          "romaji": "Kyūshoku",
+          "fr": "Repas scolaire collectif"
+        }
+      ],
+      "etiquette": "Les chaussures d'extérieur restent au casier d'entrée (geta-bako) — chaque élève a ses uwabaki (chaussons d'intérieur)."
+    }
   ]
 }
