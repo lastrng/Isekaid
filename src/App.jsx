@@ -146,8 +146,6 @@ function SH({C,kanji,title,sub,onRefresh}){
 }
 
 // ─── Wiki system ──────────────────────────────────────────────────────────────
-// Global wiki lookup map, built once from db
-let WIKI_MAP = {};
 function buildWikiMap(wiki) {
   if (!wiki) return {};
   const map = {};
@@ -387,9 +385,22 @@ function StreakSection({C,streak}){
 }
 
 // ─── Wiki engine ──────────────────────────────────────────────────────────────
-// Build a lookup map from triggers → term (longest first to avoid partial matches)
+// Split text into segments, marking known wiki terms as tapable
+function parseWikiText(text, wikiMap){
+  if (!text || !wikiMap || Object.keys(wikiMap).length === 0)
+    return [{type:"text", value:text}];
+  const triggers = Object.keys(wikiMap).sort((a,b)=>b.length-a.length);
+  const escaped = triggers.map(w => w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+  const pattern = new RegExp(`(${escaped.join("|")})`, "gi");
+  const parts = text.split(pattern);
+  return parts.filter(p => p !== "").map(part => {
+    const entry = wikiMap[part.toLowerCase()];
+    return entry ? {type:"wiki", value:part, term:entry} : {type:"text", value:part};
+  });
+}
+
 function WikiText({C, text, style, wikiMap, onWikiTap}){
-  if (!wikiMap || !text) return <span style={style}>{text}</span>;
+  if (!wikiMap || !text || typeof text !== "string") return <span style={style}>{text}</span>;
   const segments = parseWikiText(text, wikiMap);
   return (
     <span style={style}>
