@@ -149,9 +149,10 @@ function SH({C,kanji,title,sub,onRefresh}){
 // Global wiki lookup map, built once from db
 let WIKI_MAP = {};
 function buildWikiMap(wiki) {
-  WIKI_MAP = {};
-  if (!wiki) return;
-  wiki.forEach(e => { WIKI_MAP[e.mot.toLowerCase()] = e; });
+  if (!wiki) return {};
+  const map = {};
+  wiki.forEach(e => { map[e.mot.toLowerCase()] = e; });
+  return map;
 }
 
 // Category colors
@@ -456,14 +457,12 @@ function Slider({C, children}){
 }
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
-function HomeScreen({C,user,db,streak,isFav,toggleFav}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap}){
   const [expr,  setExpr]  = useState(null);
   const [cult,  setCult]  = useState(null);
   const [repas, setRepas] = useState(null);
   const [song,  setSong]  = useState(null);
-  const [wikiSelected, setWikiSelected] = useState(null);
   const loaded = useRef(false);
-  const wikiMap = useMemo(() => buildWikiMap(db?.wiki), [db?.wiki]);
 
   const {month,day,weekday,hour} = getJPDate();
   const g = greet(hour, user.name==="Voyageur"?"":user.name);
@@ -515,9 +514,9 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav}){
         <div style={{marginBottom:28}}>
           {db ? (
             <Slider C={C}>
-              <ExprCard  C={C} data={expr}  fav={expr&&isFav("expr",expr)}   onFav={expr&&(()=>toggleFav("expr",expr))}  wikiMap={wikiMap} onWikiTap={setWikiSelected}/>
-              <CultCard  C={C} data={cult}  fav={cult&&isFav("cult",cult)}   onFav={cult&&(()=>toggleFav("cult",cult))}  wikiMap={wikiMap} onWikiTap={setWikiSelected}/>
-              <RepasCard C={C} data={repas} fav={repas&&isFav("repas",repas)} onFav={repas&&(()=>toggleFav("repas",repas))} wikiMap={wikiMap} onWikiTap={setWikiSelected}/>
+              <ExprCard  C={C} data={expr}  fav={expr&&isFav("expr",expr)}   onFav={expr&&(()=>toggleFav("expr",expr))}  wikiMap={wikiMap} onWikiTap={onWikiTap}/>
+              <CultCard  C={C} data={cult}  fav={cult&&isFav("cult",cult)}   onFav={cult&&(()=>toggleFav("cult",cult))}  wikiMap={wikiMap} onWikiTap={onWikiTap}/>
+              <RepasCard C={C} data={repas} fav={repas&&isFav("repas",repas)} onFav={repas&&(()=>toggleFav("repas",repas))} wikiMap={wikiMap} onWikiTap={onWikiTap}/>
             </Slider>
           ) : (
             <div style={{padding:"24px",textAlign:"center",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
@@ -530,25 +529,23 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav}){
         {/* Section 2 — Song of the Day */}
         <SH C={C} kanji="音" title="Song of the Day" sub="Musique japonaise du jour" onRefresh={()=>refresh("song",true)}/>
         <div style={{marginBottom:28}}>
-          <SongCard C={C} data={song} fav={song&&isFav("song",song)} onFav={song&&(()=>toggleFav("song",song))} wikiMap={wikiMap} onWikiTap={setWikiSelected}/>
+          <SongCard C={C} data={song} fav={song&&isFav("song",song)} onFav={song&&(()=>toggleFav("song",song))} wikiMap={wikiMap} onWikiTap={onWikiTap}/>
         </div>
 
         {/* Section 3 — Streak */}
         <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
         <StreakSection C={C} streak={streak}/>
       </div>
-      {/* Wiki panel */}
-      {wikiSelected && <WikiPanel C={C} entry={wikiSelected} onClose={()=>setWikiSelected(null)}/>}
     </div>
   );
 }
 
 // ─── Other screens
-function ExploreScreen({C,db,isFav,toggleFav}){
+function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap}){
   const [view,setView] = useState(null);
-  if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>;
-  if(view==="codes")      return <CodesScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>;
-  if(view==="regions")    return <RegionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>;
+  if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
+  if(view==="codes")      return <CodesScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
+  if(view==="regions")    return <RegionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
   const ROUTES = {"Traditions":"traditions","Codes sociaux":"codes","Régions du Japon":"regions"};
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
@@ -592,7 +589,8 @@ function RegionHero({C,r,height=200,children}){
   );
 }
 
-function RegionDetail({C,r,onBack,fav,onFav}){
+function RegionDetail({C,r,onBack,fav,onFav,wikiMap,onWikiTap}){
+  const wt=(text,style)=><WikiText C={C} text={text} style={style} wikiMap={wikiMap||{}} onWikiTap={onWikiTap}/>;
   const Row = ({icon,title,items}) => (
     <div>
       <div style={{fontSize:10,color:r.couleur,letterSpacing:".18em",marginBottom:11,textTransform:"uppercase"}}>{icon} {title}</div>
@@ -623,7 +621,7 @@ function RegionDetail({C,r,onBack,fav,onFav}){
       <div style={{padding:"20px 20px 110px",display:"flex",flexDirection:"column",gap:20}}>
         <div>
           <div style={{fontSize:10,color:r.couleur,letterSpacing:".2em",marginBottom:10,textTransform:"uppercase"}}>🌏 Ambiance</div>
-          <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{r.ambiance}</p>
+          <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{wt(r.ambiance)}</p>
         </div>
 
         <Row icon="🏙️" title="Villes principales" items={r.villes}/>
@@ -661,11 +659,11 @@ function RegionDetail({C,r,onBack,fav,onFav}){
   );
 }
 
-function RegionsScreen({C,db,isFav,toggleFav}){
+function RegionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap}){
   const [selected,setSelected] = useState(null);
   const regions = db?.regions || [];
 
-  if(selected) return <RegionDetail C={C} r={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("region",selected)} onFav={toggleFav&&(()=>toggleFav("region",selected))}/>;
+  if(selected) return <RegionDetail C={C} r={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("region",selected)} onFav={toggleFav&&(()=>toggleFav("region",selected))} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
 
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
@@ -704,7 +702,8 @@ const CODE_CATS = [
   {id:"Travail",      label:"Travail",       emoji:"💼"},
 ];
 
-function CodeDetail({C,c,onBack,fav,onFav}){
+function CodeDetail({C,c,onBack,fav,onFav,wikiMap,onWikiTap}){
+  const wt=(text,style)=><WikiText C={C} text={text} style={style} wikiMap={wikiMap||{}} onWikiTap={onWikiTap}/>;
   const Block = ({title,items,color,icon}) => (
     <div>
       <div style={{fontSize:10,color:color,letterSpacing:".18em",marginBottom:11,textTransform:"uppercase"}}>{icon} {title}</div>
@@ -738,7 +737,7 @@ function CodeDetail({C,c,onBack,fav,onFav}){
       <div style={{padding:"4px 20px 110px",display:"flex",flexDirection:"column",gap:20}}>
         <div>
           <div style={{fontSize:10,color:C.red,letterSpacing:".2em",marginBottom:10,textTransform:"uppercase"}}>📖 Comprendre</div>
-          <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{c.explication}</p>
+          <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{wt(c.explication)}</p>
         </div>
 
         <div style={{padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
@@ -757,12 +756,12 @@ function CodeDetail({C,c,onBack,fav,onFav}){
   );
 }
 
-function CodesScreen({C,db,isFav,toggleFav}){
+function CodesScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap}){
   const [cat,setCat] = useState("all");
   const [selected,setSelected] = useState(null);
   const codes = db?.codes_sociaux || [];
 
-  if(selected) return <CodeDetail C={C} c={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("code",selected)} onFav={toggleFav&&(()=>toggleFav("code",selected))}/>;
+  if(selected) return <CodeDetail C={C} c={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("code",selected)} onFav={toggleFav&&(()=>toggleFav("code",selected))} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
 
   const filtered = cat==="all" ? codes : codes.filter(c=>c.categorie===cat);
 
@@ -816,7 +815,8 @@ const SEASONS = [
   {id:"hiver",     label:"Hiver",     jp:"冬", emoji:"❄️", color:"#7B9BB5", months:"Déc – Fév"},
 ];
 
-function TraditionDetail({C,t,onBack,fav,onFav}){
+function TraditionDetail({C,t,onBack,fav,onFav,wikiMap,onWikiTap}){
+  const wt=(text,style)=><WikiText C={C} text={text} style={style} wikiMap={wikiMap||{}} onWikiTap={onWikiTap}/>;
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
       {/* Hero */}
@@ -838,7 +838,7 @@ function TraditionDetail({C,t,onBack,fav,onFav}){
         {/* Histoire */}
         <div>
           <div style={{fontSize:10,color:C.red,letterSpacing:".2em",marginBottom:10,textTransform:"uppercase"}}>📜 Histoire & origine</div>
-          <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{t.histoire}</p>
+          <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{wt(t.histoire)}</p>
         </div>
 
         {/* Rituels */}
@@ -861,7 +861,7 @@ function TraditionDetail({C,t,onBack,fav,onFav}){
             {t.comment_vivre.map((c,i)=>(
               <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start"}}>
                 <span style={{color:C.green,fontSize:13,flexShrink:0}}>◈</span>
-                <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{c}</span>
+                <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{wt(c)}</span>
               </div>
             ))}
           </div>
@@ -872,7 +872,7 @@ function TraditionDetail({C,t,onBack,fav,onFav}){
           <span style={{fontSize:22,flexShrink:0}}>🍱</span>
           <div>
             <div style={{fontSize:10,color:C.gold,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Gastronomie associée</div>
-            <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.55}}>{t.gastronomie}</p>
+            <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.55}}>{wt(t.gastronomie)}</p>
           </div>
         </div>
 
@@ -881,7 +881,7 @@ function TraditionDetail({C,t,onBack,fav,onFav}){
           <span style={{fontSize:22,flexShrink:0}}>📍</span>
           <div>
             <div style={{fontSize:10,color:C.red,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Où la vivre au Japon</div>
-            <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.55}}>{t.lieu_phare}</p>
+            <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.55}}>{wt(t.lieu_phare)}</p>
           </div>
         </div>
       </div>
@@ -889,12 +889,12 @@ function TraditionDetail({C,t,onBack,fav,onFav}){
   );
 }
 
-function TraditionsScreen({C,db,isFav,toggleFav}){
+function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap}){
   const [season,setSeason] = useState("printemps");
   const [selected,setSelected] = useState(null);
   const traditions = db?.traditions || [];
 
-  if(selected) return <TraditionDetail C={C} t={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("tradition",selected)} onFav={toggleFav&&(()=>toggleFav("tradition",selected))}/>;
+  if(selected) return <TraditionDetail C={C} t={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("tradition",selected)} onFav={toggleFav&&(()=>toggleFav("tradition",selected))} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
 
   const seasonData = SEASONS.find(s=>s.id===season);
   const filtered = traditions.filter(t=>t.saison===season);
@@ -1276,10 +1276,12 @@ export default function IsekaidApp(){
   const [screen,setScreen]=useState("splash");
   const [tab,setTab]=useState("home");
   const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
-  const [dark,setDark]=useState(()=>loadTheme());      // read saved theme immediately
+  const [dark,setDark]=useState(()=>loadTheme());
   const [db,setDb]=useState(null);
   const [streak,setStreak]=useState(()=>loadStreak()||{count:0,best:0,last:null});
   const [favs,setFavs]=useState(()=>loadFavs());
+  const [wikiEntry,setWikiEntry]=useState(null);
+  const [wikiMap,setWikiMap]=useState({});
 
   const isFav = (type,item)=> favs.some(f=>f.id===favId(type,item));
   const toggleFav = (type,item)=>{
@@ -1295,7 +1297,7 @@ export default function IsekaidApp(){
   const C=dark?DARK:LIGHT;
 
   // Load content data on startup
-  useEffect(()=>{ setDb(DATA); setStreak(touchStreak()); },[]);
+  useEffect(()=>{ setDb(DATA); setStreak(touchStreak()); setWikiMap(buildWikiMap(DATA.wiki)); },[]);
 
   // Persist theme whenever it changes
   useEffect(()=>{ saveTheme(dark); },[dark]);
@@ -1329,13 +1331,15 @@ export default function IsekaidApp(){
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav}/>}
-              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry}/>}
+              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C}/>}
               {tab==="learn"     &&<LearnScreen     C={C}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav}/>}
             </div>
             <BottomNav C={C} active={tab} onChange={setTab}/>
+            {/* Global wiki panel — available everywhere */}
+            {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)}/>}
           </>
         )}
       </div>
