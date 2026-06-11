@@ -3541,5 +3541,261 @@
       ],
       "etiquette": "Les chaussures d'extérieur restent au casier d'entrée (geta-bako) — chaque élève a ses uwabaki (chaussons d'intérieur)."
     }
+  ],
+  "situations": [
+    {
+      "id": "restaurant",
+      "titre": "Au restaurant",
+      "nom_jp": "レストラン",
+      "emoji": "🍜",
+      "contexte": "Commander, demander l'addition, exprimer ses préférences au restaurant ou à l'izakaya.",
+      "phrases": [
+        {
+          "jp": "メニューをください",
+          "romaji": "Menyū wo kudasai",
+          "fr": "Le menu, s'il vous plaît"
+        },
+        {
+          "jp": "これをください",
+          "romaji": "Kore wo kudasai",
+          "fr": "Je voudrais ça (en montrant)"
+        },
+        {
+          "jp": "おすすめは何ですか？",
+          "romaji": "Osusume wa nan desu ka?",
+          "fr": "Qu'est-ce que vous recommandez ?"
+        },
+        {
+          "jp": "お会計お願いします",
+          "romaji": "Okaikei onegaishimasu",
+          "fr": "L'addition, s'il vous plaît"
+        },
+        {
+          "jp": "とても美味しいです",
+          "romaji": "Totemo oishii desu",
+          "fr": "C'est très bon"
+        },
+        {
+          "jp": "ごちそうさまでした",
+          "romaji": "Gochisōsama deshita",
+          "fr": "Merci pour le repas (en partant)"
+        }
+      ]
+    },
+    {
+      "id": "konbini",
+      "titre": "Au konbini",
+      "nom_jp": "コンビニ",
+      "emoji": "🏪",
+      "contexte": "Payer, demander un sac, réchauffer un plat au combini.",
+      "phrases": [
+        {
+          "jp": "袋をください",
+          "romaji": "Fukuro wo kudasai",
+          "fr": "Un sac, s'il vous plaît"
+        },
+        {
+          "jp": "温めますか？",
+          "romaji": "Atatamemasu ka?",
+          "fr": "Vous voulez que je le réchauffe ? (on vous le demandera)"
+        },
+        {
+          "jp": "はい、お願いします",
+          "romaji": "Hai, onegaishimasu",
+          "fr": "Oui, s'il vous plaît"
+        },
+        {
+          "jp": "カードで払えますか？",
+          "romaji": "Kādo de haraemasu ka?",
+          "fr": "Puis-je payer par carte ?"
+        },
+        {
+          "jp": "大丈夫です",
+          "romaji": "Daijōbu desu",
+          "fr": "Ça va / Non merci (pour refuser poliment)"
+        }
+      ]
+    },
+    {
+      "id": "train",
+      "titre": "Dans le train",
+      "nom_jp": "電車",
+      "emoji": "🚃",
+      "contexte": "Acheter un billet, demander son chemin, savoir où descendre.",
+      "phrases": [
+        {
+          "jp": "東京駅までいくらですか？",
+          "romaji": "Tōkyō-eki made ikura desu ka?",
+          "fr": "Combien jusqu'à la gare de Tokyo ?"
+        },
+        {
+          "jp": "この電車は新宿に止まりますか？",
+          "romaji": "Kono densha wa Shinjuku ni tomarimasu ka?",
+          "fr": "Ce train s'arrête-t-il à Shinjuku ?"
+        },
+        {
+          "jp": "乗り換えはどこですか？",
+          "romaji": "Norikae wa doko desu ka?",
+          "fr": "Où est la correspondance ?"
+        },
+        {
+          "jp": "次は何駅ですか？",
+          "romaji": "Tsugi wa nani-eki desu ka?",
+          "fr": "Quelle est la prochaine gare ?"
+        },
+        {
+          "jp": "すみません、降ります",
+          "romaji": "Sumimasen, orimasu",
+          "fr": "Excusez-moi, je descends"
+        }
+      ]
+    },
+    {
+      "id": "shopping",
+      "titre": "Faire du shopping",
+      "nom_jp": "買い物",
+      "emoji": "🛍️",
+      "contexte": "Demander un prix, une taille, essayer un vêtement.",
+      "phrases": [
+        {
+          "jp": "これはいくらですか？",
+          "romaji": "Kore wa ikura desu ka?",
+          "fr": "Combien coûte ceci ?"
+        },
+        {
+          "jp": "試着できますか？",
+          "romaji": "Shichaku dekimasu ka?",
+          "fr": "Puis-je essayer ?"
+        },
+        {
+          "jp": "もっと大きいサイズはありますか？",
+          "romaji": "Motto ōkii saizu wa arimasu ka?",
+          "fr": "Avez-vous une taille plus grande ?"
+        },
+        {
+          "jp": "これをください",
+          "romaji": "Kore wo kudasai",
+          "fr": "Je prends ceci"
+        },
+        {
+          "jp": "見ているだけです",
+          "romaji": "Mite iru dake desu",
+          "fr": "Je regarde juste (merci)"
+        }
+      ]
+    },
+    {
+      "id": "hotel",
+      "titre": "À l'hôtel / ryokan",
+      "nom_jp": "ホテル",
+      "emoji": "🏨",
+      "contexte": "Check-in, demander des informations, le wifi, les horaires.",
+      "phrases": [
+        {
+          "jp": "チェックインお願いします",
+          "romaji": "Chekku-in onegaishimasu",
+          "fr": "Je voudrais faire le check-in"
+        },
+        {
+          "jp": "予約しています",
+          "romaji": "Yoyaku shite imasu",
+          "fr": "J'ai une réservation"
+        },
+        {
+          "jp": "Wi-Fiはありますか？",
+          "romaji": "Wai-Fai wa arimasu ka?",
+          "fr": "Y a-t-il du wifi ?"
+        },
+        {
+          "jp": "朝食は何時ですか？",
+          "romaji": "Chōshoku wa nan-ji desu ka?",
+          "fr": "À quelle heure est le petit-déjeuner ?"
+        },
+        {
+          "jp": "荷物を預けられますか？",
+          "romaji": "Nimotsu wo azukeraremasu ka?",
+          "fr": "Puis-je laisser mes bagages ?"
+        }
+      ]
+    },
+    {
+      "id": "urgence",
+      "titre": "Demander de l'aide",
+      "nom_jp": "助け",
+      "emoji": "🆘",
+      "contexte": "Se repérer, demander de l'aide, gérer un imprévu.",
+      "phrases": [
+        {
+          "jp": "すみません",
+          "romaji": "Sumimasen",
+          "fr": "Excusez-moi / Pardon (passe-partout)"
+        },
+        {
+          "jp": "道に迷いました",
+          "romaji": "Michi ni mayoimashita",
+          "fr": "Je suis perdu(e)"
+        },
+        {
+          "jp": "トイレはどこですか？",
+          "romaji": "Toire wa doko desu ka?",
+          "fr": "Où sont les toilettes ?"
+        },
+        {
+          "jp": "英語を話せますか？",
+          "romaji": "Eigo wo hanasemasu ka?",
+          "fr": "Parlez-vous anglais ?"
+        },
+        {
+          "jp": "助けてください",
+          "romaji": "Tasukete kudasai",
+          "fr": "Aidez-moi, s'il vous plaît"
+        },
+        {
+          "jp": "わかりません",
+          "romaji": "Wakarimasen",
+          "fr": "Je ne comprends pas"
+        }
+      ]
+    },
+    {
+      "id": "politesse",
+      "titre": "Politesses de base",
+      "nom_jp": "挨拶",
+      "emoji": "🙇",
+      "contexte": "Les salutations et formules indispensables du quotidien.",
+      "phrases": [
+        {
+          "jp": "おはようございます",
+          "romaji": "Ohayō gozaimasu",
+          "fr": "Bonjour (le matin)"
+        },
+        {
+          "jp": "こんにちは",
+          "romaji": "Konnichiwa",
+          "fr": "Bonjour (journée)"
+        },
+        {
+          "jp": "ありがとうございます",
+          "romaji": "Arigatō gozaimasu",
+          "fr": "Merci beaucoup"
+        },
+        {
+          "jp": "すみません",
+          "romaji": "Sumimasen",
+          "fr": "Pardon / Excusez-moi"
+        },
+        {
+          "jp": "はじめまして",
+          "romaji": "Hajimemashite",
+          "fr": "Enchanté(e) (première rencontre)"
+        },
+        {
+          "jp": "さようなら",
+          "romaji": "Sayōnara",
+          "fr": "Au revoir"
+        }
+      ]
+    }
   ]
 }
+        
