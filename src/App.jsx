@@ -1544,37 +1544,6 @@ const SITUATIONS = [
    ]},
 ];
 
-function SituationDetail({C, s, onBack, script}){
-  return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
-      <div style={{padding:"50px 20px 0"}}>
-        <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer"}}>‹ Situations</button>
-      </div>
-      <div style={{padding:"20px"}}>
-        <div style={{borderRadius:16,overflow:"hidden",marginBottom:22,background:`linear-gradient(145deg,${s.color} 0%,${s.color}99 50%,#1a1410 130%)`,padding:"22px 18px",position:"relative"}}>
-          <div style={{position:"absolute",right:-10,bottom:-30,fontSize:120,fontFamily:"'Noto Serif JP',serif",color:"rgba(255,255,255,0.12)",lineHeight:1}}>{s.jp}</div>
-          <div style={{position:"relative"}}>
-            <div style={{fontSize:40,marginBottom:6}}>{s.emoji}</div>
-            <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",color:"#fff",fontWeight:400}}>{s.title}</div>
-            <span style={{fontSize:10,padding:"3px 9px",background:"rgba(255,255,255,0.18)",borderRadius:20,color:"#fff"}}>{s.niveau}</span>
-          </div>
-        </div>
-
-        <div style={{fontSize:10,color:s.color,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>🗣️ Phrases utiles</div>
-        <div style={{display:"flex",flexDirection:"column",gap:10,paddingBottom:110}}>
-          {s.phrases.map((p,i)=>(
-            <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 16px"}}>
-              <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:4}}>{script==="romaji"?p.romaji:p.jp}</div>
-              <div style={{fontSize:12,color:s.color,fontStyle:"italic",marginBottom:3}}>{script==="romaji"?p.jp:p.romaji}</div>
-              <div style={{fontSize:13,color:C.t2}}>{p.fr}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 const LEARN_DECKS = [
   {id:"hira", label:"Hiragana", jp:"ひらがな", emoji:"あ", deck:HIRAGANA, desc:"46 caractères de base · mots japonais"},
   {id:"kata", label:"Katakana", jp:"カタカナ", emoji:"ア", deck:KATAKANA, desc:"46 caractères de base · mots étrangers"},
