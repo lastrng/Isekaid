@@ -1277,24 +1277,147 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
   );
 }
 
-function ScenariosScreen({C,script}){
+// ─── Scénarios interactifs ────────────────────────────────────────────────────
+function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
+  const [step,setStep] = useState(0);
+  const [picked,setPicked] = useState(null);
+  const [score,setScore] = useState(0);
+  const [finished,setFinished] = useState(false);
+  const etape = s.etapes[step];
+
+  const choose = (choix)=>{
+    if(picked) return;
+    setPicked(choix);
+    if(choix.correct) setScore(v=>v+1);
+  };
+  const nextStep = ()=>{
+    if(step < s.etapes.length-1){ setStep(step+1); setPicked(null); }
+    else {
+      setFinished(true);
+      const perfect = score === s.etapes.length;
+      // reward only first successful (>=70%) completion
+      if(!alreadyDone && score/s.etapes.length >= 0.7) onComplete(s);
+    }
+  };
+
+  if(finished){
+    const pct = Math.round((score/s.etapes.length)*100);
+    const passed = score/s.etapes.length >= 0.7;
+    const earned = passed && !alreadyDone;
+    return(
+      <div style={{padding:"60px 24px",textAlign:"center"}}>
+        <div style={{fontSize:60,marginBottom:14}}>{pct===100?"🏆":passed?"🎉":"📚"}</div>
+        <div style={{fontSize:22,color:C.text,fontWeight:500,marginBottom:6}}>{pct===100?"Parfait !":passed?"Bien joué !":"Continue à pratiquer"}</div>
+        <div style={{fontSize:15,color:C.t2,marginBottom:8}}>Score : <b style={{color:s.couleur}}>{score}</b> / {s.etapes.length} ({pct}%)</div>
+        {earned ? (
+          <div style={{margin:"18px 0",padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14}}>
+            <div style={{fontSize:13,color:C.text,fontWeight:600,marginBottom:4}}>Récompense débloquée 🎁</div>
+            <div style={{fontSize:14,color:C.t2}}>+{s.recompense_cles} 🔑 · +{s.recompense_xp} XP</div>
+          </div>
+        ) : alreadyDone && passed ? (
+          <div style={{margin:"18px 0",fontSize:12,color:C.t3}}>Déjà complété — récompense déjà obtenue ✓</div>
+        ) : !passed ? (
+          <div style={{margin:"18px 0",fontSize:12,color:C.t3}}>Atteins 70% pour gagner la récompense 🔑</div>
+        ) : null}
+        <div style={{display:"flex",gap:11,marginTop:8}}>
+          <button onClick={()=>{setStep(0);setPicked(null);setScore(0);setFinished(false);}} style={{flex:1,padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Recommencer</button>
+          <button onClick={onExit} style={{flex:1,padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Terminer</button>
+        </div>
+      </div>
+    );
+  }
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+      <div style={{padding:"50px 20px 10px"}}>
+        <button onClick={onExit} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:16}}>‹ Quitter</button>
+        {/* Progress */}
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
+          <div style={{flex:1,height:5,background:C.s3,borderRadius:3,overflow:"hidden"}}>
+            <div style={{height:"100%",width:`${(step/s.etapes.length)*100}%`,background:s.couleur,borderRadius:3,transition:"width .3s"}}/>
+          </div>
+          <span style={{fontSize:11,color:C.t3}}>{step+1}/{s.etapes.length}</span>
+        </div>
+      </div>
+
+      <div style={{padding:"10px 20px 110px"}}>
+        {/* Situation */}
+        <div style={{padding:"18px",background:`${s.couleur}11`,border:`1px solid ${s.couleur}33`,borderRadius:14,marginBottom:18}}>
+          <div style={{fontSize:10,color:s.couleur,letterSpacing:".2em",marginBottom:8,textTransform:"uppercase"}}>{s.emoji} Situation</div>
+          <div style={{fontSize:15,color:C.text,lineHeight:1.55}}>{etape.situation}</div>
+        </div>
+
+        <div style={{fontSize:13,color:C.t2,fontWeight:500,marginBottom:14}}>{etape.question}</div>
+
+        {/* Choices */}
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {etape.choix.map((c,i)=>{
+            let bg=C.s1, bd=C.border;
+            if(picked){
+              if(c.correct){ bg="rgba(78,128,96,0.1)"; bd="rgba(78,128,96,0.4)"; }
+              else if(c===picked){ bg="rgba(201,70,61,0.08)"; bd="rgba(201,70,61,0.4)"; }
+            }
+            return(
+              <button key={i} onClick={()=>choose(c)} disabled={!!picked} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`1px solid ${bd}`,borderRadius:12,cursor:picked?"default":"pointer",transition:"all .2s"}}>
+                {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{script==="romaji"?c.romaji:c.jp}</div>}
+                {c.jp && <div style={{fontSize:11,color:C.t3,fontStyle:"italic",marginBottom:3}}>{script==="romaji"?c.jp:c.romaji}</div>}
+                <div style={{fontSize:13,color:C.t2}}>{c.fr}</div>
+                {picked===c && <div style={{marginTop:4,fontSize:12,color:c.correct?C.green:C.red}}>{c.correct?"✓ ":"✕ "}{c.feedback}</div>}
+                {picked && c.correct && picked!==c && <div style={{marginTop:4,fontSize:12,color:C.green}}>✓ {c.feedback}</div>}
+              </button>
+            );
+          })}
+        </div>
+
+        {picked && (
+          <button onClick={nextStep} style={{marginTop:18,width:"100%",padding:"15px",background:s.couleur,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+            {step < s.etapes.length-1 ? "Continuer →" : "Voir le résultat"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
+  const [active,setActive] = useState(null);
+  const scenarios = db?.scenarios || [];
+
+  if(active) return <ScenarioPlay C={C} s={active} script={script} onExit={()=>setActive(null)} onComplete={completeScenario} alreadyDone={scenariosDone?.includes(active.id)}/>;
+
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>場 · SCÉNARIOS</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Shinario":"シナリオ"}</div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Simulations de situations réelles</div>
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
-          {SCENS.map((s,i)=>(
-            <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14}}>
-              <span style={{fontSize:28,flexShrink:0}}>{s.emoji}</span>
-              <div style={{flex:1}}>
-                <div style={{fontSize:14,color:C.text,marginBottom:5}}>{s.title}</div>
-                <span style={{fontSize:9,padding:"2px 8px",border:`1px solid ${s.color}55`,borderRadius:20,color:s.color}}>{s.diff}</span>
+        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Mets-toi en situation et gagne des récompenses 🔑</div>
+        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+          {scenarios.map((s,i)=>{
+            const done = scenariosDone?.includes(s.id);
+            return(
+              <div key={i} onClick={()=>setActive(s)} style={{position:"relative",borderRadius:16,overflow:"hidden",cursor:"pointer",border:`1px solid ${s.couleur}44`,animation:"fadeUp .4s ease"}}>
+                <div style={{background:`linear-gradient(135deg,${s.couleur}26 0%,${s.couleur}0a 100%)`,padding:"18px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:14}}>
+                    <span style={{fontSize:34,flexShrink:0}}>{s.emoji}</span>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
+                        <span style={{fontSize:16,color:C.text,fontWeight:500}}>{s.titre}</span>
+                        <span style={{fontSize:12,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</span>
+                      </div>
+                      <div style={{fontSize:12,color:C.t2,lineHeight:1.4,marginBottom:7}}>{s.contexte}</div>
+                      <div style={{display:"flex",gap:7,alignItems:"center",flexWrap:"wrap"}}>
+                        <span style={{fontSize:9,padding:"2px 8px",border:`1px solid ${s.couleur}55`,borderRadius:20,color:s.couleur}}>{s.niveau}</span>
+                        <span style={{fontSize:9,padding:"2px 8px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>+{s.recompense_cles} 🔑 · +{s.recompense_xp} XP</span>
+                        {done && <span style={{fontSize:9,padding:"2px 8px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:20,color:C.green}}>✓ Complété</span>}
+                      </div>
+                    </div>
+                    <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>
+                  </div>
+                </div>
               </div>
-              <div style={{fontSize:11,color:C.t3}}>Bientôt</div>
-            </div>
-          ))}
+            );
+          })}
+          {scenarios.length===0 && <div style={{padding:"24px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
         </div>
       </div>
     </div>
@@ -2003,6 +2126,12 @@ function saveStreak(s){
 
 // ─── Progression : déblocages & XP ────────────────────────────────────────────
 const UNLOCK_KEY = "isekaid_unlocks_v1";
+const SCEN_KEY = "isekaid_scenarios_v1"; // {done:[ids], xp:number}
+function loadScenarioProgress(){
+  try { const raw=localStorage.getItem(SCEN_KEY); return raw?JSON.parse(raw):{done:[],xp:0}; }
+  catch { return {done:[],xp:0}; }
+}
+function saveScenarioProgress(p){ try { localStorage.setItem(SCEN_KEY, JSON.stringify(p)); } catch {} }
 // Catégories verrouillables : coût en clés + XP accordé
 const LOCKABLE = {
   traditions:    {label:"Traditions",      emoji:"⛩️", cost:0, xp:100, free:true},
@@ -2031,8 +2160,8 @@ function defaultUnlocks(){
 }
 function getUnlocks(){ return loadUnlocks() || defaultUnlocks(); }
 function saveUnlocks(u){ try { localStorage.setItem(UNLOCK_KEY, JSON.stringify(u)); } catch {} }
-function computeXP(unlocks){
-  let xp = 0;
+function computeXP(unlocks, scenXP){
+  let xp = scenXP || 0;
   Object.keys(unlocks||{}).forEach(k=>{ if(unlocks[k] && LOCKABLE[k]) xp += LOCKABLE[k].xp; });
   return xp;
 }
@@ -2066,9 +2195,19 @@ export default function IsekaidApp(){
   const [streak,setStreak]=useState(()=>loadStreak()||{count:0,best:0,last:null,keys:0});
   const [favs,setFavs]=useState(()=>loadFavs());
   const [unlocks,setUnlocks]=useState(()=>getUnlocks());
+  const [scenProgress,setScenProgress]=useState(()=>loadScenarioProgress());
 
-  const xp = computeXP(unlocks);
+  const xp = computeXP(unlocks, scenProgress.xp);
   const rank = titleForXP(xp);
+
+  // Complete a scenario: grant keys + XP once
+  const completeScenario = (s)=>{
+    if(scenProgress.done.includes(s.id)) return;
+    const newProg = {done:[...scenProgress.done, s.id], xp:(scenProgress.xp||0)+s.recompense_xp};
+    setScenProgress(newProg); saveScenarioProgress(newProg);
+    const newStreak = {...streak, keys:(streak.keys||0)+s.recompense_cles};
+    setStreak(newStreak); saveStreak(newStreak);
+  };
 
   // Unlock a category: spend keys, grant XP via unlock state
   const unlockCategory = (catKey)=>{
@@ -2147,7 +2286,7 @@ export default function IsekaidApp(){
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
-              {tab==="scenarios" &&<ScenariosScreen C={C} script={script}/>}
+              {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank}/>}
             </div>
