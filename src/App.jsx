@@ -1301,23 +1301,239 @@ function ScenariosScreen({C,script}){
   );
 }
 
+// ─── Kana (hiragana + katakana) ───────────────────────────────────────────────
+const HIRAGANA = [
+  {k:"あ",r:"a"},{k:"い",r:"i"},{k:"う",r:"u"},{k:"え",r:"e"},{k:"お",r:"o"},
+  {k:"か",r:"ka"},{k:"き",r:"ki"},{k:"く",r:"ku"},{k:"け",r:"ke"},{k:"こ",r:"ko"},
+  {k:"さ",r:"sa"},{k:"し",r:"shi"},{k:"す",r:"su"},{k:"せ",r:"se"},{k:"そ",r:"so"},
+  {k:"た",r:"ta"},{k:"ち",r:"chi"},{k:"つ",r:"tsu"},{k:"て",r:"te"},{k:"と",r:"to"},
+  {k:"な",r:"na"},{k:"に",r:"ni"},{k:"ぬ",r:"nu"},{k:"ね",r:"ne"},{k:"の",r:"no"},
+  {k:"は",r:"ha"},{k:"ひ",r:"hi"},{k:"ふ",r:"fu"},{k:"へ",r:"he"},{k:"ほ",r:"ho"},
+  {k:"ま",r:"ma"},{k:"み",r:"mi"},{k:"む",r:"mu"},{k:"め",r:"me"},{k:"も",r:"mo"},
+  {k:"や",r:"ya"},{k:"ゆ",r:"yu"},{k:"よ",r:"yo"},
+  {k:"ら",r:"ra"},{k:"り",r:"ri"},{k:"る",r:"ru"},{k:"れ",r:"re"},{k:"ろ",r:"ro"},
+  {k:"わ",r:"wa"},{k:"を",r:"wo"},{k:"ん",r:"n"},
+];
+const KATAKANA = [
+  {k:"ア",r:"a"},{k:"イ",r:"i"},{k:"ウ",r:"u"},{k:"エ",r:"e"},{k:"オ",r:"o"},
+  {k:"カ",r:"ka"},{k:"キ",r:"ki"},{k:"ク",r:"ku"},{k:"ケ",r:"ke"},{k:"コ",r:"ko"},
+  {k:"サ",r:"sa"},{k:"シ",r:"shi"},{k:"ス",r:"su"},{k:"セ",r:"se"},{k:"ソ",r:"so"},
+  {k:"タ",r:"ta"},{k:"チ",r:"chi"},{k:"ツ",r:"tsu"},{k:"テ",r:"te"},{k:"ト",r:"to"},
+  {k:"ナ",r:"na"},{k:"ニ",r:"ni"},{k:"ヌ",r:"nu"},{k:"ネ",r:"ne"},{k:"ノ",r:"no"},
+  {k:"ハ",r:"ha"},{k:"ヒ",r:"hi"},{k:"フ",r:"fu"},{k:"ヘ",r:"he"},{k:"ホ",r:"ho"},
+  {k:"マ",r:"ma"},{k:"ミ",r:"mi"},{k:"ム",r:"mu"},{k:"メ",r:"me"},{k:"モ",r:"mo"},
+  {k:"ヤ",r:"ya"},{k:"ユ",r:"yu"},{k:"ヨ",r:"yo"},
+  {k:"ラ",r:"ra"},{k:"リ",r:"ri"},{k:"ル",r:"ru"},{k:"レ",r:"re"},{k:"ロ",r:"ro"},
+  {k:"ワ",r:"wa"},{k:"ヲ",r:"wo"},{k:"ン",r:"n"},
+];
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+// ── Flashcard mode ──
+function FlashcardMode({C, deck, onExit}){
+  const [cards] = useState(()=>shuffle(deck));
+  const [idx,setIdx] = useState(0);
+  const [flipped,setFlipped] = useState(false);
+  const [known,setKnown] = useState(0);
+  const card = cards[idx];
+  const done = idx >= cards.length;
+
+  const next = (gotIt)=>{
+    if(gotIt) setKnown(k=>k+1);
+    setFlipped(false);
+    setTimeout(()=> setIdx(i=>i+1), 120);
+  };
+
+  if(done) return (
+    <div style={{padding:"40px 24px",textAlign:"center"}}>
+      <div style={{fontSize:54,marginBottom:14}}>🎉</div>
+      <div style={{fontSize:20,color:C.text,fontWeight:500,marginBottom:8}}>Série terminée !</div>
+      <div style={{fontSize:14,color:C.t2,marginBottom:26}}>Tu as reconnu <b style={{color:C.green}}>{known}</b> / {cards.length} caractères</div>
+      <button onClick={onExit} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
+    </div>
+  );
+
+  return(
+    <div style={{padding:"10px 24px 30px"}}>
+      {/* Progress */}
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
+        <div style={{flex:1,height:5,background:C.s3,borderRadius:3,overflow:"hidden"}}>
+          <div style={{height:"100%",width:`${(idx/cards.length)*100}%`,background:C.red,borderRadius:3,transition:"width .3s"}}/>
+        </div>
+        <span style={{fontSize:11,color:C.t3}}>{idx+1}/{cards.length}</span>
+      </div>
+
+      {/* Card */}
+      <div onClick={()=>setFlipped(f=>!f)} style={{
+        height:280, borderRadius:20, cursor:"pointer", marginBottom:22,
+        background:flipped?"linear-gradient(160deg,rgba(201,70,61,0.12),transparent)":C.s1,
+        border:`1px solid ${flipped?"rgba(201,70,61,0.3)":C.border}`,
+        display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+        transition:"all .25s", position:"relative"
+      }}>
+        {!flipped ? (
+          <>
+            <div style={{fontSize:120,fontFamily:"'Noto Serif JP',serif",color:C.text,lineHeight:1}}>{card.k}</div>
+            <div style={{position:"absolute",bottom:18,fontSize:11,color:C.t3}}>Touche pour révéler</div>
+          </>
+        ) : (
+          <>
+            <div style={{fontSize:64,fontFamily:"'Noto Serif JP',serif",color:C.t3,marginBottom:8}}>{card.k}</div>
+            <div style={{fontSize:44,color:C.red,fontWeight:600,letterSpacing:".05em"}}>{card.r}</div>
+          </>
+        )}
+      </div>
+
+      {/* Actions */}
+      {flipped ? (
+        <div style={{display:"flex",gap:11}}>
+          <button onClick={()=>next(false)} style={{flex:1,padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>À revoir</button>
+          <button onClick={()=>next(true)} style={{flex:1,padding:"14px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:12,color:C.green,fontSize:13,fontWeight:600,cursor:"pointer"}}>Je connais ✓</button>
+        </div>
+      ) : (
+        <button onClick={()=>setFlipped(true)} style={{width:"100%",padding:"14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Révéler la lecture</button>
+      )}
+    </div>
+  );
+}
+
+// ── Quiz mode ──
+function QuizMode({C, deck, onExit}){
+  const [cards] = useState(()=>shuffle(deck));
+  const [idx,setIdx] = useState(0);
+  const [score,setScore] = useState(0);
+  const [picked,setPicked] = useState(null);
+  const card = cards[idx];
+  const done = idx >= cards.length;
+
+  // build 4 options (1 correct + 3 distractors)
+  const options = useState(()=>cards.map(c=>{
+    const others = shuffle(deck.filter(x=>x.r!==c.r)).slice(0,3);
+    return shuffle([c, ...others]);
+  }))[0];
+
+  const choose = (opt)=>{
+    if(picked) return;
+    setPicked(opt.r);
+    if(opt.r===card.r) setScore(s=>s+1);
+    setTimeout(()=>{ setPicked(null); setIdx(i=>i+1); }, 850);
+  };
+
+  if(done) return (
+    <div style={{padding:"40px 24px",textAlign:"center"}}>
+      <div style={{fontSize:54,marginBottom:14}}>{score/cards.length>=0.8?"🏆":score/cards.length>=0.5?"👍":"📚"}</div>
+      <div style={{fontSize:20,color:C.text,fontWeight:500,marginBottom:8}}>Quiz terminé !</div>
+      <div style={{fontSize:14,color:C.t2,marginBottom:26}}>Score : <b style={{color:C.red}}>{score}</b> / {cards.length}</div>
+      <button onClick={onExit} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
+    </div>
+  );
+
+  return(
+    <div style={{padding:"10px 24px 30px"}}>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:30}}>
+        <div style={{flex:1,height:5,background:C.s3,borderRadius:3,overflow:"hidden"}}>
+          <div style={{height:"100%",width:`${(idx/cards.length)*100}%`,background:C.red,borderRadius:3,transition:"width .3s"}}/>
+        </div>
+        <span style={{fontSize:11,color:C.t3}}>{idx+1}/{cards.length}</span>
+      </div>
+
+      <div style={{textAlign:"center",marginBottom:30}}>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:14,textTransform:"uppercase"}}>Quelle est la lecture ?</div>
+        <div style={{fontSize:100,fontFamily:"'Noto Serif JP',serif",color:C.text,lineHeight:1}}>{card.k}</div>
+      </div>
+
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:11}}>
+        {options[idx].map((opt,i)=>{
+          let bg=C.s1, bd=C.border, col=C.text;
+          if(picked){
+            if(opt.r===card.r){ bg="rgba(78,128,96,0.15)"; bd="rgba(78,128,96,0.4)"; col=C.green; }
+            else if(opt.r===picked){ bg="rgba(201,70,61,0.12)"; bd="rgba(201,70,61,0.4)"; col=C.red; }
+          }
+          return(
+            <button key={i} onClick={()=>choose(opt)} style={{padding:"18px",background:bg,border:`1px solid ${bd}`,borderRadius:14,color:col,fontSize:20,fontWeight:600,cursor:picked?"default":"pointer",transition:"all .2s"}}>
+              {opt.r}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const LEARN_DECKS = [
+  {id:"hira", label:"Hiragana", jp:"ひらがな", emoji:"あ", deck:HIRAGANA, desc:"46 caractères de base · mots japonais"},
+  {id:"kata", label:"Katakana", jp:"カタカナ", emoji:"ア", deck:KATAKANA, desc:"46 caractères de base · mots étrangers"},
+];
+
 function LearnScreen({C,script}){
+  const [deck,setDeck] = useState(null);   // selected deck object
+  const [mode,setMode] = useState(null);   // "flash" | "quiz"
+
+  // Active session
+  if(deck && mode){
+    return(
+      <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+        <div style={{padding:"50px 20px 6px"}}>
+          <button onClick={()=>setMode(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer"}}>‹ {deck.label}</button>
+        </div>
+        {mode==="flash" ? <FlashcardMode C={C} deck={deck.deck} onExit={()=>setMode(null)}/>
+                        : <QuizMode      C={C} deck={deck.deck} onExit={()=>setMode(null)}/>}
+      </div>
+    );
+  }
+
+  // Mode selection for a chosen deck
+  if(deck){
+    return(
+      <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+        <div style={{padding:"50px 20px 110px"}}>
+          <button onClick={()=>setDeck(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:24}}>‹ Alphabets</button>
+          <div style={{textAlign:"center",marginBottom:30}}>
+            <div style={{fontSize:64,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:6}}>{deck.emoji}</div>
+            <div style={{fontSize:22,color:C.text,fontWeight:500}}>{deck.label}</div>
+            <div style={{fontSize:13,color:C.t2,marginTop:4}}>{deck.desc}</div>
+          </div>
+          <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>Choisis un mode</div>
+          <div style={{display:"flex",flexDirection:"column",gap:11}}>
+            <div onClick={()=>setMode("flash")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
+              <span style={{fontSize:30}}>🃏</span>
+              <div style={{flex:1}}><div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Flashcards</div><div style={{fontSize:12,color:C.t2}}>Vois le caractère, devine, retourne pour vérifier</div></div>
+              <span style={{fontSize:18,color:C.t3}}>›</span>
+            </div>
+            <div onClick={()=>setMode("quiz")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
+              <span style={{fontSize:30}}>✍️</span>
+              <div style={{flex:1}}><div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Quiz</div><div style={{fontSize:12,color:C.t2}}>Choisis la bonne lecture parmi 4 options</div></div>
+              <span style={{fontSize:18,color:C.t3}}>›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Deck selection (home)
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihongo wo manabu":"日本語を学ぶ"}</div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Apprentissage naturel et contextuel</div>
+        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Apprends à lire le japonais</div>
+
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>🔤 Les syllabaires</div>
         <div style={{display:"flex",flexDirection:"column",gap:11}}>
-          {LEARN_S.map((l,i)=>(
-            <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14}}>
-              <span style={{fontSize:28}}>{l.emoji}</span>
-              <div><div style={{fontSize:14,color:C.text,marginBottom:3}}>{l.title}</div><div style={{fontSize:12,color:C.t2}}>{l.sub}</div></div>
+          {LEARN_DECKS.map((d,i)=>(
+            <div key={i} onClick={()=>setDeck(d)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:16,cursor:"pointer",animation:"fadeUp .4s ease"}}>
+              <span style={{fontSize:40,fontFamily:"'Noto Serif JP',serif",color:C.red,width:48,textAlign:"center"}}>{d.emoji}</span>
+              <div style={{flex:1}}>
+                <div style={{display:"flex",alignItems:"baseline",gap:8}}><span style={{fontSize:16,color:C.text,fontWeight:500}}>{d.label}</span><span style={{fontSize:12,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{d.jp}</span></div>
+                <div style={{fontSize:12,color:C.t2,marginTop:3}}>{d.desc}</div>
+              </div>
+              <span style={{fontSize:18,color:C.t3}}>›</span>
             </div>
           ))}
         </div>
-        <div style={{marginTop:16,padding:"15px",textAlign:"center",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12}}>
-          <div style={{fontSize:11,color:C.t3}}>Module complet bientôt 📖</div>
+
+        <div style={{marginTop:18,padding:"14px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6}}>
+          💡 Commence par l'hiragana, c'est la base du japonais. Le katakana s'utilise pour les mots empruntés (コーヒー = coffee).
         </div>
       </div>
     </div>
