@@ -729,6 +729,26 @@ function VieScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
 }
 
 // ─── Régions du Japon ─────────────────────────────────────────────────────────
+// Approximate bounding boxes per region id (lat min/max, lng min/max)
+const REGION_BOUNDS = {
+  "hokkaido":        {latMin:41.3, latMax:45.6, lngMin:139.3, lngMax:146.0},
+  "tohoku":          {latMin:37.0, latMax:41.6, lngMin:139.2, lngMax:142.1},
+  "kanto":           {latMin:34.9, latMax:37.1, lngMin:138.7, lngMax:140.9},
+  "chubu":           {latMin:34.6, latMax:37.6, lngMin:136.0, lngMax:139.2},
+  "kansai":          {latMin:33.4, latMax:35.8, lngMin:134.2, lngMax:136.6},
+  "chugoku":         {latMin:33.8, latMax:35.7, lngMin:131.0, lngMax:134.4},
+  "shikoku":         {latMin:32.7, latMax:34.4, lngMin:132.0, lngMax:134.8},
+  "kyushu-okinawa":  {latMin:24.0, latMax:34.0, lngMin:122.9, lngMax:132.1},
+};
+// Japan overall bounds (rough)
+function inJapan(lat,lng){ return lat>=24 && lat<=46 && lng>=122 && lng<=146.5; }
+function matchRegion(lat,lng){
+  for(const [id,b] of Object.entries(REGION_BOUNDS)){
+    if(lat>=b.latMin && lat<=b.latMax && lng>=b.lngMin && lng<=b.lngMax) return id;
+  }
+  return null;
+}
+
 function RegionHero({C,r,height=200,children}){
   return(
     <div style={{position:"relative",height,borderRadius:16,overflow:"hidden",background:`linear-gradient(145deg, ${r.couleur} 0%, ${r.couleur}99 45%, #1a1410 130%)`}}>
@@ -815,9 +835,27 @@ function RegionDetail({C,r,onBack,fav,onFav,wikiMap,onWikiTap,script}){
 
 function RegionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
   const [selected,setSelected] = useState(null);
+  const [geo,setGeo] = useState({status:"idle"}); // idle | loading | japan | abroad | denied | error
   const regions = db?.regions || [];
 
+  const locate = ()=>{
+    if(!navigator.geolocation){ setGeo({status:"error"}); return; }
+    setGeo({status:"loading"});
+    navigator.geolocation.getCurrentPosition(
+      pos=>{
+        const {latitude:lat, longitude:lng} = pos.coords;
+        if(!inJapan(lat,lng)){ setGeo({status:"abroad"}); return; }
+        const id = matchRegion(lat,lng);
+        setGeo({status:"japan", regionId:id});
+      },
+      ()=> setGeo({status:"denied"}),
+      {timeout:10000, maximumAge:600000}
+    );
+  };
+
   if(selected) return <RegionDetail C={C} r={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("region",selected)} onFav={toggleFav&&(()=>toggleFav("region",selected))} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
+
+  const detectedRegion = geo.status==="japan" && geo.regionId ? regions.find(r=>r.id===geo.regionId) : null;
 
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
@@ -826,9 +864,59 @@ function RegionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>日本の地方</div>
         <div style={{fontSize:13,color:C.t2}}>Les 8 grandes régions du Japon</div>
       </div>
+
+      {/* Géolocalisation */}
+      <div style={{padding:"0 20px 14px"}}>
+        {geo.status==="idle" && (
+          <button onClick={locate} style={{width:"100%",padding:"13px",background:C.s1,border:`1px dashed ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+            📍 Où suis-je au Japon ?
+          </button>
+        )}
+        {geo.status==="loading" && (
+          <div style={{padding:"13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.t3,fontSize:13,textAlign:"center"}}>
+            Localisation en cours…
+          </div>
+        )}
+        {detectedRegion && (
+          <div onClick={()=>setSelected(detectedRegion)} style={{cursor:"pointer",borderRadius:14,overflow:"hidden",border:`1px solid ${detectedRegion.couleur}55`,animation:"fadeUp .4s ease"}}>
+            <div style={{background:`linear-gradient(120deg,${detectedRegion.couleur}33 0%,${detectedRegion.couleur}11 100%)`,padding:"14px 16px",display:"flex",alignItems:"center",gap:13}}>
+              <span style={{fontSize:30}}>📍</span>
+              <div style={{flex:1}}>
+                <div style={{fontSize:10,color:detectedRegion.couleur,letterSpacing:".15em",textTransform:"uppercase",marginBottom:3}}>Vous vous situez dans</div>
+                <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text}}>{detectedRegion.nom} <span style={{fontSize:13,color:C.t3}}>{detectedRegion.nom_jp}</span></div>
+              </div>
+              <span style={{fontSize:18,color:C.t3}}>›</span>
+            </div>
+          </div>
+        )}
+        {geo.status==="japan" && !geo.regionId && (
+          <div style={{padding:"13px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13}}>
+            📍 Tu es au Japon, mais ta région exacte n'a pas pu être identifiée. Explore les 8 régions ci-dessous.
+          </div>
+        )}
+        {geo.status==="abroad" && (
+          <div style={{padding:"13px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,display:"flex",alignItems:"center",gap:10}}>
+            <span style={{fontSize:18}}>🌍</span>
+            <span>Tu n'es pas au Japon pour l'instant — mais tu peux explorer chaque région en attendant le grand voyage !</span>
+          </div>
+        )}
+        {geo.status==="denied" && (
+          <div style={{padding:"13px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.t3,fontSize:12}}>
+            Localisation refusée. Tu peux l'autoriser dans les réglages de ton navigateur pour détecter ta région.
+          </div>
+        )}
+        {geo.status==="error" && (
+          <div style={{padding:"13px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.t3,fontSize:12}}>
+            La géolocalisation n'est pas disponible sur cet appareil.
+          </div>
+        )}
+      </div>
+
       <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:13}}>
-        {regions.map((r,i)=>(
-          <div key={i} onClick={()=>setSelected(r)} style={{cursor:"pointer",animation:"fadeUp .4s ease"}}>
+        {regions.map((r,i)=>{
+          const isHere = detectedRegion && detectedRegion.id===r.id;
+          return(
+          <div key={i} onClick={()=>setSelected(r)} style={{cursor:"pointer",animation:"fadeUp .4s ease",position:"relative"}}>
             <RegionHero C={C} r={r} height={120}>
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between"}}>
                 <div>
@@ -839,8 +927,10 @@ function RegionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
                 <div style={{fontSize:20,color:"rgba(255,255,255,0.7)"}}>›</div>
               </div>
             </RegionHero>
+            {isHere && <div style={{position:"absolute",top:10,right:10,fontSize:9,padding:"4px 9px",background:"rgba(0,0,0,0.45)",borderRadius:20,color:"#fff",letterSpacing:".08em",backdropFilter:"blur(4px)"}}>📍 Vous êtes ici</div>}
           </div>
-        ))}
+          );
+        })}
         {regions.length===0 && <div style={{padding:"24px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
       </div>
     </div>
