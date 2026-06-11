@@ -568,36 +568,107 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 }
 
 // ─── Other screens
-function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
+function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory}){
   const [view,setView] = useState(null);
+  const [confirmCat,setConfirmCat] = useState(null); // category pending unlock confirm
+  const [toast,setToast] = useState(null);
+
   if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
   if(view==="codes")      return <CodesScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
   if(view==="regions")    return <RegionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
   if(view==="vie")        return <VieScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
-  const ROUTES = {"Traditions":"traditions","Codes sociaux":"codes","Régions du Japon":"regions","Vie quotidienne":"vie"};
+
+  // module title → {route, catKey}
+  const MODS = {
+    "Traditions":      {route:"traditions",  cat:"traditions"},
+    "Vie quotidienne": {route:"vie",         cat:"vie_quotidienne"},
+    "Codes sociaux":   {route:"codes",       cat:"codes_sociaux"},
+    "Régions du Japon":{route:"regions",     cat:"regions"},
+  };
+  const keys = streak?.keys || 0;
+
+  const tryOpen = (m)=>{
+    const def = MODS[m.title];
+    if(!def) return;
+    if(isUnlocked(def.cat)) { setView(def.route); return; }
+    setConfirmCat(def.cat); // show unlock confirm
+  };
+  const doUnlock = (catKey)=>{
+    const res = unlockCategory(catKey);
+    setConfirmCat(null);
+    if(res.ok){ setToast("Catégorie débloquée ! 🎉"); setTimeout(()=>setToast(null),2200); }
+    else if(res.reason==="keys"){ setToast("Pas assez de clés 🔑"); setTimeout(()=>setToast(null),2200); }
+  };
+
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>探 · EXPLORER</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>文化を探す</div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Découvrir la culture japonaise</div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:3}}>
+          <div>
+            <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>探 · EXPLORER</div>
+            <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>文化を探す</div>
+          </div>
+          {/* Key balance */}
+          <div style={{display:"flex",alignItems:"center",gap:5,padding:"7px 12px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:20}}>
+            <span style={{fontSize:14}}>🔑</span>
+            <span style={{fontSize:14,fontWeight:700,color:C.text}}>{keys}</span>
+          </div>
+        </div>
+        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Débloque les catégories avec tes clés 🔑</div>
+
         <div style={{display:"flex",flexDirection:"column",gap:11}}>
           {EXPLORE_MODS.map((m,i)=>{
-            const route = ROUTES[m.title];
-            const active = !!route;
+            const def = MODS[m.title];
+            const unlocked = def && isUnlocked(def.cat);
+            const lockDef = def && LOCKABLE[def.cat];
             return(
-              <div key={i} onClick={()=>active&&setView(route)} style={{background:C.s1,border:`1px solid ${active?"rgba(201,70,61,0.3)":C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:active?"pointer":"default",transition:"all .2s"}}>
-                <span style={{fontSize:28,flexShrink:0}}>{m.emoji}</span>
-                <div style={{flex:1}}><div style={{fontSize:14,color:C.text,marginBottom:3}}>{m.title}</div><div style={{fontSize:12,color:C.t2}}>{m.sub}</div></div>
-                {active
+              <div key={i} onClick={()=>tryOpen(m)} style={{position:"relative",background:C.s1,border:`1px solid ${unlocked?"rgba(201,70,61,0.3)":C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",transition:"all .2s",overflow:"hidden"}}>
+                <span style={{fontSize:28,flexShrink:0,filter:unlocked?"none":"grayscale(0.6) opacity(0.7)"}}>{m.emoji}</span>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:14,color:C.text,marginBottom:3}}>{m.title}</div>
+                  <div style={{fontSize:12,color:C.t2}}>{m.sub}</div>
+                </div>
+                {unlocked
                   ? <span style={{fontSize:10,padding:"3px 10px",background:"rgba(201,70,61,0.1)",border:"1px solid rgba(201,70,61,0.25)",borderRadius:20,color:C.red,whiteSpace:"nowrap"}}>Disponible</span>
-                  : <span style={{fontSize:11,color:C.t3}}>Bientôt</span>}
-                <div style={{fontSize:16,color:C.t3}}>›</div>
+                  : <span style={{fontSize:11,padding:"4px 11px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:4}}>🔒 {lockDef?.cost} 🔑</span>}
+                <div style={{fontSize:16,color:C.t3}}>{unlocked?"›":""}</div>
               </div>
             );
           })}
         </div>
+
+        <div style={{marginTop:18,padding:"14px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6}}>
+          🔑 Tu gagnes <b style={{color:C.t2}}>1 clé par jour</b> de connexion. Utilise-les pour débloquer des catégories — chaque déblocage améliore ton titre.
+        </div>
       </div>
+
+      {/* Unlock confirm modal */}
+      {confirmCat && (()=>{
+        const def = LOCKABLE[confirmCat];
+        const enough = keys >= def.cost;
+        return(
+          <>
+            <div onClick={()=>setConfirmCat(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:200}}/>
+            <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"min(100vw,390px)",zIndex:201,background:C.s1,borderRadius:"20px 20px 0 0",padding:"0 22px 36px",animation:"slideUp .25s ease"}}>
+              <div style={{width:36,height:4,borderRadius:2,background:C.s3,margin:"12px auto 20px"}}/>
+              <div style={{textAlign:"center",fontSize:40,marginBottom:10}}>{def.emoji}</div>
+              <div style={{textAlign:"center",fontSize:18,color:C.text,fontWeight:500,marginBottom:6}}>Débloquer « {def.label} »</div>
+              <div style={{textAlign:"center",fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:18}}>
+                Coût : <b style={{color:C.red}}>{def.cost} 🔑</b> · Tu as <b>{keys} 🔑</b><br/>
+                Rapporte <b style={{color:C.green}}>+{def.xp} XP</b> vers ton prochain titre
+              </div>
+              <button onClick={()=>enough&&doUnlock(confirmCat)} disabled={!enough} style={{width:"100%",padding:"14px",background:enough?C.red:C.s3,border:"none",borderRadius:12,color:enough?"#fff":C.t3,fontSize:14,fontWeight:600,cursor:enough?"pointer":"not-allowed",marginBottom:9}}>
+                {enough ? `Débloquer pour ${def.cost} 🔑` : `Il te manque ${def.cost-keys} clé(s)`}
+              </button>
+              {!enough && <div style={{textAlign:"center",fontSize:11,color:C.t3,marginBottom:4}}>Reviens demain pour gagner +1 clé 🔥</div>}
+              <button onClick={()=>setConfirmCat(null)} style={{width:"100%",padding:"11px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Plus tard</button>
+            </div>
+          </>
+        );
+      })()}
+
+      {/* Toast */}
+      {toast && <div style={{position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",zIndex:210,background:C.text,color:C.bg,padding:"11px 20px",borderRadius:24,fontSize:13,fontWeight:500,boxShadow:"0 4px 20px rgba(0,0,0,0.3)",animation:"fadeUp .3s ease"}}>{toast}</div>}
     </div>
   );
 }
@@ -1253,21 +1324,46 @@ function LearnScreen({C}){
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,rank}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
+  // next title progress
+  const tier = rank || {min:0,title:"Curieux du Japon",emoji:"🌱"};
+  const nextTier = TITLES.find(t=>t.min>(xp||0));
+  const prevMin = tier.min;
+  const nextMin = nextTier ? nextTier.min : tier.min;
+  const progress = nextTier ? Math.min(((xp||0)-prevMin)/(nextMin-prevMin),1) : 1;
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:16}}>人 · PROFIL</div>
-        <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
+        <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
           <div style={{width:50,height:50,borderRadius:"50%",background:"rgba(201,70,61,0.1)",border:"2px solid rgba(201,70,61,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontFamily:"'Noto Serif JP',serif",color:C.red,flexShrink:0}}>
             {(user.name||"V")[0].toUpperCase()}
           </div>
-          <div>
+          <div style={{flex:1}}>
             <div style={{fontSize:16,color:C.text,marginBottom:4}}>{user.name}</div>
-            <div style={{fontSize:11,color:C.t2}}>🌱 Curious Tourist</div>
+            <div style={{fontSize:12,color:C.text,fontWeight:500}}>{tier.emoji} {tier.title} <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{tier.jp}</span></div>
+          </div>
+        </div>
+
+        {/* XP / Title progress */}
+        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+            <div style={{display:"flex",alignItems:"center",gap:7}}>
+              <span style={{fontSize:16}}>⭐</span>
+              <span style={{fontSize:13,color:C.text,fontWeight:600}}>{xp||0} XP</span>
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.18)",borderRadius:20}}>
+              <span style={{fontSize:12}}>🔑</span><span style={{fontSize:12,fontWeight:700,color:C.text}}>{streak?.keys||0}</span>
+            </div>
+          </div>
+          <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:7}}>
+            <div style={{height:"100%",width:`${progress*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
+          </div>
+          <div style={{fontSize:11,color:C.t3}}>
+            {nextTier ? <>Prochain titre : <b style={{color:C.t2}}>{nextTier.emoji} {nextTier.title}</b> à {nextTier.min} XP</> : "Titre maximal atteint ! 🎌"}
           </div>
         </div>
         {/* Theme toggle */}
@@ -1493,23 +1589,72 @@ function loadStreak(){
   try { const raw=localStorage.getItem(STREAK_KEY); return raw?JSON.parse(raw):null; }
   catch { return null; }
 }
-// Returns { count, best, last } updated for "today"
+// Returns { count, best, last, keys } updated for "today"
 function touchStreak(){
   const today = dayKey();
   let s = loadStreak();
   if(!s || !s.last){
-    s = { count:1, best:1, last:today };
+    s = { count:1, best:1, last:today, keys:1, totalKeysEarned:1 };
   } else if(s.last === today){
-    // already counted today — no change
+    // already counted today — no change, ensure keys fields exist
+    if(s.keys===undefined) s.keys = 0;
+    if(s.totalKeysEarned===undefined) s.totalKeysEarned = s.keys;
   } else {
     const gap = daysBetween(s.last, today);
     if(gap === 1) s.count += 1;        // consecutive day
-    else if(gap >= 2) s.count = 1;     // streak broken
+    else if(gap >= 2) s.count = 1;     // streak broken (keys are kept!)
     s.last = today;
     if(s.count > (s.best||0)) s.best = s.count;
+    // +1 key per active day
+    s.keys = (s.keys||0) + 1;
+    s.totalKeysEarned = (s.totalKeysEarned||0) + 1;
   }
   try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
   return s;
+}
+function saveStreak(s){
+  try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
+}
+
+// ─── Progression : déblocages & XP ────────────────────────────────────────────
+const UNLOCK_KEY = "isekaid_unlocks_v1";
+// Catégories verrouillables : coût en clés + XP accordé
+const LOCKABLE = {
+  traditions:    {label:"Traditions",      emoji:"⛩️", cost:3, xp:100, free:true},
+  vie_quotidienne:{label:"Vie quotidienne", emoji:"🏙️", cost:4, xp:120, free:false},
+  codes_sociaux: {label:"Codes sociaux",   emoji:"🤫", cost:5, xp:150, free:false},
+  regions:       {label:"Régions du Japon",emoji:"🗾", cost:5, xp:150, free:false},
+};
+// Paliers de titres selon l'XP total
+const TITLES = [
+  {min:0,    title:"Curieux du Japon",   jp:"興味",   emoji:"🌱"},
+  {min:100,  title:"Voyageur novice",    jp:"旅人",   emoji:"🎒"},
+  {min:250,  title:"Explorateur",        jp:"探検家", emoji:"🧭"},
+  {min:400,  title:"Initié culturel",    jp:"文化人", emoji:"🎴"},
+  {min:520,  title:"Connaisseur",        jp:"通",     emoji:"🏮"},
+  {min:9999, title:"Maître du Japon",    jp:"達人",   emoji:"🎌"},
+];
+function loadUnlocks(){
+  try { const raw=localStorage.getItem(UNLOCK_KEY); return raw?JSON.parse(raw):null; }
+  catch { return null; }
+}
+function defaultUnlocks(){
+  // free categories unlocked by default
+  const u = {};
+  Object.entries(LOCKABLE).forEach(([k,v])=>{ if(v.free) u[k]=true; });
+  return u;
+}
+function getUnlocks(){ return loadUnlocks() || defaultUnlocks(); }
+function saveUnlocks(u){ try { localStorage.setItem(UNLOCK_KEY, JSON.stringify(u)); } catch {} }
+function computeXP(unlocks){
+  let xp = 0;
+  Object.keys(unlocks||{}).forEach(k=>{ if(unlocks[k] && LOCKABLE[k]) xp += LOCKABLE[k].xp; });
+  return xp;
+}
+function titleForXP(xp){
+  let t = TITLES[0];
+  for(const tier of TITLES){ if(xp >= tier.min) t = tier; }
+  return t;
 }
 
 // ─── Favorites (collection) ───────────────────────────────────────────────────
@@ -1533,8 +1678,27 @@ export default function IsekaidApp(){
   const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
   const [dark,setDark]=useState(()=>loadTheme());
   const [db,setDb]=useState(null);
-  const [streak,setStreak]=useState(()=>loadStreak()||{count:0,best:0,last:null});
+  const [streak,setStreak]=useState(()=>loadStreak()||{count:0,best:0,last:null,keys:0});
   const [favs,setFavs]=useState(()=>loadFavs());
+  const [unlocks,setUnlocks]=useState(()=>getUnlocks());
+
+  const xp = computeXP(unlocks);
+  const rank = titleForXP(xp);
+
+  // Unlock a category: spend keys, grant XP via unlock state
+  const unlockCategory = (catKey)=>{
+    const def = LOCKABLE[catKey];
+    if(!def || unlocks[catKey]) return {ok:false, reason:"already"};
+    if((streak.keys||0) < def.cost) return {ok:false, reason:"keys"};
+    // spend keys
+    const newStreak = {...streak, keys:(streak.keys||0)-def.cost};
+    setStreak(newStreak); saveStreak(newStreak);
+    // unlock
+    const newUnlocks = {...unlocks, [catKey]:true};
+    setUnlocks(newUnlocks); saveUnlocks(newUnlocks);
+    return {ok:true};
+  };
+  const isUnlocked = (catKey)=> !LOCKABLE[catKey] || !!unlocks[catKey];
   const [wikiEntry,setWikiEntry]=useState(null);
   const [wikiMap,setWikiMap]=useState({});
   const [script,setScript]=useState(()=>loadScript());
@@ -1590,10 +1754,10 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript}/>}
-              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script}/>}
+              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C}/>}
               {tab==="learn"     &&<LearnScreen     C={C}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
