@@ -3796,5 +3796,383 @@
         }
       ]
     }
+  ],
+  "scenarios": [
+    {
+      "id": "presentation",
+      "titre": "Se présenter",
+      "nom_jp": "自己紹介",
+      "emoji": "🙋",
+      "couleur": "#C9463D",
+      "niveau": "Débutant",
+      "contexte": "Tu rencontres un Japonais pour la première fois lors d'un événement. Fais bonne impression !",
+      "recompense_cles": 1,
+      "recompense_xp": 40,
+      "etapes": [
+        {
+          "situation": "Un Japonais s'approche de toi et dit : « はじめまして »",
+          "question": "Comment réponds-tu ?",
+          "choix": [
+            {
+              "jp": "はじめまして",
+              "romaji": "Hajimemashite",
+              "fr": "Enchanté(e)",
+              "correct": true,
+              "feedback": "Parfait ! On répond par la même formule lors d'une première rencontre."
+            },
+            {
+              "jp": "さようなら",
+              "romaji": "Sayōnara",
+              "fr": "Au revoir",
+              "correct": false,
+              "feedback": "C'est « au revoir » — un peu prématuré pour une rencontre !"
+            },
+            {
+              "jp": "おやすみ",
+              "romaji": "Oyasumi",
+              "fr": "Bonne nuit",
+              "correct": false,
+              "feedback": "« Bonne nuit » ne convient pas à une présentation."
+            }
+          ]
+        },
+        {
+          "situation": "Il te demande ton nom : « お名前は？ »",
+          "question": "Comment donnes-tu ton nom (ex : Lucas) ?",
+          "choix": [
+            {
+              "jp": "ルカスです",
+              "romaji": "Lucas desu",
+              "fr": "Je suis Lucas",
+              "correct": true,
+              "feedback": "Excellent ! « [Nom] desu » est la façon simple et polie de se nommer."
+            },
+            {
+              "jp": "ルカスがいます",
+              "romaji": "Lucas ga imasu",
+              "fr": "Il y a Lucas",
+              "correct": false,
+              "feedback": "« ga imasu » sert à dire qu'une personne existe/est présente, pas à se nommer."
+            },
+            {
+              "jp": "ルカスをください",
+              "romaji": "Lucas wo kudasai",
+              "fr": "Lucas, s'il vous plaît",
+              "correct": false,
+              "feedback": "Tu viens de te « commander » toi-même ! « kudasai » sert à demander un objet."
+            }
+          ]
+        },
+        {
+          "situation": "Pour conclure poliment la présentation…",
+          "question": "Que dis-tu pour marquer ton souhait de bonnes relations ?",
+          "choix": [
+            {
+              "jp": "よろしくお願いします",
+              "romaji": "Yoroshiku onegaishimasu",
+              "fr": "Ravi de faire votre connaissance",
+              "correct": true,
+              "feedback": "Impeccable ! Cette formule scelle toute nouvelle relation au Japon."
+            },
+            {
+              "jp": "いただきます",
+              "romaji": "Itadakimasu",
+              "fr": "Bon appétit",
+              "correct": false,
+              "feedback": "Ça se dit avant de manger, pas pour conclure une présentation !"
+            },
+            {
+              "jp": "ごめんなさい",
+              "romaji": "Gomen nasai",
+              "fr": "Je suis désolé(e)",
+              "correct": false,
+              "feedback": "Pas besoin de t'excuser, la rencontre se passe bien !"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "remercier",
+      "titre": "Remercier",
+      "nom_jp": "お礼",
+      "emoji": "🙏",
+      "couleur": "#3A6645",
+      "niveau": "Débutant",
+      "contexte": "Quelqu'un vient de te rendre service. Exprime ta gratitude avec le bon niveau de politesse.",
+      "recompense_cles": 1,
+      "recompense_xp": 40,
+      "etapes": [
+        {
+          "situation": "Un passant t'aide à retrouver ton chemin. Tu veux le remercier poliment.",
+          "question": "Que dis-tu ?",
+          "choix": [
+            {
+              "jp": "ありがとうございます",
+              "romaji": "Arigatō gozaimasu",
+              "fr": "Merci beaucoup",
+              "correct": true,
+              "feedback": "Parfait ! La forme polie complète, idéale avec un inconnu."
+            },
+            {
+              "jp": "ありがとう",
+              "romaji": "Arigatō",
+              "fr": "Merci",
+              "correct": false,
+              "feedback": "Correct mais trop familier avec un inconnu. Préfère la forme en « gozaimasu »."
+            },
+            {
+              "jp": "すみません",
+              "romaji": "Sumimasen",
+              "fr": "Excusez-moi",
+              "correct": false,
+              "feedback": "Curieusement, ça s'emploie parfois pour remercier — mais ici « arigatō gozaimasu » est plus clair."
+            }
+          ]
+        },
+        {
+          "situation": "Il répond : « どういたしまして »",
+          "question": "Que signifie sa réponse ?",
+          "choix": [
+            {
+              "jp": "どういたしまして",
+              "romaji": "Dō itashimashite",
+              "fr": "Je vous en prie / De rien",
+              "correct": true,
+              "feedback": "Exact ! C'est la réponse classique à un remerciement."
+            },
+            {
+              "jp": "",
+              "romaji": "",
+              "fr": "Dépêchez-vous",
+              "correct": false,
+              "feedback": "Non, c'est une formule de politesse signifiant « de rien »."
+            },
+            {
+              "jp": "",
+              "romaji": "",
+              "fr": "Je ne sais pas",
+              "correct": false,
+              "feedback": "Non, « dō itashimashite » veut dire « je vous en prie »."
+            }
+          ]
+        },
+        {
+          "situation": "Plus tard, un ami proche te prête son parapluie.",
+          "question": "Comment le remercies-tu, lui, de façon naturelle ?",
+          "choix": [
+            {
+              "jp": "ありがとう",
+              "romaji": "Arigatō",
+              "fr": "Merci",
+              "correct": true,
+              "feedback": "Parfait ! Entre amis proches, la forme courte est naturelle et chaleureuse."
+            },
+            {
+              "jp": "ありがとうございます",
+              "romaji": "Arigatō gozaimasu",
+              "fr": "Merci beaucoup",
+              "correct": false,
+              "feedback": "Pas faux, mais un peu formel entre amis proches. « Arigatō » suffit."
+            },
+            {
+              "jp": "おめでとう",
+              "romaji": "Omedetō",
+              "fr": "Félicitations",
+              "correct": false,
+              "feedback": "« Félicitations » ne correspond pas à un remerciement !"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sexcuser",
+      "titre": "S'excuser",
+      "nom_jp": "謝罪",
+      "emoji": "🙇",
+      "couleur": "#C4956A",
+      "niveau": "Intermédiaire",
+      "contexte": "Tu as commis un petit impair. Apprends à t'excuser avec le bon registre selon la gravité.",
+      "recompense_cles": 2,
+      "recompense_xp": 60,
+      "etapes": [
+        {
+          "situation": "Tu bouscules légèrement quelqu'un dans la rue.",
+          "question": "Que dis-tu spontanément ?",
+          "choix": [
+            {
+              "jp": "すみません",
+              "romaji": "Sumimasen",
+              "fr": "Pardon / Excusez-moi",
+              "correct": true,
+              "feedback": "Parfait ! « Sumimasen » est le passe-partout pour un petit incident."
+            },
+            {
+              "jp": "ありがとう",
+              "romaji": "Arigatō",
+              "fr": "Merci",
+              "correct": false,
+              "feedback": "Tu remercies la personne que tu viens de bousculer — étrange !"
+            },
+            {
+              "jp": "こんにちは",
+              "romaji": "Konnichiwa",
+              "fr": "Bonjour",
+              "correct": false,
+              "feedback": "Un « bonjour » ne répare pas une bousculade."
+            }
+          ]
+        },
+        {
+          "situation": "Tu es en retard à un rendez-vous important avec un collègue.",
+          "question": "Comment t'excuses-tu sincèrement ?",
+          "choix": [
+            {
+              "jp": "遅れてすみません",
+              "romaji": "Okurete sumimasen",
+              "fr": "Désolé pour le retard",
+              "correct": true,
+              "feedback": "Excellent ! Tu précises la raison de tes excuses, c'est plus sincère."
+            },
+            {
+              "jp": "すみません、トイレはどこですか",
+              "romaji": "Sumimasen, toire wa doko desu ka",
+              "fr": "Pardon, où sont les toilettes ?",
+              "correct": false,
+              "feedback": "Tu commences bien par « sumimasen »… mais le reste est hors sujet !"
+            },
+            {
+              "jp": "おはよう",
+              "romaji": "Ohayō",
+              "fr": "Salut (matin)",
+              "correct": false,
+              "feedback": "Une salutation décontractée n'excuse pas un retard."
+            }
+          ]
+        },
+        {
+          "situation": "Tu as fait une vraie erreur professionnelle. Il faut des excuses formelles.",
+          "question": "Quelle est la formule la plus appropriée ?",
+          "choix": [
+            {
+              "jp": "申し訳ございません",
+              "romaji": "Mōshiwake gozaimasen",
+              "fr": "Je vous présente mes sincères excuses",
+              "correct": true,
+              "feedback": "Parfait ! C'est l'excuse la plus formelle et respectueuse, adaptée au monde professionnel."
+            },
+            {
+              "jp": "ごめん",
+              "romaji": "Gomen",
+              "fr": "Désolé",
+              "correct": false,
+              "feedback": "Bien trop familier pour une faute professionnelle."
+            },
+            {
+              "jp": "すみません",
+              "romaji": "Sumimasen",
+              "fr": "Excusez-moi",
+              "correct": false,
+              "feedback": "Correct pour un petit incident, mais trop léger pour une vraie erreur au travail."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "konbini-scenario",
+      "titre": "Au konbini",
+      "nom_jp": "コンビニにて",
+      "emoji": "🏪",
+      "couleur": "#5B9BD5",
+      "niveau": "Débutant",
+      "contexte": "Tu fais tes achats dans un konbini. Gère l'interaction avec le personnel de caisse.",
+      "recompense_cles": 1,
+      "recompense_xp": 40,
+      "etapes": [
+        {
+          "situation": "En arrivant en caisse, l'employé dit : « いらっしゃいませ »",
+          "question": "Que signifie cette phrase et que fais-tu ?",
+          "choix": [
+            {
+              "jp": "",
+              "romaji": "",
+              "fr": "« Bienvenue » — je n'ai pas à répondre, je souris poliment",
+              "correct": true,
+              "feedback": "Exact ! « Irasshaimase » est l'accueil rituel, on n'y répond pas verbalement."
+            },
+            {
+              "jp": "",
+              "romaji": "",
+              "fr": "« Au revoir » — je m'en vais",
+              "correct": false,
+              "feedback": "Non, c'est un accueil chaleureux « bienvenue », pas un adieu."
+            },
+            {
+              "jp": "",
+              "romaji": "",
+              "fr": "« Payez maintenant » — je sors ma carte",
+              "correct": false,
+              "feedback": "Non, c'est simplement « bienvenue »."
+            }
+          ]
+        },
+        {
+          "situation": "L'employé te demande : « 袋はご利用ですか？ »",
+          "question": "Il te demande si tu veux un sac. Tu en veux un.",
+          "choix": [
+            {
+              "jp": "はい、お願いします",
+              "romaji": "Hai, onegaishimasu",
+              "fr": "Oui, s'il vous plaît",
+              "correct": true,
+              "feedback": "Parfait ! Réponse polie et claire pour accepter."
+            },
+            {
+              "jp": "いいえ、結構です",
+              "romaji": "Iie, kekkō desu",
+              "fr": "Non, ça ira",
+              "correct": false,
+              "feedback": "C'est la réponse pour REFUSER le sac — l'inverse de ce que tu voulais."
+            },
+            {
+              "jp": "わかりません",
+              "romaji": "Wakarimasen",
+              "fr": "Je ne comprends pas",
+              "correct": false,
+              "feedback": "Évite si possible — ici un simple « oui merci » suffisait."
+            }
+          ]
+        },
+        {
+          "situation": "Tu as payé, l'employé te tend ton sac.",
+          "question": "Que dis-tu en partant ?",
+          "choix": [
+            {
+              "jp": "ありがとうございます",
+              "romaji": "Arigatō gozaimasu",
+              "fr": "Merci beaucoup",
+              "correct": true,
+              "feedback": "Parfait ! Un remerciement poli clôt l'interaction avec élégance."
+            },
+            {
+              "jp": "いただきます",
+              "romaji": "Itadakimasu",
+              "fr": "Bon appétit",
+              "correct": false,
+              "feedback": "Pas encore ! Tu n'es pas à table."
+            },
+            {
+              "jp": "はじめまして",
+              "romaji": "Hajimemashite",
+              "fr": "Enchanté",
+              "correct": false,
+              "feedback": "On ne se présente pas en quittant une caisse !"
+            }
+          ]
+        }
+      ]
+    }
   ]
 }
