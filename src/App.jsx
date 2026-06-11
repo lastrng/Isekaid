@@ -1344,7 +1344,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
         {/* Situation */}
         <div style={{padding:"18px",background:`${s.couleur}11`,border:`1px solid ${s.couleur}33`,borderRadius:14,marginBottom:18}}>
           <div style={{fontSize:10,color:s.couleur,letterSpacing:".2em",marginBottom:8,textTransform:"uppercase"}}>{s.emoji} Situation</div>
-          <div style={{fontSize:15,color:C.text,lineHeight:1.55}}>{etape.situation}</div>
+          <div style={{fontSize:15,color:C.text,lineHeight:1.55}}>{script==="romaji" && etape.situation_romaji ? etape.situation_romaji : etape.situation}</div>
         </div>
 
         <div style={{fontSize:13,color:C.t2,fontWeight:500,marginBottom:14}}>{etape.question}</div>
@@ -2302,3 +2302,4 @@ export default function IsekaidApp(){
     </div>
   );
 }
+                         
