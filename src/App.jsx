@@ -2194,4 +2194,3 @@ export default function IsekaidApp(){
     </div>
   );
 }
-                     
