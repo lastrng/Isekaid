@@ -606,7 +606,7 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:3}}>
           <div>
             <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>探 · EXPLORER</div>
-            <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>文化を探す</div>
+            <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Bunka wo sagasu":"文化を探す"}</div>
           </div>
           {/* Key balance */}
           <div style={{display:"flex",alignItems:"center",gap:5,padding:"7px 12px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:20}}>
@@ -761,7 +761,7 @@ function VieScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 12px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>暮 · VIE QUOTIDIENNE</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>日常生活</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nichijō seikatsu":"日常生活"}</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Vivre le Japon au jour le jour</div>
       </div>
 
@@ -932,7 +932,7 @@ function RegionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 16px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>地 · RÉGIONS</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>日本の地方</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihon no chihō":"日本の地方"}</div>
         <div style={{fontSize:13,color:C.t2}}>Les 8 grandes régions du Japon</div>
       </div>
 
@@ -1084,7 +1084,7 @@ function CodesScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 12px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>礼 · CODES SOCIAUX</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>暗黙のルール</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Anmoku no rūru":"暗黙のルール"}</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Les règles invisibles à connaître</div>
       </div>
 
@@ -1218,7 +1218,7 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 12px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>暦 · TRADITIONS</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>年中行事</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nenchū gyōji":"年中行事"}</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Le calendrier des traditions japonaises</div>
       </div>
 
@@ -1277,12 +1277,12 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
   );
 }
 
-function ScenariosScreen({C}){
+function ScenariosScreen({C,script}){
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>場 · SCÉNARIOS</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>シナリオ</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Shinario":"シナリオ"}</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Simulations de situations réelles</div>
         <div style={{display:"flex",flexDirection:"column",gap:11}}>
           {SCENS.map((s,i)=>(
@@ -1301,12 +1301,12 @@ function ScenariosScreen({C}){
   );
 }
 
-function LearnScreen({C}){
+function LearnScreen({C,script}){
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>日本語を学ぶ</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihongo wo manabu":"日本語を学ぶ"}</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Apprentissage naturel et contextuel</div>
         <div style={{display:"flex",flexDirection:"column",gap:11}}>
           {LEARN_S.map((l,i)=>(
@@ -1802,8 +1802,8 @@ export default function IsekaidApp(){
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
-              {tab==="scenarios" &&<ScenariosScreen C={C}/>}
-              {tab==="learn"     &&<LearnScreen     C={C}/>}
+              {tab==="scenarios" &&<ScenariosScreen C={C} script={script}/>}
+              {tab==="learn"     &&<LearnScreen     C={C} script={script}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
