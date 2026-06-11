@@ -110,7 +110,7 @@ button{font-family:inherit;}
 @keyframes glow{0%,100%{box-shadow:0 0 8px rgba(201,70,61,.18)}50%{box-shadow:0 0 20px rgba(201,70,61,.42)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideUp{from{transform:translateX(-50%) translateY(100%)}to{transform:translateX(-50%) translateY(0)}}
-@keyframes slideUp{from{transform:translateX(-50%) translateY(100%)}to{transform:translateX(-50%) translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.85)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 @keyframes p1{0%{transform:translateY(-10px) rotate(0);opacity:0}10%{opacity:.55}90%{opacity:.2}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 @keyframes p2{0%{transform:translateY(-10px) translateX(0) rotate(0);opacity:0}10%{opacity:.4}100%{transform:translateY(110vh) translateX(38px) rotate(-540deg);opacity:0}}
 `;
@@ -1465,6 +1465,43 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,
   );
 }
 const TABS=[{id:"home",kanji:"家",label:"Home"},{id:"explore",kanji:"探",label:"Explorer"},{id:"scenarios",kanji:"場",label:"Scénarios"},{id:"learn",kanji:"学",label:"Apprendre"},{id:"profile",kanji:"人",label:"Profil"}];
+// ─── Daily welcome popup (streak + clé) ───────────────────────────────────────
+function DailyWelcome({C, streak, onClose}){
+  const count = streak?.count || 0;
+  const keys = streak?.keys || 0;
+  return(
+    <>
+      <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:300,backdropFilter:"blur(3px)"}}/>
+      <div style={{
+        position:"fixed", top:"50%", left:"50%", transform:"translate(-50%,-50%)",
+        width:"min(86vw,340px)", zIndex:301, background:C.s1,
+        borderRadius:22, padding:"32px 26px 26px", textAlign:"center",
+        animation:"popIn .35s cubic-bezier(.2,.9,.3,1.3)",
+        boxShadow:"0 24px 80px rgba(0,0,0,0.4)", border:`1px solid ${C.border}`
+      }}>
+        {/* Flame */}
+        <div style={{fontSize:60,marginBottom:6,animation:"glow 2s ease infinite"}}>🔥</div>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".25em",textTransform:"uppercase",marginBottom:6}}>Content de te revoir</div>
+        <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>
+          {count} jour{count>1?"s":""}
+        </div>
+        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>de streak consécutif{count>1?"s":""} 🎌</div>
+
+        {/* Key reward */}
+        <div style={{padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14,marginBottom:22}}>
+          <div style={{fontSize:38,marginBottom:6,animation:"popIn .5s ease .2s both"}}>🔑</div>
+          <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:3}}>+1 clé gagnée !</div>
+          <div style={{fontSize:12,color:C.t2}}>Tu as maintenant <b style={{color:C.red}}>{keys} clé{keys>1?"s":""}</b> à dépenser</div>
+        </div>
+
+        <button onClick={onClose} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+          Continuer l'aventure →
+        </button>
+      </div>
+    </>
+  );
+}
+
 function BottomNav({C,active,onChange}){
   return(
     <div style={{position:"absolute",bottom:0,left:0,right:0,height:72,display:"flex",background:C.navBg,backdropFilter:"blur(18px)",borderTop:`1px solid ${C.border}`,zIndex:100}}>
@@ -1593,8 +1630,10 @@ function loadStreak(){
 function touchStreak(){
   const today = dayKey();
   let s = loadStreak();
+  let gainedKey = false;
   if(!s || !s.last){
     s = { count:1, best:1, last:today, keys:1, totalKeysEarned:1 };
+    gainedKey = true;
   } else if(s.last === today){
     // already counted today — no change, ensure keys fields exist
     if(s.keys===undefined) s.keys = 0;
@@ -1608,9 +1647,10 @@ function touchStreak(){
     // +1 key per active day
     s.keys = (s.keys||0) + 1;
     s.totalKeysEarned = (s.totalKeysEarned||0) + 1;
+    gainedKey = true;
   }
   try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
-  return s;
+  return {...s, gainedKey};
 }
 function saveStreak(s){
   try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
@@ -1620,8 +1660,8 @@ function saveStreak(s){
 const UNLOCK_KEY = "isekaid_unlocks_v1";
 // Catégories verrouillables : coût en clés + XP accordé
 const LOCKABLE = {
-  traditions:    {label:"Traditions",      emoji:"⛩️", cost:3, xp:100, free:true},
-  vie_quotidienne:{label:"Vie quotidienne", emoji:"🏙️", cost:4, xp:120, free:false},
+  traditions:    {label:"Traditions",      emoji:"⛩️", cost:0, xp:100, free:true},
+  vie_quotidienne:{label:"Vie quotidienne", emoji:"🏙️", cost:1, xp:120, free:false},
   codes_sociaux: {label:"Codes sociaux",   emoji:"🤫", cost:5, xp:150, free:false},
   regions:       {label:"Régions du Japon",emoji:"🗾", cost:5, xp:150, free:false},
 };
@@ -1700,6 +1740,7 @@ export default function IsekaidApp(){
   };
   const isUnlocked = (catKey)=> !LOCKABLE[catKey] || !!unlocks[catKey];
   const [wikiEntry,setWikiEntry]=useState(null);
+  const [showWelcome,setShowWelcome]=useState(false);
   const [wikiMap,setWikiMap]=useState({});
   const [script,setScript]=useState(()=>loadScript());
 
@@ -1717,7 +1758,13 @@ export default function IsekaidApp(){
   const C=dark?DARK:LIGHT;
 
   // Load content data on startup
-  useEffect(()=>{ setDb(DATA); setStreak(touchStreak()); setWikiMap(buildWikiMap(DATA.wiki)); },[]);
+  useEffect(()=>{
+    setDb(DATA);
+    const s = touchStreak();
+    setStreak(s);
+    setWikiMap(buildWikiMap(DATA.wiki));
+    if(s.gainedKey) setShowWelcome(true); // show daily popup only when a key was earned
+  },[]);
 
   // Persist theme whenever it changes
   useEffect(()=>{ saveTheme(dark); },[dark]);
@@ -1763,6 +1810,8 @@ export default function IsekaidApp(){
             <BottomNav C={C} active={tab} onChange={setTab}/>
             {/* Global wiki panel — available everywhere */}
             {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
+            {/* Daily welcome popup */}
+            {showWelcome && <DailyWelcome C={C} streak={streak} onClose={()=>setShowWelcome(false)}/>}
           </>
         )}
       </div>
