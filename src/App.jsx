@@ -1334,13 +1334,31 @@ function FlashcardMode({C, deck, onExit}){
   const [idx,setIdx] = useState(0);
   const [flipped,setFlipped] = useState(false);
   const [known,setKnown] = useState(0);
+  const [drag,setDrag] = useState({x:0, active:false}); // current drag offset
+  const start = useRef(0);
   const card = cards[idx];
   const done = idx >= cards.length;
 
-  const next = (gotIt)=>{
+  const SWIPE_THRESHOLD = 90;
+
+  const commit = (gotIt)=>{
+    // fly the card off-screen then advance
+    setDrag({x: gotIt?500:-500, active:false});
     if(gotIt) setKnown(k=>k+1);
-    setFlipped(false);
-    setTimeout(()=> setIdx(i=>i+1), 120);
+    setTimeout(()=>{
+      setFlipped(false);
+      setDrag({x:0, active:false});
+      setIdx(i=>i+1);
+    }, 180);
+  };
+
+  const onStart = (clientX)=>{ start.current = clientX; setDrag(d=>({...d, active:true})); };
+  const onMove = (clientX)=>{ if(!drag.active) return; setDrag({x: clientX-start.current, active:true}); };
+  const onEnd = ()=>{
+    if(!drag.active) return;
+    if(drag.x > SWIPE_THRESHOLD) commit(true);
+    else if(drag.x < -SWIPE_THRESHOLD) commit(false);
+    else setDrag({x:0, active:false}); // snap back
   };
 
   if(done) return (
@@ -1352,28 +1370,53 @@ function FlashcardMode({C, deck, onExit}){
     </div>
   );
 
+  const rot = drag.x / 18; // tilt while dragging
+  const knowOpacity = Math.max(0, Math.min(1, drag.x / SWIPE_THRESHOLD));
+  const revOpacity  = Math.max(0, Math.min(1, -drag.x / SWIPE_THRESHOLD));
+
   return(
     <div style={{padding:"10px 24px 30px"}}>
       {/* Progress */}
-      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:18}}>
         <div style={{flex:1,height:5,background:C.s3,borderRadius:3,overflow:"hidden"}}>
           <div style={{height:"100%",width:`${(idx/cards.length)*100}%`,background:C.red,borderRadius:3,transition:"width .3s"}}/>
         </div>
         <span style={{fontSize:11,color:C.t3}}>{idx+1}/{cards.length}</span>
       </div>
 
+      {/* Swipe hints */}
+      <div style={{display:"flex",justifyContent:"space-between",marginBottom:10,fontSize:10,letterSpacing:".05em"}}>
+        <span style={{color:C.t3}}>← À revoir</span>
+        <span style={{color:C.t3}}>Je connais →</span>
+      </div>
+
       {/* Card */}
-      <div onClick={()=>setFlipped(f=>!f)} style={{
-        height:280, borderRadius:20, cursor:"pointer", marginBottom:22,
-        background:flipped?"linear-gradient(160deg,rgba(201,70,61,0.12),transparent)":C.s1,
-        border:`1px solid ${flipped?"rgba(201,70,61,0.3)":C.border}`,
-        display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-        transition:"all .25s", position:"relative"
-      }}>
+      <div
+        onMouseDown={e=>onStart(e.clientX)}
+        onMouseMove={e=>onMove(e.clientX)}
+        onMouseUp={onEnd}
+        onMouseLeave={onEnd}
+        onTouchStart={e=>onStart(e.touches[0].clientX)}
+        onTouchMove={e=>onMove(e.touches[0].clientX)}
+        onTouchEnd={onEnd}
+        onClick={()=>{ if(Math.abs(drag.x)<6) setFlipped(f=>!f); }}
+        style={{
+          height:280, borderRadius:20, cursor:"grab", marginBottom:20, userSelect:"none",
+          transform:`translateX(${drag.x}px) rotate(${rot}deg)`,
+          transition: drag.active ? "none" : "transform .25s ease",
+          background:flipped?"linear-gradient(160deg,rgba(201,70,61,0.12),transparent)":C.s1,
+          border:`1px solid ${flipped?"rgba(201,70,61,0.3)":C.border}`,
+          display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+          position:"relative", overflow:"hidden", touchAction:"pan-y"
+        }}>
+        {/* Swipe overlays */}
+        <div style={{position:"absolute",top:16,right:16,padding:"6px 12px",borderRadius:10,border:`2px solid ${C.green}`,color:C.green,fontSize:13,fontWeight:700,transform:"rotate(12deg)",opacity:knowOpacity}}>CONNU ✓</div>
+        <div style={{position:"absolute",top:16,left:16,padding:"6px 12px",borderRadius:10,border:`2px solid ${C.red}`,color:C.red,fontSize:13,fontWeight:700,transform:"rotate(-12deg)",opacity:revOpacity}}>À REVOIR</div>
+
         {!flipped ? (
           <>
             <div style={{fontSize:120,fontFamily:"'Noto Serif JP',serif",color:C.text,lineHeight:1}}>{card.k}</div>
-            <div style={{position:"absolute",bottom:18,fontSize:11,color:C.t3}}>Touche pour révéler</div>
+            <div style={{position:"absolute",bottom:18,fontSize:11,color:C.t3}}>Touche pour révéler · glisse pour répondre</div>
           </>
         ) : (
           <>
@@ -1383,15 +1426,11 @@ function FlashcardMode({C, deck, onExit}){
         )}
       </div>
 
-      {/* Actions */}
-      {flipped ? (
-        <div style={{display:"flex",gap:11}}>
-          <button onClick={()=>next(false)} style={{flex:1,padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>À revoir</button>
-          <button onClick={()=>next(true)} style={{flex:1,padding:"14px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:12,color:C.green,fontSize:13,fontWeight:600,cursor:"pointer"}}>Je connais ✓</button>
-        </div>
-      ) : (
-        <button onClick={()=>setFlipped(true)} style={{width:"100%",padding:"14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Révéler la lecture</button>
-      )}
+      {/* Buttons (alternative to swipe) */}
+      <div style={{display:"flex",gap:11}}>
+        <button onClick={()=>commit(false)} style={{flex:1,padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>À revoir</button>
+        <button onClick={()=>commit(true)} style={{flex:1,padding:"14px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:12,color:C.green,fontSize:13,fontWeight:600,cursor:"pointer"}}>Je connais ✓</button>
+      </div>
     </div>
   );
 }
