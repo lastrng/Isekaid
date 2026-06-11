@@ -1498,14 +1498,119 @@ function QuizMode({C, deck, onExit}){
   );
 }
 
+// ─── Situations courantes (phrases utiles) ────────────────────────────────────
+const SITUATIONS = [
+  {id:"resto", emoji:"🍜", title:"Au restaurant", jp:"レストラン", color:"#3A6645", niveau:"Débutant",
+   phrases:[
+     {jp:"メニューをください", romaji:"Menyū wo kudasai", fr:"Le menu, s'il vous plaît"},
+     {jp:"これをお願いします", romaji:"Kore wo onegai shimasu", fr:"Ceci, s'il vous plaît (en pointant)"},
+     {jp:"おすすめは何ですか", romaji:"Osusume wa nan desu ka", fr:"Quelle est votre recommandation ?"},
+     {jp:"お会計お願いします", romaji:"Okaikei onegai shimasu", fr:"L'addition, s'il vous plaît"},
+     {jp:"とても美味しいです", romaji:"Totemo oishii desu", fr:"C'est très bon"},
+     {jp:"いただきます", romaji:"Itadakimasu", fr:"Bon appétit (avant de manger)"},
+     {jp:"ごちそうさまでした", romaji:"Gochisōsama deshita", fr:"Merci pour le repas (après)"},
+   ]},
+  {id:"konbini", emoji:"🏪", title:"Au konbini", jp:"コンビニ", color:"#3A6645", niveau:"Débutant",
+   phrases:[
+     {jp:"袋はいりません", romaji:"Fukuro wa irimasen", fr:"Je n'ai pas besoin de sac"},
+     {jp:"温めてください", romaji:"Atatamete kudasai", fr:"Réchauffez-le, s'il vous plaît"},
+     {jp:"カードで払えますか", romaji:"Kādo de haraemasu ka", fr:"Puis-je payer par carte ?"},
+     {jp:"これはいくらですか", romaji:"Kore wa ikura desu ka", fr:"Combien coûte ceci ?"},
+     {jp:"お箸をください", romaji:"Ohashi wo kudasai", fr:"Des baguettes, s'il vous plaît"},
+   ]},
+  {id:"gare", emoji:"🚉", title:"Gare & transports", jp:"駅・交通", color:"#9E7A1A", niveau:"Intermédiaire",
+   phrases:[
+     {jp:"東京駅までいくらですか", romaji:"Tōkyō-eki made ikura desu ka", fr:"Combien jusqu'à la gare de Tokyo ?"},
+     {jp:"この電車は新宿に行きますか", romaji:"Kono densha wa Shinjuku ni ikimasu ka", fr:"Ce train va-t-il à Shinjuku ?"},
+     {jp:"切符はどこで買えますか", romaji:"Kippu wa doko de kaemasu ka", fr:"Où puis-je acheter un billet ?"},
+     {jp:"次の駅は何ですか", romaji:"Tsugi no eki wa nan desu ka", fr:"Quelle est la prochaine station ?"},
+     {jp:"乗り換えはどこですか", romaji:"Norikae wa doko desu ka", fr:"Où est la correspondance ?"},
+   ]},
+  {id:"social", emoji:"🤝", title:"Rencontre sociale", jp:"出会い", color:"#9E7A1A", niveau:"Intermédiaire",
+   phrases:[
+     {jp:"はじめまして", romaji:"Hajimemashite", fr:"Enchanté (première rencontre)"},
+     {jp:"よろしくお願いします", romaji:"Yoroshiku onegai shimasu", fr:"Ravi de faire votre connaissance"},
+     {jp:"お名前は何ですか", romaji:"Onamae wa nan desu ka", fr:"Comment vous appelez-vous ?"},
+     {jp:"出身はどちらですか", romaji:"Shusshin wa dochira desu ka", fr:"D'où venez-vous ?"},
+     {jp:"また会いましょう", romaji:"Mata aimashō", fr:"Revoyons-nous"},
+   ]},
+  {id:"entreprise", emoji:"💼", title:"En entreprise", jp:"会社で", color:"#C9463D", niveau:"Avancé",
+   phrases:[
+     {jp:"お世話になっております", romaji:"Osewa ni natte orimasu", fr:"Formule de politesse pro (intraduisible)"},
+     {jp:"お疲れ様です", romaji:"Otsukaresama desu", fr:"Bon courage / merci pour le travail"},
+     {jp:"よろしくお願いいたします", romaji:"Yoroshiku onegai itashimasu", fr:"Formule de clôture polie"},
+     {jp:"少々お待ちください", romaji:"Shōshō omachi kudasai", fr:"Un instant, s'il vous plaît"},
+     {jp:"申し訳ございません", romaji:"Mōshiwake gozaimasen", fr:"Je suis vraiment désolé (formel)"},
+   ]},
+];
+
+function SituationDetail({C, s, onBack, script}){
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
+      <div style={{padding:"50px 20px 0"}}>
+        <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer"}}>‹ Situations</button>
+      </div>
+      <div style={{padding:"20px"}}>
+        <div style={{borderRadius:16,overflow:"hidden",marginBottom:22,background:`linear-gradient(145deg,${s.color} 0%,${s.color}99 50%,#1a1410 130%)`,padding:"22px 18px",position:"relative"}}>
+          <div style={{position:"absolute",right:-10,bottom:-30,fontSize:120,fontFamily:"'Noto Serif JP',serif",color:"rgba(255,255,255,0.12)",lineHeight:1}}>{s.jp}</div>
+          <div style={{position:"relative"}}>
+            <div style={{fontSize:40,marginBottom:6}}>{s.emoji}</div>
+            <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",color:"#fff",fontWeight:400}}>{s.title}</div>
+            <span style={{fontSize:10,padding:"3px 9px",background:"rgba(255,255,255,0.18)",borderRadius:20,color:"#fff"}}>{s.niveau}</span>
+          </div>
+        </div>
+
+        <div style={{fontSize:10,color:s.color,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>🗣️ Phrases utiles</div>
+        <div style={{display:"flex",flexDirection:"column",gap:10,paddingBottom:110}}>
+          {s.phrases.map((p,i)=>(
+            <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 16px"}}>
+              <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:4}}>{script==="romaji"?p.romaji:p.jp}</div>
+              <div style={{fontSize:12,color:s.color,fontStyle:"italic",marginBottom:3}}>{script==="romaji"?p.jp:p.romaji}</div>
+              <div style={{fontSize:13,color:C.t2}}>{p.fr}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const LEARN_DECKS = [
   {id:"hira", label:"Hiragana", jp:"ひらがな", emoji:"あ", deck:HIRAGANA, desc:"46 caractères de base · mots japonais"},
   {id:"kata", label:"Katakana", jp:"カタカナ", emoji:"ア", deck:KATAKANA, desc:"46 caractères de base · mots étrangers"},
 ];
 
-function LearnScreen({C,script}){
+function SituationDetail({C, s, onBack, script}){
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
+      <div style={{padding:"50px 20px 20px"}}>
+        <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:20}}>‹ Situations</button>
+        <div style={{fontSize:46,marginBottom:8}}>{s.emoji}</div>
+        <div style={{fontSize:26,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{s.titre}</div>
+        <div style={{fontSize:14,color:C.t3,fontFamily:"'Noto Serif JP',serif",marginBottom:10}}>{s.nom_jp}</div>
+        <div style={{fontSize:13,color:C.t2,fontStyle:"italic",lineHeight:1.5}}>{s.contexte}</div>
+      </div>
+      <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
+        {s.phrases.map((p,i)=>(
+          <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"15px 16px"}}>
+            <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:4,lineHeight:1.4}}>{script==="romaji"?p.romaji:p.jp}</div>
+            <div style={{fontSize:12,color:C.gold,fontStyle:"italic",marginBottom:5}}>{script==="romaji"?p.jp:p.romaji}</div>
+            <div style={{fontSize:13,color:C.t2}}>{p.fr}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LearnScreen({C,script,db}){
   const [deck,setDeck] = useState(null);   // selected deck object
   const [mode,setMode] = useState(null);   // "flash" | "quiz"
+  const [situation,setSituation] = useState(null); // selected situation
+  const situations = db?.situations || [];
+
+  // Active situation detail
+  if(situation) return <SituationDetail C={C} s={situation} onBack={()=>setSituation(null)} script={script}/>;
 
   // Active session
   if(deck && mode){
@@ -1535,7 +1640,7 @@ function LearnScreen({C,script}){
           <div style={{display:"flex",flexDirection:"column",gap:11}}>
             <div onClick={()=>setMode("flash")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
               <span style={{fontSize:30}}>🃏</span>
-              <div style={{flex:1}}><div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Flashcards</div><div style={{fontSize:12,color:C.t2}}>Vois le caractère, devine, retourne pour vérifier</div></div>
+              <div style={{flex:1}}><div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Flashcards</div><div style={{fontSize:12,color:C.t2}}>Glisse pour répondre : je connais / à revoir</div></div>
               <span style={{fontSize:18,color:C.t3}}>›</span>
             </div>
             <div onClick={()=>setMode("quiz")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
@@ -1549,14 +1654,15 @@ function LearnScreen({C,script}){
     );
   }
 
-  // Deck selection (home)
+  // Home: decks + situations
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihongo wo manabu":"日本語を学ぶ"}</div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Apprends à lire le japonais</div>
+        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Apprends à lire et à parler</div>
 
+        {/* Syllabaires */}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>🔤 Les syllabaires</div>
         <div style={{display:"flex",flexDirection:"column",gap:11}}>
           {LEARN_DECKS.map((d,i)=>(
@@ -1571,8 +1677,23 @@ function LearnScreen({C,script}){
           ))}
         </div>
 
-        <div style={{marginTop:18,padding:"14px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6}}>
-          💡 Commence par l'hiragana, c'est la base du japonais. Le katakana s'utilise pour les mots empruntés (コーヒー = coffee).
+        {/* Situations courantes */}
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",margin:"26px 0 12px",textTransform:"uppercase"}}>💬 Situations courantes</div>
+        <div style={{display:"flex",flexDirection:"column",gap:11}}>
+          {situations.map((s,i)=>(
+            <div key={i} onClick={()=>setSituation(s)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",animation:"fadeUp .4s ease"}}>
+              <span style={{fontSize:28,flexShrink:0}}>{s.emoji}</span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{display:"flex",alignItems:"baseline",gap:8}}>
+                  <span style={{fontSize:15,color:C.text,fontWeight:500}}>{s.titre}</span>
+                  <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</span>
+                </div>
+                <div style={{fontSize:12,color:C.t2,lineHeight:1.45,marginTop:3}}>{s.phrases.length} phrases utiles</div>
+              </div>
+              <span style={{fontSize:18,color:C.t3,flexShrink:0}}>›</span>
+            </div>
+          ))}
+          {situations.length===0 && <div style={{padding:"18px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
         </div>
       </div>
     </div>
@@ -2058,7 +2179,7 @@ export default function IsekaidApp(){
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script}/>}
-              {tab==="learn"     &&<LearnScreen     C={C} script={script}/>}
+              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
