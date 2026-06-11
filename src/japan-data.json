@@ -3834,7 +3834,8 @@
               "correct": false,
               "feedback": "« Bonne nuit » ne convient pas à une présentation."
             }
-          ]
+          ],
+          "situation_romaji": "Un Japonais s'approche de toi et dit : « Hajimemashite »"
         },
         {
           "situation": "Il te demande ton nom : « お名前は？ »",
@@ -3861,7 +3862,8 @@
               "correct": false,
               "feedback": "Tu viens de te « commander » toi-même ! « kudasai » sert à demander un objet."
             }
-          ]
+          ],
+          "situation_romaji": "Il te demande ton nom : « Onamae wa? »"
         },
         {
           "situation": "Pour conclure poliment la présentation…",
@@ -3888,7 +3890,8 @@
               "correct": false,
               "feedback": "Pas besoin de t'excuser, la rencontre se passe bien !"
             }
-          ]
+          ],
+          "situation_romaji": "Pour conclure poliment la présentation…"
         }
       ]
     },
@@ -3928,7 +3931,8 @@
               "correct": false,
               "feedback": "Curieusement, ça s'emploie parfois pour remercier — mais ici « arigatō gozaimasu » est plus clair."
             }
-          ]
+          ],
+          "situation_romaji": "Un passant t'aide à retrouver ton chemin. Tu veux le remercier poliment."
         },
         {
           "situation": "Il répond : « どういたしまして »",
@@ -3955,7 +3959,8 @@
               "correct": false,
               "feedback": "Non, « dō itashimashite » veut dire « je vous en prie »."
             }
-          ]
+          ],
+          "situation_romaji": "Il répond : « Dō itashimashite »"
         },
         {
           "situation": "Plus tard, un ami proche te prête son parapluie.",
@@ -3982,7 +3987,8 @@
               "correct": false,
               "feedback": "« Félicitations » ne correspond pas à un remerciement !"
             }
-          ]
+          ],
+          "situation_romaji": "Plus tard, un ami proche te prête son parapluie."
         }
       ]
     },
@@ -4022,7 +4028,8 @@
               "correct": false,
               "feedback": "Un « bonjour » ne répare pas une bousculade."
             }
-          ]
+          ],
+          "situation_romaji": "Tu bouscules légèrement quelqu'un dans la rue."
         },
         {
           "situation": "Tu es en retard à un rendez-vous important avec un collègue.",
@@ -4049,7 +4056,8 @@
               "correct": false,
               "feedback": "Une salutation décontractée n'excuse pas un retard."
             }
-          ]
+          ],
+          "situation_romaji": "Tu es en retard à un rendez-vous important avec un collègue."
         },
         {
           "situation": "Tu as fait une vraie erreur professionnelle. Il faut des excuses formelles.",
@@ -4076,7 +4084,8 @@
               "correct": false,
               "feedback": "Correct pour un petit incident, mais trop léger pour une vraie erreur au travail."
             }
-          ]
+          ],
+          "situation_romaji": "Tu as fait une vraie erreur professionnelle. Il faut des excuses formelles."
         }
       ]
     },
@@ -4116,7 +4125,8 @@
               "correct": false,
               "feedback": "Non, c'est simplement « bienvenue »."
             }
-          ]
+          ],
+          "situation_romaji": "En arrivant en caisse, l'employé dit : « Irasshaimase »"
         },
         {
           "situation": "L'employé te demande : « 袋はご利用ですか？ »",
@@ -4143,7 +4153,8 @@
               "correct": false,
               "feedback": "Évite si possible — ici un simple « oui merci » suffisait."
             }
-          ]
+          ],
+          "situation_romaji": "L'employé te demande : « Fukuro wa go-riyō desu ka? »"
         },
         {
           "situation": "Tu as payé, l'employé te tend ton sac.",
@@ -4170,7 +4181,8 @@
               "correct": false,
               "feedback": "On ne se présente pas en quittant une caisse !"
             }
-          ]
+          ],
+          "situation_romaji": "Tu as payé, l'employé te tend ton sac."
         }
       ]
     }
