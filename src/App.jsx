@@ -1,6 +1,7 @@
 import DATA from "./japan-data.json";
 import AUDIO_MANIFEST from "./audio-manifest.json";
 import { useState, useEffect, useRef, useMemo } from "react";
+import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress } from "./supabase";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 const LIGHT = {
@@ -2062,6 +2063,81 @@ function DailyWelcome({C, streak, onClose}){
   );
 }
 
+// ─── Écran de connexion ───────────────────────────────────────────────────────
+function AuthScreen({C, onSkip}){
+  const [mode,setMode] = useState("signin"); // signin | signup
+  const [email,setEmail] = useState("");
+  const [pw,setPw] = useState("");
+  const [busy,setBusy] = useState(false);
+  const [msg,setMsg] = useState(null);
+
+  const submitEmail = async ()=>{
+    if(!email || !pw){ setMsg({type:"err",text:"Renseigne email et mot de passe."}); return; }
+    setBusy(true); setMsg(null);
+    try {
+      const fn = mode==="signup" ? signUpEmail : signInEmail;
+      const { error } = await fn(email, pw);
+      if(error){ setMsg({type:"err",text:traduireErreur(error.message)}); }
+      else if(mode==="signup"){ setMsg({type:"ok",text:"Compte créé ! Tu peux te connecter."}); setMode("signin"); }
+      // en cas de succès de connexion, le listener onAuthChange prend le relais
+    } catch(e){ setMsg({type:"err",text:"Une erreur est survenue."}); }
+    setBusy(false);
+  };
+  const google = async ()=>{
+    setBusy(true);
+    try { await signInGoogle(); } catch(e){ setMsg({type:"err",text:"Connexion Google indisponible."}); setBusy(false); }
+  };
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,display:"flex",flexDirection:"column",justifyContent:"center",padding:"40px 28px"}}>
+      <div style={{textAlign:"center",marginBottom:34}}>
+        <div style={{fontSize:50,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:C.text,marginBottom:6}}>異世界</div>
+        <div style={{fontSize:13,color:C.t2,letterSpacing:".05em"}}>Connecte-toi pour sauvegarder ta progression</div>
+      </div>
+
+      {/* Google */}
+      <button onClick={google} disabled={busy} style={{width:"100%",padding:"14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:14,fontWeight:500,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:16}}>
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continuer avec Google
+      </button>
+
+      <div style={{display:"flex",alignItems:"center",gap:12,margin:"4px 0 16px"}}>
+        <div style={{flex:1,height:1,background:C.border}}/>
+        <span style={{fontSize:11,color:C.t3}}>ou</span>
+        <div style={{flex:1,height:1,background:C.border}}/>
+      </div>
+
+      {/* Email */}
+      <input value={email} onChange={e=>setEmail(e.target.value)} type="email" placeholder="Adresse email" autoCapitalize="none" style={{width:"100%",padding:"13px 15px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:14,marginBottom:10,boxSizing:"border-box"}}/>
+      <input value={pw} onChange={e=>setPw(e.target.value)} type="password" placeholder="Mot de passe" style={{width:"100%",padding:"13px 15px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:14,marginBottom:14,boxSizing:"border-box"}}/>
+
+      {msg && <div style={{fontSize:12,color:msg.type==="err"?C.red:C.green,marginBottom:12,textAlign:"center"}}>{msg.text}</div>}
+
+      <button onClick={submitEmail} disabled={busy} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:busy?"default":"pointer",opacity:busy?0.7:1,marginBottom:14}}>
+        {busy ? "..." : mode==="signup" ? "Créer mon compte" : "Se connecter"}
+      </button>
+
+      <div style={{textAlign:"center",fontSize:12,color:C.t2,marginBottom:24}}>
+        {mode==="signup" ? "Déjà un compte ? " : "Pas encore de compte ? "}
+        <span onClick={()=>{setMode(mode==="signup"?"signin":"signup");setMsg(null);}} style={{color:C.red,cursor:"pointer",fontWeight:500}}>
+          {mode==="signup" ? "Se connecter" : "S'inscrire"}
+        </span>
+      </div>
+
+      <div style={{textAlign:"center"}}>
+        <span onClick={onSkip} style={{fontSize:12,color:C.t3,cursor:"pointer",borderBottom:`1px dotted ${C.t3}`}}>Continuer sans compte</span>
+      </div>
+    </div>
+  );
+}
+function traduireErreur(m){
+  if(/Invalid login/i.test(m)) return "Email ou mot de passe incorrect.";
+  if(/already registered/i.test(m)) return "Cet email a déjà un compte.";
+  if(/at least 6/i.test(m)) return "Le mot de passe doit faire au moins 6 caractères.";
+  if(/valid email/i.test(m)) return "Adresse email invalide.";
+  return m;
+}
+
 function BottomNav({C,active,onChange}){
   return(
     <div style={{position:"absolute",bottom:0,left:0,right:0,height:72,display:"flex",background:C.navBg,backdropFilter:"blur(18px)",borderTop:`1px solid ${C.border}`,zIndex:100}}>
@@ -2319,6 +2395,42 @@ export default function IsekaidApp(){
   const [showWelcome,setShowWelcome]=useState(false);
   const [wikiMap,setWikiMap]=useState({});
   const [script,setScript]=useState(()=>loadScript());
+  const [session,setSession]=useState(null);
+  const [authChecked,setAuthChecked]=useState(false);
+  const [skipAuth,setSkipAuth]=useState(false);
+
+  // Listen for auth changes
+  useEffect(()=>{
+    if(!supabaseEnabled){ setAuthChecked(true); return; }
+    getSession().then(s=>{ setSession(s); setAuthChecked(true); });
+    const sub = onAuthChange(s=> setSession(s));
+    return ()=> sub.unsubscribe?.();
+  },[]);
+
+  // When logged in: pull cloud progress (merge into local state)
+  useEffect(()=>{
+    if(!session?.user) return;
+    fetchProgress(session.user.id).then(p=>{
+      if(!p) return;
+      if(p.streak && Object.keys(p.streak).length){ setStreak(p.streak); saveStreak(p.streak); }
+      if(p.unlocks && Object.keys(p.unlocks).length){ setUnlocks(p.unlocks); saveUnlocks(p.unlocks); }
+      if(p.scenarios && Object.keys(p.scenarios).length){ setScenProgress(p.scenarios); saveScenarioProgress(p.scenarios); }
+      if(Array.isArray(p.favorites) && p.favorites.length){ setFavs(p.favorites); saveFavs(p.favorites); }
+    });
+  },[session?.user?.id]);
+
+  // Push progress to cloud (debounced) whenever it changes and user is logged in
+  const syncRef = useRef(null);
+  useEffect(()=>{
+    if(!session?.user) return;
+    clearTimeout(syncRef.current);
+    syncRef.current = setTimeout(()=>{
+      saveProgress(session.user.id, { streak, unlocks, scenarios:scenProgress, favorites:favs });
+    }, 800);
+    return ()=> clearTimeout(syncRef.current);
+  },[streak, unlocks, scenProgress, favs, session?.user?.id]);
+
+  const logout = async ()=>{ await signOut(); setSession(null); };
 
   const isFav = (type,item)=> favs.some(f=>f.id===favId(type,item));
   const toggleFav = (type,item)=>{
@@ -2347,8 +2459,21 @@ export default function IsekaidApp(){
   useEffect(()=>{ saveScript(script); },[script]);
   const toggleScript = ()=> setScript(s=> s==="kanji" ? "romaji" : "kanji");
 
-  // When splash finishes: skip onboarding if a profile is already loaded
+  // When splash finishes: decide auth → onboarding → app
   const afterSplash = ()=>{
+    if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
+    setScreen(user ? "app" : "onboarding");
+  };
+
+  // Once a session arrives (e.g. Google redirect or email login), advance past auth
+  useEffect(()=>{
+    if(session?.user && screen==="auth"){
+      setScreen(user ? "app" : "onboarding");
+    }
+  },[session?.user, screen]);
+
+  const skipAuthAndContinue = ()=>{
+    setSkipAuth(true);
     setScreen(user ? "app" : "onboarding");
   };
 
@@ -2372,6 +2497,7 @@ export default function IsekaidApp(){
       <style>{CSS}</style>
       <div style={{width:"min(100vw,390px)",height:"min(100dvh,844px)",position:"relative",overflow:"hidden",borderRadius:"clamp(0px,calc((100vw - 390px)*999),44px)",background:C.bg,boxShadow:"0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,0,0,.08)",transition:"background .3s"}}>
         {screen==="splash"     &&<Splash onDone={afterSplash}/>}
+        {screen==="auth"       &&<AuthScreen C={C} onSkip={skipAuthAndContinue}/>}
         {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
         {screen==="app"&&user&&(
           <>
