@@ -1,4 +1,5 @@
 import DATA from "./japan-data.json";
+import AUDIO_MANIFEST from "./audio-manifest.json";
 import { useState, useEffect, useRef, useMemo } from "react";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
@@ -205,15 +206,30 @@ function WikiPanel({C, entry, onClose, script}) {
 
 // WikiText: renders text with wiki terms highlighted and tapable
 // ─── Audio (synthèse vocale japonaise) ────────────────────────────────────────
+let _currentAudio = null;
 function speakJP(text){
+  if(!text) return;
+  // 1) Prefer the pre-generated high-quality MP3 if available
+  const file = AUDIO_MANIFEST[text.trim()];
+  if(file){
+    try {
+      if(_currentAudio){ _currentAudio.pause(); _currentAudio = null; }
+      _currentAudio = new Audio("/" + file);
+      _currentAudio.play().catch(()=> browserSpeak(text)); // fallback if play fails
+      return;
+    } catch(e){ /* fall through */ }
+  }
+  // 2) Fallback: browser speech synthesis (dev / missing file)
+  browserSpeak(text);
+}
+function browserSpeak(text){
   try {
     if(!window.speechSynthesis || !text) return;
-    window.speechSynthesis.cancel(); // stop any ongoing speech
+    window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = "ja-JP";
-    u.rate = 0.85;  // slightly slower for learners
+    u.rate = 0.85;
     u.pitch = 1.0;
-    // Prefer a Japanese voice if available
     const voices = window.speechSynthesis.getVoices();
     const jp = voices.find(v=>v.lang==="ja-JP" || v.lang?.startsWith("ja"));
     if(jp) u.voice = jp;
