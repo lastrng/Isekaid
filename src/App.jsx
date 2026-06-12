@@ -185,7 +185,10 @@ function WikiPanel({C, entry, onClose, script}) {
             <div style={{fontSize:12,color:color,fontStyle:"italic",marginBottom:2}}>{script==="romaji"?entry.jp:entry.romaji}</div>
             <div style={{fontSize:16,fontWeight:500,color:C.text}}>{entry.mot}</div>
           </div>
-          <span style={{fontSize:9,padding:"4px 10px",background:`${color}18`,border:`1px solid ${color}44`,borderRadius:20,color,letterSpacing:".1em",marginTop:4}}>{entry.categorie}</span>
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            <span style={{fontSize:9,padding:"4px 10px",background:`${color}18`,border:`1px solid ${color}44`,borderRadius:20,color,letterSpacing:".1em"}}>{entry.categorie}</span>
+            <SpeakButton C={C} text={entry.jp} color={color} size={34}/>
+          </div>
         </div>
         {/* Divider */}
         <div style={{height:1,background:C.border,marginBottom:14}}/>
@@ -201,6 +204,44 @@ function WikiPanel({C, entry, onClose, script}) {
 }
 
 // WikiText: renders text with wiki terms highlighted and tapable
+// ─── Audio (synthèse vocale japonaise) ────────────────────────────────────────
+function speakJP(text){
+  try {
+    if(!window.speechSynthesis || !text) return;
+    window.speechSynthesis.cancel(); // stop any ongoing speech
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "ja-JP";
+    u.rate = 0.85;  // slightly slower for learners
+    u.pitch = 1.0;
+    // Prefer a Japanese voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const jp = voices.find(v=>v.lang==="ja-JP" || v.lang?.startsWith("ja"));
+    if(jp) u.voice = jp;
+    window.speechSynthesis.speak(u);
+  } catch(e){}
+}
+
+function SpeakButton({C, text, size=30, color}){
+  const [playing,setPlaying] = useState(false);
+  if(!text) return null;
+  const onClick = (e)=>{
+    e.stopPropagation();
+    speakJP(text);
+    setPlaying(true);
+    setTimeout(()=>setPlaying(false), 900);
+  };
+  return(
+    <button onClick={onClick} aria-label="Écouter" style={{
+      background:"transparent", border:"none", cursor:"pointer", padding:4,
+      fontSize:size*0.5, lineHeight:1, flexShrink:0, opacity:playing?1:0.7,
+      transition:"opacity .2s, transform .15s", transform:playing?"scale(1.15)":"scale(1)",
+      color:color||C.t2
+    }}>
+      🔊
+    </button>
+  );
+}
+
 function FavButton({C,active,onClick}){
   return(
     <button onClick={onClick} aria-label="Sauvegarder" style={{
@@ -224,12 +265,15 @@ function ExprCard({C,data,fav,onFav,wikiMap,onWikiTap,script}){
         <div style={{fontSize:10,color:C.gold,letterSpacing:".2em",textTransform:"uppercase"}}>表現 · Expression du jour {data.emoji}</div>
         {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
       </div>
-      <div style={{fontSize:34,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2,marginBottom:5}}>{script==="romaji"?data.romaji:data.expression}</div>
+      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
+        <div style={{fontSize:34,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2}}>{script==="romaji"?data.romaji:data.expression}</div>
+        <SpeakButton C={C} text={data.expression} color={C.gold} size={34}/>
+      </div>
       <div style={{fontSize:12,color:C.gold,fontStyle:"italic",marginBottom:3}}>{data.romaji}</div>
       <div style={{fontSize:14,color:C.t2,fontWeight:500,marginBottom:13}}>{data.traduction}</div>
       <div style={{fontSize:13,color:C.t2,lineHeight:1.78,marginBottom:13}}>{wt(data.contexte)}</div>
       <div style={{padding:"11px 13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:8}}>
-        <div style={{fontSize:9,color:C.gold,letterSpacing:".18em",marginBottom:6}}>EXEMPLE</div>
+        <div style={{fontSize:9,color:C.gold,letterSpacing:".18em",marginBottom:6,display:"flex",alignItems:"center",justifyContent:"space-between"}}>EXEMPLE <SpeakButton C={C} text={data.exemple_jp} color={C.gold} size={26}/></div>
         <div style={{fontSize:13,color:C.text,marginBottom:3}}>{data.exemple_jp}</div>
         <div style={{fontSize:11,color:C.t3,fontStyle:"italic"}}>{data.exemple_fr}</div>
       </div>
@@ -268,7 +312,10 @@ function RepasCard({C,data,fav,onFav,wikiMap,onWikiTap,script}){
         <div style={{fontSize:10,color:C.green,letterSpacing:".2em",textTransform:"uppercase"}}>🍱 Repas · {data.moment}</div>
         {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
       </div>
-      <div style={{fontSize:32,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2,marginBottom:5}}>{script==="romaji"?data.romaji:data.nom_jp} {data.emoji}</div>
+      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
+        <div style={{fontSize:32,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2}}>{script==="romaji"?data.romaji:data.nom_jp} {data.emoji}</div>
+        <SpeakButton C={C} text={data.nom_jp} color={C.green} size={30}/>
+      </div>
       <div style={{fontSize:12,color:C.green,fontStyle:"italic",marginBottom:11}}>{data.romaji} — {data.traduction}</div>
       <p style={{fontSize:13,color:C.t2,lineHeight:1.8,marginBottom:12}}>{wt(data.description)}</p>
       <div style={{padding:"11px 13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:8,display:"flex",gap:10,alignItems:"flex-start"}}>
@@ -1358,13 +1405,18 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
               else if(c===picked){ bg="rgba(201,70,61,0.08)"; bd="rgba(201,70,61,0.4)"; }
             }
             return(
-              <button key={i} onClick={()=>choose(c)} disabled={!!picked} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`1px solid ${bd}`,borderRadius:12,cursor:picked?"default":"pointer",transition:"all .2s"}}>
-                {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{script==="romaji"?c.romaji:c.jp}</div>}
-                {c.jp && <div style={{fontSize:11,color:C.t3,fontStyle:"italic",marginBottom:3}}>{script==="romaji"?c.jp:c.romaji}</div>}
-                <div style={{fontSize:13,color:C.t2}}>{c.fr}</div>
+              <div key={i} onClick={()=>!picked&&choose(c)} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`1px solid ${bd}`,borderRadius:12,cursor:picked?"default":"pointer",transition:"all .2s"}}>
+                <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
+                  <div style={{flex:1,minWidth:0}}>
+                    {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{script==="romaji"?c.romaji:c.jp}</div>}
+                    {c.jp && <div style={{fontSize:11,color:C.t3,fontStyle:"italic",marginBottom:3}}>{script==="romaji"?c.jp:c.romaji}</div>}
+                    <div style={{fontSize:13,color:C.t2}}>{c.fr}</div>
+                  </div>
+                  {picked && c.jp && <SpeakButton C={C} text={c.jp} color={s.couleur}/>}
+                </div>
                 {picked===c && <div style={{marginTop:4,fontSize:12,color:c.correct?C.green:C.red}}>{c.correct?"✓ ":"✕ "}{c.feedback}</div>}
                 {picked && c.correct && picked!==c && <div style={{marginTop:4,fontSize:12,color:C.green}}>✓ {c.feedback}</div>}
-              </button>
+              </div>
             );
           })}
         </div>
@@ -1529,777 +1581,4 @@ function FlashcardMode({C, deck, onExit}){
           transition: drag.active ? "none" : "transform .25s ease",
           background:flipped?"linear-gradient(160deg,rgba(201,70,61,0.12),transparent)":C.s1,
           border:`1px solid ${flipped?"rgba(201,70,61,0.3)":C.border}`,
-          display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-          position:"relative", overflow:"hidden", touchAction:"pan-y"
-        }}>
-        {/* Swipe overlays */}
-        <div style={{position:"absolute",top:16,right:16,padding:"6px 12px",borderRadius:10,border:`2px solid ${C.green}`,color:C.green,fontSize:13,fontWeight:700,transform:"rotate(12deg)",opacity:knowOpacity}}>CONNU ✓</div>
-        <div style={{position:"absolute",top:16,left:16,padding:"6px 12px",borderRadius:10,border:`2px solid ${C.red}`,color:C.red,fontSize:13,fontWeight:700,transform:"rotate(-12deg)",opacity:revOpacity}}>À REVOIR</div>
-
-        {!flipped ? (
-          <>
-            <div style={{fontSize:120,fontFamily:"'Noto Serif JP',serif",color:C.text,lineHeight:1}}>{card.k}</div>
-            <div style={{position:"absolute",bottom:18,fontSize:11,color:C.t3}}>Touche pour révéler · glisse pour répondre</div>
-          </>
-        ) : (
-          <>
-            <div style={{fontSize:64,fontFamily:"'Noto Serif JP',serif",color:C.t3,marginBottom:8}}>{card.k}</div>
-            <div style={{fontSize:44,color:C.red,fontWeight:600,letterSpacing:".05em"}}>{card.r}</div>
-          </>
-        )}
-      </div>
-
-      {/* Buttons (alternative to swipe) */}
-      <div style={{display:"flex",gap:11}}>
-        <button onClick={()=>commit(false)} style={{flex:1,padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>À revoir</button>
-        <button onClick={()=>commit(true)} style={{flex:1,padding:"14px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:12,color:C.green,fontSize:13,fontWeight:600,cursor:"pointer"}}>Je connais ✓</button>
-      </div>
-    </div>
-  );
-}
-
-// ── Quiz mode ──
-function QuizMode({C, deck, onExit}){
-  const [cards] = useState(()=>shuffle(deck));
-  const [idx,setIdx] = useState(0);
-  const [score,setScore] = useState(0);
-  const [picked,setPicked] = useState(null);
-  const card = cards[idx];
-  const done = idx >= cards.length;
-
-  // build 4 options (1 correct + 3 distractors)
-  const options = useState(()=>cards.map(c=>{
-    const others = shuffle(deck.filter(x=>x.r!==c.r)).slice(0,3);
-    return shuffle([c, ...others]);
-  }))[0];
-
-  const choose = (opt)=>{
-    if(picked) return;
-    setPicked(opt.r);
-    if(opt.r===card.r) setScore(s=>s+1);
-    setTimeout(()=>{ setPicked(null); setIdx(i=>i+1); }, 850);
-  };
-
-  if(done) return (
-    <div style={{padding:"40px 24px",textAlign:"center"}}>
-      <div style={{fontSize:54,marginBottom:14}}>{score/cards.length>=0.8?"🏆":score/cards.length>=0.5?"👍":"📚"}</div>
-      <div style={{fontSize:20,color:C.text,fontWeight:500,marginBottom:8}}>Quiz terminé !</div>
-      <div style={{fontSize:14,color:C.t2,marginBottom:26}}>Score : <b style={{color:C.red}}>{score}</b> / {cards.length}</div>
-      <button onClick={onExit} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
-    </div>
-  );
-
-  return(
-    <div style={{padding:"10px 24px 30px"}}>
-      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:30}}>
-        <div style={{flex:1,height:5,background:C.s3,borderRadius:3,overflow:"hidden"}}>
-          <div style={{height:"100%",width:`${(idx/cards.length)*100}%`,background:C.red,borderRadius:3,transition:"width .3s"}}/>
-        </div>
-        <span style={{fontSize:11,color:C.t3}}>{idx+1}/{cards.length}</span>
-      </div>
-
-      <div style={{textAlign:"center",marginBottom:30}}>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:14,textTransform:"uppercase"}}>Quelle est la lecture ?</div>
-        <div style={{fontSize:100,fontFamily:"'Noto Serif JP',serif",color:C.text,lineHeight:1}}>{card.k}</div>
-      </div>
-
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:11}}>
-        {options[idx].map((opt,i)=>{
-          let bg=C.s1, bd=C.border, col=C.text;
-          if(picked){
-            if(opt.r===card.r){ bg="rgba(78,128,96,0.15)"; bd="rgba(78,128,96,0.4)"; col=C.green; }
-            else if(opt.r===picked){ bg="rgba(201,70,61,0.12)"; bd="rgba(201,70,61,0.4)"; col=C.red; }
-          }
-          return(
-            <button key={i} onClick={()=>choose(opt)} style={{padding:"18px",background:bg,border:`1px solid ${bd}`,borderRadius:14,color:col,fontSize:20,fontWeight:600,cursor:picked?"default":"pointer",transition:"all .2s"}}>
-              {opt.r}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// ─── Situations courantes (phrases utiles) ────────────────────────────────────
-const SITUATIONS = [
-  {id:"resto", emoji:"🍜", title:"Au restaurant", jp:"レストラン", color:"#3A6645", niveau:"Débutant",
-   phrases:[
-     {jp:"メニューをください", romaji:"Menyū wo kudasai", fr:"Le menu, s'il vous plaît"},
-     {jp:"これをお願いします", romaji:"Kore wo onegai shimasu", fr:"Ceci, s'il vous plaît (en pointant)"},
-     {jp:"おすすめは何ですか", romaji:"Osusume wa nan desu ka", fr:"Quelle est votre recommandation ?"},
-     {jp:"お会計お願いします", romaji:"Okaikei onegai shimasu", fr:"L'addition, s'il vous plaît"},
-     {jp:"とても美味しいです", romaji:"Totemo oishii desu", fr:"C'est très bon"},
-     {jp:"いただきます", romaji:"Itadakimasu", fr:"Bon appétit (avant de manger)"},
-     {jp:"ごちそうさまでした", romaji:"Gochisōsama deshita", fr:"Merci pour le repas (après)"},
-   ]},
-  {id:"konbini", emoji:"🏪", title:"Au konbini", jp:"コンビニ", color:"#3A6645", niveau:"Débutant",
-   phrases:[
-     {jp:"袋はいりません", romaji:"Fukuro wa irimasen", fr:"Je n'ai pas besoin de sac"},
-     {jp:"温めてください", romaji:"Atatamete kudasai", fr:"Réchauffez-le, s'il vous plaît"},
-     {jp:"カードで払えますか", romaji:"Kādo de haraemasu ka", fr:"Puis-je payer par carte ?"},
-     {jp:"これはいくらですか", romaji:"Kore wa ikura desu ka", fr:"Combien coûte ceci ?"},
-     {jp:"お箸をください", romaji:"Ohashi wo kudasai", fr:"Des baguettes, s'il vous plaît"},
-   ]},
-  {id:"gare", emoji:"🚉", title:"Gare & transports", jp:"駅・交通", color:"#9E7A1A", niveau:"Intermédiaire",
-   phrases:[
-     {jp:"東京駅までいくらですか", romaji:"Tōkyō-eki made ikura desu ka", fr:"Combien jusqu'à la gare de Tokyo ?"},
-     {jp:"この電車は新宿に行きますか", romaji:"Kono densha wa Shinjuku ni ikimasu ka", fr:"Ce train va-t-il à Shinjuku ?"},
-     {jp:"切符はどこで買えますか", romaji:"Kippu wa doko de kaemasu ka", fr:"Où puis-je acheter un billet ?"},
-     {jp:"次の駅は何ですか", romaji:"Tsugi no eki wa nan desu ka", fr:"Quelle est la prochaine station ?"},
-     {jp:"乗り換えはどこですか", romaji:"Norikae wa doko desu ka", fr:"Où est la correspondance ?"},
-   ]},
-  {id:"social", emoji:"🤝", title:"Rencontre sociale", jp:"出会い", color:"#9E7A1A", niveau:"Intermédiaire",
-   phrases:[
-     {jp:"はじめまして", romaji:"Hajimemashite", fr:"Enchanté (première rencontre)"},
-     {jp:"よろしくお願いします", romaji:"Yoroshiku onegai shimasu", fr:"Ravi de faire votre connaissance"},
-     {jp:"お名前は何ですか", romaji:"Onamae wa nan desu ka", fr:"Comment vous appelez-vous ?"},
-     {jp:"出身はどちらですか", romaji:"Shusshin wa dochira desu ka", fr:"D'où venez-vous ?"},
-     {jp:"また会いましょう", romaji:"Mata aimashō", fr:"Revoyons-nous"},
-   ]},
-  {id:"entreprise", emoji:"💼", title:"En entreprise", jp:"会社で", color:"#C9463D", niveau:"Avancé",
-   phrases:[
-     {jp:"お世話になっております", romaji:"Osewa ni natte orimasu", fr:"Formule de politesse pro (intraduisible)"},
-     {jp:"お疲れ様です", romaji:"Otsukaresama desu", fr:"Bon courage / merci pour le travail"},
-     {jp:"よろしくお願いいたします", romaji:"Yoroshiku onegai itashimasu", fr:"Formule de clôture polie"},
-     {jp:"少々お待ちください", romaji:"Shōshō omachi kudasai", fr:"Un instant, s'il vous plaît"},
-     {jp:"申し訳ございません", romaji:"Mōshiwake gozaimasen", fr:"Je suis vraiment désolé (formel)"},
-   ]},
-];
-
-const LEARN_DECKS = [
-  {id:"hira", label:"Hiragana", jp:"ひらがな", emoji:"あ", deck:HIRAGANA, desc:"46 caractères de base · mots japonais"},
-  {id:"kata", label:"Katakana", jp:"カタカナ", emoji:"ア", deck:KATAKANA, desc:"46 caractères de base · mots étrangers"},
-];
-
-function SituationDetail({C, s, onBack, script}){
-  return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
-      <div style={{padding:"50px 20px 20px"}}>
-        <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:20}}>‹ Situations</button>
-        <div style={{fontSize:46,marginBottom:8}}>{s.emoji}</div>
-        <div style={{fontSize:26,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{s.titre}</div>
-        <div style={{fontSize:14,color:C.t3,fontFamily:"'Noto Serif JP',serif",marginBottom:10}}>{s.nom_jp}</div>
-        <div style={{fontSize:13,color:C.t2,fontStyle:"italic",lineHeight:1.5}}>{s.contexte}</div>
-      </div>
-      <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
-        {s.phrases.map((p,i)=>(
-          <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"15px 16px"}}>
-            <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:4,lineHeight:1.4}}>{script==="romaji"?p.romaji:p.jp}</div>
-            <div style={{fontSize:12,color:C.gold,fontStyle:"italic",marginBottom:5}}>{script==="romaji"?p.jp:p.romaji}</div>
-            <div style={{fontSize:13,color:C.t2}}>{p.fr}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function LearnScreen({C,script,db}){
-  const [deck,setDeck] = useState(null);   // selected deck object
-  const [mode,setMode] = useState(null);   // "flash" | "quiz"
-  const [situation,setSituation] = useState(null); // selected situation
-  const situations = db?.situations || [];
-
-  // Active situation detail
-  if(situation) return <SituationDetail C={C} s={situation} onBack={()=>setSituation(null)} script={script}/>;
-
-  // Active session
-  if(deck && mode){
-    return(
-      <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-        <div style={{padding:"50px 20px 6px"}}>
-          <button onClick={()=>setMode(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer"}}>‹ {deck.label}</button>
-        </div>
-        {mode==="flash" ? <FlashcardMode C={C} deck={deck.deck} onExit={()=>setMode(null)}/>
-                        : <QuizMode      C={C} deck={deck.deck} onExit={()=>setMode(null)}/>}
-      </div>
-    );
-  }
-
-  // Mode selection for a chosen deck
-  if(deck){
-    return(
-      <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-        <div style={{padding:"50px 20px 110px"}}>
-          <button onClick={()=>setDeck(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:24}}>‹ Alphabets</button>
-          <div style={{textAlign:"center",marginBottom:30}}>
-            <div style={{fontSize:64,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:6}}>{deck.emoji}</div>
-            <div style={{fontSize:22,color:C.text,fontWeight:500}}>{deck.label}</div>
-            <div style={{fontSize:13,color:C.t2,marginTop:4}}>{deck.desc}</div>
-          </div>
-          <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>Choisis un mode</div>
-          <div style={{display:"flex",flexDirection:"column",gap:11}}>
-            <div onClick={()=>setMode("flash")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
-              <span style={{fontSize:30}}>🃏</span>
-              <div style={{flex:1}}><div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Flashcards</div><div style={{fontSize:12,color:C.t2}}>Glisse pour répondre : je connais / à revoir</div></div>
-              <span style={{fontSize:18,color:C.t3}}>›</span>
-            </div>
-            <div onClick={()=>setMode("quiz")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
-              <span style={{fontSize:30}}>✍️</span>
-              <div style={{flex:1}}><div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Quiz</div><div style={{fontSize:12,color:C.t2}}>Choisis la bonne lecture parmi 4 options</div></div>
-              <span style={{fontSize:18,color:C.t3}}>›</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Home: decks + situations
-  return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-      <div style={{padding:"50px 20px 110px"}}>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihongo wo manabu":"日本語を学ぶ"}</div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Apprends à lire et à parler</div>
-
-        {/* Syllabaires */}
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>🔤 Les syllabaires</div>
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
-          {LEARN_DECKS.map((d,i)=>(
-            <div key={i} onClick={()=>setDeck(d)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:16,cursor:"pointer",animation:"fadeUp .4s ease"}}>
-              <span style={{fontSize:40,fontFamily:"'Noto Serif JP',serif",color:C.red,width:48,textAlign:"center"}}>{d.emoji}</span>
-              <div style={{flex:1}}>
-                <div style={{display:"flex",alignItems:"baseline",gap:8}}><span style={{fontSize:16,color:C.text,fontWeight:500}}>{d.label}</span><span style={{fontSize:12,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{d.jp}</span></div>
-                <div style={{fontSize:12,color:C.t2,marginTop:3}}>{d.desc}</div>
-              </div>
-              <span style={{fontSize:18,color:C.t3}}>›</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Situations courantes */}
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",margin:"26px 0 12px",textTransform:"uppercase"}}>💬 Situations courantes</div>
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
-          {situations.map((s,i)=>(
-            <div key={i} onClick={()=>setSituation(s)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",animation:"fadeUp .4s ease"}}>
-              <span style={{fontSize:28,flexShrink:0}}>{s.emoji}</span>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{display:"flex",alignItems:"baseline",gap:8}}>
-                  <span style={{fontSize:15,color:C.text,fontWeight:500}}>{s.titre}</span>
-                  <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</span>
-                </div>
-                <div style={{fontSize:12,color:C.t2,lineHeight:1.45,marginTop:3}}>{s.phrases.length} phrases utiles</div>
-              </div>
-              <span style={{fontSize:18,color:C.t3,flexShrink:0}}>›</span>
-            </div>
-          ))}
-          {situations.length===0 && <div style={{padding:"18px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,rank}){
-  const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
-  const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
-  const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
-  // next title progress
-  const tier = rank || {min:0,title:"Curieux du Japon",emoji:"🌱"};
-  const nextTier = TITLES.find(t=>t.min>(xp||0));
-  const prevMin = tier.min;
-  const nextMin = nextTier ? nextTier.min : tier.min;
-  const progress = nextTier ? Math.min(((xp||0)-prevMin)/(nextMin-prevMin),1) : 1;
-  return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-      <div style={{padding:"50px 20px 110px"}}>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:16}}>人 · PROFIL</div>
-        <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{width:50,height:50,borderRadius:"50%",background:"rgba(201,70,61,0.1)",border:"2px solid rgba(201,70,61,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontFamily:"'Noto Serif JP',serif",color:C.red,flexShrink:0}}>
-            {(user.name||"V")[0].toUpperCase()}
-          </div>
-          <div style={{flex:1}}>
-            <div style={{fontSize:16,color:C.text,marginBottom:4}}>{user.name}</div>
-            <div style={{fontSize:12,color:C.text,fontWeight:500}}>{tier.emoji} {tier.title} <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{tier.jp}</span></div>
-          </div>
-        </div>
-
-        {/* XP / Title progress */}
-        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-            <div style={{display:"flex",alignItems:"center",gap:7}}>
-              <span style={{fontSize:16}}>⭐</span>
-              <span style={{fontSize:13,color:C.text,fontWeight:600}}>{xp||0} XP</span>
-            </div>
-            <div style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.18)",borderRadius:20}}>
-              <span style={{fontSize:12}}>🔑</span><span style={{fontSize:12,fontWeight:700,color:C.text}}>{streak?.keys||0}</span>
-            </div>
-          </div>
-          <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:7}}>
-            <div style={{height:"100%",width:`${progress*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
-          </div>
-          <div style={{fontSize:11,color:C.t3}}>
-            {nextTier ? <>Prochain titre : <b style={{color:C.t2}}>{nextTier.emoji} {nextTier.title}</b> à {nextTier.min} XP</> : "Titre maximal atteint ! 🎌"}
-          </div>
-        </div>
-        {/* Theme toggle */}
-        <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div>
-            <div style={{fontSize:13,color:C.text,marginBottom:2}}>{dark?"Mode sombre 🌙":"Mode clair ☀️"}</div>
-            <div style={{fontSize:11,color:C.t3}}>Basculer le thème de l'app</div>
-          </div>
-          <div onClick={()=>setDark(d=>!d)} style={{width:48,height:26,borderRadius:13,background:dark?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
-            <div style={{position:"absolute",top:3,left:dark?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
-          </div>
-        </div>
-        {/* DB stats */}
-        {db && (
-          <div style={{marginBottom:16,padding:"14px 16px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,display:"flex",alignItems:"center",gap:12}}>
-            <span style={{fontSize:20}}>📚</span>
-            <div>
-              <div style={{fontSize:12,color:C.text,fontWeight:500}}>{total} contenus chargés</div>
-              <div style={{fontSize:10,color:C.t3}}>depuis japan-data.json — aucun appel API</div>
-            </div>
-            <span style={{marginLeft:"auto",fontSize:14}}>✅</span>
-          </div>
-        )}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18}}>
-          {[
-            {v:String(streak?.count||0),label:"Streak",emoji:"🔥"},
-            {v:total||"—",label:"Contenus",emoji:"📖"},
-            {v:lvlL[user.level]||"Débutant",label:"Niveau",emoji:"🎯"},
-            {v:goalL[user.goal]||"Immersion",label:"Objectif",emoji:"🗾"},
-          ].map((s,i)=>(
-            <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,padding:"15px 13px"}}>
-              <div style={{fontSize:18,marginBottom:4}}>{s.emoji}</div>
-              <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:1}}>{s.v}</div>
-              <div style={{fontSize:10,color:C.t3,letterSpacing:".07em"}}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Ma collection (favoris) */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11}}>
-          <div style={{fontSize:10,color:C.t3,letterSpacing:".22em",textTransform:"uppercase"}}>Ma collection ♥</div>
-          <span style={{fontSize:11,color:C.t3}}>{favs?.length||0} sauvegardé{(favs?.length||0)>1?"s":""}</span>
-        </div>
-        {(!favs || favs.length===0) ? (
-          <div style={{padding:"22px 16px",textAlign:"center",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,marginBottom:22}}>
-            <div style={{fontSize:22,marginBottom:8}}>♡</div>
-            <div style={{fontSize:12,color:C.t3,lineHeight:1.6}}>Touche le cœur sur une carte<br/>pour la sauvegarder ici</div>
-          </div>
-        ) : (
-          <div style={{display:"flex",flexDirection:"column",gap:9,marginBottom:22}}>
-            {favs.map((f,i)=>{
-              const it=f.item;
-              const meta={
-                expr:{emoji:it.emoji||"🗣️", title:it.expression, sub:it.traduction, c:C.gold},
-                cult:{emoji:it.emoji||"🏮", title:it.titre, sub:it.tag, c:C.red},
-                repas:{emoji:it.emoji||"🍱", title:it.nom_jp, sub:it.traduction, c:C.green},
-                song:{emoji:it.emoji||"🎵", title:it.titre, sub:it.artiste, c:"#8B6FB0"},
-                tradition:{emoji:it.emoji||"⛩️", title:it.nom, sub:it.mois, c:C.red},
-                code:{emoji:it.emoji||"🎌", title:it.titre, sub:it.categorie, c:C.red},
-                region:{emoji:it.emoji||"🗾", title:it.nom, sub:it.position, c:C.green},
-                vie:{emoji:it.emoji||"🏙️", title:it.titre, sub:it.categorie, c:"#5B7E9B"},
-              }[f.type]||{emoji:"♥",title:"",sub:"",c:C.red};
-              return(
-                <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
-                  <span style={{fontSize:22,flexShrink:0}}>{meta.emoji}</span>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:13,color:C.text,fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{meta.title}</div>
-                    <div style={{fontSize:11,color:C.t3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{meta.sub}</div>
-                  </div>
-                  <span style={{fontSize:8,padding:"2px 7px",borderRadius:20,background:`${meta.c}1a`,color:meta.c,letterSpacing:".08em",textTransform:"uppercase",flexShrink:0}}>{f.type}</span>
-                  <button onClick={()=>toggleFav(f.type,it)} aria-label="Retirer" style={{background:"transparent",border:"none",cursor:"pointer",color:C.red,fontSize:15,flexShrink:0,padding:4}}>♥</button>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".22em",marginBottom:11,textTransform:"uppercase"}}>Collection de badges</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          {BADGES.map((b,i)=>(
-            <div key={i} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.28)":C.border}`,borderRadius:12,padding:"13px",textAlign:"center",opacity:b.unlocked?1:.5}}>
-              <div style={{fontSize:24,marginBottom:5}}>{b.emoji}</div>
-              <div style={{fontSize:11,color:b.unlocked?C.text:C.t3}}>{b.label}</div>
-              {!b.unlocked&&<div style={{fontSize:9,color:C.t3,marginTop:2}}>🔒</div>}
-            </div>
-          ))}
-        </div>
-
-        {/* Réinitialiser le profil */}
-        <button onClick={()=>{ if(confirm("Réinitialiser ton profil ? Tu repasseras par l'onboarding.")) onReset&&onReset(); }}
-          style={{marginTop:22,width:"100%",padding:"13px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
-          ↺ Réinitialiser le profil
-        </button>
-        <div style={{marginTop:10,textAlign:"center",fontSize:10,color:C.t3,lineHeight:1.5}}>
-          Ton profil est sauvegardé sur cet appareil —<br/>l'onboarding ne réapparaîtra qu'après réinitialisation.
-        </div>
-      </div>
-    </div>
-  );
-}
-const TABS=[{id:"home",kanji:"家",label:"Home"},{id:"explore",kanji:"探",label:"Explorer"},{id:"scenarios",kanji:"場",label:"Scénarios"},{id:"learn",kanji:"学",label:"Apprendre"},{id:"profile",kanji:"人",label:"Profil"}];
-// ─── Daily welcome popup (streak + clé) ───────────────────────────────────────
-function DailyWelcome({C, streak, onClose}){
-  const count = streak?.count || 0;
-  const keys = streak?.keys || 0;
-  return(
-    <>
-      <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:300,backdropFilter:"blur(3px)"}}/>
-      <div style={{
-        position:"fixed", top:"50%", left:"50%", transform:"translate(-50%,-50%)",
-        width:"min(86vw,340px)", zIndex:301, background:C.s1,
-        borderRadius:22, padding:"32px 26px 26px", textAlign:"center",
-        animation:"popIn .35s cubic-bezier(.2,.9,.3,1.3)",
-        boxShadow:"0 24px 80px rgba(0,0,0,0.4)", border:`1px solid ${C.border}`
-      }}>
-        {/* Flame */}
-        <div style={{fontSize:60,marginBottom:6,animation:"glow 2s ease infinite"}}>🔥</div>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".25em",textTransform:"uppercase",marginBottom:6}}>Content de te revoir</div>
-        <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>
-          {count} jour{count>1?"s":""}
-        </div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>de streak consécutif{count>1?"s":""} 🎌</div>
-
-        {/* Key reward */}
-        <div style={{padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14,marginBottom:22}}>
-          <div style={{fontSize:38,marginBottom:6,animation:"popIn .5s ease .2s both"}}>🔑</div>
-          <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:3}}>+1 clé gagnée !</div>
-          <div style={{fontSize:12,color:C.t2}}>Tu as maintenant <b style={{color:C.red}}>{keys} clé{keys>1?"s":""}</b> à dépenser</div>
-        </div>
-
-        <button onClick={onClose} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
-          Continuer l'aventure →
-        </button>
-      </div>
-    </>
-  );
-}
-
-function BottomNav({C,active,onChange}){
-  return(
-    <div style={{position:"absolute",bottom:0,left:0,right:0,height:72,display:"flex",background:C.navBg,backdropFilter:"blur(18px)",borderTop:`1px solid ${C.border}`,zIndex:100}}>
-      {TABS.map(t=>{
-        const on=t.id===active;
-        return(
-          <button key={t.id} onClick={()=>onChange(t.id)} style={{flex:1,border:"none",background:"transparent",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:3,color:on?C.red:C.t3,transition:"color .2s",position:"relative"}}>
-            <span style={{fontFamily:"'Noto Serif JP',serif",fontSize:on?20:18,transition:"font-size .2s"}}>{t.kanji}</span>
-            <span style={{fontSize:9,letterSpacing:".04em"}}>{t.label}</span>
-            {on&&<div style={{position:"absolute",bottom:8,width:4,height:4,borderRadius:"50%",background:C.red}}/>}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-// ─── Onboarding ───────────────────────────────────────────────────────────────
-function Onboarding({onComplete}){
-  const C=LIGHT;
-  const [step,setStep]=useState(0);
-  const [why,setWhy]=useState([]);
-  const [goal,setGoal]=useState("");
-  const [level,setLevel]=useState("");
-  const [name,setName]=useState("");
-  const ok=[why.length>0,!!goal,!!level][step];
-  const toggle=id=>setWhy(w=>w.includes(id)?w.filter(x=>x!==id):[...w,id]);
-  const chip=active=>({padding:"15px 12px",borderRadius:10,cursor:"pointer",background:active?"rgba(201,70,61,0.09)":"rgba(26,20,16,0.04)",border:`1px solid ${active?"rgba(201,70,61,0.3)":C.border}`,transition:"all .2s"});
-  const titles=[{jp:"なぜ日本？",fr:"Pourquoi le Japon ?"},{jp:"目標は何？",fr:"Quel est ton objectif ?"},{jp:"あなたは？",fr:"Parle-moi de toi"}];
-  return(
-    <div style={{height:"100%",display:"flex",flexDirection:"column",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
-      <div style={{padding:"50px 26px 0",flexShrink:0}}>
-        <div style={{display:"flex",gap:5,marginBottom:28}}>
-          {[0,1,2].map(i=>(<div key={i} style={{height:2,flex:1,borderRadius:1,background:i<=step?C.red:"rgba(26,20,16,0.1)",transition:"background .4s"}}/>))}
-        </div>
-        <div key={step} style={{animation:"fadeUp .35s ease"}}>
-          <div style={{fontSize:11,color:C.t3,letterSpacing:".28em",marginBottom:5}}>{step+1} / 3</div>
-          <div style={{fontSize:26,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:4}}>{titles[step].jp}</div>
-          <div style={{fontSize:14,color:C.t2}}>{titles[step].fr}</div>
-        </div>
-      </div>
-      <div key={`b${step}`} style={{flex:1,overflowY:"auto",padding:"22px 26px",animation:"fadeUp .35s ease"}}>
-        {step===0&&(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>{WHY.map(o=>(<div key={o.id} style={chip(why.includes(o.id))} onClick={()=>toggle(o.id)}><div style={{fontSize:26,marginBottom:7,textAlign:"center"}}>{o.emoji}</div><div style={{fontSize:12,color:why.includes(o.id)?C.text:C.t2,textAlign:"center",lineHeight:1.4}}>{o.label}</div></div>))}</div>)}
-        {step===1&&(<div style={{display:"flex",flexDirection:"column",gap:10}}>{GOALS.map(o=>(<div key={o.id} style={{...chip(goal===o.id),display:"flex",alignItems:"center",gap:14,padding:"16px"}} onClick={()=>setGoal(o.id)}><span style={{fontSize:24}}>{o.emoji}</span><span style={{fontSize:14,color:goal===o.id?C.text:C.t2,flex:1}}>{o.label}</span>{goal===o.id&&<span style={{color:C.red}}>✓</span>}</div>))}</div>)}
-        {step===2&&(
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            {LEVELS.map(o=>(<div key={o.id} style={{...chip(level===o.id),display:"flex",alignItems:"center",gap:14,padding:"16px"}} onClick={()=>setLevel(o.id)}><span style={{fontSize:28}}>{o.emoji}</span><div style={{flex:1}}><div style={{fontSize:14,color:level===o.id?C.text:C.t2,marginBottom:2}}>{o.label}</div><div style={{fontSize:11,color:C.t3}}>{o.sub}</div></div>{level===o.id&&<span style={{color:C.red}}>✓</span>}</div>))}
-            <div style={{marginTop:6}}>
-              <div style={{fontSize:11,color:C.t3,marginBottom:8,letterSpacing:".12em"}}>Ton prénom (optionnel)</div>
-              <input value={name} onChange={e=>setName(e.target.value)} placeholder="Ex : Léa" style={{background:"rgba(26,20,16,0.04)",border:`1px solid ${C.border}`,color:C.text}}/>
-            </div>
-          </div>
-        )}
-      </div>
-      <div style={{padding:"14px 26px 34px",flexShrink:0}}>
-        <button onClick={()=>step<2?setStep(s=>s+1):onComplete({why,goal,level,name:name||"Voyageur"})} disabled={!ok}
-          style={{width:"100%",padding:"15px",background:ok?C.red:"rgba(26,20,16,0.08)",border:"none",borderRadius:12,color:ok?"#fff":C.t3,fontSize:15,cursor:ok?"pointer":"default",letterSpacing:".04em",transition:"all .2s"}}>
-          {step<2?"Continuer →":"Commencer l'aventure 🌸"}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function Splash({onDone}){
-  useEffect(()=>{const t=setTimeout(onDone,2500);return()=>clearTimeout(t);},[]);
-  return(
-    <div style={{height:"100%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"#0F0B08",position:"relative",overflow:"hidden"}}>
-      <Petals/>
-      <div style={{position:"relative",zIndex:1,textAlign:"center",animation:"fadeIn .8s ease"}}>
-        <div style={{fontSize:70,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:"#F0E6D3",lineHeight:1,animation:"fadeUp .9s ease"}}>異世界</div>
-        <div style={{height:1,background:"linear-gradient(90deg,transparent,#C9463D,transparent)",margin:"16px auto",width:70}}/>
-        <div style={{fontSize:12,letterSpacing:".42em",color:"#9C8A74",textTransform:"uppercase"}}>ISEKAI'D</div>
-        <div style={{fontSize:10,color:"#5E4E3C",marginTop:6,letterSpacing:".22em"}}>Experience Japan every day.</div>
-      </div>
-    </div>
-  );
-}
-
-// ─── Root ─────────────────────────────────────────────────────────────────────
-// Persistence helpers (localStorage) — safe wrappers
-const STORE_KEY = "isekaid_profile_v1";
-const THEME_KEY = "isekaid_theme_v1";
-function loadProfile(){
-  try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
-  catch { return null; }
-}
-function saveProfile(u){
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(u)); } catch {}
-}
-function clearProfile(){
-  try { localStorage.removeItem(STORE_KEY); } catch {}
-}
-function loadTheme(){
-  try { return localStorage.getItem(THEME_KEY) === "dark"; } catch { return false; }
-}
-function saveTheme(isDark){
-  try { localStorage.setItem(THEME_KEY, isDark ? "dark" : "light"); } catch {}
-}
-
-// Script mode: "kanji" (漢字) or "romaji" (phonétique)
-const SCRIPT_KEY = "isekaid_script_v1";
-function loadScript(){
-  try { return localStorage.getItem(SCRIPT_KEY) === "romaji" ? "romaji" : "kanji"; }
-  catch { return "kanji"; }
-}
-function saveScript(mode){
-  try { localStorage.setItem(SCRIPT_KEY, mode); } catch {}
-}
-
-// ─── Streak logic ─────────────────────────────────────────────────────────────
-const STREAK_KEY = "isekaid_streak_v1";
-// Local day key YYYY-MM-DD (no timezone surprises)
-function dayKey(d=new Date()){
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-}
-function daysBetween(aKey,bKey){
-  const a=new Date(aKey+"T00:00:00"), b=new Date(bKey+"T00:00:00");
-  return Math.round((b-a)/86400000);
-}
-function loadStreak(){
-  try { const raw=localStorage.getItem(STREAK_KEY); return raw?JSON.parse(raw):null; }
-  catch { return null; }
-}
-// Returns { count, best, last, keys } updated for "today"
-function touchStreak(){
-  const today = dayKey();
-  let s = loadStreak();
-  let gainedKey = false;
-  if(!s || !s.last){
-    s = { count:1, best:1, last:today, keys:1, totalKeysEarned:1 };
-    gainedKey = true;
-  } else if(s.last === today){
-    // already counted today — no change, ensure keys fields exist
-    if(s.keys===undefined) s.keys = 0;
-    if(s.totalKeysEarned===undefined) s.totalKeysEarned = s.keys;
-  } else {
-    const gap = daysBetween(s.last, today);
-    if(gap === 1) s.count += 1;        // consecutive day
-    else if(gap >= 2) s.count = 1;     // streak broken (keys are kept!)
-    s.last = today;
-    if(s.count > (s.best||0)) s.best = s.count;
-    // +1 key per active day
-    s.keys = (s.keys||0) + 1;
-    s.totalKeysEarned = (s.totalKeysEarned||0) + 1;
-    gainedKey = true;
-  }
-  try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
-  return {...s, gainedKey};
-}
-function saveStreak(s){
-  try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
-}
-
-// ─── Progression : déblocages & XP ────────────────────────────────────────────
-const UNLOCK_KEY = "isekaid_unlocks_v1";
-const SCEN_KEY = "isekaid_scenarios_v1"; // {done:[ids], xp:number}
-function loadScenarioProgress(){
-  try { const raw=localStorage.getItem(SCEN_KEY); return raw?JSON.parse(raw):{done:[],xp:0}; }
-  catch { return {done:[],xp:0}; }
-}
-function saveScenarioProgress(p){ try { localStorage.setItem(SCEN_KEY, JSON.stringify(p)); } catch {} }
-// Catégories verrouillables : coût en clés + XP accordé
-const LOCKABLE = {
-  traditions:    {label:"Traditions",      emoji:"⛩️", cost:0, xp:100, free:true},
-  vie_quotidienne:{label:"Vie quotidienne", emoji:"🏙️", cost:1, xp:120, free:false},
-  codes_sociaux: {label:"Codes sociaux",   emoji:"🤫", cost:5, xp:150, free:false},
-  regions:       {label:"Régions du Japon",emoji:"🗾", cost:5, xp:150, free:false},
-};
-// Paliers de titres selon l'XP total
-const TITLES = [
-  {min:0,    title:"Curieux du Japon",   jp:"興味",   emoji:"🌱"},
-  {min:100,  title:"Voyageur novice",    jp:"旅人",   emoji:"🎒"},
-  {min:250,  title:"Explorateur",        jp:"探検家", emoji:"🧭"},
-  {min:400,  title:"Initié culturel",    jp:"文化人", emoji:"🎴"},
-  {min:520,  title:"Connaisseur",        jp:"通",     emoji:"🏮"},
-  {min:9999, title:"Maître du Japon",    jp:"達人",   emoji:"🎌"},
-];
-function loadUnlocks(){
-  try { const raw=localStorage.getItem(UNLOCK_KEY); return raw?JSON.parse(raw):null; }
-  catch { return null; }
-}
-function defaultUnlocks(){
-  // free categories unlocked by default
-  const u = {};
-  Object.entries(LOCKABLE).forEach(([k,v])=>{ if(v.free) u[k]=true; });
-  return u;
-}
-function getUnlocks(){ return loadUnlocks() || defaultUnlocks(); }
-function saveUnlocks(u){ try { localStorage.setItem(UNLOCK_KEY, JSON.stringify(u)); } catch {} }
-function computeXP(unlocks, scenXP){
-  let xp = scenXP || 0;
-  Object.keys(unlocks||{}).forEach(k=>{ if(unlocks[k] && LOCKABLE[k]) xp += LOCKABLE[k].xp; });
-  return xp;
-}
-function titleForXP(xp){
-  let t = TITLES[0];
-  for(const tier of TITLES){ if(xp >= tier.min) t = tier; }
-  return t;
-}
-
-// ─── Favorites (collection) ───────────────────────────────────────────────────
-const FAV_KEY = "isekaid_favs_v1";
-function loadFavs(){
-  try { const raw=localStorage.getItem(FAV_KEY); return raw?JSON.parse(raw):[]; }
-  catch { return []; }
-}
-function saveFavs(list){
-  try { localStorage.setItem(FAV_KEY, JSON.stringify(list)); } catch {}
-}
-// Build a stable id for any content item
-function favId(type, item){
-  const label = item.expression || item.titre || item.nom_jp || item.nom || "";
-  return `${type}:${label}`;
-}
-
-export default function IsekaidApp(){
-  const [screen,setScreen]=useState("splash");
-  const [tab,setTab]=useState("home");
-  const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
-  const [dark,setDark]=useState(()=>loadTheme());
-  const [db,setDb]=useState(null);
-  const [streak,setStreak]=useState(()=>loadStreak()||{count:0,best:0,last:null,keys:0});
-  const [favs,setFavs]=useState(()=>loadFavs());
-  const [unlocks,setUnlocks]=useState(()=>getUnlocks());
-  const [scenProgress,setScenProgress]=useState(()=>loadScenarioProgress());
-
-  const xp = computeXP(unlocks, scenProgress.xp);
-  const rank = titleForXP(xp);
-
-  // Complete a scenario: grant keys + XP once
-  const completeScenario = (s)=>{
-    if(scenProgress.done.includes(s.id)) return;
-    const newProg = {done:[...scenProgress.done, s.id], xp:(scenProgress.xp||0)+s.recompense_xp};
-    setScenProgress(newProg); saveScenarioProgress(newProg);
-    const newStreak = {...streak, keys:(streak.keys||0)+s.recompense_cles};
-    setStreak(newStreak); saveStreak(newStreak);
-  };
-
-  // Unlock a category: spend keys, grant XP via unlock state
-  const unlockCategory = (catKey)=>{
-    const def = LOCKABLE[catKey];
-    if(!def || unlocks[catKey]) return {ok:false, reason:"already"};
-    if((streak.keys||0) < def.cost) return {ok:false, reason:"keys"};
-    // spend keys
-    const newStreak = {...streak, keys:(streak.keys||0)-def.cost};
-    setStreak(newStreak); saveStreak(newStreak);
-    // unlock
-    const newUnlocks = {...unlocks, [catKey]:true};
-    setUnlocks(newUnlocks); saveUnlocks(newUnlocks);
-    return {ok:true};
-  };
-  const isUnlocked = (catKey)=> !LOCKABLE[catKey] || !!unlocks[catKey];
-  const [wikiEntry,setWikiEntry]=useState(null);
-  const [showWelcome,setShowWelcome]=useState(false);
-  const [wikiMap,setWikiMap]=useState({});
-  const [script,setScript]=useState(()=>loadScript());
-
-  const isFav = (type,item)=> favs.some(f=>f.id===favId(type,item));
-  const toggleFav = (type,item)=>{
-    const id = favId(type,item);
-    setFavs(prev=>{
-      const exists = prev.some(f=>f.id===id);
-      const next = exists ? prev.filter(f=>f.id!==id)
-                          : [{id, type, item, savedAt:Date.now()}, ...prev];
-      saveFavs(next);
-      return next;
-    });
-  };
-  const C=dark?DARK:LIGHT;
-
-  // Load content data on startup
-  useEffect(()=>{
-    setDb(DATA);
-    const s = touchStreak();
-    setStreak(s);
-    setWikiMap(buildWikiMap(DATA.wiki));
-    if(s.gainedKey) setShowWelcome(true); // show daily popup only when a key was earned
-  },[]);
-
-  // Persist theme whenever it changes
-  useEffect(()=>{ saveTheme(dark); },[dark]);
-  useEffect(()=>{ saveScript(script); },[script]);
-  const toggleScript = ()=> setScript(s=> s==="kanji" ? "romaji" : "kanji");
-
-  // When splash finishes: skip onboarding if a profile is already loaded
-  const afterSplash = ()=>{
-    setScreen(user ? "app" : "onboarding");
-  };
-
-  // Save profile at end of onboarding
-  const completeOnboarding = (u)=>{
-    saveProfile(u);
-    setUser(u);
-    setScreen("app");
-  };
-
-  // Reset profile (called from Profile screen)
-  const resetProfile = ()=>{
-    clearProfile();
-    setUser(null);
-    setScreen("onboarding");
-    setTab("home");
-  };
-
-  return(
-    <div style={{width:"100%",height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:"#080604",fontFamily:"'Noto Sans JP','Helvetica Neue',sans-serif"}}>
-      <style>{CSS}</style>
-      <div style={{width:"min(100vw,390px)",height:"min(100dvh,844px)",position:"relative",overflow:"hidden",borderRadius:"clamp(0px,calc((100vw - 390px)*999),44px)",background:C.bg,boxShadow:"0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,0,0,.08)",transition:"background .3s"}}>
-        {screen==="splash"     &&<Splash onDone={afterSplash}/>}
-        {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
-        {screen==="app"&&user&&(
-          <>
-            <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript}/>}
-              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
-              {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
-              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank}/>}
-            </div>
-            {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
-            <BottomNav C={C} active={tab} onChange={setTab}/>
-            {/* Global wiki panel — available everywhere */}
-            {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
-            {/* Daily welcome popup */}
-            {showWelcome && <DailyWelcome C={C} streak={streak} onClose={()=>setShowWelcome(false)}/>}
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-                         
+          dis
