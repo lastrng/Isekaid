@@ -240,20 +240,39 @@ function browserSpeak(text){
 function SpeakButton({C, text, size=30, color}){
   const [playing,setPlaying] = useState(false);
   if(!text) return null;
+  const col = color || C.red;
   const onClick = (e)=>{
     e.stopPropagation();
     speakJP(text);
     setPlaying(true);
     setTimeout(()=>setPlaying(false), 900);
   };
+  const s = size; // total button size
+  const r = s/2;  // circle radius
   return(
-    <button onClick={onClick} aria-label="Écouter" style={{
-      background:"transparent", border:"none", cursor:"pointer", padding:4,
-      fontSize:size*0.5, lineHeight:1, flexShrink:0, opacity:playing?1:0.7,
-      transition:"opacity .2s, transform .15s", transform:playing?"scale(1.15)":"scale(1)",
-      color:color||C.t2
+    <button onClick={onClick} aria-label="Écouter la prononciation" style={{
+      width:s, height:s, borderRadius:"50%", flexShrink:0, cursor:"pointer",
+      background: playing ? `rgba(201,70,61,0.18)` : `rgba(201,70,61,0.08)`,
+      border:`1px solid ${playing ? "rgba(201,70,61,0.5)" : "rgba(201,70,61,0.22)"}`,
+      display:"inline-flex", alignItems:"center", justifyContent:"center",
+      padding:0, transition:"all .2s", transform: playing ? "scale(1.12)" : "scale(1)",
     }}>
-      🔊
+      <svg width={s*0.58} height={s*0.58} viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Speaker body */}
+        <rect x="2" y="7.5" width="5" height="7" rx="1.2" fill={col} opacity={playing?1:0.85}/>
+        {/* Speaker cone */}
+        <path d="M7 7L13 3V19L7 15" fill={col} opacity={playing?1:0.85}/>
+        {/* Wave 1 */}
+        <path d="M15.5 8.5 Q18.5 11 15.5 13.5" stroke={col} strokeWidth="1.7" strokeLinecap="round"
+          opacity={playing ? 1 : 0.7}
+          style={{transition:"opacity .2s"}}
+        />
+        {/* Wave 2 */}
+        <path d="M17.5 6 Q22.5 11 17.5 16" stroke={col} strokeWidth="1.5" strokeLinecap="round"
+          opacity={playing ? 0.75 : 0.4}
+          style={{transition:"opacity .2s"}}
+        />
+      </svg>
     </button>
   );
 }
