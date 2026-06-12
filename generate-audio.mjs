@@ -2,8 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 
-GOOGLE_TTS_API_KEY=AIzaSyDkYlKZEogT4HJyQEB_DfVqwHjusoYlAdE node generate-audio.mjs
-
 const API_KEY = process.env.GOOGLE_TTS_API_KEY;
 if (!API_KEY) {
   console.error("❌ Variable GOOGLE_TTS_API_KEY manquante.");
