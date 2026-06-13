@@ -77,6 +77,28 @@ function pickDaily(arr, dateKey, salt){
   return arr[idx];
 }
 
+// Chaque centre d'intérêt → catégories de contenu privilégiées
+const INTEREST_MAP = {
+  anime:     {keys:["culture","songs"],            label:"Anime & Manga",  emoji:"⛩️"},
+  voyage:    {keys:["regions","vie_quotidienne","traditions"], label:"Voyage", emoji:"✈️"},
+  culture:   {keys:["culture","traditions"],        label:"Culture & Art",  emoji:"🎋"},
+  langue:    {keys:["expressions","situations"],    label:"Langue",         emoji:"🈶"},
+  lifestyle: {keys:["vie_quotidienne","culture"],   label:"Lifestyle",      emoji:"🍵"},
+  gastro:    {keys:["repas"],                       label:"Gastronomie",    emoji:"🍣"},
+};
+// Construit une recommandation personnalisée (1 item) selon les intérêts de l'user
+function recommendForUser(db, why, today){
+  if(!db || !why || why.length===0) return null;
+  // Rassemble les catégories pertinentes
+  const cats = [...new Set(why.flatMap(w => INTEREST_MAP[w]?.keys || []))].filter(k => db[k]?.length);
+  if(cats.length===0) return null;
+  // Choisit une catégorie du jour (déterministe), puis un item du jour dedans
+  const cat = cats[hashStr(today+":reco-cat") % cats.length];
+  const item = pickDaily(db[cat], today, "reco-item");
+  if(!item) return null;
+  return { cat, item };
+}
+
 const JP_MONTHS = ["睦月","如月","弥生","卯月","皐月","水無月","文月","葉月","長月","神無月","霜月","師走"];
 const JP_DAYS   = ["日","月","火","水","木","金","土"];
 function getJPDate() {
@@ -551,7 +573,7 @@ function Slider({C, children}){
 }
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
-function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch}){
   const [expr,  setExpr]  = useState(null);
   const [cult,  setCult]  = useState(null);
   const [repas, setRepas] = useState(null);
@@ -619,6 +641,64 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
       </div>
 
       <div style={{padding:"18px 20px 110px"}}>
+        {/* Search tap target */}
+        <div onClick={onSearch} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 15px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,cursor:"pointer",marginBottom:24}}>
+          <span style={{fontSize:15,color:C.t3}}>🔍</span>
+          <span style={{fontSize:13,color:C.t3}}>Rechercher un mot, plat, tradition…</span>
+        </div>
+
+        {/* Proverbe du jour */}
+        {db?.proverbes && (()=>{
+          const prov = pickDaily(db.proverbes, today, "prov");
+          if(!prov) return null;
+          return(
+            <div style={{marginBottom:26,padding:"18px 18px 16px",background:`linear-gradient(160deg,rgba(158,122,26,0.08),transparent)`,border:`1px solid ${C.border}`,borderRadius:14,position:"relative",overflow:"hidden"}}>
+              <div style={{fontSize:60,position:"absolute",top:-10,right:6,opacity:0.06,fontFamily:"'Noto Serif JP',serif"}}>諺</div>
+              <div style={{fontSize:9,color:C.gold,letterSpacing:".2em",marginBottom:9,textTransform:"uppercase"}}>諺 · Proverbe du jour</div>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
+                <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,lineHeight:1.4}}>{script==="romaji"?prov.romaji:prov.jp}</div>
+                <SpeakButton C={C} text={prov.jp} color={C.gold} size={26}/>
+              </div>
+              <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:8}}>{script==="romaji"?prov.jp:prov.romaji}</div>
+              <div style={{fontSize:13,color:C.text,fontWeight:500,marginBottom:4}}>« {prov.fr} »</div>
+              <div style={{fontSize:12,color:C.t2,lineHeight:1.5}}>{prov.sens}</div>
+            </div>
+          );
+        })()}
+
+        {/* Recommandé pour toi (selon les intérêts d'onboarding) */}
+        {db && user?.why?.length>0 && (()=>{
+          const reco = recommendForUser(db, user.why, today);
+          if(!reco) return null;
+          const {cat, item} = reco;
+          // Titre + sous-titre génériques selon la catégorie
+          const META = {
+            culture:{label:"Culture",emoji:"🎴",title:item.titre,sub:item.contenu},
+            traditions:{label:"Tradition",emoji:item.emoji||"⛩️",title:item.nom,sub:item.tagline},
+            repas:{label:"Gastronomie",emoji:item.emoji||"🍱",title:item.nom_jp,sub:item.description||item.romaji},
+            regions:{label:"Région",emoji:item.emoji||"🗾",title:item.nom,sub:item.tagline},
+            vie_quotidienne:{label:"Vie quotidienne",emoji:item.emoji||"🏙️",title:item.titre,sub:item.resume},
+            expressions:{label:"Expression",emoji:"💬",title:item.expression,sub:item.traduction},
+            songs:{label:"Musique",emoji:"🎵",title:item.titre,sub:item.artiste},
+            situations:{label:"Phrase utile",emoji:"🗣️",title:item.titre,sub:(item.phrases?.[0]?.fr)||""},
+          }[cat] || {label:"Pour toi",emoji:"✨",title:"",sub:""};
+          return(
+            <div style={{marginBottom:26}}>
+              <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:11}}>
+                <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>✨ Recommandé pour toi</span>
+              </div>
+              <div style={{padding:"16px",background:`linear-gradient(160deg,rgba(201,70,61,0.08),transparent)`,border:`1px solid rgba(201,70,61,0.2)`,borderRadius:14,display:"flex",alignItems:"center",gap:14}}>
+                <span style={{fontSize:32,flexShrink:0}}>{META.emoji}</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:9,color:C.red,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{META.label} · selon tes goûts</div>
+                  <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{META.title}</div>
+                  <div style={{fontSize:12,color:C.t2,lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{META.sub}</div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Section 1 — Daily Japan (slider) */}
         <SH C={C} kanji="日" title="Daily Japan" sub="Ta sélection du jour" onRefresh={()=>refresh("daily",true)}/>
         <div style={{marginBottom:28}}>
@@ -1886,7 +1966,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana}){
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,rank}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,rank,kanaProgress}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
@@ -1910,6 +1990,46 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,
           </div>
         </div>
 
+        {/* Préférences (réponses onboarding) */}
+        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
+          <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:12,textTransform:"uppercase"}}>🎌 Mon profil Japon</div>
+          <div style={{display:"flex",flexDirection:"column",gap:11}}>
+            {/* Niveau */}
+            {user.level && (
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:12,color:C.t2}}>Niveau</span>
+                <span style={{fontSize:12,color:C.text,fontWeight:500}}>{lvlL[user.level]||user.level}</span>
+              </div>
+            )}
+            {/* Objectif */}
+            {user.goal && (
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:12,color:C.t2}}>Objectif</span>
+                <span style={{fontSize:12,color:C.text,fontWeight:500}}>{goalL[user.goal]||user.goal}</span>
+              </div>
+            )}
+            {/* Centres d'intérêt */}
+            {user.why?.length>0 && (
+              <div>
+                <span style={{fontSize:12,color:C.t2,display:"block",marginBottom:8}}>Centres d'intérêt</span>
+                <div style={{display:"flex",flexWrap:"wrap",gap:7}}>
+                  {user.why.map((w,i)=>{
+                    const m = INTEREST_MAP[w];
+                    return(
+                      <span key={i} style={{fontSize:11,padding:"5px 11px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.22)",borderRadius:20,color:C.text}}>
+                        {m?.emoji} {m?.label||w}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+          <div style={{marginTop:12,fontSize:11,color:C.t3,lineHeight:1.5}}>
+            Ces préférences personnalisent tes recommandations sur l'accueil ✨
+          </div>
+        </div>
+
         {/* XP / Title progress */}
         <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
@@ -1928,7 +2048,34 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,
             {nextTier ? <>Prochain titre : <b style={{color:C.t2}}>{nextTier.emoji} {nextTier.title}</b> à {nextTier.min} XP</> : "Titre maximal atteint ! 🎌"}
           </div>
         </div>
-        {/* Theme toggle */}
+        {/* Kana mastery */}
+        {(()=>{
+          const hira = HIRAGANA || []; const kata = KATAKANA || [];
+          const kp = kanaProgress || {};
+          const masteredIn = (deck)=> deck.filter(c => (kp[c.k]?.known||0) >= 2).length;
+          const hiraDone = masteredIn(hira), kataDone = masteredIn(kata);
+          const hiraPct = hira.length ? hiraDone/hira.length : 0;
+          const kataPct = kata.length ? kataDone/kata.length : 0;
+          const Bar = ({label, jp, done, total, pct, color})=>(
+            <div style={{marginBottom:10}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:5}}>
+                <span style={{fontSize:12,color:C.text}}>{label} <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{jp}</span></span>
+                <span style={{fontSize:11,color:C.t2}}>{done}/{total}</span>
+              </div>
+              <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden"}}>
+                <div style={{height:"100%",width:`${pct*100}%`,background:color,borderRadius:3,transition:"width .5s"}}/>
+              </div>
+            </div>
+          );
+          return(
+            <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
+              <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:12,textTransform:"uppercase"}}>🔤 Maîtrise des syllabaires</div>
+              <Bar label="Hiragana" jp="ひらがな" done={hiraDone} total={hira.length} pct={hiraPct} color={C.red}/>
+              <Bar label="Katakana" jp="カタカナ" done={kataDone} total={kata.length} pct={kataPct} color={C.gold}/>
+              {(hiraDone+kataDone)===0 && <div style={{fontSize:11,color:C.t3,marginTop:6}}>Entraîne-toi dans l'onglet Apprendre pour remplir ces barres 🎴</div>}
+            </div>
+          );
+        })()}
         <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div>
             <div style={{fontSize:13,color:C.text,marginBottom:2}}>{dark?"Mode sombre 🌙":"Mode clair ☀️"}</div>
@@ -2137,6 +2284,72 @@ function traduireErreur(m){
   if(/at least 6/i.test(m)) return "Le mot de passe doit faire au moins 6 caractères.";
   if(/valid email/i.test(m)) return "Adresse email invalide.";
   return m;
+}
+
+// ─── Recherche globale ────────────────────────────────────────────────────────
+function buildSearchIndex(db){
+  if(!db) return [];
+  const items = [];
+  (db.wiki||[]).forEach(w=> items.push({type:"Wiki", emoji:"📖", color:"#9E7A1A", title:w.mot, jp:w.jp, sub:w.definition, blob:`${w.mot} ${w.romaji} ${w.jp} ${w.definition} ${w.categorie}`, raw:w, kind:"wiki"}));
+  (db.expressions||[]).forEach(e=> items.push({type:"Expression", emoji:"💬", color:"#C9463D", title:e.traduction, jp:e.expression, sub:e.romaji, blob:`${e.expression} ${e.romaji} ${e.traduction} ${e.contexte}`, raw:e, kind:"expr"}));
+  (db.repas||[]).forEach(r=> items.push({type:"Repas", emoji:r.emoji||"🍱", color:"#3A6645", title:r.nom_jp, jp:r.nom_jp, sub:r.description||r.romaji, blob:`${r.nom_jp} ${r.romaji||""} ${r.description||""}`, raw:r, kind:"repas"}));
+  (db.traditions||[]).forEach(t=> items.push({type:"Tradition", emoji:t.emoji||"⛩️", color:"#C4956A", title:t.nom, jp:t.nom_jp, sub:t.tagline, blob:`${t.nom} ${t.nom_jp} ${t.tagline} ${t.histoire} ${t.saison}`, raw:t, kind:"tradition"}));
+  (db.codes_sociaux||[]).forEach(c=> items.push({type:"Code social", emoji:c.emoji||"🤫", color:"#8B6FB0", title:c.titre, jp:c.nom_jp, sub:c.resume, blob:`${c.titre} ${c.nom_jp} ${c.resume} ${c.explication}`, raw:c, kind:"code"}));
+  (db.vie_quotidienne||[]).forEach(v=> items.push({type:"Vie quotidienne", emoji:v.emoji||"🏙️", color:"#5B7E9B", title:v.titre, jp:v.nom_jp, sub:v.resume, blob:`${v.titre} ${v.nom_jp} ${v.resume} ${v.description}`, raw:v, kind:"vie"}));
+  (db.regions||[]).forEach(r=> items.push({type:"Région", emoji:r.emoji||"🗾", color:"#4E8060", title:r.nom, jp:r.nom_jp, sub:r.tagline, blob:`${r.nom} ${r.nom_jp} ${r.tagline} ${r.ambiance}`, raw:r, kind:"region"}));
+  return items;
+}
+
+function SearchScreen({C, db, script, onClose, onWikiTap}){
+  const [q,setQ] = useState("");
+  const index = useMemo(()=>buildSearchIndex(db), [db]);
+  const results = useMemo(()=>{
+    const query = q.trim().toLowerCase();
+    if(query.length < 2) return [];
+    return index.filter(it => it.blob.toLowerCase().includes(query)).slice(0, 40);
+  }, [q, index]);
+
+  return(
+    <div style={{position:"fixed",inset:0,zIndex:150,background:C.bg,display:"flex",flexDirection:"column"}}>
+      {/* Search bar */}
+      <div style={{padding:"50px 16px 12px",borderBottom:`1px solid ${C.border}`,display:"flex",gap:10,alignItems:"center"}}>
+        <div style={{flex:1,display:"flex",alignItems:"center",gap:8,padding:"10px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
+          <span style={{fontSize:15,color:C.t3}}>🔍</span>
+          <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Rechercher un mot, plat, tradition…" style={{flex:1,background:"transparent",border:"none",outline:"none",color:C.text,fontSize:14}}/>
+          {q && <span onClick={()=>setQ("")} style={{fontSize:16,color:C.t3,cursor:"pointer"}}>×</span>}
+        </div>
+        <button onClick={onClose} style={{background:"transparent",border:"none",color:C.t2,fontSize:14,cursor:"pointer"}}>Fermer</button>
+      </div>
+
+      {/* Results */}
+      <div style={{flex:1,overflowY:"auto",padding:"14px 16px 30px"}}>
+        {q.trim().length<2 && (
+          <div style={{textAlign:"center",padding:"40px 20px",color:C.t3}}>
+            <div style={{fontSize:40,marginBottom:12}}>🔍</div>
+            <div style={{fontSize:13}}>Cherche parmi {index.length} contenus :<br/>expressions, plats, traditions, codes, mots du wiki…</div>
+          </div>
+        )}
+        {q.trim().length>=2 && results.length===0 && (
+          <div style={{textAlign:"center",padding:"40px 20px",color:C.t3,fontSize:13}}>Aucun résultat pour « {q} »</div>
+        )}
+        <div style={{display:"flex",flexDirection:"column",gap:9}}>
+          {results.map((it,i)=>(
+            <div key={i} onClick={()=>{ if(it.kind==="wiki"){ onWikiTap(it.raw); onClose(); } }} style={{display:"flex",alignItems:"center",gap:13,padding:"13px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,cursor:it.kind==="wiki"?"pointer":"default"}}>
+              <span style={{fontSize:24,flexShrink:0}}>{it.emoji}</span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{display:"flex",alignItems:"baseline",gap:7,marginBottom:2}}>
+                  <span style={{fontSize:14,color:C.text,fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{it.title}</span>
+                  {it.jp && it.jp!==it.title && <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif",flexShrink:0}}>{it.jp}</span>}
+                </div>
+                <div style={{fontSize:11,color:C.t2,lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{it.sub}</div>
+              </div>
+              <span style={{fontSize:8,padding:"3px 8px",background:`${it.color}18`,border:`1px solid ${it.color}40`,borderRadius:20,color:it.color,whiteSpace:"nowrap",flexShrink:0}}>{it.type}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function BottomNav({C,active,onChange}){
@@ -2428,6 +2641,7 @@ export default function IsekaidApp(){
   const isUnlocked = (catKey)=> !LOCKABLE[catKey] || !!unlocks[catKey];
   const [wikiEntry,setWikiEntry]=useState(null);
   const [showWelcome,setShowWelcome]=useState(false);
+  const [showSearch,setShowSearch]=useState(false);
   const [wikiMap,setWikiMap]=useState({});
   const [script,setScript]=useState(()=>loadScript());
   const [session,setSession]=useState(null);
@@ -2539,11 +2753,11 @@ export default function IsekaidApp(){
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
@@ -2551,6 +2765,8 @@ export default function IsekaidApp(){
             {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
             {/* Daily welcome popup */}
             {showWelcome && <DailyWelcome C={C} streak={streak} onClose={()=>setShowWelcome(false)}/>}
+            {/* Global search */}
+            {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
           </>
         )}
       </div>
