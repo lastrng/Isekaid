@@ -1788,11 +1788,12 @@ function SituationDetail({C, s, onBack, script}){
   );
 }
 
-function LearnScreen({C,script,db}){
+function LearnScreen({C,script,db,kanaProgress,onRecordKana}){
   const [deck,setDeck] = useState(null);   // selected deck object
   const [mode,setMode] = useState(null);   // "flash" | "quiz"
   const [situation,setSituation] = useState(null); // selected situation
   const situations = db?.situations || [];
+  const kp = kanaProgress || {};
 
   // Active situation detail
   if(situation) return <SituationDetail C={C} s={situation} onBack={()=>setSituation(null)} script={script}/>;
@@ -1804,8 +1805,8 @@ function LearnScreen({C,script,db}){
         <div style={{padding:"50px 20px 6px"}}>
           <button onClick={()=>setMode(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer"}}>‹ {deck.label}</button>
         </div>
-        {mode==="flash" ? <FlashcardMode C={C} deck={deck.deck} onExit={()=>setMode(null)}/>
-                        : <QuizMode      C={C} deck={deck.deck} onExit={()=>setMode(null)}/>}
+        {mode==="flash" ? <FlashcardMode C={C} deck={deck.deck} onExit={()=>setMode(null)} onRecord={onRecordKana}/>
+                        : <QuizMode      C={C} deck={deck.deck} onExit={()=>setMode(null)} onRecord={onRecordKana}/>}
       </div>
     );
   }
@@ -2240,6 +2241,31 @@ function saveTheme(isDark){
 
 // Script mode: "kanji" (漢字) or "romaji" (phonétique)
 const SCRIPT_KEY = "isekaid_script_v1";
+
+// ── Suivi des kana maîtrisés ──────────────────────────────────────────────────
+const KANA_KEY = "isekaid_kana_v1"; // { "あ": {seen, known}, ... }
+function loadKanaProgress(){
+  try { const raw=localStorage.getItem(KANA_KEY); return raw?JSON.parse(raw):{}; }
+  catch { return {}; }
+}
+function saveKanaProgress(p){ try { localStorage.setItem(KANA_KEY, JSON.stringify(p)); } catch {} }
+// Record a result for one character: known=true if recognized
+function recordKana(progress, char, known){
+  const cur = progress[char] || {seen:0, known:0};
+  const next = { seen:cur.seen+1, known:cur.known + (known?1:0) };
+  return { ...progress, [char]: next };
+}
+// A char is "mastered" if known at least 3 times and success rate >= 70%
+function isMastered(entry){
+  if(!entry || entry.seen < 3) return false;
+  return (entry.known / entry.seen) >= 0.7;
+}
+function deckMastery(progress, deck){
+  let mastered = 0;
+  deck.forEach(c=>{ if(isMastered(progress[c.k])) mastered++; });
+  return { mastered, total: deck.length };
+}
+
 function loadScript(){
   try { return localStorage.getItem(SCRIPT_KEY) === "romaji" ? "romaji" : "kanji"; }
   catch { return "kanji"; }
@@ -2364,6 +2390,15 @@ export default function IsekaidApp(){
   const [favs,setFavs]=useState(()=>loadFavs());
   const [unlocks,setUnlocks]=useState(()=>getUnlocks());
   const [scenProgress,setScenProgress]=useState(()=>loadScenarioProgress());
+  const [kanaProgress,setKanaProgress]=useState(()=>loadKanaProgress());
+
+  const recordKanaResult = (char, known)=>{
+    setKanaProgress(prev=>{
+      const next = recordKana(prev, char, known);
+      saveKanaProgress(next);
+      return next;
+    });
+  };
 
   const xp = computeXP(unlocks, scenProgress.xp);
   const rank = titleForXP(xp);
@@ -2416,6 +2451,8 @@ export default function IsekaidApp(){
       if(p.unlocks && Object.keys(p.unlocks).length){ setUnlocks(p.unlocks); saveUnlocks(p.unlocks); }
       if(p.scenarios && Object.keys(p.scenarios).length){ setScenProgress(p.scenarios); saveScenarioProgress(p.scenarios); }
       if(Array.isArray(p.favorites) && p.favorites.length){ setFavs(p.favorites); saveFavs(p.favorites); }
+      if(p.kana_progress && Object.keys(p.kana_progress).length){ setKanaProgress(p.kana_progress); saveKanaProgress(p.kana_progress); }
+      if(p.profile && p.profile.name){ setUser(p.profile); saveProfile(p.profile); }
     });
   },[session?.user?.id]);
 
@@ -2425,10 +2462,10 @@ export default function IsekaidApp(){
     if(!session?.user) return;
     clearTimeout(syncRef.current);
     syncRef.current = setTimeout(()=>{
-      saveProgress(session.user.id, { streak, unlocks, scenarios:scenProgress, favorites:favs });
+      saveProgress(session.user.id, { streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user });
     }, 800);
     return ()=> clearTimeout(syncRef.current);
-  },[streak, unlocks, scenProgress, favs, session?.user?.id]);
+  },[streak, unlocks, scenProgress, favs, kanaProgress, user, session?.user?.id]);
 
   const logout = async ()=>{ await signOut(); setSession(null); };
 
@@ -2505,7 +2542,7 @@ export default function IsekaidApp(){
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
-              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db}/>}
+              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
