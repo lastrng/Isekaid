@@ -116,7 +116,39 @@ function greet(hour,name) {
 const WHY    = [{id:"anime",label:"Anime & Manga",emoji:"⛩️"},{id:"voyage",label:"Voyager au Japon",emoji:"✈️"},{id:"culture",label:"Culture & Art",emoji:"🎋"},{id:"langue",label:"Apprendre le japonais",emoji:"🈶"},{id:"lifestyle",label:"Lifestyle japonais",emoji:"🍵"},{id:"gastro",label:"Gastronomie",emoji:"🍣"}];
 const GOALS  = [{id:"travel",label:"Préparer un voyage",emoji:"🗾"},{id:"live",label:"Vivre au Japon",emoji:"🏯"},{id:"learn",label:"Apprendre la langue",emoji:"📚"},{id:"imm",label:"Immersion culturelle",emoji:"🌸"}];
 const LEVELS = [{id:"beginner",label:"Débutant",sub:"Je découvre le Japon",emoji:"🌱"},{id:"intermediate",label:"Intermédiaire",sub:"Je connais les bases",emoji:"🌿"},{id:"advanced",label:"Avancé",sub:"Je maîtrise l'essentiel",emoji:"🎍"}];
-const BADGES = [{emoji:"🌸",label:"1er jour",unlocked:true},{emoji:"⛩️",label:"Culture x5",unlocked:false},{emoji:"🗣️",label:"1er scénario",unlocked:false},{emoji:"🔥",label:"7j streak",unlocked:false},{emoji:"🗾",label:"Tokyo unlock",unlocked:false},{emoji:"🏯",label:"Local-like",unlocked:false}];
+// Achievements réels — chaque badge a une condition basée sur l'activité de l'user
+// check(ctx) reçoit { streak, xp, unlocks, scenProgress, kanaProgress, favs }
+const ACHIEVEMENTS = [
+  {id:"first_day",  emoji:"🌸", label:"Premier jour",      desc:"Lance l'app pour la première fois",        check:()=>true},
+  {id:"streak3",    emoji:"🔥", label:"En route",           desc:"Atteins 3 jours de streak",                check:c=>(c.streak?.count||0)>=3 || (c.streak?.best||0)>=3},
+  {id:"streak7",    emoji:"⚡", label:"Régulier",           desc:"Atteins 7 jours de streak",                check:c=>(c.streak?.count||0)>=7 || (c.streak?.best||0)>=7},
+  {id:"streak30",   emoji:"🏯", label:"Inébranlable",       desc:"Atteins 30 jours de streak",               check:c=>(c.streak?.best||0)>=30},
+  {id:"first_key",  emoji:"🔑", label:"Premier trésor",     desc:"Gagne ta première clé",                    check:c=>(c.streak?.totalKeysEarned||0)>=1},
+  {id:"unlock1",    emoji:"🗝️", label:"Explorateur",        desc:"Débloque une catégorie",                   check:c=>Object.values(c.unlocks||{}).filter(Boolean).length>=2},
+  {id:"unlock_all", emoji:"🗾", label:"Tout vu",            desc:"Débloque toutes les catégories",           check:c=>["traditions","vie_quotidienne","codes_sociaux","regions"].every(k=>c.unlocks?.[k])},
+  {id:"scen1",      emoji:"🗣️", label:"Premier dialogue",   desc:"Réussis ton premier scénario",             check:c=>(c.scenProgress?.done?.length||0)>=1},
+  {id:"scen_all",   emoji:"🎭", label:"Acteur né",          desc:"Réussis tous les scénarios",               check:c=>(c.scenProgress?.done?.length||0)>=4},
+  {id:"kana10",     emoji:"🎴", label:"Apprenti lecteur",   desc:"Maîtrise 10 caractères kana",              check:c=>kanaMastered(c.kanaProgress)>=10},
+  {id:"kana_hira",  emoji:"📜", label:"Maître hiragana",    desc:"Maîtrise tout l'hiragana",                 check:c=>kanaMasteredIn(c.kanaProgress,"hira")>=46},
+  {id:"kana_kata",  emoji:"📖", label:"Maître katakana",    desc:"Maîtrise tout le katakana",                check:c=>kanaMasteredIn(c.kanaProgress,"kata")>=46},
+  {id:"fav5",       emoji:"❤️", label:"Collectionneur",     desc:"Ajoute 5 favoris",                         check:c=>(c.favs?.length||0)>=5},
+  {id:"xp250",      emoji:"🧭", label:"Connaisseur",        desc:"Atteins 250 XP",                           check:c=>(c.xp||0)>=250},
+  {id:"xp520",      emoji:"🎌", label:"Maître du Japon",    desc:"Atteins 520 XP",                           check:c=>(c.xp||0)>=520},
+];
+// Helpers de comptage kana (dépendent de HIRAGANA/KATAKANA définis plus bas)
+function kanaMastered(kp){
+  if(!kp) return 0;
+  return Object.values(kp).filter(v=>(v?.known||0)>=2).length;
+}
+function kanaMasteredIn(kp, which){
+  if(!kp) return 0;
+  const deck = which==="hira" ? HIRAGANA : KATAKANA;
+  if(!deck) return 0;
+  return deck.filter(c=>(kp[c.k]?.known||0)>=2).length;
+}
+function computeAchievements(ctx){
+  return ACHIEVEMENTS.map(a=>({ ...a, unlocked: !!a.check(ctx) }));
+}
 const EXPLORE_MODS = [{emoji:"⛩️",title:"Traditions",sub:"Obon, Hanami, Hatsumōde…"},{emoji:"🏙️",title:"Vie quotidienne",sub:"Konbini, école, travail"},{emoji:"🤫",title:"Codes sociaux",sub:"Honne, tatemae, hiérarchie"},{emoji:"🗾",title:"Régions du Japon",sub:"Tokyo, Osaka, Kyoto, Okinawa"}];
 const SCENS  = [{emoji:"🍜",title:"Au restaurant",diff:"Débutant",color:"#3A6645"},{emoji:"🏪",title:"Au konbini",diff:"Débutant",color:"#3A6645"},{emoji:"🚉",title:"Gare / Transports",diff:"Intermédiaire",color:"#9E7A1A"},{emoji:"🤝",title:"Rencontre sociale",diff:"Intermédiaire",color:"#9E7A1A"},{emoji:"💼",title:"En entreprise",diff:"Avancé",color:"#C9463D"}];
 const LEARN_S = [{emoji:"💬",title:"Expressions utiles",sub:"Restaurants, trains, shopping"},{emoji:"👂",title:"Prononciation audio",sub:"Voix natives, écoute lente"},{emoji:"🔤",title:"Kana & Kanji",sub:"Reconnaissance, lecture pratique"},{emoji:"🧠",title:"Révision intelligente",sub:"Spaced repetition adaptatif"}];
@@ -1966,7 +1998,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana}){
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,rank,kanaProgress}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
@@ -2150,16 +2182,27 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,
           </div>
         )}
 
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".22em",marginBottom:11,textTransform:"uppercase"}}>Collection de badges</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          {BADGES.map((b,i)=>(
-            <div key={i} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.28)":C.border}`,borderRadius:12,padding:"13px",textAlign:"center",opacity:b.unlocked?1:.5}}>
-              <div style={{fontSize:24,marginBottom:5}}>{b.emoji}</div>
-              <div style={{fontSize:11,color:b.unlocked?C.text:C.t3}}>{b.label}</div>
-              {!b.unlocked&&<div style={{fontSize:9,color:C.t3,marginTop:2}}>🔒</div>}
-            </div>
-          ))}
-        </div>
+        {(()=>{
+          const achievements = computeAchievements({ streak, xp, unlocks, scenProgress, kanaProgress, favs });
+          const earned = achievements.filter(a=>a.unlocked).length;
+          return(
+            <>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11}}>
+                <span style={{fontSize:10,color:C.t3,letterSpacing:".22em",textTransform:"uppercase"}}>Collection de badges</span>
+                <span style={{fontSize:11,color:C.t2,fontWeight:600}}>{earned}/{achievements.length}</span>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9}}>
+                {achievements.map((b,i)=>(
+                  <div key={i} title={b.desc} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.32)":C.border}`,borderRadius:12,padding:"13px 8px",textAlign:"center",opacity:b.unlocked?1:.45,transition:"all .3s"}}>
+                    <div style={{fontSize:24,marginBottom:5,filter:b.unlocked?"none":"grayscale(1)"}}>{b.emoji}</div>
+                    <div style={{fontSize:10,color:b.unlocked?C.text:C.t3,lineHeight:1.25,marginBottom:3}}>{b.label}</div>
+                    <div style={{fontSize:8,color:C.t3,lineHeight:1.3}}>{b.unlocked?"✓":b.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </>
+          );
+        })()}
 
         {/* Réinitialiser le profil */}
         <button onClick={()=>{ if(confirm("Réinitialiser ton profil ? Tu repasseras par l'onboarding.")) onReset&&onReset(); }}
@@ -2174,6 +2217,23 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,
   );
 }
 const TABS=[{id:"home",kanji:"家",label:"Home"},{id:"explore",kanji:"探",label:"Explorer"},{id:"scenarios",kanji:"場",label:"Scénarios"},{id:"learn",kanji:"学",label:"Apprendre"},{id:"profile",kanji:"人",label:"Profil"}];
+// ─── Achievement unlocked popup ───────────────────────────────────────────────
+function AchievementPopup({C, achievement, onClose}){
+  if(!achievement) return null;
+  return(
+    <>
+      <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:310,backdropFilter:"blur(3px)"}}/>
+      <div style={{position:"fixed",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"min(82vw,320px)",zIndex:311,background:C.s1,borderRadius:22,padding:"30px 26px 24px",textAlign:"center",animation:"popIn .4s cubic-bezier(.2,.9,.3,1.3)",boxShadow:"0 24px 80px rgba(0,0,0,0.4)",border:`1px solid rgba(201,70,61,0.3)`}}>
+        <div style={{fontSize:11,color:C.gold,letterSpacing:".25em",textTransform:"uppercase",marginBottom:14}}>Badge débloqué</div>
+        <div style={{fontSize:66,marginBottom:14,animation:"popIn .6s ease .15s both"}}>{achievement.emoji}</div>
+        <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:6}}>{achievement.label}</div>
+        <div style={{fontSize:13,color:C.t2,lineHeight:1.5,marginBottom:22}}>{achievement.desc}</div>
+        <button onClick={onClose} style={{width:"100%",padding:"13px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Super ! 🎉</button>
+      </div>
+    </>
+  );
+}
+
 // ─── Daily welcome popup (streak + clé) ───────────────────────────────────────
 function DailyWelcome({C, streak, onClose}){
   const count = streak?.count || 0;
@@ -2642,6 +2702,25 @@ export default function IsekaidApp(){
   const [wikiEntry,setWikiEntry]=useState(null);
   const [showWelcome,setShowWelcome]=useState(false);
   const [showSearch,setShowSearch]=useState(false);
+  const [newAchievement,setNewAchievement]=useState(null);
+
+  // Detect newly unlocked achievements and celebrate
+  useEffect(()=>{
+    if(!db) return;
+    const earned = computeAchievements({ streak, xp, unlocks, scenProgress, kanaProgress, favs })
+      .filter(a=>a.unlocked).map(a=>a.id);
+    let seen = [];
+    try { seen = JSON.parse(localStorage.getItem("isekaid_ach_v1")||"[]"); } catch {}
+    const fresh = earned.filter(id=>!seen.includes(id));
+    if(fresh.length>0){
+      // Don't celebrate on the very first load (seen is empty = existing user) unless it's truly new
+      if(seen.length>0){
+        const a = ACHIEVEMENTS.find(x=>x.id===fresh[fresh.length-1]);
+        if(a) setNewAchievement(a);
+      }
+      try { localStorage.setItem("isekaid_ach_v1", JSON.stringify(earned)); } catch {}
+    }
+  },[streak, xp, unlocks, scenProgress, kanaProgress, favs, db]);
   const [wikiMap,setWikiMap]=useState({});
   const [script,setScript]=useState(()=>loadScript());
   const [session,setSession]=useState(null);
@@ -2757,7 +2836,7 @@ export default function IsekaidApp(){
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
@@ -2767,6 +2846,8 @@ export default function IsekaidApp(){
             {showWelcome && <DailyWelcome C={C} streak={streak} onClose={()=>setShowWelcome(false)}/>}
             {/* Global search */}
             {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
+            {/* Achievement unlocked */}
+            {newAchievement && <AchievementPopup C={C} achievement={newAchievement} onClose={()=>setNewAchievement(null)}/>}
           </>
         )}
       </div>
