@@ -2066,6 +2066,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   const [situation,setSituation] = useState(null); // selected situation
   const [pathStep,setPathStep] = useState(null);   // active path step (detail)
   const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
+  const [learnMode,setLearnMode] = useState(null);   // null = choix | "path" | "free"
   const situations = db?.situations || [];
   const kp = kanaProgress || {};
   const completed = pathProgress?.completed || [];
@@ -2203,14 +2204,50 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
     );
   }
 
-  // Home: decks + situations
+  // Home: choix entre Parcours et Entraînement libre
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-      <div style={{padding:"50px 20px 110px"}}>
+      {/* En-tête sticky */}
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihongo wo manabu":"日本語を学ぶ"}</div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Apprends à lire et à parler</div>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Nihongo wo manabu":"日本語を学ぶ"}</div>
+          {learnMode && <button onClick={()=>setLearnMode(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"6px 13px",color:C.t2,fontSize:12,cursor:"pointer",whiteSpace:"nowrap"}}>‹ Menu</button>}
+        </div>
+      </div>
+      <div style={{padding:"20px 20px 110px"}}>
 
+        {/* ── Écran de choix (aucun mode sélectionné) ── */}
+        {!learnMode && (()=>{
+          const doneCount = TOKYO_PATH.filter(s=>completed.includes(s.id)).length;
+          return(
+            <div style={{display:"flex",flexDirection:"column",gap:16}}>
+              {/* Carte Parcours */}
+              <div onClick={()=>setLearnMode("path")} style={{cursor:"pointer",padding:"22px",borderRadius:18,background:`linear-gradient(150deg,rgba(201,70,61,0.12),rgba(158,122,26,0.06))`,border:`1px solid rgba(201,70,61,0.25)`,position:"relative",overflow:"hidden"}}>
+                <div style={{fontSize:64,position:"absolute",top:-6,right:8,opacity:0.12}}>🗼</div>
+                <div style={{fontSize:11,color:C.red,letterSpacing:".12em",textTransform:"uppercase",marginBottom:8}}>Parcours guidé</div>
+                <div style={{fontSize:19,color:C.text,fontWeight:600,marginBottom:6}}>Survivre à Tokyo</div>
+                <div style={{fontSize:13,color:C.t2,lineHeight:1.5,marginBottom:14,maxWidth:260}}>Un programme étape par étape pour te débrouiller une semaine sur place : lire, saluer, commander, te déplacer.</div>
+                <div style={{display:"flex",alignItems:"center",gap:10}}>
+                  <div style={{flex:1,height:6,background:C.s3,borderRadius:3,overflow:"hidden"}}>
+                    <div style={{height:"100%",width:`${(doneCount/TOKYO_PATH.length)*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
+                  </div>
+                  <span style={{fontSize:11,color:C.t2,fontWeight:600,whiteSpace:"nowrap"}}>{doneCount}/{TOKYO_PATH.length}</span>
+                </div>
+              </div>
+              {/* Carte Entraînement libre */}
+              <div onClick={()=>setLearnMode("free")} style={{cursor:"pointer",padding:"22px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+                <div style={{fontSize:60,position:"absolute",top:-2,right:10,opacity:0.1}}>🎴</div>
+                <div style={{fontSize:11,color:C.gold,letterSpacing:".12em",textTransform:"uppercase",marginBottom:8}}>À la carte</div>
+                <div style={{fontSize:19,color:C.text,fontWeight:600,marginBottom:6}}>Entraînement libre</div>
+                <div style={{fontSize:13,color:C.t2,lineHeight:1.5,maxWidth:260}}>Révise les syllabaires (hiragana, katakana, sons avancés) en flashcards ou quiz, et explore les situations courantes à ton rythme.</div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ── Mode Parcours ── */}
+        {learnMode==="path" && (<>
         {/* ── Parcours "Survivre à Tokyo" ── */}
         <div style={{marginBottom:30}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:4}}>
@@ -2249,7 +2286,10 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
             })}
           </div>
         </div>
+        </>)}
 
+        {/* ── Mode Entraînement libre (flashcards + situations) ── */}
+        {learnMode==="free" && (<>
         {/* Syllabaires */}
         {["Bases","Avancé"].map(grp=>(
           <div key={grp}>
@@ -2297,6 +2337,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
           ))}
           {situations.length===0 && <div style={{padding:"18px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
         </div>
+        </>)}
       </div>
     </div>
   );
