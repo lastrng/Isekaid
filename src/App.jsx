@@ -7,14 +7,29 @@ import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, sign
 const LIGHT = {
   bg:"#FAF7F2", s1:"#FFFFFF", s2:"#F3EDE3", s3:"#EAE2D6",
   text:"#1C1410", t2:"#7A6858", t3:"#A89880",
-  red:"#C9463D", gold:"#9E7A1A", green:"#3A6645",
+  red:"#C9463D", gold:"#9E7A1A", green:"#3A6645", indigo:"#2E4374",
   border:"rgba(26,20,16,0.09)", navBg:"rgba(250,247,242,0.97)",
 };
 const DARK = {
   bg:"#0F0B08", s1:"#1A1410", s2:"#241C15", s3:"#2E231B",
   text:"#F0E6D3", t2:"#9C8A74", t3:"#5E4E3C",
-  red:"#C9463D", gold:"#C9A84C", green:"#4E8060",
+  red:"#C9463D", gold:"#C9A84C", green:"#4E8060", indigo:"#6B82C4",
   border:"rgba(240,230,211,0.07)", navBg:"rgba(15,11,8,0.97)",
+};
+
+// Accent saisonnier dynamique (selon le mois réel)
+function currentSeasonKey(date=new Date()){
+  const m = date.getMonth(); // 0-11
+  if(m>=2 && m<=4) return "printemps";
+  if(m>=5 && m<=7) return "été";
+  if(m>=8 && m<=10) return "automne";
+  return "hiver";
+}
+const SEASON_ACCENT = {
+  printemps:{accent:"#E08BA8", soft:"rgba(224,139,168,0.10)", emoji:"🌸", particle:"🌸", label:"Printemps"},
+  "été":    {accent:"#3C9DC4", soft:"rgba(60,157,196,0.10)",  emoji:"🎐", particle:"💧", label:"Été"},
+  automne:  {accent:"#C97D3C", soft:"rgba(201,125,60,0.10)",  emoji:"🍁", particle:"🍁", label:"Automne"},
+  hiver:    {accent:"#7B9BB5", soft:"rgba(123,155,181,0.12)", emoji:"❄️", particle:"❄️", label:"Hiver"},
 };
 
 // ─── Static data ──────────────────────────────────────────────────────────────
@@ -170,7 +185,30 @@ button{font-family:inherit;}
 @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.85)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 @keyframes p1{0%{transform:translateY(-10px) rotate(0);opacity:0}10%{opacity:.55}90%{opacity:.2}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 @keyframes p2{0%{transform:translateY(-10px) translateX(0) rotate(0);opacity:0}10%{opacity:.4}100%{transform:translateY(110vh) translateX(38px) rotate(-540deg);opacity:0}}
+@keyframes floatDown{0%{transform:translateY(-20px) translateX(0) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.3}100%{transform:translateY(108vh) translateX(20px) rotate(360deg);opacity:0}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.lift{transition:transform .18s ease, box-shadow .18s ease;}
+.lift:active{transform:scale(.975);}
+@media(hover:hover){.lift:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.10);}}
+.stagger>*{animation:fadeUp .5s ease both;}
+.stagger>*:nth-child(1){animation-delay:.04s}.stagger>*:nth-child(2){animation-delay:.10s}.stagger>*:nth-child(3){animation-delay:.16s}.stagger>*:nth-child(4){animation-delay:.22s}.stagger>*:nth-child(5){animation-delay:.28s}.stagger>*:nth-child(6){animation-delay:.34s}.stagger>*:nth-child(7){animation-delay:.40s}.stagger>*:nth-child(8){animation-delay:.46s}
 `;
+
+// Particules saisonnières flottantes (pétales, flocons, gouttes, feuilles)
+function SeasonParticles({season}){
+  const conf = SEASON_ACCENT[season] || SEASON_ACCENT.printemps;
+  const isEmoji = season!=="printemps"; // printemps = forme CSS, autres = emoji léger
+  return(
+    <div style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden",zIndex:0}}>
+      {Array.from({length:8},(_,i)=>(
+        isEmoji
+          ? <div key={i} style={{position:"absolute",top:"-24px",left:`${6+i*12}%`,fontSize:10+i%3*3,opacity:0.5,animation:`floatDown ${9+i*1.2}s ${i*0.9}s infinite linear`}}>{conf.particle}</div>
+          : <div key={i} style={{position:"absolute",top:"-20px",left:`${8+i*12}%`,width:6+i%3*2,height:6+i%3*2,borderRadius:"50% 0 50% 0",background:conf.accent,opacity:0.4,animation:`${i%2?"p1":"p2"} ${7+i}s ${i*.8}s infinite linear`}}/>
+      ))}
+    </div>
+  );
+}
 
 function Petals() {
   return(
@@ -666,8 +704,12 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
     if(!loaded.current && db) { loaded.current=true; refresh(); } // initial = today's fixed content
   }, [db]);
 
+  const seasonKey = currentSeasonKey();
+  const seasonAccent = SEASON_ACCENT[seasonKey];
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif",position:"relative"}}>
+      {/* Particules saisonnières en fond */}
+      <SeasonParticles season={seasonKey}/>
       {/* Sticky header */}
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         {/* Row 1 — date + badges alignés */}
@@ -695,7 +737,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
         <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{g.jp}</div>
       </div>
 
-      <div style={{padding:"18px 20px 110px"}}>
+      <div style={{padding:"18px 20px 110px",position:"relative",zIndex:1}}>
         {/* Search tap target */}
         <div onClick={onSearch} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 15px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,cursor:"pointer",marginBottom:24}}>
           <span style={{fontSize:15,color:C.t3}}>🔍</span>
@@ -707,8 +749,8 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           const prov = pickDaily(db.proverbes, today, "prov");
           if(!prov) return null;
           return(
-            <div style={{marginBottom:26,padding:"18px 18px 16px",background:`linear-gradient(160deg,rgba(158,122,26,0.08),transparent)`,border:`1px solid ${C.border}`,borderRadius:14,position:"relative",overflow:"hidden"}}>
-              <div style={{fontSize:60,position:"absolute",top:-10,right:6,opacity:0.06,fontFamily:"'Noto Serif JP',serif"}}>諺</div>
+            <div className="lift" style={{marginBottom:26,padding:"20px 18px 16px",background:`linear-gradient(155deg,${seasonAccent.soft},transparent 70%)`,border:`1px solid ${C.border}`,borderRadius:18,position:"relative",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,0.03)"}}>
+              <div style={{fontSize:72,position:"absolute",top:-14,right:0,opacity:0.05,fontFamily:"'Noto Serif JP',serif"}}>諺</div>
               <div style={{fontSize:9,color:C.gold,letterSpacing:".2em",marginBottom:9,textTransform:"uppercase"}}>諺 · Proverbe du jour</div>
               <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
                 <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,lineHeight:1.4}}>{script==="romaji"?prov.romaji:prov.jp}</div>
