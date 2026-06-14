@@ -3579,6 +3579,21 @@
           "jp": "ごちそうさまでした",
           "romaji": "Gochisōsama deshita",
           "fr": "Merci pour le repas (en partant)"
+        },
+        {
+          "jp": "二人です",
+          "romaji": "Futari desu",
+          "fr": "Nous sommes deux (personnes)"
+        },
+        {
+          "jp": "水をください",
+          "romaji": "Mizu wo kudasai",
+          "fr": "De l'eau, s'il vous plaît"
+        },
+        {
+          "jp": "これは何ですか？",
+          "romaji": "Kore wa nan desu ka?",
+          "fr": "Qu'est-ce que c'est ?"
         }
       ]
     },
@@ -3613,6 +3628,21 @@
           "jp": "大丈夫です",
           "romaji": "Daijōbu desu",
           "fr": "Ça va / Non merci (pour refuser poliment)"
+        },
+        {
+          "jp": "これはいくらですか？",
+          "romaji": "Kore wa ikura desu ka?",
+          "fr": "Combien ça coûte ?"
+        },
+        {
+          "jp": "レジはどこですか？",
+          "romaji": "Reji wa doko desu ka?",
+          "fr": "Où est la caisse ?"
+        },
+        {
+          "jp": "現金で払います",
+          "romaji": "Genkin de haraimasu",
+          "fr": "Je paie en espèces"
         }
       ]
     },
@@ -3647,6 +3677,21 @@
           "jp": "すみません、降ります",
           "romaji": "Sumimasen, orimasu",
           "fr": "Excusez-moi, je descends"
+        },
+        {
+          "jp": "切符はどこで買えますか？",
+          "romaji": "Kippu wa doko de kaemasu ka?",
+          "fr": "Où puis-je acheter un billet ?"
+        },
+        {
+          "jp": "渋谷に行きたいです",
+          "romaji": "Shibuya ni ikitai desu",
+          "fr": "Je voudrais aller à Shibuya"
+        },
+        {
+          "jp": "何番線ですか？",
+          "romaji": "Nan-ban-sen desu ka?",
+          "fr": "Quel quai / quelle voie ?"
         }
       ]
     },
@@ -3754,6 +3799,21 @@
           "jp": "わかりません",
           "romaji": "Wakarimasen",
           "fr": "Je ne comprends pas"
+        },
+        {
+          "jp": "病院はどこですか？",
+          "romaji": "Byōin wa doko desu ka?",
+          "fr": "Où est l'hôpital ?"
+        },
+        {
+          "jp": "もう一度お願いします",
+          "romaji": "Mō ichido onegaishimasu",
+          "fr": "Encore une fois, s'il vous plaît"
+        },
+        {
+          "jp": "ゆっくり話してください",
+          "romaji": "Yukkuri hanashite kudasai",
+          "fr": "Parlez lentement, s'il vous plaît"
         }
       ]
     },
@@ -3793,6 +3853,21 @@
           "jp": "さようなら",
           "romaji": "Sayōnara",
           "fr": "Au revoir"
+        },
+        {
+          "jp": "いいえ",
+          "romaji": "Iie",
+          "fr": "Non"
+        },
+        {
+          "jp": "はい",
+          "romaji": "Hai",
+          "fr": "Oui"
+        },
+        {
+          "jp": "どうぞ",
+          "romaji": "Dōzo",
+          "fr": "Je vous en prie / Allez-y"
         }
       ]
     }
