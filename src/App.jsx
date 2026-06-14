@@ -134,6 +134,7 @@ const ACHIEVEMENTS = [
   {id:"fav5",       emoji:"❤️", label:"Collectionneur",     desc:"Ajoute 5 favoris",                         check:c=>(c.favs?.length||0)>=5},
   {id:"xp250",      emoji:"🧭", label:"Connaisseur",        desc:"Atteins 250 XP",                           check:c=>(c.xp||0)>=250},
   {id:"xp520",      emoji:"🎌", label:"Maître du Japon",    desc:"Atteins 520 XP",                           check:c=>(c.xp||0)>=520},
+  {id:"tokyo_ready",emoji:"🗼", label:"Prêt pour Tokyo",     desc:"Termine le parcours « Survivre à Tokyo »", check:c=>(c.pathProgress?.completed?.length||0)>=8},
 ];
 // Helpers de comptage kana (dépendent de HIRAGANA/KATAKANA définis plus bas)
 function kanaMastered(kp){
@@ -262,6 +263,16 @@ function WikiPanel({C, entry, onClose, script}) {
 // WikiText: renders text with wiki terms highlighted and tapable
 // ─── Audio (synthèse vocale japonaise) ────────────────────────────────────────
 let _currentAudio = null;
+// Partage via l'API native (mobile) avec repli sur copie presse-papier
+async function shareContent(text){
+  try {
+    if(navigator.share){ await navigator.share({ text }); return; }
+  } catch(e){ /* user cancelled or unsupported */ return; }
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("Copié dans le presse-papier ! Tu peux le coller où tu veux.");
+  } catch(e){}
+}
 function speakJP(text){
   if(!text) return;
   // 1) Prefer the pre-generated high-quality MP3 if available
@@ -693,7 +704,10 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
               </div>
               <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:8}}>{script==="romaji"?prov.jp:prov.romaji}</div>
               <div style={{fontSize:13,color:C.text,fontWeight:500,marginBottom:4}}>« {prov.fr} »</div>
-              <div style={{fontSize:12,color:C.t2,lineHeight:1.5}}>{prov.sens}</div>
+              <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginBottom:12}}>{prov.sens}</div>
+              <button onClick={()=>shareContent(`${prov.jp} (${prov.romaji})\n« ${prov.fr} »\n${prov.sens}\n\n— Proverbe du jour sur Isekai'd 🎌`)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2,fontSize:11,cursor:"pointer"}}>
+                <span style={{fontSize:13}}>📤</span> Partager
+              </button>
             </div>
           );
         })()}
@@ -1637,6 +1651,27 @@ const HIRAGANA = [
   {k:"ら",r:"ra"},{k:"り",r:"ri"},{k:"る",r:"ru"},{k:"れ",r:"re"},{k:"ろ",r:"ro"},
   {k:"わ",r:"wa"},{k:"を",r:"wo"},{k:"ん",r:"n"},
 ];
+// Dakuten / handakuten (sons "voisés") — hiragana
+const HIRAGANA_DAKUTEN = [
+  {k:"が",r:"ga"},{k:"ぎ",r:"gi"},{k:"ぐ",r:"gu"},{k:"げ",r:"ge"},{k:"ご",r:"go"},
+  {k:"ざ",r:"za"},{k:"じ",r:"ji"},{k:"ず",r:"zu"},{k:"ぜ",r:"ze"},{k:"ぞ",r:"zo"},
+  {k:"だ",r:"da"},{k:"ぢ",r:"ji"},{k:"づ",r:"zu"},{k:"で",r:"de"},{k:"ど",r:"do"},
+  {k:"ば",r:"ba"},{k:"び",r:"bi"},{k:"ぶ",r:"bu"},{k:"べ",r:"be"},{k:"ぼ",r:"bo"},
+  {k:"ぱ",r:"pa"},{k:"ぴ",r:"pi"},{k:"ぷ",r:"pu"},{k:"ぺ",r:"pe"},{k:"ぽ",r:"po"},
+];
+// Combinaisons (yōon) — hiragana
+const HIRAGANA_COMBO = [
+  {k:"きゃ",r:"kya"},{k:"きゅ",r:"kyu"},{k:"きょ",r:"kyo"},
+  {k:"しゃ",r:"sha"},{k:"しゅ",r:"shu"},{k:"しょ",r:"sho"},
+  {k:"ちゃ",r:"cha"},{k:"ちゅ",r:"chu"},{k:"ちょ",r:"cho"},
+  {k:"にゃ",r:"nya"},{k:"にゅ",r:"nyu"},{k:"にょ",r:"nyo"},
+  {k:"ひゃ",r:"hya"},{k:"ひゅ",r:"hyu"},{k:"ひょ",r:"hyo"},
+  {k:"みゃ",r:"mya"},{k:"みゅ",r:"myu"},{k:"みょ",r:"myo"},
+  {k:"りゃ",r:"rya"},{k:"りゅ",r:"ryu"},{k:"りょ",r:"ryo"},
+  {k:"ぎゃ",r:"gya"},{k:"ぎゅ",r:"gyu"},{k:"ぎょ",r:"gyo"},
+  {k:"じゃ",r:"ja"},{k:"じゅ",r:"ju"},{k:"じょ",r:"jo"},
+  {k:"びゃ",r:"bya"},{k:"びゅ",r:"byu"},{k:"びょ",r:"byo"},
+];
 const KATAKANA = [
   {k:"ア",r:"a"},{k:"イ",r:"i"},{k:"ウ",r:"u"},{k:"エ",r:"e"},{k:"オ",r:"o"},
   {k:"カ",r:"ka"},{k:"キ",r:"ki"},{k:"ク",r:"ku"},{k:"ケ",r:"ke"},{k:"コ",r:"ko"},
@@ -1648,6 +1683,25 @@ const KATAKANA = [
   {k:"ヤ",r:"ya"},{k:"ユ",r:"yu"},{k:"ヨ",r:"yo"},
   {k:"ラ",r:"ra"},{k:"リ",r:"ri"},{k:"ル",r:"ru"},{k:"レ",r:"re"},{k:"ロ",r:"ro"},
   {k:"ワ",r:"wa"},{k:"ヲ",r:"wo"},{k:"ン",r:"n"},
+];
+const KATAKANA_DAKUTEN = [
+  {k:"ガ",r:"ga"},{k:"ギ",r:"gi"},{k:"グ",r:"gu"},{k:"ゲ",r:"ge"},{k:"ゴ",r:"go"},
+  {k:"ザ",r:"za"},{k:"ジ",r:"ji"},{k:"ズ",r:"zu"},{k:"ゼ",r:"ze"},{k:"ゾ",r:"zo"},
+  {k:"ダ",r:"da"},{k:"ヂ",r:"ji"},{k:"ヅ",r:"zu"},{k:"デ",r:"de"},{k:"ド",r:"do"},
+  {k:"バ",r:"ba"},{k:"ビ",r:"bi"},{k:"ブ",r:"bu"},{k:"ベ",r:"be"},{k:"ボ",r:"bo"},
+  {k:"パ",r:"pa"},{k:"ピ",r:"pi"},{k:"プ",r:"pu"},{k:"ペ",r:"pe"},{k:"ポ",r:"po"},
+];
+const KATAKANA_COMBO = [
+  {k:"キャ",r:"kya"},{k:"キュ",r:"kyu"},{k:"キョ",r:"kyo"},
+  {k:"シャ",r:"sha"},{k:"シュ",r:"shu"},{k:"ショ",r:"sho"},
+  {k:"チャ",r:"cha"},{k:"チュ",r:"chu"},{k:"チョ",r:"cho"},
+  {k:"ニャ",r:"nya"},{k:"ニュ",r:"nyu"},{k:"ニョ",r:"nyo"},
+  {k:"ヒャ",r:"hya"},{k:"ヒュ",r:"hyu"},{k:"ヒョ",r:"hyo"},
+  {k:"ミャ",r:"mya"},{k:"ミュ",r:"myu"},{k:"ミョ",r:"myo"},
+  {k:"リャ",r:"rya"},{k:"リュ",r:"ryu"},{k:"リョ",r:"ryo"},
+  {k:"ギャ",r:"gya"},{k:"ギュ",r:"gyu"},{k:"ギョ",r:"gyo"},
+  {k:"ジャ",r:"ja"},{k:"ジュ",r:"ju"},{k:"ジョ",r:"jo"},
+  {k:"ビャ",r:"bya"},{k:"ビュ",r:"byu"},{k:"ビョ",r:"byo"},
 ];
 function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
@@ -1868,9 +1922,32 @@ const SITUATIONS = [
 ];
 
 const LEARN_DECKS = [
-  {id:"hira", label:"Hiragana", jp:"ひらがな", emoji:"あ", deck:HIRAGANA, desc:"46 caractères de base · mots japonais"},
-  {id:"kata", label:"Katakana", jp:"カタカナ", emoji:"ア", deck:KATAKANA, desc:"46 caractères de base · mots étrangers"},
+  {id:"hira", label:"Hiragana", jp:"ひらがな", emoji:"あ", deck:HIRAGANA, desc:"46 caractères de base · mots japonais", group:"Bases"},
+  {id:"kata", label:"Katakana", jp:"カタカナ", emoji:"ア", deck:KATAKANA, desc:"46 caractères de base · mots étrangers", group:"Bases"},
+  {id:"hira_dak", label:"Hiragana — dakuten", jp:"濁音", emoji:"が", deck:HIRAGANA_DAKUTEN, desc:"25 sons voisés (が ざ だ ば ぱ)", group:"Avancé"},
+  {id:"hira_combo", label:"Hiragana — combinaisons", jp:"拗音", emoji:"きゃ", deck:HIRAGANA_COMBO, desc:"30 combinaisons (きゃ しゅ ちょ…)", group:"Avancé"},
+  {id:"kata_dak", label:"Katakana — dakuten", jp:"濁音", emoji:"ガ", deck:KATAKANA_DAKUTEN, desc:"25 sons voisés (ガ ザ ダ バ パ)", group:"Avancé"},
+  {id:"kata_combo", label:"Katakana — combinaisons", jp:"拗音", emoji:"キャ", deck:KATAKANA_COMBO, desc:"30 combinaisons (キャ シュ チョ…)", group:"Avancé"},
 ];
+
+// ─── Parcours "Survivre à Tokyo" ──────────────────────────────────────────────
+// 8 paliers : fondations (lire) puis situations dans l'ordre d'un voyage.
+const TOKYO_PATH = [
+  {id:"p1", type:"kana",    deckId:"hira",            emoji:"あ", title:"Lire l'hiragana",     goal:"Reconnaître les 46 sons de base — la fondation de toute lecture."},
+  {id:"p2", type:"kana",    deckId:"kata",            emoji:"ア", title:"Lire le katakana",     goal:"Déchiffrer menus et marques en katakana (コーヒー, トイレ…)."},
+  {id:"p3", type:"phrases", situationId:"politesse",  emoji:"🙇", title:"Les politesses",       goal:"Saluer, remercier, s'excuser — le socle social japonais."},
+  {id:"p4", type:"phrases", situationId:"urgence",    emoji:"🆘", title:"Se débrouiller",       goal:"Demander de l'aide, son chemin, dire qu'on ne comprend pas."},
+  {id:"p5", type:"phrases", situationId:"konbini",    emoji:"🏪", title:"Au konbini",           goal:"Demander un prix, payer (carte ou espèces), gérer le passage en caisse."},
+  {id:"p6", type:"phrases", situationId:"restaurant", emoji:"🍜", title:"Au restaurant",        goal:"Commander, demander l'addition, complimenter le repas."},
+  {id:"p7", type:"phrases", situationId:"train",      emoji:"🚃", title:"Prendre le train",     goal:"Acheter un billet, trouver sa correspondance, descendre au bon arrêt."},
+  {id:"p8", type:"final",                             emoji:"🗼", title:"Une journée à Tokyo",  goal:"Le grand test : enchaîne des situations réelles d'une journée."},
+];
+const PATH_KEY = "isekaid_path_v1";
+function loadPathProgress(){
+  try { const raw=localStorage.getItem(PATH_KEY); return raw?JSON.parse(raw):{completed:[]}; }
+  catch { return {completed:[]}; }
+}
+function savePathProgress(p){ try { localStorage.setItem(PATH_KEY, JSON.stringify(p)); } catch {} }
 
 function SituationDetail({C, s, onBack, script}){
   return(
@@ -1900,12 +1977,186 @@ function SituationDetail({C, s, onBack, script}){
   );
 }
 
-function LearnScreen({C,script,db,kanaProgress,onRecordKana}){
+// ─── Checkpoint : quiz de validation d'un palier ──────────────────────────────
+function CheckpointQuiz({C, pool, distractorPool, onPass, onExit, passRatio=0.7, label, allowAudio=false}){
+  // pool: [{q, a}], distractorPool: [{q, a}] pour fabriquer de faux choix
+  const questions = useMemo(()=>{
+    const qs = shuffle(pool).slice(0, Math.min(8, pool.length));
+    return qs.map(item=>{
+      const others = shuffle(distractorPool.filter(d=>d.a!==item.a)).slice(0,3).map(d=>d.a);
+      const opts = shuffle([item.a, ...others]);
+      return { q:item.q, a:item.a, opts };
+    });
+  }, [pool, distractorPool]);
+
+  const [idx,setIdx] = useState(0);
+  const [picked,setPicked] = useState(null);
+  const [score,setScore] = useState(0);
+  const [done,setDone] = useState(false);
+
+  if(questions.length===0) return null;
+  const cur = questions[idx];
+
+  if(done){
+    const ratio = score/questions.length;
+    const passed = ratio>=passRatio;
+    return(
+      <div style={{padding:"40px 26px",textAlign:"center"}}>
+        <div style={{fontSize:60,marginBottom:16}}>{passed?"🎉":"💪"}</div>
+        <div style={{fontSize:22,fontWeight:600,color:C.text,marginBottom:8}}>{passed?"Palier validé !":"Presque !"}</div>
+        <div style={{fontSize:15,color:C.t2,marginBottom:6}}>Score : {score}/{questions.length}</div>
+        <div style={{fontSize:13,color:C.t3,marginBottom:26,lineHeight:1.5}}>
+          {passed ? "Tu peux passer au palier suivant." : `Il te faut ${Math.ceil(passRatio*questions.length)}/${questions.length} pour valider. Réessaie !`}
+        </div>
+        {passed
+          ? <button onClick={onPass} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Continuer →</button>
+          : <button onClick={()=>{setIdx(0);setScore(0);setPicked(null);setDone(false);}} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Réessayer</button>}
+        <button onClick={onExit} style={{width:"100%",padding:"12px",marginTop:10,background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Quitter</button>
+      </div>
+    );
+  }
+
+  const choose = (opt)=>{
+    if(picked) return;
+    setPicked(opt);
+    if(opt===cur.a) setScore(s=>s+1);
+    setTimeout(()=>{
+      if(idx+1>=questions.length){ setDone(true); }
+      else { setIdx(i=>i+1); setPicked(null); }
+    }, 750);
+  };
+
+  return(
+    <div style={{padding:"30px 22px"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+        <span style={{fontSize:11,color:C.t3}}>{label}</span>
+        <span style={{fontSize:11,color:C.t2}}>{idx+1}/{questions.length}</span>
+      </div>
+      <div style={{height:4,background:C.s3,borderRadius:2,overflow:"hidden",marginBottom:30}}>
+        <div style={{height:"100%",width:`${((idx)/questions.length)*100}%`,background:C.red,borderRadius:2,transition:"width .3s"}}/>
+      </div>
+      <div style={{textAlign:"center",marginBottom:30}}>
+        <div style={{fontSize:13,color:C.t3,marginBottom:14}}>Que signifie / comment se lit :</div>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
+          <div style={{fontSize:42,fontFamily:"'Noto Serif JP',serif",color:C.text}}>{cur.q}</div>
+          {allowAudio && <SpeakButton C={C} text={cur.q} color={C.gold} size={30}/>}
+        </div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:11}}>
+        {cur.opts.map((opt,i)=>{
+          let bg=C.s1, bd=C.border, col=C.text;
+          if(picked){
+            if(opt===cur.a){ bg="rgba(58,102,69,0.15)"; bd=C.green; col=C.green; }
+            else if(opt===picked){ bg="rgba(201,70,61,0.12)"; bd=C.red; col=C.red; }
+          }
+          return(
+            <button key={i} onClick={()=>choose(opt)} style={{padding:"15px",background:bg,border:`1px solid ${bd}`,borderRadius:12,color:col,fontSize:14,cursor:picked?"default":"pointer",textAlign:"left",transition:"all .2s"}}>
+              {opt}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep}){
   const [deck,setDeck] = useState(null);   // selected deck object
   const [mode,setMode] = useState(null);   // "flash" | "quiz"
   const [situation,setSituation] = useState(null); // selected situation
+  const [pathStep,setPathStep] = useState(null);   // active path step (detail)
+  const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
   const situations = db?.situations || [];
   const kp = kanaProgress || {};
+  const completed = pathProgress?.completed || [];
+
+  // ── Checkpoint actif ──
+  if(checkpoint){
+    const step = checkpoint;
+    let pool=[], distractor=[];
+    if(step.type==="kana"){
+      const dk = LEARN_DECKS.find(d=>d.id===step.deckId);
+      const cards = dk?.deck || [];
+      pool = cards.map(c=>({q:c.k, a:c.r}));
+      distractor = pool;
+    } else if(step.type==="phrases"){
+      const sit = situations.find(s=>s.id===step.situationId);
+      pool = (sit?.phrases||[]).map(p=>({q:p.jp, a:p.fr}));
+      distractor = situations.flatMap(s=>(s.phrases||[]).map(p=>({q:p.jp,a:p.fr})));
+    } else if(step.type==="final"){
+      const surv = situations.filter(s=>["politesse","urgence","konbini","restaurant","train"].includes(s.id));
+      pool = surv.flatMap(s=>(s.phrases||[]).map(p=>({q:p.jp, a:p.fr})));
+      distractor = pool;
+    }
+    return(
+      <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+        <div style={{padding:"50px 20px 6px"}}>
+          <button onClick={()=>setCheckpoint(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer"}}>‹ {step.title}</button>
+        </div>
+        <CheckpointQuiz C={C} pool={pool} distractorPool={distractor} label={`Checkpoint · ${step.title}`}
+          passRatio={step.type==="final"?0.8:0.7}
+          allowAudio={step.type!=="kana"}
+          onPass={()=>{ onCompleteStep&&onCompleteStep(step.id); setCheckpoint(null); setPathStep(null); }}
+          onExit={()=>setCheckpoint(null)}/>
+      </div>
+    );
+  }
+
+  // ── Détail d'un palier du parcours ──
+  if(pathStep){
+    const step = pathStep;
+    const sit = step.situationId ? situations.find(s=>s.id===step.situationId) : null;
+    const dk = step.deckId ? LEARN_DECKS.find(d=>d.id===step.deckId) : null;
+    return(
+      <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+        <div style={{padding:"50px 20px 110px"}}>
+          <button onClick={()=>setPathStep(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:22}}>‹ Parcours</button>
+          <div style={{textAlign:"center",marginBottom:24}}>
+            <div style={{fontSize:54,fontFamily:step.deckId?"'Noto Serif JP',serif":"inherit",color:C.text,marginBottom:8}}>{step.emoji}</div>
+            <div style={{fontSize:21,color:C.text,fontWeight:600,marginBottom:6}}>{step.title}</div>
+            <div style={{fontSize:13,color:C.t2,lineHeight:1.5,maxWidth:300,margin:"0 auto"}}>{step.goal}</div>
+          </div>
+
+          {step.type==="kana" && dk && (
+            <div style={{marginBottom:14}}>
+              <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:10,textTransform:"uppercase"}}>📚 Apprends</div>
+              <div onClick={()=>setDeck(dk)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
+                <span style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",color:C.red}}>{dk.emoji}</span>
+                <div style={{flex:1}}><div style={{fontSize:14,color:C.text,fontWeight:500}}>Flashcards & quiz</div><div style={{fontSize:12,color:C.t2}}>{dk.desc}</div></div>
+                <span style={{fontSize:18,color:C.t3}}>›</span>
+              </div>
+            </div>
+          )}
+          {step.type==="phrases" && sit && (
+            <div style={{marginBottom:14}}>
+              <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:10,textTransform:"uppercase"}}>📚 Apprends ces phrases</div>
+              <div style={{display:"flex",flexDirection:"column",gap:9}}>
+                {sit.phrases.map((p,i)=>(
+                  <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,padding:"13px 15px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
+                      <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text}}>{script==="romaji"?p.romaji:p.jp}</div>
+                      <SpeakButton C={C} text={p.jp} color={C.gold} size={26}/>
+                    </div>
+                    <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:3}}>{script==="romaji"?p.jp:p.romaji}</div>
+                    <div style={{fontSize:13,color:C.t2}}>{p.fr}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {step.type==="final" && (
+            <div style={{marginBottom:14,padding:"16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:13,color:C.t2,lineHeight:1.6}}>
+              🗼 Ce test final mélange toutes les situations de survie : politesses, aide, konbini, restaurant, train. Réussis-le à 80% pour prouver que tu peux te débrouiller une semaine à Tokyo !
+            </div>
+          )}
+
+          <button onClick={()=>setCheckpoint(step)} style={{marginTop:8,width:"100%",padding:"15px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+            {completed.includes(step.id) ? "Refaire le checkpoint ✓" : "Passer le checkpoint →"}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Active situation detail
   if(situation) return <SituationDetail C={C} s={situation} onBack={()=>setSituation(null)} script={script}/>;
@@ -1960,20 +2211,73 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana}){
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihongo wo manabu":"日本語を学ぶ"}</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Apprends à lire et à parler</div>
 
-        {/* Syllabaires */}
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>🔤 Les syllabaires</div>
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
-          {LEARN_DECKS.map((d,i)=>(
-            <div key={i} onClick={()=>setDeck(d)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:16,cursor:"pointer",animation:"fadeUp .4s ease"}}>
-              <span style={{fontSize:40,fontFamily:"'Noto Serif JP',serif",color:C.red,width:48,textAlign:"center"}}>{d.emoji}</span>
-              <div style={{flex:1}}>
-                <div style={{display:"flex",alignItems:"baseline",gap:8}}><span style={{fontSize:16,color:C.text,fontWeight:500}}>{d.label}</span><span style={{fontSize:12,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{d.jp}</span></div>
-                <div style={{fontSize:12,color:C.t2,marginTop:3}}>{d.desc}</div>
-              </div>
-              <span style={{fontSize:18,color:C.t3}}>›</span>
-            </div>
-          ))}
+        {/* ── Parcours "Survivre à Tokyo" ── */}
+        <div style={{marginBottom:30}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:4}}>
+            <div style={{fontSize:15,color:C.text,fontWeight:600}}>🗼 Survivre à Tokyo</div>
+            <span style={{fontSize:11,color:C.t2,fontWeight:600}}>{TOKYO_PATH.filter(s=>completed.includes(s.id)).length}/{TOKYO_PATH.length}</span>
+          </div>
+          <div style={{fontSize:12,color:C.t2,marginBottom:14,lineHeight:1.5}}>
+            {TOKYO_PATH.every(s=>completed.includes(s.id)) ? "🎉 Bravo ! Tu as les bases pour te débrouiller une semaine à Tokyo." : "Un parcours guidé, étape par étape, pour te débrouiller sur place."}
+          </div>
+          <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:16}}>
+            <div style={{height:"100%",width:`${(TOKYO_PATH.filter(s=>completed.includes(s.id)).length/TOKYO_PATH.length)*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
+          </div>
+          <div>
+            {TOKYO_PATH.map((step,i)=>{
+              const isDone = completed.includes(step.id);
+              const prevDone = i===0 || completed.includes(TOKYO_PATH[i-1].id);
+              const isLocked = !prevDone && !isDone;
+              const isFinal = step.type==="final";
+              return(
+                <div key={step.id} style={{display:"flex",gap:13,alignItems:"stretch"}}>
+                  <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:30,flexShrink:0}}>
+                    <div style={{width:30,height:30,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0,background:isDone?C.red:(isLocked?C.s2:"rgba(201,70,61,0.09)"),border:`1px solid ${isDone?C.red:(isLocked?C.border:"rgba(201,70,61,0.35)")}`,color:isDone?"#fff":C.t2}}>
+                      {isDone?"✓":(isLocked?"🔒":step.emoji)}
+                    </div>
+                    {i<TOKYO_PATH.length-1 && <div style={{flex:1,width:2,background:isDone?C.red:C.border,minHeight:14,margin:"2px 0"}}/>}
+                  </div>
+                  <div onClick={()=>{ if(!isLocked) setPathStep(step); }} style={{flex:1,marginBottom:10,padding:"13px 15px",cursor:isLocked?"default":"pointer",background:(isFinal && !isLocked)?"rgba(201,70,61,0.06)":C.s1,border:`1px solid ${isDone?"rgba(201,70,61,0.4)":((isFinal&&!isLocked)?"rgba(201,70,61,0.4)":C.border)}`,borderRadius:12,opacity:isLocked?0.55:1,transition:"all .2s"}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                      <span style={{fontSize:14,color:C.text,fontWeight:500}}>{step.title}</span>
+                      {!isLocked && !isDone && <span style={{fontSize:15,color:C.t3}}>›</span>}
+                    </div>
+                    <div style={{fontSize:11,color:C.t2,lineHeight:1.45,marginTop:3}}>{isLocked?"Termine l'étape précédente pour débloquer":step.goal}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
+
+        {/* Syllabaires */}
+        {["Bases","Avancé"].map(grp=>(
+          <div key={grp}>
+            <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",margin: grp==="Bases"?"0 0 12px":"24px 0 12px",textTransform:"uppercase"}}>
+              {grp==="Bases" ? "🔤 Les syllabaires" : "⚡ Sons avancés"}
+            </div>
+            <div style={{display:"flex",flexDirection:"column",gap:11}}>
+              {LEARN_DECKS.filter(d=>d.group===grp).map((d,i)=>{
+                const mastered = (d.deck||[]).filter(c=>(kp[c.k]?.known||0)>=2).length;
+                const pct = d.deck.length ? mastered/d.deck.length : 0;
+                return(
+                  <div key={i} onClick={()=>setDeck(d)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px 18px",display:"flex",alignItems:"center",gap:16,cursor:"pointer",animation:"fadeUp .4s ease"}}>
+                    <span style={{fontSize:34,fontFamily:"'Noto Serif JP',serif",color:C.red,width:48,textAlign:"center"}}>{d.emoji}</span>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{display:"flex",alignItems:"baseline",gap:8}}><span style={{fontSize:15,color:C.text,fontWeight:500}}>{d.label}</span><span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{d.jp}</span></div>
+                      <div style={{fontSize:11,color:C.t2,marginTop:3}}>{d.desc}</div>
+                      {/* mini progress */}
+                      <div style={{height:4,background:C.s3,borderRadius:2,overflow:"hidden",marginTop:8}}>
+                        <div style={{height:"100%",width:`${pct*100}%`,background:C.red,borderRadius:2,transition:"width .4s"}}/>
+                      </div>
+                    </div>
+                    <span style={{fontSize:18,color:C.t3}}>›</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
 
         {/* Situations courantes */}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",margin:"26px 0 12px",textTransform:"uppercase"}}>💬 Situations courantes</div>
@@ -1998,7 +2302,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana}){
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
@@ -2183,7 +2487,7 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,
         )}
 
         {(()=>{
-          const achievements = computeAchievements({ streak, xp, unlocks, scenProgress, kanaProgress, favs });
+          const achievements = computeAchievements({ streak, xp, unlocks, scenProgress, kanaProgress, favs, pathProgress });
           const earned = achievements.filter(a=>a.unlocked).length;
           return(
             <>
@@ -2204,9 +2508,15 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,
           );
         })()}
 
+        {/* Revoir la présentation */}
+        <button onClick={()=>onShowTour&&onShowTour()}
+          style={{marginTop:22,width:"100%",padding:"13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
+          ✨ Revoir la présentation
+        </button>
+
         {/* Réinitialiser le profil */}
         <button onClick={()=>{ if(confirm("Réinitialiser ton profil ? Tu repasseras par l'onboarding.")) onReset&&onReset(); }}
-          style={{marginTop:22,width:"100%",padding:"13px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
+          style={{marginTop:10,width:"100%",padding:"13px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
           ↺ Réinitialiser le profil
         </button>
         <div style={{marginTop:10,textAlign:"center",fontSize:10,color:C.t3,lineHeight:1.5}}>
@@ -2476,6 +2786,80 @@ function Onboarding({onComplete}){
   );
 }
 
+// ─── Parcours de présentation (tour des fonctionnalités) ──────────────────────
+const TOUR_STEPS = [
+  {
+    emoji:"異",
+    serif:true,
+    title:"Bienvenue dans Isekai'd",
+    text:"Ton rendez-vous quotidien avec le Japon : culture, langue, traditions et vie quotidienne, un peu chaque jour.",
+    color:"#C9463D",
+  },
+  {
+    emoji:"🗓️",
+    title:"Un contenu frais chaque jour",
+    text:"Expression, plat, proverbe et recommandations personnalisées selon tes goûts. Reviens chaque jour pour découvrir du nouveau.",
+    color:"#C4956A",
+  },
+  {
+    emoji:"🔑",
+    title:"Gagne des clés, débloque du contenu",
+    text:"Chaque jour de connexion te donne une clé. Dépense-les pour débloquer des catégories — traditions, régions, codes sociaux… et gagne de l'XP.",
+    color:"#9E7A1A",
+  },
+  {
+    emoji:"🎴",
+    title:"Apprends en t'amusant",
+    text:"Flashcards à glisser pour les syllabaires, scénarios interactifs, phrases utiles, prononciation audio. Ta progression est suivie.",
+    color:"#3A6645",
+  },
+  {
+    emoji:"🏆",
+    title:"Progresse et débloque des badges",
+    text:"Monte en titre, enchaîne les séries, collectionne les badges. Ton compte synchronise tout entre tes appareils.",
+    color:"#5B9BD5",
+  },
+];
+
+function Tour({C, onDone}){
+  const [step,setStep] = useState(0);
+  const s = TOUR_STEPS[step];
+  const last = step === TOUR_STEPS.length-1;
+  return(
+    <div style={{height:"100%",display:"flex",flexDirection:"column",background:C.bg}}>
+      {/* Skip */}
+      <div style={{padding:"50px 22px 0",display:"flex",justifyContent:"flex-end",flexShrink:0}}>
+        <span onClick={onDone} style={{fontSize:12,color:C.t3,cursor:"pointer"}}>Passer</span>
+      </div>
+
+      {/* Content */}
+      <div key={step} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"0 36px",textAlign:"center",animation:"fadeUp .4s ease"}}>
+        <div style={{
+          width:120,height:120,borderRadius:"50%",marginBottom:34,
+          display:"flex",alignItems:"center",justifyContent:"center",
+          background:`${s.color}14`, border:`1px solid ${s.color}40`,
+          fontSize:s.serif?60:52, fontFamily:s.serif?"'Noto Serif JP',serif":"inherit",
+          color:s.serif?s.color:"inherit", fontWeight:s.serif?300:"normal",
+        }}>{s.emoji}</div>
+        <div style={{fontSize:23,fontWeight:600,color:C.text,marginBottom:14,lineHeight:1.3}}>{s.title}</div>
+        <div style={{fontSize:15,color:C.t2,lineHeight:1.65,maxWidth:300}}>{s.text}</div>
+      </div>
+
+      {/* Dots + button */}
+      <div style={{padding:"0 36px 40px",flexShrink:0}}>
+        <div style={{display:"flex",justifyContent:"center",gap:7,marginBottom:26}}>
+          {TOUR_STEPS.map((_,i)=>(
+            <div key={i} onClick={()=>setStep(i)} style={{width:i===step?22:7,height:7,borderRadius:4,background:i===step?s.color:C.s3,cursor:"pointer",transition:"all .3s"}}/>
+          ))}
+        </div>
+        <button onClick={()=> last ? onDone() : setStep(step+1)} style={{width:"100%",padding:"15px",background:s.color,border:"none",borderRadius:12,color:"#fff",fontSize:15,fontWeight:600,cursor:"pointer",transition:"background .3s"}}>
+          {last ? "Commencer 🌸" : "Suivant →"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Splash({onDone}){
   useEffect(()=>{const t=setTimeout(onDone,2500);return()=>clearTimeout(t);},[]);
   return(
@@ -2494,6 +2878,9 @@ function Splash({onDone}){
 // ─── Root ─────────────────────────────────────────────────────────────────────
 // Persistence helpers (localStorage) — safe wrappers
 const STORE_KEY = "isekaid_profile_v1";
+const TOUR_KEY = "isekaid_tour_v1";
+function tourSeen(){ try { return localStorage.getItem(TOUR_KEY)==="1"; } catch { return false; } }
+function markTourSeen(){ try { localStorage.setItem(TOUR_KEY,"1"); } catch {} }
 const THEME_KEY = "isekaid_theme_v1";
 function loadProfile(){
   try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
@@ -2664,6 +3051,17 @@ export default function IsekaidApp(){
   const [unlocks,setUnlocks]=useState(()=>getUnlocks());
   const [scenProgress,setScenProgress]=useState(()=>loadScenarioProgress());
   const [kanaProgress,setKanaProgress]=useState(()=>loadKanaProgress());
+  const [pathProgress,setPathProgress]=useState(()=>loadPathProgress());
+
+  const completePathStep = (stepId)=>{
+    setPathProgress(prev=>{
+      const completed = prev?.completed || [];
+      if(completed.includes(stepId)) return prev;
+      const next = { completed:[...completed, stepId] };
+      savePathProgress(next);
+      return next;
+    });
+  };
 
   const recordKanaResult = (char, known)=>{
     setKanaProgress(prev=>{
@@ -2707,7 +3105,7 @@ export default function IsekaidApp(){
   // Detect newly unlocked achievements and celebrate
   useEffect(()=>{
     if(!db) return;
-    const earned = computeAchievements({ streak, xp, unlocks, scenProgress, kanaProgress, favs })
+    const earned = computeAchievements({ streak, xp, unlocks, scenProgress, kanaProgress, favs, pathProgress })
       .filter(a=>a.unlocked).map(a=>a.id);
     let seen = [];
     try { seen = JSON.parse(localStorage.getItem("isekaid_ach_v1")||"[]"); } catch {}
@@ -2720,7 +3118,7 @@ export default function IsekaidApp(){
       }
       try { localStorage.setItem("isekaid_ach_v1", JSON.stringify(earned)); } catch {}
     }
-  },[streak, xp, unlocks, scenProgress, kanaProgress, favs, db]);
+  },[streak, xp, unlocks, scenProgress, kanaProgress, favs, pathProgress, db]);
   const [wikiMap,setWikiMap]=useState({});
   const [script,setScript]=useState(()=>loadScript());
   const [session,setSession]=useState(null);
@@ -2811,8 +3209,10 @@ export default function IsekaidApp(){
   const completeOnboarding = (u)=>{
     saveProfile(u);
     setUser(u);
-    setScreen("app");
+    setScreen(tourSeen() ? "app" : "tour");
   };
+
+  const finishTour = ()=>{ markTourSeen(); setScreen("app"); };
 
   // Reset profile (called from Profile screen)
   const resetProfile = ()=>{
@@ -2829,14 +3229,15 @@ export default function IsekaidApp(){
         {screen==="splash"     &&<Splash onDone={afterSplash}/>}
         {screen==="auth"       &&<AuthScreen C={C} onSkip={skipAuthAndContinue}/>}
         {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
+        {screen==="tour"       &&<Tour C={C} onDone={finishTour}/>}
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
-              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress}/>}
+              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={()=>setScreen("tour")} pathProgress={pathProgress}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
