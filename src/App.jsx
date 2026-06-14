@@ -665,7 +665,7 @@ function Slider({C, children}){
 }
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
-function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile}){
   const [expr,  setExpr]  = useState(null);
   const [cult,  setCult]  = useState(null);
   const [repas, setRepas] = useState(null);
@@ -708,8 +708,6 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
   const seasonAccent = SEASON_ACCENT[seasonKey];
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif",position:"relative"}}>
-      {/* Particules saisonnières en fond */}
-      <SeasonParticles season={seasonKey}/>
       {/* Sticky header */}
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         {/* Row 1 — date + badges alignés */}
@@ -718,18 +716,18 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
             <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:2}}>{month} {day}日（{weekday}）</div>
             <div style={{fontSize:11,color:C.t2}}>{g.fr}</div>
           </div>
-          {/* Streak + script toggle alignés */}
-          <div style={{display:"flex",gap:6,alignItems:"center"}}>
-            {/* Streak badge — alterne flamme / titre app */}
-            <div onClick={()=>setStreakFlip(f=>!f)} style={{display:"flex",alignItems:"center",gap:3,padding:"4px 9px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:20,cursor:"pointer",minWidth:44,justifyContent:"center",transition:"all .3s"}}>
-              {streakFlip
-                ? <span style={{fontSize:10,fontFamily:"'Noto Serif JP',serif",color:C.red,fontWeight:500,letterSpacing:".04em"}}>異世界</span>
-                : <><span style={{fontSize:11}}>🔥</span><span style={{fontSize:11,color:C.text,fontWeight:600}}>{streak?.count||0}</span></>
-              }
-            </div>
-            {/* Script toggle — aligné avec le streak */}
-            <button onClick={toggleScript} style={{padding:"4px 10px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,cursor:"pointer",fontFamily:"'Noto Serif JP',serif",fontSize:12,color:C.t2,lineHeight:1}}>
+          {/* Script toggle + profil alignés */}
+          <div style={{display:"flex",gap:8,alignItems:"center"}}>
+            {/* Script toggle */}
+            <button onClick={toggleScript} style={{width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",background:C.s2,border:`1px solid ${C.border}`,borderRadius:"50%",cursor:"pointer",fontFamily:"'Noto Serif JP',serif",fontSize:13,color:C.t2,lineHeight:1}}>
               {script==="kanji" ? "あ" : "A"}
+            </button>
+            {/* Profil */}
+            <button onClick={onProfile} aria-label="Profil" style={{width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",background:C.s2,border:`1px solid ${C.border}`,borderRadius:"50%",cursor:"pointer",padding:0}}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={C.t2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 21v-1a7 7 0 0 1 14 0v1"/>
+              </svg>
             </button>
           </div>
         </div>
@@ -2412,6 +2410,44 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   );
 }
 
+// ─── Onglet Voyage (à venir) ──────────────────────────────────────────────────
+function VoyageScreen({C, user}){
+  const seasonKey = currentSeasonKey();
+  const acc = SEASON_ACCENT[seasonKey];
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      {/* En-tête */}
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>旅 · VOYAGE</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Préparer mon voyage</div>
+      </div>
+
+      <div style={{padding:"40px 24px 110px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",minHeight:"55%"}}>
+        <div style={{width:96,height:96,borderRadius:"50%",background:acc.soft,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:46,marginBottom:24}}>🗺️</div>
+        <div style={{fontSize:20,color:C.text,fontWeight:600,marginBottom:10}}>Bientôt disponible</div>
+        <div style={{fontSize:14,color:C.t2,lineHeight:1.6,maxWidth:300,marginBottom:24}}>
+          Ici tu pourras préparer ton séjour au Japon : itinéraires, lieux à visiter selon ta position, check-lists et conseils pratiques.
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:10,width:"100%",maxWidth:320}}>
+          {[
+            {emoji:"📍",t:"Suggestions géolocalisées",d:"Que voir autour de toi, ville par ville"},
+            {emoji:"🗓️",t:"Itinéraires personnalisés",d:"Selon tes goûts et la durée du séjour"},
+            {emoji:"✅",t:"Check-lists de préparation",d:"Avant et pendant le voyage"},
+          ].map((it,i)=>(
+            <div key={i} style={{display:"flex",alignItems:"center",gap:13,padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,textAlign:"left",opacity:0.75}}>
+              <span style={{fontSize:24,flexShrink:0}}>{it.emoji}</span>
+              <div>
+                <div style={{fontSize:14,color:C.text,fontWeight:500}}>{it.t}</div>
+                <div style={{fontSize:11,color:C.t2,marginTop:2}}>{it.d}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
@@ -2636,7 +2672,7 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,
     </div>
   );
 }
-const TABS=[{id:"home",kanji:"家",label:"Home"},{id:"explore",kanji:"探",label:"Explorer"},{id:"scenarios",kanji:"場",label:"Scénarios"},{id:"learn",kanji:"学",label:"Apprendre"},{id:"profile",kanji:"人",label:"Profil"}];
+const TABS=[{id:"home",kanji:"家",label:"Home"},{id:"explore",kanji:"探",label:"Explorer"},{id:"scenarios",kanji:"場",label:"Scénarios"},{id:"learn",kanji:"学",label:"Apprendre"},{id:"voyage",kanji:"旅",label:"Voyage"}];
 // ─── Achievement unlocked popup ───────────────────────────────────────────────
 function AchievementPopup({C, achievement, onClose}){
   if(!achievement) return null;
@@ -3342,11 +3378,12 @@ export default function IsekaidApp(){
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress}/>}
+              {tab==="voyage"    &&<VoyageScreen    C={C} user={user}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
