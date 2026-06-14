@@ -291,15 +291,26 @@ function speakJP(text){
 function browserSpeak(text){
   try {
     if(!window.speechSynthesis || !text) return;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "ja-JP";
-    u.rate = 0.85;
-    u.pitch = 1.0;
+    const speak = ()=>{
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "ja-JP";
+      u.rate = 0.85;
+      u.pitch = 1.0;
+      const voices = window.speechSynthesis.getVoices();
+      const jp = voices.find(v=>v.lang==="ja-JP") || voices.find(v=>v.lang?.toLowerCase().startsWith("ja"));
+      if(jp) u.voice = jp;
+      window.speechSynthesis.speak(u);
+    };
     const voices = window.speechSynthesis.getVoices();
-    const jp = voices.find(v=>v.lang==="ja-JP" || v.lang?.startsWith("ja"));
-    if(jp) u.voice = jp;
-    window.speechSynthesis.speak(u);
+    if(voices && voices.length){
+      speak();
+    } else {
+      // Les voix se chargent de façon asynchrone sur certains navigateurs (iOS, Chrome)
+      window.speechSynthesis.onvoiceschanged = ()=>{ speak(); window.speechSynthesis.onvoiceschanged = null; };
+      // Filet de sécurité : tente quand même après un court délai
+      setTimeout(speak, 250);
+    }
   } catch(e){}
 }
 
@@ -622,6 +633,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
   const [repas, setRepas] = useState(null);
   const [song,  setSong]  = useState(null);
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
+  const [recoOpen, setRecoOpen] = useState(false);
   const loaded = useRef(false);
 
   // Auto-alternate streak badge every 3s
@@ -717,29 +729,43 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           const reco = recommendForUser(db, user.why, today);
           if(!reco) return null;
           const {cat, item} = reco;
-          // Titre + sous-titre génériques selon la catégorie
+          // Titre + sous-titre + contenu complet selon la catégorie
           const META = {
-            culture:{label:"Culture",emoji:"🎴",title:item.titre,sub:item.contenu},
-            traditions:{label:"Tradition",emoji:item.emoji||"⛩️",title:item.nom,sub:item.tagline},
-            repas:{label:"Gastronomie",emoji:item.emoji||"🍱",title:item.nom_jp,sub:item.description||item.romaji},
-            regions:{label:"Région",emoji:item.emoji||"🗾",title:item.nom,sub:item.tagline},
-            vie_quotidienne:{label:"Vie quotidienne",emoji:item.emoji||"🏙️",title:item.titre,sub:item.resume},
-            expressions:{label:"Expression",emoji:"💬",title:item.expression,sub:item.traduction},
-            songs:{label:"Musique",emoji:"🎵",title:item.titre,sub:item.artiste},
-            situations:{label:"Phrase utile",emoji:"🗣️",title:item.titre,sub:(item.phrases?.[0]?.fr)||""},
-          }[cat] || {label:"Pour toi",emoji:"✨",title:"",sub:""};
+            culture:{label:"Culture",emoji:"🎴",title:item.titre,sub:item.contenu,full:item.contenu,extra:item.insight},
+            traditions:{label:"Tradition",emoji:item.emoji||"⛩️",title:item.nom,sub:item.tagline,full:item.histoire||item.tagline,extra:item.comment_vivre},
+            repas:{label:"Gastronomie",emoji:item.emoji||"🍱",title:item.nom_jp,sub:item.description||item.romaji,full:item.description,extra:item.romaji?`Lecture : ${item.romaji}`:""},
+            regions:{label:"Région",emoji:item.emoji||"🗾",title:item.nom,sub:item.tagline,full:item.ambiance||item.tagline,extra:""},
+            vie_quotidienne:{label:"Vie quotidienne",emoji:item.emoji||"🏙️",title:item.titre,sub:item.resume,full:item.description||item.resume,extra:""},
+            expressions:{label:"Expression",emoji:"💬",title:item.expression,sub:item.traduction,full:item.contexte,extra:item.exemple_jp?`${item.exemple_jp} — ${item.exemple_fr||""}`:""},
+            songs:{label:"Musique",emoji:"🎵",title:item.titre,sub:item.artiste,full:item.contexte||"",extra:""},
+            situations:{label:"Phrase utile",emoji:"🗣️",title:item.titre,sub:(item.phrases?.[0]?.fr)||"",full:"",extra:""},
+          }[cat] || {label:"Pour toi",emoji:"✨",title:"",sub:"",full:"",extra:""};
+          const jpText = cat==="repas"?item.nom_jp:(cat==="expressions"?item.expression:null);
           return(
             <div style={{marginBottom:26}}>
               <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:11}}>
                 <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>✨ Recommandé pour toi</span>
               </div>
-              <div style={{padding:"16px",background:`linear-gradient(160deg,rgba(201,70,61,0.08),transparent)`,border:`1px solid rgba(201,70,61,0.2)`,borderRadius:14,display:"flex",alignItems:"center",gap:14}}>
-                <span style={{fontSize:32,flexShrink:0}}>{META.emoji}</span>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:9,color:C.red,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{META.label} · selon tes goûts</div>
-                  <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{META.title}</div>
-                  <div style={{fontSize:12,color:C.t2,lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{META.sub}</div>
+              <div onClick={()=>setRecoOpen(o=>!o)} style={{padding:"16px",background:`linear-gradient(160deg,rgba(201,70,61,0.08),transparent)`,border:`1px solid rgba(201,70,61,0.2)`,borderRadius:14,cursor:"pointer",transition:"all .2s"}}>
+                <div style={{display:"flex",alignItems:"center",gap:14}}>
+                  <span style={{fontSize:32,flexShrink:0}}>{META.emoji}</span>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:9,color:C.red,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{META.label} · selon tes goûts</div>
+                    <div style={{display:"flex",alignItems:"center",gap:7}}>
+                      <span style={{fontSize:15,color:C.text,fontWeight:500,overflow:recoOpen?"visible":"hidden",textOverflow:"ellipsis",whiteSpace:recoOpen?"normal":"nowrap"}}>{META.title}</span>
+                      {jpText && recoOpen && <SpeakButton C={C} text={jpText} color={C.red} size={24}/>}
+                    </div>
+                    {!recoOpen && <div style={{fontSize:12,color:C.t2,lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:1,WebkitBoxOrient:"vertical",marginTop:2}}>{META.sub}</div>}
+                  </div>
+                  <span style={{fontSize:13,color:C.t3,flexShrink:0,transform:recoOpen?"rotate(180deg)":"none",transition:"transform .2s"}}>▾</span>
                 </div>
+                {recoOpen && (
+                  <div style={{marginTop:14,paddingTop:14,borderTop:`1px solid ${C.border}`,animation:"fadeUp .3s ease"}}>
+                    {META.full && <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:META.extra?10:0}}>{META.full}</div>}
+                    {META.extra && <div style={{fontSize:12,color:C.t3,lineHeight:1.5,fontStyle:"italic"}}>{META.extra}</div>}
+                    {!META.full && !META.extra && <div style={{fontSize:13,color:C.t2}}>{META.sub}</div>}
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -1333,6 +1359,7 @@ function CodesScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
 
 // ─── Traditions : calendrier annuel ──────────────────────────────────────────
 const SEASONS = [
+  {id:"quotidien", label:"Quotidien", jp:"日常", emoji:"🏮", color:"#C9463D", months:"Toute l'année"},
   {id:"printemps", label:"Printemps", jp:"春", emoji:"🌸", color:"#D98BA8", months:"Mars – Mai"},
   {id:"été",       label:"Été",       jp:"夏", emoji:"🎆", color:"#5B9BD5", months:"Juin – Août"},
   {id:"automne",   label:"Automne",   jp:"秋", emoji:"🍁", color:"#C97D3C", months:"Sept – Nov"},
@@ -1414,7 +1441,7 @@ function TraditionDetail({C,t,onBack,fav,onFav,wikiMap,onWikiTap,script}){
 }
 
 function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
-  const [season,setSeason] = useState("printemps");
+  const [season,setSeason] = useState("quotidien");
   const [selected,setSelected] = useState(null);
   const traditions = db?.traditions || [];
 
@@ -2066,6 +2093,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   const [situation,setSituation] = useState(null); // selected situation
   const [pathStep,setPathStep] = useState(null);   // active path step (detail)
   const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
+  const [learnMode,setLearnMode] = useState(null);   // null = choix | "path" | "free"
   const situations = db?.situations || [];
   const kp = kanaProgress || {};
   const completed = pathProgress?.completed || [];
@@ -2203,14 +2231,50 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
     );
   }
 
-  // Home: decks + situations
+  // Home: choix entre Parcours et Entraînement libre
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-      <div style={{padding:"50px 20px 110px"}}>
+      {/* En-tête sticky */}
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihongo wo manabu":"日本語を学ぶ"}</div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Apprends à lire et à parler</div>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Nihongo wo manabu":"日本語を学ぶ"}</div>
+          {learnMode && <button onClick={()=>setLearnMode(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"6px 13px",color:C.t2,fontSize:12,cursor:"pointer",whiteSpace:"nowrap"}}>‹ Menu</button>}
+        </div>
+      </div>
+      <div style={{padding:"20px 20px 110px"}}>
 
+        {/* ── Écran de choix (aucun mode sélectionné) ── */}
+        {!learnMode && (()=>{
+          const doneCount = TOKYO_PATH.filter(s=>completed.includes(s.id)).length;
+          return(
+            <div style={{display:"flex",flexDirection:"column",gap:16}}>
+              {/* Carte Parcours */}
+              <div onClick={()=>setLearnMode("path")} style={{cursor:"pointer",padding:"22px",borderRadius:18,background:`linear-gradient(150deg,rgba(201,70,61,0.12),rgba(158,122,26,0.06))`,border:`1px solid rgba(201,70,61,0.25)`,position:"relative",overflow:"hidden"}}>
+                <div style={{fontSize:64,position:"absolute",top:-6,right:8,opacity:0.12}}>🗼</div>
+                <div style={{fontSize:11,color:C.red,letterSpacing:".12em",textTransform:"uppercase",marginBottom:8}}>Parcours guidé</div>
+                <div style={{fontSize:19,color:C.text,fontWeight:600,marginBottom:6}}>Survivre à Tokyo</div>
+                <div style={{fontSize:13,color:C.t2,lineHeight:1.5,marginBottom:14,maxWidth:260}}>Un programme étape par étape pour te débrouiller une semaine sur place : lire, saluer, commander, te déplacer.</div>
+                <div style={{display:"flex",alignItems:"center",gap:10}}>
+                  <div style={{flex:1,height:6,background:C.s3,borderRadius:3,overflow:"hidden"}}>
+                    <div style={{height:"100%",width:`${(doneCount/TOKYO_PATH.length)*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
+                  </div>
+                  <span style={{fontSize:11,color:C.t2,fontWeight:600,whiteSpace:"nowrap"}}>{doneCount}/{TOKYO_PATH.length}</span>
+                </div>
+              </div>
+              {/* Carte Entraînement libre */}
+              <div onClick={()=>setLearnMode("free")} style={{cursor:"pointer",padding:"22px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+                <div style={{fontSize:60,position:"absolute",top:-2,right:10,opacity:0.1}}>🎴</div>
+                <div style={{fontSize:11,color:C.gold,letterSpacing:".12em",textTransform:"uppercase",marginBottom:8}}>À la carte</div>
+                <div style={{fontSize:19,color:C.text,fontWeight:600,marginBottom:6}}>Entraînement libre</div>
+                <div style={{fontSize:13,color:C.t2,lineHeight:1.5,maxWidth:260}}>Révise les syllabaires (hiragana, katakana, sons avancés) en flashcards ou quiz, et explore les situations courantes à ton rythme.</div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ── Mode Parcours ── */}
+        {learnMode==="path" && (<>
         {/* ── Parcours "Survivre à Tokyo" ── */}
         <div style={{marginBottom:30}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:4}}>
@@ -2249,7 +2313,10 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
             })}
           </div>
         </div>
+        </>)}
 
+        {/* ── Mode Entraînement libre (flashcards + situations) ── */}
+        {learnMode==="free" && (<>
         {/* Syllabaires */}
         {["Bases","Avancé"].map(grp=>(
           <div key={grp}>
@@ -2297,6 +2364,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
           ))}
           {situations.length===0 && <div style={{padding:"18px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
         </div>
+        </>)}
       </div>
     </div>
   );
@@ -2787,76 +2855,53 @@ function Onboarding({onComplete}){
 }
 
 // ─── Parcours de présentation (tour des fonctionnalités) ──────────────────────
+// Parcours guidé contextuel : chaque étape pointe une section (onglet) réelle
 const TOUR_STEPS = [
-  {
-    emoji:"異",
-    serif:true,
-    title:"Bienvenue dans Isekai'd",
-    text:"Ton rendez-vous quotidien avec le Japon : culture, langue, traditions et vie quotidienne, un peu chaque jour.",
-    color:"#C9463D",
-  },
-  {
-    emoji:"🗓️",
-    title:"Un contenu frais chaque jour",
-    text:"Expression, plat, proverbe et recommandations personnalisées selon tes goûts. Reviens chaque jour pour découvrir du nouveau.",
-    color:"#C4956A",
-  },
-  {
-    emoji:"🔑",
-    title:"Gagne des clés, débloque du contenu",
-    text:"Chaque jour de connexion te donne une clé. Dépense-les pour débloquer des catégories — traditions, régions, codes sociaux… et gagne de l'XP.",
-    color:"#9E7A1A",
-  },
-  {
-    emoji:"🎴",
-    title:"Apprends en t'amusant",
-    text:"Flashcards à glisser pour les syllabaires, scénarios interactifs, phrases utiles, prononciation audio. Ta progression est suivie.",
-    color:"#3A6645",
-  },
-  {
-    emoji:"🏆",
-    title:"Progresse et débloque des badges",
-    text:"Monte en titre, enchaîne les séries, collectionne les badges. Ton compte synchronise tout entre tes appareils.",
-    color:"#5B9BD5",
-  },
+  {tab:"home",      emoji:"🏠", title:"L'accueil",        text:"Ton rendez-vous quotidien : proverbe du jour, recommandations selon tes goûts, et ta sélection « Daily Japan ». Reviens chaque jour pour du nouveau contenu et garder ta série 🔥."},
+  {tab:"explore",   emoji:"🗺️", title:"Explorer",          text:"Découvre traditions, vie quotidienne, codes sociaux et régions. Certaines catégories se débloquent avec les clés 🔑 que tu gagnes chaque jour."},
+  {tab:"scenarios", emoji:"🎭", title:"Scénarios",        text:"Des dialogues interactifs à embranchements pour t'entraîner à de vraies conversations. Réussis-les pour gagner des clés et de l'XP."},
+  {tab:"learn",     emoji:"🎴", title:"Apprendre",         text:"Le cœur de l'app : le parcours « Survivre à Tokyo » étape par étape, ou l'entraînement libre (flashcards de kana, situations). Avec prononciation audio 🔊."},
+  {tab:"profile",   emoji:"🏆", title:"Ton profil",        text:"Suis ta progression : titre, XP, maîtrise des syllabaires, badges débloqués et tes favoris. Tout est synchronisé sur ton compte."},
 ];
 
-function Tour({C, onDone}){
-  const [step,setStep] = useState(0);
+function GuidedTour({C, step, onNext, onPrev, onSkip, onFinish, dontShowAgain, setDontShowAgain}){
   const s = TOUR_STEPS[step];
   const last = step === TOUR_STEPS.length-1;
+  const first = step === 0;
   return(
-    <div style={{height:"100%",display:"flex",flexDirection:"column",background:C.bg}}>
-      {/* Skip */}
-      <div style={{padding:"50px 22px 0",display:"flex",justifyContent:"flex-end",flexShrink:0}}>
-        <span onClick={onDone} style={{fontSize:12,color:C.t3,cursor:"pointer"}}>Passer</span>
-      </div>
-
-      {/* Content */}
-      <div key={step} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"0 36px",textAlign:"center",animation:"fadeUp .4s ease"}}>
-        <div style={{
-          width:120,height:120,borderRadius:"50%",marginBottom:34,
-          display:"flex",alignItems:"center",justifyContent:"center",
-          background:`${s.color}14`, border:`1px solid ${s.color}40`,
-          fontSize:s.serif?60:52, fontFamily:s.serif?"'Noto Serif JP',serif":"inherit",
-          color:s.serif?s.color:"inherit", fontWeight:s.serif?300:"normal",
-        }}>{s.emoji}</div>
-        <div style={{fontSize:23,fontWeight:600,color:C.text,marginBottom:14,lineHeight:1.3}}>{s.title}</div>
-        <div style={{fontSize:15,color:C.t2,lineHeight:1.65,maxWidth:300}}>{s.text}</div>
-      </div>
-
-      {/* Dots + button */}
-      <div style={{padding:"0 36px 40px",flexShrink:0}}>
-        <div style={{display:"flex",justifyContent:"center",gap:7,marginBottom:26}}>
-          {TOUR_STEPS.map((_,i)=>(
-            <div key={i} onClick={()=>setStep(i)} style={{width:i===step?22:7,height:7,borderRadius:4,background:i===step?s.color:C.s3,cursor:"pointer",transition:"all .3s"}}/>
-          ))}
+    <>
+      {/* Voile sombre — laisse voir la section derrière */}
+      <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:300,backdropFilter:"blur(1px)"}}/>
+      {/* Carte d'explication, ancrée en bas (au-dessus de la nav) */}
+      <div style={{position:"fixed",left:"50%",bottom:90,transform:"translateX(-50%)",width:"min(90vw,360px)",zIndex:301,background:C.s1,borderRadius:18,padding:"22px 22px 18px",boxShadow:"0 20px 60px rgba(0,0,0,0.45)",border:`1px solid ${C.border}`,animation:"fadeUp .35s ease"}}>
+        {/* Skip en haut à droite */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+          <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>Découverte · {step+1}/{TOUR_STEPS.length}</span>
+          {!last && <span onClick={onSkip} style={{fontSize:12,color:C.t3,cursor:"pointer"}}>Passer</span>}
         </div>
-        <button onClick={()=> last ? onDone() : setStep(step+1)} style={{width:"100%",padding:"15px",background:s.color,border:"none",borderRadius:12,color:"#fff",fontSize:15,fontWeight:600,cursor:"pointer",transition:"background .3s"}}>
-          {last ? "Commencer 🌸" : "Suivant →"}
-        </button>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+          <span style={{fontSize:34}}>{s.emoji}</span>
+          <div style={{fontSize:19,fontWeight:600,color:C.text}}>{s.title}</div>
+        </div>
+        <div style={{fontSize:14,color:C.t2,lineHeight:1.6,marginBottom:18}}>{s.text}</div>
+
+        {/* Sur la dernière étape : option de désactivation */}
+        {last && (
+          <div onClick={()=>setDontShowAgain(v=>!v)} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 13px",background:C.s2,borderRadius:10,marginBottom:16,cursor:"pointer",border:`1px solid ${dontShowAgain?C.red:C.border}`}}>
+            <div style={{width:20,height:20,borderRadius:5,flexShrink:0,border:`1px solid ${dontShowAgain?C.red:C.t3}`,background:dontShowAgain?C.red:"transparent",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:13}}>{dontShowAgain?"✓":""}</div>
+            <span style={{fontSize:13,color:C.text}}>Ne plus afficher ce parcours à l'ouverture</span>
+          </div>
+        )}
+
+        {/* Navigation */}
+        <div style={{display:"flex",gap:10}}>
+          {!first && <button onClick={onPrev} style={{flex:"0 0 auto",padding:"13px 18px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:14,cursor:"pointer"}}>‹</button>}
+          <button onClick={last ? onFinish : onNext} style={{flex:1,padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+            {last ? "Terminer 🌸" : "Suivant →"}
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -2878,9 +2923,9 @@ function Splash({onDone}){
 // ─── Root ─────────────────────────────────────────────────────────────────────
 // Persistence helpers (localStorage) — safe wrappers
 const STORE_KEY = "isekaid_profile_v1";
-const TOUR_KEY = "isekaid_tour_v1";
-function tourSeen(){ try { return localStorage.getItem(TOUR_KEY)==="1"; } catch { return false; } }
-function markTourSeen(){ try { localStorage.setItem(TOUR_KEY,"1"); } catch {} }
+const TOUR_KEY = "isekaid_tour_off_v1"; // "1" => parcours désactivé (ne plus afficher)
+function tourDisabled(){ try { return localStorage.getItem(TOUR_KEY)==="1"; } catch { return false; } }
+function setTourDisabled(off){ try { localStorage.setItem(TOUR_KEY, off?"1":"0"); } catch {} }
 const THEME_KEY = "isekaid_theme_v1";
 function loadProfile(){
   try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
@@ -3100,6 +3145,8 @@ export default function IsekaidApp(){
   const [wikiEntry,setWikiEntry]=useState(null);
   const [showWelcome,setShowWelcome]=useState(false);
   const [showSearch,setShowSearch]=useState(false);
+  const [tourStep,setTourStep]=useState(-1); // -1 = inactif, 0+ = étape en cours
+  const [tourDontShow,setTourDontShow]=useState(false);
   const [newAchievement,setNewAchievement]=useState(null);
 
   // Detect newly unlocked achievements and celebrate
@@ -3209,10 +3256,31 @@ export default function IsekaidApp(){
   const completeOnboarding = (u)=>{
     saveProfile(u);
     setUser(u);
-    setScreen(tourSeen() ? "app" : "tour");
+    setScreen("app");
+    // Lance le parcours guidé sauf s'il a été désactivé
+    if(!tourDisabled()){ setTab("home"); setTourStep(0); }
   };
 
-  const finishTour = ()=>{ markTourSeen(); setScreen("app"); };
+  // Lance le parcours guidé à chaque ouverture (si non désactivé) — une fois l'app affichée
+  useEffect(()=>{
+    if(screen==="app" && user && !tourDisabled() && tourStep===-1){
+      // léger délai pour laisser l'app s'afficher
+      const t = setTimeout(()=>{ setTab("home"); setTourStep(0); }, 400);
+      return ()=>clearTimeout(t);
+    }
+  },[screen, user]);
+
+  const tourNext = ()=>{
+    const next = tourStep+1;
+    if(next < TOUR_STEPS.length){ setTab(TOUR_STEPS[next].tab); setTourStep(next); }
+  };
+  const tourPrev = ()=>{
+    const prev = tourStep-1;
+    if(prev>=0){ setTab(TOUR_STEPS[prev].tab); setTourStep(prev); }
+  };
+  const tourSkip = ()=>{ setTourStep(-1); setTab("home"); };
+  const tourFinish = ()=>{ if(tourDontShow) setTourDisabled(true); setTourStep(-1); setTab("home"); };
+  const startTour = ()=>{ setTourDontShow(false); setTab("home"); setTourStep(0); };
 
   // Reset profile (called from Profile screen)
   const resetProfile = ()=>{
@@ -3229,7 +3297,6 @@ export default function IsekaidApp(){
         {screen==="splash"     &&<Splash onDone={afterSplash}/>}
         {screen==="auth"       &&<AuthScreen C={C} onSkip={skipAuthAndContinue}/>}
         {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
-        {screen==="tour"       &&<Tour C={C} onDone={finishTour}/>}
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
@@ -3237,10 +3304,12 @@ export default function IsekaidApp(){
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={()=>setScreen("tour")} pathProgress={pathProgress}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
+            {/* Parcours guidé contextuel */}
+            {tourStep>=0 && <GuidedTour C={C} step={tourStep} onNext={tourNext} onPrev={tourPrev} onSkip={tourSkip} onFinish={tourFinish} dontShowAgain={tourDontShow} setDontShowAgain={setTourDontShow}/>}
             {/* Global wiki panel — available everywhere */}
             {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
             {/* Daily welcome popup */}
