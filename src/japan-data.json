@@ -1694,6 +1694,871 @@
       ],
       "gastronomie": "Ramen de Sapporo, fruits de mer, maïs grillé, soupe au lait",
       "lieu_phare": "Sapporo, Hokkaido — parc Ōdōri, février"
+    },
+    {
+      "id": "itadakimasu",
+      "nom": "Itadakimasu & Gochisōsama",
+      "nom_jp": "いただきます",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🙏",
+      "tagline": "Remercier avant et après chaque repas",
+      "histoire": "Avant de manger, les Japonais joignent les mains et disent « itadakimasu » (« je reçois humblement »), et « gochisōsama deshita » en terminant. Loin d'être une simple formule, c'est un remerciement à tous ceux qui ont rendu le repas possible — agriculteurs, cuisinier, et même aux êtres vivants sacrifiés. Cette gratitude s'enracine dans le bouddhisme et le shintoïsme.",
+      "rituels": [
+        "Joindre les mains devant soi",
+        "Dire « itadakimasu » avant la première bouchée",
+        "Dire « gochisōsama deshita » à la fin",
+        "Ne pas gaspiller — finir son assiette par respect"
+      ],
+      "comment_vivre": [
+        "Imite le geste, même au restaurant ou au konbini",
+        "Dis-le à voix basse, ce n'est pas théâtral",
+        "Observe les enfants à l'école : ils le font en chœur",
+        "Un signe de tête suffit si tu manges seul"
+      ],
+      "gastronomie": "S'applique à tout repas, du kaiseki raffiné au bol de ramen",
+      "lieu_phare": "Partout : maisons, cantines scolaires, restaurants, izakaya"
+    },
+    {
+      "id": "oshibori",
+      "nom": "L'oshibori",
+      "nom_jp": "おしぼり",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🤲",
+      "tagline": "La serviette chaude offerte en s'asseyant",
+      "histoire": "Dès que tu t'assieds dans un restaurant ou un izakaya, on te tend une petite serviette humide — chaude en hiver, fraîche en été. L'oshibori sert à se nettoyer les mains avant de manger. C'est un geste d'hospitalité (omotenashi) vieux de plusieurs siècles, mentionné dès le théâtre nō.",
+      "rituels": [
+        "Se nettoyer les mains en s'asseyant",
+        "Replier l'oshibori et le poser près de soi",
+        "Ne pas l'utiliser pour s'essuyer le visage (mal vu en public)"
+      ],
+      "comment_vivre": [
+        "Utilise-la dès qu'on te la donne",
+        "Replie-la proprement après usage",
+        "En été elle est rafraîchissante, profite-en",
+        "Évite de t'en servir comme serviette de table"
+      ],
+      "gastronomie": "Présente dans presque tous les restaurants et izakaya",
+      "lieu_phare": "Izakaya, restaurants, certains taxis et vols intérieurs"
+    },
+    {
+      "id": "konbini-greeting",
+      "nom": "Irasshaimase !",
+      "nom_jp": "いらっしゃいませ",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🏪",
+      "tagline": "L'accueil sonore dans chaque commerce",
+      "histoire": "En franchissant la porte d'un konbini, d'un restaurant ou d'une boutique, tu es accueilli par un « irasshaimase ! » (« bienvenue ! ») lancé énergiquement par le personnel. Ce n'est pas une question, on n'y répond pas. C'est l'expression de l'omotenashi, l'art japonais de l'hospitalité désintéressée.",
+      "rituels": [
+        "Le personnel le lance à chaque entrée de client",
+        "Souvent repris en chœur par toute l'équipe",
+        "Aucune réponse attendue du client"
+      ],
+      "comment_vivre": [
+        "Ne réponds pas — un simple signe de tête suffit",
+        "Observe l'énergie mise dans l'accueil",
+        "Au moment de payer, un « arigatō » est apprécié",
+        "Écoute les variantes selon les enseignes"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Konbini, restaurants, grands magasins, boutiques"
+    },
+    {
+      "id": "slurp",
+      "nom": "Aspirer ses nouilles",
+      "nom_jp": "すする",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🍜",
+      "tagline": "Le bruit qui est un compliment",
+      "histoire": "Au Japon, aspirer bruyamment ses ramen, soba ou udon n'est pas malpoli — c'est même valorisé. Le bruit (susuru) indique qu'on apprécie le plat, aère les nouilles pour révéler les arômes, et permet de les manger très chaudes. C'est l'un des rares cas où faire du bruit en mangeant est encouragé.",
+      "rituels": [
+        "Aspirer les nouilles avec un bruit franc",
+        "Manger vite tant que c'est chaud",
+        "Boire le bouillon directement au bol"
+      ],
+      "comment_vivre": [
+        "Ose aspirer, personne ne te jugera",
+        "Ça paraît étrange au début, puis ça devient naturel",
+        "Penche-toi vers le bol, ne lève pas le bol trop haut",
+        "Le silence, lui, peut surprendre le chef"
+      ],
+      "gastronomie": "Ramen, soba, udon — toutes les nouilles en bouillon",
+      "lieu_phare": "Échoppes de ramen, restaurants de soba, stands de gare"
+    },
+    {
+      "id": "vending",
+      "nom": "Les distributeurs partout",
+      "nom_jp": "自動販売機",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🥤",
+      "tagline": "Une machine à boissons à chaque coin de rue",
+      "histoire": "Le Japon compte environ un distributeur automatique pour 30 habitants — boissons chaudes et froides, à toute heure, même au sommet du mont Fuji. Leur omniprésence tient à la faible criminalité (personne ne les vandalise), à la densité urbaine et à l'amour de la commodité. Le bouton rouge = chaud, le bleu = froid.",
+      "rituels": [
+        "Boire sur place et jeter la canette dans la poubelle attenante",
+        "Choisir chaud (赤) ou froid (青)",
+        "Payer en pièces, IC card ou parfois smartphone"
+      ],
+      "comment_vivre": [
+        "Garde quelques pièces de 100 yens sur toi",
+        "Essaie une boisson chaude en canette en hiver",
+        "Ne marche pas en buvant — bois près de la machine",
+        "Repère le café en canette, une institution"
+      ],
+      "gastronomie": "Café, thé vert, boissons isotoniques, soupe parfois",
+      "lieu_phare": "Partout : rues, gares, parcs, sommets de montagne"
+    },
+    {
+      "id": "phone-bow",
+      "nom": "S'incliner au téléphone",
+      "nom_jp": "お辞儀",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🙇",
+      "tagline": "Le salut respectueux, même invisible",
+      "histoire": "Il n'est pas rare de voir un Japonais s'incliner en pleine conversation téléphonique, alors que son interlocuteur ne le voit pas. L'inclinaison (ojigi) est si ancrée comme marque de respect qu'elle devient un réflexe corporel. Le degré d'inclinaison varie selon le respect dû : léger salut entre égaux, profonde courbure pour des excuses sincères.",
+      "rituels": [
+        "Inclinaison légère (15°) pour saluer",
+        "Inclinaison moyenne (30°) pour remercier",
+        "Inclinaison profonde (45°) pour s'excuser"
+      ],
+      "comment_vivre": [
+        "Un léger signe de tête suffit pour un étranger",
+        "Observe les employés de gare et de magasin",
+        "N'exagère pas — la sincérité prime sur l'angle",
+        "On ne serre quasiment jamais la main"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Bureaux, gares, commerces, partout dans les interactions"
+    },
+    {
+      "id": "plastic-food",
+      "nom": "Les plats en plastique",
+      "nom_jp": "食品サンプル",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🍱",
+      "tagline": "Les répliques de plats en vitrine",
+      "histoire": "Devant les restaurants, des répliques ultra-réalistes des plats (sampuru) sont exposées en vitrine. Apparues dans les années 1920 pour aider une clientèle peu habituée aux menus, elles sont devenues un artisanat à part entière, fabriquées à la main en cire puis en PVC. Elles permettent de commander en pointant, sans parler japonais.",
+      "rituels": [
+        "Examiner la vitrine avant d'entrer",
+        "Pointer le plat souhaité si besoin",
+        "Repérer les prix affichés sous chaque réplique"
+      ],
+      "comment_vivre": [
+        "Utilise-les pour commander sans parler",
+        "Prends le serveur dehors et montre la réplique",
+        "Idéal quand le menu n'a ni photos ni anglais",
+        "Kappabashi (Tokyo) est LE quartier pour en acheter"
+      ],
+      "gastronomie": "Tous types de plats : ramen, parfaits, bentō, tempura",
+      "lieu_phare": "Devanture des restaurants, rue Kappabashi (Tokyo)"
+    },
+    {
+      "id": "clean-streets",
+      "nom": "Des rues sans poubelles",
+      "nom_jp": "ゴミの持ち帰り",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🧹",
+      "tagline": "Propreté impeccable malgré l'absence de poubelles",
+      "histoire": "Les rues japonaises sont remarquablement propres alors qu'on n'y trouve presque aucune poubelle publique (retirées notamment après l'attentat de 1995). La norme : chacun rapporte ses déchets chez soi. Cette propreté collective s'apprend dès l'école, où les élèves nettoient eux-mêmes leur classe (sōji).",
+      "rituels": [
+        "Garder ses déchets sur soi jusqu'à une poubelle",
+        "Trier rigoureusement (brûlable, plastique, canettes)",
+        "Ne jamais jeter par terre, même un mégot"
+      ],
+      "comment_vivre": [
+        "Garde un petit sac pour tes déchets",
+        "Jette près des konbini ou des distributeurs",
+        "Ne mange pas en marchant (lié à la propreté)",
+        "Observe : zéro détritus, zéro poubelle, un mystère résolu"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Toutes les villes, des ruelles de Tokyo aux gares"
+    },
+    {
+      "id": "nyugaku",
+      "nom": "Nyūgakushiki",
+      "nom_jp": "入学式",
+      "saison": "printemps",
+      "mois": "Avril",
+      "emoji": "🎒",
+      "tagline": "La rentrée scolaire sous les cerisiers",
+      "histoire": "Au Japon, l'année scolaire et professionnelle commence en avril, en pleine floraison des cerisiers. La cérémonie d'entrée (nyūgakushiki) est un moment solennel : les enfants en uniforme neuf, accompagnés de leurs parents, franchissent les portes de l'école. Le sakura en toile de fond symbolise les nouveaux départs.",
+      "rituels": [
+        "Cérémonie formelle dans le gymnase",
+        "Photo de famille sous les cerisiers",
+        "Cartable randoseru flambant neuf"
+      ],
+      "comment_vivre": [
+        "Observe les familles endimanchées début avril",
+        "Les randoseru colorés sont partout",
+        "Moment très photographié, respecte l'intimité"
+      ],
+      "gastronomie": "Bentō de célébration, sekihan (riz aux haricots rouges)",
+      "lieu_phare": "Écoles primaires, entreprises, partout au Japon"
+    },
+    {
+      "id": "ohanami-picnic",
+      "nom": "Le bentō de hanami",
+      "nom_jp": "花見弁当",
+      "saison": "printemps",
+      "mois": "Mars – Avril",
+      "emoji": "🍱",
+      "tagline": "Le pique-nique codifié sous les fleurs",
+      "histoire": "Le hanami ne se conçoit pas sans son bentō spécial, aux couleurs printanières. Onigiri, tamagoyaki, karaage et wagashi roses sont disposés avec soin. Les konbini et grands magasins proposent des bentō de hanami éphémères chaque saison.",
+      "rituels": [
+        "Réserver l'emplacement tôt le matin",
+        "Disposer un bentō coloré",
+        "Partager nourriture et boissons en groupe"
+      ],
+      "comment_vivre": [
+        "Achète un bentō de saison au depachika",
+        "Apporte une bâche bleue (le standard)",
+        "Le plus jeune du groupe garde la place le matin"
+      ],
+      "gastronomie": "Bentō printanier, sakura mochi, sake",
+      "lieu_phare": "Parcs d'Ueno, Yoyogi, bords de rivière Meguro"
+    },
+    {
+      "id": "hanami-dango",
+      "nom": "Hanami Dango",
+      "nom_jp": "花見団子",
+      "saison": "printemps",
+      "mois": "Mars – Avril",
+      "emoji": "🍡",
+      "tagline": "Les trois boulettes tricolores du printemps",
+      "histoire": "Le hanami dango, brochette de trois boulettes de mochi rose, blanc et vert, est LE wagashi du printemps. Les couleurs évoquent les fleurs de cerisier (rose), la neige qui fond (blanc) et les jeunes pousses (vert). Un dicton dit « hana yori dango » — les boulettes plutôt que les fleurs.",
+      "rituels": [
+        "Déguster sous les cerisiers",
+        "Trois couleurs dans un ordre précis"
+      ],
+      "comment_vivre": [
+        "Trouve-les en konbini au printemps",
+        "Goûte le contraste avec le thé vert amer"
+      ],
+      "gastronomie": "Mochi sucré à la pâte de haricot",
+      "lieu_phare": "Konbini, échoppes de wagashi, parcs"
+    },
+    {
+      "id": "shidare",
+      "nom": "Les cerisiers pleureurs",
+      "nom_jp": "枝垂れ桜",
+      "saison": "printemps",
+      "mois": "Avril",
+      "emoji": "🌸",
+      "tagline": "Les sakura aux branches tombantes",
+      "histoire": "Moins connus que les somei-yoshino, les shidarezakura (cerisiers pleureurs) offrent des cascades de fleurs aux branches retombantes. Certains, comme celui de Maruyama à Kyoto, sont vénérés et illuminés la nuit. Ils fleurissent souvent un peu avant les variétés classiques.",
+      "rituels": [
+        "Admirer l'illumination nocturne",
+        "Photographier les cascades de fleurs"
+      ],
+      "comment_vivre": [
+        "Cherche le célèbre cerisier de Maruyama (Kyoto)",
+        "Viens tôt ou tard pour éviter la foule"
+      ],
+      "gastronomie": "Thé matcha en terrasse de jardin",
+      "lieu_phare": "Parc Maruyama (Kyoto), temple de Rokusonnō"
+    },
+    {
+      "id": "shubun-haru",
+      "nom": "Higan de printemps",
+      "nom_jp": "春彼岸",
+      "saison": "printemps",
+      "mois": "Mars",
+      "emoji": "🌼",
+      "tagline": "Honorer les ancêtres à l'équinoxe",
+      "histoire": "Autour de l'équinoxe de printemps, la semaine de higan est consacrée aux ancêtres. Les familles nettoient les tombes (ohaka mairi) et offrent des botamochi, boulettes de riz enrobées de pâte de haricot. C'est un moment de connexion entre le monde des vivants et celui des défunts.",
+      "rituels": [
+        "Nettoyer et fleurir les tombes familiales",
+        "Offrir des botamochi",
+        "Prier pour les ancêtres"
+      ],
+      "comment_vivre": [
+        "Respecte le recueillement dans les cimetières",
+        "Les botamochi apparaissent en pâtisserie"
+      ],
+      "gastronomie": "Botamochi (riz et pâte de haricot rouge)",
+      "lieu_phare": "Temples bouddhistes, cimetières familiaux"
+    },
+    {
+      "id": "yukata",
+      "nom": "Porter le yukata",
+      "nom_jp": "浴衣",
+      "saison": "été",
+      "mois": "Juin – Août",
+      "emoji": "👘",
+      "tagline": "Le kimono léger des soirées d'été",
+      "histoire": "L'été, lors des matsuri et feux d'artifice, jeunes et moins jeunes revêtent le yukata, kimono de coton léger. Né comme vêtement de bain à l'époque Heian, il est devenu la tenue festive estivale par excellence. Les motifs varient selon l'âge et le goût.",
+      "rituels": [
+        "Nouer l'obi dans le dos",
+        "Porter des geta (sandales de bois)",
+        "Tenir un éventail (uchiwa)"
+      ],
+      "comment_vivre": [
+        "Loue ou achète un yukata pour un matsuri",
+        "Beaucoup de ryokan en prêtent",
+        "Marche à petits pas, c'est plus élégant"
+      ],
+      "gastronomie": "Kakigōri, takoyaki de festival",
+      "lieu_phare": "Matsuri d'été, feux d'artifice, quartiers de Kyoto"
+    },
+    {
+      "id": "kakigori",
+      "nom": "Kakigōri",
+      "nom_jp": "かき氷",
+      "saison": "été",
+      "mois": "Juin – Août",
+      "emoji": "🍧",
+      "tagline": "La glace pilée qui rafraîchit l'été",
+      "histoire": "Le kakigōri, glace finement pilée arrosée de sirop coloré, est le dessert estival incontournable. Mentionné dès le Xe siècle dans les écrits de Sei Shōnagon comme un luxe aristocratique, il est aujourd'hui partout, du stand de festival au café branché avec versions au matcha ou fruits frais.",
+      "rituels": [
+        "Choisir son sirop (fraise, melon, citron)",
+        "Ajouter du lait concentré sucré (option)"
+      ],
+      "comment_vivre": [
+        "Repère le drapeau 氷 (kōri = glace)",
+        "Mange vite avant que ça fonde",
+        "Essaie la version matcha-azuki haut de gamme"
+      ],
+      "gastronomie": "Glace pilée, sirops, lait concentré, mochi",
+      "lieu_phare": "Stands de festival, cafés, échoppes traditionnelles"
+    },
+    {
+      "id": "semi",
+      "nom": "Le chant des cigales",
+      "nom_jp": "蝉の声",
+      "saison": "été",
+      "mois": "Juillet – Août",
+      "emoji": "🦗",
+      "tagline": "La bande-son de l'été japonais",
+      "histoire": "Dès juillet, le chant assourdissant des cigales (semi) envahit le Japon. Loin d'être une nuisance, il est culturellement associé à l'été et à l'éphémère (les cigales adultes ne vivent que quelques semaines). On le retrouve dans la poésie, les haïkus et le cinéma de Miyazaki.",
+      "rituels": [
+        "Écouter le crescendo de fin d'après-midi",
+        "Les enfants chassent les cigales au filet"
+      ],
+      "comment_vivre": [
+        "Impossible à manquer en marchant",
+        "Repère les différentes espèces au chant distinct",
+        "Symbole sonore du natsu (été)"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Parcs, forêts, temples, partout en ville"
+    },
+    {
+      "id": "uchimizu",
+      "nom": "Uchimizu",
+      "nom_jp": "打ち水",
+      "saison": "été",
+      "mois": "Juin – Août",
+      "emoji": "💧",
+      "tagline": "Asperger d'eau pour rafraîchir la rue",
+      "histoire": "L'uchimizu est la coutume d'asperger d'eau le pas de sa porte et la rue, pour rafraîchir l'air par évaporation et abattre la poussière. Geste écologique et esthétique remontant à l'époque Edo, il exprime aussi l'hospitalité : une entrée fraîchement arrosée accueille les visiteurs.",
+      "rituels": [
+        "Asperger le matin ou en soirée",
+        "Utiliser l'eau de pluie récupérée"
+      ],
+      "comment_vivre": [
+        "Observe les commerçants le faire à l'aube",
+        "Geste à la fois pratique et poétique"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Devant les commerces, ruelles, temples"
+    },
+    {
+      "id": "furin",
+      "nom": "Les carillons à vent",
+      "nom_jp": "風鈴",
+      "saison": "été",
+      "mois": "Juin – Août",
+      "emoji": "🎐",
+      "tagline": "Le tintement rafraîchissant du furin",
+      "histoire": "Le furin, petite cloche de verre ou de métal suspendue à la fenêtre, tinte à la moindre brise. Son son cristallin est censé rafraîchir psychologiquement pendant la chaleur. Une bandelette de papier (tanzaku) y est attachée, portant parfois un vœu ou un haïku.",
+      "rituels": [
+        "Suspendre le furin à la véranda",
+        "Écouter son tintement à la brise"
+      ],
+      "comment_vivre": [
+        "Achète-en un comme souvenir sonore",
+        "Les temples organisent des expos de furin l'été"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Maisons traditionnelles, temple Kawasaki Daishi"
+    },
+    {
+      "id": "koyo",
+      "nom": "Kōyō",
+      "nom_jp": "紅葉",
+      "saison": "automne",
+      "mois": "Oct – Nov",
+      "emoji": "🍁",
+      "tagline": "La chasse aux feuilles rouges",
+      "histoire": "Pendant que le hanami célèbre le printemps, le kōyō célèbre l'automne : la contemplation des érables (momiji) et ginkgos virant au rouge et or. Comme pour les sakura, un « front des couleurs » descend du nord vers le sud, et les Japonais voyagent pour admirer les plus beaux sites.",
+      "rituels": [
+        "Voyager vers les sites réputés",
+        "Pique-niquer sous les érables",
+        "Illuminations nocturnes des jardins"
+      ],
+      "comment_vivre": [
+        "Suis le 'front du kōyō' à la météo",
+        "Kyoto et Nikkō sont spectaculaires",
+        "Viens en semaine pour éviter la foule"
+      ],
+      "gastronomie": "Patate douce grillée, châtaignes, momiji manjū",
+      "lieu_phare": "Kyoto (Tōfuku-ji), Nikkō, vallée de Korankei"
+    },
+    {
+      "id": "halloween-jp",
+      "nom": "Halloween à la japonaise",
+      "nom_jp": "ハロウィン",
+      "saison": "automne",
+      "mois": "Octobre",
+      "emoji": "🎃",
+      "tagline": "Le cosplay urbain géant de Shibuya",
+      "histoire": "Importé récemment, Halloween est devenu au Japon un phénomène de cosplay urbain plutôt qu'une fête pour enfants. Le carrefour de Shibuya se transforme en immense rassemblement costumé. Pas de porte-à-porte : c'est avant tout une occasion de se déguiser et de faire la fête entre adultes.",
+      "rituels": [
+        "Se déguiser et arpenter Shibuya",
+        "Photos de groupe costumés"
+      ],
+      "comment_vivre": [
+        "Évite Shibuya si tu n'aimes pas la foule",
+        "Les konbini regorgent de sucreries à thème"
+      ],
+      "gastronomie": "Sucreries et desserts à thème citrouille",
+      "lieu_phare": "Shibuya, parcs d'attractions, Kawasaki"
+    },
+    {
+      "id": "tsukimi-dango",
+      "nom": "Tsukimi & le lapin de lune",
+      "nom_jp": "月見",
+      "saison": "automne",
+      "mois": "Septembre",
+      "emoji": "🌕",
+      "tagline": "Contempler la pleine lune d'automne",
+      "histoire": "Le tsukimi célèbre la pleine lune de la mi-automne, considérée comme la plus belle de l'année. On dispose des tsukimi dango (boulettes blanches en pyramide) et des herbes de la pampa (susuki) près d'une fenêtre. La légende voit un lapin pilant le mochi sur la lune.",
+      "rituels": [
+        "Empiler 15 dango en pyramide",
+        "Décorer de susuki (herbe argentée)",
+        "Contempler la lune en silence"
+      ],
+      "comment_vivre": [
+        "Cherche le 'tsukimi burger' saisonnier",
+        "Repère le lapin dans la lune",
+        "McDonald's sort un menu tsukimi chaque année"
+      ],
+      "gastronomie": "Tsukimi dango, taro, marrons",
+      "lieu_phare": "Jardins, temples, depuis chez soi"
+    },
+    {
+      "id": "shinmai",
+      "nom": "Le riz nouveau",
+      "nom_jp": "新米",
+      "saison": "automne",
+      "mois": "Sept – Oct",
+      "emoji": "🌾",
+      "tagline": "La récolte de riz tant attendue",
+      "histoire": "L'automne marque la récolte du riz. Le shinmai (riz nouveau) est célébré pour sa texture moelleuse et son parfum. Les restaurants l'annoncent fièrement, et le festival shintō de Niiname-sai voit l'empereur offrir le premier riz aux divinités. Le riz est sacré dans la culture japonaise.",
+      "rituels": [
+        "Goûter le premier riz de l'année",
+        "Offrandes aux divinités du riz"
+      ],
+      "comment_vivre": [
+        "Cherche le label 新米 dans les restos",
+        "La différence de goût est réelle"
+      ],
+      "gastronomie": "Riz blanc nouveau, onigiri",
+      "lieu_phare": "Campagnes rizicoles, sanctuaires shintō"
+    },
+    {
+      "id": "akimatsuri",
+      "nom": "Aki Matsuri",
+      "nom_jp": "秋祭り",
+      "saison": "automne",
+      "mois": "Sept – Nov",
+      "emoji": "🏮",
+      "tagline": "Les fêtes de la moisson",
+      "histoire": "Les aki matsuri (festivals d'automne) remercient les divinités pour les récoltes. On y porte des mikoshi (sanctuaires portatifs) dans les rues au son des taiko. Chaque région a ses variantes spectaculaires, comme le Danjiri Matsuri d'Osaka où d'énormes chars de bois sont tirés à toute vitesse.",
+      "rituels": [
+        "Porter le mikoshi en procession",
+        "Jouer du taiko et de la flûte",
+        "Stands de nourriture (yatai)"
+      ],
+      "comment_vivre": [
+        "Suis le son des tambours",
+        "Goûte aux yatai (stands)",
+        "Le Danjiri d'Osaka est impressionnant"
+      ],
+      "gastronomie": "Takoyaki, yakisoba, pomme d'amour",
+      "lieu_phare": "Sanctuaires locaux, Kishiwada (Osaka)"
+    },
+    {
+      "id": "illumination",
+      "nom": "Les illuminations d'hiver",
+      "nom_jp": "イルミネーション",
+      "saison": "hiver",
+      "mois": "Nov – Fév",
+      "emoji": "✨",
+      "tagline": "Les villes parées de millions de lumières",
+      "histoire": "De novembre à février, le Japon se couvre d'illuminations spectaculaires (millions de LED). Initialement inspirées de Noël occidental, elles sont devenues un art à part entière, attirant des foules dans les jardins et avenues. C'est aussi un rendez-vous romantique pour les couples.",
+      "rituels": [
+        "Se promener parmi les lumières",
+        "Sortie romantique en couple"
+      ],
+      "comment_vivre": [
+        "Nabana no Sato (Nagoya) est légendaire",
+        "Viens à la tombée de la nuit",
+        "Habille-toi chaudement"
+      ],
+      "gastronomie": "Vin chaud, marrons grillés, amazake",
+      "lieu_phare": "Roppongi, Nabana no Sato, Kobe Luminarie"
+    },
+    {
+      "id": "kotatsu",
+      "nom": "Le kotatsu",
+      "nom_jp": "こたつ",
+      "saison": "hiver",
+      "mois": "Déc – Fév",
+      "emoji": "🔥",
+      "tagline": "La table chauffante dont on ne sort plus",
+      "histoire": "Le kotatsu, table basse équipée d'un chauffage sous une couverture, est le cœur de l'hiver japonais. On y glisse les jambes pour se réchauffer, on y mange, dort et regarde la télé en famille. Un dicton plaisante : une fois sous le kotatsu, impossible d'en sortir. Le chat s'y love aussi.",
+      "rituels": [
+        "Glisser les jambes sous la couverture",
+        "Manger des mikan (mandarines)",
+        "Toute la famille se réunit autour"
+      ],
+      "comment_vivre": [
+        "Certains cafés et ryokan en proposent",
+        "Associe-le aux mandarines, le combo culte",
+        "Méfie-toi : tu ne voudras plus bouger"
+      ],
+      "gastronomie": "Mikan (mandarines), nabe (fondue japonaise)",
+      "lieu_phare": "Foyers, ryokan, cafés à thème"
+    },
+    {
+      "id": "onsen-yuki",
+      "nom": "Onsen sous la neige",
+      "nom_jp": "雪見風呂",
+      "saison": "hiver",
+      "mois": "Déc – Fév",
+      "emoji": "♨️",
+      "tagline": "Le bain chaud face au paysage enneigé",
+      "histoire": "Le yukimi-buro est l'art de se baigner dans un onsen en plein air (rotenburo) tandis qu'il neige. Le contraste entre l'eau brûlante et le froid mordant, au milieu d'un paysage blanc, est considéré comme l'une des plus grandes expériences sensorielles du Japon. Les macaques de Nagano l'ont bien compris.",
+      "rituels": [
+        "Se laver entièrement avant le bain",
+        "Entrer nu dans l'eau brûlante",
+        "Contempler la neige en silence"
+      ],
+      "comment_vivre": [
+        "Respecte les règles : pas de maillot, lavage avant",
+        "Cache les tatouages ou choisis un onsen tolérant",
+        "Hydrate-toi après le bain"
+      ],
+      "gastronomie": "Sake chaud (atsukan), nabe après le bain",
+      "lieu_phare": "Ginzan Onsen, Nyūtō, parc des singes de Jigokudani"
+    },
+    {
+      "id": "nabe",
+      "nom": "La saison du nabe",
+      "nom_jp": "鍋",
+      "saison": "hiver",
+      "mois": "Déc – Fév",
+      "emoji": "🍲",
+      "tagline": "La fondue conviviale de l'hiver",
+      "histoire": "Quand le froid arrive, le nabe (fondue japonaise mijotée dans une marmite partagée) rassemble familles et amis. Chacun pioche légumes, tofu et viande dans le bouillon commun. Il existe d'innombrables variantes régionales : sukiyaki, shabu-shabu, chanko (celui des lutteurs de sumo).",
+      "rituels": [
+        "Partager une marmite commune",
+        "Ajouter les ingrédients progressivement",
+        "Finir par du riz ou des nouilles (shime)"
+      ],
+      "comment_vivre": [
+        "Commande un nabe à plusieurs",
+        "Goûte le chanko-nabe près des stades de sumo",
+        "Le shime final est sacré, ne le saute pas"
+      ],
+      "gastronomie": "Sukiyaki, shabu-shabu, chanko-nabe",
+      "lieu_phare": "Izakaya, quartier de Ryōgoku (sumo)"
+    },
+    {
+      "id": "daruma",
+      "nom": "Le vœu du Daruma",
+      "nom_jp": "だるま",
+      "saison": "hiver",
+      "mois": "Janvier",
+      "emoji": "🔴",
+      "tagline": "La poupée porte-bonheur aux yeux blancs",
+      "histoire": "En début d'année, on achète une poupée daruma (effigie rouge du moine Bodhidharma) aux yeux vides. On colorie un œil en formulant un vœu, et l'autre une fois le vœu réalisé. Tombée, elle se redresse toujours — symbole de persévérance, écho du proverbe « sept fois à terre, huit fois debout ».",
+      "rituels": [
+        "Colorier un œil en faisant un vœu",
+        "Colorier le second œil une fois exaucé",
+        "Brûler le daruma au sanctuaire l'année suivante"
+      ],
+      "comment_vivre": [
+        "Achète un daruma au nouvel an",
+        "Le marché aux daruma de Takasaki est célèbre",
+        "Garde-le en vue pour rester motivé"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Temples, marché de Takasaki (Gunma)"
+    },
+    {
+      "id": "queue",
+      "nom": "L'art de la file",
+      "nom_jp": "行列",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🚶",
+      "tagline": "Des files d'attente parfaitement ordonnées",
+      "histoire": "Les Japonais font la queue avec une discipline remarquable : marquages au sol sur les quais, files qui se reforment d'elles-mêmes, aucun resquillage. Cet ordre spontané, visible partout, reflète le sens du collectif (wa) et le respect mutuel. Même après une catastrophe, les files restent impeccables.",
+      "rituels": [
+        "Se placer derrière les marquages au sol",
+        "Laisser sortir avant d'entrer (train)",
+        "Avancer en silence et en ordre"
+      ],
+      "comment_vivre": [
+        "Repère les marquages sur les quais",
+        "Ne double jamais, même pressé",
+        "Laisse une file pour ceux qui marchent (escalators)"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Quais de gare, arrêts de bus, restaurants populaires"
+    },
+    {
+      "id": "escalator",
+      "nom": "Le côté de l'escalator",
+      "nom_jp": "エスカレーター",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🛗",
+      "tagline": "Se tenir d'un côté, laisser passer de l'autre",
+      "histoire": "Sur les escalators, on se tient d'un côté pour laisser le passage à ceux qui montent à pied. À Tokyo, on se tient à gauche ; à Osaka, à droite — une différence régionale célèbre. Cette règle tacite fluidifie les flux dans les gares bondées.",
+      "rituels": [
+        "Se tenir à gauche (Tokyo) ou droite (Osaka)",
+        "Laisser le côté libre pour les pressés"
+      ],
+      "comment_vivre": [
+        "Tokyo = gauche, Osaka = droite",
+        "Observe avant de te placer",
+        "Tiens la rampe"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Gares, centres commerciaux, métro"
+    },
+    {
+      "id": "masks",
+      "nom": "Le masque par civisme",
+      "nom_jp": "マスク",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "😷",
+      "tagline": "Se masquer pour protéger les autres",
+      "histoire": "Bien avant 2020, porter un masque était courant au Japon : quand on est enrhumé (pour ne pas contaminer), en cas d'allergies au pollen, ou simplement par confort. C'est un geste de considération collective autant que de protection personnelle.",
+      "rituels": [
+        "Porter un masque dès les premiers symptômes",
+        "Masque anti-pollen au printemps"
+      ],
+      "comment_vivre": [
+        "Garde-en sur toi, c'est socialement apprécié",
+        "Disponibles partout en konbini",
+        "Le pollen de cèdre est redoutable au printemps"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Transports, bureaux, espaces publics"
+    },
+    {
+      "id": "point-call",
+      "nom": "Pointer et nommer",
+      "nom_jp": "指差喚呼",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "👉",
+      "tagline": "Le geste de sécurité des cheminots",
+      "histoire": "Les conducteurs et employés de train pointent du doigt les signaux et les énoncent à voix haute (shisa kanko). Ce rituel, qui paraît théâtral, réduit drastiquement les erreurs en engageant le corps et la voix dans la vérification. C'est un modèle de sécurité étudié dans le monde entier.",
+      "rituels": [
+        "Pointer chaque signal du doigt",
+        "Énoncer son état à voix haute"
+      ],
+      "comment_vivre": [
+        "Observe les conducteurs sur les quais",
+        "Geste fascinant de rigueur",
+        "Symbole de la fiabilité ferroviaire japonaise"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Quais, cabines de train, chantiers"
+    },
+    {
+      "id": "train-silence",
+      "nom": "Le silence dans le train",
+      "nom_jp": "電車のマナー",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🤫",
+      "tagline": "Wagons bondés, silence respecté",
+      "histoire": "Dans les trains, même bondés, le silence règne : pas d'appels téléphoniques, sonneries en mode manner, conversations feutrées. Ce respect du calme commun (meiwaku wo kakenai — ne pas déranger autrui) frappe tous les visiteurs. Des panneaux rappellent de mettre le téléphone en 'mode manières'.",
+      "rituels": [
+        "Téléphone en mode silencieux",
+        "Pas d'appels à bord",
+        "Conversations à voix basse"
+      ],
+      "comment_vivre": [
+        "Mets ton téléphone en silencieux",
+        "Ne téléphone jamais dans le wagon",
+        "Baisse le volume de tes écouteurs"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Trains, métros, bus"
+    },
+    {
+      "id": "tray-payment",
+      "nom": "Le plateau à monnaie",
+      "nom_jp": "カルトン",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🪙",
+      "tagline": "On ne tend pas l'argent à la main",
+      "histoire": "À la caisse, on ne donne et ne reçoit pas l'argent de main à main : on le pose sur un petit plateau (calton). Ce geste évite le contact, permet de compter posément et reflète le soin apporté aux transactions. La monnaie est rendue avec les deux mains, parfois avec une légère courbette.",
+      "rituels": [
+        "Poser les billets sur le plateau",
+        "Recevoir la monnaie comptée à voix haute"
+      ],
+      "comment_vivre": [
+        "Cherche le petit plateau près de la caisse",
+        "Ne tends pas l'argent directement",
+        "La monnaie est toujours comptée devant toi"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Konbini, boutiques, restaurants"
+    },
+    {
+      "id": "wet-umbrella",
+      "nom": "Les pochettes à parapluie",
+      "nom_jp": "傘袋",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "☔",
+      "tagline": "Emballer son parapluie mouillé",
+      "histoire": "Les jours de pluie, à l'entrée des magasins, des distributeurs offrent des pochettes plastiques pour emballer son parapluie mouillé et ne pas tremper le sol. Certains lieux proposent aussi des porte-parapluies avec clé. Tout est pensé pour ne pas déranger (meiwaku) ni salir.",
+      "rituels": [
+        "Emballer son parapluie à l'entrée",
+        "Ou le déposer au porte-parapluie"
+      ],
+      "comment_vivre": [
+        "Cherche le distributeur de pochettes",
+        "Utilise le porte-parapluie verrouillable",
+        "Ne secoue pas ton parapluie à l'intérieur"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Grands magasins, bureaux, musées"
+    },
+    {
+      "id": "oshibori-bow",
+      "nom": "Le service à deux mains",
+      "nom_jp": "両手で渡す",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🤲",
+      "tagline": "Donner et recevoir avec les deux mains",
+      "histoire": "Carte de visite, monnaie, cadeau, plat : on donne et reçoit avec les deux mains, en signe de respect et d'attention. Recevoir d'une seule main, surtout d'un supérieur, peut sembler désinvolte. Ce geste accompagne souvent une légère inclinaison.",
+      "rituels": [
+        "Tendre les objets à deux mains",
+        "Recevoir à deux mains avec un signe de tête"
+      ],
+      "comment_vivre": [
+        "Prends les cartes de visite à deux mains",
+        "Geste apprécié même d'un étranger",
+        "Accompagne d'un léger 'arigatō'"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Commerces, bureaux, échanges formels"
+    },
+    {
+      "id": "konbini-life",
+      "nom": "Vivre au rythme du konbini",
+      "nom_jp": "コンビニ文化",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🍙",
+      "tagline": "Le konbini, pilier de la vie 24h/24",
+      "histoire": "Le konbini est une institution : on y mange chaud, paie ses factures, retire de l'argent, achète des billets, imprime, envoie des colis, à toute heure. Les onigiri, le poulet frit (karaage-kun) et les desserts y sont étonnamment bons. Chaque enseigne a ses spécialités et nouveautés hebdomadaires.",
+      "rituels": [
+        "Onigiri du matin, café en canette",
+        "Paiement de factures à la caisse",
+        "Repas chaud réchauffé sur place"
+      ],
+      "comment_vivre": [
+        "Goûte les onigiri (le pliage de l'emballage est un art)",
+        "Le karaage-kun de Lawson est culte",
+        "Retire des yens aux ATM 7-Eleven (acceptent l'étranger)"
+      ],
+      "gastronomie": "Onigiri, oden l'hiver, desserts, café",
+      "lieu_phare": "7-Eleven, FamilyMart, Lawson — partout"
+    },
+    {
+      "id": "bowing-staff",
+      "nom": "L'au revoir du personnel",
+      "nom_jp": "お見送り",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "👋",
+      "tagline": "Être raccompagné avec une révérence",
+      "histoire": "Dans les hôtels, restaurants et boutiques, le personnel raccompagne souvent le client jusqu'à la porte et s'incline, parfois jusqu'à ce qu'on disparaisse de la vue. Le personnel du shinkansen s'incline avant de quitter le wagon. C'est l'expression ultime de l'omotenashi.",
+      "rituels": [
+        "Le personnel raccompagne à la sortie",
+        "Inclinaison prolongée jusqu'au départ"
+      ],
+      "comment_vivre": [
+        "Réponds par un léger signe de tête",
+        "Observe le contrôleur s'incliner en quittant le wagon",
+        "Touchant une fois qu'on le remarque"
+      ],
+      "gastronomie": "—",
+      "lieu_phare": "Hôtels, ryokan, boutiques, shinkansen"
+    },
+    {
+      "id": "tatami",
+      "nom": "Vivre sur le tatami",
+      "nom_jp": "畳",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🍵",
+      "tagline": "Le sol de paille qui dicte les usages",
+      "histoire": "Le tatami, natte de paille de riz, structure l'espace traditionnel japonais. On le mesure en nombre de tatamis (jō), on s'y assoit en seiza, on n'y marche jamais avec des chaussures ni des chaussons. Son odeur de paille fraîche et sa souplece définissent l'habitat japonais classique.",
+      "rituels": [
+        "Retirer chaussons avant le tatami",
+        "S'asseoir en seiza ou en tailleur",
+        "Ne pas marcher sur le bord (heri)"
+      ],
+      "comment_vivre": [
+        "Enlève tes chaussons sur le tatami",
+        "Évite de piétiner les bordures",
+        "Teste une nuit sur futon en ryokan"
+      ],
+      "gastronomie": "Thé matcha servi en chambre tatami",
+      "lieu_phare": "Ryokan, temples, maisons traditionnelles"
+    },
+    {
+      "id": "seasonal-konbini",
+      "nom": "Le culte du saisonnier",
+      "nom_jp": "季節限定",
+      "saison": "quotidien",
+      "mois": "Toute l'année",
+      "emoji": "🍂",
+      "tagline": "Le 'édition limitée' érigé en art de vivre",
+      "histoire": "Le Japon vénère le saisonnier (kisetsukan) : produits 'limités' (gentei) qui changent au fil de l'année — Kit Kat sakura au printemps, boissons matcha, desserts à la châtaigne en automne. Cette rotation perpétuelle reflète une sensibilité profonde aux saisons et crée une excitation constante.",
+      "rituels": [
+        "Guetter les éditions limitées saisonnières",
+        "Goûter avant qu'elles disparaissent"
+      ],
+      "comment_vivre": [
+        "Cherche le mot 限定 (gentei = limité)",
+        "Les Kit Kat régionaux font de super souvenirs",
+        "Chaque saison a ses saveurs phares"
+      ],
+      "gastronomie": "Kit Kat régionaux, boissons et desserts gentei",
+      "lieu_phare": "Konbini, gares, boutiques de souvenirs"
     }
   ],
   "codes_sociaux": [
