@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.isekaid",
+    "sha256_cert_fingerprints": [
+      "E5:FD:F6:60:87:14:96:63:2F:4B:A6:53:32:02:3A:BF:D2:EA:5E:69:17:AD:9A:08:B6:38:13:E5:78:68:BA:6A"
+    ]
+  }
+}]
