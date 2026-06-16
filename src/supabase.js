@@ -49,3 +49,21 @@ export async function saveProgress(userId, patch){
     .eq("user_id", userId);
   return !error;
 }
+
+// ── Voyages (cloud) ─────────────────────────────────────────────────────────
+// Les voyages sont stockés dans la colonne JSONB `trips` de la table progress.
+export async function fetchTrips(userId){
+  if(!supabaseEnabled) return null;
+  const { data, error } = await supabase
+    .from("progress").select("trips").eq("user_id", userId).single();
+  if(error || !data) return null;
+  return data.trips || null;
+}
+export async function saveTripsCloud(userId, trips){
+  if(!supabaseEnabled) return false;
+  const { error } = await supabase
+    .from("progress")
+    .update({ trips, updated_at: new Date().toISOString() })
+    .eq("user_id", userId);
+  return !error;
+}

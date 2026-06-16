@@ -1,7 +1,7 @@
 import DATA from "./japan-data.json";
 import AUDIO_MANIFEST from "./audio-manifest.json";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress } from "./supabase";
+import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud } from "./supabase";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 const LIGHT = {
@@ -2609,7 +2609,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
 }
 
 // ─── Onglet Voyage (à venir) ──────────────────────────────────────────────────
-function VoyageScreen({C, user, db, script}){
+function VoyageScreen({C, user, db, script, session}){
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   const villes = db?.villes || [];
@@ -2622,9 +2622,33 @@ function VoyageScreen({C, user, db, script}){
   const [view, setView] = useState("home");
   const [activeTripId, setActiveTripId] = useState(null);
   const [showPremium, setShowPremium] = useState(false);
+  const pushTimer = useRef(null);
 
   const isPremium = !!user?.isPremium;
-  const persist = (next)=>{ setTrips(next); saveTrips(next); };
+
+  // ── Sync cloud : pull au login ──
+  useEffect(()=>{
+    if(session?.user && supabaseEnabled){
+      fetchTrips(session.user.id).then(cloud=>{
+        if(Array.isArray(cloud) && cloud.length>0){
+          // Le cloud fait autorité au login (fusion simple : on prend le cloud s'il existe)
+          setTrips(cloud); saveTrips(cloud);
+        } else if(loadTrips().length>0){
+          // Pas de cloud mais des voyages locaux → on les pousse
+          saveTripsCloud(session.user.id, loadTrips());
+        }
+      });
+    }
+  },[session?.user?.id]);
+
+  // ── Persistance locale + push cloud debounce ──
+  const persist = (next)=>{
+    setTrips(next); saveTrips(next);
+    if(session?.user && supabaseEnabled){
+      clearTimeout(pushTimer.current);
+      pushTimer.current = setTimeout(()=>{ saveTripsCloud(session.user.id, next); }, 1200);
+    }
+  };
   const activeTrip = trips.find(t=>t.id===activeTripId);
 
   // Création
@@ -2675,7 +2699,7 @@ function VoyageScreen({C, user, db, script}){
   }
   // ─── Vue : un voyage ───
   if(view==="trip" && activeTrip){
-    return <VoyageTrip C={C} trip={activeTrip} db={db} villeById={villeById} script={script}
+    return <VoyageTrip C={C} trip={activeTrip} db={db} villeById={villeById} script={script} user={user}
               onBack={()=>setView("home")} onUpdate={updateTrip} onDelete={deleteTrip}/>;
   }
 
@@ -2826,7 +2850,7 @@ const VOYAGE_TYPES = [
   {id:"acheter",label:"Acheter",emoji:"🛍️"},
 ];
 
-function VoyageTrip({C, trip, db, villeById, script, onBack, onUpdate, onDelete}){
+function VoyageTrip({C, trip, db, villeById, script, user, onBack, onUpdate, onDelete}){
   const lieuById = useMemo(()=>Object.fromEntries((db?.lieux||[]).map(l=>[l.id,l])), [db]);
   const lieux = db?.lieux || [];
   const [dayIdx, setDayIdx] = useState(0);
@@ -2924,7 +2948,13 @@ function VoyageTrip({C, trip, db, villeById, script, onBack, onUpdate, onDelete}
 
   // ─── Sous-vue : catalogue ───
   if(sub==="catalogue"){
-    const list = lieux.filter(l=> l.villeId===day.villeId && (catType==="tout"||l.type===catType));
+    const why = user?.why || [];
+    const matchScore = (l)=> (l.interets||[]).filter(it=>why.includes(it)).length;
+    const list = lieux
+      .filter(l=> l.villeId===day.villeId && (catType==="tout"||l.type===catType))
+      .map(l=>({...l, _score: matchScore(l)}))
+      .sort((a,b)=> b._score - a._score);
+    const hasReco = why.length>0 && list.some(l=>l._score>0);
     return(
       <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
         <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
@@ -2938,14 +2968,20 @@ function VoyageTrip({C, trip, db, villeById, script, onBack, onUpdate, onDelete}
           </div>
         </div>
         <div style={{padding:"14px 20px 110px"}} className="stagger">
+          {hasReco && <div style={{fontSize:11,color:C.t3,marginBottom:12,lineHeight:1.5}}>✨ Les lieux <b style={{color:C.gold}}>recommandés pour toi</b> apparaissent en premier, selon tes centres d'intérêt.</div>}
           {list.length===0 && <div style={{textAlign:"center",color:C.t3,fontSize:12,padding:"30px 0"}}>Aucun lieu de ce type pour {ville?.nom}.</div>}
           {list.map(l=>{
             const inDay = idsInDay.has(l.id);
+            const reco = l._score>0;
             return(
-              <div key={l.id} className="lift" onClick={()=>{setDetailId(l.id);setSub("detail");}} style={{display:"flex",alignItems:"center",gap:11,background:C.s1,border:`1px solid ${C.border}`,borderRadius:13,padding:"12px 14px",marginBottom:9,cursor:"pointer"}}>
+              <div key={l.id} className="lift" onClick={()=>{setDetailId(l.id);setSub("detail");}} style={{display:"flex",alignItems:"center",gap:11,background:C.s1,border:`1px solid ${reco?"rgba(158,122,26,0.35)":C.border}`,borderRadius:13,padding:"12px 14px",marginBottom:9,cursor:"pointer",position:"relative",overflow:"hidden"}}>
+                {reco && <div style={{position:"absolute",top:0,left:0,bottom:0,width:3,background:`linear-gradient(${C.gold},${C.gold}44)`}}/>}
                 <span style={{fontSize:24,flexShrink:0}}>{l.emoji}</span>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l.nom}</div>
+                  <div style={{display:"flex",alignItems:"center",gap:7}}>
+                    <span style={{fontSize:13,color:C.text,fontWeight:500}}>{l.nom}</span>
+                    {reco && <span style={{fontSize:8,padding:"2px 7px",background:"rgba(158,122,26,0.15)",border:"1px solid rgba(158,122,26,0.3)",borderRadius:10,color:C.gold,whiteSpace:"nowrap",flexShrink:0}}>✨ Pour toi</span>}
+                  </div>
                   <div style={{fontSize:10,color:C.t3}}>{l.categorie} · {l.quartier} · {l.budget}</div>
                 </div>
                 <button onClick={(e)=>{e.stopPropagation(); if(!inDay) addLieu(l.id);}} style={{flexShrink:0,width:30,height:30,borderRadius:"50%",border:"none",background:inDay?"transparent":C.red,color:inDay?C.green:"#fff",fontSize:inDay?16:20,cursor:inDay?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>{inDay?"✓":"＋"}</button>
@@ -4046,7 +4082,7 @@ export default function IsekaidApp(){
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress}/>}
-              {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script}/>}
+              {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
