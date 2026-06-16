@@ -165,7 +165,30 @@ function kanaMasteredIn(kp, which){
 function computeAchievements(ctx){
   return ACHIEVEMENTS.map(a=>({ ...a, unlocked: !!a.check(ctx) }));
 }
-const EXPLORE_MODS = [{emoji:"⛩️",title:"Traditions",sub:"Obon, Hanami, Hatsumōde…"},{emoji:"🏙️",title:"Vie quotidienne",sub:"Konbini, école, travail"},{emoji:"🤫",title:"Codes sociaux",sub:"Honne, tatemae, hiérarchie"},{emoji:"🗾",title:"Régions du Japon",sub:"Tokyo, Osaka, Kyoto, Okinawa"}];
+// Explorer — 3 sections organisées
+const EXPLORE_SECTIONS = [
+  {
+    id:"traditions_section", label:"Traditions & Coutumes", emoji:"🌸", jp:"伝統",
+    mods:[
+      {emoji:"⛩️", title:"Traditions saisonnières", sub:"Hanami, Obon, Hatsumōde, matsuri…", route:"traditions", cat:"traditions", filter:"saison"},
+      {emoji:"🏮", title:"Coutumes du quotidien",   sub:"Itadakimasu, konbini, ojigi, furin…", route:"traditions", cat:"traditions", filter:"quotidien"},
+    ]
+  },
+  {
+    id:"culture_section", label:"Société & Régions", emoji:"🗾", jp:"文化",
+    mods:[
+      {emoji:"🏙️", title:"Vie quotidienne",  sub:"Konbini, école, travail, sento",     route:"vie",    cat:"vie_quotidienne"},
+      {emoji:"🤫", title:"Codes sociaux",    sub:"Honne, tatemae, hiérarchie, groupes", route:"codes",  cat:"codes_sociaux"},
+      {emoji:"🗾", title:"Régions du Japon", sub:"Tokyo, Osaka, Kyoto, Okinawa",        route:"regions",cat:"regions"},
+    ]
+  },
+  {
+    id:"histoire_section", label:"Histoire", emoji:"📜", jp:"歴史",
+    mods:[
+      {emoji:"📜", title:"Histoire du Japon", sub:"Jōmon, Heian, Edo, Meiji… 8 grandes périodes", route:"histoire", cat:"histoire"},
+    ]
+  },
+];
 const SCENS  = [{emoji:"🍜",title:"Au restaurant",diff:"Débutant",color:"#3A6645"},{emoji:"🏪",title:"Au konbini",diff:"Débutant",color:"#3A6645"},{emoji:"🚉",title:"Gare / Transports",diff:"Intermédiaire",color:"#9E7A1A"},{emoji:"🤝",title:"Rencontre sociale",diff:"Intermédiaire",color:"#9E7A1A"},{emoji:"💼",title:"En entreprise",diff:"Avancé",color:"#C9463D"}];
 const LEARN_S = [{emoji:"💬",title:"Expressions utiles",sub:"Restaurants, trains, shopping"},{emoji:"👂",title:"Prononciation audio",sub:"Voix natives, écoute lente"},{emoji:"🔤",title:"Kana & Kanji",sub:"Reconnaissance, lecture pratique"},{emoji:"🧠",title:"Révision intelligente",sub:"Spaced repetition adaptatif"}];
 
@@ -845,28 +868,23 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 // ─── Other screens
 function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory}){
   const [view,setView] = useState(null);
-  const [confirmCat,setConfirmCat] = useState(null); // category pending unlock confirm
+  const [viewFilter,setViewFilter] = useState(null);
+  const [confirmCat,setConfirmCat] = useState(null);
   const [toast,setToast] = useState(null);
+  const seasonKey = currentSeasonKey();
+  const acc = SEASON_ACCENT[seasonKey];
 
-  if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
+  if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script} initialSeason={viewFilter} onBack={()=>{setView(null);setViewFilter(null);}}/>;
   if(view==="codes")      return <CodesScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
   if(view==="regions")    return <RegionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
   if(view==="vie")        return <VieScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
+  if(view==="histoire")   return <HistoireScreen C={C} db={db} script={script} onBack={()=>setView(null)}/>;
 
-  // module title → {route, catKey}
-  const MODS = {
-    "Traditions":      {route:"traditions",  cat:"traditions"},
-    "Vie quotidienne": {route:"vie",         cat:"vie_quotidienne"},
-    "Codes sociaux":   {route:"codes",       cat:"codes_sociaux"},
-    "Régions du Japon":{route:"regions",     cat:"regions"},
-  };
   const keys = streak?.keys || 0;
-
-  const tryOpen = (m)=>{
-    const def = MODS[m.title];
-    if(!def) return;
-    if(isUnlocked(def.cat)) { setView(def.route); return; }
-    setConfirmCat(def.cat); // show unlock confirm
+  const tryOpen = (mod)=>{
+    if(!mod.cat) return;
+    if(isUnlocked(mod.cat)){ setViewFilter(mod.filter||null); setView(mod.route); return; }
+    setConfirmCat(mod.cat);
   };
   const doUnlock = (catKey)=>{
     const res = unlockCategory(catKey);
@@ -876,74 +894,90 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
   };
 
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-      <div style={{padding:"50px 20px 110px"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:3}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      {/* En-tête sticky */}
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
           <div>
             <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>探 · EXPLORER</div>
             <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Bunka wo sagasu":"文化を探す"}</div>
           </div>
-          {/* Key balance */}
-          <div style={{display:"flex",alignItems:"center",gap:5,padding:"7px 12px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:20}}>
+          <div style={{display:"flex",alignItems:"center",gap:5,padding:"7px 12px",background:`${acc.soft}`,border:`1px solid ${acc.accent}44`,borderRadius:20}}>
             <span style={{fontSize:14}}>🔑</span>
             <span style={{fontSize:14,fontWeight:700,color:C.text}}>{keys}</span>
           </div>
         </div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Débloque les catégories avec tes clés 🔑</div>
+      </div>
 
-        <div className="stagger" style={{display:"flex",flexDirection:"column",gap:11}}>
-          {EXPLORE_MODS.map((m,i)=>{
-            const def = MODS[m.title];
-            const unlocked = def && isUnlocked(def.cat);
-            const lockDef = def && LOCKABLE[def.cat];
-            return(
-              <div key={i} className="lift" onClick={()=>tryOpen(m)} style={{position:"relative",background:C.s1,border:`1px solid ${unlocked?"rgba(201,70,61,0.3)":C.border}`,borderRadius:18,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",overflow:"hidden",boxShadow:"0 2px 10px rgba(0,0,0,0.03)"}}>
-                <span style={{fontSize:28,flexShrink:0,filter:unlocked?"none":"grayscale(0.6) opacity(0.7)"}}>{m.emoji}</span>
-                <div style={{flex:1}}>
-                  <div style={{fontSize:14,color:C.text,marginBottom:3}}>{m.title}</div>
-                  <div style={{fontSize:12,color:C.t2}}>{m.sub}</div>
-                </div>
-                {unlocked
-                  ? <span style={{fontSize:10,padding:"3px 10px",background:"rgba(201,70,61,0.1)",border:"1px solid rgba(201,70,61,0.25)",borderRadius:20,color:C.red,whiteSpace:"nowrap"}}>Disponible</span>
-                  : <span style={{fontSize:11,padding:"4px 11px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:4}}>🔒 {lockDef?.cost} 🔑</span>}
-                <div style={{fontSize:16,color:C.t3}}>{unlocked?"›":""}</div>
+      <div style={{padding:"18px 20px 110px"}}>
+        {/* 3 sections */}
+        {EXPLORE_SECTIONS.map(section=>(
+          <div key={section.id} style={{marginBottom:28}}>
+            {/* Titre de section */}
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+              <div style={{flex:1,height:1,background:C.border}}/>
+              <div style={{display:"flex",alignItems:"center",gap:6,padding:"4px 13px",background:C.s2,borderRadius:20,flexShrink:0}}>
+                <span style={{fontSize:14}}>{section.emoji}</span>
+                <span style={{fontSize:11,color:C.t2,fontWeight:500}}>{section.label}</span>
+                <span style={{fontSize:11,fontFamily:"'Noto Serif JP',serif",color:C.t3}}>{section.jp}</span>
               </div>
-            );
-          })}
-        </div>
+              <div style={{flex:1,height:1,background:C.border}}/>
+            </div>
 
-        <div style={{marginTop:18,padding:"14px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6}}>
-          🔑 Tu gagnes <b style={{color:C.t2}}>1 clé par jour</b> de connexion. Utilise-les pour débloquer des catégories — chaque déblocage améliore ton titre.
+            {/* Modules de la section */}
+            <div style={{display:"flex",flexDirection:"column",gap:10}} className="stagger">
+              {section.mods.map((mod,i)=>{
+                const unlocked = mod.cat && isUnlocked(mod.cat);
+                const lockDef = mod.cat && LOCKABLE[mod.cat];
+                return(
+                  <div key={i} className="lift" onClick={()=>tryOpen(mod)}
+                    style={{position:"relative",background:C.s1,border:`1px solid ${unlocked?`${acc.accent}44`:C.border}`,borderRadius:16,padding:"16px 18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",overflow:"hidden",boxShadow:unlocked?"0 2px 12px rgba(0,0,0,0.05)":"none"}}>
+                    {unlocked && <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${acc.accent},transparent)`}}/>}
+                    <div style={{width:46,height:46,borderRadius:12,background:unlocked?`${acc.soft}`:`${C.s2}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>
+                      {mod.emoji}
+                    </div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:14,color:C.text,fontWeight:500,marginBottom:2}}>{mod.title}</div>
+                      <div style={{fontSize:11,color:C.t2}}>{mod.sub}</div>
+                    </div>
+                    {unlocked
+                      ? <span style={{fontSize:18,color:acc.accent}}>›</span>
+                      : <span style={{fontSize:11,padding:"5px 11px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:16,color:C.t2,whiteSpace:"nowrap",flexShrink:0}}>🔒 {lockDef?.cost} 🔑</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+
+        {/* Hint clés */}
+        <div style={{padding:"13px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6}}>
+          🔑 Tu gagnes <b style={{color:C.t2}}>1 clé par jour</b> de connexion. Utilise-les pour débloquer des sections.
         </div>
       </div>
 
-      {/* Unlock confirm modal */}
+      {/* Toast */}
+      {toast && <div style={{position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",background:C.text,color:C.bg,padding:"10px 20px",borderRadius:20,fontSize:13,zIndex:200,animation:"fadeUp .3s ease"}}>{toast}</div>}
+
+      {/* Modale unlock */}
       {confirmCat && (()=>{
         const def = LOCKABLE[confirmCat];
-        const enough = keys >= def.cost;
         return(
-          <>
-            <div onClick={()=>setConfirmCat(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:200}}/>
-            <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"min(100vw,390px)",zIndex:201,background:C.s1,borderRadius:"20px 20px 0 0",padding:"0 22px 36px",animation:"slideUp .25s ease"}}>
-              <div style={{width:36,height:4,borderRadius:2,background:C.s3,margin:"12px auto 20px"}}/>
-              <div style={{textAlign:"center",fontSize:40,marginBottom:10}}>{def.emoji}</div>
-              <div style={{textAlign:"center",fontSize:18,color:C.text,fontWeight:500,marginBottom:6}}>Débloquer « {def.label} »</div>
-              <div style={{textAlign:"center",fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:18}}>
-                Coût : <b style={{color:C.red}}>{def.cost} 🔑</b> · Tu as <b>{keys} 🔑</b><br/>
-                Rapporte <b style={{color:C.green}}>+{def.xp} XP</b> vers ton prochain titre
+          <div onClick={()=>setConfirmCat(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+            <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:440,background:C.s1,borderRadius:"22px 22px 0 0",padding:"26px 22px 32px",animation:"fadeUp .3s ease"}}>
+              <div style={{textAlign:"center",marginBottom:18}}>
+                <div style={{fontSize:36,marginBottom:8}}>{def?.emoji}</div>
+                <div style={{fontSize:18,color:C.text,fontWeight:600,marginBottom:6}}>{def?.label}</div>
+                <div style={{fontSize:13,color:C.t2}}>Déverrouiller pour <b style={{color:C.text}}>{def?.cost} clé{def?.cost>1?"s":""} 🔑</b></div>
               </div>
-              <button onClick={()=>enough&&doUnlock(confirmCat)} disabled={!enough} style={{width:"100%",padding:"14px",background:enough?C.red:C.s3,border:"none",borderRadius:12,color:enough?"#fff":C.t3,fontSize:14,fontWeight:600,cursor:enough?"pointer":"not-allowed",marginBottom:9}}>
-                {enough ? `Débloquer pour ${def.cost} 🔑` : `Il te manque ${def.cost-keys} clé(s)`}
-              </button>
-              {!enough && <div style={{textAlign:"center",fontSize:11,color:C.t3,marginBottom:4}}>Reviens demain pour gagner +1 clé 🔥</div>}
-              <button onClick={()=>setConfirmCat(null)} style={{width:"100%",padding:"11px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Plus tard</button>
+              <div style={{display:"flex",gap:10}}>
+                <button onClick={()=>setConfirmCat(null)} style={{flex:1,padding:"13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:14,cursor:"pointer"}}>Annuler</button>
+                <button onClick={()=>doUnlock(confirmCat)} style={{flex:1,padding:"13px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Débloquer</button>
+              </div>
             </div>
-          </>
+          </div>
         );
       })()}
-
-      {/* Toast */}
-      {toast && <div style={{position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",zIndex:210,background:C.text,color:C.bg,padding:"11px 20px",borderRadius:24,fontSize:13,fontWeight:500,boxShadow:"0 4px 20px rgba(0,0,0,0.3)",animation:"fadeUp .3s ease"}}>{toast}</div>}
     </div>
   );
 }
@@ -1480,8 +1514,84 @@ function TraditionDetail({C,t,onBack,fav,onFav,wikiMap,onWikiTap,script}){
   );
 }
 
-function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
-  const [season,setSeason] = useState("quotidien");
+// ─── Écran Histoire ───────────────────────────────────────────────────────────
+function HistoireScreen({C, db, script, onBack}){
+  const [selected, setSelected] = useState(null);
+  const histoire = db?.histoire || [];
+  const seasonKey = currentSeasonKey();
+  const acc = SEASON_ACCENT[seasonKey];
+
+  if(selected){
+    const h = selected;
+    return(
+      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+        <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+          <button onClick={()=>setSelected(null)} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Histoire</button>
+          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{h.titre}</div>
+          <div style={{fontSize:13,color:C.gold,fontFamily:"'Noto Serif JP',serif"}}>{h.titre_jp} · {h.periode}</div>
+        </div>
+        <div style={{padding:"20px 20px 110px"}}>
+          {/* Bannière thème */}
+          <div className="lift" style={{padding:"20px",background:`linear-gradient(135deg,${acc.soft},transparent)`,border:`1px solid ${C.border}`,borderRadius:16,marginBottom:20,textAlign:"center"}}>
+            <div style={{fontSize:52,marginBottom:8}}>{h.emoji}</div>
+            <div style={{fontSize:12,color:acc.accent,letterSpacing:".15em",textTransform:"uppercase"}}>{h.theme}</div>
+          </div>
+          {/* Résumé */}
+          <div style={{fontSize:15,color:C.text,fontWeight:500,lineHeight:1.6,marginBottom:16,fontStyle:"italic"}}>{h.resume}</div>
+          {/* Contenu */}
+          <div style={{fontSize:13,color:C.t2,lineHeight:1.75,marginBottom:20}}>{h.contenu}</div>
+          {/* Anecdote */}
+          {h.anecdote && (
+            <div style={{background:"rgba(158,122,26,0.1)",border:"1px solid rgba(158,122,26,0.3)",borderRadius:13,padding:"14px 16px",marginBottom:16}}>
+              <div style={{fontSize:9,color:C.gold,letterSpacing:".1em",marginBottom:5,textTransform:"uppercase"}}>💡 Le savais-tu ?</div>
+              <div style={{fontSize:13,color:C.text,lineHeight:1.6}}>{h.anecdote}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>📜 · HISTOIRE</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>歴史 — Histoire du Japon</div>
+      </div>
+
+      <div style={{padding:"18px 20px 110px"}}>
+        {/* Ligne du temps */}
+        <div style={{fontSize:11,color:C.t3,marginBottom:16,textAlign:"center"}}>De la préhistoire à nos jours — {histoire.length} grandes périodes</div>
+        {histoire.length===0 && <div style={{color:C.t3,textAlign:"center",padding:"40px 0"}}>Chargement…</div>}
+        <div style={{position:"relative"}}>
+          {/* Ligne verticale */}
+          <div style={{position:"absolute",left:22,top:0,bottom:0,width:2,background:`linear-gradient(to bottom, ${acc.accent}44, ${C.border})`,borderRadius:1}}/>
+          <div style={{display:"flex",flexDirection:"column",gap:12}} className="stagger">
+            {histoire.map((h,i)=>(
+              <div key={h.id} className="lift" onClick={()=>setSelected(h)} style={{display:"flex",gap:14,cursor:"pointer",paddingLeft:4}}>
+                {/* Dot sur la timeline */}
+                <div style={{flexShrink:0,width:36,height:36,borderRadius:"50%",background:i===histoire.length-1?acc.accent:C.s1,border:`2px solid ${i===histoire.length-1?acc.accent:C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,zIndex:1}}>{h.emoji}</div>
+                {/* Carte */}
+                <div style={{flex:1,background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"12px 14px",marginBottom:0}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}}>
+                    <div style={{fontSize:14,color:C.text,fontWeight:500}}>{h.titre}</div>
+                    <span style={{fontSize:18,color:C.t3}}>›</span>
+                  </div>
+                  <div style={{fontSize:10,color:acc.accent,letterSpacing:".05em",marginBottom:4}}>{h.periode}</div>
+                  <div style={{fontSize:11,color:C.t2,lineHeight:1.4}}>{h.resume}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initialSeason,onBack}){
+  const [season,setSeason] = useState(initialSeason||"quotidien");
   const [selected,setSelected] = useState(null);
   const traditions = db?.traditions || [];
 
@@ -1492,10 +1602,10 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
 
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-      <div style={{padding:"50px 20px 12px"}}>
+      <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        {onBack && <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>暦 · TRADITIONS</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nenchū gyōji":"年中行事"}</div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Le calendrier des traditions japonaises</div>
       </div>
 
       {/* Season selector */}
@@ -1663,36 +1773,55 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
 function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
   const [active,setActive] = useState(null);
   const scenarios = db?.scenarios || [];
+  const seasonKey = currentSeasonKey();
+  const acc = SEASON_ACCENT[seasonKey];
+  const done = (s)=> scenariosDone?.includes(s.id);
+  const totalDone = scenarios.filter(done).length;
 
-  if(active) return <ScenarioPlay C={C} s={active} script={script} onExit={()=>setActive(null)} onComplete={completeScenario} alreadyDone={scenariosDone?.includes(active.id)}/>;
+  if(active) return <ScenarioPlay C={C} s={active} script={script} onExit={()=>setActive(null)} onComplete={completeScenario} alreadyDone={done(active)}/>;
 
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-      <div style={{padding:"50px 20px 110px"}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      {/* Header sticky */}
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>場 · SCÉNARIOS</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Shinario":"シナリオ"}</div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Mets-toi en situation et gagne des récompenses 🔑</div>
-        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
+          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Shinario":"シナリオ"}</div>
+          {totalDone>0 && <div style={{fontSize:12,color:acc.accent,fontWeight:500}}>{totalDone}/{scenarios.length} complétés</div>}
+        </div>
+      </div>
+
+      <div style={{padding:"18px 20px 110px"}}>
+        {/* Intro */}
+        <div style={{padding:"14px 16px",background:acc.soft,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:20,display:"flex",alignItems:"center",gap:12}}>
+          <span style={{fontSize:24}}>🎭</span>
+          <div style={{fontSize:12,color:C.t2,lineHeight:1.5}}>Entraîne-toi dans de vraies situations japonaises. Complète les scénarios pour gagner des clés 🔑 et de l'XP.</div>
+        </div>
+
+        {/* Liste des scénarios */}
+        <div style={{display:"flex",flexDirection:"column",gap:12}} className="stagger">
           {scenarios.map((s,i)=>{
-            const done = scenariosDone?.includes(s.id);
+            const isDone = done(s);
             return(
-              <div key={i} onClick={()=>setActive(s)} style={{position:"relative",borderRadius:16,overflow:"hidden",cursor:"pointer",border:`1px solid ${s.couleur}44`,animation:"fadeUp .4s ease"}}>
-                <div style={{background:`linear-gradient(135deg,${s.couleur}26 0%,${s.couleur}0a 100%)`,padding:"18px"}}>
+              <div key={i} className="lift" onClick={()=>setActive(s)} style={{position:"relative",borderRadius:18,overflow:"hidden",cursor:"pointer",border:`1px solid ${isDone?"rgba(78,128,96,0.3)":s.couleur+"44"}`,boxShadow:isDone?"0 2px 12px rgba(58,102,69,0.08)":"none"}}>
+                {/* Barre couleur en haut */}
+                <div style={{height:3,background:`linear-gradient(90deg,${s.couleur},${s.couleur}44)`}}/>
+                <div style={{background:`linear-gradient(135deg,${s.couleur}18 0%,transparent 100%)`,padding:"16px 18px"}}>
                   <div style={{display:"flex",alignItems:"center",gap:14}}>
-                    <span style={{fontSize:34,flexShrink:0}}>{s.emoji}</span>
+                    <div style={{width:52,height:52,borderRadius:14,background:`${s.couleur}22`,border:`1px solid ${s.couleur}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0}}>{s.emoji}</div>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
-                        <span style={{fontSize:16,color:C.text,fontWeight:500}}>{s.titre}</span>
-                        <span style={{fontSize:12,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</span>
+                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
+                        <span style={{fontSize:15,color:C.text,fontWeight:600}}>{s.titre}</span>
+                        <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</span>
                       </div>
-                      <div style={{fontSize:12,color:C.t2,lineHeight:1.4,marginBottom:7}}>{s.contexte}</div>
-                      <div style={{display:"flex",gap:7,alignItems:"center",flexWrap:"wrap"}}>
-                        <span style={{fontSize:9,padding:"2px 8px",border:`1px solid ${s.couleur}55`,borderRadius:20,color:s.couleur}}>{s.niveau}</span>
-                        <span style={{fontSize:9,padding:"2px 8px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>+{s.recompense_cles} 🔑 · +{s.recompense_xp} XP</span>
-                        {done && <span style={{fontSize:9,padding:"2px 8px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:20,color:C.green}}>✓ Complété</span>}
+                      <div style={{fontSize:12,color:C.t2,lineHeight:1.4,marginBottom:8}}>{s.contexte}</div>
+                      <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
+                        <span style={{fontSize:10,padding:"3px 9px",border:`1px solid ${s.couleur}55`,borderRadius:20,color:s.couleur,fontWeight:500}}>{s.niveau}</span>
+                        <span style={{fontSize:10,padding:"3px 9px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>+{s.recompense_cles} 🔑 · +{s.recompense_xp} XP</span>
+                        {isDone && <span style={{fontSize:10,padding:"3px 9px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:20,color:C.green}}>✓ Complété</span>}
                       </div>
                     </div>
-                    <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>
+                    <span style={{fontSize:20,color:isDone?C.green:acc.accent,flexShrink:0}}>{isDone?"✓":"›"}</span>
                   </div>
                 </div>
               </div>
@@ -2309,8 +2438,10 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   }
 
   // Home: choix entre Parcours et Entraînement libre
+  const seasonKey = currentSeasonKey();
+  const acc = SEASON_ACCENT[seasonKey];
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
       {/* En-tête sticky */}
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
@@ -2324,27 +2455,39 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
         {/* ── Écran de choix (aucun mode sélectionné) ── */}
         {!learnMode && (()=>{
           const doneCount = TOKYO_PATH.filter(s=>completed.includes(s.id)).length;
+          const pct = Math.round((doneCount/TOKYO_PATH.length)*100);
           return(
-            <div style={{display:"flex",flexDirection:"column",gap:16}}>
-              {/* Carte Parcours */}
-              <div onClick={()=>setLearnMode("path")} style={{cursor:"pointer",padding:"22px",borderRadius:18,background:`linear-gradient(150deg,rgba(201,70,61,0.12),rgba(158,122,26,0.06))`,border:`1px solid rgba(201,70,61,0.25)`,position:"relative",overflow:"hidden"}}>
-                <div style={{fontSize:64,position:"absolute",top:-6,right:8,opacity:0.12}}>🗼</div>
-                <div style={{fontSize:11,color:C.red,letterSpacing:".12em",textTransform:"uppercase",marginBottom:8}}>Parcours guidé</div>
-                <div style={{fontSize:19,color:C.text,fontWeight:600,marginBottom:6}}>Survivre à Tokyo</div>
-                <div style={{fontSize:13,color:C.t2,lineHeight:1.5,marginBottom:14,maxWidth:260}}>Un programme étape par étape pour te débrouiller une semaine sur place : lire, saluer, commander, te déplacer.</div>
-                <div style={{display:"flex",alignItems:"center",gap:10}}>
-                  <div style={{flex:1,height:6,background:C.s3,borderRadius:3,overflow:"hidden"}}>
-                    <div style={{height:"100%",width:`${(doneCount/TOKYO_PATH.length)*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
+            <div style={{display:"flex",flexDirection:"column",gap:14}}>
+
+              {/* Carte Parcours Tokyo — hero */}
+              <div className="lift" onClick={()=>setLearnMode("path")} style={{cursor:"pointer",borderRadius:20,overflow:"hidden",border:`1px solid rgba(201,70,61,0.3)`,boxShadow:"0 4px 20px rgba(201,70,61,0.08)"}}>
+                <div style={{height:6,background:`linear-gradient(90deg,${C.red},${C.gold})`}}/>
+                <div style={{padding:"22px 20px 20px",background:`linear-gradient(150deg,rgba(201,70,61,0.12),rgba(158,122,26,0.05))`,position:"relative",overflow:"hidden"}}>
+                  <div style={{fontSize:72,position:"absolute",top:-8,right:6,opacity:0.1,fontFamily:"'Noto Serif JP',serif"}}>🗼</div>
+                  <div style={{fontSize:10,color:C.red,letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>Parcours guidé · 8 paliers</div>
+                  <div style={{fontSize:20,color:C.text,fontWeight:700,marginBottom:6}}>Survivre à Tokyo</div>
+                  <div style={{fontSize:13,color:C.t2,lineHeight:1.55,marginBottom:16,maxWidth:280}}>Un programme étape par étape pour te débrouiller une semaine sur place : lire, saluer, commander, te déplacer.</div>
+                  {/* Barre progression */}
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{flex:1,height:7,background:C.s3,borderRadius:4,overflow:"hidden"}}>
+                      <div style={{height:"100%",width:`${pct}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:4,transition:"width .6s ease"}}/>
+                    </div>
+                    <span style={{fontSize:12,color:C.t2,fontWeight:600,whiteSpace:"nowrap"}}>{doneCount}/{TOKYO_PATH.length} {pct>0&&`· ${pct}%`}</span>
                   </div>
-                  <span style={{fontSize:11,color:C.t2,fontWeight:600,whiteSpace:"nowrap"}}>{doneCount}/{TOKYO_PATH.length}</span>
                 </div>
               </div>
+
               {/* Carte Entraînement libre */}
-              <div onClick={()=>setLearnMode("free")} style={{cursor:"pointer",padding:"22px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
-                <div style={{fontSize:60,position:"absolute",top:-2,right:10,opacity:0.1}}>🎴</div>
-                <div style={{fontSize:11,color:C.gold,letterSpacing:".12em",textTransform:"uppercase",marginBottom:8}}>À la carte</div>
-                <div style={{fontSize:19,color:C.text,fontWeight:600,marginBottom:6}}>Entraînement libre</div>
-                <div style={{fontSize:13,color:C.t2,lineHeight:1.5,maxWidth:260}}>Révise les syllabaires (hiragana, katakana, sons avancés) en flashcards ou quiz, et explore les situations courantes à ton rythme.</div>
+              <div className="lift" onClick={()=>setLearnMode("free")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+                <div style={{height:4,background:`linear-gradient(90deg,${acc.accent},transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
+                <div style={{fontSize:10,color:acc.accent,letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>À la carte</div>
+                <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
+                  <div style={{width:48,height:48,borderRadius:13,background:acc.soft,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>🎴</div>
+                  <div>
+                    <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:5}}>Entraînement libre</div>
+                    <div style={{fontSize:12,color:C.t2,lineHeight:1.55}}>Flashcards et quiz sur les syllabaires (hiragana, katakana, sons avancés) + situations courantes.</div>
+                  </div>
+                </div>
               </div>
             </div>
           );
@@ -2361,7 +2504,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
           <div style={{fontSize:12,color:C.t2,marginBottom:14,lineHeight:1.5}}>
             {TOKYO_PATH.every(s=>completed.includes(s.id)) ? "🎉 Bravo ! Tu as les bases pour te débrouiller une semaine à Tokyo." : "Un parcours guidé, étape par étape, pour te débrouiller sur place."}
           </div>
-          <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:16}}>
+          <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:20}}>
             <div style={{height:"100%",width:`${(TOKYO_PATH.filter(s=>completed.includes(s.id)).length/TOKYO_PATH.length)*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
           </div>
           <div>
@@ -2371,19 +2514,24 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
               const isLocked = !prevDone && !isDone;
               const isFinal = step.type==="final";
               return(
-                <div key={step.id} style={{display:"flex",gap:13,alignItems:"stretch"}}>
-                  <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:30,flexShrink:0}}>
-                    <div style={{width:30,height:30,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0,background:isDone?C.red:(isLocked?C.s2:"rgba(201,70,61,0.09)"),border:`1px solid ${isDone?C.red:(isLocked?C.border:"rgba(201,70,61,0.35)")}`,color:isDone?"#fff":C.t2}}>
+                <div key={step.id} style={{display:"flex",gap:12,alignItems:"stretch"}}>
+                  {/* Timeline dot */}
+                  <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:32,flexShrink:0}}>
+                    <div style={{width:32,height:32,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0,background:isDone?C.red:(isLocked?C.s2:isFinal?"rgba(201,70,61,0.15)":"rgba(201,70,61,0.09)"),border:`2px solid ${isDone?C.red:(isLocked?C.border:isFinal?"rgba(201,70,61,0.5)":"rgba(201,70,61,0.3)")}`,color:isDone?"#fff":C.t2,boxShadow:isDone?"0 2px 8px rgba(201,70,61,0.3)":"none",transition:"all .3s"}}>
                       {isDone?"✓":(isLocked?"🔒":step.emoji)}
                     </div>
-                    {i<TOKYO_PATH.length-1 && <div style={{flex:1,width:2,background:isDone?C.red:C.border,minHeight:14,margin:"2px 0"}}/>}
+                    {i<TOKYO_PATH.length-1 && <div style={{flex:1,width:2,background:isDone?`linear-gradient(${C.red},rgba(201,70,61,0.2))`:C.border,minHeight:12,margin:"3px 0",borderRadius:1}}/>}
                   </div>
-                  <div onClick={()=>{ if(!isLocked) setPathStep(step); }} style={{flex:1,marginBottom:10,padding:"13px 15px",cursor:isLocked?"default":"pointer",background:(isFinal && !isLocked)?"rgba(201,70,61,0.06)":C.s1,border:`1px solid ${isDone?"rgba(201,70,61,0.4)":((isFinal&&!isLocked)?"rgba(201,70,61,0.4)":C.border)}`,borderRadius:12,opacity:isLocked?0.55:1,transition:"all .2s"}}>
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                      <span style={{fontSize:14,color:C.text,fontWeight:500}}>{step.title}</span>
-                      {!isLocked && !isDone && <span style={{fontSize:15,color:C.t3}}>›</span>}
+                  {/* Carte palier */}
+                  <div onClick={()=>{ if(!isLocked) setPathStep(step); }} className={isLocked?"":"lift"}
+                    style={{flex:1,marginBottom:10,padding:"12px 15px",cursor:isLocked?"default":"pointer",background:isDone?"rgba(201,70,61,0.04)":(isFinal&&!isLocked)?"rgba(201,70,61,0.06)":C.s1,border:`1px solid ${isDone?"rgba(201,70,61,0.35)":(isFinal&&!isLocked)?"rgba(201,70,61,0.3)":C.border}`,borderRadius:13,opacity:isLocked?0.5:1,transition:"all .2s",position:"relative",overflow:"hidden"}}>
+                    {isDone && <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${C.red},transparent)`,borderRadius:"13px 13px 0 0"}}/>}
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:3}}>
+                      <span style={{fontSize:13,color:isDone?C.t2:C.text,fontWeight:isDone?400:600,textDecoration:isDone?"none":"none"}}>{step.title}</span>
+                      {!isLocked && !isDone && <span style={{fontSize:16,color:"rgba(201,70,61,0.6)"}}>›</span>}
+                      {isDone && <span style={{fontSize:11,color:C.red,fontWeight:600}}>✓</span>}
                     </div>
-                    <div style={{fontSize:11,color:C.t2,lineHeight:1.45,marginTop:3}}>{isLocked?"Termine l'étape précédente pour débloquer":step.goal}</div>
+                    <div style={{fontSize:11,color:C.t3,lineHeight:1.4}}>{isLocked?"Termine l'étape précédente pour débloquer":step.goal}</div>
                   </div>
                 </div>
               );
@@ -2397,25 +2545,34 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
         {/* Syllabaires */}
         {["Bases","Avancé"].map(grp=>(
           <div key={grp}>
-            <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",margin: grp==="Bases"?"0 0 12px":"24px 0 12px",textTransform:"uppercase"}}>
-              {grp==="Bases" ? "🔤 Les syllabaires" : "⚡ Sons avancés"}
+            <div style={{display:"flex",alignItems:"center",gap:8,margin:grp==="Bases"?"0 0 12px":"24px 0 12px"}}>
+              <div style={{flex:1,height:1,background:C.border}}/>
+              <span style={{fontSize:10,color:C.t3,letterSpacing:".2em",textTransform:"uppercase",flexShrink:0}}>{grp==="Bases" ? "🔤 Syllabaires" : "⚡ Sons avancés"}</span>
+              <div style={{flex:1,height:1,background:C.border}}/>
             </div>
-            <div style={{display:"flex",flexDirection:"column",gap:11}}>
+            <div style={{display:"flex",flexDirection:"column",gap:10}} className="stagger">
               {LEARN_DECKS.filter(d=>d.group===grp).map((d,i)=>{
                 const mastered = (d.deck||[]).filter(c=>(kp[c.k]?.known||0)>=2).length;
                 const pct = d.deck.length ? mastered/d.deck.length : 0;
+                const pctRounded = Math.round(pct*100);
                 return(
-                  <div key={i} onClick={()=>setDeck(d)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px 18px",display:"flex",alignItems:"center",gap:16,cursor:"pointer",animation:"fadeUp .4s ease"}}>
-                    <span style={{fontSize:34,fontFamily:"'Noto Serif JP',serif",color:C.red,width:48,textAlign:"center"}}>{d.emoji}</span>
+                  <div key={i} className="lift" onClick={()=>setDeck(d)} style={{background:C.s1,border:`1px solid ${pct===1?"rgba(78,128,96,0.4)":C.border}`,borderRadius:16,padding:"15px 17px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",position:"relative",overflow:"hidden"}}>
+                    {pct===1 && <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${C.green},transparent)`}}/>}
+                    <div style={{width:46,height:46,borderRadius:12,background:pct===1?"rgba(78,128,96,0.1)":"rgba(201,70,61,0.08)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,fontFamily:"'Noto Serif JP',serif",color:pct===1?C.green:C.red,flexShrink:0}}>{d.emoji}</div>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:"flex",alignItems:"baseline",gap:8}}><span style={{fontSize:15,color:C.text,fontWeight:500}}>{d.label}</span><span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{d.jp}</span></div>
-                      <div style={{fontSize:11,color:C.t2,marginTop:3}}>{d.desc}</div>
-                      {/* mini progress */}
-                      <div style={{height:4,background:C.s3,borderRadius:2,overflow:"hidden",marginTop:8}}>
-                        <div style={{height:"100%",width:`${pct*100}%`,background:C.red,borderRadius:2,transition:"width .4s"}}/>
+                      <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:2}}>
+                        <span style={{fontSize:14,color:C.text,fontWeight:500}}>{d.label}</span>
+                        <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{d.jp}</span>
+                      </div>
+                      <div style={{fontSize:11,color:C.t2,marginBottom:7}}>{d.desc}</div>
+                      <div style={{display:"flex",alignItems:"center",gap:8}}>
+                        <div style={{flex:1,height:4,background:C.s3,borderRadius:2,overflow:"hidden"}}>
+                          <div style={{height:"100%",width:`${pct*100}%`,background:pct===1?C.green:C.red,borderRadius:2,transition:"width .4s"}}/>
+                        </div>
+                        <span style={{fontSize:10,color:pct===1?C.green:C.t3,fontWeight:600,whiteSpace:"nowrap"}}>{pctRounded}%</span>
                       </div>
                     </div>
-                    <span style={{fontSize:18,color:C.t3}}>›</span>
+                    <span style={{fontSize:18,color:pct===1?C.green:C.t3}}>›</span>
                   </div>
                 );
               })}
@@ -2424,11 +2581,15 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
         ))}
 
         {/* Situations courantes */}
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",margin:"26px 0 12px",textTransform:"uppercase"}}>💬 Situations courantes</div>
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,margin:"26px 0 12px"}}>
+          <div style={{flex:1,height:1,background:C.border}}/>
+          <span style={{fontSize:10,color:C.t3,letterSpacing:".2em",textTransform:"uppercase",flexShrink:0}}>💬 Situations courantes</span>
+          <div style={{flex:1,height:1,background:C.border}}/>
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:10}} className="stagger">
           {situations.map((s,i)=>(
-            <div key={i} onClick={()=>setSituation(s)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",animation:"fadeUp .4s ease"}}>
-              <span style={{fontSize:28,flexShrink:0}}>{s.emoji}</span>
+            <div key={i} className="lift" onClick={()=>setSituation(s)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"14px 16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
+              <div style={{width:44,height:44,borderRadius:11,background:C.s2,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{s.emoji}</div>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{display:"flex",alignItems:"baseline",gap:8}}>
                   <span style={{fontSize:15,color:C.text,fontWeight:500}}>{s.titre}</span>
@@ -3598,6 +3759,7 @@ const LOCKABLE = {
   vie_quotidienne:{label:"Vie quotidienne", emoji:"🏙️", cost:1, xp:120, free:false},
   codes_sociaux: {label:"Codes sociaux",   emoji:"🤫", cost:5, xp:150, free:false},
   regions:       {label:"Régions du Japon",emoji:"🗾", cost:5, xp:150, free:false},
+  histoire:      {label:"Histoire",        emoji:"📜", cost:3, xp:130, free:false},
 };
 // Paliers de titres selon l'XP total
 const TITLES = [

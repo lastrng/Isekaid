@@ -5200,5 +5200,1848 @@
       "fr": "Demain, le vent de demain soufflera.",
       "sens": "Inutile de trop s'inquiéter : demain apportera ses propres solutions."
     }
+  ],
+  "villes": [
+    {
+      "id": "tokyo",
+      "nom": "Tokyo",
+      "nom_jp": "東京",
+      "region": "Kantō",
+      "emoji": "🗼",
+      "tagline": "La mégapole qui ne dort jamais",
+      "description": "Capitale ultramoderne où gratte-ciels, temples cachés et quartiers électriques cohabitent. Un concentré du Japon contemporain.",
+      "lat": 35.6762,
+      "lng": 139.6503,
+      "jours_conseilles": "3-4",
+      "image": "/images/villes/tokyo.jpg"
+    },
+    {
+      "id": "kyoto",
+      "nom": "Kyoto",
+      "nom_jp": "京都",
+      "region": "Kansai",
+      "emoji": "⛩️",
+      "tagline": "L'âme traditionnelle du Japon",
+      "description": "Ancienne capitale impériale aux milliers de temples, jardins zen et ruelles de geishas. Le cœur historique et spirituel du pays.",
+      "lat": 35.0116,
+      "lng": 135.7681,
+      "jours_conseilles": "3-4",
+      "image": "/images/villes/kyoto.jpg"
+    },
+    {
+      "id": "osaka",
+      "nom": "Osaka",
+      "nom_jp": "大阪",
+      "region": "Kansai",
+      "emoji": "🍜",
+      "tagline": "La capitale de la gastronomie",
+      "description": "Ville chaleureuse et décontractée, réputée pour sa street food, son humour et sa vie nocturne débridée à Dotonbori.",
+      "lat": 34.6937,
+      "lng": 135.5023,
+      "jours_conseilles": "2",
+      "image": "/images/villes/osaka.jpg"
+    },
+    {
+      "id": "nara",
+      "nom": "Nara",
+      "nom_jp": "奈良",
+      "region": "Kansai",
+      "emoji": "🦌",
+      "tagline": "Temples millénaires et daims en liberté",
+      "description": "Première capitale du Japon, célèbre pour ses daims sacrés en liberté et son immense Bouddha de bronze. Parfait en excursion d'une journée.",
+      "lat": 34.6851,
+      "lng": 135.8048,
+      "jours_conseilles": "1",
+      "image": "/images/villes/nara.jpg"
+    },
+    {
+      "id": "hiroshima",
+      "nom": "Hiroshima",
+      "nom_jp": "広島",
+      "region": "Chūgoku",
+      "emoji": "🕊️",
+      "tagline": "Mémoire, paix et renaissance",
+      "description": "Ville de la paix, marquée par l'histoire, aujourd'hui vibrante et accueillante. Porte d'entrée vers l'île sacrée de Miyajima.",
+      "lat": 34.3853,
+      "lng": 132.4553,
+      "jours_conseilles": "1-2",
+      "image": "/images/villes/hiroshima.jpg"
+    },
+    {
+      "id": "hakone",
+      "nom": "Hakone",
+      "nom_jp": "箱根",
+      "region": "Kantō",
+      "emoji": "♨️",
+      "tagline": "Onsen et vue sur le mont Fuji",
+      "description": "Station thermale de montagne réputée pour ses onsen, ses ryokan et ses vues sur le mont Fuji par temps clair. L'évasion idéale depuis Tokyo.",
+      "lat": 35.2324,
+      "lng": 139.1069,
+      "jours_conseilles": "1-2",
+      "image": "/images/villes/hakone.jpg"
+    },
+    {
+      "id": "kanazawa",
+      "nom": "Kanazawa",
+      "nom_jp": "金沢",
+      "region": "Chūbu",
+      "emoji": "🏯",
+      "tagline": "L'élégance préservée de l'ère Edo",
+      "description": "Ville d'art et d'histoire épargnée par les guerres, célèbre pour son jardin Kenroku-en, ses quartiers de geishas et de samouraïs intacts.",
+      "lat": 36.5613,
+      "lng": 136.6562,
+      "jours_conseilles": "1-2",
+      "image": "/images/villes/kanazawa.jpg"
+    },
+    {
+      "id": "takayama",
+      "nom": "Takayama",
+      "nom_jp": "高山",
+      "region": "Chūbu",
+      "emoji": "⛰️",
+      "tagline": "Le Japon rural des Alpes",
+      "description": "Petite ville de montagne au centre historique en bois magnifiquement préservé, porte d'entrée vers les villages de Shirakawa-go.",
+      "lat": 36.1408,
+      "lng": 137.252,
+      "jours_conseilles": "1",
+      "image": "/images/villes/takayama.jpg"
+    },
+    {
+      "id": "uji",
+      "nom": "Uji",
+      "nom_jp": "宇治",
+      "region": "Kansai",
+      "emoji": "🍵",
+      "tagline": "La capitale du thé matcha",
+      "description": "Petite ville paisible entre Kyoto et Nara, réputée pour son matcha d'exception et le temple Byodo-in figurant sur la pièce de 10 yens.",
+      "lat": 34.8844,
+      "lng": 135.7997,
+      "jours_conseilles": "1/2 journée",
+      "image": "/images/villes/uji.jpg"
+    }
+  ],
+  "lieux": [
+    {
+      "id": "senso-ji",
+      "villeId": "tokyo",
+      "nom": "Senso-ji",
+      "nom_jp": "浅草寺",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "⛩️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Asakusa",
+      "description": "Le plus ancien temple de Tokyo, précédé de la célèbre porte Kaminarimon et de sa rue commerçante Nakamise.",
+      "conseil": "Viens tôt le matin (avant 8h) pour éviter la foule et photographier la lanterne géante au calme.",
+      "duree": "1-2h",
+      "budget": "Gratuit",
+      "lat": 35.7148,
+      "lng": 139.7967,
+      "saison_ideale": "",
+      "horaires": "6h00–17h00 (enceinte ouverte 24h)",
+      "acces": "Station Asakusa (Ginza/Asakusa Line), 5 min à pied",
+      "prix_detail": "Entrée gratuite",
+      "site_web": "senso-ji.jp",
+      "a_proximite": [
+        "akihabara"
+      ],
+      "image": "/images/lieux/senso-ji.jpg"
+    },
+    {
+      "id": "shibuya-crossing",
+      "villeId": "tokyo",
+      "nom": "Carrefour de Shibuya",
+      "nom_jp": "渋谷スクランブル",
+      "type": "voir",
+      "categorie": "Quartier",
+      "emoji": "🚦",
+      "interets": [
+        "lifestyle",
+        "anime"
+      ],
+      "quartier": "Shibuya",
+      "description": "Le passage piéton le plus fréquenté du monde, symbole de l'effervescence de Tokyo. Spectaculaire de nuit.",
+      "conseil": "Observe-le d'en haut depuis le Starbucks Tsutaya ou le Shibuya Sky pour la vue parfaite.",
+      "duree": "30min-1h",
+      "budget": "Gratuit",
+      "lat": 35.6595,
+      "lng": 139.7004,
+      "saison_ideale": "",
+      "horaires": "24h/24",
+      "acces": "Station Shibuya, sortie Hachiko",
+      "prix_detail": "Gratuit (Shibuya Sky : ~2000¥)",
+      "site_web": "",
+      "a_proximite": [
+        "ichiran"
+      ],
+      "image": "/images/lieux/shibuya-crossing.jpg"
+    },
+    {
+      "id": "teamlab",
+      "villeId": "tokyo",
+      "nom": "teamLab Planets",
+      "nom_jp": "チームラボ",
+      "type": "faire",
+      "categorie": "Musée immersif",
+      "emoji": "🌌",
+      "interets": [
+        "lifestyle",
+        "culture"
+      ],
+      "quartier": "Toyosu",
+      "description": "Musée d'art numérique immersif où l'on marche pieds nus dans l'eau et la lumière. Une expérience sensorielle unique.",
+      "conseil": "Réserve tes billets en ligne à l'avance, ça affiche complet très vite. Porte un short, on entre dans l'eau.",
+      "duree": "2h",
+      "budget": "¥¥",
+      "lat": 35.6499,
+      "lng": 139.7906,
+      "saison_ideale": "",
+      "horaires": "9h00–22h00 (variable selon jours)",
+      "acces": "Station Shin-Toyosu (Yurikamome), 1 min",
+      "prix_detail": "~3800¥ adulte",
+      "site_web": "planets.teamlab.art",
+      "a_proximite": [],
+      "image": "/images/lieux/teamlab.jpg"
+    },
+    {
+      "id": "ichiran",
+      "villeId": "tokyo",
+      "nom": "Ichiran Ramen",
+      "nom_jp": "一蘭",
+      "type": "manger",
+      "categorie": "Ramen",
+      "emoji": "🍜",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Shibuya",
+      "description": "Chaîne culte de ramen tonkotsu où l'on mange dans des box individuels, concentré sur son bol.",
+      "conseil": "Commande via la machine à l'entrée. Personnalise ton bol sur la fiche papier : richesse, ail, piquant.",
+      "duree": "45min",
+      "budget": "¥",
+      "lat": 35.6618,
+      "lng": 139.7041,
+      "saison_ideale": "",
+      "horaires": "10h00–23h00",
+      "acces": "Station Shibuya, 3 min",
+      "prix_detail": "~1000–1500¥ le bol",
+      "site_web": "ichiran.com",
+      "a_proximite": [
+        "shibuya-crossing"
+      ],
+      "image": "/images/lieux/ichiran.jpg"
+    },
+    {
+      "id": "park-hyatt",
+      "villeId": "tokyo",
+      "nom": "Park Hyatt Tokyo",
+      "nom_jp": "パークハイアット",
+      "type": "dormir",
+      "categorie": "Hôtel de luxe",
+      "emoji": "🏨",
+      "interets": [
+        "lifestyle"
+      ],
+      "quartier": "Shinjuku",
+      "description": "Hôtel iconique de 'Lost in Translation', avec vue imprenable sur la skyline et le mont Fuji.",
+      "conseil": "Même sans y dormir, monte au New York Bar au 52e étage pour un cocktail avec vue.",
+      "duree": "—",
+      "budget": "¥¥¥",
+      "lat": 35.6857,
+      "lng": 139.6907,
+      "saison_ideale": "",
+      "horaires": "Check-in 15h",
+      "acces": "Station Shinjuku, 12 min ou navette",
+      "prix_detail": "Chambre dès ~60000¥/nuit",
+      "site_web": "hyatt.com",
+      "a_proximite": [],
+      "image": "/images/lieux/park-hyatt.jpg"
+    },
+    {
+      "id": "akihabara",
+      "villeId": "tokyo",
+      "nom": "Akihabara",
+      "nom_jp": "秋葉原",
+      "type": "acheter",
+      "categorie": "Électronique & anime",
+      "emoji": "🎮",
+      "interets": [
+        "anime",
+        "lifestyle"
+      ],
+      "quartier": "Akihabara",
+      "description": "Le paradis de l'électronique, des mangas, des jeux vidéo et de la culture otaku. Des immeubles entiers de boutiques.",
+      "conseil": "Explore les étages : les pépites (figurines rares, rétro-gaming) sont souvent aux niveaux supérieurs.",
+      "duree": "2-3h",
+      "budget": "¥¥",
+      "lat": 35.7022,
+      "lng": 139.7745,
+      "saison_ideale": "",
+      "horaires": "Boutiques ~10h00–20h00",
+      "acces": "Station Akihabara (Yamanote Line)",
+      "prix_detail": "Variable",
+      "site_web": "",
+      "a_proximite": [
+        "senso-ji"
+      ],
+      "image": "/images/lieux/akihabara.jpg"
+    },
+    {
+      "id": "fushimi-inari",
+      "villeId": "kyoto",
+      "nom": "Fushimi Inari",
+      "nom_jp": "伏見稲荷大社",
+      "type": "voir",
+      "categorie": "Sanctuaire",
+      "emoji": "⛩️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Fushimi",
+      "description": "Le sanctuaire aux milliers de portes torii vermillon qui serpentent à flanc de montagne. Magique et iconique.",
+      "conseil": "Monte tôt le matin ou en fin de journée : au sommet, la foule disparaît et la lumière est superbe.",
+      "duree": "2-3h",
+      "budget": "Gratuit",
+      "lat": 34.9671,
+      "lng": 135.7727,
+      "saison_ideale": "",
+      "horaires": "24h/24",
+      "acces": "Station JR Inari ou Fushimi-Inari (Keihan)",
+      "prix_detail": "Gratuit",
+      "site_web": "inari.jp",
+      "a_proximite": [
+        "nishiki"
+      ],
+      "image": "/images/lieux/fushimi-inari.jpg"
+    },
+    {
+      "id": "kinkaku-ji",
+      "villeId": "kyoto",
+      "nom": "Kinkaku-ji",
+      "nom_jp": "金閣寺",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "🏯",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Kita",
+      "description": "Le Pavillon d'Or, temple zen recouvert de feuilles d'or se reflétant dans un étang. Éblouissant.",
+      "conseil": "Sublime sous la neige en hiver ou avec les couleurs d'automne. Évite le milieu de journée, bondé.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 35.0394,
+      "lng": 135.7292,
+      "saison_ideale": "hiver",
+      "horaires": "9h00–17h00",
+      "acces": "Bus 101/205 depuis gare de Kyoto",
+      "prix_detail": "500¥ adulte",
+      "site_web": "shokoku-ji.jp",
+      "a_proximite": [
+        "arashiyama"
+      ],
+      "image": "/images/lieux/kinkaku-ji.jpg"
+    },
+    {
+      "id": "arashiyama",
+      "villeId": "kyoto",
+      "nom": "Bambouseraie d'Arashiyama",
+      "nom_jp": "嵐山",
+      "type": "faire",
+      "categorie": "Nature",
+      "emoji": "🎋",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Arashiyama",
+      "description": "Forêt de bambous géants où la lumière filtre en un spectacle apaisant. Quartier charmant au bord de la rivière.",
+      "conseil": "Arrive avant 8h pour vivre la bambouseraie quasiment seul — l'expérience est incomparable.",
+      "duree": "Demi-journée",
+      "budget": "Gratuit",
+      "lat": 35.0095,
+      "lng": 135.6669,
+      "saison_ideale": "",
+      "horaires": "24h/24 (bambouseraie)",
+      "acces": "Station Saga-Arashiyama (JR) ou Arashiyama (Randen)",
+      "prix_detail": "Gratuit",
+      "site_web": "",
+      "a_proximite": [
+        "kinkaku-ji"
+      ],
+      "image": "/images/lieux/arashiyama.jpg"
+    },
+    {
+      "id": "nishiki",
+      "villeId": "kyoto",
+      "nom": "Marché Nishiki",
+      "nom_jp": "錦市場",
+      "type": "manger",
+      "categorie": "Marché",
+      "emoji": "🍢",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Nakagyō",
+      "description": "La 'cuisine de Kyoto' : une ruelle couverte de 400 m regorgeant de stands de spécialités locales à déguster.",
+      "conseil": "Goûte le tamagoyaki, les brochettes et le mochi. Ne mange pas en marchant, fais-le près du stand.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 35.005,
+      "lng": 135.7649,
+      "saison_ideale": "",
+      "horaires": "9h00–18h00 (selon stands)",
+      "acces": "Station Shijo (Karasuma Line)",
+      "prix_detail": "Variable",
+      "site_web": "",
+      "a_proximite": [
+        "fushimi-inari"
+      ],
+      "image": "/images/lieux/nishiki.jpg"
+    },
+    {
+      "id": "ryokan-kyoto",
+      "villeId": "kyoto",
+      "nom": "Ryokan Gion",
+      "nom_jp": "旅館",
+      "type": "dormir",
+      "categorie": "Ryokan",
+      "emoji": "🏮",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Gion",
+      "description": "Auberge traditionnelle avec tatamis, futons et dîner kaiseki, au cœur du quartier des geishas.",
+      "conseil": "Réserve un ryokan avec dîner inclus (kaiseki) au moins une nuit : c'est une expérience en soi.",
+      "duree": "—",
+      "budget": "¥¥¥",
+      "lat": 35.0037,
+      "lng": 135.7752,
+      "saison_ideale": "",
+      "horaires": "Check-in 15h",
+      "acces": "Quartier Gion, station Gion-Shijo",
+      "prix_detail": "Dès ~25000¥/nuit (dîner inclus)",
+      "site_web": "",
+      "a_proximite": [
+        "nishiki"
+      ],
+      "image": "/images/lieux/ryokan-kyoto.jpg"
+    },
+    {
+      "id": "dotonbori",
+      "villeId": "osaka",
+      "nom": "Dotonbori",
+      "nom_jp": "道頓堀",
+      "type": "voir",
+      "categorie": "Quartier",
+      "emoji": "🎡",
+      "interets": [
+        "lifestyle",
+        "gastro"
+      ],
+      "quartier": "Namba",
+      "description": "Le quartier le plus animé d'Osaka : enseignes lumineuses géantes, canal et ambiance festive jour et nuit.",
+      "conseil": "Repère le panneau Glico (le coureur), photo culte. Viens le soir quand tout s'illumine.",
+      "duree": "2h",
+      "budget": "Gratuit",
+      "lat": 34.6687,
+      "lng": 135.5013,
+      "saison_ideale": "",
+      "horaires": "24h/24",
+      "acces": "Station Namba",
+      "prix_detail": "Gratuit",
+      "site_web": "",
+      "a_proximite": [
+        "takoyaki",
+        "shinsaibashi"
+      ],
+      "image": "/images/lieux/dotonbori.jpg"
+    },
+    {
+      "id": "osaka-castle",
+      "villeId": "osaka",
+      "nom": "Château d'Osaka",
+      "nom_jp": "大阪城",
+      "type": "voir",
+      "categorie": "Château",
+      "emoji": "🏯",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Chūō",
+      "description": "Majestueux château historique entouré de douves et d'un parc, splendide à la saison des cerisiers.",
+      "conseil": "Le parc est gratuit et superbe au hanami. Monte au donjon pour la vue panoramique.",
+      "duree": "2h",
+      "budget": "¥",
+      "lat": 34.6873,
+      "lng": 135.5259,
+      "saison_ideale": "printemps",
+      "horaires": "9h00–17h00",
+      "acces": "Station Osakajokoen (JR Loop)",
+      "prix_detail": "600¥ (donjon), parc gratuit",
+      "site_web": "osakacastle.net",
+      "a_proximite": [],
+      "image": "/images/lieux/osaka-castle.jpg"
+    },
+    {
+      "id": "takoyaki",
+      "villeId": "osaka",
+      "nom": "Takoyaki de Dotonbori",
+      "nom_jp": "たこ焼き",
+      "type": "manger",
+      "categorie": "Street food",
+      "emoji": "🐙",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Namba",
+      "description": "Les boulettes de poulpe grillées, spécialité emblématique d'Osaka, à déguster brûlantes au stand.",
+      "conseil": "Attention, l'intérieur est très chaud ! Souffle avant de croquer. Le meilleur se mange debout au stand.",
+      "duree": "30min",
+      "budget": "¥",
+      "lat": 34.6686,
+      "lng": 135.501,
+      "saison_ideale": "",
+      "horaires": "10h00–23h00",
+      "acces": "Dotonbori, station Namba",
+      "prix_detail": "~500–700¥",
+      "site_web": "",
+      "a_proximite": [
+        "dotonbori"
+      ],
+      "image": "/images/lieux/takoyaki.jpg"
+    },
+    {
+      "id": "kuromon",
+      "villeId": "osaka",
+      "nom": "Marché Kuromon",
+      "nom_jp": "黒門市場",
+      "type": "manger",
+      "categorie": "Marché",
+      "emoji": "🦀",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Nipponbashi",
+      "description": "Le 'garde-manger d'Osaka' : fruits de mer frais, wagyu grillé et fruits de saison à déguster sur place.",
+      "conseil": "Viens le matin pour la fraîcheur. Goûte les brochettes de bœuf wagyu et les huîtres grillées.",
+      "duree": "1-2h",
+      "budget": "¥¥",
+      "lat": 34.666,
+      "lng": 135.5057,
+      "saison_ideale": "",
+      "horaires": "9h00–18h00",
+      "acces": "Station Nipponbashi, 2 min",
+      "prix_detail": "Variable",
+      "site_web": "kuromon.com",
+      "a_proximite": [
+        "dotonbori"
+      ],
+      "image": "/images/lieux/kuromon.jpg"
+    },
+    {
+      "id": "shinsaibashi",
+      "villeId": "osaka",
+      "nom": "Shinsaibashi",
+      "nom_jp": "心斎橋",
+      "type": "acheter",
+      "categorie": "Shopping",
+      "emoji": "🛍️",
+      "interets": [
+        "lifestyle"
+      ],
+      "quartier": "Chūō",
+      "description": "La plus grande artère commerçante d'Osaka, galerie couverte de 600 m mêlant grandes marques et boutiques locales.",
+      "conseil": "Idéal les jours de pluie (couvert). Combine avec Dotonbori juste à côté.",
+      "duree": "2h",
+      "budget": "¥¥",
+      "lat": 34.6723,
+      "lng": 135.5008,
+      "saison_ideale": "",
+      "horaires": "~11h00–21h00",
+      "acces": "Station Shinsaibashi",
+      "prix_detail": "Variable",
+      "site_web": "",
+      "a_proximite": [
+        "dotonbori"
+      ],
+      "image": "/images/lieux/shinsaibashi.jpg"
+    },
+    {
+      "id": "nara-park",
+      "villeId": "nara",
+      "nom": "Parc de Nara",
+      "nom_jp": "奈良公園",
+      "type": "faire",
+      "categorie": "Parc",
+      "emoji": "🦌",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Centre",
+      "description": "Vaste parc où plus de 1000 daims sika en liberté se promènent et s'inclinent pour réclamer des biscuits.",
+      "conseil": "Achète des 'shika senbei' (biscuits à daims). Incline-toi : certains daims rendent la révérence !",
+      "duree": "2-3h",
+      "budget": "Gratuit",
+      "lat": 34.6851,
+      "lng": 135.843,
+      "saison_ideale": "",
+      "horaires": "24h/24",
+      "acces": "Station Kintetsu Nara, 5 min",
+      "prix_detail": "Gratuit (biscuits ~200¥)",
+      "site_web": "",
+      "a_proximite": [
+        "todai-ji",
+        "kasuga"
+      ],
+      "image": "/images/lieux/nara-park.jpg"
+    },
+    {
+      "id": "todai-ji",
+      "villeId": "nara",
+      "nom": "Tōdai-ji",
+      "nom_jp": "東大寺",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "🛕",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Centre",
+      "description": "Temple abritant le Grand Bouddha (Daibutsu) de 15 m, dans l'un des plus grands bâtiments en bois du monde.",
+      "conseil": "Cherche le pilier percé d'un trou de la taille des narines du Bouddha : y passer porterait chance.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 34.6889,
+      "lng": 135.8398,
+      "saison_ideale": "",
+      "horaires": "7h30–17h30 (saisonnier)",
+      "acces": "Bus depuis gare de Nara",
+      "prix_detail": "600¥",
+      "site_web": "todaiji.or.jp",
+      "a_proximite": [
+        "nara-park"
+      ],
+      "image": "/images/lieux/todai-ji.jpg"
+    },
+    {
+      "id": "kasuga",
+      "villeId": "nara",
+      "nom": "Kasuga Taisha",
+      "nom_jp": "春日大社",
+      "type": "voir",
+      "categorie": "Sanctuaire",
+      "emoji": "🏮",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Est",
+      "description": "Sanctuaire shintō célèbre pour ses milliers de lanternes de pierre et de bronze, dans une forêt mystique.",
+      "conseil": "Les lanternes sont allumées lors de festivals spéciaux (février et août) — un spectacle féérique.",
+      "duree": "1h",
+      "budget": "Gratuit",
+      "lat": 34.6817,
+      "lng": 135.8484,
+      "saison_ideale": "",
+      "horaires": "6h30–17h30",
+      "acces": "Bus depuis gare de Nara",
+      "prix_detail": "Gratuit (sanctuaire intérieur 500¥)",
+      "site_web": "kasugataisha.or.jp",
+      "a_proximite": [
+        "nara-park",
+        "todai-ji"
+      ],
+      "image": "/images/lieux/kasuga.jpg"
+    },
+    {
+      "id": "mochi-nara",
+      "villeId": "nara",
+      "nom": "Nakatanidou",
+      "nom_jp": "中谷堂",
+      "type": "manger",
+      "categorie": "Wagashi",
+      "emoji": "🍡",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Centre",
+      "description": "Échoppe célèbre pour son spectacle de pilage du mochi ultra-rapide (mochitsuki). Yomogi mochi frais.",
+      "conseil": "Si tu as de la chance, assiste au pilage à grande vitesse — impressionnant. Mange le mochi tiède.",
+      "duree": "30min",
+      "budget": "¥",
+      "lat": 34.6829,
+      "lng": 135.827,
+      "saison_ideale": "",
+      "horaires": "10h00–19h00",
+      "acces": "Près de Sanjo-dori, gare de Nara",
+      "prix_detail": "~150¥/mochi",
+      "site_web": "",
+      "a_proximite": [
+        "nara-park"
+      ],
+      "image": "/images/lieux/mochi-nara.jpg"
+    },
+    {
+      "id": "peace-park",
+      "villeId": "hiroshima",
+      "nom": "Parc du Mémorial de la Paix",
+      "nom_jp": "平和記念公園",
+      "type": "voir",
+      "categorie": "Mémorial",
+      "emoji": "🕊️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Naka",
+      "description": "Lieu de mémoire poignant autour du Dôme de Genbaku, avec son musée bouleversant dédié à la paix.",
+      "conseil": "Prévois du temps pour le musée, émouvant et essentiel. Un moment de recueillement, pas une simple visite.",
+      "duree": "2-3h",
+      "budget": "¥",
+      "lat": 34.3955,
+      "lng": 132.4536,
+      "saison_ideale": "",
+      "horaires": "Parc 24h/24, musée 8h30–18h00",
+      "acces": "Tram ligne 2/6, arrêt Genbaku Dome-mae",
+      "prix_detail": "Parc gratuit, musée 200¥",
+      "site_web": "hpmmuseum.jp",
+      "a_proximite": [
+        "shukkeien"
+      ],
+      "image": "/images/lieux/peace-park.jpg"
+    },
+    {
+      "id": "miyajima",
+      "villeId": "hiroshima",
+      "nom": "Île de Miyajima",
+      "nom_jp": "宮島",
+      "type": "faire",
+      "categorie": "Île sacrée",
+      "emoji": "⛩️",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Hatsukaichi",
+      "description": "Île sacrée au célèbre torii 'flottant' du sanctuaire d'Itsukushima, avec daims et mont Misen.",
+      "conseil": "Vérifie les horaires des marées : à marée haute le torii semble flotter, à marée basse on marche jusqu'à lui.",
+      "duree": "Demi-journée",
+      "budget": "¥",
+      "lat": 34.2959,
+      "lng": 132.3197,
+      "saison_ideale": "",
+      "horaires": "Ferry ~6h00–22h00",
+      "acces": "Tram + ferry depuis Hiroshima (~1h)",
+      "prix_detail": "Ferry ~180¥, torii gratuit",
+      "site_web": "miyajima.or.jp",
+      "a_proximite": [],
+      "image": "/images/lieux/miyajima.jpg"
+    },
+    {
+      "id": "okonomiyaki-hiro",
+      "villeId": "hiroshima",
+      "nom": "Okonomimura",
+      "nom_jp": "お好み村",
+      "type": "manger",
+      "categorie": "Okonomiyaki",
+      "emoji": "🥞",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Naka",
+      "description": "Immeuble entier dédié à l'okonomiyaki style Hiroshima, en couches avec nouilles, garni devant toi.",
+      "conseil": "Le style Hiroshima diffère d'Osaka (étagé, avec nouilles). Mange-le directement sur la plaque chaude.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 34.3925,
+      "lng": 132.4595,
+      "saison_ideale": "",
+      "horaires": "11h00–22h00",
+      "acces": "Centre-ville, tram Hatchobori",
+      "prix_detail": "~1000¥",
+      "site_web": "",
+      "a_proximite": [
+        "peace-park"
+      ],
+      "image": "/images/lieux/okonomiyaki-hiro.jpg"
+    },
+    {
+      "id": "shukkeien",
+      "villeId": "hiroshima",
+      "nom": "Jardin Shukkei-en",
+      "nom_jp": "縮景園",
+      "type": "voir",
+      "categorie": "Jardin",
+      "emoji": "🍃",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Naka",
+      "description": "Jardin traditionnel paysager miniaturisant montagnes et vallées autour d'un étang central. Havre de paix.",
+      "conseil": "Splendide à l'automne (kōyō). Combine avec le château d'Hiroshima juste à côté.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 34.4017,
+      "lng": 132.4694,
+      "saison_ideale": "automne",
+      "horaires": "9h00–18h00",
+      "acces": "Tram arrêt Shukkeien-mae",
+      "prix_detail": "260¥",
+      "site_web": "",
+      "a_proximite": [
+        "peace-park"
+      ],
+      "image": "/images/lieux/shukkeien.jpg"
+    },
+    {
+      "id": "onsen-hakone",
+      "villeId": "hakone",
+      "nom": "Onsen de Hakone",
+      "nom_jp": "箱根温泉",
+      "type": "faire",
+      "categorie": "Onsen",
+      "emoji": "♨️",
+      "interets": [
+        "lifestyle"
+      ],
+      "quartier": "Hakone",
+      "description": "Sources chaudes naturelles dans un cadre montagneux, l'expérience thermale japonaise par excellence.",
+      "conseil": "Si tu as des tatouages, cherche un onsen privé (kashikiri) ou un ryokan avec bain en chambre.",
+      "duree": "2h",
+      "budget": "¥¥",
+      "lat": 35.233,
+      "lng": 139.1069,
+      "saison_ideale": "hiver",
+      "horaires": "Variable selon établissement",
+      "acces": "Hakone-Yumoto, puis bus",
+      "prix_detail": "~1000–2000¥ (bain public)",
+      "site_web": "",
+      "a_proximite": [
+        "owakudani"
+      ],
+      "image": "/images/lieux/onsen-hakone.jpg"
+    },
+    {
+      "id": "owakudani",
+      "villeId": "hakone",
+      "nom": "Owakudani",
+      "nom_jp": "大涌谷",
+      "type": "voir",
+      "categorie": "Volcanique",
+      "emoji": "🌋",
+      "interets": [
+        "lifestyle",
+        "culture"
+      ],
+      "quartier": "Hakone",
+      "description": "Vallée volcanique fumante aux sources sulfureuses, accessible en téléphérique avec vue sur le Fuji.",
+      "conseil": "Goûte les fameux œufs noirs (kuro-tamago) cuits dans les eaux sulfureuses : ils porteraient bonheur.",
+      "duree": "1-2h",
+      "budget": "¥¥",
+      "lat": 35.2445,
+      "lng": 139.0193,
+      "saison_ideale": "",
+      "horaires": "9h00–17h00 (téléphérique)",
+      "acces": "Téléphérique de Hakone",
+      "prix_detail": "Téléphérique ~1500¥, œuf ~500¥",
+      "site_web": "",
+      "a_proximite": [
+        "onsen-hakone",
+        "open-air-museum"
+      ],
+      "image": "/images/lieux/owakudani.jpg"
+    },
+    {
+      "id": "open-air-museum",
+      "villeId": "hakone",
+      "nom": "Musée en plein air",
+      "nom_jp": "彫刻の森美術館",
+      "type": "faire",
+      "categorie": "Musée",
+      "emoji": "🗿",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Hakone",
+      "description": "Musée de sculptures en plein air mêlant art moderne (dont Picasso) et nature montagneuse.",
+      "conseil": "Il y a un onsen pour les pieds (ashiyu) dans le musée : pause détente face aux œuvres.",
+      "duree": "2h",
+      "budget": "¥¥",
+      "lat": 35.2447,
+      "lng": 139.0506,
+      "saison_ideale": "",
+      "horaires": "9h00–17h00",
+      "acces": "Station Chokoku-no-Mori (Hakone Tozan)",
+      "prix_detail": "1600¥",
+      "site_web": "hakone-oam.or.jp",
+      "a_proximite": [
+        "owakudani"
+      ],
+      "image": "/images/lieux/open-air-museum.jpg"
+    },
+    {
+      "id": "ryokan-hakone",
+      "villeId": "hakone",
+      "nom": "Ryokan avec rotenburo",
+      "nom_jp": "露天風呂付旅館",
+      "type": "dormir",
+      "categorie": "Ryokan",
+      "emoji": "🏯",
+      "interets": [
+        "lifestyle",
+        "culture"
+      ],
+      "quartier": "Hakone",
+      "description": "Auberge traditionnelle avec bain extérieur privatif, parfois face au mont Fuji. Le sommet du raffinement.",
+      "conseil": "Réserve une chambre avec rotenburo privatif : se baigner face à la nature au lever du soleil, inoubliable.",
+      "duree": "—",
+      "budget": "¥¥¥",
+      "lat": 35.233,
+      "lng": 139.105,
+      "saison_ideale": "",
+      "horaires": "Check-in 15h",
+      "acces": "Navette depuis Hakone-Yumoto",
+      "prix_detail": "Dès ~30000¥/nuit",
+      "site_web": "",
+      "a_proximite": [
+        "onsen-hakone"
+      ],
+      "image": "/images/lieux/ryokan-hakone.jpg"
+    },
+    {
+      "id": "meiji-jingu",
+      "villeId": "tokyo",
+      "nom": "Sanctuaire Meiji",
+      "nom_jp": "明治神宮",
+      "type": "voir",
+      "categorie": "Sanctuaire",
+      "emoji": "⛩️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Shibuya",
+      "description": "Havre de paix boisé en plein Tokyo, dédié à l'empereur Meiji. Une forêt sacrée de 100 000 arbres au cœur de la ville.",
+      "conseil": "Combine avec le parc Yoyogi et Harajuku juste à côté. Le matin, tu peux croiser une cérémonie de mariage traditionnelle.",
+      "duree": "1-2h",
+      "budget": "Gratuit",
+      "lat": 35.6764,
+      "lng": 139.6993,
+      "saison_ideale": "",
+      "horaires": "Du lever au coucher du soleil",
+      "acces": "Station Harajuku (JR Yamanote)",
+      "prix_detail": "Gratuit (jardin intérieur 500¥)",
+      "site_web": "meijijingu.or.jp",
+      "a_proximite": [
+        "shibuya-crossing"
+      ],
+      "image": "/images/lieux/meiji-jingu.jpg"
+    },
+    {
+      "id": "tokyo-tower",
+      "villeId": "tokyo",
+      "nom": "Tokyo Tower",
+      "nom_jp": "東京タワー",
+      "type": "voir",
+      "categorie": "Monument",
+      "emoji": "🗼",
+      "interets": [
+        "lifestyle"
+      ],
+      "quartier": "Minato",
+      "description": "L'emblématique tour rouge et blanche inspirée de la Tour Eiffel, offrant une vue à 360° sur la mégapole.",
+      "conseil": "Plus belle de nuit quand elle s'illumine. Pour la photographier en entier, va au quartier de Roppongi Hills.",
+      "duree": "1-2h",
+      "budget": "¥¥",
+      "lat": 35.6586,
+      "lng": 139.7454,
+      "saison_ideale": "",
+      "horaires": "9h00–23h00",
+      "acces": "Station Akabanebashi, 5 min",
+      "prix_detail": "~1200¥ (pont principal)",
+      "site_web": "tokyotower.co.jp",
+      "a_proximite": [],
+      "image": "/images/lieux/tokyo-tower.jpg"
+    },
+    {
+      "id": "tsukiji",
+      "villeId": "tokyo",
+      "nom": "Marché extérieur de Tsukiji",
+      "nom_jp": "築地場外市場",
+      "type": "manger",
+      "categorie": "Marché",
+      "emoji": "🍣",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Chūō",
+      "description": "Le marché mythique où déguster sushi, sashimi et fruits de mer ultra-frais dans une ambiance animée.",
+      "conseil": "Viens tôt le matin (avant 10h) et le ventre vide. Goûte le tamagoyaki sur bâtonnet et les brochettes de thon grillé.",
+      "duree": "1-2h",
+      "budget": "¥¥",
+      "lat": 35.6654,
+      "lng": 139.7707,
+      "saison_ideale": "",
+      "horaires": "5h00–14h00 (fermé certains mercredis/dimanches)",
+      "acces": "Station Tsukiji (Hibiya Line)",
+      "prix_detail": "Variable",
+      "site_web": "tsukiji.or.jp",
+      "a_proximite": [],
+      "image": "/images/lieux/tsukiji.jpg"
+    },
+    {
+      "id": "ueno-park",
+      "villeId": "tokyo",
+      "nom": "Parc d'Ueno",
+      "nom_jp": "上野公園",
+      "type": "faire",
+      "categorie": "Parc & musées",
+      "emoji": "🌳",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Taitō",
+      "description": "Vaste parc abritant musées, un zoo et des cerisiers. L'un des meilleurs spots de hanami de Tokyo.",
+      "conseil": "Spectaculaire à la saison des cerisiers. Profites-en pour visiter le Musée National de Tokyo, le plus ancien du pays.",
+      "duree": "Demi-journée",
+      "budget": "Gratuit",
+      "lat": 35.7156,
+      "lng": 139.7745,
+      "saison_ideale": "printemps",
+      "horaires": "5h00–23h00",
+      "acces": "Station Ueno (JR)",
+      "prix_detail": "Parc gratuit (musées payants)",
+      "site_web": "",
+      "a_proximite": [
+        "tsukiji"
+      ],
+      "image": "/images/lieux/ueno-park.jpg"
+    },
+    {
+      "id": "teamlab-borderless",
+      "villeId": "tokyo",
+      "nom": "Street Kart Shibuya",
+      "nom_jp": "ストリートカート",
+      "type": "faire",
+      "categorie": "Expérience",
+      "emoji": "🏎️",
+      "interets": [
+        "lifestyle",
+        "anime"
+      ],
+      "quartier": "Shibuya",
+      "description": "Conduire un kart costumé dans les rues de Tokyo, une expérience délirante et inoubliable.",
+      "conseil": "Permis de conduire international OBLIGATOIRE (à faire avant le départ). Réserve à l'avance, les créneaux partent vite.",
+      "duree": "1-2h",
+      "budget": "¥¥",
+      "lat": 35.658,
+      "lng": 139.7016,
+      "saison_ideale": "",
+      "horaires": "Selon créneaux réservés",
+      "acces": "Divers points de départ (Shibuya, Asakusa)",
+      "prix_detail": "~9000¥",
+      "site_web": "",
+      "a_proximite": [
+        "shibuya-crossing"
+      ],
+      "image": "/images/lieux/street-kart.jpg"
+    },
+    {
+      "id": "kiyomizu-dera",
+      "villeId": "kyoto",
+      "nom": "Kiyomizu-dera",
+      "nom_jp": "清水寺",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "🏯",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Higashiyama",
+      "description": "Temple perché offrant une terrasse en bois spectaculaire surplombant Kyoto, sans un seul clou dans sa structure.",
+      "conseil": "Monte par les ruelles préservées de Higashiyama (Sannenzaka). Superbe à l'automne et illuminé lors de soirées spéciales.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 34.9949,
+      "lng": 135.785,
+      "saison_ideale": "automne",
+      "horaires": "6h00–18h00",
+      "acces": "Bus 100/206, arrêt Kiyomizu-michi",
+      "prix_detail": "400¥",
+      "site_web": "kiyomizudera.or.jp",
+      "a_proximite": [
+        "ginkaku-ji-kyoto",
+        "nishiki"
+      ],
+      "image": "/images/lieux/kiyomizu-dera.jpg"
+    },
+    {
+      "id": "ginkaku-ji-kyoto",
+      "villeId": "kyoto",
+      "nom": "Ginkaku-ji",
+      "nom_jp": "銀閣寺",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "🏯",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Higashiyama",
+      "description": "Le Pavillon d'Argent et son jardin zen de sable et de mousse d'une élégance épurée. Plus sobre mais aussi raffiné que son cousin doré.",
+      "conseil": "Emprunte le 'Chemin de la Philosophie' qui y mène, longé de cerisiers — magnifique au printemps.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 35.027,
+      "lng": 135.7982,
+      "saison_ideale": "printemps",
+      "horaires": "8h30–17h00",
+      "acces": "Bus 5/17, arrêt Ginkakuji-michi",
+      "prix_detail": "500¥",
+      "site_web": "shokoku-ji.jp",
+      "a_proximite": [
+        "kiyomizu-dera"
+      ],
+      "image": "/images/lieux/ginkaku-ji.jpg"
+    },
+    {
+      "id": "gion",
+      "villeId": "kyoto",
+      "nom": "Quartier de Gion",
+      "nom_jp": "祇園",
+      "type": "faire",
+      "categorie": "Quartier historique",
+      "emoji": "🏮",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Gion",
+      "description": "Le quartier des geishas aux ruelles bordées de maisons de thé en bois (machiya). Atmosphère hors du temps à la tombée de la nuit.",
+      "conseil": "Promène-toi en début de soirée : avec de la chance, tu apercevras une geiko ou maiko se rendant à un rendez-vous. Reste discret et respectueux.",
+      "duree": "1-2h",
+      "budget": "Gratuit",
+      "lat": 35.0036,
+      "lng": 135.7752,
+      "saison_ideale": "",
+      "horaires": "24h/24",
+      "acces": "Station Gion-Shijo (Keihan)",
+      "prix_detail": "Gratuit",
+      "site_web": "",
+      "a_proximite": [
+        "kiyomizu-dera",
+        "nishiki"
+      ],
+      "image": "/images/lieux/gion.jpg"
+    },
+    {
+      "id": "nijo-castle",
+      "villeId": "kyoto",
+      "nom": "Château de Nijo",
+      "nom_jp": "二条城",
+      "type": "voir",
+      "categorie": "Château",
+      "emoji": "🏯",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Nakagyō",
+      "description": "Résidence des shoguns Tokugawa, célèbre pour ses 'planchers rossignols' qui chantent sous les pas pour déjouer les intrus.",
+      "conseil": "Écoute le grincement volontaire du plancher uguisubari, un système anti-intrusion ingénieux. Jardins superbes.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 35.0142,
+      "lng": 135.7481,
+      "saison_ideale": "",
+      "horaires": "8h45–16h00",
+      "acces": "Station Nijojo-mae (Tozai Line)",
+      "prix_detail": "800¥",
+      "site_web": "",
+      "a_proximite": [
+        "nishiki"
+      ],
+      "image": "/images/lieux/nijo-castle.jpg"
+    },
+    {
+      "id": "sumiyoshi",
+      "villeId": "osaka",
+      "nom": "Sumiyoshi Taisha",
+      "nom_jp": "住吉大社",
+      "type": "voir",
+      "categorie": "Sanctuaire",
+      "emoji": "⛩️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Sumiyoshi",
+      "description": "L'un des plus anciens sanctuaires shintō du Japon, au style architectural unique antérieur à l'influence bouddhiste, avec son pont arqué iconique.",
+      "conseil": "Le pont Taiko-bashi, très raide, est magnifique en photo. Sanctuaire authentique et moins touristique.",
+      "duree": "1h",
+      "budget": "Gratuit",
+      "lat": 34.6126,
+      "lng": 135.4933,
+      "saison_ideale": "",
+      "horaires": "6h00–17h00",
+      "acces": "Station Sumiyoshitaisha (Nankai)",
+      "prix_detail": "Gratuit",
+      "site_web": "",
+      "a_proximite": [
+        "shinsekai"
+      ],
+      "image": "/images/lieux/sumiyoshi.jpg"
+    },
+    {
+      "id": "shinsekai",
+      "villeId": "osaka",
+      "nom": "Shinsekai",
+      "nom_jp": "新世界",
+      "type": "manger",
+      "categorie": "Quartier rétro",
+      "emoji": "🍢",
+      "interets": [
+        "gastro",
+        "lifestyle"
+      ],
+      "quartier": "Naniwa",
+      "description": "Quartier rétro pittoresque dominé par la tour Tsutenkaku, royaume du kushikatsu (brochettes panées frites).",
+      "conseil": "Goûte le kushikatsu, spécialité du coin. Règle d'or : interdit de tremper deux fois sa brochette dans la sauce commune !",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 34.6525,
+      "lng": 135.5063,
+      "saison_ideale": "",
+      "horaires": "Restaurants ~11h00–22h00",
+      "acces": "Station Dobutsuen-mae",
+      "prix_detail": "~100–200¥/brochette",
+      "site_web": "",
+      "a_proximite": [
+        "sumiyoshi"
+      ],
+      "image": "/images/lieux/shinsekai.jpg"
+    },
+    {
+      "id": "himeji-castle",
+      "villeId": "kanazawa",
+      "nom": "Château de Himeji",
+      "nom_jp": "姫路城",
+      "type": "voir",
+      "categorie": "Château",
+      "emoji": "🏯",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Himeji",
+      "description": "Le plus beau château du Japon, surnommé 'le Héron blanc', classé UNESCO et parfaitement préservé depuis le XVIIe siècle.",
+      "conseil": "Jamais détruit par les guerres ou séismes. Combine avec le jardin voisin Koko-en. Évite les week-ends, très fréquenté.",
+      "duree": "2-3h",
+      "budget": "¥",
+      "lat": 34.8394,
+      "lng": 134.6939,
+      "saison_ideale": "printemps",
+      "horaires": "9h00–17h00",
+      "acces": "Gare de Himeji (Shinkansen), 15 min à pied",
+      "prix_detail": "1000¥ (+340¥ avec Koko-en)",
+      "site_web": "himejicastle.jp",
+      "a_proximite": [],
+      "image": "/images/lieux/himeji-castle.jpg"
+    },
+    {
+      "id": "kenroku-en",
+      "villeId": "kanazawa",
+      "nom": "Jardin Kenroku-en",
+      "nom_jp": "兼六園",
+      "type": "voir",
+      "categorie": "Jardin",
+      "emoji": "🍃",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Centre",
+      "description": "Considéré comme l'un des trois plus beaux jardins du Japon, sublime à chaque saison avec ses étangs, ponts et maisons de thé.",
+      "conseil": "En hiver, admire les 'yukitsuri' (cordages protégeant les arbres de la neige). Arrive à l'ouverture pour le calme.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 36.562,
+      "lng": 136.6624,
+      "saison_ideale": "hiver",
+      "horaires": "7h00–18h00",
+      "acces": "Bus depuis gare de Kanazawa",
+      "prix_detail": "320¥",
+      "site_web": "",
+      "a_proximite": [
+        "higashi-chaya"
+      ],
+      "image": "/images/lieux/kenroku-en.jpg"
+    },
+    {
+      "id": "higashi-chaya",
+      "villeId": "kanazawa",
+      "nom": "Quartier Higashi Chaya",
+      "nom_jp": "ひがし茶屋街",
+      "type": "faire",
+      "categorie": "Quartier historique",
+      "emoji": "🏮",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Higashi",
+      "description": "Ancien quartier des geishas aux maisons de thé en bois préservées, où l'on déguste thé matcha et feuilles d'or comestibles.",
+      "conseil": "Goûte une glace recouverte de feuille d'or, spécialité de Kanazawa (la ville produit 99% de l'or en feuille du Japon).",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 36.572,
+      "lng": 136.666,
+      "saison_ideale": "",
+      "horaires": "Boutiques ~9h00–18h00",
+      "acces": "Bus depuis gare de Kanazawa",
+      "prix_detail": "Variable",
+      "site_web": "",
+      "a_proximite": [
+        "kenroku-en"
+      ],
+      "image": "/images/lieux/higashi-chaya.jpg"
+    },
+    {
+      "id": "shirakawa-go",
+      "villeId": "takayama",
+      "nom": "Shirakawa-go",
+      "nom_jp": "白川郷",
+      "type": "voir",
+      "categorie": "Village classé",
+      "emoji": "🏡",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Ono",
+      "description": "Village classé UNESCO aux fermes traditionnelles 'gasshō-zukuri' aux toits de chaume pentus, féerique sous la neige.",
+      "conseil": "Monte au point de vue de Shiroyama pour la photo panoramique. En hiver, certaines soirées d'illumination sont magiques (sur réservation).",
+      "duree": "Demi-journée",
+      "budget": "¥",
+      "lat": 36.2578,
+      "lng": 136.9063,
+      "saison_ideale": "hiver",
+      "horaires": "Village ouvert en continu",
+      "acces": "Bus depuis Takayama (~50 min)",
+      "prix_detail": "Gratuit (maisons ~300¥)",
+      "site_web": "shirakawa-go.gr.jp",
+      "a_proximite": [
+        "takayama-old-town"
+      ],
+      "image": "/images/lieux/shirakawa-go.jpg"
+    },
+    {
+      "id": "takayama-old-town",
+      "villeId": "takayama",
+      "nom": "Vieille ville de Takayama",
+      "nom_jp": "高山古い町並み",
+      "type": "faire",
+      "categorie": "Quartier historique",
+      "emoji": "🏮",
+      "interets": [
+        "culture",
+        "gastro"
+      ],
+      "quartier": "Sanmachi",
+      "description": "Ruelles d'époque Edo bordées de maisons de marchands, brasseries de saké et échoppes. Ambiance authentique du Japon rural.",
+      "conseil": "Goûte le bœuf de Hida (équivalent local du wagyu) en brochette ou en sushi. Repère les boules de cèdre signalant les brasseries de saké.",
+      "duree": "2-3h",
+      "budget": "¥",
+      "lat": 36.1411,
+      "lng": 137.2585,
+      "saison_ideale": "",
+      "horaires": "Boutiques ~9h00–17h00",
+      "acces": "Gare de Takayama, 10 min à pied",
+      "prix_detail": "Variable",
+      "site_web": "",
+      "a_proximite": [
+        "shirakawa-go"
+      ],
+      "image": "/images/lieux/takayama-old-town.jpg"
+    },
+    {
+      "id": "byodo-in",
+      "villeId": "uji",
+      "nom": "Byodo-in",
+      "nom_jp": "平等院",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "🏛️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Uji",
+      "description": "Temple du XIe siècle d'une beauté saisissante, son Pavillon du Phénix se reflétant dans un étang. Figure sur la pièce de 10 yens.",
+      "conseil": "Compare le bâtiment réel avec une pièce de 10 yens dans ta poche ! Le musée attenant abrite de superbes statues.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 34.8896,
+      "lng": 135.8077,
+      "saison_ideale": "",
+      "horaires": "8h30–17h30",
+      "acces": "Gare d'Uji (JR Nara Line), 10 min à pied",
+      "prix_detail": "600¥",
+      "site_web": "byodoin.or.jp",
+      "a_proximite": [
+        "uji-matcha"
+      ],
+      "image": "/images/lieux/byodo-in.jpg"
+    },
+    {
+      "id": "uji-matcha",
+      "villeId": "uji",
+      "nom": "Rue du matcha (Byodo-in Omotesando)",
+      "nom_jp": "宇治抹茶",
+      "type": "manger",
+      "categorie": "Thé & douceurs",
+      "emoji": "🍵",
+      "interets": [
+        "gastro",
+        "culture"
+      ],
+      "quartier": "Uji",
+      "description": "La rue marchande menant au Byodo-in, paradis du matcha : glaces, sobas au thé vert, pâtisseries et dégustations.",
+      "conseil": "Goûte une vraie glace au matcha de qualité (Uji est LA référence du Japon). Essaie aussi le cha-soba (nouilles au thé vert).",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 34.8905,
+      "lng": 135.807,
+      "saison_ideale": "",
+      "horaires": "Boutiques ~10h00–17h00",
+      "acces": "Gare d'Uji, 10 min à pied",
+      "prix_detail": "~500–900¥",
+      "site_web": "",
+      "a_proximite": [
+        "byodo-in"
+      ],
+      "image": "/images/lieux/uji-matcha.jpg"
+    }
+  ],
+  "voyages_preconcus": [
+    {
+      "id": "essentiel-7j",
+      "titre": "L'essentiel en 7 jours",
+      "duree": 7,
+      "theme": "Premier voyage",
+      "emoji": "🎌",
+      "villes": [
+        "tokyo",
+        "hakone",
+        "kyoto",
+        "osaka"
+      ],
+      "description": "L'itinéraire parfait pour une première découverte : la modernité de Tokyo, la détente à Hakone, la tradition à Kyoto et la gastronomie d'Osaka.",
+      "niveau": "Découverte",
+      "jours": [
+        {
+          "num": 1,
+          "villeId": "tokyo",
+          "titre": "Tokyo historique",
+          "etapes": [
+            {
+              "lieuId": "senso-ji"
+            },
+            {
+              "lieuId": "akihabara"
+            },
+            {
+              "lieuId": "ichiran"
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "villeId": "tokyo",
+          "titre": "Tokyo moderne",
+          "etapes": [
+            {
+              "lieuId": "shibuya-crossing"
+            },
+            {
+              "lieuId": "teamlab"
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "villeId": "hakone",
+          "titre": "Détente à Hakone",
+          "etapes": [
+            {
+              "lieuId": "owakudani"
+            },
+            {
+              "lieuId": "onsen-hakone"
+            },
+            {
+              "lieuId": "ryokan-hakone"
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "villeId": "kyoto",
+          "titre": "Kyoto spirituel",
+          "etapes": [
+            {
+              "lieuId": "fushimi-inari"
+            },
+            {
+              "lieuId": "nishiki"
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "villeId": "kyoto",
+          "titre": "Temples de Kyoto",
+          "etapes": [
+            {
+              "lieuId": "kinkaku-ji"
+            },
+            {
+              "lieuId": "arashiyama"
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "villeId": "osaka",
+          "titre": "Osaka gourmand",
+          "etapes": [
+            {
+              "lieuId": "osaka-castle"
+            },
+            {
+              "lieuId": "dotonbori"
+            },
+            {
+              "lieuId": "takoyaki"
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "villeId": "osaka",
+          "titre": "Derniers achats",
+          "etapes": [
+            {
+              "lieuId": "kuromon"
+            },
+            {
+              "lieuId": "shinsaibashi"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "culture-5j",
+      "titre": "Japon culturel",
+      "duree": 5,
+      "theme": "Culture & traditions",
+      "emoji": "⛩️",
+      "villes": [
+        "kyoto",
+        "nara",
+        "hiroshima"
+      ],
+      "description": "Une immersion dans l'âme traditionnelle du Japon : temples millénaires, sanctuaires, jardins zen et lieux de mémoire.",
+      "niveau": "Passionné",
+      "jours": [
+        {
+          "num": 1,
+          "villeId": "kyoto",
+          "titre": "Sanctuaires de Kyoto",
+          "etapes": [
+            {
+              "lieuId": "fushimi-inari"
+            },
+            {
+              "lieuId": "kinkaku-ji"
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "villeId": "kyoto",
+          "titre": "Kyoto nature & ryokan",
+          "etapes": [
+            {
+              "lieuId": "arashiyama"
+            },
+            {
+              "lieuId": "ryokan-kyoto"
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "villeId": "nara",
+          "titre": "Nara et ses daims",
+          "etapes": [
+            {
+              "lieuId": "nara-park"
+            },
+            {
+              "lieuId": "todai-ji"
+            },
+            {
+              "lieuId": "kasuga"
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "villeId": "hiroshima",
+          "titre": "Mémoire d'Hiroshima",
+          "etapes": [
+            {
+              "lieuId": "peace-park"
+            },
+            {
+              "lieuId": "shukkeien"
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "villeId": "hiroshima",
+          "titre": "Île sacrée de Miyajima",
+          "etapes": [
+            {
+              "lieuId": "miyajima"
+            },
+            {
+              "lieuId": "okonomiyaki-hiro"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tokyo-express-3j",
+      "titre": "Tokyo en 3 jours",
+      "duree": 3,
+      "theme": "City break",
+      "emoji": "🗼",
+      "villes": [
+        "tokyo"
+      ],
+      "description": "Un concentré de Tokyo pour un court séjour : traditions, pop culture, art numérique et gastronomie.",
+      "niveau": "Découverte",
+      "jours": [
+        {
+          "num": 1,
+          "villeId": "tokyo",
+          "titre": "Tokyo traditionnel",
+          "etapes": [
+            {
+              "lieuId": "senso-ji"
+            },
+            {
+              "lieuId": "ichiran"
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "villeId": "tokyo",
+          "titre": "Pop culture",
+          "etapes": [
+            {
+              "lieuId": "akihabara"
+            },
+            {
+              "lieuId": "shibuya-crossing"
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "villeId": "tokyo",
+          "titre": "Art & modernité",
+          "etapes": [
+            {
+              "lieuId": "teamlab"
+            },
+            {
+              "lieuId": "park-hyatt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gastro-4j",
+      "titre": "Saveurs du Kansai",
+      "duree": 4,
+      "theme": "Gastronomie",
+      "emoji": "🍜",
+      "villes": [
+        "osaka",
+        "kyoto",
+        "nara"
+      ],
+      "description": "Un voyage pour les gourmands à travers le Kansai : street food d'Osaka, marchés de Kyoto et douceurs de Nara.",
+      "niveau": "Gourmand",
+      "jours": [
+        {
+          "num": 1,
+          "villeId": "osaka",
+          "titre": "Street food d'Osaka",
+          "etapes": [
+            {
+              "lieuId": "dotonbori"
+            },
+            {
+              "lieuId": "takoyaki"
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "villeId": "osaka",
+          "titre": "Marché Kuromon",
+          "etapes": [
+            {
+              "lieuId": "kuromon"
+            },
+            {
+              "lieuId": "shinsaibashi"
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "villeId": "kyoto",
+          "titre": "Cuisine de Kyoto",
+          "etapes": [
+            {
+              "lieuId": "nishiki"
+            },
+            {
+              "lieuId": "fushimi-inari"
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "villeId": "nara",
+          "titre": "Douceurs de Nara",
+          "etapes": [
+            {
+              "lieuId": "mochi-nara"
+            },
+            {
+              "lieuId": "nara-park"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "histoire": [
+    {
+      "id": "jomon",
+      "titre": "Période Jōmon",
+      "titre_jp": "縄文時代",
+      "periode": "-14000 à -300",
+      "emoji": "🏺",
+      "theme": "Origines",
+      "resume": "Les premiers habitants du Japon, chasseurs-cueilleurs aux poteries parmi les plus anciennes du monde.",
+      "contenu": "La période Jōmon (-14 000 à -300 av. J-C) est l'une des plus longues de l'histoire humaine. Son nom vient des motifs 'cordés' (jōmon) ornant ses céramiques, les plus anciennes jamais découvertes. Les Jōmon vivaient en harmonie avec la nature, pêchant, chassant et cueillant dans des forêts abondantes. Leurs habitations semi-souterraines (tateana) et leurs statuettes dogū (figurines en argile aux grands yeux) témoignent d'une spiritualité déjà élaborée.",
+      "anecdote": "Les poteries Jōmon datent d'environ 16 000 ans — bien avant celles de la Mésopotamie, renversant l'idée que la céramique est née au Moyen-Orient.",
+      "lieu_lien": "tokyo"
+    },
+    {
+      "id": "yayoi",
+      "titre": "Période Yayoi",
+      "titre_jp": "弥生時代",
+      "periode": "-300 à 300",
+      "emoji": "🌾",
+      "theme": "Agriculture",
+      "resume": "L'arrivée de la riziculture et du métal transforme profondément la société japonaise.",
+      "contenu": "Vers 300 av. J-C, des migrants venus de Corée et de Chine apportent la riziculture inondée, le bronze et le fer. La société se stratifie : des chefs guerriers émergent, des villages se fortifient. La reine chamane Himiko, dirigeant le royaume de Yamatai, fascine encore les historiens par son pouvoir mystérieux évoqué dans les chroniques chinoises.",
+      "anecdote": "Himiko aurait gouverné grâce à sa magie et son contact avec les esprits. Elle envoya des ambassadeurs en Chine vers 239 ap. J-C, premier contact diplomatique connu du Japon.",
+      "lieu_lien": "nara"
+    },
+    {
+      "id": "nara-period",
+      "titre": "Période de Nara",
+      "titre_jp": "奈良時代",
+      "periode": "710 – 794",
+      "emoji": "🦌",
+      "theme": "Première capitale",
+      "resume": "Nara devient la première capitale permanente du Japon, sous l'influence de la Chine des Tang.",
+      "contenu": "En 710, l'impératrice Genmei fonde Heijō-kyō (Nara), première capitale permanente calquée sur Chang'an, la capitale Tang. Le bouddhisme devient religion d'État : le grand Bouddha de bronze de Tōdai-ji (752) est le plus grand objet en bronze jamais coulé à l'époque. Les premiers écrits japonais apparaissent : le Kojiki (712) et le Nihon Shoki (720), qui fondent la mythologie impériale.",
+      "anecdote": "La construction du Grand Bouddha mobilisa plus de 2,6 millions de travailleurs et consomma presque tout le bronze du pays. L'impératrice elle-même participa symboliquement au polissage.",
+      "lieu_lien": "nara"
+    },
+    {
+      "id": "heian",
+      "titre": "Période Heian",
+      "titre_jp": "平安時代",
+      "periode": "794 – 1185",
+      "emoji": "🎭",
+      "theme": "Âge d'or culturel",
+      "resume": "La cour impériale de Kyoto atteint un raffinement extrême — et produit la première grande littérature mondiale.",
+      "contenu": "Kyoto (Heiankyō) devient la capitale en 794. La cour aristocratique cultive le mono no aware — la sensibilité à l'éphémère des choses. Les femmes de cour donnent naissance à une littérature extraordinaire : Murasaki Shikibu écrit le Genji Monogatari vers 1010, considéré comme le premier roman de l'histoire. La calligraphie, la poésie waka et l'esthétique du karami (beauté austère) définissent encore le Japon contemporain.",
+      "anecdote": "Le Genji Monogatari (Le Dit du Genji) compte 54 chapitres et environ 400 personnages. Écrit par une dame de cour, il est souvent cité comme le premier roman psychologique de l'humanité.",
+      "lieu_lien": "kyoto"
+    },
+    {
+      "id": "kamakura",
+      "titre": "Shogunat de Kamakura",
+      "titre_jp": "鎌倉幕府",
+      "periode": "1185 – 1333",
+      "emoji": "⚔️",
+      "theme": "Ère des samouraïs",
+      "resume": "Les guerriers samouraïs prennent le pouvoir. Naissance du bushido et de la culture martiale japonaise.",
+      "contenu": "Minamoto no Yoritomo établit le premier shogunat à Kamakura en 1185, inaugurant 700 ans de domination militaire. Le code des guerriers (bushido) émerge : loyauté, honneur, mort plutôt que déshonneur. Le bouddhisme Zen arrive de Chine, profondément lié aux arts martiaux. Deux invasions mongoles (1274, 1281) sont repoussées par des typhons providentiels — les fameux kamikaze, 'vents divins'.",
+      "anecdote": "Le typhon qui détruisit la flotte mongole en 1281 fut interprété comme un signe divin protégeant le Japon. Cette notion de 'vent divin' (kamikaze) fut réutilisée 660 ans plus tard dans un tout autre contexte.",
+      "lieu_lien": "tokyo"
+    },
+    {
+      "id": "edo",
+      "titre": "Période Edo",
+      "titre_jp": "江戸時代",
+      "periode": "1603 – 1868",
+      "emoji": "🏯",
+      "theme": "Paix et isolement",
+      "resume": "250 ans de paix sous les Tokugawa. Le Japon s'isole du monde et crée une culture populaire unique.",
+      "contenu": "Tokugawa Ieyasu unifie le Japon après des siècles de guerres civiles et établit son shogunat à Edo (Tokyo). La politique de sakoku (fermeture) isole le Japon : seuls les Hollandais et les Chinois peuvent commercer, à Nagasaki. Cette longue paix voit éclore une culture populaire extraordinaire : ukiyo-e (estampes), kabuki, haiku, et l'émergence d'une bourgeoisie marchande. Edo devient la plus grande ville du monde vers 1700.",
+      "anecdote": "La Grande Vague de Kanagawa d'Hokusai (vers 1831) est l'image japonaise la plus reproduite au monde. Elle fait partie d'une série de 36 vues du mont Fuji, publiée quand Hokusai avait plus de 70 ans.",
+      "lieu_lien": "tokyo"
+    },
+    {
+      "id": "meiji",
+      "titre": "Ère Meiji",
+      "titre_jp": "明治時代",
+      "periode": "1868 – 1912",
+      "emoji": "🚂",
+      "theme": "Modernisation éclair",
+      "resume": "Le Japon s'ouvre au monde et se modernise à une vitesse stupéfiante pour éviter la colonisation.",
+      "contenu": "Confronté aux 'bateaux noirs' du commodore Perry en 1853, le Japon comprend qu'il doit se moderniser ou être colonisé. La Restauration Meiji renverse le shogunat et restaure l'empereur. En 40 ans, le Japon se dote de chemins de fer, d'une marine, d'une constitution, d'universités et d'une industrie. Il bat la Russie en 1905 — première victoire d'un pays asiatique sur une puissance européenne, choc mondial.",
+      "anecdote": "Des étudiants japonais furent envoyés par centaines en Europe et aux États-Unis pour 'importer' la modernité. Ils ramènerent la médecine allemande, le droit français, la marine britannique et l'éducation américaine.",
+      "lieu_lien": "tokyo"
+    },
+    {
+      "id": "contemporain",
+      "titre": "Le Japon contemporain",
+      "titre_jp": "現代日本",
+      "periode": "1945 – aujourd'hui",
+      "emoji": "🌸",
+      "theme": "Renaissance",
+      "resume": "De la défaite à la 3e puissance mondiale. Le Japon réinvente son identité avec une créativité unique.",
+      "contenu": "Après la défaite de 1945 et la reconstruction sous occupation américaine, le Japon réalise un 'miracle économique' qui en fait la 2e puissance mondiale dans les années 1960-1980. Sa culture douce (manga, anime, J-pop, cuisine, design) conquiert le monde. Les crises des années 1990 (bulle économique) et les catastrophes (Kobe 1995, Fukushima 2011) révèlent une résilience et une solidarité collectives remarquables.",
+      "anecdote": "Le Japon a plus de centenaires par habitant que tout autre pays. En 2023, on comptait plus de 90 000 personnes âgées de plus de 100 ans — une démographie qui façonne profondément la société et l'économie.",
+      "lieu_lien": "kyoto"
+    }
   ]
 }
