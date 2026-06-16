@@ -891,13 +891,13 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
         </div>
         <div style={{fontSize:13,color:C.t2,marginBottom:22}}>Débloque les catégories avec tes clés 🔑</div>
 
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
+        <div className="stagger" style={{display:"flex",flexDirection:"column",gap:11}}>
           {EXPLORE_MODS.map((m,i)=>{
             const def = MODS[m.title];
             const unlocked = def && isUnlocked(def.cat);
             const lockDef = def && LOCKABLE[def.cat];
             return(
-              <div key={i} onClick={()=>tryOpen(m)} style={{position:"relative",background:C.s1,border:`1px solid ${unlocked?"rgba(201,70,61,0.3)":C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",transition:"all .2s",overflow:"hidden"}}>
+              <div key={i} className="lift" onClick={()=>tryOpen(m)} style={{position:"relative",background:C.s1,border:`1px solid ${unlocked?"rgba(201,70,61,0.3)":C.border}`,borderRadius:18,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",overflow:"hidden",boxShadow:"0 2px 10px rgba(0,0,0,0.03)"}}>
                 <span style={{fontSize:28,flexShrink:0,filter:unlocked?"none":"grayscale(0.6) opacity(0.7)"}}>{m.emoji}</span>
                 <div style={{flex:1}}>
                   <div style={{fontSize:14,color:C.text,marginBottom:3}}>{m.title}</div>
@@ -1527,11 +1527,11 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
       </div>
 
       {/* Tradition cards */}
-      <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
+      <div className="stagger" style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
         {filtered.map((t,i)=>(
-          <div key={i} onClick={()=>setSelected(t)} style={{
-            background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px 16px",
-            display:"flex",alignItems:"center",gap:14,cursor:"pointer",transition:"all .2s",animation:"fadeUp .4s ease"
+          <div key={i} className="lift" onClick={()=>setSelected(t)} style={{
+            background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,padding:"16px 16px",
+            display:"flex",alignItems:"center",gap:14,cursor:"pointer",boxShadow:"0 2px 10px rgba(0,0,0,0.03)"
           }}>
             <span style={{fontSize:32,flexShrink:0}}>{t.emoji}</span>
             <div style={{flex:1,minWidth:0}}>
@@ -2016,6 +2016,43 @@ function loadPathProgress(){
 }
 function savePathProgress(p){ try { localStorage.setItem(PATH_KEY, JSON.stringify(p)); } catch {} }
 
+// ─── Voyages (planificateur) ────────────────────────────────────────────────
+// Structure : tableau de voyages (prévu pour le premium multi-voyages).
+// Version gratuite : 1 seul voyage autorisé.
+const TRIPS_KEY = "isekaid_trips_v1";
+const FREE_TRIP_LIMIT = 1;
+function loadTrips(){
+  try { const raw=localStorage.getItem(TRIPS_KEY); return raw?JSON.parse(raw):[]; }
+  catch { return []; }
+}
+function saveTrips(trips){ try { localStorage.setItem(TRIPS_KEY, JSON.stringify(trips)); } catch {} }
+function makeTripId(){ return "trip_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function makeStepId(){ return "s_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+
+// Check-list de préparatifs par défaut (inspirée d'un vrai voyage)
+const DEFAULT_CHECKLIST = [
+  "Passeport valide (6 mois)","Billets d'avion","Réservations d'hôtels/ryokan",
+  "JR Pass (à commander avant le départ)","Carte IC (Suica/Pasmo)","Pocket WiFi ou eSIM",
+  "Adaptateur de prise (type A)","Yens en espèces","Assurance voyage",
+];
+
+// Construit un voyage perso à partir d'un itinéraire préconçu
+function tripFromPreconcu(p){
+  return {
+    id: makeTripId(),
+    titre: p.titre,
+    mode_dates: "jours",
+    dateDebut: "",
+    villes: [...p.villes],
+    source: p.id,
+    jours: p.jours.map(j=>({
+      num: j.num, date:"", villeId: j.villeId, titre: j.titre||"",
+      etapes: (j.etapes||[]).map(e=>({ id: makeStepId(), lieuId: e.lieuId, note:"" }))
+    })),
+    checklist: DEFAULT_CHECKLIST.map((t,i)=>({ id:"c"+i, texte:t, fait:false })),
+  };
+}
+
 function SituationDetail({C, s, onBack, script}){
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
@@ -2411,44 +2448,484 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
 }
 
 // ─── Onglet Voyage (à venir) ──────────────────────────────────────────────────
-function VoyageScreen({C, user}){
+function VoyageScreen({C, user, db, script}){
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
-  return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
-      {/* En-tête */}
-      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>旅 · VOYAGE</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Préparer mon voyage</div>
-      </div>
+  const villes = db?.villes || [];
+  const lieux = db?.lieux || [];
+  const preconcus = db?.voyages_preconcus || [];
+  const villeById = useMemo(()=>Object.fromEntries(villes.map(v=>[v.id,v])), [villes]);
 
-      <div style={{padding:"40px 24px 110px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",minHeight:"55%"}}>
-        <div style={{width:96,height:96,borderRadius:"50%",background:acc.soft,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:46,marginBottom:24}}>🗺️</div>
-        <div style={{fontSize:20,color:C.text,fontWeight:600,marginBottom:10}}>Bientôt disponible</div>
-        <div style={{fontSize:14,color:C.t2,lineHeight:1.6,maxWidth:300,marginBottom:24}}>
-          Ici tu pourras préparer ton séjour au Japon : itinéraires, lieux à visiter selon ta position, check-lists et conseils pratiques.
+  const [trips, setTrips] = useState(()=>loadTrips());
+  // vues : "home" | "browse" (préconçus) | "create" | "trip"
+  const [view, setView] = useState("home");
+  const [activeTripId, setActiveTripId] = useState(null);
+  const [showPremium, setShowPremium] = useState(false);
+
+  const isPremium = !!user?.isPremium;
+  const persist = (next)=>{ setTrips(next); saveTrips(next); };
+  const activeTrip = trips.find(t=>t.id===activeTripId);
+
+  // Création
+  const tryCreate = ()=>{
+    if(trips.length >= FREE_TRIP_LIMIT && !isPremium){ setShowPremium(true); return; }
+    setView("create");
+  };
+  const tryAdopt = (p)=>{
+    if(trips.length >= FREE_TRIP_LIMIT && !isPremium){ setShowPremium(true); return; }
+    const t = tripFromPreconcu(p);
+    persist([...trips, t]); setActiveTripId(t.id); setView("trip");
+  };
+  const createTrip = (trip)=>{ persist([...trips, trip]); setActiveTripId(trip.id); setView("trip"); };
+  const updateTrip = (updated)=>{ persist(trips.map(t=>t.id===updated.id?updated:t)); };
+  const deleteTrip = (id)=>{ persist(trips.filter(t=>t.id!==id)); setActiveTripId(null); setView("home"); };
+
+  // ─── Vue : création ───
+  if(view==="create"){
+    return <VoyageCreate C={C} villes={villes} onCancel={()=>setView("home")} onCreate={createTrip}/>;
+  }
+  // ─── Vue : préconçus ───
+  if(view==="browse"){
+    return(
+      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+        <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+          <button onClick={()=>setView("home")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"6px 13px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:10}}>‹ Retour</button>
+          <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>✨ INSPIRATION</div>
+          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Itinéraires préconçus</div>
         </div>
-        <div style={{display:"flex",flexDirection:"column",gap:10,width:"100%",maxWidth:320}}>
-          {[
-            {emoji:"📍",t:"Suggestions géolocalisées",d:"Que voir autour de toi, ville par ville"},
-            {emoji:"🗓️",t:"Itinéraires personnalisés",d:"Selon tes goûts et la durée du séjour"},
-            {emoji:"✅",t:"Check-lists de préparation",d:"Avant et pendant le voyage"},
-          ].map((it,i)=>(
-            <div key={i} style={{display:"flex",alignItems:"center",gap:13,padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,textAlign:"left",opacity:0.75}}>
-              <span style={{fontSize:24,flexShrink:0}}>{it.emoji}</span>
-              <div>
-                <div style={{fontSize:14,color:C.text,fontWeight:500}}>{it.t}</div>
-                <div style={{fontSize:11,color:C.t2,marginTop:2}}>{it.d}</div>
+        <div style={{padding:"18px 20px 110px"}} className="stagger">
+          {preconcus.map(p=>(
+            <div key={p.id} className="lift" style={{marginBottom:14,background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,overflow:"hidden",cursor:"pointer"}} onClick={()=>{setActiveTripId("preview_"+p.id);}}>
+              <div style={{height:84,background:`linear-gradient(135deg,${C.red}22,${C.gold}18)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:38,position:"relative"}}>
+                {p.emoji}
+                <span style={{position:"absolute",bottom:8,left:12,fontSize:9,color:C.text,background:C.s1,padding:"3px 9px",borderRadius:12,opacity:0.9}}>{p.niveau}</span>
+              </div>
+              <div style={{padding:"13px 15px"}}>
+                <div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:3}}>{p.titre}</div>
+                <div style={{fontSize:11,color:C.t3,marginBottom:6}}>{p.duree} jours · {p.villes.map(id=>villeById[id]?.nom||id).join(", ")}</div>
+                <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginBottom:12}}>{p.description}</div>
+                <button onClick={(e)=>{e.stopPropagation(); tryAdopt(p);}} style={{width:"100%",padding:"11px",background:C.red,border:"none",borderRadius:10,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Utiliser cet itinéraire</button>
               </div>
             </div>
           ))}
         </div>
       </div>
+    );
+  }
+  // ─── Vue : un voyage ───
+  if(view==="trip" && activeTrip){
+    return <VoyageTrip C={C} trip={activeTrip} db={db} villeById={villeById} script={script}
+              onBack={()=>setView("home")} onUpdate={updateTrip} onDelete={deleteTrip}/>;
+  }
+
+  // ─── Vue : accueil ───
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>旅 · VOYAGE</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Mon voyage</div>
+      </div>
+
+      <div style={{padding:"18px 20px 110px"}}>
+        {trips.length===0 ? (
+          <>
+            {/* État vide */}
+            <div style={{textAlign:"center",padding:"24px 4px 28px"}}>
+              <div style={{width:88,height:88,borderRadius:"50%",background:acc.soft,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:42,margin:"0 auto 20px"}}>🗺️</div>
+              <div style={{fontSize:18,color:C.text,fontWeight:600,marginBottom:8}}>Planifie ton séjour</div>
+              <div style={{fontSize:13,color:C.t2,lineHeight:1.6,maxWidth:300,margin:"0 auto 22px"}}>Crée ton itinéraire jour par jour, ou inspire-toi d'un voyage préconçu.</div>
+              <button onClick={tryCreate} style={{width:"100%",maxWidth:320,padding:"14px",background:C.red,border:"none",borderRadius:13,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:10}}>+ Créer mon voyage</button>
+              <button onClick={()=>setView("browse")} style={{width:"100%",maxWidth:320,padding:"14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:13,color:C.text,fontSize:14,fontWeight:600,cursor:"pointer"}}>✨ Explorer des itinéraires</button>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Voyage existant */}
+            {trips.map(t=>{
+              const nbLieux = t.jours.reduce((a,j)=>a+j.etapes.length,0);
+              return(
+                <div key={t.id} className="lift" onClick={()=>{setActiveTripId(t.id);setView("trip");}} style={{marginBottom:14,background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,overflow:"hidden",cursor:"pointer"}}>
+                  <div style={{height:70,background:`linear-gradient(135deg,${acc.accent}33,${C.gold}18)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30}}>🗾</div>
+                  <div style={{padding:"13px 15px"}}>
+                    <div style={{fontSize:16,color:C.text,fontWeight:600,marginBottom:3}}>{t.titre}</div>
+                    <div style={{fontSize:11,color:C.t3}}>{t.jours.length} jour{t.jours.length>1?"s":""} · {nbLieux} lieu{nbLieux>1?"x":""} · {t.villes.map(id=>villeById[id]?.nom||id).join(", ")}</div>
+                  </div>
+                </div>
+              );
+            })}
+            {/* Ajouter un 2e voyage → premium */}
+            <button onClick={tryCreate} style={{width:"100%",padding:"13px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:13,color:C.t2,fontSize:13,cursor:"pointer",marginTop:4}}>
+              + Nouveau voyage {!isPremium && "🔒"}
+            </button>
+            <button onClick={()=>setView("browse")} style={{width:"100%",padding:"13px",background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer",marginTop:6}}>✨ Voir les itinéraires préconçus</button>
+          </>
+        )}
+      </div>
+
+      {/* Modale premium */}
+      {showPremium && (
+        <div onClick={()=>setShowPremium(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+          <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:440,background:C.s1,borderRadius:"22px 22px 0 0",padding:"26px 22px 32px",animation:"fadeUp .3s ease"}}>
+            <div style={{textAlign:"center"}}>
+              <div style={{fontSize:40,marginBottom:12}}>🌸</div>
+              <div style={{fontSize:19,color:C.text,fontWeight:700,marginBottom:8}}>Plusieurs voyages avec Premium</div>
+              <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:20}}>La version gratuite te permet de planifier un voyage. Passe à Premium pour créer autant d'itinéraires que tu veux, et débloquer les futures fonctionnalités.</div>
+              <button onClick={()=>setShowPremium(false)} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:8}}>Bientôt disponible</button>
+              <button onClick={()=>setShowPremium(false)} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Plus tard</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress}){
+// ─── Écran de création de voyage ──────────────────────────────────────────────
+function VoyageCreate({C, villes, onCancel, onCreate}){
+  const [titre, setTitre] = useState("Mon voyage au Japon");
+  const [selVilles, setSelVilles] = useState([]);
+  const [modeDates, setModeDates] = useState("jours"); // "jours" | "calendrier"
+  const [nbJours, setNbJours] = useState(5);
+  const [dateDebut, setDateDebut] = useState("");
+
+  const toggleVille = (id)=> setSelVilles(s=> s.includes(id)? s.filter(x=>x!==id) : [...s,id]);
+  const canCreate = titre.trim() && selVilles.length>0;
+
+  const submit = ()=>{
+    if(!canCreate) return;
+    const n = modeDates==="jours" ? Math.max(1,Math.min(30,nbJours||1)) : (nbJours||selVilles.length||1);
+    const jours = Array.from({length:n},(_,i)=>({
+      num:i+1, date:"", villeId: selVilles[Math.min(i,selVilles.length-1)], titre:"", etapes:[]
+    }));
+    onCreate({
+      id: makeTripId(), titre:titre.trim(), mode_dates:modeDates,
+      dateDebut: modeDates==="calendrier"?dateDebut:"",
+      villes:[...selVilles], jours,
+      checklist: DEFAULT_CHECKLIST.map((t,i)=>({id:"c"+i,texte:t,fait:false})),
+    });
+  };
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <button onClick={onCancel} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Annuler</button>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Nouveau voyage</div>
+      </div>
+
+      <div style={{padding:"18px 20px 120px"}}>
+        {/* Titre */}
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Titre</div>
+        <input value={titre} onChange={e=>setTitre(e.target.value)} style={{width:"100%",boxSizing:"border-box",padding:"13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:11,color:C.text,fontSize:14,marginBottom:20,fontFamily:"inherit"}}/>
+
+        {/* Villes */}
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Villes ({selVilles.length})</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:20}}>
+          {villes.map(v=>{
+            const on = selVilles.includes(v.id);
+            return <button key={v.id} onClick={()=>toggleVille(v.id)} style={{padding:"8px 13px",borderRadius:18,fontSize:12,cursor:"pointer",border:`1px solid ${on?C.red:C.border}`,background:on?"rgba(201,70,61,0.12)":C.s1,color:on?C.text:C.t2}}>{v.emoji} {v.nom} {on?"✓":""}</button>;
+          })}
+        </div>
+
+        {/* Dates */}
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Dates</div>
+        <div style={{display:"flex",gap:8,marginBottom:14}}>
+          <button onClick={()=>setModeDates("jours")} style={{flex:1,padding:"10px",borderRadius:9,fontSize:12,cursor:"pointer",border:`1px solid ${modeDates==="jours"?C.red:C.border}`,background:modeDates==="jours"?"rgba(201,70,61,0.12)":C.s1,color:modeDates==="jours"?C.text:C.t2}}>Nombre de jours</button>
+          <button onClick={()=>setModeDates("calendrier")} style={{flex:1,padding:"10px",borderRadius:9,fontSize:12,cursor:"pointer",border:`1px solid ${modeDates==="calendrier"?C.red:C.border}`,background:modeDates==="calendrier"?"rgba(201,70,61,0.12)":C.s1,color:modeDates==="calendrier"?C.text:C.t2}}>📅 Calendrier</button>
+        </div>
+        {modeDates==="jours" ? (
+          <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:24}}>
+            <button onClick={()=>setNbJours(n=>Math.max(1,n-1))} style={{width:40,height:40,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s1,color:C.text,fontSize:20,cursor:"pointer"}}>−</button>
+            <div style={{fontSize:18,color:C.text,fontWeight:600,minWidth:90,textAlign:"center"}}>{nbJours} jour{nbJours>1?"s":""}</div>
+            <button onClick={()=>setNbJours(n=>Math.min(30,n+1))} style={{width:40,height:40,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s1,color:C.text,fontSize:20,cursor:"pointer"}}>+</button>
+          </div>
+        ) : (
+          <div style={{marginBottom:24}}>
+            <input type="date" value={dateDebut} onChange={e=>setDateDebut(e.target.value)} style={{width:"100%",boxSizing:"border-box",padding:"12px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:11,color:C.text,fontSize:14,marginBottom:10,fontFamily:"inherit"}}/>
+            <div style={{display:"flex",alignItems:"center",gap:14}}>
+              <span style={{fontSize:12,color:C.t2}}>Durée :</span>
+              <button onClick={()=>setNbJours(n=>Math.max(1,n-1))} style={{width:34,height:34,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s1,color:C.text,fontSize:18,cursor:"pointer"}}>−</button>
+              <span style={{fontSize:15,color:C.text,fontWeight:600,minWidth:70,textAlign:"center"}}>{nbJours} j</span>
+              <button onClick={()=>setNbJours(n=>Math.min(30,n+1))} style={{width:34,height:34,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s1,color:C.text,fontSize:18,cursor:"pointer"}}>+</button>
+            </div>
+          </div>
+        )}
+
+        <button onClick={submit} disabled={!canCreate} style={{width:"100%",padding:"15px",background:canCreate?C.red:C.s3,border:"none",borderRadius:13,color:canCreate?"#fff":C.t3,fontSize:14,fontWeight:600,cursor:canCreate?"pointer":"default"}}>Créer le voyage →</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Vue d'un voyage (placeholder étape suivante : itinéraire détaillé) ─────────
+const VOYAGE_TYPES = [
+  {id:"voir",label:"Voir",emoji:"👁️"},
+  {id:"faire",label:"Faire",emoji:"🎯"},
+  {id:"manger",label:"Manger",emoji:"🍜"},
+  {id:"dormir",label:"Dormir",emoji:"🏨"},
+  {id:"acheter",label:"Acheter",emoji:"🛍️"},
+];
+
+function VoyageTrip({C, trip, db, villeById, script, onBack, onUpdate, onDelete}){
+  const lieuById = useMemo(()=>Object.fromEntries((db?.lieux||[]).map(l=>[l.id,l])), [db]);
+  const lieux = db?.lieux || [];
+  const [dayIdx, setDayIdx] = useState(0);
+  // sous-vues : "day" | "catalogue" | "detail" | "checklist"
+  const [sub, setSub] = useState("day");
+  const [catType, setCatType] = useState("tout");
+  const [detailId, setDetailId] = useState(null);
+  const [noteEdit, setNoteEdit] = useState(null); // id d'étape en édition de note
+  const [confirmDel, setConfirmDel] = useState(false);
+
+  const day = trip.jours[dayIdx];
+  const ville = day ? villeById[day.villeId] : null;
+
+  // ── Mutations ──
+  const addLieu = (lieuId)=>{
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:[...j.etapes, {id:makeStepId(), lieuId, note:""}]}));
+    onUpdate({...trip, jours});
+  };
+  const removeEtape = (etapeId)=>{
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:j.etapes.filter(e=>e.id!==etapeId)}));
+    onUpdate({...trip, jours});
+  };
+  const moveEtape = (idx, dir)=>{
+    const arr = [...day.etapes]; const ni = idx+dir;
+    if(ni<0||ni>=arr.length) return;
+    [arr[idx],arr[ni]]=[arr[ni],arr[idx]];
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:arr}));
+    onUpdate({...trip, jours});
+  };
+  const setNote = (etapeId, note)=>{
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:j.etapes.map(e=>e.id===etapeId?{...e,note}:e)}));
+    onUpdate({...trip, jours});
+  };
+  const toggleCheck = (cid)=> onUpdate({...trip, checklist:(trip.checklist||[]).map(c=>c.id===cid?{...c,fait:!c.fait}:c)});
+  const addCheck = (texte)=> onUpdate({...trip, checklist:[...(trip.checklist||[]), {id:"c"+Date.now(), texte, fait:false}]});
+  const removeCheck = (cid)=> onUpdate({...trip, checklist:(trip.checklist||[]).filter(c=>c.id!==cid)});
+
+  const idsInDay = new Set((day?.etapes||[]).map(e=>e.lieuId));
+
+  // ─── Sous-vue : fiche détail enrichie ───
+  if(sub==="detail" && detailId){
+    const l = lieuById[detailId];
+    if(!l){ setSub("catalogue"); return null; }
+    const proches = (l.a_proximite||[]).map(id=>lieuById[id]).filter(Boolean);
+    const inDay = idsInDay.has(l.id);
+    return(
+      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+        {/* Bannière image / emoji */}
+        <div style={{height:150,background:`linear-gradient(135deg,${C.red}44,${C.s2})`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
+          <img src={l.image} alt="" onError={(e)=>{e.target.style.display="none";}} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+          <span style={{fontSize:58,position:"relative",textShadow:"0 2px 12px rgba(0,0,0,0.4)"}}>{l.emoji}</span>
+          <button onClick={()=>setSub("catalogue")} style={{position:"absolute",top:44,left:16,fontSize:12,color:"#fff",background:"rgba(0,0,0,0.45)",border:"none",padding:"6px 13px",borderRadius:16,cursor:"pointer"}}>‹ Retour</button>
+        </div>
+        <div style={{padding:"16px 20px 110px"}}>
+          <div style={{textAlign:"center",marginBottom:14}}>
+            <div style={{fontSize:19,color:C.text,fontWeight:600}}>{l.nom}</div>
+            <div style={{fontSize:13,color:C.gold,fontFamily:"'Noto Serif JP',serif"}}>{l.nom_jp}</div>
+            <div style={{fontSize:11,color:C.t3,marginTop:3}}>{l.categorie} · {l.quartier} · {ville?.nom}</div>
+          </div>
+          <div style={{fontSize:13,color:C.t2,lineHeight:1.65,marginBottom:14}}>{l.description}</div>
+          {l.conseil && (
+            <div style={{background:"rgba(158,122,26,0.1)",border:"1px solid rgba(158,122,26,0.3)",borderRadius:12,padding:"12px 14px",marginBottom:14}}>
+              <div style={{fontSize:9,color:C.gold,letterSpacing:".1em",marginBottom:5,textTransform:"uppercase"}}>💡 Conseil de voyageur</div>
+              <div style={{fontSize:12,color:C.text,lineHeight:1.55}}>{l.conseil}</div>
+            </div>
+          )}
+          {/* Infos pratiques */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14}}>
+            {l.horaires && <InfoBox C={C} icon="🕐" label="Horaires" val={l.horaires}/>}
+            {l.prix_detail && <InfoBox C={C} icon="💴" label="Prix" val={l.prix_detail}/>}
+            {l.acces && <InfoBox C={C} icon="🚉" label="Accès" val={l.acces}/>}
+            {l.duree && <InfoBox C={C} icon="⏱️" label="Durée" val={l.duree}/>}
+          </div>
+          {l.site_web && <div style={{fontSize:11,color:C.t3,marginBottom:14}}>🔗 {l.site_web}</div>}
+          {/* À proximité */}
+          {proches.length>0 && (
+            <div style={{marginBottom:16}}>
+              <div style={{fontSize:9,color:C.t3,letterSpacing:".1em",marginBottom:8,textTransform:"uppercase"}}>📍 À proximité</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:7}}>
+                {proches.map(p=>(
+                  <button key={p.id} onClick={()=>setDetailId(p.id)} style={{padding:"7px 11px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,fontSize:11,color:C.t2,cursor:"pointer"}}>{p.emoji} {p.nom}</button>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Ajouter */}
+          <button onClick={()=>{ if(!inDay) addLieu(l.id); setSub("day"); }} disabled={inDay}
+            style={{width:"100%",padding:"14px",background:inDay?C.s3:C.red,border:"none",borderRadius:13,color:inDay?C.t2:"#fff",fontSize:14,fontWeight:600,cursor:inDay?"default":"pointer"}}>
+            {inDay ? "✓ Déjà dans ce jour" : `+ Ajouter au jour ${day.num}`}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Sous-vue : catalogue ───
+  if(sub==="catalogue"){
+    const list = lieux.filter(l=> l.villeId===day.villeId && (catType==="tout"||l.type===catType));
+    return(
+      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+        <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+          <button onClick={()=>setSub("day")} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Retour au jour {day.num}</button>
+          <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:10}}>Explorer · {ville?.emoji} {ville?.nom}</div>
+          <div style={{display:"flex",gap:6,overflowX:"auto",paddingBottom:4}}>
+            <FilterPill C={C} on={catType==="tout"} onClick={()=>setCatType("tout")}>Tout</FilterPill>
+            {VOYAGE_TYPES.map(t=>(
+              <FilterPill key={t.id} C={C} on={catType===t.id} onClick={()=>setCatType(t.id)}>{t.emoji} {t.label}</FilterPill>
+            ))}
+          </div>
+        </div>
+        <div style={{padding:"14px 20px 110px"}} className="stagger">
+          {list.length===0 && <div style={{textAlign:"center",color:C.t3,fontSize:12,padding:"30px 0"}}>Aucun lieu de ce type pour {ville?.nom}.</div>}
+          {list.map(l=>{
+            const inDay = idsInDay.has(l.id);
+            return(
+              <div key={l.id} className="lift" onClick={()=>{setDetailId(l.id);setSub("detail");}} style={{display:"flex",alignItems:"center",gap:11,background:C.s1,border:`1px solid ${C.border}`,borderRadius:13,padding:"12px 14px",marginBottom:9,cursor:"pointer"}}>
+                <span style={{fontSize:24,flexShrink:0}}>{l.emoji}</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l.nom}</div>
+                  <div style={{fontSize:10,color:C.t3}}>{l.categorie} · {l.quartier} · {l.budget}</div>
+                </div>
+                <button onClick={(e)=>{e.stopPropagation(); if(!inDay) addLieu(l.id);}} style={{flexShrink:0,width:30,height:30,borderRadius:"50%",border:"none",background:inDay?"transparent":C.red,color:inDay?C.green:"#fff",fontSize:inDay?16:20,cursor:inDay?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>{inDay?"✓":"＋"}</button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Sous-vue : check-list ───
+  if(sub==="checklist"){
+    const cl = trip.checklist||[];
+    const done = cl.filter(c=>c.fait).length;
+    return(
+      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+        <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+          <button onClick={()=>setSub("day")} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Retour</button>
+          <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Préparatifs ✅</div>
+          <div style={{fontSize:11,color:C.t3,marginTop:3}}>{done} / {cl.length} faits</div>
+        </div>
+        <div style={{padding:"14px 20px 110px"}}>
+          {cl.map(c=>(
+            <div key={c.id} style={{display:"flex",alignItems:"center",gap:11,padding:"11px 0",borderBottom:`1px solid ${C.border}`}}>
+              <button onClick={()=>toggleCheck(c.id)} style={{width:22,height:22,flexShrink:0,borderRadius:6,border:`1px solid ${c.fait?C.green:C.t3}`,background:c.fait?C.green:"transparent",color:"#fff",fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>{c.fait?"✓":""}</button>
+              <span style={{flex:1,fontSize:13,color:c.fait?C.t3:C.text,textDecoration:c.fait?"line-through":"none"}}>{c.texte}</span>
+              <button onClick={()=>removeCheck(c.id)} style={{background:"transparent",border:"none",color:C.t3,fontSize:16,cursor:"pointer"}}>×</button>
+            </div>
+          ))}
+          <ChecklistAdd C={C} onAdd={addCheck}/>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Vue principale : le jour ───
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+          <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0}}>‹ Mes voyages</button>
+          <button onClick={()=>setSub("checklist")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,padding:"5px 12px",color:C.t2,fontSize:11,cursor:"pointer"}}>✅ Préparatifs</button>
+        </div>
+        <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:10}}>{trip.titre}</div>
+        <div style={{display:"flex",gap:6,overflowX:"auto",paddingBottom:4}}>
+          {trip.jours.map((j,i)=>(
+            <button key={i} onClick={()=>setDayIdx(i)} style={{flexShrink:0,padding:"6px 13px",borderRadius:16,fontSize:12,cursor:"pointer",border:`1px solid ${i===dayIdx?C.red:C.border}`,background:i===dayIdx?C.red:C.s1,color:i===dayIdx?"#fff":C.t2}}>J{j.num}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{padding:"16px 20px 110px"}}>
+        {day && (
+          <>
+            <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginBottom:14,textTransform:"uppercase"}}>
+              Jour {day.num} · {ville?.emoji} {ville?.nom||""}{day.titre?` · ${day.titre}`:""}
+            </div>
+            {day.etapes.length===0 ? (
+              <div style={{textAlign:"center",padding:"24px 10px"}}>
+                <div style={{fontSize:34,marginBottom:10}}>📍</div>
+                <div style={{fontSize:13,color:C.t2,marginBottom:16}}>Aucun lieu pour ce jour.</div>
+              </div>
+            ) : (
+              <div style={{display:"flex",flexDirection:"column",gap:9,marginBottom:14}}>
+                {day.etapes.map((e,i)=>{
+                  const l = lieuById[e.lieuId];
+                  return(
+                    <div key={e.id} style={{display:"flex",gap:9,alignItems:"flex-start"}}>
+                      {/* Flèches réordonner */}
+                      <div style={{display:"flex",flexDirection:"column",gap:2,marginTop:6}}>
+                        <button onClick={()=>moveEtape(i,-1)} disabled={i===0} style={{width:22,height:20,border:`1px solid ${C.border}`,borderRadius:6,background:C.s1,color:i===0?C.t3:C.t2,fontSize:10,cursor:i===0?"default":"pointer"}}>▲</button>
+                        <button onClick={()=>moveEtape(i,1)} disabled={i===day.etapes.length-1} style={{width:22,height:20,border:`1px solid ${C.border}`,borderRadius:6,background:C.s1,color:i===day.etapes.length-1?C.t3:C.t2,fontSize:10,cursor:i===day.etapes.length-1?"default":"pointer"}}>▼</button>
+                      </div>
+                      <div className="lift" onClick={()=>{if(l){setDetailId(l.id);setSub("detail");}}} style={{flex:1,background:C.s1,border:`1px solid ${C.border}`,borderRadius:13,padding:"12px 14px",cursor:l?"pointer":"default"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:9}}>
+                          <span style={{flexShrink:0,width:22,height:22,borderRadius:"50%",background:C.s2,color:C.t2,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center"}}>{i+1}</span>
+                          <span style={{fontSize:20}}>{l?.emoji||"📍"}</span>
+                          <div style={{flex:1,minWidth:0}}>
+                            <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l?.nom||e.nom||"Lieu"}</div>
+                            {l && <div style={{fontSize:10,color:C.t3}}>{l.categorie} · {l.budget}</div>}
+                          </div>
+                          <button onClick={(ev)=>{ev.stopPropagation(); removeEtape(e.id);}} style={{background:"transparent",border:"none",color:C.t3,fontSize:18,cursor:"pointer",flexShrink:0}}>×</button>
+                        </div>
+                        {/* Note */}
+                        {noteEdit===e.id ? (
+                          <input autoFocus defaultValue={e.note} onClick={ev=>ev.stopPropagation()} onBlur={ev=>{setNote(e.id,ev.target.value);setNoteEdit(null);}} onKeyDown={ev=>{if(ev.key==="Enter"){setNote(e.id,ev.target.value);setNoteEdit(null);}}} placeholder="Ta note..." style={{width:"100%",boxSizing:"border-box",marginTop:8,padding:"7px 9px",background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11,fontFamily:"inherit"}}/>
+                        ) : (
+                          <div onClick={(ev)=>{ev.stopPropagation();setNoteEdit(e.id);}} style={{marginTop:7,fontSize:11,color:e.note?C.t2:C.t3,fontStyle:e.note?"italic":"normal",cursor:"text"}}>
+                            {e.note ? `📝 ${e.note}` : "📝 Ajouter une note"}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {/* Ajouter un lieu */}
+            <button onClick={()=>{setCatType("tout");setSub("catalogue");}} style={{width:"100%",padding:"13px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:13,color:C.red,fontSize:13,fontWeight:500,cursor:"pointer"}}>+ Ajouter un lieu à ce jour</button>
+
+            {/* Supprimer le voyage */}
+            <div style={{marginTop:30,textAlign:"center"}}>
+              {!confirmDel ? (
+                <button onClick={()=>setConfirmDel(true)} style={{background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer"}}>Supprimer ce voyage</button>
+              ) : (
+                <div style={{display:"flex",gap:10,justifyContent:"center"}}>
+                  <button onClick={()=>onDelete(trip.id)} style={{padding:"8px 16px",background:C.red,border:"none",borderRadius:9,color:"#fff",fontSize:12,cursor:"pointer"}}>Confirmer la suppression</button>
+                  <button onClick={()=>setConfirmDel(false)} style={{padding:"8px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:9,color:C.t2,fontSize:12,cursor:"pointer"}}>Annuler</button>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function InfoBox({C, icon, label, val}){
+  return(
+    <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:9,padding:"9px 11px"}}>
+      <div style={{fontSize:8,color:C.t3,letterSpacing:".05em",marginBottom:3}}>{icon} {label.toUpperCase()}</div>
+      <div style={{fontSize:11,color:C.text,lineHeight:1.35}}>{val}</div>
+    </div>
+  );
+}
+function FilterPill({C, on, onClick, children}){
+  return <button onClick={onClick} style={{flexShrink:0,padding:"6px 12px",borderRadius:16,fontSize:11,cursor:"pointer",border:`1px solid ${on?C.red:C.border}`,background:on?C.red:C.s1,color:on?"#fff":C.t2}}>{children}</button>;
+}
+function ChecklistAdd({C, onAdd}){
+  const [val,setVal] = useState("");
+  return(
+    <div style={{display:"flex",gap:8,marginTop:16}}>
+      <input value={val} onChange={e=>setVal(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&val.trim()){onAdd(val.trim());setVal("");}}} placeholder="Ajouter un élément..." style={{flex:1,padding:"11px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:10,color:C.text,fontSize:12,fontFamily:"inherit"}}/>
+      <button onClick={()=>{if(val.trim()){onAdd(val.trim());setVal("");}}} style={{padding:"0 16px",background:C.red,border:"none",borderRadius:10,color:"#fff",fontSize:18,cursor:"pointer"}}>+</button>
+    </div>
+  );
+}
+
+function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
@@ -2664,6 +3141,12 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,streak,favs,toggleFav,xp,
         <button onClick={()=>{ if(confirm("Réinitialiser ton profil ? Tu repasseras par l'onboarding.")) onReset&&onReset(); }}
           style={{marginTop:10,width:"100%",padding:"13px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
           ↺ Réinitialiser le profil
+        </button>
+
+        {/* Supprimer le compte */}
+        <button onClick={()=>onDeleteAccount&&onDeleteAccount()}
+          style={{marginTop:10,width:"100%",padding:"13px",background:"transparent",border:`1px solid rgba(201,70,61,0.3)`,borderRadius:12,color:C.red,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
+          🗑️ Supprimer mon compte
         </button>
         <div style={{marginTop:10,textAlign:"center",fontSize:10,color:C.t3,lineHeight:1.5}}>
           Ton profil est sauvegardé sur cet appareil —<br/>l'onboarding ne réapparaîtra qu'après réinitialisation.
@@ -3368,6 +3851,24 @@ export default function IsekaidApp(){
     setTab("home");
   };
 
+  const deleteAccount = async ()=>{
+    if(!confirm("Supprimer définitivement ton compte et toutes tes données ? Cette action est irréversible.")) return;
+    if(!confirm("Dernière confirmation — toutes tes données (progression, voyages, favoris) seront effacées.")) return;
+    // Supprimer les données Supabase si connecté
+    if(session?.user && supabaseEnabled){
+      try {
+        await supabase.from("progress").delete().eq("user_id", session.user.id);
+        await signOut();
+      } catch(e){}
+    }
+    // Vider tout le localStorage
+    const keys = ["isekaid_profile_v1","isekaid_streak_v1","isekaid_favs_v1","isekaid_unlocks_v1",
+      "isekaid_scenarios_v1","isekaid_kana_v1","isekaid_ach_v1","isekaid_tour_off_v1",
+      "isekaid_path_v1","isekaid_trips_v1","isekaid_theme_v1","isekaid_script_v1"];
+    keys.forEach(k=>{ try { localStorage.removeItem(k); } catch {} });
+    setUser(null); setSession(null); setScreen("auth"); setTab("home");
+  };
+
   return(
     <div style={{width:"100%",height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:"#080604",fontFamily:"'Noto Sans JP','Helvetica Neue',sans-serif"}}>
       <style>{CSS}</style>
@@ -3382,8 +3883,8 @@ export default function IsekaidApp(){
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress}/>}
-              {tab==="voyage"    &&<VoyageScreen    C={C} user={user}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress}/>}
+              {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
