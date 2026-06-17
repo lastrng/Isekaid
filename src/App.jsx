@@ -2890,6 +2890,106 @@ function VoyageTrip({C, trip, db, villeById, script, user, onBack, onUpdate, onD
 
   const idsInDay = new Set((day?.etapes||[]).map(e=>e.lieuId));
 
+  // ── Export / Partage ──
+  const [shareOpen, setShareOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Construit un texte lisible de tout l'itinéraire
+  const buildTripText = ()=>{
+    let txt = `🗾 ${trip.titre}\n`;
+    const villesNoms = trip.villes.map(id=>villeById[id]?.nom||id).join(" · ");
+    txt += `${trip.jours.length} jour${trip.jours.length>1?"s":""} · ${villesNoms}\n`;
+    txt += `${"─".repeat(28)}\n\n`;
+    trip.jours.forEach(j=>{
+      const v = villeById[j.villeId];
+      txt += `📅 JOUR ${j.num} — ${v?.nom||""}${j.titre?` · ${j.titre}`:""}\n`;
+      if(j.etapes.length===0){ txt += `   (aucun lieu prévu)\n`; }
+      j.etapes.forEach((e,i)=>{
+        const l = lieuById[e.lieuId];
+        txt += `   ${i+1}. ${l?.emoji||"📍"} ${l?.nom||"Lieu"}`;
+        if(l?.budget) txt += ` (${l.budget})`;
+        txt += `\n`;
+        if(e.note) txt += `      📝 ${e.note}\n`;
+      });
+      txt += `\n`;
+    });
+    const cl = trip.checklist||[];
+    if(cl.length){
+      txt += `✅ PRÉPARATIFS\n`;
+      cl.forEach(c=> txt += `   ${c.fait?"☑":"☐"} ${c.texte}\n`);
+      txt += `\n`;
+    }
+    txt += `${"─".repeat(28)}\n✨ Créé avec Isekai'd — isekaid.vercel.app`;
+    return txt;
+  };
+
+  const shareNative = async ()=>{
+    const text = buildTripText();
+    if(navigator.share){
+      try { await navigator.share({ title: trip.titre, text }); setShareOpen(false); return; }
+      catch(e){ /* annulé → on garde la modale */ }
+    } else {
+      copyText();
+    }
+  };
+  const copyText = async ()=>{
+    const text = buildTripText();
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true); setTimeout(()=>setCopied(false), 2000);
+    } catch(e){
+      // Repli : sélection manuelle
+      const ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); setCopied(true); setTimeout(()=>setCopied(false),2000); } catch{}
+      document.body.removeChild(ta);
+    }
+  };
+  // Export PDF via fenêtre d'impression (l'utilisateur choisit "Enregistrer en PDF")
+  const exportPDF = ()=>{
+    const villesNoms = trip.villes.map(id=>villeById[id]?.nom||id).join(" · ");
+    const joursHTML = trip.jours.map(j=>{
+      const v = villeById[j.villeId];
+      const etapesHTML = j.etapes.length
+        ? j.etapes.map((e,i)=>{
+            const l = lieuById[e.lieuId];
+            return `<li><b>${l?.nom||"Lieu"}</b>${l?.categorie?` <span class="cat">· ${l.categorie}</span>`:""}${l?.budget?` <span class="cat">· ${l.budget}</span>`:""}${e.note?`<div class="note">📝 ${e.note}</div>`:""}</li>`;
+          }).join("")
+        : `<li class="empty">Aucun lieu prévu</li>`;
+      return `<div class="day"><h2>Jour ${j.num} — ${v?.nom||""}${j.titre?` · ${j.titre}`:""}</h2><ol>${etapesHTML}</ol></div>`;
+    }).join("");
+    const cl = trip.checklist||[];
+    const clHTML = cl.length ? `<div class="checklist"><h2>✅ Préparatifs</h2><ul>${cl.map(c=>`<li>${c.fait?"☑":"☐"} ${c.texte}</li>`).join("")}</ul></div>` : "";
+    const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>${trip.titre}</title>
+      <style>
+        @page { margin: 1.5cm; }
+        body { font-family: -apple-system, 'Segoe UI', sans-serif; color: #1C1410; line-height: 1.5; }
+        .header { border-bottom: 3px solid #C9463D; padding-bottom: 12px; margin-bottom: 24px; }
+        h1 { font-size: 26px; margin: 0 0 4px; }
+        .sub { color: #777; font-size: 14px; }
+        .day { margin-bottom: 22px; page-break-inside: avoid; }
+        h2 { font-size: 17px; color: #C9463D; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        ol, ul { margin: 8px 0; padding-left: 22px; }
+        li { margin-bottom: 7px; font-size: 14px; }
+        .cat { color: #999; font-size: 12px; }
+        .note { color: #555; font-style: italic; font-size: 12px; margin-top: 2px; }
+        .empty { color: #aaa; font-style: italic; list-style: none; }
+        .checklist { margin-top: 24px; page-break-inside: avoid; }
+        .footer { margin-top: 30px; padding-top: 12px; border-top: 1px solid #eee; color: #999; font-size: 11px; text-align: center; }
+        .kanji { color:#C9463D; font-size: 20px; }
+      </style></head><body>
+      <div class="header"><h1><span class="kanji">異</span> ${trip.titre}</h1>
+      <div class="sub">${trip.jours.length} jour${trip.jours.length>1?"s":""} · ${villesNoms}</div></div>
+      ${joursHTML}${clHTML}
+      <div class="footer">✨ Créé avec Isekai'd — isekaid.vercel.app</div>
+      </body></html>`;
+    const w = window.open("", "_blank");
+    if(!w){ alert("Autorise les fenêtres pop-up pour exporter en PDF."); return; }
+    w.document.write(html); w.document.close();
+    setTimeout(()=>{ w.print(); }, 350);
+    setShareOpen(false);
+  };
+
   // ─── Sous-vue : fiche détail enrichie ───
   if(sub==="detail" && detailId){
     const l = lieuById[detailId];
@@ -3024,7 +3124,10 @@ function VoyageTrip({C, trip, db, villeById, script, user, onBack, onUpdate, onD
       <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
           <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0}}>‹ Mes voyages</button>
-          <button onClick={()=>setSub("checklist")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,padding:"5px 12px",color:C.t2,fontSize:11,cursor:"pointer"}}>✅ Préparatifs</button>
+          <div style={{display:"flex",gap:7}}>
+            <button onClick={()=>setShareOpen(true)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,padding:"5px 12px",color:C.t2,fontSize:11,cursor:"pointer"}}>↗ Partager</button>
+            <button onClick={()=>setSub("checklist")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,padding:"5px 12px",color:C.t2,fontSize:11,cursor:"pointer"}}>✅ Préparatifs</button>
+          </div>
         </div>
         <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:10}}>{trip.titre}</div>
         <div style={{display:"flex",gap:6,overflowX:"auto",paddingBottom:4}}>
@@ -3097,6 +3200,31 @@ function VoyageTrip({C, trip, db, villeById, script, user, onBack, onUpdate, onD
           </>
         )}
       </div>
+
+      {/* Modale de partage */}
+      {shareOpen && (
+        <div onClick={()=>setShareOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+          <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:440,background:C.s1,borderRadius:"22px 22px 0 0",padding:"22px 22px 32px",animation:"fadeUp .3s ease"}}>
+            <div style={{width:36,height:4,borderRadius:2,background:C.s3,margin:"0 auto 18px"}}/>
+            <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:4,textAlign:"center"}}>Partager mon voyage</div>
+            <div style={{fontSize:12,color:C.t2,marginBottom:20,textAlign:"center"}}>{trip.titre} · {trip.jours.length} jour{trip.jours.length>1?"s":""}</div>
+
+            <button onClick={shareNative} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              ↗ Partager l'itinéraire
+            </button>
+
+            <button onClick={copyText} style={{width:"100%",padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              {copied ? "✓ Copié !" : "📋 Copier le texte"}
+            </button>
+
+            <button onClick={exportPDF} style={{width:"100%",padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              📄 Exporter en PDF
+            </button>
+
+            <button onClick={()=>setShareOpen(false)} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Fermer</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
