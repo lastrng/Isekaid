@@ -2609,7 +2609,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
 }
 
 // ─── Onglet Voyage (à venir) ──────────────────────────────────────────────────
-function VoyageScreen({C, user, db, script, session}){
+function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   const villes = db?.villes || [];
@@ -2623,8 +2623,6 @@ function VoyageScreen({C, user, db, script, session}){
   const [activeTripId, setActiveTripId] = useState(null);
   const [showPremium, setShowPremium] = useState(false);
   const pushTimer = useRef(null);
-
-  const isPremium = !!user?.isPremium;
 
   // ── Sync cloud : pull au login ──
   useEffect(()=>{
@@ -2699,7 +2697,7 @@ function VoyageScreen({C, user, db, script, session}){
   }
   // ─── Vue : un voyage ───
   if(view==="trip" && activeTrip){
-    return <VoyageTrip C={C} trip={activeTrip} db={db} villeById={villeById} script={script} user={user}
+    return <VoyageTrip C={C} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
               onBack={()=>setView("home")} onUpdate={updateTrip} onDelete={deleteTrip}/>;
   }
 
@@ -2747,15 +2745,15 @@ function VoyageScreen({C, user, db, script, session}){
         )}
       </div>
 
-      {/* Modale premium */}
+      {/* Modale premium → ouvre la vraie page Premium */}
       {showPremium && (
         <div onClick={()=>setShowPremium(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
           <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:440,background:C.s1,borderRadius:"22px 22px 0 0",padding:"26px 22px 32px",animation:"fadeUp .3s ease"}}>
             <div style={{textAlign:"center"}}>
               <div style={{fontSize:40,marginBottom:12}}>🌸</div>
-              <div style={{fontSize:19,color:C.text,fontWeight:700,marginBottom:8}}>Plusieurs voyages avec Premium</div>
-              <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:20}}>La version gratuite te permet de planifier un voyage. Passe à Premium pour créer autant d'itinéraires que tu veux, et débloquer les futures fonctionnalités.</div>
-              <button onClick={()=>setShowPremium(false)} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:8}}>Bientôt disponible</button>
+              <div style={{fontSize:19,color:C.text,fontWeight:700,marginBottom:8}}>Voyages illimités avec Premium</div>
+              <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:20}}>La version gratuite te permet de planifier un voyage. Passe à Premium pour créer autant d'itinéraires que tu veux, ajouter tes propres lieux, et débloquer tout le contenu.</div>
+              <button onClick={()=>{ setShowPremium(false); onOpenPremium&&onOpenPremium(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:8}}>Découvrir Premium</button>
               <button onClick={()=>setShowPremium(false)} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Plus tard</button>
             </div>
           </div>
@@ -2850,11 +2848,16 @@ const VOYAGE_TYPES = [
   {id:"acheter",label:"Acheter",emoji:"🛍️"},
 ];
 
-function VoyageTrip({C, trip, db, villeById, script, user, onBack, onUpdate, onDelete}){
-  const lieuById = useMemo(()=>Object.fromEntries((db?.lieux||[]).map(l=>[l.id,l])), [db]);
-  const lieux = db?.lieux || [];
+function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPremium, onBack, onUpdate, onDelete}){
+  const customLieux = trip.customLieux || [];
+  const lieuById = useMemo(()=>{
+    const base = Object.fromEntries((db?.lieux||[]).map(l=>[l.id,l]));
+    customLieux.forEach(l=>{ base[l.id]=l; });
+    return base;
+  }, [db, customLieux]);
+  const lieux = [...(db?.lieux || []), ...customLieux];
   const [dayIdx, setDayIdx] = useState(0);
-  // sous-vues : "day" | "catalogue" | "detail" | "checklist"
+  // sous-vues : "day" | "catalogue" | "detail" | "checklist" | "addcustom"
   const [sub, setSub] = useState("day");
   const [catType, setCatType] = useState("tout");
   const [detailId, setDetailId] = useState(null);
@@ -2887,6 +2890,22 @@ function VoyageTrip({C, trip, db, villeById, script, user, onBack, onUpdate, onD
   const toggleCheck = (cid)=> onUpdate({...trip, checklist:(trip.checklist||[]).map(c=>c.id===cid?{...c,fait:!c.fait}:c)});
   const addCheck = (texte)=> onUpdate({...trip, checklist:[...(trip.checklist||[]), {id:"c"+Date.now(), texte, fait:false}]});
   const removeCheck = (cid)=> onUpdate({...trip, checklist:(trip.checklist||[]).filter(c=>c.id!==cid)});
+
+  // ── Lieu personnalisé (Premium) ──
+  const addCustomLieu = (data)=>{
+    const id = "custom_"+Date.now().toString(36);
+    const lieu = {
+      id, villeId: day.villeId, nom: data.nom, nom_jp:"", type: data.type, categorie: data.categorie||"Lieu personnalisé",
+      emoji: data.emoji||"📍", interets:[], quartier: data.quartier||"", description: data.description||"",
+      conseil:"", duree:"", budget: data.budget||"", lat:null, lng:null, horaires:"", acces:"", prix_detail:"",
+      site_web:"", a_proximite:[], image:"", custom:true,
+    };
+    const nextCustom = [...customLieux, lieu];
+    // Ajoute directement au jour courant
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:[...j.etapes, {id:makeStepId(), lieuId:id, note:""}]}));
+    onUpdate({...trip, customLieux: nextCustom, jours});
+    setSub("day");
+  };
 
   const idsInDay = new Set((day?.etapes||[]).map(e=>e.lieuId));
 
@@ -3088,9 +3107,19 @@ function VoyageTrip({C, trip, db, villeById, script, user, onBack, onUpdate, onD
               </div>
             );
           })}
+          {/* Ajouter un lieu personnalisé (Premium) */}
+          <button onClick={()=>{ if(isPremium){ setSub("addcustom"); } else { onOpenPremium&&onOpenPremium(); } }}
+            style={{width:"100%",marginTop:6,padding:"13px",background:"transparent",border:`1px dashed ${isPremium?C.gold:C.border}`,borderRadius:13,color:isPremium?C.gold:C.t3,fontSize:13,fontWeight:500,cursor:"pointer"}}>
+            {isPremium ? "📍 Ajouter mon propre lieu" : "📍 Ajouter mon lieu (Premium 🔒)"}
+          </button>
         </div>
       </div>
     );
+  }
+
+  // ─── Sous-vue : ajout lieu personnalisé ───
+  if(sub==="addcustom"){
+    return <CustomLieuForm C={C} ville={ville} onCancel={()=>setSub("catalogue")} onSave={addCustomLieu}/>;
   }
 
   // ─── Sous-vue : check-list ───
@@ -3250,7 +3279,171 @@ function ChecklistAdd({C, onAdd}){
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress}){
+// ─── Formulaire d'ajout de lieu personnalisé (Premium) ────────────────────────
+function CustomLieuForm({C, ville, onCancel, onSave}){
+  const [nom, setNom] = useState("");
+  const [type, setType] = useState("voir");
+  const [emoji, setEmoji] = useState("📍");
+  const [quartier, setQuartier] = useState("");
+  const [budget, setBudget] = useState("");
+  const [description, setDescription] = useState("");
+  const EMOJIS = ["📍","⛩️","🏯","🍜","🍣","🍵","🏨","🛍️","🌸","🎌","🗼","🎎","🍡","🏮","⛰️","🎭"];
+  const BUDGETS = ["Gratuit","¥","¥¥","¥¥¥"];
+  const canSave = nom.trim().length>0;
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <button onClick={onCancel} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Annuler</button>
+        <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Mon lieu · {ville?.nom}</div>
+      </div>
+      <div style={{padding:"18px 20px 120px"}}>
+        {/* Nom */}
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Nom du lieu *</div>
+        <input value={nom} onChange={e=>setNom(e.target.value)} placeholder="Ex. Café de mon ami, Hôtel réservé…" style={{width:"100%",boxSizing:"border-box",padding:"13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:11,color:C.text,fontSize:14,marginBottom:20,fontFamily:"inherit"}}/>
+
+        {/* Type */}
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Type</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:7,marginBottom:20}}>
+          {VOYAGE_TYPES.map(t=>(
+            <button key={t.id} onClick={()=>setType(t.id)} style={{padding:"8px 13px",borderRadius:18,fontSize:12,cursor:"pointer",border:`1px solid ${type===t.id?C.red:C.border}`,background:type===t.id?"rgba(201,70,61,0.12)":C.s1,color:type===t.id?C.text:C.t2}}>{t.emoji} {t.label}</button>
+          ))}
+        </div>
+
+        {/* Emoji */}
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Icône</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:20}}>
+          {EMOJIS.map(e=>(
+            <button key={e} onClick={()=>setEmoji(e)} style={{width:42,height:42,borderRadius:10,fontSize:20,cursor:"pointer",border:`1px solid ${emoji===e?C.red:C.border}`,background:emoji===e?"rgba(201,70,61,0.12)":C.s1}}>{e}</button>
+          ))}
+        </div>
+
+        {/* Quartier */}
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Quartier (optionnel)</div>
+        <input value={quartier} onChange={e=>setQuartier(e.target.value)} placeholder="Ex. Shibuya" style={{width:"100%",boxSizing:"border-box",padding:"13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:11,color:C.text,fontSize:14,marginBottom:20,fontFamily:"inherit"}}/>
+
+        {/* Budget */}
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Budget (optionnel)</div>
+        <div style={{display:"flex",gap:8,marginBottom:20}}>
+          {BUDGETS.map(b=>(
+            <button key={b} onClick={()=>setBudget(budget===b?"":b)} style={{flex:1,padding:"10px",borderRadius:9,fontSize:12,cursor:"pointer",border:`1px solid ${budget===b?C.red:C.border}`,background:budget===b?"rgba(201,70,61,0.12)":C.s1,color:budget===b?C.text:C.t2}}>{b}</button>
+          ))}
+        </div>
+
+        {/* Description */}
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Note (optionnel)</div>
+        <textarea value={description} onChange={e=>setDescription(e.target.value)} placeholder="Pourquoi ce lieu, horaires, infos…" rows={3} style={{width:"100%",boxSizing:"border-box",padding:"13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:11,color:C.text,fontSize:14,marginBottom:24,fontFamily:"inherit",resize:"vertical"}}/>
+
+        <button onClick={()=>{ if(canSave) onSave({nom:nom.trim(),type,emoji,quartier:quartier.trim(),budget,description:description.trim()}); }} disabled={!canSave}
+          style={{width:"100%",padding:"15px",background:canSave?C.red:C.s3,border:"none",borderRadius:13,color:canSave?"#fff":C.t3,fontSize:14,fontWeight:600,cursor:canSave?"pointer":"default"}}>
+          Ajouter à ce jour →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Page Premium ─────────────────────────────────────────────────────────────
+const PREMIUM_PLANS = [
+  { id:"annual",  label:"Annuel",  price:"29,99 €", per:"/ an",  sub:"soit 2,50 €/mois", badge:"Le plus avantageux · -37%", highlight:true },
+  { id:"monthly", label:"Mensuel", price:"3,99 €",  per:"/ mois", sub:"sans engagement", badge:null, highlight:false },
+];
+const PREMIUM_PERKS = [
+  { emoji:"🚫", title:"Sans publicité", desc:"Profite de l'app sans aucune interruption." },
+  { emoji:"🗺️", title:"Voyages illimités", desc:"Planifie autant de voyages que tu veux, plus de limite." },
+  { emoji:"🔓", title:"Tout le contenu débloqué", desc:"Accède immédiatement à toutes les sections, sans clés." },
+  { emoji:"📍", title:"Lieux personnalisés", desc:"Ajoute tes propres adresses à tes itinéraires." },
+];
+
+function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose}){
+  const [sel, setSel] = useState("annual");
+  const acc = SEASON_ACCENT[currentSeasonKey()];
+
+  if(isPremium){
+    return(
+      <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Noto Sans JP',sans-serif"}}>
+        <div style={{padding:"50px 22px 40px",textAlign:"center"}}>
+          <button onClick={onClose} style={{position:"absolute",top:48,left:18,background:C.s1,border:`1px solid ${C.border}`,borderRadius:"50%",width:34,height:34,color:C.t2,fontSize:18,cursor:"pointer"}}>×</button>
+          <div style={{fontSize:60,margin:"20px 0 16px"}}>🌸</div>
+          <div style={{fontSize:13,color:C.gold,letterSpacing:".2em",textTransform:"uppercase",marginBottom:8}}>Membre Premium</div>
+          <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:12}}>Merci de ton soutien 🙏</div>
+          <div style={{fontSize:14,color:C.t2,lineHeight:1.6,maxWidth:320,margin:"0 auto 30px"}}>
+            Tu profites de tous les avantages Isekai'd Premium. Ton abonnement <b style={{color:C.text}}>{premium?.plan==="annual"?"annuel":"mensuel"}</b> est actif.
+          </div>
+          <div style={{maxWidth:360,margin:"0 auto"}}>
+            {PREMIUM_PERKS.map((p,i)=>(
+              <div key={i} style={{display:"flex",alignItems:"center",gap:14,padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:10,textAlign:"left"}}>
+                <span style={{fontSize:26}}>{p.emoji}</span>
+                <div><div style={{fontSize:14,color:C.text,fontWeight:500}}>{p.title}</div><div style={{fontSize:11,color:C.t2}}>{p.desc}</div></div>
+                <span style={{marginLeft:"auto",color:C.green,fontSize:18}}>✓</span>
+              </div>
+            ))}
+          </div>
+          <button onClick={onCancel} style={{marginTop:24,background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer",textDecoration:"underline"}}>Gérer / annuler l'abonnement</button>
+        </div>
+      </div>
+    );
+  }
+
+  return(
+    <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Noto Sans JP',sans-serif"}}>
+      {/* Hero */}
+      <div style={{padding:"54px 22px 28px",background:`linear-gradient(160deg,rgba(201,70,61,0.18),${acc.soft} 60%,transparent)`,position:"relative",textAlign:"center"}}>
+        <button onClick={onClose} style={{position:"absolute",top:48,left:18,background:"rgba(0,0,0,0.25)",border:"none",borderRadius:"50%",width:34,height:34,color:"#fff",fontSize:18,cursor:"pointer"}}>×</button>
+        <div style={{fontSize:54,marginBottom:10}}>異</div>
+        <div style={{fontSize:11,color:C.gold,letterSpacing:".25em",textTransform:"uppercase",marginBottom:8}}>Isekai'd Premium</div>
+        <div style={{fontSize:25,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:10,lineHeight:1.3}}>Vis le Japon<br/>sans limite</div>
+        <div style={{fontSize:13,color:C.t2,lineHeight:1.6,maxWidth:300,margin:"0 auto"}}>Débloque tout le potentiel d'Isekai'd et soutiens le développement de l'app.</div>
+      </div>
+
+      <div style={{padding:"6px 22px 40px"}}>
+        {/* Avantages */}
+        <div style={{margin:"18px 0 26px"}}>
+          {PREMIUM_PERKS.map((p,i)=>(
+            <div key={i} className="lift" style={{display:"flex",alignItems:"center",gap:14,padding:"15px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:10}}>
+              <div style={{width:46,height:46,borderRadius:12,background:acc.soft,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{p.emoji}</div>
+              <div><div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:2}}>{p.title}</div><div style={{fontSize:12,color:C.t2,lineHeight:1.45}}>{p.desc}</div></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Plans */}
+        <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:22}}>
+          {PREMIUM_PLANS.map(pl=>{
+            const on = sel===pl.id;
+            return(
+              <div key={pl.id} onClick={()=>setSel(pl.id)} style={{position:"relative",cursor:"pointer",padding:"18px 20px",borderRadius:16,background:on?`linear-gradient(135deg,rgba(201,70,61,0.12),transparent)`:C.s1,border:`2px solid ${on?C.red:C.border}`,transition:"all .2s"}}>
+                {pl.badge && <div style={{position:"absolute",top:-10,left:18,background:C.red,color:"#fff",fontSize:9,fontWeight:700,padding:"3px 10px",borderRadius:10,letterSpacing:".03em"}}>{pl.badge}</div>}
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <div>
+                    <div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:3}}>{pl.label}</div>
+                    <div style={{fontSize:11,color:C.t2}}>{pl.sub}</div>
+                  </div>
+                  <div style={{textAlign:"right"}}>
+                    <span style={{fontSize:22,color:C.text,fontWeight:700}}>{pl.price}</span>
+                    <span style={{fontSize:11,color:C.t3}}> {pl.per}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* CTA */}
+        <button onClick={()=>onActivate(sel)} style={{width:"100%",padding:"16px",background:C.red,border:"none",borderRadius:14,color:"#fff",fontSize:15,fontWeight:700,cursor:"pointer",marginBottom:12,boxShadow:"0 4px 16px rgba(201,70,61,0.3)"}}>
+          Devenir Premium
+        </button>
+        <div style={{fontSize:10,color:C.t3,textAlign:"center",lineHeight:1.6,marginBottom:8}}>
+          Paiement sécurisé via Google Play. Annulable à tout moment.<br/>
+          L'abonnement se renouvelle automatiquement sauf résiliation.
+        </div>
+        <button onClick={onClose} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Peut-être plus tard</button>
+      </div>
+    </div>
+  );
+}
+
+function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
@@ -3272,6 +3465,16 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,fa
             <div style={{fontSize:16,color:C.text,marginBottom:4}}>{user.name}</div>
             <div style={{fontSize:12,color:C.text,fontWeight:500}}>{tier.emoji} {tier.title} <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{tier.jp}</span></div>
           </div>
+        </div>
+
+        {/* Bannière Premium */}
+        <div onClick={onOpenPremium} className="lift" style={{marginBottom:14,padding:"16px 18px",borderRadius:16,cursor:"pointer",background:isPremium?`linear-gradient(135deg,rgba(158,122,26,0.18),rgba(201,70,61,0.08))`:`linear-gradient(135deg,rgba(201,70,61,0.16),rgba(158,122,26,0.06))`,border:`1px solid ${isPremium?"rgba(158,122,26,0.4)":"rgba(201,70,61,0.3)"}`,display:"flex",alignItems:"center",gap:14}}>
+          <span style={{fontSize:30}}>{isPremium?"🌸":"✨"}</span>
+          <div style={{flex:1}}>
+            <div style={{fontSize:15,color:C.text,fontWeight:700,marginBottom:2}}>{isPremium?"Membre Premium":"Passe à Premium"}</div>
+            <div style={{fontSize:11,color:C.t2,lineHeight:1.4}}>{isPremium?"Merci de ton soutien 🙏 Gérer mon abonnement":"Sans pub · voyages illimités · tout débloqué"}</div>
+          </div>
+          <span style={{fontSize:18,color:C.t3}}>›</span>
         </div>
 
         {/* Préférences (réponses onboarding) */}
@@ -3946,6 +4149,14 @@ function defaultUnlocks(){
 }
 function getUnlocks(){ return loadUnlocks() || defaultUnlocks(); }
 function saveUnlocks(u){ try { localStorage.setItem(UNLOCK_KEY, JSON.stringify(u)); } catch {} }
+
+// ── Premium ──
+const PREMIUM_KEY = "isekaid_premium_v1";
+function loadPremium(){
+  try { return JSON.parse(localStorage.getItem(PREMIUM_KEY)||"null"); } catch { return null; }
+}
+function savePremium(p){ try { localStorage.setItem(PREMIUM_KEY, JSON.stringify(p)); } catch {} }
+
 function computeXP(unlocks, scenXP){
   let xp = scenXP || 0;
   Object.keys(unlocks||{}).forEach(k=>{ if(unlocks[k] && LOCKABLE[k]) xp += LOCKABLE[k].xp; });
@@ -3981,6 +4192,17 @@ export default function IsekaidApp(){
   const [streak,setStreak]=useState(()=>loadStreak()||{count:0,best:0,last:null,keys:0});
   const [favs,setFavs]=useState(()=>loadFavs());
   const [unlocks,setUnlocks]=useState(()=>getUnlocks());
+  const [premium,setPremium]=useState(()=>loadPremium());
+  const isPremium = !!premium?.active;
+  const [showPremiumPage,setShowPremiumPage]=useState(false);
+  const activatePremium = (plan)=>{
+    const p = { active:true, plan, since:new Date().toISOString() };
+    setPremium(p); savePremium(p);
+    setShowPremiumPage(false);
+  };
+  const cancelPremium = ()=>{
+    setPremium(null); savePremium(null);
+  };
   const [scenProgress,setScenProgress]=useState(()=>loadScenarioProgress());
   const [kanaProgress,setKanaProgress]=useState(()=>loadKanaProgress());
   const [pathProgress,setPathProgress]=useState(()=>loadPathProgress());
@@ -4028,7 +4250,7 @@ export default function IsekaidApp(){
     setUnlocks(newUnlocks); saveUnlocks(newUnlocks);
     return {ok:true};
   };
-  const isUnlocked = (catKey)=> !LOCKABLE[catKey] || !!unlocks[catKey];
+  const isUnlocked = (catKey)=> isPremium || !LOCKABLE[catKey] || !!unlocks[catKey];
   const [wikiEntry,setWikiEntry]=useState(null);
   const [showWelcome,setShowWelcome]=useState(false);
   const [showSearch,setShowSearch]=useState(false);
@@ -4209,8 +4431,8 @@ export default function IsekaidApp(){
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress}/>}
-              {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
+              {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
@@ -4222,6 +4444,7 @@ export default function IsekaidApp(){
             {showWelcome && <DailyWelcome C={C} streak={streak} onClose={()=>setShowWelcome(false)}/>}
             {/* Global search */}
             {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
+            {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)}/>}
             {/* Achievement unlocked */}
             {newAchievement && <AchievementPopup C={C} achievement={newAchievement} onClose={()=>setNewAchievement(null)}/>}
           </>
