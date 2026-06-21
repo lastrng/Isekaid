@@ -3561,9 +3561,16 @@ const PREMIUM_PERKS = [
   { emoji:"📍", title:"Lieux personnalisés", desc:"Ajoute tes propres adresses à tes itinéraires." },
 ];
 
-function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose}){
+function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRedeemCode}){
   const [sel, setSel] = useState("annual");
   const acc = SEASON_ACCENT[currentSeasonKey()];
+  const [codeOpen,setCodeOpen] = useState(false);
+  const [codeVal,setCodeVal] = useState("");
+  const [codeError,setCodeError] = useState(false);
+  const tryCode = ()=>{
+    if(onRedeemCode && onRedeemCode(codeVal)){ setCodeError(false); }
+    else { setCodeError(true); }
+  };
 
   if(isPremium){
     return(
@@ -3574,7 +3581,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose}){
           <div style={{fontSize:13,color:C.gold,letterSpacing:".2em",textTransform:"uppercase",marginBottom:8}}>Membre Premium</div>
           <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:12}}>Merci de ton soutien 🙏</div>
           <div style={{fontSize:14,color:C.t2,lineHeight:1.6,maxWidth:320,margin:"0 auto 30px"}}>
-            Tu profites de tous les avantages Isekai'd Premium. Ton abonnement <b style={{color:C.text}}>{premium?.plan==="annual"?"annuel":"mensuel"}</b> est actif.
+            Tu profites de tous les avantages Isekai'd Premium. {premium?.plan==="code" ? <>Accès débloqué via <b style={{color:C.text}}>code d'invitation</b> 🎟️</> : <>Ton abonnement <b style={{color:C.text}}>{premium?.plan==="annual"?"annuel":"mensuel"}</b> est actif.</>}
           </div>
           <div style={{maxWidth:360,margin:"0 auto"}}>
             {PREMIUM_PERKS.map((p,i)=>(
@@ -3643,6 +3650,23 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose}){
           Paiement sécurisé via Google Play. Annulable à tout moment.<br/>
           L'abonnement se renouvelle automatiquement sauf résiliation.
         </div>
+
+        {/* Code d'invitation */}
+        {!codeOpen ? (
+          <button onClick={()=>setCodeOpen(true)} style={{width:"100%",padding:"12px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",marginBottom:8}}>
+            🎟️ J'ai un code d'invitation
+          </button>
+        ) : (
+          <div style={{padding:"14px",background:C.s1,border:`1px solid ${codeError?C.red:C.border}`,borderRadius:12,marginBottom:8}}>
+            <div style={{fontSize:12,color:C.t2,marginBottom:9,textAlign:"center"}}>Entre ton code pour débloquer le Premium</div>
+            <div style={{display:"flex",gap:8}}>
+              <input value={codeVal} onChange={e=>{setCodeVal(e.target.value);setCodeError(false);}} onKeyDown={e=>{if(e.key==="Enter")tryCode();}} autoFocus placeholder="CODE-INVITATION" style={{flex:1,boxSizing:"border-box",padding:"11px 13px",background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,color:C.text,fontSize:14,fontFamily:"inherit",textTransform:"uppercase"}}/>
+              <button onClick={tryCode} style={{padding:"0 18px",background:C.red,border:"none",borderRadius:10,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>OK</button>
+            </div>
+            {codeError && <div style={{fontSize:11,color:C.red,marginTop:8,textAlign:"center"}}>Code invalide. Vérifie et réessaie.</div>}
+          </div>
+        )}
+
         <button onClick={onClose} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Peut-être plus tard</button>
       </div>
     </div>
@@ -4455,6 +4479,9 @@ function saveUnlocks(u){ try { localStorage.setItem(UNLOCK_KEY, JSON.stringify(u
 
 // ── Premium ──
 const PREMIUM_KEY = "isekaid_premium_v1";
+// Code d'accès secret à partager avec tes amis pour débloquer le Premium à vie.
+// ⚠️ Change cette valeur pour ton propre code, puis garde-la confidentielle.
+const ACCESS_CODE = "ISEKAI-FRIENDS-2026";
 function loadPremium(){
   try { return JSON.parse(localStorage.getItem(PREMIUM_KEY)||"null"); } catch { return null; }
 }
@@ -4505,6 +4532,16 @@ export default function IsekaidApp(){
     const p = { active:true, plan, since:new Date().toISOString() };
     setPremium(p); savePremium(p);
     setShowPremiumPage(false);
+  };
+  // Active le Premium à vie via code d'accès. Retourne true si le code est valide.
+  const redeemCode = (code)=>{
+    const clean = (code||"").trim().toUpperCase();
+    if(clean === ACCESS_CODE.toUpperCase()){
+      const p = { active:true, plan:"code", since:new Date().toISOString() };
+      setPremium(p); savePremium(p);
+      return true;
+    }
+    return false;
   };
   const cancelPremium = ()=>{
     setPremium(null); savePremium(null);
@@ -4791,7 +4828,7 @@ export default function IsekaidApp(){
             )}
             {/* Global search */}
             {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
-            {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)}/>}
+            {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)} onRedeemCode={redeemCode}/>}
             {/* Achievement unlocked */}
             {newAchievement && <AchievementPopup C={C} achievement={newAchievement} onClose={()=>setNewAchievement(null)}/>}
           </>
