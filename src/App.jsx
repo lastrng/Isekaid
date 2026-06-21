@@ -4561,6 +4561,7 @@ export default function IsekaidApp(){
   const isUnlocked = (catKey)=> isPremium || !LOCKABLE[catKey] || !!unlocks[catKey];
   const [wikiEntry,setWikiEntry]=useState(null);
   const [showWelcome,setShowWelcome]=useState(false);
+  const [welcomeQueued,setWelcomeQueued]=useState(false);
   const [dailyInfo,setDailyInfo]=useState(null);
   const [mission,setMission]=useState(()=>loadMission());
   const [missionReward,setMissionReward]=useState(false);
@@ -4664,7 +4665,9 @@ export default function IsekaidApp(){
     setStreak(s);
     setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
     setWikiMap(buildWikiMap(DATA.wiki));
-    if(s.gainedKey) setShowWelcome(true); // show daily popup only when a key was earned
+    // Le DailyWelcome est mis en file d'attente ; il s'affichera quand aucun autre
+    // overlay prioritaire (tour guidé) n'est actif — voir l'effet de séquencement plus bas.
+    if(s.gainedKey) setWelcomeQueued(true);
   },[]);
 
   // Persist theme whenever it changes
@@ -4707,6 +4710,16 @@ export default function IsekaidApp(){
       return ()=>clearTimeout(t);
     }
   },[screen, user]);
+
+  // ── Séquencement des pop-ups : un seul overlay à la fois ──
+  // Priorité : parcours guidé (tourStep>=0) > DailyWelcome (streak).
+  // Le DailyWelcome en file attend que le tour soit terminé et que l'app soit visible.
+  useEffect(()=>{
+    if(welcomeQueued && screen==="app" && tourStep===-1 && !showWelcome){
+      const t = setTimeout(()=>{ setShowWelcome(true); setWelcomeQueued(false); }, 350);
+      return ()=>clearTimeout(t);
+    }
+  },[welcomeQueued, screen, tourStep, showWelcome]);
 
   const tourNext = ()=>{
     const next = tourStep+1;
@@ -4769,8 +4782,8 @@ export default function IsekaidApp(){
             {tourStep>=0 && <GuidedTour C={C} step={tourStep} onNext={tourNext} onPrev={tourPrev} onSkip={tourSkip} onFinish={tourFinish} dontShowAgain={tourDontShow} setDontShowAgain={setTourDontShow}/>}
             {/* Global wiki panel — available everywhere */}
             {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
-            {/* Daily welcome popup */}
-            {showWelcome && <DailyWelcome C={C} streak={streak} dailyInfo={dailyInfo} onClose={()=>setShowWelcome(false)}/>}
+            {/* Daily welcome popup — jamais pendant le parcours guidé */}
+            {showWelcome && tourStep===-1 && <DailyWelcome C={C} streak={streak} dailyInfo={dailyInfo} onClose={()=>setShowWelcome(false)}/>}
             {missionReward && (
               <div onClick={()=>setMissionReward(false)} style={{position:"fixed",bottom:96,left:"50%",transform:"translateX(-50%)",zIndex:320,background:C.green,color:"#fff",padding:"13px 22px",borderRadius:24,fontSize:13,fontWeight:600,boxShadow:"0 6px 24px rgba(58,102,69,0.4)",animation:"fadeUp .35s ease",display:"flex",alignItems:"center",gap:9,whiteSpace:"nowrap"}}>
                 🎯 Mission accomplie ! <span style={{opacity:0.9}}>+1 clé 🔑</span>
