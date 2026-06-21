@@ -2072,6 +2072,7 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
   const [idx, setIdx] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [hasDrawn, setHasDrawn] = useState(false);
+  const [showMyTrace, setShowMyTrace] = useState(true); // afficher mon tracé par-dessus le modèle
   const [animKey, setAnimKey] = useState(0); // relance l'animation du modèle
   const canvasRef = useRef(null);
   const drawing = useRef(false);
@@ -2124,12 +2125,13 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
     setHasDrawn(false);
   };
 
-  const reveal = ()=>{ setRevealed(true); setAnimKey(k=>k+1); };
+  const reveal = ()=>{ setRevealed(true); setShowMyTrace(true); setAnimKey(k=>k+1); };
   const next = (known)=>{
     if(onRecord && card) onRecord(card.k, known);
     clearCanvas();
     setRevealed(false);
     setHasDrawn(false);
+    setShowMyTrace(true);
     if(idx+1 < total) setIdx(idx+1);
     else { setIdx(0); } // boucle
   };
@@ -2160,15 +2162,15 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
             <div style={{position:"absolute",left:"50%",top:0,bottom:0,width:1,borderLeft:`1px dashed ${C.border}`}}/>
             <div style={{position:"absolute",top:"50%",left:0,right:0,height:1,borderTop:`1px dashed ${C.border}`}}/>
           </div>
-          {/* Modèle en filigrane (toujours visible, léger) ou révélé (animé) */}
-          <div key={animKey} style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none",fontSize:200,fontFamily:"'Noto Serif JP',serif",color:revealed?C.green:C.t3,opacity:revealed?0.9:0.13,transition:"opacity .3s",animation:revealed?"drawReveal 1.1s ease forwards":"none"}}>
+          {/* Modèle révélé (vert, animé) — DESSOUS le tracé fantôme pour comparaison */}
+          <div key={animKey} style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none",fontSize:200,fontFamily:"'Noto Serif JP',serif",color:revealed?C.green:C.t3,opacity:revealed?1:0.13,zIndex:1,transition:"opacity .3s",animation:revealed?"drawReveal 1.1s ease forwards":"none"}}>
             {card.k}
           </div>
-          {/* Canvas de tracé */}
+          {/* Canvas de tracé — fantôme (25%) au-dessus du modèle quand révélé, masquable */}
           <canvas ref={canvasRef}
             onMouseDown={start} onMouseMove={move} onMouseUp={end} onMouseLeave={end}
             onTouchStart={start} onTouchMove={move} onTouchEnd={end}
-            style={{position:"absolute",inset:0,width:"100%",height:"100%",touchAction:"none",cursor:"crosshair"}}
+            style={{position:"absolute",inset:0,width:"100%",height:"100%",zIndex:2,touchAction:"none",cursor:revealed?"default":"crosshair",pointerEvents:revealed?"none":"auto",opacity:revealed?(showMyTrace?0.3:0):1,transition:"opacity .3s"}}
           />
         </div>
 
@@ -2183,7 +2185,10 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
             <div style={{textAlign:"center",marginBottom:6}}>
               <span style={{fontSize:13,color:C.text}}>Le kana <b style={{color:C.green,fontFamily:"'Noto Serif JP',serif",fontSize:18}}>{card.k}</b> se prononce <b>{card.r}</b></span>
             </div>
-            <button onClick={reveal} style={{width:"100%",padding:"9px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:10,color:C.t2,fontSize:12,cursor:"pointer",marginBottom:12}}>↻ Rejouer l'animation</button>
+            <div style={{display:"flex",gap:8,marginBottom:12}}>
+              <button onClick={reveal} style={{flex:1,padding:"9px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:10,color:C.t2,fontSize:12,cursor:"pointer"}}>↻ Rejouer</button>
+              <button onClick={()=>setShowMyTrace(v=>!v)} style={{flex:1,padding:"9px",background:showMyTrace?C.s2:"transparent",border:`1px solid ${showMyTrace?C.red:C.border}`,borderRadius:10,color:showMyTrace?C.text:C.t3,fontSize:12,cursor:"pointer"}}>{showMyTrace?"👁 Mon tracé":"👁‍🗨 Masqué"}</button>
+            </div>
             <div style={{fontSize:11,color:C.t3,textAlign:"center",marginBottom:10}}>Comment était ton tracé ?</div>
             <div style={{display:"flex",gap:10}}>
               <button onClick={()=>next(false)} style={{flex:1,padding:"13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,fontWeight:500,cursor:"pointer"}}>À revoir</button>
