@@ -25,6 +25,24 @@ function currentSeasonKey(date=new Date()){
   if(m>=8 && m<=10) return "automne";
   return "hiver";
 }
+// ─── Affichage du japonais selon le mode de script (kana par défaut) ───
+// modes : "kana" (hiragana, défaut pédagogique) | "kanji" (japonais natif) | "romaji"
+// Texte principal affiché en grand
+function jpMain(entry, script, jpField="jp"){
+  if(!entry) return "";
+  const jp = entry[jpField] || entry.jp || "";
+  if(script==="romaji") return entry.romaji || jp;
+  if(script==="kana")   return entry.kana   || jp;  // si pas de kana, fallback kanji
+  return jp;
+}
+// Texte secondaire (sous le principal) : on montre une autre forme utile
+function jpSub(entry, script, jpField="jp"){
+  if(!entry) return "";
+  const jp = entry[jpField] || entry.jp || "";
+  if(script==="romaji") return jp;                  // sous le romaji → le japonais
+  if(script==="kana")   return entry.romaji || "";  // sous le kana → le romaji
+  return entry.romaji || "";                        // sous le kanji → le romaji
+}
 const SEASON_ACCENT = {
   printemps:{accent:"#E08BA8", soft:"rgba(224,139,168,0.10)", emoji:"🌸", particle:"🌸", label:"Printemps"},
   "été":    {accent:"#3C9DC4", soft:"rgba(60,157,196,0.10)",  emoji:"🎐", particle:"💧", label:"Été"},
@@ -206,6 +224,8 @@ button{font-family:inherit;}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideUp{from{transform:translateX(-50%) translateY(100%)}to{transform:translateX(-50%) translateY(0)}}
 @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.85)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0);opacity:0}10%{opacity:1}100%{transform:translateY(420px) rotate(540deg);opacity:0}}
+@keyframes drawReveal{0%{opacity:0;clip-path:inset(0 100% 0 0)}30%{opacity:.9}100%{opacity:.9;clip-path:inset(0 0 0 0)}}
 @keyframes p1{0%{transform:translateY(-10px) rotate(0);opacity:0}10%{opacity:.55}90%{opacity:.2}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 @keyframes p2{0%{transform:translateY(-10px) translateX(0) rotate(0);opacity:0}10%{opacity:.4}100%{transform:translateY(110vh) translateX(38px) rotate(-540deg);opacity:0}}
 @keyframes floatDown{0%{transform:translateY(-20px) translateX(0) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.3}100%{transform:translateY(108vh) translateX(20px) rotate(360deg);opacity:0}}
@@ -299,8 +319,8 @@ function WikiPanel({C, entry, onClose, script}) {
         {/* Header */}
         <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:14}}>
           <div>
-            <div style={{fontSize:26,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{script==="romaji"?entry.romaji:entry.jp}</div>
-            <div style={{fontSize:12,color:color,fontStyle:"italic",marginBottom:2}}>{script==="romaji"?entry.jp:entry.romaji}</div>
+            <div style={{fontSize:26,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{jpMain(entry, script)}</div>
+            <div style={{fontSize:12,color:color,fontStyle:"italic",marginBottom:2}}>{jpSub(entry, script)}</div>
             <div style={{fontSize:16,fontWeight:500,color:C.text}}>{entry.mot}</div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
@@ -439,7 +459,7 @@ function ExprCard({C,data,fav,onFav,wikiMap,onWikiTap,script}){
         {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
       </div>
       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
-        <div style={{fontSize:34,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2}}>{script==="romaji"?data.romaji:data.expression}</div>
+        <div style={{fontSize:34,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2}}>{jpMain(data, script, "expression")}</div>
         <SpeakButton C={C} text={data.expression} color={C.gold} size={34}/>
       </div>
       <div style={{fontSize:12,color:C.gold,fontStyle:"italic",marginBottom:3}}>{data.romaji}</div>
@@ -486,7 +506,7 @@ function RepasCard({C,data,fav,onFav,wikiMap,onWikiTap,script}){
         {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
       </div>
       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
-        <div style={{fontSize:32,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2}}>{script==="romaji"?data.romaji:data.nom_jp} {data.emoji}</div>
+        <div style={{fontSize:32,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2}}>{jpMain(data, script, "nom_jp")} {data.emoji}</div>
         <SpeakButton C={C} text={data.nom_jp} color={C.green} size={30}/>
       </div>
       <div style={{fontSize:12,color:C.green,fontStyle:"italic",marginBottom:11}}>{data.romaji} — {data.traduction}</div>
@@ -688,7 +708,7 @@ function Slider({C, children}){
 }
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
-function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab}){
   const [expr,  setExpr]  = useState(null);
   const [cult,  setCult]  = useState(null);
   const [repas, setRepas] = useState(null);
@@ -702,6 +722,9 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
     const t = setInterval(()=> setStreakFlip(f=>!f), 5000);
     return ()=> clearInterval(t);
   },[]);
+
+  // Marque "lire le contenu du jour" à l'arrivée sur l'accueil
+  useEffect(()=>{ if(onTask) onTask("daily"); },[]);
 
   const {month,day,weekday,hour} = getJPDate();
   const g = greet(hour, user.name==="Voyageur"?"":user.name);
@@ -743,7 +766,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           <div style={{display:"flex",gap:8,alignItems:"center"}}>
             {/* Script toggle */}
             <button onClick={toggleScript} style={{width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",background:C.s2,border:`1px solid ${C.border}`,borderRadius:"50%",cursor:"pointer",fontFamily:"'Noto Serif JP',serif",fontSize:13,color:C.t2,lineHeight:1}}>
-              {script==="kanji" ? "あ" : "A"}
+              {script==="kana" ? "あ" : script==="kanji" ? "漢" : "A"}
             </button>
             {/* Profil */}
             <button onClick={onProfile} aria-label="Profil" style={{width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",background:C.s2,border:`1px solid ${C.border}`,borderRadius:"50%",cursor:"pointer",padding:0}}>
@@ -765,6 +788,41 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           <span style={{fontSize:13,color:C.t3}}>Rechercher un mot, plat, tradition…</span>
         </div>
 
+        {/* Mission du jour */}
+        {mission && (()=>{
+          const done = mission.done || [];
+          const allDone = done.length >= DAILY_TASKS.length;
+          const pct = Math.round((done.length/DAILY_TASKS.length)*100);
+          return(
+            <div style={{marginBottom:24,padding:"16px 18px",background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`,borderRadius:16}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+                <div style={{fontSize:11,color:allDone?C.green:C.gold,letterSpacing:".15em",textTransform:"uppercase",fontWeight:600}}>
+                  {allDone ? "✓ Mission accomplie !" : "🎯 Mission du jour"}
+                </div>
+                <div style={{fontSize:11,color:C.t3}}>{done.length}/{DAILY_TASKS.length}</div>
+              </div>
+              <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
+                <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {DAILY_TASKS.map(t=>{
+                  const ok = done.includes(t.id);
+                  return(
+                    <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(t.id==="daily"?"home":t.id); }} style={{display:"flex",alignItems:"center",gap:11,cursor:ok?"default":"pointer",opacity:ok?0.6:1}}>
+                      <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":t.emoji}</div>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:13,color:C.text,textDecoration:ok?"line-through":"none"}}>{t.label}</div>
+                      </div>
+                      {!ok && <span style={{fontSize:10,color:C.t3}}>{t.hint} ›</span>}
+                    </div>
+                  );
+                })}
+              </div>
+              {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>🔑 +1 clé bonus gagnée aujourd'hui !</div>}
+            </div>
+          );
+        })()}
+
         {/* Proverbe du jour */}
         {db?.proverbes && (()=>{
           const prov = pickDaily(db.proverbes, today, "prov");
@@ -774,10 +832,10 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
               <div style={{fontSize:72,position:"absolute",top:-14,right:0,opacity:0.05,fontFamily:"'Noto Serif JP',serif"}}>諺</div>
               <div style={{fontSize:9,color:C.gold,letterSpacing:".2em",marginBottom:9,textTransform:"uppercase"}}>諺 · Proverbe du jour</div>
               <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
-                <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,lineHeight:1.4}}>{script==="romaji"?prov.romaji:prov.jp}</div>
+                <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,lineHeight:1.4}}>{jpMain(prov, script)}</div>
                 <SpeakButton C={C} text={prov.jp} color={C.gold} size={26}/>
               </div>
-              <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:8}}>{script==="romaji"?prov.jp:prov.romaji}</div>
+              <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:8}}>{jpSub(prov, script)}</div>
               <div style={{fontSize:13,color:C.text,fontWeight:500,marginBottom:4}}>« {prov.fr} »</div>
               <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginBottom:12}}>{prov.sens}</div>
               <button onClick={()=>shareContent(`${prov.jp} (${prov.romaji})\n« ${prov.fr} »\n${prov.sens}\n\n— Proverbe du jour sur Isekai'd 🎌`)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2,fontSize:11,cursor:"pointer"}}>
@@ -900,7 +958,7 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
           <div>
             <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>探 · EXPLORER</div>
-            <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Bunka wo sagasu":"文化を探す"}</div>
+            <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Bunka wo sagasu":script==="kana"?"ぶんかをさがす":"文化を探す"}</div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:5,padding:"7px 12px",background:`${acc.soft}`,border:`1px solid ${acc.accent}44`,borderRadius:20}}>
             <span style={{fontSize:14}}>🔑</span>
@@ -1035,8 +1093,8 @@ function VieDetail({C,v,onBack,fav,onFav,wikiMap,onWikiTap,script}){
             <div style={{display:"flex",flexDirection:"column",gap:11}}>
               {v.vocabulaire.map((w,i)=>(
                 <div key={i} style={{paddingBottom:i<v.vocabulaire.length-1?11:0,borderBottom:i<v.vocabulaire.length-1?`1px solid ${C.border}`:"none"}}>
-                  <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{script==="romaji"?w.romaji:w.jp}</div>
-                  <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:2}}>{script==="romaji"?w.jp:w.romaji}</div>
+                  <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(w, script)}</div>
+                  <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:2}}>{jpSub(w, script)}</div>
                   <div style={{fontSize:12,color:C.t2}}>{w.fr}</div>
                 </div>
               ))}
@@ -1070,7 +1128,7 @@ function VieScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 12px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>暮 · VIE QUOTIDIENNE</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nichijō seikatsu":"日常生活"}</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nichijō seikatsu":script==="kana"?"にちじょうせいかつ":"日常生活"}</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Vivre le Japon au jour le jour</div>
       </div>
 
@@ -1241,7 +1299,7 @@ function RegionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 16px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>地 · RÉGIONS</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihon no chihō":"日本の地方"}</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihon no chihō":script==="kana"?"にほんのちほう":"日本の地方"}</div>
         <div style={{fontSize:13,color:C.t2}}>Les 8 grandes régions du Japon</div>
       </div>
 
@@ -1393,7 +1451,7 @@ function CodesScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 12px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>礼 · CODES SOCIAUX</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Anmoku no rūru":"暗黙のルール"}</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Anmoku no rūru":script==="kana"?"あんもくのルール":"暗黙のルール"}</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Les règles invisibles à connaître</div>
       </div>
 
@@ -1605,7 +1663,7 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initial
       <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         {onBack && <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>暦 · TRADITIONS</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nenchū gyōji":"年中行事"}</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nenchū gyōji":script==="kana"?"ねんちゅうぎょうじ":"年中行事"}</div>
       </div>
 
       {/* Season selector */}
@@ -1747,8 +1805,8 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
               <div key={i} onClick={()=>!picked&&choose(c)} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`1px solid ${bd}`,borderRadius:12,cursor:picked?"default":"pointer",transition:"all .2s"}}>
                 <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
                   <div style={{flex:1,minWidth:0}}>
-                    {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{script==="romaji"?c.romaji:c.jp}</div>}
-                    {c.jp && <div style={{fontSize:11,color:C.t3,fontStyle:"italic",marginBottom:3}}>{script==="romaji"?c.jp:c.romaji}</div>}
+                    {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(c, script)}</div>}
+                    {c.jp && <div style={{fontSize:11,color:C.t3,fontStyle:"italic",marginBottom:3}}>{jpSub(c, script)}</div>}
                     <div style={{fontSize:13,color:C.t2}}>{c.fr}</div>
                   </div>
                   {picked && c.jp && <SpeakButton C={C} text={c.jp} color={s.couleur}/>}
@@ -1786,7 +1844,7 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>場 · SCÉNARIOS</div>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
-          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Shinario":"シナリオ"}</div>
+          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Shinario":script==="kana"?"シナリオ":"シナリオ"}</div>
           {totalDone>0 && <div style={{fontSize:12,color:acc.accent,fontWeight:500}}>{totalDone}/{scenarios.length} complétés</div>}
         </div>
       </div>
@@ -2008,6 +2066,143 @@ function FlashcardMode({C, deck, onExit}){
   );
 }
 
+// ── Mode Dessin : "Dessine le kana qui se prononce X" ──
+function DrawKanaMode({C, deck, onExit, onRecord}){
+  const [order] = useState(()=> [...deck].sort(()=>Math.random()-0.5));
+  const [idx, setIdx] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+  const [hasDrawn, setHasDrawn] = useState(false);
+  const [animKey, setAnimKey] = useState(0); // relance l'animation du modèle
+  const canvasRef = useRef(null);
+  const drawing = useRef(false);
+  const lastPt = useRef(null);
+  const card = order[idx];
+  const total = order.length;
+
+  // Prépare le canvas (haute résolution)
+  const setupCanvas = ()=>{
+    const cv = canvasRef.current;
+    if(!cv) return;
+    const rect = cv.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    cv.width = rect.width * dpr;
+    cv.height = rect.height * dpr;
+    const ctx = cv.getContext("2d");
+    ctx.scale(dpr, dpr);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 14;
+    ctx.strokeStyle = C.red;
+  };
+  useEffect(()=>{ setupCanvas(); }, [idx]);
+
+  const getPos = (e)=>{
+    const cv = canvasRef.current;
+    const rect = cv.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+  };
+  const start = (e)=>{ e.preventDefault(); drawing.current = true; lastPt.current = getPos(e); setHasDrawn(true); };
+  const move = (e)=>{
+    if(!drawing.current) return;
+    e.preventDefault();
+    const ctx = canvasRef.current.getContext("2d");
+    const p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastPt.current.x, lastPt.current.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    lastPt.current = p;
+  };
+  const end = (e)=>{ e && e.preventDefault(); drawing.current = false; };
+
+  const clearCanvas = ()=>{
+    const cv = canvasRef.current;
+    if(!cv) return;
+    const ctx = cv.getContext("2d");
+    ctx.clearRect(0,0,cv.width,cv.height);
+    setHasDrawn(false);
+  };
+
+  const reveal = ()=>{ setRevealed(true); setAnimKey(k=>k+1); };
+  const next = (known)=>{
+    if(onRecord && card) onRecord(card.k, known);
+    clearCanvas();
+    setRevealed(false);
+    setHasDrawn(false);
+    if(idx+1 < total) setIdx(idx+1);
+    else { setIdx(0); } // boucle
+  };
+
+  if(!card) return null;
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{padding:"6px 20px 110px",maxWidth:480,margin:"0 auto"}}>
+        {/* Progression */}
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:18}}>
+          <div style={{flex:1,height:5,background:C.s3,borderRadius:3,overflow:"hidden"}}>
+            <div style={{height:"100%",width:`${((idx)/total)*100}%`,background:C.red,borderRadius:3,transition:"width .3s"}}/>
+          </div>
+          <span style={{fontSize:11,color:C.t3,fontWeight:600}}>{idx+1}/{total}</span>
+        </div>
+
+        {/* Consigne */}
+        <div style={{textAlign:"center",marginBottom:14}}>
+          <div style={{fontSize:11,color:C.t3,letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>Dessine le kana qui se prononce</div>
+          <div style={{fontSize:46,fontWeight:700,color:C.red,fontFamily:"'Noto Serif JP',serif",lineHeight:1}}>{card.r}</div>
+        </div>
+
+        {/* Zone de dessin */}
+        <div style={{position:"relative",width:"100%",aspectRatio:"1",maxWidth:300,margin:"0 auto 16px",background:C.s1,border:`2px solid ${revealed?C.green:C.border}`,borderRadius:18,overflow:"hidden",transition:"border-color .3s"}}>
+          {/* Grille repère (croix centrale en pointillés) */}
+          <div style={{position:"absolute",inset:0,pointerEvents:"none"}}>
+            <div style={{position:"absolute",left:"50%",top:0,bottom:0,width:1,borderLeft:`1px dashed ${C.border}`}}/>
+            <div style={{position:"absolute",top:"50%",left:0,right:0,height:1,borderTop:`1px dashed ${C.border}`}}/>
+          </div>
+          {/* Modèle en filigrane (toujours visible, léger) ou révélé (animé) */}
+          <div key={animKey} style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none",fontSize:200,fontFamily:"'Noto Serif JP',serif",color:revealed?C.green:C.t3,opacity:revealed?0.9:0.13,transition:"opacity .3s",animation:revealed?"drawReveal 1.1s ease forwards":"none"}}>
+            {card.k}
+          </div>
+          {/* Canvas de tracé */}
+          <canvas ref={canvasRef}
+            onMouseDown={start} onMouseMove={move} onMouseUp={end} onMouseLeave={end}
+            onTouchStart={start} onTouchMove={move} onTouchEnd={end}
+            style={{position:"absolute",inset:0,width:"100%",height:"100%",touchAction:"none",cursor:"crosshair"}}
+          />
+        </div>
+
+        {/* Actions */}
+        {!revealed ? (
+          <div style={{display:"flex",gap:10,maxWidth:300,margin:"0 auto"}}>
+            <button onClick={clearCanvas} style={{flex:1,padding:"13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,fontWeight:500,cursor:"pointer"}}>Effacer</button>
+            <button onClick={reveal} style={{flex:2,padding:"13px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Vérifier le tracé</button>
+          </div>
+        ) : (
+          <div style={{maxWidth:300,margin:"0 auto"}}>
+            <div style={{textAlign:"center",marginBottom:6}}>
+              <span style={{fontSize:13,color:C.text}}>Le kana <b style={{color:C.green,fontFamily:"'Noto Serif JP',serif",fontSize:18}}>{card.k}</b> se prononce <b>{card.r}</b></span>
+            </div>
+            <button onClick={reveal} style={{width:"100%",padding:"9px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:10,color:C.t2,fontSize:12,cursor:"pointer",marginBottom:12}}>↻ Rejouer l'animation</button>
+            <div style={{fontSize:11,color:C.t3,textAlign:"center",marginBottom:10}}>Comment était ton tracé ?</div>
+            <div style={{display:"flex",gap:10}}>
+              <button onClick={()=>next(false)} style={{flex:1,padding:"13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,fontWeight:500,cursor:"pointer"}}>À revoir</button>
+              <button onClick={()=>next(true)} style={{flex:1,padding:"13px",background:C.green,border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Réussi ✓</button>
+            </div>
+          </div>
+        )}
+
+        {/* Astuce ordre des traits */}
+        {!revealed && !hasDrawn && (
+          <div style={{marginTop:18,padding:"11px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,fontSize:11,color:C.t2,textAlign:"center",maxWidth:300,margin:"18px auto 0",lineHeight:1.5}}>
+            💡 Trace de mémoire, puis vérifie. En japonais, on écrit généralement de haut en bas et de gauche à droite.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Quiz mode ──
 function QuizMode({C, deck, onExit}){
   const [cards] = useState(()=>shuffle(deck));
@@ -2197,8 +2392,8 @@ function SituationDetail({C, s, onBack, script}){
           <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"15px 16px"}}>
             <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10}}>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:4,lineHeight:1.4}}>{script==="romaji"?p.romaji:p.jp}</div>
-                <div style={{fontSize:12,color:C.gold,fontStyle:"italic",marginBottom:5}}>{script==="romaji"?p.jp:p.romaji}</div>
+                <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:4,lineHeight:1.4}}>{jpMain(p, script)}</div>
+                <div style={{fontSize:12,color:C.gold,fontStyle:"italic",marginBottom:5}}>{jpSub(p, script)}</div>
                 <div style={{fontSize:13,color:C.t2}}>{p.fr}</div>
               </div>
               <SpeakButton C={C} text={p.jp} color={C.gold}/>
@@ -2368,10 +2563,10 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
                 {sit.phrases.map((p,i)=>(
                   <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,padding:"13px 15px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
-                      <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text}}>{script==="romaji"?p.romaji:p.jp}</div>
+                      <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text}}>{jpMain(p, script)}</div>
                       <SpeakButton C={C} text={p.jp} color={C.gold} size={26}/>
                     </div>
-                    <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:3}}>{script==="romaji"?p.jp:p.romaji}</div>
+                    <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:3}}>{jpSub(p, script)}</div>
                     <div style={{fontSize:13,color:C.t2}}>{p.fr}</div>
                   </div>
                 ))}
@@ -2403,7 +2598,8 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
           <button onClick={()=>setMode(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer"}}>‹ {deck.label}</button>
         </div>
         {mode==="flash" ? <FlashcardMode C={C} deck={deck.deck} onExit={()=>setMode(null)} onRecord={onRecordKana}/>
-                        : <QuizMode      C={C} deck={deck.deck} onExit={()=>setMode(null)} onRecord={onRecordKana}/>}
+         : mode==="quiz" ? <QuizMode      C={C} deck={deck.deck} onExit={()=>setMode(null)} onRecord={onRecordKana}/>
+                         : <DrawKanaMode  C={C} deck={deck.deck} onExit={()=>setMode(null)} onRecord={onRecordKana}/>}
       </div>
     );
   }
@@ -2431,6 +2627,11 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
               <div style={{flex:1}}><div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Quiz</div><div style={{fontSize:12,color:C.t2}}>Choisis la bonne lecture parmi 4 options</div></div>
               <span style={{fontSize:18,color:C.t3}}>›</span>
             </div>
+            <div onClick={()=>setMode("draw")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
+              <span style={{fontSize:30}}>🖌️</span>
+              <div style={{flex:1}}><div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Dessiner</div><div style={{fontSize:12,color:C.t2}}>On te donne le son, tu traces le bon kana</div></div>
+              <span style={{fontSize:18,color:C.t3}}>›</span>
+            </div>
           </div>
         </div>
       </div>
@@ -2446,7 +2647,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Nihongo wo manabu":"日本語を学ぶ"}</div>
+          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Nihongo wo manabu":script==="kana"?"にほんごをまなぶ":"日本語を学ぶ"}</div>
           {learnMode && <button onClick={()=>setLearnMode(null)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"6px 13px",color:C.t2,fontSize:12,cursor:"pointer",whiteSpace:"nowrap"}}>‹ Menu</button>}
         </div>
       </div>
@@ -3443,7 +3644,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose}){
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
@@ -3571,6 +3772,32 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,fa
           <div onClick={()=>setDark(d=>!d)} style={{width:48,height:26,borderRadius:13,background:dark?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
             <div style={{position:"absolute",top:3,left:dark?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
           </div>
+        </div>
+
+        {/* Sélecteur d'accent (déblocable par XP) */}
+        <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
+          <div style={{marginBottom:12}}>
+            <div style={{fontSize:13,color:C.text,marginBottom:2}}>🎨 Couleur d'accent</div>
+            <div style={{fontSize:11,color:C.t3}}>Débloque de nouvelles teintes en gagnant de l'XP</div>
+          </div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:10}}>
+            {ACCENT_THEMES.map(a=>{
+              const unlocked = (xp||0) >= a.minXp;
+              const active = accent===a.id;
+              return(
+                <button key={a.id} onClick={()=>{ if(unlocked) chooseAccent(a.id); }} title={a.label}
+                  style={{position:"relative",width:46,height:46,borderRadius:"50%",border:`2px solid ${active?C.text:"transparent"}`,background:a.color,cursor:unlocked?"pointer":"not-allowed",opacity:unlocked?1:0.3,display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s"}}>
+                  {active && <span style={{color:"#fff",fontSize:18,textShadow:"0 1px 3px rgba(0,0,0,0.4)"}}>✓</span>}
+                  {!unlocked && <span style={{position:"absolute",fontSize:14}}>🔒</span>}
+                </button>
+              );
+            })}
+          </div>
+          {(()=>{
+            const next = ACCENT_THEMES.find(a=>(xp||0) < a.minXp);
+            if(!next) return <div style={{fontSize:10,color:C.gold,marginTop:10}}>✨ Toutes les couleurs débloquées — bravo !</div>;
+            return <div style={{fontSize:10,color:C.t3,marginTop:10}}>Prochaine : {next.emoji} {next.label} à {next.minXp} XP (encore {next.minXp-(xp||0)} XP)</div>;
+          })()}
         </div>
         {/* DB stats */}
         {db && (
@@ -3702,9 +3929,17 @@ function AchievementPopup({C, achievement, onClose}){
 }
 
 // ─── Daily welcome popup (streak + clé) ───────────────────────────────────────
-function DailyWelcome({C, streak, onClose}){
+function DailyWelcome({C, streak, dailyInfo, onClose}){
   const count = streak?.count || 0;
   const keys = streak?.keys || 0;
+  const freezes = streak?.freezes || 0;
+  const milestone = dailyInfo?.milestone || null;
+  const frozenUsed = dailyInfo?.frozenUsed || false;
+  const keysGained = 1 + (milestone?.bonus || 0);
+  const NEXT = [7,14,30,60,100];
+  const nextGoal = NEXT.find(d=>d>count);
+  const daysToNext = nextGoal ? nextGoal - count : null;
+
   return(
     <>
       <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:300,backdropFilter:"blur(3px)"}}/>
@@ -3713,25 +3948,55 @@ function DailyWelcome({C, streak, onClose}){
         width:"min(86vw,340px)", zIndex:301, background:C.s1,
         borderRadius:22, padding:"32px 26px 26px", textAlign:"center",
         animation:"popIn .35s cubic-bezier(.2,.9,.3,1.3)",
-        boxShadow:"0 24px 80px rgba(0,0,0,0.4)", border:`1px solid ${C.border}`
+        boxShadow:"0 24px 80px rgba(0,0,0,0.4)", border:`1px solid ${milestone?"rgba(201,70,61,0.5)":C.border}`
       }}>
-        {/* Flame */}
-        <div style={{fontSize:60,marginBottom:6,animation:"glow 2s ease infinite"}}>🔥</div>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".25em",textTransform:"uppercase",marginBottom:6}}>Content de te revoir</div>
-        <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>
-          {count} jour{count>1?"s":""}
-        </div>
-        <div style={{fontSize:13,color:C.t2,marginBottom:22}}>de streak consécutif{count>1?"s":""} 🎌</div>
+        {milestone && (
+          <div style={{position:"absolute",inset:0,overflow:"hidden",borderRadius:22,pointerEvents:"none"}}>
+            {Array.from({length:14}).map((_,i)=>(
+              <div key={i} style={{position:"absolute",top:"-10%",left:`${(i*7+5)%100}%`,fontSize:`${12+(i%3)*5}px`,animation:`fall ${1.5+(i%4)*0.4}s ease-in ${(i%5)*0.15}s both`}}>{["🎊","✨","🔑","🎌","⭐"][i%5]}</div>
+            ))}
+          </div>
+        )}
 
-        {/* Key reward */}
-        <div style={{padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14,marginBottom:22}}>
+        <div style={{fontSize:60,marginBottom:6,animation:"glow 2s ease infinite",filter:milestone?"drop-shadow(0 0 14px rgba(201,70,61,0.6))":"none"}}>{milestone?milestone.emoji:"🔥"}</div>
+
+        {milestone ? (
+          <>
+            <div style={{fontSize:10,color:C.gold,letterSpacing:".25em",textTransform:"uppercase",marginBottom:6}}>🎉 Palier atteint !</div>
+            <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:400,color:C.text,marginBottom:2}}>{milestone.label}</div>
+            <div style={{fontSize:13,color:C.t2,marginBottom:20}}>{count} jours consécutifs 🎌</div>
+          </>
+        ) : (
+          <>
+            <div style={{fontSize:10,color:C.t3,letterSpacing:".25em",textTransform:"uppercase",marginBottom:6}}>Content de te revoir</div>
+            <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>
+              {count} jour{count>1?"s":""}
+            </div>
+            <div style={{fontSize:13,color:C.t2,marginBottom:20}}>de streak consécutif{count>1?"s":""} 🎌</div>
+          </>
+        )}
+
+        {frozenUsed && (
+          <div style={{padding:"10px 14px",background:"rgba(90,184,232,0.1)",border:"1px solid rgba(90,184,232,0.3)",borderRadius:12,marginBottom:14,display:"flex",alignItems:"center",gap:10}}>
+            <span style={{fontSize:22}}>🧊</span>
+            <div style={{textAlign:"left"}}><div style={{fontSize:12,color:C.text,fontWeight:600}}>Un gel a sauvé ton streak !</div><div style={{fontSize:10,color:C.t2}}>Il te reste {freezes} gel{freezes>1?"s":""}</div></div>
+          </div>
+        )}
+
+        <div style={{padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14,marginBottom:milestone||daysToNext?14:22}}>
           <div style={{fontSize:38,marginBottom:6,animation:"popIn .5s ease .2s both"}}>🔑</div>
-          <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:3}}>+1 clé gagnée !</div>
+          <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:3}}>
+            +{keysGained} clé{keysGained>1?"s":""} gagnée{keysGained>1?"s":""} !{milestone && <span style={{color:C.gold}}> (dont +{milestone.bonus} bonus)</span>}
+          </div>
           <div style={{fontSize:12,color:C.t2}}>Tu as maintenant <b style={{color:C.red}}>{keys} clé{keys>1?"s":""}</b> à dépenser</div>
         </div>
 
+        {daysToNext && !milestone && (
+          <div style={{fontSize:11,color:C.t3,marginBottom:18}}>Plus que <b style={{color:C.text}}>{daysToNext} jour{daysToNext>1?"s":""}</b> avant le palier <b>{nextGoal} jours</b> 🏆</div>
+        )}
+
         <button onClick={onClose} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
-          Continuer l'aventure →
+          {milestone ? "Génial ! →" : "Continuer l'aventure →"}
         </button>
       </div>
     </>
@@ -4061,8 +4326,11 @@ function deckMastery(progress, deck){
 }
 
 function loadScript(){
-  try { return localStorage.getItem(SCRIPT_KEY) === "romaji" ? "romaji" : "kanji"; }
-  catch { return "kanji"; }
+  try {
+    const v = localStorage.getItem(SCRIPT_KEY);
+    return (v==="romaji"||v==="kanji"||v==="kana") ? v : "kana";
+  }
+  catch { return "kana"; }
 }
 function saveScript(mode){
   try { localStorage.setItem(SCRIPT_KEY, mode); } catch {}
@@ -4070,6 +4338,23 @@ function saveScript(mode){
 
 // ─── Streak logic ─────────────────────────────────────────────────────────────
 const STREAK_KEY = "isekaid_streak_v1";
+
+// ─── Mission quotidienne ──────────────────────────────────────────────────────
+const MISSION_KEY = "isekaid_mission_v1";
+const DAILY_TASKS = [
+  { id:"daily",    emoji:"📖", label:"Lire le contenu du jour",   hint:"Accueil" },
+  { id:"learn",    emoji:"🎴", label:"Réviser une leçon",          hint:"Apprendre" },
+  { id:"explore",  emoji:"⛩️", label:"Découvrir une tradition",    hint:"Explorer" },
+];
+function loadMission(){
+  try {
+    const raw = localStorage.getItem(MISSION_KEY);
+    const m = raw ? JSON.parse(raw) : null;
+    if(!m || m.day !== dayKey()) return { day: dayKey(), done: [], claimed:false };
+    return m;
+  } catch { return { day: dayKey(), done: [], claimed:false }; }
+}
+function saveMission(m){ try { localStorage.setItem(MISSION_KEY, JSON.stringify(m)); } catch {} }
 // Local day key YYYY-MM-DD (no timezone surprises)
 function dayKey(d=new Date()){
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
@@ -4129,6 +4414,19 @@ const LOCKABLE = {
   histoire:      {label:"Histoire",        emoji:"📜", cost:3, xp:130, free:false},
 };
 // Paliers de titres selon l'XP total
+// ─── Accents déblocables par XP (cosmétique, motivationnel) ───
+const ACCENT_THEMES = [
+  { id:"classic",  label:"Rouge impérial", jp:"朱",   color:"#C9463D", minXp:0,   emoji:"🔴" },
+  { id:"sakura",   label:"Sakura",         jp:"桜",   color:"#E08BA8", minXp:100, emoji:"🌸" },
+  { id:"matcha",   label:"Matcha",         jp:"抹茶", color:"#7BA05B", minXp:250, emoji:"🍵" },
+  { id:"indigo",   label:"Indigo",         jp:"藍",   color:"#3F6CA6", minXp:400, emoji:"🟦" },
+  { id:"gold",     label:"Or de Kanazawa", jp:"金",   color:"#C9A84C", minXp:520, emoji:"🟡" },
+  { id:"sumi",     label:"Encre de Sumi",  jp:"墨",   color:"#5A5560", minXp:700, emoji:"⚫" },
+];
+const ACCENT_KEY = "isekaid_accent_v1";
+function loadAccent(){ try { return localStorage.getItem(ACCENT_KEY) || "classic"; } catch { return "classic"; } }
+function saveAccent(id){ try { localStorage.setItem(ACCENT_KEY, id); } catch {} }
+
 const TITLES = [
   {min:0,    title:"Curieux du Japon",   jp:"興味",   emoji:"🌱"},
   {min:100,  title:"Voyageur novice",    jp:"旅人",   emoji:"🎒"},
@@ -4185,9 +4483,12 @@ function favId(type, item){
 
 export default function IsekaidApp(){
   const [screen,setScreen]=useState("splash");
-  const [tab,setTab]=useState("home");
+  const [tab,setTabRaw]=useState("home");
+  const setTab = (t)=>{ if(t==="explore") completeTask("explore"); setTabRaw(t); };
   const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
   const [dark,setDark]=useState(()=>loadTheme());
+  const [accent,setAccent]=useState(()=>loadAccent());
+  const chooseAccent = (id)=>{ setAccent(id); saveAccent(id); };
   const [db,setDb]=useState(null);
   const [streak,setStreak]=useState(()=>loadStreak()||{count:0,best:0,last:null,keys:0});
   const [favs,setFavs]=useState(()=>loadFavs());
@@ -4208,6 +4509,7 @@ export default function IsekaidApp(){
   const [pathProgress,setPathProgress]=useState(()=>loadPathProgress());
 
   const completePathStep = (stepId)=>{
+    completeTask("learn");
     setPathProgress(prev=>{
       const completed = prev?.completed || [];
       if(completed.includes(stepId)) return prev;
@@ -4218,6 +4520,7 @@ export default function IsekaidApp(){
   };
 
   const recordKanaResult = (char, known)=>{
+    completeTask("learn");
     setKanaProgress(prev=>{
       const next = recordKana(prev, char, known);
       saveKanaProgress(next);
@@ -4253,6 +4556,24 @@ export default function IsekaidApp(){
   const isUnlocked = (catKey)=> isPremium || !LOCKABLE[catKey] || !!unlocks[catKey];
   const [wikiEntry,setWikiEntry]=useState(null);
   const [showWelcome,setShowWelcome]=useState(false);
+  const [dailyInfo,setDailyInfo]=useState(null);
+  const [mission,setMission]=useState(()=>loadMission());
+  const [missionReward,setMissionReward]=useState(false);
+  useEffect(()=>{ if(missionReward){ const t=setTimeout(()=>setMissionReward(false),3500); return ()=>clearTimeout(t); } },[missionReward]);
+  const completeTask = (taskId)=>{
+    setMission(prev=>{
+      if(prev.done.includes(taskId)) return prev;
+      const done = [...prev.done, taskId];
+      const m = {...prev, done};
+      if(done.length>=DAILY_TASKS.length && !prev.claimed){
+        m.claimed = true;
+        setStreak(s=>{ const ns={...s, keys:(s.keys||0)+1, totalKeysEarned:(s.totalKeysEarned||0)+1}; saveStreak(ns); return ns; });
+        setMissionReward(true);
+      }
+      saveMission(m);
+      return m;
+    });
+  };
   const [showSearch,setShowSearch]=useState(false);
   const [tourStep,setTourStep]=useState(-1); // -1 = inactif, 0+ = étape en cours
   const [tourDontShow,setTourDontShow]=useState(false);
@@ -4327,13 +4648,16 @@ export default function IsekaidApp(){
       return next;
     });
   };
-  const C=dark?DARK:LIGHT;
+  const baseC = dark?DARK:LIGHT;
+  const accentDef = ACCENT_THEMES.find(a=>a.id===accent) || ACCENT_THEMES[0];
+  const C = useMemo(()=>({ ...baseC, red: accentDef.color }), [dark, accentDef.color]);
 
   // Load content data on startup
   useEffect(()=>{
     setDb(DATA);
     const s = touchStreak();
     setStreak(s);
+    setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
     setWikiMap(buildWikiMap(DATA.wiki));
     if(s.gainedKey) setShowWelcome(true); // show daily popup only when a key was earned
   },[]);
@@ -4341,7 +4665,7 @@ export default function IsekaidApp(){
   // Persist theme whenever it changes
   useEffect(()=>{ saveTheme(dark); },[dark]);
   useEffect(()=>{ saveScript(script); },[script]);
-  const toggleScript = ()=> setScript(s=> s==="kanji" ? "romaji" : "kanji");
+  const toggleScript = ()=> setScript(s=> s==="kana" ? "kanji" : s==="kanji" ? "romaji" : "kana");
 
   // When splash finishes: decide auth → onboarding → app
   const afterSplash = ()=>{
@@ -4427,11 +4751,11 @@ export default function IsekaidApp(){
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
@@ -4441,7 +4765,12 @@ export default function IsekaidApp(){
             {/* Global wiki panel — available everywhere */}
             {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
             {/* Daily welcome popup */}
-            {showWelcome && <DailyWelcome C={C} streak={streak} onClose={()=>setShowWelcome(false)}/>}
+            {showWelcome && <DailyWelcome C={C} streak={streak} dailyInfo={dailyInfo} onClose={()=>setShowWelcome(false)}/>}
+            {missionReward && (
+              <div onClick={()=>setMissionReward(false)} style={{position:"fixed",bottom:96,left:"50%",transform:"translateX(-50%)",zIndex:320,background:C.green,color:"#fff",padding:"13px 22px",borderRadius:24,fontSize:13,fontWeight:600,boxShadow:"0 6px 24px rgba(58,102,69,0.4)",animation:"fadeUp .35s ease",display:"flex",alignItems:"center",gap:9,whiteSpace:"nowrap"}}>
+                🎯 Mission accomplie ! <span style={{opacity:0.9}}>+1 clé 🔑</span>
+              </div>
+            )}
             {/* Global search */}
             {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
             {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)}/>}

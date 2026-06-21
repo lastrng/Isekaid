@@ -7,7 +7,8 @@
       "contexte": "Dit avant chaque repas, ce mot exprime la gratitude envers tout ce qui a contribué à la nourriture — la nature, les agriculteurs, les cuisiniers. C'est bien plus qu'un simple 'bon appétit'.",
       "exemple_jp": "さあ、食べましょう。いただきます！",
       "exemple_fr": "Allez, mangeons. Itadakimasu !",
-      "emoji": "🍱"
+      "emoji": "🍱",
+      "kana": "いただきます"
     },
     {
       "expression": "木漏れ日",
@@ -16,7 +17,8 @@
       "contexte": "Ce mot désigne ce moment visuel où la lumière du soleil se glisse entre les feuilles des arbres. Il n'existe aucun équivalent direct en français.",
       "exemple_jp": "森の木漏れ日がとても美しい。",
       "exemple_fr": "Le komorebi dans la forêt est vraiment magnifique.",
-      "emoji": "🌿"
+      "emoji": "🌿",
+      "kana": "こもれび"
     },
     {
       "expression": "お疲れ様です",
@@ -25,7 +27,8 @@
       "contexte": "Expression clé du monde professionnel japonais. Elle reconnaît les efforts de quelqu'un et s'utilise en arrivant au bureau, en partant, ou pour remercier un collègue.",
       "exemple_jp": "今日もお疲れ様です！",
       "exemple_fr": "Encore merci pour ton travail aujourd'hui !",
-      "emoji": "💼"
+      "emoji": "💼",
+      "kana": "おつかれさま です"
     },
     {
       "expression": "一期一会",
@@ -34,7 +37,8 @@
       "contexte": "Philosophie du thé selon laquelle chaque rencontre est unique et ne se reproduira jamais exactement. Elle invite à être pleinement présent dans chaque moment partagé.",
       "exemple_jp": "この出会いを一期一会として大切にしよう。",
       "exemple_fr": "Chérissons cette rencontre comme un moment unique.",
-      "emoji": "🍵"
+      "emoji": "🍵",
+      "kana": "いちご いちえ"
     },
     {
       "expression": "仕方がない",
@@ -43,7 +47,8 @@
       "contexte": "Expression de résilience tranquille face à ce qu'on ne peut changer. Ni résignation amère ni indifférence, mais une forme d'acceptation sereine et mature.",
       "exemple_jp": "電車が遅れた。仕方がない、待つしかない。",
       "exemple_fr": "Le train est en retard. On n'y peut rien, il faut attendre.",
-      "emoji": "🌊"
+      "emoji": "🌊",
+      "kana": "しかた が ない"
     },
     {
       "expression": "頑張ります",
@@ -52,7 +57,8 @@
       "contexte": "Bien plus qu'un simple 'j'essaierai', c'est une promesse de mobiliser toute son énergie. On l'utilise avant un défi, un examen, une compétition — c'est un engagement.",
       "exemple_jp": "試験前に：頑張ります！",
       "exemple_fr": "Avant l'examen : Je vais tout donner !",
-      "emoji": "💪"
+      "emoji": "💪",
+      "kana": "がんばります"
     },
     {
       "expression": "もったいない",
@@ -61,7 +67,8 @@
       "contexte": "Concept profond qui exprime le regret face au gaspillage. Il résume à lui seul une philosophie du respect des ressources, très ancrée dans la culture japonaise.",
       "exemple_jp": "食べ物を捨てるなんて、もったいない！",
       "exemple_fr": "Jeter de la nourriture, quel gâchis !",
-      "emoji": "♻️"
+      "emoji": "♻️",
+      "kana": "もったいない"
     },
     {
       "expression": "なるほど",
@@ -70,7 +77,8 @@
       "contexte": "Réaction très naturelle dans une conversation japonaise pour montrer qu'on comprend et qu'on suit. C'est un signal d'écoute active, pas seulement d'accord.",
       "exemple_jp": "なるほど、そういうことか！",
       "exemple_fr": "Ah je vois, c'est donc ça !",
-      "emoji": "💡"
+      "emoji": "💡",
+      "kana": "なるほど"
     },
     {
       "expression": "よろしくお願いします",
@@ -79,7 +87,8 @@
       "contexte": "Expression indispensable qui ouvre et ferme les relations au Japon — en se présentant, en commençant un projet, en demandant un service. Elle établit un lien de confiance mutuelle.",
       "exemple_jp": "これからよろしくお願いします。",
       "exemple_fr": "Je compte sur vous pour la suite.",
-      "emoji": "🤝"
+      "emoji": "🤝",
+      "kana": "よろしく おねがいします"
     },
     {
       "expression": "懐かしい",
@@ -88,7 +97,8 @@
       "contexte": "Ce mot exprime la nostalgie positive, celle qui réchauffe le cœur en évoquant de bons souvenirs. Différent de la tristesse du passé, c'est une douce mélancolie.",
       "exemple_jp": "この歌を聴くと懐かしい気持ちになる。",
       "exemple_fr": "Cette chanson me donne un sentiment de douce nostalgie.",
-      "emoji": "🌸"
+      "emoji": "🌸",
+      "kana": "なつかしい"
     },
     {
       "expression": "ただいま",
@@ -97,7 +107,8 @@
       "contexte": "Dit en franchissant la porte de chez soi, suivi de 'okaerinasai' par la famille. Ce rituel simple ancre le foyer comme un lieu de retour et de chaleur.",
       "exemple_jp": "ただいま！— おかえりなさい！",
       "exemple_fr": "Je suis rentré ! — Bienvenue à la maison !",
-      "emoji": "🏠"
+      "emoji": "🏠",
+      "kana": "ただいま"
     },
     {
       "expression": "間",
@@ -106,7 +117,8 @@
       "contexte": "Concept esthétique qui valorise l'espace entre les choses — le silence entre deux notes, le vide dans une pièce, la pause dans une conversation. Le 'ma' n'est pas un manque, c'est une présence.",
       "exemple_jp": "この部屋の間がとても心地よい。",
       "exemple_fr": "Le 'ma' de cette pièce est très apaisant.",
-      "emoji": "🪷"
+      "emoji": "🪷",
+      "kana": "ま"
     },
     {
       "expression": "すみません",
@@ -115,7 +127,8 @@
       "contexte": "Mot universel qui sert à attirer l'attention, s'excuser, ou même remercier quelqu'un qui a fait un effort pour vous. Indispensable dans tout lieu public.",
       "exemple_jp": "すみません、駅はどこですか？",
       "exemple_fr": "Excusez-moi, où est la gare ?",
-      "emoji": "🗣️"
+      "emoji": "🗣️",
+      "kana": "すみません"
     },
     {
       "expression": "物の哀れ",
@@ -124,7 +137,8 @@
       "contexte": "Sensibilité japonaise à la beauté impermanente des choses — une fleur qui tombe, le coucher du soleil, la fin d'un été. C'est une mélancolie douce qui rend les choses précieuses.",
       "exemple_jp": "桜の散る様子に物の哀れを感じる。",
       "exemple_fr": "Je ressens le mono no aware en voyant les pétales tomber.",
-      "emoji": "🍂"
+      "emoji": "🍂",
+      "kana": "もの の あわれ"
     },
     {
       "expression": "大丈夫",
@@ -133,7 +147,8 @@
       "contexte": "Mot ultra-polyvalent : peut rassurer ('je vais bien'), refuser poliment ('non merci'), ou confirmer ('c'est bon'). Le ton et le contexte en précisent le sens.",
       "exemple_jp": "転んだの？大丈夫？— うん、大丈夫！",
       "exemple_fr": "Tu es tombé ? Ça va ? — Oui, ça va !",
-      "emoji": "👌"
+      "emoji": "👌",
+      "kana": "だいじょうぶ"
     },
     {
       "expression": "わびさび",
@@ -142,7 +157,8 @@
       "contexte": "Esthétique japonaise qui trouve la beauté dans ce qui est simple, usé, incomplet ou éphémère. Un bol de thé ébréché, une maison en bois ancienne — leur imperfection est leur beauté.",
       "exemple_jp": "古い茶碗のわびさびが好きだ。",
       "exemple_fr": "J'aime le wabi-sabi de ce vieux bol à thé.",
-      "emoji": "🏚️"
+      "emoji": "🏚️",
+      "kana": "わびさび"
     },
     {
       "expression": "縁",
@@ -151,7 +167,8 @@
       "contexte": "Le concept d'en désigne les liens invisibles qui unissent les personnes — les rencontres, les relations, les hasards. Croire en l'en, c'est croire que les connexions ont un sens.",
       "exemple_jp": "これも何かの縁ですね。",
       "exemple_fr": "C'est sans doute un signe du destin.",
-      "emoji": "🔴"
+      "emoji": "🔴",
+      "kana": "えん"
     },
     {
       "expression": "空気を読む",
@@ -160,7 +177,8 @@
       "contexte": "Compétence sociale fondamentale au Japon : percevoir ce que les autres ressentent sans qu'ils le disent. Quelqu'un qui 'ne lit pas l'atmosphère' peut vite être perçu comme maladroit.",
       "exemple_jp": "空気を読んで、その話題には触れなかった。",
       "exemple_fr": "J'ai senti l'ambiance et j'ai évité d'aborder ce sujet.",
-      "emoji": "🌫️"
+      "emoji": "🌫️",
+      "kana": "くうき を よむ"
     },
     {
       "expression": "粋",
@@ -169,7 +187,8 @@
       "contexte": "Idéal esthétique d'Edo désignant une élégance discrète, spontanée, sans ostentation. L'iki, c'est le chic sans effort apparent, la beauté qui ne se montre pas mais se ressent.",
       "exemple_jp": "あの人の着こなしは粋だね。",
       "exemple_fr": "Sa façon de s'habiller, c'est vraiment iki.",
-      "emoji": "👘"
+      "emoji": "👘",
+      "kana": "いき"
     },
     {
       "expression": "甘え",
@@ -178,7 +197,8 @@
       "contexte": "Concept psychologique central dans les relations japonaises : se laisser aller à la bienveillance de l'autre, compter sur lui sans gêne. Acceptable et même sain dans les relations proches.",
       "exemple_jp": "子供は親に甘えるものだ。",
       "exemple_fr": "Il est naturel qu'un enfant s'abandonne à l'amour de ses parents.",
-      "emoji": "🤗"
+      "emoji": "🤗",
+      "kana": "あまえ"
     },
     {
       "expression": "侘び",
@@ -187,7 +207,8 @@
       "contexte": "Dimension du wabi-sabi centrée sur l'austérité sereine — vivre simplement, trouver la beauté dans le dénuement, apprécier ce qui est sobre et naturel.",
       "exemple_jp": "この茶室には侘びの精神が宿っている。",
       "exemple_fr": "Cet espace de thé incarne l'esprit du wabi.",
-      "emoji": "🍃"
+      "emoji": "🍃",
+      "kana": "わび"
     },
     {
       "expression": "道",
@@ -196,7 +217,8 @@
       "contexte": "Suffixe qui transforme une pratique en voie spirituelle : Judo, Kendo, Chado (thé), Shodo (calligraphie). Le 'do' implique une quête de perfection qui ne finit jamais.",
       "exemple_jp": "彼は剣道の道を歩んでいる。",
       "exemple_fr": "Il suit la voie du kendo.",
-      "emoji": "⛩️"
+      "emoji": "⛩️",
+      "kana": "dう"
     },
     {
       "expression": "侘茶",
@@ -205,7 +227,8 @@
       "contexte": "Style de cérémonie du thé développé par Sen no Rikyu qui valorise l'imperfection, les ustensiles simples et l'espace humble. Une révolution esthétique qui a changé le Japon.",
       "exemple_jp": "利休の侘茶の精神は今も生きている。",
       "exemple_fr": "L'esprit du wabi-cha de Rikyu vit encore aujourd'hui.",
-      "emoji": "🏺"
+      "emoji": "🏺",
+      "kana": "わびちゃ"
     },
     {
       "expression": "木漏れ日",
@@ -214,7 +237,8 @@
       "contexte": "Dans le shinto, les ko-dama sont des esprits divins qui habitent les arbres très anciens. On les reconnaît au fait que les forêts où ils vivent produisent un écho particulier quand on frappe des mains.",
       "exemple_jp": "古い森にはコダマが宿ると言われている。",
       "exemple_fr": "On dit que des esprits ko-dama habitent les vieilles forêts.",
-      "emoji": "🌳"
+      "emoji": "🌳",
+      "kana": "こだま"
     },
     {
       "expression": "岡目八目",
@@ -223,7 +247,8 @@
       "contexte": "Proverbe issu du jeu de go : celui qui regarde une partie de l'extérieur voit huit coups d'avance par rapport aux joueurs. Un rappel de la valeur du recul et de la perspective.",
       "exemple_jp": "岡目八目というから、君の意見を聞かせて。",
       "exemple_fr": "Comme dit le proverbe, donne-moi ton avis extérieur.",
-      "emoji": "🎯"
+      "emoji": "🎯",
+      "kana": "おかめ はちもく"
     },
     {
       "expression": "七転び八起き",
@@ -232,7 +257,8 @@
       "contexte": "L'un des proverbes les plus célèbres du Japon, qui incarne l'esprit de résilience. Peu importe le nombre de chutes — ce qui compte, c'est de se relever à chaque fois.",
       "exemple_jp": "七転び八起き、あきらめないで！",
       "exemple_fr": "Tomber sept fois, se relever huit — n'abandonne pas !",
-      "emoji": "🌅"
+      "emoji": "🌅",
+      "kana": "なな ころび や おき"
     },
     {
       "expression": "花鳥風月",
@@ -241,7 +267,8 @@
       "contexte": "Expression poétique qui désigne la beauté de la nature dans sa diversité. C'est l'idéal contemplatif japonais — trouver la paix et l'inspiration dans l'observation du monde naturel.",
       "exemple_jp": "花鳥風月を楽しむ旅に出たい。",
       "exemple_fr": "Je voudrais partir en voyage pour contempler la beauté naturelle.",
-      "emoji": "🌙"
+      "emoji": "🌙",
+      "kana": "かchうfうげつ"
     },
     {
       "expression": "以心伝心",
@@ -250,7 +277,8 @@
       "contexte": "La communication silencieuse entre deux personnes qui se comprennent profondément. Un idéal relationnel japonais où les mots deviennent superflus quand la connexion est assez profonde.",
       "exemple_jp": "長年の友との会話は以心伝心だ。",
       "exemple_fr": "Avec mon ami de longue date, nous nous comprenons sans même parler.",
-      "emoji": "💫"
+      "emoji": "💫",
+      "kana": "いしん でんしん"
     },
     {
       "expression": "温故知新",
@@ -259,7 +287,8 @@
       "contexte": "Concept confucéen au cœur de la culture japonaise : étudier et respecter les traditions anciennes permet de créer quelque chose de nouveau et pertinent. L'innovation naît du respect du passé.",
       "exemple_jp": "温故知新の精神で新しいプロジェクトに取り組む。",
       "exemple_fr": "En honorant le passé, nous créons quelque chose de nouveau.",
-      "emoji": "📜"
+      "emoji": "📜",
+      "kana": "おんこ ちしん"
     },
     {
       "expression": "初心忘るべからず",
@@ -268,7 +297,8 @@
       "contexte": "Enseignement zen fondamental : garder la fraîcheur et l'humilité du débutant, même après des années d'expérience. L'expert qui pense tout savoir ne peut plus rien apprendre.",
       "exemple_jp": "初心忘るべからず — 常に謙虚でいること。",
       "exemple_fr": "Ne jamais oublier l'esprit du débutant — rester toujours humble.",
-      "emoji": "🌱"
+      "emoji": "🌱",
+      "kana": "しょしん わする べからず"
     }
   ],
   "culture": [
@@ -526,7 +556,8 @@
       "moment": "petit-déjeuner",
       "description": "Triangle de riz blanc emballé dans une feuille de nori, fourré de saumon, thon mayo ou prune umeboshi. Disponible dans tout konbini japonais, c'est le compagnon idéal du matin pressé.",
       "fun_fact": "L'emballage en trois parties du konbini onigiri est une invention géniale : on tire sur une languette et le nori reste croustillant jusqu'à la dernière seconde.",
-      "emoji": "🍙"
+      "emoji": "🍙",
+      "kana": "おにぎり"
     },
     {
       "nom_jp": "味噌汁",
@@ -535,7 +566,8 @@
       "moment": "petit-déjeuner",
       "description": "Soupe chaude à base de pâte de soja fermentée avec tofu soyeux, algues wakame et ciboule, servie dans un bol laqué. Légère et profonde à la fois, elle réveille doucement les sens.",
       "fun_fact": "La soupe miso est souvent considérée comme un médicament au Japon — ses propriétés fermentées sont associées à la longévité et à la santé intestinale depuis des siècles.",
-      "emoji": "🍲"
+      "emoji": "🍲",
+      "kana": "みそ しる"
     },
     {
       "nom_jp": "玉子焼き",
@@ -544,7 +576,8 @@
       "moment": "petit-déjeuner",
       "description": "Fine omelette sucrée-salée roulée en couches successives dans une poêle rectangulaire, servie tranchée en rectangles. Sa texture moelleuse et son goût légèrement sucré en font un incontournable du bento.",
       "fun_fact": "La qualité du tamagoyaki est considérée comme le test ultime du talent d'un chef de sushi — sa préparation demande concentration et précision absolues.",
-      "emoji": "🥚"
+      "emoji": "🥚",
+      "kana": "たまごやき"
     },
     {
       "nom_jp": "ラーメン",
@@ -553,7 +586,8 @@
       "moment": "déjeuner",
       "description": "Bol généreux de nouilles de blé dans un bouillon riche — shoyu, miso, tonkotsu ou shio — garni de chashu, œuf mollet mariné, nori et ciboulette. Chaque région du Japon a son propre ramen.",
       "fun_fact": "À Sapporo, le ramen miso est né d'une erreur d'un chef qui tomba son riz dans la soupe — une heureuse improvisation devenue tradition régionale.",
-      "emoji": "🍜"
+      "emoji": "🍜",
+      "kana": "らめん"
     },
     {
       "nom_jp": "カレーライス",
@@ -562,7 +596,8 @@
       "moment": "déjeuner",
       "description": "Curry épais et doux, très différent de son cousin indien, servi sur du riz japonais avec des morceaux de légumes et de viande. Considéré comme plat national non officiel.",
       "fun_fact": "Les soldats de la Marine japonaise mangent du curry tous les vendredis depuis des décennies — une tradition née pour garder le compte des jours en mer.",
-      "emoji": "🍛"
+      "emoji": "🍛",
+      "kana": "かrえ らいす"
     },
     {
       "nom_jp": "寿司",
@@ -571,7 +606,8 @@
       "moment": "déjeuner",
       "description": "Petites boulettes de riz assaisonné coiffées de poisson cru, crevettes ou tamago, à tremper délicatement dans la sauce soja avec une pointe de wasabi. Au Japon, la fraîcheur est une religion.",
       "fun_fact": "Le sushi était à l'origine un mode de conservation : le poisson était fermenté plusieurs mois avec du riz. La version actuelle que nous connaissons n'a que deux siècles.",
-      "emoji": "🍣"
+      "emoji": "🍣",
+      "kana": "すし"
     },
     {
       "nom_jp": "うどん",
@@ -580,7 +616,8 @@
       "moment": "déjeuner",
       "description": "Grosses nouilles blanches et élastiques dans un bouillon dashi léger, accompagnées de tempura, tofu frit ou champignons. Plat réconfortant par excellence, surtout en hiver.",
       "fun_fact": "À Kagawa, la capitale de l'udon, il y a plus de restaurants udon que de feux rouges. Les habitants mangent de l'udon jusqu'à trois fois par jour.",
-      "emoji": "🍝"
+      "emoji": "🍝",
+      "kana": "うどん"
     },
     {
       "nom_jp": "天ぷら",
@@ -589,7 +626,8 @@
       "moment": "déjeuner",
       "description": "Légumes ou crevettes enrobés dans une pâte ultra-légère et frits dans de l'huile fraîche, servis avec un dipping de dashi, sauce soja et radis râpé. La pâte doit être préparée avec de l'eau glacée.",
       "fun_fact": "La tempura a été introduite au Japon par les missionnaires portugais au XVIe siècle lors des jours de jeûne (Quatuor temporum) — d'où son nom.",
-      "emoji": "🦐"
+      "emoji": "🦐",
+      "kana": "てmぷら"
     },
     {
       "nom_jp": "焼き鳥",
@@ -598,7 +636,8 @@
       "moment": "dîner",
       "description": "Morceaux de poulet grillés sur charbon de bois (binchōtan), nappés de tare ou simplement salés. Servis dans les izakaya, ils sont inséparables d'un verre de bière froide.",
       "fun_fact": "Le binchōtan est un charbon blanc très pur qui brûle sans fumée — il crée une chaleur infrarouge douce qui cuit le yakitori de l'intérieur sans le brûler.",
-      "emoji": "🍢"
+      "emoji": "🍢",
+      "kana": "やきとり"
     },
     {
       "nom_jp": "お好み焼き",
@@ -607,7 +646,8 @@
       "moment": "dîner",
       "description": "Galette épaisse à base de chou, œufs et farine, garnie selon les goûts. Cuite sur une plaque chauffante à table, nappée de sauce okono, mayo japonaise et bonite séchée qui danse dans la vapeur.",
       "fun_fact": "Il existe deux versions rivales : l'okonomiyaki d'Osaka (mélangé) et celui d'Hiroshima (en couches). Les habitants de chaque ville considèrent que leur version est la seule vraie.",
-      "emoji": "🥞"
+      "emoji": "🥞",
+      "kana": "おこのみやき"
     },
     {
       "nom_jp": "抹茶ラテ",
@@ -616,7 +656,8 @@
       "moment": "goûter",
       "description": "Poudre de thé vert matcha émulsionnée dans du lait chaud ou froid, légèrement sucrée. Sa couleur vert vif et son goût umami intense en ont fait un symbole de la culture japonaise mondiale.",
       "fun_fact": "Le vrai matcha de cérémonie est l'un des produits les plus tracés du Japon — chaque lot est identifiable jusqu'à la parcelle de théiers qui l'a produit.",
-      "emoji": "🍵"
+      "emoji": "🍵",
+      "kana": "まっちゃ lあって"
     },
     {
       "nom_jp": "たこ焼き",
@@ -625,7 +666,8 @@
       "moment": "goûter",
       "description": "Petites boules de pâte croustillante farcies de morceaux de pieuvre, gingembre mariné et ciboule. Servies brûlantes couvertes de sauce, mayo et katsuobushi qui danse dans la vapeur.",
       "fun_fact": "À Osaka, le takoyaki est une obsession culturelle — les Osakiens possèdent souvent leur propre moule à la maison pour en préparer le week-end en famille.",
-      "emoji": "🐙"
+      "emoji": "🐙",
+      "kana": "たこやき"
     },
     {
       "nom_jp": "どら焼き",
@@ -634,7 +676,8 @@
       "moment": "goûter",
       "description": "Deux petits pancakes moelleux assemblés autour d'une couche généreuse d'anko (pâte de haricots rouges sucrés). Simple, réconfortant, et universellement aimé des enfants comme des grands.",
       "fun_fact": "Le dorayaki est la friandise préférée de Doraemon, le célèbre chat robot du manga — sa popularité a rendu ce gâteau traditionnel iconique dans le monde entier.",
-      "emoji": "🥮"
+      "emoji": "🥮",
+      "kana": "どらやき"
     },
     {
       "nom_jp": "日本酒",
@@ -643,7 +686,8 @@
       "moment": "dîner",
       "description": "Alcool fermenté à base de riz poli, aux arômes floraux, fruités ou umami. Servi chaud (atsukan) en hiver dans une tokkuri ou frais (rei-shu) dans un verre à pied en été.",
       "fun_fact": "La qualité du sake dépend du taux de polissage du riz : un daiginjo est poli à plus de 50%, ne gardant que le cœur du grain — un processus qui peut durer 48 heures.",
-      "emoji": "🍶"
+      "emoji": "🍶",
+      "kana": "にほんしゅ"
     },
     {
       "nom_jp": "茶碗蒸し",
@@ -652,7 +696,8 @@
       "moment": "dîner",
       "description": "Flan savoureux d'œufs et de dashi cuit à la vapeur dans une tasse couverte, avec des morceaux de poulet, kamaboko et champignons shiitake. Sa texture incroyablement soyeuse est un voyage en soi.",
       "fun_fact": "Pour tester si le dashi est de qualité, les chefs japonais trempent un doigt et le goûtent — il doit avoir de la profondeur sans être salé ni trop prononcé.",
-      "emoji": "🍮"
+      "emoji": "🍮",
+      "kana": "ちゃわんむし"
     },
     {
       "nom_jp": "ざるそば",
@@ -661,7 +706,8 @@
       "moment": "déjeuner",
       "description": "Nouilles de sarrasin refroidies servies sur un plateau en bambou avec un tsuyu (bouillon froid) pour tremper, du wasabi et de la ciboule. Élégant, léger, parfait en été.",
       "fun_fact": "Il est de tradition de terminer les restes du tsuyu en versant de l'eau chaude de cuisson des soba dedans — une boisson appelée sobayu, riche en nutriments.",
-      "emoji": "🎍"
+      "emoji": "🎍",
+      "kana": "ざる そば"
     },
     {
       "nom_jp": "抹茶アイスクリーム",
@@ -670,7 +716,8 @@
       "moment": "goûter",
       "description": "Crème glacée d'un vert intense, au goût légèrement amer et végétal du matcha, souvent servie en cône ou en coupe avec des mochi. Incontournable dans tout parc ou rue commerçante du Japon.",
       "fun_fact": "Le matcha utilisé dans les glaces japonaises est généralement de grade culinaire, différent du matcha de cérémonie — mais sa couleur vibrante est garantie par la teneur en chlorophylle.",
-      "emoji": "🍦"
+      "emoji": "🍦",
+      "kana": "まっちゃ あいす くりいむ"
     },
     {
       "nom_jp": "焼き魚",
@@ -679,7 +726,8 @@
       "moment": "petit-déjeuner",
       "description": "Filet de saumon, maquereau ou brème grillé sur charbon et servi avec du riz blanc, miso et cornichons. Le petit-déjeuner japonais traditionnel — simple, nourrissant et profondément réconfortant.",
       "fun_fact": "Au Japon, il est courant de manger du poisson au petit-déjeuner depuis plus de 1000 ans — une tradition liée aux préceptes bouddhistes qui interdisaient la viande.",
-      "emoji": "🐟"
+      "emoji": "🐟",
+      "kana": "やきざかな"
     },
     {
       "nom_jp": "かき氷",
@@ -688,7 +736,8 @@
       "moment": "goûter",
       "description": "Montagne de glace finement pilée arrosée de sirop de fraise, melon, azuki ou matcha, parfois couronnée de lait concentré et de mochi. Le dessert emblématique de l'été japonais.",
       "fun_fact": "Des boutiques spécialisées en kakigōri à Tokyo utilisent de la glace naturelle taillée dans des lacs de montagne — une pratique qui remonte à l'époque Heian.",
-      "emoji": "🧊"
+      "emoji": "🧊",
+      "kana": "かきgうり"
     },
     {
       "nom_jp": "鍋料理",
@@ -697,7 +746,8 @@
       "moment": "dîner",
       "description": "Pot de bouillon frémissant au centre de la table, dans lequel on plonge légumes, tofu, champignons, crevettes et viandes fines. Le nabe est un repas social par excellence — on mange ensemble, au même rythme.",
       "fun_fact": "En japonais, 'nabe wo kakomu' (s'asseoir autour du nabe) est une expression pour désigner un moment de partage intime — le nabe est un vecteur de rapprochement familial.",
-      "emoji": "🫕"
+      "emoji": "🫕",
+      "kana": "なべ ryうり"
     }
   ],
   "songs": [
@@ -3411,602 +3461,688 @@
       "jp": "和菓子",
       "romaji": "wagashi",
       "definition": "Confiseries traditionnelles japonaises, souvent à base de pâte de haricots rouges (anko), de riz ou de fruits. Leur forme change selon les saisons.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "わがし"
     },
     {
       "mot": "onigiri",
       "jp": "おにぎり",
       "romaji": "onigiri",
       "definition": "Boule ou triangle de riz compressé, souvent fourré (saumon, thon, umeboshi) et enveloppé de nori. Snack emblématique des konbini.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "おにぎり"
     },
     {
       "mot": "ramen",
       "jp": "ラーメン",
       "romaji": "ramen",
       "definition": "Soupe de nouilles de blé dans un bouillon (shoyu, miso, tonkotsu ou shio), garnie de chashu, œuf mollet, nori et ciboulette.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "らめん"
     },
     {
       "mot": "sushi",
       "jp": "寿司",
       "romaji": "sushi",
       "definition": "Riz vinaigré (shari) coiffé de poisson cru ou autres garnitures. À ne pas confondre avec les sashimi (poisson seul sans riz).",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "すし"
     },
     {
       "mot": "sashimi",
       "jp": "刺身",
       "romaji": "sashimi",
       "definition": "Tranches de poisson ou fruits de mer crus, servies sans riz avec sauce soja, wasabi et gingembre mariné.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "さしみ"
     },
     {
       "mot": "tempura",
       "jp": "天ぷら",
       "romaji": "tempura",
       "definition": "Légumes ou fruits de mer enrobés d'une pâte légère à l'eau glacée et frits. Introduit au Japon par les missionnaires portugais au XVIe siècle.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "てmぷら"
     },
     {
       "mot": "yakitori",
       "jp": "焼き鳥",
       "romaji": "yakitori",
       "definition": "Brochettes de poulet grillées sur charbon de bois (binchōtan), nappées de tare ou salées. Incontournables des izakaya.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "やきとり"
     },
     {
       "mot": "okonomiyaki",
       "jp": "お好み焼き",
       "romaji": "okonomiyaki",
       "definition": "Galette épaisse à base de chou, œufs et farine. Le nom signifie 'comme tu aimes'. Deux styles rivaux : Osaka (mélangé) et Hiroshima (en couches).",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "おこのみやき"
     },
     {
       "mot": "takoyaki",
       "jp": "たこ焼き",
       "romaji": "takoyaki",
       "definition": "Petites boules de pâte farcies de pieuvre, gingembre et ciboule. Spécialité d'Osaka, cuites dans un moule à alvéoles.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "たこやき"
     },
     {
       "mot": "mochi",
       "jp": "餅",
       "romaji": "mochi",
       "definition": "Gâteau de riz gluant, à la texture élastique et moelleuse. Présent dans de nombreuses fêtes : Nouvel an, hanami, tsukimi.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "もち"
     },
     {
       "mot": "matcha",
       "jp": "抹茶",
       "romaji": "matcha",
       "definition": "Poudre de thé vert finement moulue, utilisée dans la cérémonie du thé et de nombreux desserts. Goût umami légèrement amer.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "まっちゃ"
     },
     {
       "mot": "sake",
       "jp": "酒",
       "romaji": "sake / nihonshu",
       "definition": "Alcool de riz fermenté japonais. Peut être servi chaud (atsukan) ou froid (rei-shu). Qualité liée au taux de polissage du riz.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "さけ / にほんしゅ"
     },
     {
       "mot": "saké",
       "jp": "酒",
       "romaji": "sake",
       "definition": "Alcool de riz fermenté japonais. Peut être servi chaud (atsukan) ou froid (rei-shu). Qualité liée au taux de polissage du riz.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "さけ"
     },
     {
       "mot": "miso",
       "jp": "味噌",
       "romaji": "miso",
       "definition": "Pâte fermentée à base de soja, utilisée en soupe ou comme condiment. Il en existe des centaines de variétés selon la région et la durée de fermentation.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "みそ"
     },
     {
       "mot": "dashi",
       "jp": "だし",
       "romaji": "dashi",
       "definition": "Bouillon de base de la cuisine japonaise, préparé à partir d'algues konbu et de bonite séchée (katsuobushi). Base de la soupe miso et du chawanmushi.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "だし"
     },
     {
       "mot": "udon",
       "jp": "うどん",
       "romaji": "udon",
       "definition": "Grosses nouilles blanches de blé, élastiques et moelleuses. Servies chaudes ou froides dans un bouillon dashi. Spécialité de Kagawa.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "うどん"
     },
     {
       "mot": "soba",
       "jp": "そば",
       "romaji": "soba",
       "definition": "Nouilles de sarrasin fines, servies froides (zaru soba) ou chaudes. Tradition de manger des soba le soir du réveillon (toshikoshi soba).",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "そば"
     },
     {
       "mot": "izakaya",
       "jp": "居酒屋",
       "romaji": "izakaya",
       "definition": "Taverne japonaise où l'on commande de petits plats partagés avec des boissons. Espace social où le tatemae se relâche après quelques verres.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "いざかや"
     },
     {
       "mot": "konbini",
       "jp": "コンビニ",
       "romaji": "konbini",
       "definition": "Convenience store japonais (7-Eleven, FamilyMart, Lawson). Ouvert 24h/24, on y mange, paie ses factures, envoie des colis et imprime des documents.",
-      "categorie": "Vie quotidienne"
+      "categorie": "Vie quotidienne",
+      "kana": "こんびに"
     },
     {
       "mot": "bento",
       "jp": "弁当",
       "romaji": "bentō",
       "definition": "Repas préparé emporté dans une boîte compartimentée. Au Japon, un bento soigneusement préparé est un acte d'amour et de soin envers l'autre.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "べんtう"
     },
     {
       "mot": "dorayaki",
       "jp": "どら焼き",
       "romaji": "dorayaki",
       "definition": "Deux petits pancakes moelleux garnis d'anko (pâte de haricots rouges sucrée). Friandise préférée de Doraemon.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "どらやき"
     },
     {
       "mot": "anko",
       "jp": "あんこ",
       "romaji": "anko",
       "definition": "Pâte sucrée à base de haricots rouges azuki, utilisée dans de nombreuses pâtisseries japonaises (mochi, dorayaki, taiyaki...).",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "あんこ"
     },
     {
       "mot": "umeboshi",
       "jp": "梅干し",
       "romaji": "umeboshi",
       "definition": "Prune japonaise séchée et marinée, au goût acide et salé intense. Souvent au centre d'un onigiri, considérée comme bonne pour la santé.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "うめぼし"
     },
     {
       "mot": "wasabi",
       "jp": "わさび",
       "romaji": "wasabi",
       "definition": "Condiment vert au goût piquant, râpé à partir d'un rhizome. Le vrai wasabi frais est très rare ; la plupart des restaurants servent un mélange raifort-moutarde.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "わさび"
     },
     {
       "mot": "shōchu",
       "jp": "焼酎",
       "romaji": "shōchu",
       "definition": "Alcool distillé japonais (25-35°), produit à partir de patate douce, orge ou riz. Boisson de prédilection au Kyūshū.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "shうちゅ"
     },
     {
       "mot": "shochu",
       "jp": "焼酎",
       "romaji": "shōchu",
       "definition": "Alcool distillé japonais (25-35°), produit à partir de patate douce, orge ou riz. Boisson de prédilection au Kyūshū.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "shうちゅ"
     },
     {
       "mot": "onsen",
       "jp": "温泉",
       "romaji": "onsen",
       "definition": "Source d'eau chaude naturelle volcanique. Bain thérapeutique et rituel de purification. On se lave avant d'entrer — l'onsen n'est pas pour se laver mais pour se détendre.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "おんせん"
     },
     {
       "mot": "sento",
       "jp": "銭湯",
       "romaji": "sentō",
       "definition": "Bain public urbain payant, sans eau thermale naturelle. Espace social de quartier, moins luxueux qu'un onsen mais ancré dans la vie quotidienne.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "せんtう"
     },
     {
       "mot": "sentō",
       "jp": "銭湯",
       "romaji": "sentō",
       "definition": "Bain public urbain payant, sans eau thermale naturelle. Espace social de quartier, moins luxueux qu'un onsen mais ancré dans la vie quotidienne.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "せんtう"
     },
     {
       "mot": "ryokan",
       "jp": "旅館",
       "romaji": "ryokan",
       "definition": "Auberge traditionnelle japonaise avec chambres en tatamis, repas kaiseki servis dans la chambre, yukata et bain commun. Expérience d'un Japon ancien.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "りょかん"
     },
     {
       "mot": "torii",
       "jp": "鳥居",
       "romaji": "torii",
       "definition": "Portail symbolique marquant l'entrée d'un sanctuaire shintoïste. Peint en rouge, il sépare le monde profane du monde sacré. On passe sur le côté, pas au centre.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "とりい"
     },
     {
       "mot": "shrine",
       "jp": "神社",
       "romaji": "jinja",
       "definition": "Sanctuaire shintoïste dédié à un kami (esprit divin). Reconnaissable à son torii, ses komainu (gardiens lion-chien) et son autel de prière.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "じんじゃ"
     },
     {
       "mot": "jinja",
       "jp": "神社",
       "romaji": "jinja",
       "definition": "Sanctuaire shintoïste dédié à un kami (esprit divin). Reconnaissable à son torii, ses komainu (gardiens lion-chien) et son autel de prière.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "じんじゃ"
     },
     {
       "mot": "genkan",
       "jp": "玄関",
       "romaji": "genkan",
       "definition": "Zone d'entrée surélevée d'une maison japonaise où l'on retire ses chaussures. Frontière symbolique entre le dehors (sale) et le dedans (propre).",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "げんかん"
     },
     {
       "mot": "tatami",
       "jp": "畳",
       "romaji": "tatami",
       "definition": "Natte traditionnelle en paille de riz compressée recouverte de jonc. Unité de mesure des pièces japonaises. On marche dessus en chaussettes uniquement.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "たたみ"
     },
     {
       "mot": "kotatsu",
       "jp": "こたつ",
       "romaji": "kotatsu",
       "definition": "Table basse chauffante recouverte d'une couverture épaisse. Meuble emblématique du foyer japonais en hiver, où toute la famille se retrouve.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "こたつ"
     },
     {
       "mot": "fusuma",
       "jp": "襖",
       "romaji": "fusuma",
       "definition": "Porte coulissante opaque en papier washi encadrée de bois, typique des maisons japonaises traditionnelles. Sépare les pièces de manière flexible.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "ふすま"
     },
     {
       "mot": "shoji",
       "jp": "障子",
       "romaji": "shōji",
       "definition": "Panneau coulissant translucide en papier de riz sur cadre en bois. Laisse passer la lumière diffuse, créant une atmosphère apaisante caractéristique.",
-      "categorie": "Lieux"
+      "categorie": "Lieux",
+      "kana": "shうじ"
     },
     {
       "mot": "honne",
       "jp": "本音",
       "romaji": "honne",
       "definition": "Les vrais sentiments et désirs d'une personne, par opposition au tatemae (façade sociale). S'exprime plus librement dans des contextes intimes ou après l'alcool.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "ほんね"
     },
     {
       "mot": "tatemae",
       "jp": "建前",
       "romaji": "tatemae",
       "definition": "La façade sociale présentée en public pour préserver l'harmonie collective. Complément du honne, ce n'est pas de l'hypocrisie mais une forme de respect.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "たてまえ"
     },
     {
       "mot": "senpai",
       "jp": "先輩",
       "romaji": "senpai",
       "definition": "Aîné ou mentor dans un groupe (école, travail, club). Le senpai guide son kōhai, qui lui doit respect et déférence. Relation fondamentale de la société japonaise.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "せんぱい"
     },
     {
       "mot": "kohai",
       "jp": "後輩",
       "romaji": "kōhai",
       "definition": "Le cadet ou disciple dans la relation senpai/kōhai. Doit respect et déférence à son aîné, en échange de son mentorat et de sa protection.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "kうはい"
     },
     {
       "mot": "kōhai",
       "jp": "後輩",
       "romaji": "kōhai",
       "definition": "Le cadet ou disciple dans la relation senpai/kōhai. Doit respect et déférence à son aîné, en échange de son mentorat et de sa protection.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "kうはい"
     },
     {
       "mot": "wa",
       "jp": "和",
       "romaji": "wa",
       "definition": "L'harmonie collective, valeur fondamentale de la société japonaise. Préserver le wa passe souvent avant l'expression individuelle. 'Le clou qui dépasse se fait enfoncer.'",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "わ"
     },
     {
       "mot": "giri",
       "jp": "義理",
       "romaji": "giri",
       "definition": "Sens du devoir et d'obligation réciproque envers les autres. Recevoir une faveur crée une dette morale (giri) qu'il faudra honorer. Structure invisible des relations.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "ぎり"
     },
     {
       "mot": "nemawashi",
       "jp": "根回し",
       "romaji": "nemawashi",
       "definition": "Consultations informelles individuelles avant une réunion officielle pour préparer le consensus. La décision est déjà prise quand la réunion commence.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "ねまわし"
     },
     {
       "mot": "shokunin",
       "jp": "職人",
       "romaji": "shokunin",
       "definition": "Artisan ou artiste qui consacre toute sa vie à maîtriser un unique savoir-faire. Ce chemin de perfection est considéré comme une vocation spirituelle.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "しょくにん"
     },
     {
       "mot": "ikigai",
       "jp": "生き甲斐",
       "romaji": "ikigai",
       "definition": "Raison de vivre, à l'intersection de ce qu'on aime, ce en quoi on excelle, ce dont le monde a besoin et ce pour quoi on peut être payé.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "いきがい"
     },
     {
       "mot": "mottainai",
       "jp": "もったいない",
       "romaji": "mottainai",
       "definition": "Sentiment de regret face au gaspillage. Philosophie du respect des ressources qui incite à réparer, réutiliser et recycler avant de jeter.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "もったいない"
     },
     {
       "mot": "wabi-sabi",
       "jp": "侘び寂び",
       "romaji": "wabi-sabi",
       "definition": "Esthétique japonaise qui trouve la beauté dans l'imparfait, l'impermanent et l'inachevé. Un bol ébréché est plus beau qu'un neuf.",
-      "categorie": "Culture"
+      "categorie": "Culture",
+      "kana": "わびさび"
     },
     {
       "mot": "mono no aware",
       "jp": "物の哀れ",
       "romaji": "mono no aware",
       "definition": "Sensibilité à la beauté mélancolique de l'impermanence. La conscience que les choses passent rend leur beauté plus intense — comme les cerisiers.",
-      "categorie": "Culture"
+      "categorie": "Culture",
+      "kana": "もの の あわれ"
     },
     {
       "mot": "kintsugi",
       "jp": "金継ぎ",
       "romaji": "kintsugi",
       "definition": "Art de réparer les céramiques brisées avec de la laque dorée, rendant les fissures visibles et belles. Philosophie : les blessures nous enrichissent.",
-      "categorie": "Culture"
+      "categorie": "Culture",
+      "kana": "きんつぎ"
     },
     {
       "mot": "ma",
       "jp": "間",
       "romaji": "ma",
       "definition": "L'espace, l'intervalle, le vide porteur entre les choses. Le silence entre deux notes, la pause dans une conversation — le 'ma' n'est pas un manque, c'est une présence.",
-      "categorie": "Culture"
+      "categorie": "Culture",
+      "kana": "ま"
     },
     {
       "mot": "omakase",
       "jp": "おまかせ",
       "romaji": "omakase",
       "definition": "'Je m'en remets à vous' — formule dite au chef pour lui laisser choisir le menu. Expression de confiance totale en l'expertise de l'artisan.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "おまかせ"
     },
     {
       "mot": "omotenashi",
       "jp": "おもてなし",
       "romaji": "omotenashi",
       "definition": "Art de l'hospitalité japonaise — anticiper les besoins de l'autre avant même qu'il les exprime, sans attendre de retour. Incarné dans les ryokan et restaurants haut de gamme.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "おもてなし"
     },
     {
       "mot": "keigo",
       "jp": "敬語",
       "romaji": "keigo",
       "definition": "Système de langage honorifique japonais à plusieurs niveaux : sonkeigo (élever l'autre), kenjōgo (s'abaisser soi-même), teineigo (poli neutre).",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "けいご"
     },
     {
       "mot": "hanami",
       "jp": "花見",
       "romaji": "hanami",
       "definition": "Contemplation des fleurs de cerisier au printemps. Tradition millénaire de pique-niquer sous les sakura pour célébrer leur beauté éphémère.",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "はなみ"
     },
     {
       "mot": "matsuri",
       "jp": "祭り",
       "romaji": "matsuri",
       "definition": "Festival japonais, souvent d'origine shintoïste. Processions de chars (mikoshi), stands de yatai, yukata, tambours taiko et feux d'artifice.",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "まつり"
     },
     {
       "mot": "sakura",
       "jp": "桜",
       "romaji": "sakura",
       "definition": "Cerisier japonais, symbole national du Japon. Sa floraison éphémère (1-2 semaines) incarne le mono no aware — beauté liée à l'impermanence.",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "さくら"
     },
     {
       "mot": "omikuji",
       "jp": "おみくじ",
       "romaji": "omikuji",
       "definition": "Oracle écrit tiré au sort dans les temples et sanctuaires. Du meilleur au pire : daikichi (grande chance) à kyō (malchance). Si mauvais, on le noue sur place.",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "おみくじ"
     },
     {
       "mot": "omamori",
       "jp": "お守り",
       "romaji": "omamori",
       "definition": "Amulette protectrice vendue dans les temples et sanctuaires. Chaque omamori a une fonction : amour, santé, réussite scolaire, sécurité en voiture...",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "おまもり"
     },
     {
       "mot": "obon",
       "jp": "お盆",
       "romaji": "obon",
       "definition": "Fête bouddhiste en août honoring les ancêtres. On croit que les esprits reviennent 3 jours. Lanternes, danse Bon Odori, offrandes sur l'autel familial.",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "おぼん"
     },
     {
       "mot": "yukata",
       "jp": "浴衣",
       "romaji": "yukata",
       "definition": "Kimono léger en coton, porté l'été lors des festivals (matsuri) et dans les ryokan. Plus casual que le kimono de soie, accessible à tous.",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "ゆかた"
     },
     {
       "mot": "kimono",
       "jp": "着物",
       "romaji": "kimono",
       "definition": "Vêtement traditionnel japonais en soie, aux motifs saisonniers codifiés. Porter le bon kimono au bon moment est un art en soi.",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "きもの"
     },
     {
       "mot": "nori",
       "jp": "海苔",
       "romaji": "nori",
       "definition": "Algue marine séchée et pressée en feuilles. Enveloppe les onigiri et makis, garnit les ramen, donne un goût umami caractéristique.",
-      "categorie": "Gastronomie"
+      "categorie": "Gastronomie",
+      "kana": "のり"
     },
     {
       "mot": "omiyage",
       "jp": "お土産",
       "romaji": "omiyage",
       "definition": "Cadeau souvenir rapporté d'un voyage à ses collègues et proches. Quasi obligatoire au Japon — ne pas rapporter d'omiyage après un déplacement est mal vu.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "おみやげ"
     },
     {
       "mot": "tanabata",
       "jp": "七夕",
       "romaji": "tanabata",
       "definition": "Fête des étoiles le 7 juillet. On écrit ses vœux sur des tanzaku (papiers colorés) accrochés à des bambous. Célèbre la rencontre de deux étoiles amoureuses.",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "たなばた"
     },
     {
       "mot": "setsubun",
       "jp": "節分",
       "romaji": "setsubun",
       "definition": "Veille du printemps (3 fév). On lance des haricots en criant 'Oni wa soto, fuku wa uchi !' pour chasser les démons et inviter le bonheur.",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "せつぶん"
     },
     {
       "mot": "hatsumode",
       "jp": "初詣",
       "romaji": "hatsumōde",
       "definition": "Première visite au temple ou sanctuaire de la nouvelle année. On tire un omikuji, achète des omamori et prie pour la santé et la prospérité.",
-      "categorie": "Traditions"
+      "categorie": "Traditions",
+      "kana": "はつmうで"
     },
     {
       "mot": "ikebana",
       "jp": "生け花",
       "romaji": "ikebana",
       "definition": "Art floral japonais — discipline spirituelle qui cherche à représenter l'univers dans un vase. Le vide et les tiges sont aussi importants que les fleurs.",
-      "categorie": "Arts"
+      "categorie": "Arts",
+      "kana": "いけばな"
     },
     {
       "mot": "origami",
       "jp": "折り紙",
       "romaji": "origami",
       "definition": "Art du pliage de papier — transformer une feuille sans coupe ni colle en animal ou objet. Symbolise l'économie de moyens et la précision japonaise.",
-      "categorie": "Arts"
+      "categorie": "Arts",
+      "kana": "おりがみ"
     },
     {
       "mot": "haiku",
       "jp": "俳句",
       "romaji": "haïku",
       "definition": "Forme poétique de 3 vers (5-7-5 syllabes) capturant un instant de nature ou d'émotion. Le haïku cherche à éveiller une sensation plutôt qu'à la décrire.",
-      "categorie": "Arts"
+      "categorie": "Arts",
+      "kana": "はïく"
     },
     {
       "mot": "haïku",
       "jp": "俳句",
       "romaji": "haïku",
       "definition": "Forme poétique de 3 vers (5-7-5 syllabes) capturant un instant de nature ou d'émotion. Le haïku cherche à éveiller une sensation plutôt qu'à la décrire.",
-      "categorie": "Arts"
+      "categorie": "Arts",
+      "kana": "はïく"
     },
     {
       "mot": "taiko",
       "jp": "太鼓",
       "romaji": "taiko",
       "definition": "Grand tambour japonais joué lors des festivals et cérémonies. Le jeu de taiko est une discipline physique et spirituelle à part entière.",
-      "categorie": "Arts"
+      "categorie": "Arts",
+      "kana": "たいこ"
     },
     {
       "mot": "shamisen",
       "jp": "三味線",
       "romaji": "shamisen",
       "definition": "Instrument à 3 cordes pincées, à la sonorité mélancolique et sèche. Associé aux geishas, au kabuki et à la musique traditionnelle des ryokan.",
-      "categorie": "Arts"
+      "categorie": "Arts",
+      "kana": "しゃみせん"
     },
     {
       "mot": "fuji",
       "jp": "富士山",
       "romaji": "Fuji-san",
       "definition": "Volcan sacré et symbole national à 3776m. Alpinisme juillet-août. Visible depuis Tokyo par temps clair. 'Fou celui qui ne monte pas le Fuji, fou deux fois celui qui y monte deux fois.'",
-      "categorie": "Nature"
+      "categorie": "Nature",
+      "kana": "ふじさん"
     },
     {
       "mot": "momiji",
       "jp": "紅葉",
       "romaji": "momiji / kōyō",
       "definition": "Érables japonais aux feuilles qui virent au rouge et or en automne. Leur contemplation (momijigari) est le pendant automnal du hanami.",
-      "categorie": "Nature"
+      "categorie": "Nature",
+      "kana": "もみじ / kうyう"
     },
     {
       "mot": "ume",
       "jp": "梅",
       "romaji": "ume",
       "definition": "Prunier japonais qui fleurit en février, avant les cerisiers. Ses fleurs blanches ou roses annoncent la fin de l'hiver. Ses fruits donnent l'umeboshi.",
-      "categorie": "Nature"
+      "categorie": "Nature",
+      "kana": "うめ"
     },
     {
       "mot": "sugi",
       "jp": "杉",
       "romaji": "sugi",
       "definition": "Cèdre japonais, arbre sacré des forêts de sanctuaires (comme Fushimi Inari). Sa pollen cause des allergies printanières massives au Japon.",
-      "categorie": "Nature"
+      "categorie": "Nature",
+      "kana": "すぎ"
     },
     {
       "mot": "sensei",
       "jp": "先生",
       "romaji": "sensei",
       "definition": "'Celui qui est né avant' — titre honorifique pour un enseignant, médecin, artiste ou tout expert respecté. Marque le respect pour le savoir transmis.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "せんせい"
     },
     {
       "mot": "san",
       "jp": "さん",
       "romaji": "-san",
       "definition": "Suffixe honorifique neutre (équivalent de M./Mme), accolé au nom de famille. Utiliser le prénom sans suffixe est très familier — à réserver aux amis proches.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "さん"
     },
     {
       "mot": "chan",
       "jp": "ちゃん",
       "romaji": "-chan",
       "definition": "Suffixe affectueux pour les enfants, les amis proches ou les animaux. Utilisé entre adultes, il exprime de la tendresse ou de la familiarité.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "ちゃん"
     },
     {
       "mot": "kun",
       "jp": "くん",
       "romaji": "-kun",
       "definition": "Suffixe pour les garçons ou jeunes hommes, ou entre pairs masculins proches. Un supérieur peut appeler un subordonné masculin avec -kun.",
-      "categorie": "Société"
+      "categorie": "Société",
+      "kana": "くん"
     },
     {
       "mot": "geisha",
       "jp": "芸者",
       "romaji": "geisha",
       "definition": "Artiste traditionnelle formée aux arts (musique, danse, conversation). À distinguer des maiko (apprenties). Les vraies geishas sont rares et très respectées.",
-      "categorie": "Culture"
+      "categorie": "Culture",
+      "kana": "げいしゃ"
     },
     {
       "mot": "samurai",
       "jp": "侍",
       "romaji": "samurai",
       "definition": "Guerrier de la classe militaire féodale japonaise, régi par le bushidō (code d'honneur). Aboli en 1876, leur influence reste profonde dans la culture japonaise.",
-      "categorie": "Culture"
+      "categorie": "Culture",
+      "kana": "さむらい"
     },
     {
       "mot": "ninja",
       "jp": "忍者",
       "romaji": "ninja",
       "definition": "Agents spécialisés du Japon médiéval en espionnage, sabotage et assassinat. Leur vrai rôle était celui de mercenaires — bien loin de la légende populaire.",
-      "categorie": "Culture"
+      "categorie": "Culture",
+      "kana": "にんじゃ"
     }
   ],
   "vie_quotidienne": [
@@ -4028,17 +4164,20 @@
         {
           "jp": "温めますか？",
           "romaji": "Atatamemasu ka?",
-          "fr": "Je vous le réchauffe ?"
+          "fr": "Je vous le réchauffe ?",
+          "kana": "あたためます か?"
         },
         {
           "jp": "袋いりますか？",
           "romaji": "Fukuro irimasu ka?",
-          "fr": "Vous voulez un sac ?"
+          "fr": "Vous voulez un sac ?",
+          "kana": "ふくろ いります か?"
         },
         {
           "jp": "レシートください",
           "romaji": "Reshīto kudasai",
-          "fr": "Le ticket, s'il vous plaît"
+          "fr": "Le ticket, s'il vous plaît",
+          "kana": "れshいと ください"
         }
       ],
       "etiquette": "On fait la queue à la ligne marquée au sol, on pose l'argent sur le plateau, et on ne mange pas en marchant devant le magasin (utilise l'espace prévu)."
@@ -4061,17 +4200,20 @@
         {
           "jp": "半額",
           "romaji": "Hangaku",
-          "fr": "Moitié prix"
+          "fr": "Moitié prix",
+          "kana": "はんがく"
         },
         {
           "jp": "お会計",
           "romaji": "O-kaikei",
-          "fr": "L'addition / la caisse"
+          "fr": "L'addition / la caisse",
+          "kana": "おかいけい"
         },
         {
           "jp": "ポイントカードはありますか？",
           "romaji": "Pointo kādo wa arimasu ka?",
-          "fr": "Avez-vous la carte de fidélité ?"
+          "fr": "Avez-vous la carte de fidélité ?",
+          "kana": "ぽいんと kあど わ あります か?"
         }
       ],
       "etiquette": "On ne goûte jamais avant d'acheter, on manipule les produits avec soin, et on remet son panier proprement à sa place."
@@ -4094,17 +4236,20 @@
         {
           "jp": "試食",
           "romaji": "Shishoku",
-          "fr": "Dégustation gratuite"
+          "fr": "Dégustation gratuite",
+          "kana": "ししょく"
         },
         {
           "jp": "これをください",
           "romaji": "Kore o kudasai",
-          "fr": "Celui-ci, s'il vous plaît"
+          "fr": "Celui-ci, s'il vous plaît",
+          "kana": "これ お ください"
         },
         {
           "jp": "贈り物用ですか？",
           "romaji": "Okurimono-yō desu ka?",
-          "fr": "C'est pour offrir ?"
+          "fr": "C'est pour offrir ?",
+          "kana": "おくりものyう です か?"
         }
       ],
       "etiquette": "Si on te demande si c'est pour offrir, c'est pour adapter l'emballage — le service d'empaquetage cadeau est un art au Japon."
@@ -4127,17 +4272,20 @@
         {
           "jp": "すみません、降ります",
           "romaji": "Sumimasen, orimasu",
-          "fr": "Pardon, je descends"
+          "fr": "Pardon, je descends",
+          "kana": "すみません, おります"
         },
         {
           "jp": "〜行きですか？",
           "romaji": "~yuki desu ka?",
-          "fr": "Ce train va bien à ~ ?"
+          "fr": "Ce train va bien à ~ ?",
+          "kana": "~ゆき です か?"
         },
         {
           "jp": "終電",
           "romaji": "Shūden",
-          "fr": "Le dernier train"
+          "fr": "Le dernier train",
+          "kana": "shうでん"
         }
       ],
       "etiquette": "Téléphone en silencieux, pas d'appels, on parle bas, on retire son sac à dos, et on laisse descendre avant de monter."
@@ -4160,17 +4308,20 @@
         {
           "jp": "ここまでお願いします",
           "romaji": "Koko made onegai shimasu",
-          "fr": "À cette adresse, s'il vous plaît (en montrant)"
+          "fr": "À cette adresse, s'il vous plaît (en montrant)",
+          "kana": "ここ まで おねがい します"
         },
         {
           "jp": "領収書ください",
           "romaji": "Ryōshūsho kudasai",
-          "fr": "Un reçu, s'il vous plaît"
+          "fr": "Un reçu, s'il vous plaît",
+          "kana": "ryうshうしょ ください"
         },
         {
           "jp": "ここで止めてください",
           "romaji": "Koko de tomete kudasai",
-          "fr": "Arrêtez-vous ici, s'il vous plaît"
+          "fr": "Arrêtez-vous ici, s'il vous plaît",
+          "kana": "ここ で とめて ください"
         }
       ],
       "etiquette": "Ne touche pas les portes (le chauffeur les contrôle), donne l'adresse plutôt que des directions, et paie sur le plateau."
@@ -4193,17 +4344,20 @@
         {
           "jp": "駐輪場",
           "romaji": "Chūrinjō",
-          "fr": "Parking à vélos"
+          "fr": "Parking à vélos",
+          "kana": "chうりんjう"
         },
         {
           "jp": "防犯登録",
           "romaji": "Bōhan tōroku",
-          "fr": "Enregistrement antivol"
+          "fr": "Enregistrement antivol",
+          "kana": "bうはん tうろく"
         },
         {
           "jp": "レンタサイクル",
           "romaji": "Rentasaikuru",
-          "fr": "Vélo en location"
+          "fr": "Vélo en location",
+          "kana": "れんたさいくる"
         }
       ],
       "etiquette": "On roule lentement sur les trottoirs en cédant le passage aux piétons, et on ne gare jamais son vélo n'importe où."
@@ -4226,17 +4380,20 @@
         {
           "jp": "宅急便",
           "romaji": "Takkyūbin",
-          "fr": "Livraison de colis express"
+          "fr": "Livraison de colis express",
+          "kana": "たっkyうびん"
         },
         {
           "jp": "切手",
           "romaji": "Kitte",
-          "fr": "Timbre"
+          "fr": "Timbre",
+          "kana": "きって"
         },
         {
           "jp": "再配達",
           "romaji": "Saihaitatsu",
-          "fr": "Nouvelle livraison (après absence)"
+          "fr": "Nouvelle livraison (après absence)",
+          "kana": "さいはいたつ"
         }
       ],
       "etiquette": "Sois présent au créneau choisi — les livreurs japonais sont d'une ponctualité militaire et repartent vite."
@@ -4259,17 +4416,20 @@
         {
           "jp": "現金のみ",
           "romaji": "Genkin nomi",
-          "fr": "Espèces uniquement"
+          "fr": "Espèces uniquement",
+          "kana": "げんきん のみ"
         },
         {
           "jp": "両替",
           "romaji": "Ryōgae",
-          "fr": "Change / faire de la monnaie"
+          "fr": "Change / faire de la monnaie",
+          "kana": "ryうがえ"
         },
         {
           "jp": "引き出し",
           "romaji": "Hikidashi",
-          "fr": "Retrait"
+          "fr": "Retrait",
+          "kana": "ひきだし"
         }
       ],
       "etiquette": "L'argent se pose sur le plateau à la caisse, jamais directement dans la main, et les billets se donnent propres et non froissés."
@@ -4292,17 +4452,20 @@
         {
           "jp": "大家さん",
           "romaji": "Ōya-san",
-          "fr": "Le propriétaire"
+          "fr": "Le propriétaire",
+          "kana": "うやさん"
         },
         {
           "jp": "敷金・礼金",
           "romaji": "Shikikin / reikin",
-          "fr": "Caution / 'argent de remerciement' (non remboursable)"
+          "fr": "Caution / 'argent de remerciement' (non remboursable)",
+          "kana": "しききん / れいきん"
         },
         {
           "jp": "騒音",
           "romaji": "Sōon",
-          "fr": "Nuisance sonore"
+          "fr": "Nuisance sonore",
+          "kana": "sうおん"
         }
       ],
       "etiquette": "On salue ses voisins, on ne fait aucun bruit le soir, et on respecte scrupuleusement les jours de sortie des poubelles."
@@ -4325,17 +4488,20 @@
         {
           "jp": "男湯・女湯",
           "romaji": "Otoko-yu / onna-yu",
-          "fr": "Bain hommes / bain femmes"
+          "fr": "Bain hommes / bain femmes",
+          "kana": "おとこゆ / おんなゆ"
         },
         {
           "jp": "番台",
           "romaji": "Bandai",
-          "fr": "Comptoir d'accueil"
+          "fr": "Comptoir d'accueil",
+          "kana": "ばんだい"
         },
         {
           "jp": "かけ湯",
           "romaji": "Kakeyu",
-          "fr": "Se rincer avant d'entrer"
+          "fr": "Se rincer avant d'entrer",
+          "kana": "かけゆ"
         }
       ],
       "etiquette": "Nudité obligatoire (pas de maillot), silence relatif, cheveux attachés, et on ne nage pas dans les bassins."
@@ -4358,17 +4524,20 @@
         {
           "jp": "お疲れ様です",
           "romaji": "Otsukaresama desu",
-          "fr": "Merci pour ton travail (salutation universelle)"
+          "fr": "Merci pour ton travail (salutation universelle)",
+          "kana": "おつかれさま です"
         },
         {
           "jp": "お先に失礼します",
           "romaji": "Osaki ni shitsurei shimasu",
-          "fr": "Pardon de partir avant vous"
+          "fr": "Pardon de partir avant vous",
+          "kana": "おさき に しつれい します"
         },
         {
           "jp": "残業",
           "romaji": "Zangyō",
-          "fr": "Heures supplémentaires"
+          "fr": "Heures supplémentaires",
+          "kana": "ざんgyう"
         }
       ],
       "etiquette": "On dit 'osaki ni shitsurei shimasu' en partant avant les autres, et on ne quitte jamais une réunion avant son supérieur."
@@ -4391,17 +4560,20 @@
         {
           "jp": "掃除",
           "romaji": "Sōji",
-          "fr": "Le ménage (de la classe)"
+          "fr": "Le ménage (de la classe)",
+          "kana": "sうじ"
         },
         {
           "jp": "部活",
           "romaji": "Bukatsu",
-          "fr": "Club scolaire"
+          "fr": "Club scolaire",
+          "kana": "ぶかつ"
         },
         {
           "jp": "給食",
           "romaji": "Kyūshoku",
-          "fr": "Repas scolaire collectif"
+          "fr": "Repas scolaire collectif",
+          "kana": "kyうしょく"
         }
       ],
       "etiquette": "Les chaussures d'extérieur restent au casier d'entrée (geta-bako) — chaque élève a ses uwabaki (chaussons d'intérieur)."
@@ -4418,47 +4590,56 @@
         {
           "jp": "メニューをください",
           "romaji": "Menyū wo kudasai",
-          "fr": "Le menu, s'il vous plaît"
+          "fr": "Le menu, s'il vous plaît",
+          "kana": "めんyう を ください"
         },
         {
           "jp": "これをください",
           "romaji": "Kore wo kudasai",
-          "fr": "Je voudrais ça (en montrant)"
+          "fr": "Je voudrais ça (en montrant)",
+          "kana": "これ を ください"
         },
         {
           "jp": "おすすめは何ですか？",
           "romaji": "Osusume wa nan desu ka?",
-          "fr": "Qu'est-ce que vous recommandez ?"
+          "fr": "Qu'est-ce que vous recommandez ?",
+          "kana": "おすすめ わ なん です か?"
         },
         {
           "jp": "お会計お願いします",
           "romaji": "Okaikei onegaishimasu",
-          "fr": "L'addition, s'il vous plaît"
+          "fr": "L'addition, s'il vous plaît",
+          "kana": "おかいけい おねがいします"
         },
         {
           "jp": "とても美味しいです",
           "romaji": "Totemo oishii desu",
-          "fr": "C'est très bon"
+          "fr": "C'est très bon",
+          "kana": "とても おいしい です"
         },
         {
           "jp": "ごちそうさまでした",
           "romaji": "Gochisōsama deshita",
-          "fr": "Merci pour le repas (en partant)"
+          "fr": "Merci pour le repas (en partant)",
+          "kana": "ごちsうさま でした"
         },
         {
           "jp": "二人です",
           "romaji": "Futari desu",
-          "fr": "Nous sommes deux (personnes)"
+          "fr": "Nous sommes deux (personnes)",
+          "kana": "ふたり です"
         },
         {
           "jp": "水をください",
           "romaji": "Mizu wo kudasai",
-          "fr": "De l'eau, s'il vous plaît"
+          "fr": "De l'eau, s'il vous plaît",
+          "kana": "みず を ください"
         },
         {
           "jp": "これは何ですか？",
           "romaji": "Kore wa nan desu ka?",
-          "fr": "Qu'est-ce que c'est ?"
+          "fr": "Qu'est-ce que c'est ?",
+          "kana": "これ わ なん です か?"
         }
       ]
     },
@@ -4472,42 +4653,50 @@
         {
           "jp": "袋をください",
           "romaji": "Fukuro wo kudasai",
-          "fr": "Un sac, s'il vous plaît"
+          "fr": "Un sac, s'il vous plaît",
+          "kana": "ふくろ を ください"
         },
         {
           "jp": "温めますか？",
           "romaji": "Atatamemasu ka?",
-          "fr": "Vous voulez que je le réchauffe ? (on vous le demandera)"
+          "fr": "Vous voulez que je le réchauffe ? (on vous le demandera)",
+          "kana": "あたためます か?"
         },
         {
           "jp": "はい、お願いします",
           "romaji": "Hai, onegaishimasu",
-          "fr": "Oui, s'il vous plaît"
+          "fr": "Oui, s'il vous plaît",
+          "kana": "はい, おねがいします"
         },
         {
           "jp": "カードで払えますか？",
           "romaji": "Kādo de haraemasu ka?",
-          "fr": "Puis-je payer par carte ?"
+          "fr": "Puis-je payer par carte ?",
+          "kana": "kあど で はらえます か?"
         },
         {
           "jp": "大丈夫です",
           "romaji": "Daijōbu desu",
-          "fr": "Ça va / Non merci (pour refuser poliment)"
+          "fr": "Ça va / Non merci (pour refuser poliment)",
+          "kana": "だいjうぶ です"
         },
         {
           "jp": "これはいくらですか？",
           "romaji": "Kore wa ikura desu ka?",
-          "fr": "Combien ça coûte ?"
+          "fr": "Combien ça coûte ?",
+          "kana": "これ わ いくら です か?"
         },
         {
           "jp": "レジはどこですか？",
           "romaji": "Reji wa doko desu ka?",
-          "fr": "Où est la caisse ?"
+          "fr": "Où est la caisse ?",
+          "kana": "れじ わ どこ です か?"
         },
         {
           "jp": "現金で払います",
           "romaji": "Genkin de haraimasu",
-          "fr": "Je paie en espèces"
+          "fr": "Je paie en espèces",
+          "kana": "げんきん で はらいます"
         }
       ]
     },
@@ -4521,42 +4710,50 @@
         {
           "jp": "東京駅までいくらですか？",
           "romaji": "Tōkyō-eki made ikura desu ka?",
-          "fr": "Combien jusqu'à la gare de Tokyo ?"
+          "fr": "Combien jusqu'à la gare de Tokyo ?",
+          "kana": "tうkyうえき まで いくら です か?"
         },
         {
           "jp": "この電車は新宿に止まりますか？",
           "romaji": "Kono densha wa Shinjuku ni tomarimasu ka?",
-          "fr": "Ce train s'arrête-t-il à Shinjuku ?"
+          "fr": "Ce train s'arrête-t-il à Shinjuku ?",
+          "kana": "この でんしゃ わ しんじゅく に とまります か?"
         },
         {
           "jp": "乗り換えはどこですか？",
           "romaji": "Norikae wa doko desu ka?",
-          "fr": "Où est la correspondance ?"
+          "fr": "Où est la correspondance ?",
+          "kana": "のりかえ わ どこ です か?"
         },
         {
           "jp": "次は何駅ですか？",
           "romaji": "Tsugi wa nani-eki desu ka?",
-          "fr": "Quelle est la prochaine gare ?"
+          "fr": "Quelle est la prochaine gare ?",
+          "kana": "つぎ わ なにえき です か?"
         },
         {
           "jp": "すみません、降ります",
           "romaji": "Sumimasen, orimasu",
-          "fr": "Excusez-moi, je descends"
+          "fr": "Excusez-moi, je descends",
+          "kana": "すみません, おります"
         },
         {
           "jp": "切符はどこで買えますか？",
           "romaji": "Kippu wa doko de kaemasu ka?",
-          "fr": "Où puis-je acheter un billet ?"
+          "fr": "Où puis-je acheter un billet ?",
+          "kana": "きっぷ わ どこ で かえます か?"
         },
         {
           "jp": "渋谷に行きたいです",
           "romaji": "Shibuya ni ikitai desu",
-          "fr": "Je voudrais aller à Shibuya"
+          "fr": "Je voudrais aller à Shibuya",
+          "kana": "しぶや に いきたい です"
         },
         {
           "jp": "何番線ですか？",
           "romaji": "Nan-ban-sen desu ka?",
-          "fr": "Quel quai / quelle voie ?"
+          "fr": "Quel quai / quelle voie ?",
+          "kana": "なんばんせん です か?"
         }
       ]
     },
@@ -4570,27 +4767,32 @@
         {
           "jp": "これはいくらですか？",
           "romaji": "Kore wa ikura desu ka?",
-          "fr": "Combien coûte ceci ?"
+          "fr": "Combien coûte ceci ?",
+          "kana": "これ わ いくら です か?"
         },
         {
           "jp": "試着できますか？",
           "romaji": "Shichaku dekimasu ka?",
-          "fr": "Puis-je essayer ?"
+          "fr": "Puis-je essayer ?",
+          "kana": "しちゃく できます か?"
         },
         {
           "jp": "もっと大きいサイズはありますか？",
           "romaji": "Motto ōkii saizu wa arimasu ka?",
-          "fr": "Avez-vous une taille plus grande ?"
+          "fr": "Avez-vous une taille plus grande ?",
+          "kana": "もっと うきい さいず わ あります か?"
         },
         {
           "jp": "これをください",
           "romaji": "Kore wo kudasai",
-          "fr": "Je prends ceci"
+          "fr": "Je prends ceci",
+          "kana": "これ を ください"
         },
         {
           "jp": "見ているだけです",
           "romaji": "Mite iru dake desu",
-          "fr": "Je regarde juste (merci)"
+          "fr": "Je regarde juste (merci)",
+          "kana": "みて いる だけ です"
         }
       ]
     },
@@ -4604,27 +4806,32 @@
         {
           "jp": "チェックインお願いします",
           "romaji": "Chekku-in onegaishimasu",
-          "fr": "Je voudrais faire le check-in"
+          "fr": "Je voudrais faire le check-in",
+          "kana": "cへっくいん おねがいします"
         },
         {
           "jp": "予約しています",
           "romaji": "Yoyaku shite imasu",
-          "fr": "J'ai une réservation"
+          "fr": "J'ai une réservation",
+          "kana": "よやく して います"
         },
         {
           "jp": "Wi-Fiはありますか？",
           "romaji": "Wai-Fai wa arimasu ka?",
-          "fr": "Y a-t-il du wifi ?"
+          "fr": "Y a-t-il du wifi ?",
+          "kana": "わいふぁい わ あります か?"
         },
         {
           "jp": "朝食は何時ですか？",
           "romaji": "Chōshoku wa nan-ji desu ka?",
-          "fr": "À quelle heure est le petit-déjeuner ?"
+          "fr": "À quelle heure est le petit-déjeuner ?",
+          "kana": "chうしょく わ なんじ です か?"
         },
         {
           "jp": "荷物を預けられますか？",
           "romaji": "Nimotsu wo azukeraremasu ka?",
-          "fr": "Puis-je laisser mes bagages ?"
+          "fr": "Puis-je laisser mes bagages ?",
+          "kana": "にもつ を あずけられます か?"
         }
       ]
     },
@@ -4638,47 +4845,56 @@
         {
           "jp": "すみません",
           "romaji": "Sumimasen",
-          "fr": "Excusez-moi / Pardon (passe-partout)"
+          "fr": "Excusez-moi / Pardon (passe-partout)",
+          "kana": "すみません"
         },
         {
           "jp": "道に迷いました",
           "romaji": "Michi ni mayoimashita",
-          "fr": "Je suis perdu(e)"
+          "fr": "Je suis perdu(e)",
+          "kana": "みち に まよいました"
         },
         {
           "jp": "トイレはどこですか？",
           "romaji": "Toire wa doko desu ka?",
-          "fr": "Où sont les toilettes ?"
+          "fr": "Où sont les toilettes ?",
+          "kana": "といれ わ どこ です か?"
         },
         {
           "jp": "英語を話せますか？",
           "romaji": "Eigo wo hanasemasu ka?",
-          "fr": "Parlez-vous anglais ?"
+          "fr": "Parlez-vous anglais ?",
+          "kana": "えいご を はなせます か?"
         },
         {
           "jp": "助けてください",
           "romaji": "Tasukete kudasai",
-          "fr": "Aidez-moi, s'il vous plaît"
+          "fr": "Aidez-moi, s'il vous plaît",
+          "kana": "たすけて ください"
         },
         {
           "jp": "わかりません",
           "romaji": "Wakarimasen",
-          "fr": "Je ne comprends pas"
+          "fr": "Je ne comprends pas",
+          "kana": "わかりません"
         },
         {
           "jp": "病院はどこですか？",
           "romaji": "Byōin wa doko desu ka?",
-          "fr": "Où est l'hôpital ?"
+          "fr": "Où est l'hôpital ?",
+          "kana": "byういん わ どこ です か?"
         },
         {
           "jp": "もう一度お願いします",
           "romaji": "Mō ichido onegaishimasu",
-          "fr": "Encore une fois, s'il vous plaît"
+          "fr": "Encore une fois, s'il vous plaît",
+          "kana": "mう いちど おねがいします"
         },
         {
           "jp": "ゆっくり話してください",
           "romaji": "Yukkuri hanashite kudasai",
-          "fr": "Parlez lentement, s'il vous plaît"
+          "fr": "Parlez lentement, s'il vous plaît",
+          "kana": "ゆっくり はなして ください"
         }
       ]
     },
@@ -4692,47 +4908,56 @@
         {
           "jp": "おはようございます",
           "romaji": "Ohayō gozaimasu",
-          "fr": "Bonjour (le matin)"
+          "fr": "Bonjour (le matin)",
+          "kana": "おはyう ございます"
         },
         {
           "jp": "こんにちは",
           "romaji": "Konnichiwa",
-          "fr": "Bonjour (journée)"
+          "fr": "Bonjour (journée)",
+          "kana": "こんにちわ"
         },
         {
           "jp": "ありがとうございます",
           "romaji": "Arigatō gozaimasu",
-          "fr": "Merci beaucoup"
+          "fr": "Merci beaucoup",
+          "kana": "ありがtう ございます"
         },
         {
           "jp": "すみません",
           "romaji": "Sumimasen",
-          "fr": "Pardon / Excusez-moi"
+          "fr": "Pardon / Excusez-moi",
+          "kana": "すみません"
         },
         {
           "jp": "はじめまして",
           "romaji": "Hajimemashite",
-          "fr": "Enchanté(e) (première rencontre)"
+          "fr": "Enchanté(e) (première rencontre)",
+          "kana": "はじめまして"
         },
         {
           "jp": "さようなら",
           "romaji": "Sayōnara",
-          "fr": "Au revoir"
+          "fr": "Au revoir",
+          "kana": "さyうなら"
         },
         {
           "jp": "いいえ",
           "romaji": "Iie",
-          "fr": "Non"
+          "fr": "Non",
+          "kana": "いいえ"
         },
         {
           "jp": "はい",
           "romaji": "Hai",
-          "fr": "Oui"
+          "fr": "Oui",
+          "kana": "はい"
         },
         {
           "jp": "どうぞ",
           "romaji": "Dōzo",
-          "fr": "Je vous en prie / Allez-y"
+          "fr": "Je vous en prie / Allez-y",
+          "kana": "dうぞ"
         }
       ]
     }
@@ -4758,21 +4983,24 @@
               "romaji": "Hajimemashite",
               "fr": "Enchanté(e)",
               "correct": true,
-              "feedback": "Parfait ! On répond par la même formule lors d'une première rencontre."
+              "feedback": "Parfait ! On répond par la même formule lors d'une première rencontre.",
+              "kana": "はじめまして"
             },
             {
               "jp": "さようなら",
               "romaji": "Sayōnara",
               "fr": "Au revoir",
               "correct": false,
-              "feedback": "C'est « au revoir » — un peu prématuré pour une rencontre !"
+              "feedback": "C'est « au revoir » — un peu prématuré pour une rencontre !",
+              "kana": "さyうなら"
             },
             {
               "jp": "おやすみ",
               "romaji": "Oyasumi",
               "fr": "Bonne nuit",
               "correct": false,
-              "feedback": "« Bonne nuit » ne convient pas à une présentation."
+              "feedback": "« Bonne nuit » ne convient pas à une présentation.",
+              "kana": "おやすみ"
             }
           ],
           "situation_romaji": "Un Japonais s'approche de toi et dit : « Hajimemashite »"
@@ -4786,21 +5014,24 @@
               "romaji": "Lucas desu",
               "fr": "Je suis Lucas",
               "correct": true,
-              "feedback": "Excellent ! « [Nom] desu » est la façon simple et polie de se nommer."
+              "feedback": "Excellent ! « [Nom] desu » est la façon simple et polie de se nommer.",
+              "kana": "lうcあs です"
             },
             {
               "jp": "ルカスがいます",
               "romaji": "Lucas ga imasu",
               "fr": "Il y a Lucas",
               "correct": false,
-              "feedback": "« ga imasu » sert à dire qu'une personne existe/est présente, pas à se nommer."
+              "feedback": "« ga imasu » sert à dire qu'une personne existe/est présente, pas à se nommer.",
+              "kana": "lうcあs が います"
             },
             {
               "jp": "ルカスをください",
               "romaji": "Lucas wo kudasai",
               "fr": "Lucas, s'il vous plaît",
               "correct": false,
-              "feedback": "Tu viens de te « commander » toi-même ! « kudasai » sert à demander un objet."
+              "feedback": "Tu viens de te « commander » toi-même ! « kudasai » sert à demander un objet.",
+              "kana": "lうcあs を ください"
             }
           ],
           "situation_romaji": "Il te demande ton nom : « Onamae wa? »"
@@ -4814,21 +5045,24 @@
               "romaji": "Yoroshiku onegaishimasu",
               "fr": "Ravi de faire votre connaissance",
               "correct": true,
-              "feedback": "Impeccable ! Cette formule scelle toute nouvelle relation au Japon."
+              "feedback": "Impeccable ! Cette formule scelle toute nouvelle relation au Japon.",
+              "kana": "よろしく おねがいします"
             },
             {
               "jp": "いただきます",
               "romaji": "Itadakimasu",
               "fr": "Bon appétit",
               "correct": false,
-              "feedback": "Ça se dit avant de manger, pas pour conclure une présentation !"
+              "feedback": "Ça se dit avant de manger, pas pour conclure une présentation !",
+              "kana": "いただきます"
             },
             {
               "jp": "ごめんなさい",
               "romaji": "Gomen nasai",
               "fr": "Je suis désolé(e)",
               "correct": false,
-              "feedback": "Pas besoin de t'excuser, la rencontre se passe bien !"
+              "feedback": "Pas besoin de t'excuser, la rencontre se passe bien !",
+              "kana": "ごめん なさい"
             }
           ],
           "situation_romaji": "Pour conclure poliment la présentation…"
@@ -4855,21 +5089,24 @@
               "romaji": "Arigatō gozaimasu",
               "fr": "Merci beaucoup",
               "correct": true,
-              "feedback": "Parfait ! La forme polie complète, idéale avec un inconnu."
+              "feedback": "Parfait ! La forme polie complète, idéale avec un inconnu.",
+              "kana": "ありがtう ございます"
             },
             {
               "jp": "ありがとう",
               "romaji": "Arigatō",
               "fr": "Merci",
               "correct": false,
-              "feedback": "Correct mais trop familier avec un inconnu. Préfère la forme en « gozaimasu »."
+              "feedback": "Correct mais trop familier avec un inconnu. Préfère la forme en « gozaimasu ».",
+              "kana": "ありがtう"
             },
             {
               "jp": "すみません",
               "romaji": "Sumimasen",
               "fr": "Excusez-moi",
               "correct": false,
-              "feedback": "Curieusement, ça s'emploie parfois pour remercier — mais ici « arigatō gozaimasu » est plus clair."
+              "feedback": "Curieusement, ça s'emploie parfois pour remercier — mais ici « arigatō gozaimasu » est plus clair.",
+              "kana": "すみません"
             }
           ],
           "situation_romaji": "Un passant t'aide à retrouver ton chemin. Tu veux le remercier poliment."
@@ -4883,7 +5120,8 @@
               "romaji": "Dō itashimashite",
               "fr": "Je vous en prie / De rien",
               "correct": true,
-              "feedback": "Exact ! C'est la réponse classique à un remerciement."
+              "feedback": "Exact ! C'est la réponse classique à un remerciement.",
+              "kana": "dう いたしまして"
             },
             {
               "jp": "",
@@ -4911,21 +5149,24 @@
               "romaji": "Arigatō",
               "fr": "Merci",
               "correct": true,
-              "feedback": "Parfait ! Entre amis proches, la forme courte est naturelle et chaleureuse."
+              "feedback": "Parfait ! Entre amis proches, la forme courte est naturelle et chaleureuse.",
+              "kana": "ありがtう"
             },
             {
               "jp": "ありがとうございます",
               "romaji": "Arigatō gozaimasu",
               "fr": "Merci beaucoup",
               "correct": false,
-              "feedback": "Pas faux, mais un peu formel entre amis proches. « Arigatō » suffit."
+              "feedback": "Pas faux, mais un peu formel entre amis proches. « Arigatō » suffit.",
+              "kana": "ありがtう ございます"
             },
             {
               "jp": "おめでとう",
               "romaji": "Omedetō",
               "fr": "Félicitations",
               "correct": false,
-              "feedback": "« Félicitations » ne correspond pas à un remerciement !"
+              "feedback": "« Félicitations » ne correspond pas à un remerciement !",
+              "kana": "おめでtう"
             }
           ],
           "situation_romaji": "Plus tard, un ami proche te prête son parapluie."
@@ -4952,21 +5193,24 @@
               "romaji": "Sumimasen",
               "fr": "Pardon / Excusez-moi",
               "correct": true,
-              "feedback": "Parfait ! « Sumimasen » est le passe-partout pour un petit incident."
+              "feedback": "Parfait ! « Sumimasen » est le passe-partout pour un petit incident.",
+              "kana": "すみません"
             },
             {
               "jp": "ありがとう",
               "romaji": "Arigatō",
               "fr": "Merci",
               "correct": false,
-              "feedback": "Tu remercies la personne que tu viens de bousculer — étrange !"
+              "feedback": "Tu remercies la personne que tu viens de bousculer — étrange !",
+              "kana": "ありがtう"
             },
             {
               "jp": "こんにちは",
               "romaji": "Konnichiwa",
               "fr": "Bonjour",
               "correct": false,
-              "feedback": "Un « bonjour » ne répare pas une bousculade."
+              "feedback": "Un « bonjour » ne répare pas une bousculade.",
+              "kana": "こんにちわ"
             }
           ],
           "situation_romaji": "Tu bouscules légèrement quelqu'un dans la rue."
@@ -4980,21 +5224,24 @@
               "romaji": "Okurete sumimasen",
               "fr": "Désolé pour le retard",
               "correct": true,
-              "feedback": "Excellent ! Tu précises la raison de tes excuses, c'est plus sincère."
+              "feedback": "Excellent ! Tu précises la raison de tes excuses, c'est plus sincère.",
+              "kana": "おくれて すみません"
             },
             {
               "jp": "すみません、トイレはどこですか",
               "romaji": "Sumimasen, toire wa doko desu ka",
               "fr": "Pardon, où sont les toilettes ?",
               "correct": false,
-              "feedback": "Tu commences bien par « sumimasen »… mais le reste est hors sujet !"
+              "feedback": "Tu commences bien par « sumimasen »… mais le reste est hors sujet !",
+              "kana": "すみません, といれ わ どこ です か"
             },
             {
               "jp": "おはよう",
               "romaji": "Ohayō",
               "fr": "Salut (matin)",
               "correct": false,
-              "feedback": "Une salutation décontractée n'excuse pas un retard."
+              "feedback": "Une salutation décontractée n'excuse pas un retard.",
+              "kana": "おはyう"
             }
           ],
           "situation_romaji": "Tu es en retard à un rendez-vous important avec un collègue."
@@ -5008,21 +5255,24 @@
               "romaji": "Mōshiwake gozaimasen",
               "fr": "Je vous présente mes sincères excuses",
               "correct": true,
-              "feedback": "Parfait ! C'est l'excuse la plus formelle et respectueuse, adaptée au monde professionnel."
+              "feedback": "Parfait ! C'est l'excuse la plus formelle et respectueuse, adaptée au monde professionnel.",
+              "kana": "mうしわけ ございません"
             },
             {
               "jp": "ごめん",
               "romaji": "Gomen",
               "fr": "Désolé",
               "correct": false,
-              "feedback": "Bien trop familier pour une faute professionnelle."
+              "feedback": "Bien trop familier pour une faute professionnelle.",
+              "kana": "ごめん"
             },
             {
               "jp": "すみません",
               "romaji": "Sumimasen",
               "fr": "Excusez-moi",
               "correct": false,
-              "feedback": "Correct pour un petit incident, mais trop léger pour une vraie erreur au travail."
+              "feedback": "Correct pour un petit incident, mais trop léger pour une vraie erreur au travail.",
+              "kana": "すみません"
             }
           ],
           "situation_romaji": "Tu as fait une vraie erreur professionnelle. Il faut des excuses formelles."
@@ -5077,21 +5327,24 @@
               "romaji": "Hai, onegaishimasu",
               "fr": "Oui, s'il vous plaît",
               "correct": true,
-              "feedback": "Parfait ! Réponse polie et claire pour accepter."
+              "feedback": "Parfait ! Réponse polie et claire pour accepter.",
+              "kana": "はい, おねがいします"
             },
             {
               "jp": "いいえ、結構です",
               "romaji": "Iie, kekkō desu",
               "fr": "Non, ça ira",
               "correct": false,
-              "feedback": "C'est la réponse pour REFUSER le sac — l'inverse de ce que tu voulais."
+              "feedback": "C'est la réponse pour REFUSER le sac — l'inverse de ce que tu voulais.",
+              "kana": "いいえ, けっkう です"
             },
             {
               "jp": "わかりません",
               "romaji": "Wakarimasen",
               "fr": "Je ne comprends pas",
               "correct": false,
-              "feedback": "Évite si possible — ici un simple « oui merci » suffisait."
+              "feedback": "Évite si possible — ici un simple « oui merci » suffisait.",
+              "kana": "わかりません"
             }
           ],
           "situation_romaji": "L'employé te demande : « Fukuro wa go-riyō desu ka? »"
@@ -5105,21 +5358,24 @@
               "romaji": "Arigatō gozaimasu",
               "fr": "Merci beaucoup",
               "correct": true,
-              "feedback": "Parfait ! Un remerciement poli clôt l'interaction avec élégance."
+              "feedback": "Parfait ! Un remerciement poli clôt l'interaction avec élégance.",
+              "kana": "ありがtう ございます"
             },
             {
               "jp": "いただきます",
               "romaji": "Itadakimasu",
               "fr": "Bon appétit",
               "correct": false,
-              "feedback": "Pas encore ! Tu n'es pas à table."
+              "feedback": "Pas encore ! Tu n'es pas à table.",
+              "kana": "いただきます"
             },
             {
               "jp": "はじめまして",
               "romaji": "Hajimemashite",
               "fr": "Enchanté",
               "correct": false,
-              "feedback": "On ne se présente pas en quittant une caisse !"
+              "feedback": "On ne se présente pas en quittant une caisse !",
+              "kana": "はじめまして"
             }
           ],
           "situation_romaji": "Tu as payé, l'employé te tend ton sac."
@@ -5132,73 +5388,85 @@
       "jp": "七転び八起き",
       "romaji": "Nana korobi ya oki",
       "fr": "Tomber sept fois, se relever huit.",
-      "sens": "La résilience : ce qui compte, c'est de toujours se relever."
+      "sens": "La résilience : ce qui compte, c'est de toujours se relever.",
+      "kana": "なな ころび や おき"
     },
     {
       "jp": "猿も木から落ちる",
       "romaji": "Saru mo ki kara ochiru",
       "fr": "Même les singes tombent des arbres.",
-      "sens": "Même les experts font des erreurs."
+      "sens": "Même les experts font des erreurs.",
+      "kana": "さる も き から おちる"
     },
     {
       "jp": "花より団子",
       "romaji": "Hana yori dango",
       "fr": "Des boulettes plutôt que des fleurs.",
-      "sens": "Préférer l'utile à l'esthétique ; la substance avant l'apparence."
+      "sens": "Préférer l'utile à l'esthétique ; la substance avant l'apparence.",
+      "kana": "はな より だんご"
     },
     {
       "jp": "石の上にも三年",
       "romaji": "Ishi no ue ni mo san nen",
       "fr": "Trois ans sur une pierre.",
-      "sens": "La persévérance finit par payer, même dans l'adversité."
+      "sens": "La persévérance finit par payer, même dans l'adversité.",
+      "kana": "いし の うえ に も さん ねん"
     },
     {
       "jp": "出る杭は打たれる",
       "romaji": "Deru kui wa utareru",
       "fr": "Le clou qui dépasse se fait enfoncer.",
-      "sens": "Au Japon, se démarquer attire l'attention — l'harmonie du groupe prime."
+      "sens": "Au Japon, se démarquer attire l'attention — l'harmonie du groupe prime.",
+      "kana": "でる くい わ うたれる"
     },
     {
       "jp": "一期一会",
       "romaji": "Ichi-go ichi-e",
       "fr": "Une rencontre, une occasion.",
-      "sens": "Chaque instant est unique et ne se reproduira jamais — chéris-le."
+      "sens": "Chaque instant est unique et ne se reproduira jamais — chéris-le.",
+      "kana": "いちご いちえ"
     },
     {
       "jp": "急がば回れ",
       "romaji": "Isogaba maware",
       "fr": "Si tu es pressé, fais le détour.",
-      "sens": "La voie la plus sûre est parfois plus rapide que le raccourci risqué."
+      "sens": "La voie la plus sûre est parfois plus rapide que le raccourci risqué.",
+      "kana": "いそがば まわれ"
     },
     {
       "jp": "継続は力なり",
       "romaji": "Keizoku wa chikara nari",
       "fr": "La continuité est une force.",
-      "sens": "La régularité, jour après jour, bâtit la maîtrise."
+      "sens": "La régularité, jour après jour, bâtit la maîtrise.",
+      "kana": "けいぞく わ ちから なり"
     },
     {
       "jp": "井の中の蛙大海を知らず",
       "romaji": "I no naka no kawazu taikai wo shirazu",
       "fr": "La grenouille du puits ignore l'océan.",
-      "sens": "Une vision étroite empêche de saisir l'immensité du monde."
+      "sens": "Une vision étroite empêche de saisir l'immensité du monde.",
+      "kana": "い の なか の かわず たいかい を しらず"
     },
     {
       "jp": "案ずるより産むが易し",
       "romaji": "Anzuru yori umu ga yasushi",
       "fr": "Donner naissance est plus facile que de s'en inquiéter.",
-      "sens": "L'appréhension est souvent pire que l'épreuve elle-même."
+      "sens": "L'appréhension est souvent pire que l'épreuve elle-même.",
+      "kana": "あんずる より うむ が やすし"
     },
     {
       "jp": "知らぬが仏",
       "romaji": "Shiranu ga hotoke",
       "fr": "Ne pas savoir, c'est être Bouddha.",
-      "sens": "L'ignorance procure parfois la sérénité."
+      "sens": "L'ignorance procure parfois la sérénité.",
+      "kana": "しらぬ が ほとけ"
     },
     {
       "jp": "明日は明日の風が吹く",
       "romaji": "Ashita wa ashita no kaze ga fuku",
       "fr": "Demain, le vent de demain soufflera.",
-      "sens": "Inutile de trop s'inquiéter : demain apportera ses propres solutions."
+      "sens": "Inutile de trop s'inquiéter : demain apportera ses propres solutions.",
+      "kana": "あした わ あした の かぜ が ふく"
     }
   ],
   "villes": [
