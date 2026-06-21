@@ -1,3 +1,20 @@
+#!/usr/bin/env node
+/**
+ * generate-audio.mjs
+ * ────────────────────────────────────────────────────────────────────────────
+ * Génère tous les fichiers audio japonais d'Isekai'd avec Google Cloud TTS.
+ *
+ * USAGE :
+ *   1. Crée un projet Google Cloud + active "Cloud Text-to-Speech API"
+ *   2. Crée une clé API (ou un compte de service) — voir README ci-dessous
+ *   3. Mets ta clé dans la variable d'environnement GOOGLE_TTS_API_KEY
+ *   4. Lance :  node generate-audio.mjs
+ *
+ * Les MP3 sont écrits dans  public/audio/<hash>.mp3
+ * Le mapping texte→fichier est écrit dans  src/audio-manifest.json
+ * ────────────────────────────────────────────────────────────────────────────
+ */
+
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -12,6 +29,8 @@ if (!API_KEY) {
 // ── Config voix ──────────────────────────────────────────────────────────────
 // Voix japonaises Google recommandées (Neural2 = très naturelles) :
 //   ja-JP-Neural2-B (femme)  · ja-JP-Neural2-C (homme)  · ja-JP-Neural2-D (homme)
+// COÛT : ~363 phrases / ~2000 caractères. Google offre 1M caractères Neural2
+// gratuits par mois → cette génération est GRATUITE.
 const VOICE = { languageCode: "ja-JP", name: "ja-JP-Neural2-B" };
 const SPEAKING_RATE = 0.92; // léger ralenti pour l'apprentissage
 
@@ -35,9 +54,16 @@ function collectPhrases(db) {
   (db.repas || []).forEach(r => add(r.nom_jp));
   (db.wiki || []).forEach(w => add(w.jp));
   (db.situations || []).forEach(s => (s.phrases || []).forEach(p => add(p.jp)));
+  (db.proverbes || []).forEach(p => add(p.jp));
   (db.scenarios || []).forEach(s => (s.etapes || []).forEach(e =>
     (e.choix || []).forEach(c => add(c.jp))
   ));
+  // Contenu supplémentaire ajouté depuis la v1
+  (db.villes || []).forEach(v => add(v.nom_jp));
+  (db.lieux || []).forEach(l => add(l.nom_jp));
+  (db.traditions || []).forEach(t => add(t.nom_jp));
+  (db.codes_sociaux || []).forEach(c => add(c.nom_jp));
+  (db.vie_quotidienne || []).forEach(v => add(v.nom_jp));
   return [...set];
 }
 
