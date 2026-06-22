@@ -4664,6 +4664,17 @@ export default function IsekaidApp(){
       if(Array.isArray(p.favorites) && p.favorites.length){ setFavs(p.favorites); saveFavs(p.favorites); }
       if(p.kana_progress && Object.keys(p.kana_progress).length){ setKanaProgress(p.kana_progress); saveKanaProgress(p.kana_progress); }
       if(p.profile && p.profile.name){ setUser(p.profile); saveProfile(p.profile); }
+      if(p.path && Array.isArray(p.path.completed)){ setPathProgress(p.path); savePathProgress(p.path); }
+      if(p.mission && p.mission.day){ setMission(p.mission); saveMission(p.mission); }
+      // Paramètres (thème, accent, script, parcours vu, premium)
+      const s = p.settings;
+      if(s){
+        if(typeof s.dark==="boolean"){ setDark(s.dark); saveTheme(s.dark); }
+        if(s.accent){ setAccent(s.accent); saveAccent(s.accent); }
+        if(s.script){ setScript(s.script); saveScript(s.script); }
+        if(s.tourSeen){ setTourDisabled(true); }
+        if(s.premium && s.premium.active){ setPremium(s.premium); savePremium(s.premium); }
+      }
     });
   },[session?.user?.id]);
 
@@ -4673,10 +4684,13 @@ export default function IsekaidApp(){
     if(!session?.user) return;
     clearTimeout(syncRef.current);
     syncRef.current = setTimeout(()=>{
-      saveProgress(session.user.id, { streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user });
+      saveProgress(session.user.id, {
+        streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user, path:pathProgress, mission,
+        settings: { dark, accent, script, tourSeen: tourDisabled(), premium }
+      });
     }, 800);
     return ()=> clearTimeout(syncRef.current);
-  },[streak, unlocks, scenProgress, favs, kanaProgress, user, session?.user?.id]);
+  },[streak, unlocks, scenProgress, favs, kanaProgress, user, pathProgress, mission, dark, accent, script, premium, session?.user?.id]);
 
   const logout = async ()=>{ await signOut(); setSession(null); };
 
