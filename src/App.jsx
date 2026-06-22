@@ -4481,7 +4481,7 @@ function saveUnlocks(u){ try { localStorage.setItem(UNLOCK_KEY, JSON.stringify(u
 const PREMIUM_KEY = "isekaid_premium_v1";
 // Code d'accès secret à partager avec tes amis pour débloquer le Premium à vie.
 // ⚠️ Change cette valeur pour ton propre code, puis garde-la confidentielle.
-const ACCESS_CODE = "ISEKAI-FRIENDS-2026";
+const ACCESS_CODE = "ISEKAI-2026";
 function loadPremium(){
   try { return JSON.parse(localStorage.getItem(PREMIUM_KEY)||"null"); } catch { return null; }
 }
