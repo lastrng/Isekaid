@@ -244,6 +244,7 @@ button{font-family:inherit;}
 @keyframes ring{0%{box-shadow:0 0 0 0 rgba(201,70,61,.5)}70%{box-shadow:0 0 0 14px rgba(201,70,61,0)}100%{box-shadow:0 0 0 0 rgba(201,70,61,0)}}
 @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes countUp{0%{transform:translateY(8px) scale(.8);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
+@keyframes toastUp{0%{transform:translateX(-50%) translateY(40px) scale(.8);opacity:0}55%{transform:translateX(-50%) translateY(-4px) scale(1.04);opacity:1}100%{transform:translateX(-50%) translateY(0) scale(1)}}
 .lift{transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease;}
 .lift:active{transform:scale(.96);}
 @media(hover:hover){.lift:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,0.12);}}
@@ -1033,7 +1034,7 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
       </div>
 
       {/* Toast */}
-      {toast && <div style={{position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",background:C.text,color:C.bg,padding:"10px 20px",borderRadius:20,fontSize:13,zIndex:200,animation:"fadeUp .3s ease"}}>{toast}</div>}
+      {toast && <div style={{position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",background:C.text,color:C.bg,padding:"11px 22px",borderRadius:20,fontSize:13,fontWeight:600,zIndex:200,animation:"toastUp .5s cubic-bezier(.34,1.56,.64,1)",boxShadow:"0 8px 24px rgba(0,0,0,0.25)",whiteSpace:"nowrap"}}>{toast}</div>}
 
       {/* Modale unlock */}
       {confirmCat && (()=>{
@@ -1772,12 +1773,20 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
     const passed = score/s.etapes.length >= 0.7;
     const earned = passed && !alreadyDone;
     return(
-      <div style={{padding:"60px 24px",textAlign:"center"}}>
-        <div style={{fontSize:60,marginBottom:14}}>{pct===100?"🏆":passed?"🎉":"📚"}</div>
-        <div style={{fontSize:22,color:C.text,fontWeight:500,marginBottom:6}}>{pct===100?"Parfait !":passed?"Bien joué !":"Continue à pratiquer"}</div>
-        <div style={{fontSize:15,color:C.t2,marginBottom:8}}>Score : <b style={{color:s.couleur}}>{score}</b> / {s.etapes.length} ({pct}%)</div>
+      <div style={{padding:"60px 24px",textAlign:"center",position:"relative",overflow:"hidden"}}>
+        {/* Confettis si réussi */}
+        {passed && (
+          <div style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden"}}>
+            {Array.from({length:pct===100?18:12}).map((_,i)=>(
+              <div key={i} style={{position:"absolute",top:"-10%",left:`${(i*6+4)%100}%`,fontSize:`${12+(i%3)*6}px`,animation:`fall ${1.6+(i%4)*0.4}s ease-in ${(i%6)*0.12}s both`}}>{["🎊","✨","🔑","🎌","⭐","🌸"][i%6]}</div>
+            ))}
+          </div>
+        )}
+        <div style={{fontSize:60,marginBottom:14,display:"inline-block",animation:passed?"bounceIn .6s cubic-bezier(.34,1.56,.64,1)":"fadeUp .4s ease"}}>{pct===100?"🏆":passed?"🎉":"📚"}</div>
+        <div style={{fontSize:22,color:C.text,fontWeight:500,marginBottom:6,animation:"fadeUp .4s ease .1s both"}}>{pct===100?"Parfait !":passed?"Bien joué !":"Continue à pratiquer"}</div>
+        <div style={{fontSize:15,color:C.t2,marginBottom:8,animation:"fadeUp .4s ease .18s both"}}>Score : <b style={{color:s.couleur}}>{score}</b> / {s.etapes.length} ({pct}%)</div>
         {earned ? (
-          <div style={{margin:"18px 0",padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14}}>
+          <div style={{margin:"18px 0",padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14,animation:"popBounce .6s cubic-bezier(.34,1.56,.64,1) .3s both"}}>
             <div style={{fontSize:13,color:C.text,fontWeight:600,marginBottom:4}}>Récompense débloquée 🎁</div>
             <div style={{fontSize:14,color:C.t2}}>+{s.recompense_cles} 🔑 · +{s.recompense_xp} XP</div>
           </div>
@@ -1787,8 +1796,8 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
           <div style={{margin:"18px 0",fontSize:12,color:C.t3}}>Atteins 70% pour gagner la récompense 🔑</div>
         ) : null}
         <div style={{display:"flex",gap:11,marginTop:8}}>
-          <button onClick={()=>{setStep(0);setPicked(null);setScore(0);setFinished(false);}} style={{flex:1,padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Recommencer</button>
-          <button onClick={onExit} style={{flex:1,padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Terminer</button>
+          <button onClick={()=>{setStep(0);setPicked(null);setScore(0);setFinished(false);}} className="pop-press" style={{flex:1,padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Recommencer</button>
+          <button onClick={onExit} className="pop-press" style={{flex:1,padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Terminer</button>
         </div>
       </div>
     );
@@ -1819,13 +1828,13 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
         {/* Choices */}
         <div style={{display:"flex",flexDirection:"column",gap:10}}>
           {etape.choix.map((c,i)=>{
-            let bg=C.s1, bd=C.border;
+            let bg=C.s1, bd=C.border, anim="none";
             if(picked){
-              if(c.correct){ bg="rgba(78,128,96,0.1)"; bd="rgba(78,128,96,0.4)"; }
-              else if(c===picked){ bg="rgba(201,70,61,0.08)"; bd="rgba(201,70,61,0.4)"; }
+              if(c.correct){ bg="rgba(78,128,96,0.1)"; bd="rgba(78,128,96,0.4)"; if(picked===c) anim="bounceIn .5s ease"; }
+              else if(c===picked){ bg="rgba(201,70,61,0.08)"; bd="rgba(201,70,61,0.4)"; anim="shake .4s ease"; }
             }
             return(
-              <div key={i} onClick={()=>!picked&&choose(c)} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`1px solid ${bd}`,borderRadius:12,cursor:picked?"default":"pointer",transition:"all .2s"}}>
+              <div key={i} onClick={()=>!picked&&choose(c)} className={picked?"":"lift"} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`1px solid ${bd}`,borderRadius:12,cursor:picked?"default":"pointer",transition:"all .25s",animation:anim}}>
                 <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
                   <div style={{flex:1,minWidth:0}}>
                     {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(c, script)}</div>}
@@ -1834,8 +1843,8 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
                   </div>
                   {picked && c.jp && <SpeakButton C={C} text={c.jp} color={s.couleur}/>}
                 </div>
-                {picked===c && <div style={{marginTop:4,fontSize:12,color:c.correct?C.green:C.red}}>{c.correct?"✓ ":"✕ "}{c.feedback}</div>}
-                {picked && c.correct && picked!==c && <div style={{marginTop:4,fontSize:12,color:C.green}}>✓ {c.feedback}</div>}
+                {picked===c && <div style={{marginTop:4,fontSize:12,color:c.correct?C.green:C.red,animation:"fadeIn .4s ease .15s both"}}>{c.correct?"✓ ":"✕ "}{c.feedback}</div>}
+                {picked && c.correct && picked!==c && <div style={{marginTop:4,fontSize:12,color:C.green,animation:"fadeIn .4s ease .15s both"}}>✓ {c.feedback}</div>}
               </div>
             );
           })}
@@ -2254,11 +2263,18 @@ function QuizMode({C, deck, onExit}){
   };
 
   if(done) return (
-    <div style={{padding:"40px 24px",textAlign:"center"}}>
-      <div style={{fontSize:54,marginBottom:14}}>{score/cards.length>=0.8?"🏆":score/cards.length>=0.5?"👍":"📚"}</div>
-      <div style={{fontSize:20,color:C.text,fontWeight:500,marginBottom:8}}>Quiz terminé !</div>
-      <div style={{fontSize:14,color:C.t2,marginBottom:26}}>Score : <b style={{color:C.red}}>{score}</b> / {cards.length}</div>
-      <button onClick={onExit} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
+    <div style={{padding:"40px 24px",textAlign:"center",position:"relative",overflow:"hidden"}}>
+      {score/cards.length>=0.8 && (
+        <div style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden"}}>
+          {Array.from({length:14}).map((_,i)=>(
+            <div key={i} style={{position:"absolute",top:"-10%",left:`${(i*7+5)%100}%`,fontSize:`${12+(i%3)*5}px`,animation:`fall ${1.5+(i%4)*0.4}s ease-in ${(i%5)*0.15}s both`}}>{["🎊","✨","⭐","🎌","🌸"][i%5]}</div>
+          ))}
+        </div>
+      )}
+      <div style={{fontSize:54,marginBottom:14,display:"inline-block",animation:"bounceIn .6s cubic-bezier(.34,1.56,.64,1)"}}>{score/cards.length>=0.8?"🏆":score/cards.length>=0.5?"👍":"📚"}</div>
+      <div style={{fontSize:20,color:C.text,fontWeight:500,marginBottom:8,animation:"fadeUp .4s ease .1s both"}}>Quiz terminé !</div>
+      <div style={{fontSize:14,color:C.t2,marginBottom:26,animation:"fadeUp .4s ease .18s both"}}>Score : <b style={{color:C.red}}>{score}</b> / {cards.length}</div>
+      <button onClick={onExit} className="pop-press" style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
     </div>
   );
 
@@ -2278,13 +2294,13 @@ function QuizMode({C, deck, onExit}){
 
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:11}}>
         {options[idx].map((opt,i)=>{
-          let bg=C.s1, bd=C.border, col=C.text;
+          let bg=C.s1, bd=C.border, col=C.text, anim="none";
           if(picked){
-            if(opt.r===card.r){ bg="rgba(78,128,96,0.15)"; bd="rgba(78,128,96,0.4)"; col=C.green; }
-            else if(opt.r===picked){ bg="rgba(201,70,61,0.12)"; bd="rgba(201,70,61,0.4)"; col=C.red; }
+            if(opt.r===card.r){ bg="rgba(78,128,96,0.15)"; bd="rgba(78,128,96,0.4)"; col=C.green; anim="bounceIn .5s ease"; }
+            else if(opt.r===picked){ bg="rgba(201,70,61,0.12)"; bd="rgba(201,70,61,0.4)"; col=C.red; anim="shake .4s ease"; }
           }
           return(
-            <button key={i} onClick={()=>choose(opt)} style={{padding:"18px",background:bg,border:`1px solid ${bd}`,borderRadius:14,color:col,fontSize:20,fontWeight:600,cursor:picked?"default":"pointer",transition:"all .2s"}}>
+            <button key={i} onClick={()=>choose(opt)} className={picked?"":"pop-press"} style={{padding:"18px",background:bg,border:`1px solid ${bd}`,borderRadius:14,color:col,fontSize:20,fontWeight:600,cursor:picked?"default":"pointer",transition:"all .2s",animation:anim}}>
               {opt.r}
             </button>
           );
@@ -4033,15 +4049,16 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,fa
         <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
             <div style={{display:"flex",alignItems:"center",gap:7}}>
-              <span style={{fontSize:16}}>⭐</span>
+              <span style={{fontSize:16,display:"inline-block",animation:"floatY 3s ease-in-out infinite"}}>⭐</span>
               <span style={{fontSize:13,color:C.text,fontWeight:600}}>{xp||0} XP</span>
             </div>
             <div style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.18)",borderRadius:20}}>
               <span style={{fontSize:12}}>🔑</span><span style={{fontSize:12,fontWeight:700,color:C.text}}>{streak?.keys||0}</span>
             </div>
           </div>
-          <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:7}}>
-            <div style={{height:"100%",width:`${progress*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
+          <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:7,position:"relative"}}>
+            <div style={{height:"100%",width:`${progress*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .8s cubic-bezier(.34,1.3,.64,1)"}}/>
+            <div style={{position:"absolute",inset:0,width:`${progress*100}%`,background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent)",backgroundSize:"200% 100%",animation:"shimmer 2.5s ease infinite",borderRadius:3,pointerEvents:"none"}}/>
           </div>
           <div style={{fontSize:11,color:C.t3}}>
             {nextTier ? <>Prochain titre : <b style={{color:C.t2}}>{nextTier.emoji} {nextTier.title}</b> à {nextTier.min} XP</> : "Titre maximal atteint ! 🎌"}
