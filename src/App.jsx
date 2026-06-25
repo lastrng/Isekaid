@@ -3059,6 +3059,67 @@ const VOYAGE_TYPES = [
   {id:"acheter",label:"Acheter",emoji:"🛍️"},
 ];
 
+// ── Carte du jour (Leaflet + OpenStreetMap, gratuit, sans clé) ────────────────
+function DayMap({ C, points }){
+  const containerRef = useRef(null);
+  const instanceRef = useRef(null);
+
+  const ensureLeaflet = ()=> new Promise((resolve)=>{
+    if(window.L){ resolve(window.L); return; }
+    if(!document.getElementById("leaflet-css")){
+      const link = document.createElement("link");
+      link.id="leaflet-css"; link.rel="stylesheet";
+      link.href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(link);
+    }
+    const existing = document.getElementById("leaflet-js");
+    if(existing){ existing.addEventListener("load", ()=>resolve(window.L)); if(window.L) resolve(window.L); return; }
+    const s = document.createElement("script");
+    s.id="leaflet-js"; s.src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    s.onload = ()=>resolve(window.L);
+    document.body.appendChild(s);
+  });
+
+  useEffect(()=>{
+    let cancelled = false;
+    const valid = points.filter(p=> typeof p.lat==="number" && typeof p.lng==="number");
+    if(valid.length===0) return;
+    ensureLeaflet().then((L)=>{
+      if(cancelled || !containerRef.current || !L) return;
+      if(instanceRef.current){ instanceRef.current.remove(); instanceRef.current=null; }
+      const map = L.map(containerRef.current, { zoomControl:true });
+      instanceRef.current = map;
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:"© OpenStreetMap" }).addTo(map);
+      const latlngs = [];
+      valid.forEach((p)=>{
+        const idx = points.indexOf(p) + 1;
+        const icon = L.divIcon({ className:"", html:`<div style="background:${C.red};color:#fff;width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.4);border:2px solid #fff"><span style="transform:rotate(45deg);font-size:12px;font-weight:700">${idx}</span></div>`, iconSize:[26,26], iconAnchor:[13,26] });
+        L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup(`<b>${idx}. ${p.nom||"Lieu"}</b>`);
+        latlngs.push([p.lat,p.lng]);
+      });
+      if(latlngs.length>1) L.polyline(latlngs,{color:C.red,weight:2.5,opacity:0.6,dashArray:"6 6"}).addTo(map);
+      if(latlngs.length===1) map.setView(latlngs[0],15); else map.fitBounds(latlngs,{padding:[30,30]});
+      setTimeout(()=>map.invalidateSize(),100);
+    });
+    return ()=>{ cancelled=true; if(instanceRef.current){ instanceRef.current.remove(); instanceRef.current=null; } };
+  }, [points]);
+
+  const validCount = points.filter(p=> typeof p.lat==="number" && typeof p.lng==="number").length;
+  if(validCount===0){
+    return (
+      <div style={{padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,fontSize:11,color:C.t3,textAlign:"center",marginBottom:14}}>
+        🗺️ Carte indisponible : les lieux de ce jour n'ont pas encore de coordonnées.
+      </div>
+    );
+  }
+  return (
+    <div style={{marginBottom:16}}>
+      <div ref={containerRef} style={{width:"100%",height:220,borderRadius:14,overflow:"hidden",border:`1px solid ${C.border}`,zIndex:0}}/>
+      <div style={{fontSize:10,color:C.t3,marginTop:6,textAlign:"center"}}>📍 {validCount} lieu{validCount>1?"x":""} sur la carte · OpenStreetMap</div>
+    </div>
+  );
+}
+
 function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPremium, onBack, onUpdate, onDelete}){
   const customLieux = trip.customLieux || [];
   const lieuById = useMemo(()=>{
@@ -3383,6 +3444,9 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
             <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginBottom:14,textTransform:"uppercase"}}>
               Jour {day.num} · {ville?.emoji} {ville?.nom||""}{day.titre?` · ${day.titre}`:""}
             </div>
+            {day.etapes.length>0 && (
+              <DayMap C={C} points={day.etapes.map(e=>lieuById[e.lieuId]).filter(Boolean)}/>
+            )}
             {day.etapes.length===0 ? (
               <div style={{textAlign:"center",padding:"24px 10px"}}>
                 <div style={{fontSize:34,marginBottom:10}}>📍</div>
