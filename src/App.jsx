@@ -1649,13 +1649,18 @@ function HistoireScreen({C, db, script, onBack}){
 }
 
 function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initialSeason,onBack}){
-  const [season,setSeason] = useState(initialSeason||"quotidien");
+  // initialSeason peut valoir "saison" (route générique) ou un id non valide :
+  // dans ce cas on retombe sur la saison courante pour éviter un écran noir.
+  const validId = SEASONS.some(s=>s.id===initialSeason) ? initialSeason
+                 : (initialSeason==="saison" ? currentSeasonKey() : "quotidien");
+  const [season,setSeason] = useState(validId);
   const [selected,setSelected] = useState(null);
   const traditions = db?.traditions || [];
 
   if(selected) return <TraditionDetail C={C} t={selected} onBack={()=>setSelected(null)} fav={isFav&&isFav("tradition",selected)} onFav={toggleFav&&(()=>toggleFav("tradition",selected))} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
 
-  const seasonData = SEASONS.find(s=>s.id===season);
+  // Sécurité : seasonData ne doit jamais être undefined
+  const seasonData = SEASONS.find(s=>s.id===season) || SEASONS[0];
   const filtered = traditions.filter(t=>t.saison===season);
 
   return(
@@ -2162,8 +2167,8 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
             <div style={{position:"absolute",left:"50%",top:0,bottom:0,width:1,borderLeft:`1px dashed ${C.border}`}}/>
             <div style={{position:"absolute",top:"50%",left:0,right:0,height:1,borderTop:`1px dashed ${C.border}`}}/>
           </div>
-          {/* Modèle révélé (vert, animé) — DESSOUS le tracé fantôme pour comparaison */}
-          <div key={animKey} style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none",fontSize:200,fontFamily:"'Noto Serif JP',serif",color:revealed?C.green:C.t3,opacity:revealed?1:0.13,zIndex:1,transition:"opacity .3s",animation:revealed?"drawReveal 1.1s ease forwards":"none"}}>
+          {/* Modèle — invisible tant que l'utilisateur n'a pas vérifié (test de rappel) */}
+          <div key={animKey} style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none",fontSize:200,fontFamily:"'Noto Serif JP',serif",color:C.green,opacity:revealed?1:0,zIndex:1,transition:"opacity .3s",animation:revealed?"drawReveal 1.1s ease forwards":"none"}}>
             {card.k}
           </div>
           {/* Canvas de tracé — fantôme (25%) au-dessus du modèle quand révélé, masquable */}
@@ -4481,7 +4486,7 @@ function saveUnlocks(u){ try { localStorage.setItem(UNLOCK_KEY, JSON.stringify(u
 const PREMIUM_KEY = "isekaid_premium_v1";
 // Code d'accès secret à partager avec tes amis pour débloquer le Premium à vie.
 // ⚠️ Change cette valeur pour ton propre code, puis garde-la confidentielle.
-const ACCESS_CODE = "ISEKAI-2026";
+const ACCESS_CODE = "ISEKAI-FRIENDS-2026";
 function loadPremium(){
   try { return JSON.parse(localStorage.getItem(PREMIUM_KEY)||"null"); } catch { return null; }
 }
