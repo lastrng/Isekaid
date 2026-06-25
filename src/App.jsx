@@ -231,9 +231,27 @@ button{font-family:inherit;}
 @keyframes floatDown{0%{transform:translateY(-20px) translateX(0) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.3}100%{transform:translateY(108vh) translateX(20px) rotate(360deg);opacity:0}}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 @keyframes scaleIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
-.lift{transition:transform .18s ease, box-shadow .18s ease;}
-.lift:active{transform:scale(.975);}
-@media(hover:hover){.lift:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.10);}}
+/* ── Animations dynamiques & ludiques ── */
+@keyframes bounceIn{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.08)}70%{transform:scale(.96)}100%{transform:scale(1)}}
+@keyframes popBounce{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}55%{transform:translate(-50%,-50%) scale(1.06);opacity:1}75%{transform:translate(-50%,-50%) scale(.97)}100%{transform:translate(-50%,-50%) scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+@keyframes wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.15)}30%{transform:scale(1)}45%{transform:scale(1.1)}60%{transform:scale(1)}}
+@keyframes flameFlicker{0%,100%{transform:scale(1) rotate(-2deg);filter:brightness(1)}50%{transform:scale(1.12) rotate(2deg);filter:brightness(1.25)}}
+@keyframes slideInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+@keyframes zoomBadge{0%{transform:scale(0) rotate(-180deg);opacity:0}60%{transform:scale(1.15) rotate(10deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(201,70,61,.5)}70%{box-shadow:0 0 0 14px rgba(201,70,61,0)}100%{box-shadow:0 0 0 0 rgba(201,70,61,0)}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes countUp{0%{transform:translateY(8px) scale(.8);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
+.lift{transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease;}
+.lift:active{transform:scale(.96);}
+@media(hover:hover){.lift:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,0.12);}}
+/* Classes ludiques réutilisables */
+.pop-press{transition:transform .15s cubic-bezier(.34,1.56,.64,1);}
+.pop-press:active{transform:scale(.9);}
+.screen-in{animation:slideInUp .35s cubic-bezier(.22,1,.36,1) both;}
+.float-y{animation:floatY 3s ease-in-out infinite;}
 .stagger>*{animation:fadeUp .5s ease both;}
 .stagger>*:nth-child(1){animation-delay:.04s}.stagger>*:nth-child(2){animation-delay:.10s}.stagger>*:nth-child(3){animation-delay:.16s}.stagger>*:nth-child(4){animation-delay:.22s}.stagger>*:nth-child(5){animation-delay:.28s}.stagger>*:nth-child(6){animation-delay:.34s}.stagger>*:nth-child(7){animation-delay:.40s}.stagger>*:nth-child(8){animation-delay:.46s}
 `;
@@ -4240,7 +4258,7 @@ function DailyWelcome({C, streak, dailyInfo, onClose}){
         position:"fixed", top:"50%", left:"50%", transform:"translate(-50%,-50%)",
         width:"min(86vw,340px)", zIndex:301, background:C.s1,
         borderRadius:22, padding:"32px 26px 26px", textAlign:"center",
-        animation:"popIn .35s cubic-bezier(.2,.9,.3,1.3)",
+        animation:"popBounce .55s cubic-bezier(.34,1.56,.64,1)",
         boxShadow:"0 24px 80px rgba(0,0,0,0.4)", border:`1px solid ${milestone?"rgba(201,70,61,0.5)":C.border}`
       }}>
         {milestone && (
@@ -4251,7 +4269,7 @@ function DailyWelcome({C, streak, dailyInfo, onClose}){
           </div>
         )}
 
-        <div style={{fontSize:60,marginBottom:6,animation:"glow 2s ease infinite",filter:milestone?"drop-shadow(0 0 14px rgba(201,70,61,0.6))":"none"}}>{milestone?milestone.emoji:"🔥"}</div>
+        <div style={{fontSize:60,marginBottom:6,animation:milestone?"heartbeat 1.2s ease infinite":"flameFlicker 1.6s ease infinite",filter:milestone?"drop-shadow(0 0 14px rgba(201,70,61,0.6))":"drop-shadow(0 0 10px rgba(232,98,58,0.45))"}}>{milestone?milestone.emoji:"🔥"}</div>
 
         {milestone ? (
           <>
@@ -4262,7 +4280,7 @@ function DailyWelcome({C, streak, dailyInfo, onClose}){
         ) : (
           <>
             <div style={{fontSize:10,color:C.t3,letterSpacing:".25em",textTransform:"uppercase",marginBottom:6}}>Content de te revoir</div>
-            <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>
+            <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2,display:"inline-block",animation:"countUp .5s cubic-bezier(.34,1.56,.64,1) .15s both"}}>
               {count} jour{count>1?"s":""}
             </div>
             <div style={{fontSize:13,color:C.t2,marginBottom:20}}>de streak consécutif{count>1?"s":""} 🎌</div>
@@ -4277,7 +4295,7 @@ function DailyWelcome({C, streak, dailyInfo, onClose}){
         )}
 
         <div style={{padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14,marginBottom:milestone||daysToNext?14:22}}>
-          <div style={{fontSize:38,marginBottom:6,animation:"popIn .5s ease .2s both"}}>🔑</div>
+          <div style={{fontSize:38,marginBottom:6,display:"inline-block",animation:"zoomBadge .6s cubic-bezier(.34,1.56,.64,1) .25s both"}}>🔑</div>
           <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:3}}>
             +{keysGained} clé{keysGained>1?"s":""} gagnée{keysGained>1?"s":""} !{milestone && <span style={{color:C.gold}}> (dont +{milestone.bonus} bonus)</span>}
           </div>
@@ -4288,7 +4306,7 @@ function DailyWelcome({C, streak, dailyInfo, onClose}){
           <div style={{fontSize:11,color:C.t3,marginBottom:18}}>Plus que <b style={{color:C.text}}>{daysToNext} jour{daysToNext>1?"s":""}</b> avant le palier <b>{nextGoal} jours</b> 🏆</div>
         )}
 
-        <button onClick={onClose} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+        <button onClick={onClose} className="pop-press" style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",animation:milestone?"ring 1.4s ease .6s 2":"none"}}>
           {milestone ? "Génial ! →" : "Continuer l'aventure →"}
         </button>
       </div>
@@ -4520,17 +4538,17 @@ function GuidedTour({C, step, onNext, onPrev, onSkip, onFinish, dontShowAgain, s
       {/* Voile sombre — laisse voir la section derrière */}
       <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:300,backdropFilter:"blur(1px)"}}/>
       {/* Carte d'explication, ancrée en bas (au-dessus de la nav) */}
-      <div style={{position:"fixed",left:"50%",bottom:90,transform:"translateX(-50%)",width:"min(90vw,360px)",zIndex:301,background:C.s1,borderRadius:18,padding:"22px 22px 18px",boxShadow:"0 20px 60px rgba(0,0,0,0.45)",border:`1px solid ${C.border}`,animation:"fadeUp .35s ease"}}>
+      <div key={step} style={{position:"fixed",left:"50%",bottom:90,transform:"translateX(-50%)",width:"min(90vw,360px)",zIndex:301,background:C.s1,borderRadius:18,padding:"22px 22px 18px",boxShadow:"0 20px 60px rgba(0,0,0,0.45)",border:`1px solid ${C.border}`,animation:"slideInUp .4s cubic-bezier(.34,1.56,.64,1)"}}>
         {/* Skip en haut à droite */}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
           <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>Découverte · {step+1}/{TOUR_STEPS.length}</span>
-          {!last && <span onClick={onSkip} style={{fontSize:12,color:C.t3,cursor:"pointer"}}>Passer</span>}
+          {!last && <span onClick={onSkip} className="pop-press" style={{fontSize:12,color:C.t3,cursor:"pointer"}}>Passer</span>}
         </div>
         <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
-          <span style={{fontSize:34}}>{s.emoji}</span>
-          <div style={{fontSize:19,fontWeight:600,color:C.text}}>{s.title}</div>
+          <span style={{fontSize:34,display:"inline-block",animation:"zoomBadge .5s cubic-bezier(.34,1.56,.64,1) .1s both"}}>{s.emoji}</span>
+          <div style={{fontSize:19,fontWeight:600,color:C.text,animation:"slideInRight .4s ease .12s both"}}>{s.title}</div>
         </div>
-        <div style={{fontSize:14,color:C.t2,lineHeight:1.6,marginBottom:18}}>{s.text}</div>
+        <div style={{fontSize:14,color:C.t2,lineHeight:1.6,marginBottom:18,animation:"fadeIn .5s ease .2s both"}}>{s.text}</div>
 
         {/* Sur la dernière étape : option de désactivation */}
         {last && (
@@ -4542,8 +4560,8 @@ function GuidedTour({C, step, onNext, onPrev, onSkip, onFinish, dontShowAgain, s
 
         {/* Navigation */}
         <div style={{display:"flex",gap:10}}>
-          {!first && <button onClick={onPrev} style={{flex:"0 0 auto",padding:"13px 18px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:14,cursor:"pointer"}}>‹</button>}
-          <button onClick={last ? onFinish : onNext} style={{flex:1,padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+          {!first && <button onClick={onPrev} className="pop-press" style={{flex:"0 0 auto",padding:"13px 18px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:14,cursor:"pointer"}}>‹</button>}
+          <button onClick={last ? onFinish : onNext} className="pop-press" style={{flex:1,padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
             {last ? "Terminer 🌸" : "Suivant →"}
           </button>
         </div>
@@ -5084,12 +5102,14 @@ export default function IsekaidApp(){
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
+              <div key={tab} className="screen-in" style={{height:"100%"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
+              </div>
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
             <BottomNav C={C} active={tab} onChange={setTab}/>
