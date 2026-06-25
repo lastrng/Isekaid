@@ -2498,6 +2498,172 @@ function CheckpointQuiz({C, pool, distractorPool, onPass, onExit, passRatio=0.7,
   );
 }
 
+// ── Compréhension écrite : lire un texte JP + répondre ──
+function ComprehensionRead({ C, db, script, onRecord }){
+  const exos = db?.comprehension_ecrite || [];
+  const [idx, setIdx] = useState(0);
+  const [showText, setShowText] = useState(false); // texte caché par défaut ? Non : écrite = on lit. On montre.
+  const [answers, setAnswers] = useState({});
+  const [showTrad, setShowTrad] = useState(false);
+  const exo = exos[idx];
+
+  if(!exo) return <div style={{padding:"20px",color:C.t2,fontSize:13}}>Aucun exercice disponible.</div>;
+
+  const pick = (qi, ci)=>{
+    if(answers[qi]!==undefined) return;
+    setAnswers({...answers, [qi]: ci});
+  };
+  const allAnswered = exo.questions.every((_,qi)=>answers[qi]!==undefined);
+  const score = exo.questions.filter((q,qi)=>answers[qi]===q.correct).length;
+
+  const next = ()=>{
+    setAnswers({}); setShowTrad(false);
+    if(idx+1<exos.length) setIdx(idx+1); else setIdx(0);
+  };
+
+  // Texte selon le mode de script
+  const mainText = script==="romaji" ? exo.texte_romaji : exo.texte_jp;
+
+  return(
+    <div>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
+        <div style={{fontSize:15,color:C.text,fontWeight:600}}>📖 {exo.titre}</div>
+        <span style={{fontSize:11,color:C.t3,fontWeight:600}}>{idx+1}/{exos.length} · {exo.niveau}</span>
+      </div>
+
+      {/* Le texte à lire */}
+      <div style={{padding:"18px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:8}}>
+        <div style={{fontSize:18,lineHeight:1.9,color:C.text,fontFamily:"'Noto Serif JP',serif"}}>{mainText}</div>
+        <button onClick={()=>speakJP(exo.texte_jp)} style={{marginTop:12,padding:"7px 14px",background:"rgba(91,155,213,0.12)",border:"none",borderRadius:20,color:"#5B9BD5",fontSize:12,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6}}>🔊 Écouter</button>
+      </div>
+
+      {/* Traduction repliable */}
+      <button onClick={()=>setShowTrad(v=>!v)} style={{width:"100%",padding:"10px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:10,color:C.t2,fontSize:12,cursor:"pointer",marginBottom:18}}>
+        {showTrad ? "▲ Masquer la traduction" : "▼ Afficher la traduction"}
+      </button>
+      {showTrad && <div style={{padding:"12px 16px",background:C.s2,borderRadius:10,fontSize:13,color:C.t2,fontStyle:"italic",marginBottom:18,marginTop:-8}}>{exo.traduction}</div>}
+
+      {/* Questions */}
+      <div style={{display:"flex",flexDirection:"column",gap:18}}>
+        {exo.questions.map((q,qi)=>(
+          <div key={qi}>
+            <div style={{fontSize:14,color:C.text,fontWeight:500,marginBottom:10}}>{qi+1}. {q.q}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              {q.choix.map((ch,ci)=>{
+                const answered = answers[qi]!==undefined;
+                const isPicked = answers[qi]===ci;
+                const isCorrect = ci===q.correct;
+                let bg=C.s1, bd=C.border, col=C.text;
+                if(answered){
+                  if(isCorrect){ bg="rgba(78,128,96,0.12)"; bd=C.green; col=C.green; }
+                  else if(isPicked){ bg="rgba(201,70,61,0.1)"; bd=C.red; col=C.red; }
+                }
+                return(
+                  <button key={ci} onClick={()=>pick(qi,ci)} disabled={answered} style={{textAlign:"left",padding:"12px 14px",background:bg,border:`1px solid ${bd}`,borderRadius:11,color:col,fontSize:13,cursor:answered?"default":"pointer",transition:"all .2s"}}>
+                    {ch} {answered && isCorrect && "✓"}
+                  </button>
+                );
+              })}
+            </div>
+            {answers[qi]!==undefined && (
+              <div style={{marginTop:8,fontSize:12,color:C.t2,padding:"8px 12px",background:C.s2,borderRadius:9}}>💡 {q.feedback}</div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Score + suivant */}
+      {allAnswered && (
+        <div style={{marginTop:22,textAlign:"center"}}>
+          <div style={{fontSize:14,color:C.text,marginBottom:12}}>Score : <b style={{color:score===exo.questions.length?C.green:C.red}}>{score}/{exo.questions.length}</b></div>
+          <button onClick={next} style={{padding:"13px 28px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Exercice suivant ›</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Compréhension orale : écouter (texte caché) + répondre ──
+function ComprehensionListen({ C, db, script }){
+  const exos = db?.comprehension_orale || [];
+  const [idx, setIdx] = useState(0);
+  const [revealed, setRevealed] = useState(false); // texte caché par défaut
+  const [answers, setAnswers] = useState({});
+  const exo = exos[idx];
+
+  if(!exo) return <div style={{padding:"20px",color:C.t2,fontSize:13}}>Aucun exercice disponible.</div>;
+
+  const pick = (qi, ci)=>{
+    if(answers[qi]!==undefined) return;
+    setAnswers({...answers, [qi]: ci});
+  };
+  const allAnswered = exo.questions.every((_,qi)=>answers[qi]!==undefined);
+  const score = exo.questions.filter((q,qi)=>answers[qi]===q.correct).length;
+  const next = ()=>{ setAnswers({}); setRevealed(false); if(idx+1<exos.length) setIdx(idx+1); else setIdx(0); };
+
+  return(
+    <div>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
+        <div style={{fontSize:15,color:C.text,fontWeight:600}}>🎧 {exo.titre}</div>
+        <span style={{fontSize:11,color:C.t3,fontWeight:600}}>{idx+1}/{exos.length} · {exo.niveau}</span>
+      </div>
+
+      {/* Bouton d'écoute — gros, central */}
+      <div style={{padding:"28px 18px",background:"rgba(122,74,106,0.08)",border:`1px solid ${C.border}`,borderRadius:16,marginBottom:14,textAlign:"center"}}>
+        <button onClick={()=>speakJP(exo.audio_jp)} style={{width:72,height:72,borderRadius:"50%",background:"#9A6A8A",border:"none",color:"#fff",fontSize:30,cursor:"pointer",boxShadow:"0 4px 16px rgba(122,74,106,0.3)"}}>🔊</button>
+        <div style={{fontSize:12,color:C.t2,marginTop:12}}>Appuie pour écouter — autant de fois que nécessaire</div>
+      </div>
+
+      {/* Texte caché, révélable */}
+      <button onClick={()=>setRevealed(v=>!v)} style={{width:"100%",padding:"11px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:11,color:C.t2,fontSize:12,cursor:"pointer",marginBottom:18}}>
+        {revealed ? "🙈 Masquer le texte" : "👁 Afficher le texte"}
+      </button>
+      {revealed && (
+        <div style={{padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,marginBottom:18,marginTop:-8}}>
+          <div style={{fontSize:17,lineHeight:1.8,color:C.text,fontFamily:"'Noto Serif JP',serif",marginBottom:8}}>{script==="romaji"?exo.audio_romaji:exo.audio_jp}</div>
+          <div style={{fontSize:12,color:C.t2,fontStyle:"italic"}}>{exo.traduction}</div>
+        </div>
+      )}
+
+      {/* Questions */}
+      <div style={{display:"flex",flexDirection:"column",gap:18}}>
+        {exo.questions.map((q,qi)=>(
+          <div key={qi}>
+            <div style={{fontSize:14,color:C.text,fontWeight:500,marginBottom:10}}>{qi+1}. {q.q}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              {q.choix.map((ch,ci)=>{
+                const answered = answers[qi]!==undefined;
+                const isPicked = answers[qi]===ci;
+                const isCorrect = ci===q.correct;
+                let bg=C.s1, bd=C.border, col=C.text;
+                if(answered){
+                  if(isCorrect){ bg="rgba(78,128,96,0.12)"; bd=C.green; col=C.green; }
+                  else if(isPicked){ bg="rgba(201,70,61,0.1)"; bd=C.red; col=C.red; }
+                }
+                return(
+                  <button key={ci} onClick={()=>pick(qi,ci)} disabled={answered} style={{textAlign:"left",padding:"12px 14px",background:bg,border:`1px solid ${bd}`,borderRadius:11,color:col,fontSize:13,cursor:answered?"default":"pointer",transition:"all .2s"}}>
+                    {ch} {answered && isCorrect && "✓"}
+                  </button>
+                );
+              })}
+            </div>
+            {answers[qi]!==undefined && (
+              <div style={{marginTop:8,fontSize:12,color:C.t2,padding:"8px 12px",background:C.s2,borderRadius:9}}>💡 {q.feedback}</div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {allAnswered && (
+        <div style={{marginTop:22,textAlign:"center"}}>
+          <div style={{fontSize:14,color:C.text,marginBottom:12}}>Score : <b style={{color:score===exo.questions.length?C.green:C.red}}>{score}/{exo.questions.length}</b></div>
+          <button onClick={next} style={{padding:"13px 28px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Exercice suivant ›</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep}){
   const [deck,setDeck] = useState(null);   // selected deck object
   const [mode,setMode] = useState(null);   // "flash" | "quiz"
@@ -2700,6 +2866,32 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
                   </div>
                 </div>
               </div>
+
+              {/* Carte Compréhension écrite */}
+              <div className="lift" onClick={()=>setLearnMode("read")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+                <div style={{height:4,background:`linear-gradient(90deg,#5B9BD5,transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
+                <div style={{fontSize:10,color:"#5B9BD5",letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>読解 · Lecture</div>
+                <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
+                  <div style={{width:48,height:48,borderRadius:13,background:"rgba(91,155,213,0.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>📖</div>
+                  <div>
+                    <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:5}}>Compréhension écrite</div>
+                    <div style={{fontSize:12,color:C.t2,lineHeight:1.55}}>Lis de courts textes en japonais et réponds à des questions de compréhension.</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Carte Compréhension orale */}
+              <div className="lift" onClick={()=>setLearnMode("listen")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+                <div style={{height:4,background:`linear-gradient(90deg,#7A4A6A,transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
+                <div style={{fontSize:10,color:"#9A6A8A",letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>聴解 · Écoute</div>
+                <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
+                  <div style={{width:48,height:48,borderRadius:13,background:"rgba(122,74,106,0.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>🎧</div>
+                  <div>
+                    <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:5}}>Compréhension orale</div>
+                    <div style={{fontSize:12,color:C.t2,lineHeight:1.55}}>Écoute des phrases en japonais (texte masqué) et teste ta compréhension.</div>
+                  </div>
+                </div>
+              </div>
             </div>
           );
         })()}
@@ -2752,6 +2944,9 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
         </>)}
 
         {/* ── Mode Entraînement libre (flashcards + situations) ── */}
+        {learnMode==="read" && <ComprehensionRead C={C} db={db} script={script} onRecord={onRecordKana}/>}
+        {learnMode==="listen" && <ComprehensionListen C={C} db={db} script={script}/>}
+
         {learnMode==="free" && (<>
         {/* Syllabaires */}
         {["Bases","Avancé"].map(grp=>(

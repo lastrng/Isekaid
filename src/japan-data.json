@@ -11410,5 +11410,257 @@
       "anecdote": "Le Japon a plus de centenaires par habitant que tout autre pays. En 2023, on comptait plus de 90 000 personnes âgées de plus de 100 ans — une démographie qui façonne profondément la société et l'économie.",
       "lieu_lien": "kyoto"
     }
+  ],
+  "comprehension_ecrite": [
+    {
+      "id": "ce-konbini",
+      "titre": "Au konbini",
+      "niveau": "Débutant",
+      "emoji": "🏪",
+      "texte_jp": "いらっしゃいませ。こちらのおにぎりは200円です。お弁当は500円です。温めますか？",
+      "texte_romaji": "Irasshaimase. Kochira no onigiri wa 200 en desu. Obentō wa 500 en desu. Atatamemasu ka?",
+      "traduction": "Bienvenue. Cet onigiri coûte 200 yens. Le bentō coûte 500 yens. Voulez-vous que je le réchauffe ?",
+      "questions": [
+        {
+          "q": "Combien coûte l'onigiri ?",
+          "choix": [
+            "200 yens",
+            "500 yens",
+            "700 yens"
+          ],
+          "correct": 0,
+          "feedback": "L'onigiri est à 200円, le bentō à 500円."
+        },
+        {
+          "q": "Que propose le vendeur à la fin ?",
+          "choix": [
+            "De réchauffer",
+            "Un sac",
+            "Une boisson"
+          ],
+          "correct": 0,
+          "feedback": "« 温めますか？ » (atatamemasu ka) = « je le réchauffe ? »"
+        }
+      ]
+    },
+    {
+      "id": "ce-meteo",
+      "titre": "La météo du jour",
+      "niveau": "Débutant",
+      "emoji": "🌤️",
+      "texte_jp": "今日は晴れです。でも、夕方から雨が降ります。傘を持って行ってください。",
+      "texte_romaji": "Kyō wa hare desu. Demo, yūgata kara ame ga furimasu. Kasa wo motte itte kudasai.",
+      "traduction": "Aujourd'hui il fait beau. Mais à partir du soir, il va pleuvoir. Emportez un parapluie.",
+      "questions": [
+        {
+          "q": "Quel temps fait-il aujourd'hui ?",
+          "choix": [
+            "Il pleut",
+            "Il fait beau",
+            "Il neige"
+          ],
+          "correct": 1,
+          "feedback": "« 晴れ » (hare) = beau temps / ensoleillé."
+        },
+        {
+          "q": "Que conseille le texte ?",
+          "choix": [
+            "Rester chez soi",
+            "Prendre un parapluie",
+            "Mettre un manteau"
+          ],
+          "correct": 1,
+          "feedback": "« 傘を持って行って » = emportez un parapluie, car il pleuvra le soir."
+        }
+      ]
+    },
+    {
+      "id": "ce-message",
+      "titre": "Un message d'ami",
+      "niveau": "Intermédiaire",
+      "emoji": "💬",
+      "texte_jp": "明日、一緒に映画を見に行きませんか？三時に駅で会いましょう。連絡してください。",
+      "texte_romaji": "Ashita, issho ni eiga wo mi ni ikimasen ka? Sanji ni eki de aimashō. Renraku shite kudasai.",
+      "traduction": "Demain, on va voir un film ensemble ? Retrouvons-nous à 15h à la gare. Contacte-moi.",
+      "questions": [
+        {
+          "q": "Que propose cette personne ?",
+          "choix": [
+            "Aller au restaurant",
+            "Voir un film",
+            "Faire du shopping"
+          ],
+          "correct": 1,
+          "feedback": "« 映画を見に行く » = aller voir un film."
+        },
+        {
+          "q": "Où et quand se retrouver ?",
+          "choix": [
+            "À la gare à 15h",
+            "Au cinéma à 13h",
+            "À la maison à 17h"
+          ],
+          "correct": 0,
+          "feedback": "« 三時に駅で » = à 15h à la gare."
+        }
+      ]
+    },
+    {
+      "id": "ce-annonce",
+      "titre": "Une annonce dans le train",
+      "niveau": "Intermédiaire",
+      "emoji": "🚆",
+      "texte_jp": "次は東京駅です。お降りの方はお忘れ物のないようにご注意ください。ありがとうございました。",
+      "texte_romaji": "Tsugi wa Tōkyō eki desu. Oori no kata wa owasuremono no nai yō ni go-chūi kudasai.",
+      "traduction": "Prochain arrêt : gare de Tokyo. Les personnes qui descendent, attention à ne rien oublier. Merci.",
+      "questions": [
+        {
+          "q": "Quel est le prochain arrêt ?",
+          "choix": [
+            "Gare de Tokyo",
+            "Shibuya",
+            "Ueno"
+          ],
+          "correct": 0,
+          "feedback": "« 次は東京駅です » = le prochain arrêt est la gare de Tokyo."
+        },
+        {
+          "q": "De quoi prévient l'annonce ?",
+          "choix": [
+            "Un retard",
+            "Ne rien oublier",
+            "Un changement de quai"
+          ],
+          "correct": 1,
+          "feedback": "« お忘れ物のないように » = veillez à ne rien oublier."
+        }
+      ]
+    }
+  ],
+  "comprehension_orale": [
+    {
+      "id": "co-salutation",
+      "titre": "Une salutation",
+      "niveau": "Débutant",
+      "emoji": "👋",
+      "audio_jp": "はじめまして。田中です。よろしくお願いします。",
+      "audio_romaji": "Hajimemashite. Tanaka desu. Yoroshiku onegai shimasu.",
+      "traduction": "Enchanté. Je suis Tanaka. Ravi de faire votre connaissance.",
+      "questions": [
+        {
+          "q": "Comment s'appelle la personne ?",
+          "choix": [
+            "Tanaka",
+            "Yamada",
+            "Suzuki"
+          ],
+          "correct": 0,
+          "feedback": "Elle dit « 田中です » (Tanaka desu)."
+        },
+        {
+          "q": "Dans quelle situation est-on ?",
+          "choix": [
+            "Un départ",
+            "Une première rencontre",
+            "Un repas"
+          ],
+          "correct": 1,
+          "feedback": "« はじめまして » s'utilise lors d'une première rencontre."
+        }
+      ]
+    },
+    {
+      "id": "co-commande",
+      "titre": "Une commande",
+      "niveau": "Débutant",
+      "emoji": "🍜",
+      "audio_jp": "すみません、ラーメンを一つお願いします。",
+      "audio_romaji": "Sumimasen, rāmen wo hitotsu onegai shimasu.",
+      "traduction": "Excusez-moi, un ramen s'il vous plaît.",
+      "questions": [
+        {
+          "q": "Que commande la personne ?",
+          "choix": [
+            "Un ramen",
+            "Un café",
+            "Un thé"
+          ],
+          "correct": 0,
+          "feedback": "« ラーメンを一つ » = un ramen."
+        },
+        {
+          "q": "Combien en commande-t-elle ?",
+          "choix": [
+            "Un",
+            "Deux",
+            "Trois"
+          ],
+          "correct": 0,
+          "feedback": "« 一つ » (hitotsu) = un."
+        }
+      ]
+    },
+    {
+      "id": "co-heure",
+      "titre": "L'heure du rendez-vous",
+      "niveau": "Intermédiaire",
+      "emoji": "🕐",
+      "audio_jp": "明日の朝、九時に会いましょう。遅れないでください。",
+      "audio_romaji": "Ashita no asa, kuji ni aimashō. Okurenaide kudasai.",
+      "traduction": "Demain matin, retrouvons-nous à 9h. Ne soyez pas en retard.",
+      "questions": [
+        {
+          "q": "À quelle heure est le rendez-vous ?",
+          "choix": [
+            "9h",
+            "7h",
+            "11h"
+          ],
+          "correct": 0,
+          "feedback": "« 九時 » (kuji) = 9 heures."
+        },
+        {
+          "q": "Quelle est la recommandation ?",
+          "choix": [
+            "Apporter à manger",
+            "Ne pas être en retard",
+            "Venir à deux"
+          ],
+          "correct": 1,
+          "feedback": "« 遅れないでください » = ne soyez pas en retard."
+        }
+      ]
+    },
+    {
+      "id": "co-direction",
+      "titre": "Une indication",
+      "niveau": "Intermédiaire",
+      "emoji": "🗺️",
+      "audio_jp": "まっすぐ行って、二つ目の角を右に曲がってください。",
+      "audio_romaji": "Massugu itte, futatsume no kado wo migi ni magatte kudasai.",
+      "traduction": "Allez tout droit, puis tournez à droite au deuxième coin.",
+      "questions": [
+        {
+          "q": "Quelle direction prendre au coin ?",
+          "choix": [
+            "À gauche",
+            "À droite",
+            "Tout droit"
+          ],
+          "correct": 1,
+          "feedback": "« 右に曲がって » (migi ni magatte) = tournez à droite."
+        },
+        {
+          "q": "À quel coin tourner ?",
+          "choix": [
+            "Le premier",
+            "Le deuxième",
+            "Le troisième"
+          ],
+          "correct": 1,
+          "feedback": "« 二つ目の角 » = le deuxième coin."
+        }
+      ]
+    }
   ]
 }
