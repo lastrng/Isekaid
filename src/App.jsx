@@ -349,6 +349,19 @@ function WikiPanel({C, entry, onClose, script}) {
         </div>
         {/* Divider */}
         <div style={{height:1,background:C.border,marginBottom:14}}/>
+        {/* Image (Wikimedia Commons) si disponible */}
+        {entry.image && (
+          <div style={{marginBottom:14}}>
+            <img src={entry.image} alt={entry.mot} loading="lazy"
+              style={{width:"100%",height:180,objectFit:"cover",borderRadius:12,display:"block",background:C.s2}}
+              onError={(e)=>{ e.target.parentNode.style.display="none"; }}/>
+            {(entry.author || entry.licence) && (
+              <div style={{fontSize:9,color:C.t3,marginTop:5,textAlign:"right"}}>
+                {entry.author && `Photo : ${entry.author}`}{entry.author && entry.licence && " · "}{entry.licence && `${entry.licence}`} · Wikimedia Commons
+              </div>
+            )}
+          </div>
+        )}
         {/* Definition */}
         <p style={{fontSize:14,color:C.t2,lineHeight:1.8,margin:0}}>{entry.definition}</p>
         {/* Close */}
@@ -3558,9 +3571,14 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
       <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
         {/* Bannière image / emoji */}
         <div style={{height:150,background:`linear-gradient(135deg,${C.red}44,${C.s2})`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
-          <img src={l.image} alt="" onError={(e)=>{e.target.style.display="none";}} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
-          <span style={{fontSize:58,position:"relative",textShadow:"0 2px 12px rgba(0,0,0,0.4)"}}>{l.emoji}</span>
+          <img src={l.photo || l.image} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+          {!l.photo && <span style={{fontSize:58,position:"relative",textShadow:"0 2px 12px rgba(0,0,0,0.4)"}}>{l.emoji}</span>}
           <button onClick={()=>setSub("catalogue")} style={{position:"absolute",top:44,left:16,fontSize:12,color:"#fff",background:"rgba(0,0,0,0.45)",border:"none",padding:"6px 13px",borderRadius:16,cursor:"pointer"}}>‹ Retour</button>
+          {l.photo && (l.photo_author||l.photo_licence) && (
+            <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"3px 8px",background:"rgba(0,0,0,0.4)",fontSize:8,color:"rgba(255,255,255,0.85)",textAlign:"right"}}>
+              {l.photo_author && `${l.photo_author}`}{l.photo_author && l.photo_licence && " · "}{l.photo_licence} · Wikimedia
+            </div>
+          )}
         </div>
         <div style={{padding:"16px 20px 110px"}}>
           <div style={{textAlign:"center",marginBottom:14}}>
@@ -4493,7 +4511,10 @@ function SearchScreen({C, db, script, onClose, onWikiTap}){
         <div style={{display:"flex",flexDirection:"column",gap:9}}>
           {results.map((it,i)=>(
             <div key={i} onClick={()=>{ if(it.kind==="wiki"){ onWikiTap(it.raw); onClose(); } }} style={{display:"flex",alignItems:"center",gap:13,padding:"13px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,cursor:it.kind==="wiki"?"pointer":"default"}}>
-              <span style={{fontSize:24,flexShrink:0}}>{it.emoji}</span>
+              {it.kind==="wiki" && it.raw?.image ? (
+                <img src={it.raw.image} alt={it.title} loading="lazy" style={{width:42,height:42,borderRadius:10,objectFit:"cover",flexShrink:0,background:C.s2}} onError={(e)=>{ e.target.style.display="none"; e.target.nextSibling && (e.target.nextSibling.style.display="flex"); }}/>
+              ) : null}
+              <span style={{fontSize:24,flexShrink:0,...(it.kind==="wiki" && it.raw?.image ? {display:"none",width:42,height:42,alignItems:"center",justifyContent:"center"} : {})}}>{it.emoji}</span>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{display:"flex",alignItems:"baseline",gap:7,marginBottom:2}}>
                   <span style={{fontSize:14,color:C.text,fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{it.title}</span>
