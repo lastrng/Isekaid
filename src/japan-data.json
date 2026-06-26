@@ -11441,7 +11441,8 @@
           "correct": 0,
           "feedback": "« 温めますか？ » (atatamemasu ka) = « je le réchauffe ? »"
         }
-      ]
+      ],
+      "texte_kana": "いらっしゃいませ。こちらのおにぎりは２００えんです。おべんとうは５００えんです。あたためますか？"
     },
     {
       "id": "ce-meteo",
@@ -11472,7 +11473,8 @@
           "correct": 1,
           "feedback": "« 傘を持って行って » = emportez un parapluie, car il pleuvra le soir."
         }
-      ]
+      ],
+      "texte_kana": "きょうははれです。でも、ゆうがたからあめがふります。かさをもっていってください。"
     },
     {
       "id": "ce-message",
@@ -11503,7 +11505,8 @@
           "correct": 0,
           "feedback": "« 三時に駅で » = à 15h à la gare."
         }
-      ]
+      ],
+      "texte_kana": "あした、いっしょにえいがをみにいきませんか？さんじにえきであいましょう。れんらくしてください。"
     },
     {
       "id": "ce-annonce",
@@ -11534,7 +11537,8 @@
           "correct": 1,
           "feedback": "« お忘れ物のないように » = veillez à ne rien oublier."
         }
-      ]
+      ],
+      "texte_kana": "つぎはとうきょうえきです。おおりのかたはおわすれもののないようにごちゅういください。ありがとうございました。"
     }
   ],
   "comprehension_orale": [
@@ -11567,7 +11571,8 @@
           "correct": 1,
           "feedback": "« はじめまして » s'utilise lors d'une première rencontre."
         }
-      ]
+      ],
+      "audio_kana": "はじめまして。たなかです。よろしくおねがいします。"
     },
     {
       "id": "co-commande",
@@ -11598,7 +11603,8 @@
           "correct": 0,
           "feedback": "« 一つ » (hitotsu) = un."
         }
-      ]
+      ],
+      "audio_kana": "すみません、ラーメンをひとつおねがいします。"
     },
     {
       "id": "co-heure",
@@ -11629,7 +11635,8 @@
           "correct": 1,
           "feedback": "« 遅れないでください » = ne soyez pas en retard."
         }
-      ]
+      ],
+      "audio_kana": "あしたのあさ、くじにあいましょう。おくれないでください。"
     },
     {
       "id": "co-direction",
@@ -11660,7 +11667,8 @@
           "correct": 1,
           "feedback": "« 二つ目の角 » = le deuxième coin."
         }
-      ]
+      ],
+      "audio_kana": "まっすぐいって、ふたつめのかどをみぎにまがってください。"
     }
   ]
 }

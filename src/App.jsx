@@ -2556,7 +2556,10 @@ function ComprehensionRead({ C, db, script, onRecord }){
   };
 
   // Texte selon le mode de script
-  const mainText = script==="romaji" ? exo.texte_romaji : exo.texte_jp;
+  // Texte selon le mode : kana (défaut) → kanji → romaji
+  const mainText = script==="romaji" ? exo.texte_romaji
+                 : script==="kana"   ? (exo.texte_kana || exo.texte_jp)
+                 : exo.texte_jp;
 
   return(
     <div>
@@ -2654,7 +2657,7 @@ function ComprehensionListen({ C, db, script }){
       </button>
       {revealed && (
         <div style={{padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,marginBottom:18,marginTop:-8}}>
-          <div style={{fontSize:17,lineHeight:1.8,color:C.text,fontFamily:"'Noto Serif JP',serif",marginBottom:8}}>{script==="romaji"?exo.audio_romaji:exo.audio_jp}</div>
+          <div style={{fontSize:17,lineHeight:1.8,color:C.text,fontFamily:"'Noto Serif JP',serif",marginBottom:8}}>{script==="romaji"?exo.audio_romaji:script==="kana"?(exo.audio_kana||exo.audio_jp):exo.audio_jp}</div>
           <div style={{fontSize:12,color:C.t2,fontStyle:"italic"}}>{exo.traduction}</div>
         </div>
       )}
@@ -2704,7 +2707,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   const [situation,setSituation] = useState(null); // selected situation
   const [pathStep,setPathStep] = useState(null);   // active path step (detail)
   const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
-  const [learnMode,setLearnMode] = useState(null);   // null = choix | "path" | "free"
+  const [learnMode,setLearnMode] = useState(null);   // null = choix | "path" | "alphabets" | "situations" | "read" | "listen"
   const situations = db?.situations || [];
   const kp = kanaProgress || {};
   const completed = pathProgress?.completed || [];
@@ -2888,15 +2891,28 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
                 </div>
               </div>
 
-              {/* Carte Entraînement libre */}
-              <div className="lift" onClick={()=>setLearnMode("free")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+              {/* Carte Apprendre les alphabets */}
+              <div className="lift" onClick={()=>setLearnMode("alphabets")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
                 <div style={{height:4,background:`linear-gradient(90deg,${acc.accent},transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
-                <div style={{fontSize:10,color:acc.accent,letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>À la carte</div>
+                <div style={{fontSize:10,color:acc.accent,letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>仮名 · Syllabaires</div>
                 <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
                   <div style={{width:48,height:48,borderRadius:13,background:acc.soft,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>🎴</div>
                   <div>
-                    <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:5}}>Entraînement libre</div>
-                    <div style={{fontSize:12,color:C.t2,lineHeight:1.55}}>Flashcards et quiz sur les syllabaires (hiragana, katakana, sons avancés) + situations courantes.</div>
+                    <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:5}}>Apprendre les alphabets</div>
+                    <div style={{fontSize:12,color:C.t2,lineHeight:1.55}}>Hiragana, katakana et sons avancés : flashcards, quiz et dessin des kana.</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Carte Situations courantes */}
+              <div className="lift" onClick={()=>setLearnMode("situations")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+                <div style={{height:4,background:`linear-gradient(90deg,#C97D3C,transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
+                <div style={{fontSize:10,color:"#C97D3C",letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>会話 · Expressions</div>
+                <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
+                  <div style={{width:48,height:48,borderRadius:13,background:"rgba(201,125,60,0.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>💬</div>
+                  <div>
+                    <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:5}}>Situations courantes</div>
+                    <div style={{fontSize:12,color:C.t2,lineHeight:1.55}}>Les phrases et expressions utiles au quotidien, classées par situation.</div>
                   </div>
                 </div>
               </div>
@@ -2981,7 +2997,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
         {learnMode==="read" && <ComprehensionRead C={C} db={db} script={script} onRecord={onRecordKana}/>}
         {learnMode==="listen" && <ComprehensionListen C={C} db={db} script={script}/>}
 
-        {learnMode==="free" && (<>
+        {learnMode==="alphabets" && (<>
         {/* Syllabaires */}
         {["Bases","Avancé"].map(grp=>(
           <div key={grp}>
@@ -3019,13 +3035,10 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
             </div>
           </div>
         ))}
+        </>)}
 
+        {learnMode==="situations" && (<>
         {/* Situations courantes */}
-        <div style={{display:"flex",alignItems:"center",gap:8,margin:"26px 0 12px"}}>
-          <div style={{flex:1,height:1,background:C.border}}/>
-          <span style={{fontSize:10,color:C.t3,letterSpacing:".2em",textTransform:"uppercase",flexShrink:0}}>💬 Situations courantes</span>
-          <div style={{flex:1,height:1,background:C.border}}/>
-        </div>
         <div style={{display:"flex",flexDirection:"column",gap:10}} className="stagger">
           {situations.map((s,i)=>(
             <div key={i} className="lift" onClick={()=>setSituation(s)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"14px 16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
