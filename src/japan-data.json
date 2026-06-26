@@ -4981,26 +4981,34 @@
             {
               "jp": "はじめまして",
               "romaji": "Hajimemashite",
-              "fr": "Enchanté(e)",
+              "kana": "はじめまして",
+              "fr": "Enchanté (1re rencontre)",
               "correct": true,
-              "feedback": "Parfait ! On répond par la même formule lors d'une première rencontre.",
-              "kana": "はじめまして"
+              "feedback": "Correct ! « Hajimemashite » s'emploie uniquement lors d'une première rencontre."
             },
             {
-              "jp": "さようなら",
-              "romaji": "Sayōnara",
-              "fr": "Au revoir",
+              "jp": "おひさしぶりです",
+              "romaji": "Ohisashiburi desu",
+              "kana": "おひさしぶり です",
+              "fr": "Ça faisait longtemps",
               "correct": false,
-              "feedback": "C'est « au revoir » — un peu prématuré pour une rencontre !",
-              "kana": "さようなら"
+              "feedback": "C'est pour quelqu'un qu'on RETROUVE après une absence, pas une première rencontre."
             },
             {
-              "jp": "おやすみ",
-              "romaji": "Oyasumi",
-              "fr": "Bonne nuit",
+              "jp": "おせわになります",
+              "romaji": "Osewa ni narimasu",
+              "kana": "おせわ に なります",
+              "fr": "Merci de votre aide (à venir)",
               "correct": false,
-              "feedback": "« Bonne nuit » ne convient pas à une présentation.",
-              "kana": "おやすみ"
+              "feedback": "Formule pro juste, mais elle ne « présente » pas : on attend « hajimemashite »."
+            },
+            {
+              "jp": "こんにちは",
+              "romaji": "Konnichiwa",
+              "kana": "こんにちわ",
+              "fr": "Bonjour",
+              "correct": false,
+              "feedback": "Poli mais générique ; pour SE PRÉSENTER, « hajimemashite » est attendu."
             }
           ],
           "situation_romaji": "Un Japonais s'approche de toi et dit : « Hajimemashite »"
@@ -5010,28 +5018,36 @@
           "question": "Comment donnes-tu ton nom (ex : Lucas) ?",
           "choix": [
             {
+              "jp": "ルカスと申します",
+              "romaji": "Lucas to mōshimasu",
+              "kana": "lうcあs と mうします",
+              "fr": "Je me nomme Lucas (poli)",
+              "correct": true,
+              "feedback": "Excellent ! « ~to mōshimasu » est la forme humble et polie pour donner son nom."
+            },
+            {
               "jp": "ルカスです",
               "romaji": "Lucas desu",
+              "kana": "lうcあs です",
               "fr": "Je suis Lucas",
-              "correct": true,
-              "feedback": "Excellent ! « [Nom] desu » est la façon simple et polie de se nommer.",
-              "kana": "lうcあs です"
+              "correct": false,
+              "feedback": "Correct mais plus familier ; « to mōshimasu » est plus poli en présentation."
+            },
+            {
+              "jp": "ルカスといいます",
+              "romaji": "Lucas to iimasu",
+              "kana": "lうcあs と いいます",
+              "fr": "On m'appelle Lucas",
+              "correct": false,
+              "feedback": "Acceptable, mais « to mōshimasu » est le registre le plus poli ici."
             },
             {
               "jp": "ルカスがいます",
               "romaji": "Lucas ga imasu",
+              "kana": "lうcあs が います",
               "fr": "Il y a Lucas",
               "correct": false,
-              "feedback": "« ga imasu » sert à dire qu'une personne existe/est présente, pas à se nommer.",
-              "kana": "lうcあs が います"
-            },
-            {
-              "jp": "ルカスをください",
-              "romaji": "Lucas wo kudasai",
-              "fr": "Lucas, s'il vous plaît",
-              "correct": false,
-              "feedback": "Tu viens de te « commander » toi-même ! « kudasai » sert à demander un objet.",
-              "kana": "lうcあs を ください"
+              "feedback": "« ga imasu » signifie « il y a » : on dirait que tu parles d'une autre personne !"
             }
           ],
           "situation_romaji": "Il te demande ton nom : « Onamae wa? »"
@@ -5042,27 +5058,35 @@
           "choix": [
             {
               "jp": "よろしくお願いします",
-              "romaji": "Yoroshiku onegaishimasu",
-              "fr": "Ravi de faire votre connaissance",
+              "romaji": "Yoroshiku onegai shimasu",
+              "kana": "よろしく おねがい します",
+              "fr": "Ravi de vous connaître",
               "correct": true,
-              "feedback": "Impeccable ! Cette formule scelle toute nouvelle relation au Japon.",
-              "kana": "よろしく おねがいします"
+              "feedback": "Parfait ! La formule rituelle qui clôt toute présentation au Japon."
             },
             {
-              "jp": "いただきます",
-              "romaji": "Itadakimasu",
-              "fr": "Bon appétit",
+              "jp": "おねがいします",
+              "romaji": "Onegai shimasu",
+              "kana": "おねがい します",
+              "fr": "S'il vous plaît",
               "correct": false,
-              "feedback": "Ça se dit avant de manger, pas pour conclure une présentation !",
-              "kana": "いただきます"
+              "feedback": "Incomplet : sans « yoroshiku », ça sonne comme une simple requête."
             },
             {
-              "jp": "ごめんなさい",
-              "romaji": "Gomen nasai",
-              "fr": "Je suis désolé(e)",
+              "jp": "おつかれさまです",
+              "romaji": "Otsukaresama desu",
+              "kana": "おつかれさま です",
+              "fr": "Bon courage / merci du travail",
               "correct": false,
-              "feedback": "Pas besoin de t'excuser, la rencontre se passe bien !",
-              "kana": "ごめん なさい"
+              "feedback": "C'est entre collègues après un effort, pas pour clore une présentation."
+            },
+            {
+              "jp": "しつれいします",
+              "romaji": "Shitsurei shimasu",
+              "kana": "しつれい します",
+              "fr": "Excusez-moi / je me retire",
+              "correct": false,
+              "feedback": "Sert à prendre congé ou s'excuser, pas à conclure une présentation."
             }
           ],
           "situation_romaji": "Pour conclure poliment la présentation…"
@@ -5087,26 +5111,34 @@
             {
               "jp": "ありがとうございます",
               "romaji": "Arigatō gozaimasu",
+              "kana": "ありがtう ございます",
               "fr": "Merci beaucoup",
               "correct": true,
-              "feedback": "Parfait ! La forme polie complète, idéale avec un inconnu.",
-              "kana": "ありがtう ございます"
+              "feedback": "Correct ! Forme polie au présent, idéale envers quelqu'un qu'on ne connaît pas."
             },
             {
               "jp": "ありがとう",
               "romaji": "Arigatō",
-              "fr": "Merci",
+              "kana": "ありがtう",
+              "fr": "Merci (familier)",
               "correct": false,
-              "feedback": "Correct mais trop familier avec un inconnu. Préfère la forme en « gozaimasu ».",
-              "kana": "ありがtう"
+              "feedback": "Trop familier dans un contexte poli ; ajoute « gozaimasu »."
             },
             {
-              "jp": "すみません",
-              "romaji": "Sumimasen",
-              "fr": "Excusez-moi",
+              "jp": "どういたしまして",
+              "romaji": "Dō itashimashite",
+              "kana": "dう いたしまして",
+              "fr": "Je vous en prie",
               "correct": false,
-              "feedback": "Curieusement, ça s'emploie parfois pour remercier — mais ici « arigatō gozaimasu » est plus clair.",
-              "kana": "すみません"
+              "feedback": "C'est la RÉPONSE à un merci, pas le remerciement lui-même !"
+            },
+            {
+              "jp": "おめでとうございます",
+              "romaji": "Omedetō gozaimasu",
+              "kana": "おめでtう ございます",
+              "fr": "Félicitations",
+              "correct": false,
+              "feedback": "On félicite, on ne remercie pas : le verbe est différent."
             }
           ],
           "situation_romaji": "Un passant t'aide à retrouver ton chemin. Tu veux le remercier poliment."
@@ -5116,26 +5148,36 @@
           "question": "Que signifie sa réponse ?",
           "choix": [
             {
-              "jp": "どういたしまして",
-              "romaji": "Dō itashimashite",
-              "fr": "Je vous en prie / De rien",
+              "jp": "おかげさまで",
+              "romaji": "Okagesama de",
+              "kana": "おかげさま で",
+              "fr": "Grâce à vous",
               "correct": true,
-              "feedback": "Exact ! C'est la réponse classique à un remerciement.",
-              "kana": "dう いたしまして"
+              "feedback": "Parfait ! Expression de gratitude humble très appréciée au Japon."
             },
             {
-              "jp": "",
-              "romaji": "",
-              "fr": "Dépêchez-vous",
+              "jp": "おかげで",
+              "romaji": "Okage de",
+              "kana": "おかげ で",
+              "fr": "Grâce à (ça)",
               "correct": false,
-              "feedback": "Non, c'est une formule de politesse signifiant « de rien »."
+              "feedback": "Proche, mais « okagesama de » est la forme polie et idiomatique."
             },
             {
-              "jp": "",
-              "romaji": "",
-              "fr": "Je ne sais pas",
+              "jp": "おだいじに",
+              "romaji": "Odaiji ni",
+              "kana": "おだいじ に",
+              "fr": "Prenez soin de vous",
               "correct": false,
-              "feedback": "Non, « dō itashimashite » veut dire « je vous en prie »."
+              "feedback": "On le dit à un malade, pas pour exprimer sa gratitude."
+            },
+            {
+              "jp": "ごめんなさい",
+              "romaji": "Gomennasai",
+              "kana": "ごめんなさい",
+              "fr": "Je suis désolé",
+              "correct": false,
+              "feedback": "C'est une excuse, pas un remerciement."
             }
           ],
           "situation_romaji": "Il répond : « Dō itashimashite »"
@@ -5145,28 +5187,36 @@
           "question": "Comment le remercies-tu, lui, de façon naturelle ?",
           "choix": [
             {
-              "jp": "ありがとう",
-              "romaji": "Arigatō",
-              "fr": "Merci",
+              "jp": "こちらこそ",
+              "romaji": "Kochira koso",
+              "kana": "こちら こそ",
+              "fr": "C'est moi qui vous remercie",
               "correct": true,
-              "feedback": "Parfait ! Entre amis proches, la forme courte est naturelle et chaleureuse.",
-              "kana": "ありがtう"
+              "feedback": "Excellent ! « Kochira koso » renvoie poliment le remerciement ou la politesse."
             },
             {
-              "jp": "ありがとうございます",
-              "romaji": "Arigatō gozaimasu",
-              "fr": "Merci beaucoup",
+              "jp": "そうですね",
+              "romaji": "Sō desu ne",
+              "kana": "sう です ね",
+              "fr": "C'est vrai",
               "correct": false,
-              "feedback": "Pas faux, mais un peu formel entre amis proches. « Arigatō » suffit.",
-              "kana": "ありがtう ございます"
+              "feedback": "Simple acquiescement ; ne renvoie pas le remerciement."
             },
             {
-              "jp": "おめでとう",
-              "romaji": "Omedetō",
-              "fr": "Félicitations",
+              "jp": "いいえ、ちがいます",
+              "romaji": "Iie, chigaimasu",
+              "kana": "いいえ, ちがいます",
+              "fr": "Non, c'est faux",
               "correct": false,
-              "feedback": "« Félicitations » ne correspond pas à un remerciement !",
-              "kana": "おめでtう"
+              "feedback": "Contredire ici est maladroit et hors sujet."
+            },
+            {
+              "jp": "わかりました",
+              "romaji": "Wakarimashita",
+              "kana": "わかりました",
+              "fr": "J'ai compris",
+              "correct": false,
+              "feedback": "Marque la compréhension, pas un échange de politesses."
             }
           ],
           "situation_romaji": "Plus tard, un ami proche te prête son parapluie."
@@ -5191,26 +5241,34 @@
             {
               "jp": "すみません",
               "romaji": "Sumimasen",
-              "fr": "Pardon / Excusez-moi",
+              "kana": "すみません",
+              "fr": "Excusez-moi / pardon",
               "correct": true,
-              "feedback": "Parfait ! « Sumimasen » est le passe-partout pour un petit incident.",
-              "kana": "すみません"
+              "feedback": "Correct : « sumimasen » couvre l'excuse légère et l'interpellation."
             },
             {
-              "jp": "ありがとう",
-              "romaji": "Arigatō",
-              "fr": "Merci",
+              "jp": "ごめんください",
+              "romaji": "Gomen kudasai",
+              "kana": "ごめん ください",
+              "fr": "Il y a quelqu'un ? (à l'entrée)",
               "correct": false,
-              "feedback": "Tu remercies la personne que tu viens de bousculer — étrange !",
-              "kana": "ありがtう"
+              "feedback": "S'emploie pour signaler sa présence à une porte, pas pour s'excuser."
             },
             {
-              "jp": "こんにちは",
-              "romaji": "Konnichiwa",
-              "fr": "Bonjour",
+              "jp": "おじゃまします",
+              "romaji": "Ojama shimasu",
+              "kana": "おじゃま します",
+              "fr": "Pardon de vous déranger (en entrant)",
               "correct": false,
-              "feedback": "Un « bonjour » ne répare pas une bousculade.",
-              "kana": "こんにちわ"
+              "feedback": "Se dit en entrant chez quelqu'un, pas comme excuse générale."
+            },
+            {
+              "jp": "しつれいしました",
+              "romaji": "Shitsurei shimashita",
+              "kana": "しつれい しました",
+              "fr": "Veuillez m'excuser (formel, passé)",
+              "correct": false,
+              "feedback": "Très formel et au passé ; « sumimasen » convient mieux ici."
             }
           ],
           "situation_romaji": "Tu bouscules légèrement quelqu'un dans la rue."
@@ -5220,28 +5278,36 @@
           "question": "Comment t'excuses-tu sincèrement ?",
           "choix": [
             {
-              "jp": "遅れてすみません",
-              "romaji": "Okurete sumimasen",
-              "fr": "Désolé pour le retard",
+              "jp": "もうしわけありません",
+              "romaji": "Mōshiwake arimasen",
+              "kana": "mうしわけ ありません",
+              "fr": "Je suis vraiment désolé (formel)",
               "correct": true,
-              "feedback": "Excellent ! Tu précises la raison de tes excuses, c'est plus sincère.",
-              "kana": "おくれて すみません"
+              "feedback": "Parfait : excuse formelle et sincère, adaptée à une faute sérieuse."
             },
             {
-              "jp": "すみません、トイレはどこですか",
-              "romaji": "Sumimasen, toire wa doko desu ka",
-              "fr": "Pardon, où sont les toilettes ?",
+              "jp": "ごめんね",
+              "romaji": "Gomen ne",
+              "kana": "ごめん ね",
+              "fr": "Désolé (familier)",
               "correct": false,
-              "feedback": "Tu commences bien par « sumimasen »… mais le reste est hors sujet !",
-              "kana": "すみません, といれ わ どこ です か"
+              "feedback": "Beaucoup trop familier pour une excuse formelle."
             },
             {
-              "jp": "おはよう",
-              "romaji": "Ohayō",
-              "fr": "Salut (matin)",
+              "jp": "しかたがありません",
+              "romaji": "Shikata ga arimasen",
+              "kana": "しかた が ありません",
+              "fr": "On n'y peut rien",
               "correct": false,
-              "feedback": "Une salutation décontractée n'excuse pas un retard.",
-              "kana": "おはyう"
+              "feedback": "Exprime la résignation, pas l'excuse."
+            },
+            {
+              "jp": "おかげさまで",
+              "romaji": "Okagesama de",
+              "kana": "おかげさま で",
+              "fr": "Grâce à vous",
+              "correct": false,
+              "feedback": "C'est une formule de gratitude, hors sujet ici."
             }
           ],
           "situation_romaji": "Tu es en retard à un rendez-vous important avec un collègue."
@@ -5251,28 +5317,36 @@
           "question": "Quelle est la formule la plus appropriée ?",
           "choix": [
             {
-              "jp": "申し訳ございません",
-              "romaji": "Mōshiwake gozaimasen",
-              "fr": "Je vous présente mes sincères excuses",
+              "jp": "きをつけます",
+              "romaji": "Ki wo tsukemasu",
+              "kana": "き を つけます",
+              "fr": "Je ferai attention",
               "correct": true,
-              "feedback": "Parfait ! C'est l'excuse la plus formelle et respectueuse, adaptée au monde professionnel.",
-              "kana": "mうしわけ ございません"
+              "feedback": "Excellent : promettre de faire attention apaise et conclut l'excuse."
             },
             {
-              "jp": "ごめん",
-              "romaji": "Gomen",
-              "fr": "Désolé",
+              "jp": "きにしないでください",
+              "romaji": "Ki ni shinaide kudasai",
+              "kana": "き に しないで ください",
+              "fr": "Ne vous en faites pas",
               "correct": false,
-              "feedback": "Bien trop familier pour une faute professionnelle.",
-              "kana": "ごめん"
+              "feedback": "C'est ce qu'on dit à l'autre, pas après s'être excusé soi-même."
             },
             {
-              "jp": "すみません",
-              "romaji": "Sumimasen",
-              "fr": "Excusez-moi",
+              "jp": "だいじょうぶです",
+              "romaji": "Daijōbu desu",
+              "kana": "だいjうぶ です",
+              "fr": "Ça va",
               "correct": false,
-              "feedback": "Correct pour un petit incident, mais trop léger pour une vraie erreur au travail.",
-              "kana": "すみません"
+              "feedback": "Minimise alors que tu viens de t'excuser : incohérent."
+            },
+            {
+              "jp": "しらなかったです",
+              "romaji": "Shiranakatta desu",
+              "kana": "しらなかった です",
+              "fr": "Je ne savais pas",
+              "correct": false,
+              "feedback": "Se justifier peut sembler esquiver la responsabilité."
             }
           ],
           "situation_romaji": "Tu as fait une vraie erreur professionnelle. Il faut des excuses formelles."
@@ -5295,25 +5369,36 @@
           "question": "Que signifie cette phrase et que fais-tu ?",
           "choix": [
             {
-              "jp": "",
-              "romaji": "",
-              "fr": "« Bienvenue » — je n'ai pas à répondre, je souris poliment",
+              "jp": "ふくろをください",
+              "romaji": "Fukuro wo kudasai",
+              "kana": "ふくろ を ください",
+              "fr": "Un sac, s'il vous plaît",
               "correct": true,
-              "feedback": "Exact ! « Irasshaimase » est l'accueil rituel, on n'y répond pas verbalement."
+              "feedback": "Correct : « fukuro » = sac, « ~wo kudasai » pour demander."
             },
             {
-              "jp": "",
-              "romaji": "",
-              "fr": "« Au revoir » — je m'en vais",
+              "jp": "ふくろはいりません",
+              "romaji": "Fukuro wa irimasen",
+              "kana": "ふくろ わ いりません",
+              "fr": "Je ne veux pas de sac",
               "correct": false,
-              "feedback": "Non, c'est un accueil chaleureux « bienvenue », pas un adieu."
+              "feedback": "L'inverse de ce qu'on demande si on VEUT un sac."
             },
             {
-              "jp": "",
-              "romaji": "",
-              "fr": "« Payez maintenant » — je sors ma carte",
+              "jp": "ふくろはどこですか",
+              "romaji": "Fukuro wa doko desu ka",
+              "kana": "ふくろ わ どこ です か",
+              "fr": "Où sont les sacs ?",
               "correct": false,
-              "feedback": "Non, c'est simplement « bienvenue »."
+              "feedback": "Tu demandes leur emplacement, pas qu'on t'en donne un."
+            },
+            {
+              "jp": "ふくろがすきです",
+              "romaji": "Fukuro ga suki desu",
+              "kana": "ふくろ が すき です",
+              "fr": "J'aime les sacs",
+              "correct": false,
+              "feedback": "Exprime un goût, pas une demande."
             }
           ],
           "situation_romaji": "En arrivant en caisse, l'employé dit : « Irasshaimase »"
@@ -5323,28 +5408,36 @@
           "question": "Il te demande si tu veux un sac. Tu en veux un.",
           "choix": [
             {
-              "jp": "はい、お願いします",
-              "romaji": "Hai, onegaishimasu",
-              "fr": "Oui, s'il vous plaît",
+              "jp": "カードではらいます",
+              "romaji": "Kādo de haraimasu",
+              "kana": "kあど で はらいます",
+              "fr": "Je paie par carte",
               "correct": true,
-              "feedback": "Parfait ! Réponse polie et claire pour accepter.",
-              "kana": "はい, おねがいします"
+              "feedback": "Parfait : « ~de haraimasu » indique le moyen de paiement."
             },
             {
-              "jp": "いいえ、結構です",
-              "romaji": "Iie, kekkō desu",
-              "fr": "Non, ça ira",
+              "jp": "カードがほしいです",
+              "romaji": "Kādo ga hoshii desu",
+              "kana": "kあど が ほしい です",
+              "fr": "Je veux une carte",
               "correct": false,
-              "feedback": "C'est la réponse pour REFUSER le sac — l'inverse de ce que tu voulais.",
-              "kana": "いいえ, けっkう です"
+              "feedback": "« hoshii » = désirer posséder ; tu veux PAYER avec, pas en obtenir une."
             },
             {
-              "jp": "わかりません",
-              "romaji": "Wakarimasen",
-              "fr": "Je ne comprends pas",
+              "jp": "カードはどこですか",
+              "romaji": "Kādo wa doko desu ka",
+              "kana": "kあど わ どこ です か",
+              "fr": "Où est la carte ?",
               "correct": false,
-              "feedback": "Évite si possible — ici un simple « oui merci » suffisait.",
-              "kana": "わかりません"
+              "feedback": "Hors sujet : tu annonces ton moyen de paiement."
+            },
+            {
+              "jp": "カードです",
+              "romaji": "Kādo desu",
+              "kana": "kあど です",
+              "fr": "C'est une carte",
+              "correct": false,
+              "feedback": "Décrit sans dire que tu veux payer avec."
             }
           ],
           "situation_romaji": "L'employé te demande : « Fukuro wa go-riyō desu ka? »"
@@ -5354,28 +5447,36 @@
           "question": "Que dis-tu en partant ?",
           "choix": [
             {
-              "jp": "ありがとうございます",
-              "romaji": "Arigatō gozaimasu",
-              "fr": "Merci beaucoup",
+              "jp": "レシートはけっこうです",
+              "romaji": "Reshīto wa kekkō desu",
+              "kana": "れshいと わ けっkう です",
+              "fr": "Pas besoin de reçu",
               "correct": true,
-              "feedback": "Parfait ! Un remerciement poli clôt l'interaction avec élégance.",
-              "kana": "ありがtう ございます"
+              "feedback": "Excellent : « kekkō desu » = « ça ira / pas besoin », poli pour refuser."
             },
             {
-              "jp": "いただきます",
-              "romaji": "Itadakimasu",
-              "fr": "Bon appétit",
+              "jp": "レシートをください",
+              "romaji": "Reshīto wo kudasai",
+              "kana": "れshいと を ください",
+              "fr": "Donnez-moi le reçu",
               "correct": false,
-              "feedback": "Pas encore ! Tu n'es pas à table.",
-              "kana": "いただきます"
+              "feedback": "Tu en demandes un alors que tu voulais refuser."
             },
             {
-              "jp": "はじめまして",
-              "romaji": "Hajimemashite",
-              "fr": "Enchanté",
+              "jp": "レシートはどこですか",
+              "romaji": "Reshīto wa doko desu ka",
+              "kana": "れshいと わ どこ です か",
+              "fr": "Où est le reçu ?",
               "correct": false,
-              "feedback": "On ne se présente pas en quittant une caisse !",
-              "kana": "はじめまして"
+              "feedback": "Question d'emplacement, hors contexte."
+            },
+            {
+              "jp": "レシートがありません",
+              "romaji": "Reshīto ga arimasen",
+              "kana": "れshいと が ありません",
+              "fr": "Il n'y a pas de reçu",
+              "correct": false,
+              "feedback": "Tu constates une absence au lieu de refuser poliment."
             }
           ],
           "situation_romaji": "Tu as payé, l'employé te tend ton sac."
@@ -5398,28 +5499,36 @@
           "question": "Tu es seul. Que réponds-tu ?",
           "choix": [
             {
-              "jp": "一人です",
+              "jp": "ひとりです",
               "romaji": "Hitori desu",
+              "kana": "ひとり です",
               "fr": "Une personne",
               "correct": true,
-              "feedback": "Parfait ! « Hitori » = une personne, « futari » = deux.",
-              "kana": "ひとり です"
+              "feedback": "Correct : « hitori » = une personne ; « futari » = deux."
             },
             {
-              "jp": "おいしいです",
-              "romaji": "Oishii desu",
-              "fr": "C'est délicieux",
+              "jp": "ひとつです",
+              "romaji": "Hitotsu desu",
+              "kana": "ひとつ です",
+              "fr": "Un (objet)",
               "correct": false,
-              "feedback": "Tu n'as pas encore mangé ! Cela veut dire « c'est délicieux ».",
-              "kana": "おいしい です"
+              "feedback": "« hitotsu » compte des objets, pas des personnes !"
             },
             {
-              "jp": "ありがとう",
-              "romaji": "Arigatō",
-              "fr": "Merci",
+              "jp": "いちにんまえです",
+              "romaji": "Ichinin mae desu",
+              "kana": "いちにん まえ です",
+              "fr": "Une portion",
               "correct": false,
-              "feedback": "Poli, mais il te demandait le nombre de personnes.",
-              "kana": "ありがtう"
+              "feedback": "« ichinin mae » désigne une portion de plat, pas le nombre de convives."
+            },
+            {
+              "jp": "ひとりじゃないです",
+              "romaji": "Hitori ja nai desu",
+              "kana": "ひとり じゃ ない です",
+              "fr": "Pas tout seul",
+              "correct": false,
+              "feedback": "Tu nies être seul alors que tu l'es."
             }
           ],
           "situation_romaji": "Le serveur t'accueille : « いらっしゃいませ！何名様ですか？ »"
@@ -5431,26 +5540,34 @@
             {
               "jp": "ラーメンをください",
               "romaji": "Rāmen wo kudasai",
+              "kana": "rあめん を ください",
               "fr": "Un ramen, s'il vous plaît",
               "correct": true,
-              "feedback": "Excellent ! « ~wo kudasai » est LA formule pour commander.",
-              "kana": "rあめん を ください"
+              "feedback": "Parfait : « ~wo kudasai » est la formule pour commander."
             },
             {
-              "jp": "ラーメンです",
-              "romaji": "Rāmen desu",
-              "fr": "C'est un ramen",
+              "jp": "ラーメンにします",
+              "romaji": "Rāmen ni shimasu",
+              "kana": "rあめん に します",
+              "fr": "Je vais prendre un ramen",
               "correct": false,
-              "feedback": "Cela décrit, mais ne commande pas. Utilise « kudasai ».",
-              "kana": "rあめん です"
+              "feedback": "Correct en soi, mais moins direct pour une commande au comptoir."
             },
             {
-              "jp": "ラーメンはどこ",
-              "romaji": "Rāmen wa doko",
-              "fr": "Où est le ramen ?",
+              "jp": "ラーメンはありますか",
+              "romaji": "Rāmen wa arimasu ka",
+              "kana": "rあめん わ あります か",
+              "fr": "Avez-vous des ramen ?",
               "correct": false,
-              "feedback": "Tu demandes où il est, pas idéal pour commander !",
-              "kana": "rあめん わ どこ"
+              "feedback": "Tu vérifies la disponibilité au lieu de commander."
+            },
+            {
+              "jp": "ラーメンがたべたいです",
+              "romaji": "Rāmen ga tabetai desu",
+              "kana": "rあめん が たべたい です",
+              "fr": "J'ai envie de ramen",
+              "correct": false,
+              "feedback": "Exprime une envie ; pas encore une commande passée au serveur."
             }
           ],
           "situation_romaji": "On t'apporte le menu. Tu veux commander un ramen."
@@ -5462,26 +5579,34 @@
             {
               "jp": "ごちそうさまでした",
               "romaji": "Gochisōsama deshita",
+              "kana": "ごちsうさま でした",
               "fr": "Merci pour le repas",
               "correct": true,
-              "feedback": "Parfait ! La formule rituelle après avoir mangé, très appréciée.",
-              "kana": "ごちsうさま でした"
+              "feedback": "Parfait : formule rituelle après avoir mangé."
             },
             {
               "jp": "いただきます",
               "romaji": "Itadakimasu",
+              "kana": "いただきます",
               "fr": "Bon appétit (avant)",
               "correct": false,
-              "feedback": "Ça, c'est AVANT de manger ! Après, on dit « gochisōsama ».",
-              "kana": "いただきます"
+              "feedback": "Ça se dit AVANT de manger, pas après."
             },
             {
-              "jp": "すみません",
-              "romaji": "Sumimasen",
-              "fr": "Excusez-moi",
+              "jp": "おいしかったです",
+              "romaji": "Oishii katta desu",
+              "kana": "おいしい かった です",
+              "fr": "C'était délicieux",
               "correct": false,
-              "feedback": "Utile pour appeler, mais pas pour remercier du repas.",
-              "kana": "すみません"
+              "feedback": "Sympa, mais « gochisōsama » est la formule rituelle attendue en partant."
+            },
+            {
+              "jp": "おなかがすきました",
+              "romaji": "Onaka ga sukimashita",
+              "kana": "おなか が すきました",
+              "fr": "J'ai faim",
+              "correct": false,
+              "feedback": "Tu viens de finir de manger : incohérent."
             }
           ],
           "situation_romaji": "Tu as fini, c'était excellent. Tu veux le dire."
@@ -5506,26 +5631,34 @@
             {
               "jp": "すみません",
               "romaji": "Sumimasen",
+              "kana": "すみません",
               "fr": "Excusez-moi",
               "correct": true,
-              "feedback": "Parfait ! « Sumimasen » est la clé pour aborder quelqu'un poliment.",
-              "kana": "すみません"
+              "feedback": "Parfait pour aborder poliment un agent."
             },
             {
-              "jp": "こんにちは",
-              "romaji": "Konnichiwa",
-              "fr": "Bonjour",
+              "jp": "ちょっといいですか",
+              "romaji": "Chotto ii desu ka",
+              "kana": "ちょっと いい です か",
+              "fr": "Vous avez un instant ?",
               "correct": false,
-              "feedback": "Poli, mais « sumimasen » est plus adapté pour demander de l'aide.",
-              "kana": "こんにちわ"
+              "feedback": "Correct mais moins standard ; « sumimasen » ouvre mieux l'échange."
             },
             {
-              "jp": "さようなら",
-              "romaji": "Sayōnara",
-              "fr": "Au revoir",
+              "jp": "おはようございます",
+              "romaji": "Ohayō gozaimasu",
+              "kana": "おはyう ございます",
+              "fr": "Bonjour (matin)",
               "correct": false,
-              "feedback": "Tu pars déjà ? Ce n'est pas le moment !",
-              "kana": "さようなら"
+              "feedback": "Une salutation ne sert pas à demander de l'aide."
+            },
+            {
+              "jp": "ごめんください",
+              "romaji": "Gomen kudasai",
+              "kana": "ごめん ください",
+              "fr": "Il y a quelqu'un ?",
+              "correct": false,
+              "feedback": "S'emploie à l'entrée d'un domicile, pas dans une gare."
             }
           ],
           "situation_romaji": "Tu cherches le bon quai. Tu abordes un agent."
@@ -5535,28 +5668,36 @@
           "question": "Que dis-tu ?",
           "choix": [
             {
-              "jp": "京都はどこですか",
-              "romaji": "Kyōto wa doko desu ka",
-              "fr": "Où est Kyoto ?",
+              "jp": "きょうとへいくでんしゃはどれですか",
+              "romaji": "Kyōto e iku densha wa dore desu ka",
+              "kana": "kyうと え いく でんしゃ わ どれ です か",
+              "fr": "Quel train va à Kyoto ?",
               "correct": true,
-              "feedback": "Excellent ! « ~wa doko desu ka » = « où est ~ ? »",
-              "kana": "kyうと わ どこ です か"
+              "feedback": "Excellent : « dore » (lequel) pour choisir parmi plusieurs trains."
             },
             {
-              "jp": "京都です",
-              "romaji": "Kyōto desu",
-              "fr": "C'est Kyoto",
+              "jp": "きょうとはどこですか",
+              "romaji": "Kyōto wa doko desu ka",
+              "kana": "kyうと わ どこ です か",
+              "fr": "Où est Kyoto ?",
               "correct": false,
-              "feedback": "Tu affirmes au lieu de demander. Ajoute « doko desu ka ».",
-              "kana": "kyうと です"
+              "feedback": "Tu demandes où est la VILLE, pas quel train la dessert."
             },
             {
-              "jp": "京都ください",
-              "romaji": "Kyōto kudasai",
-              "fr": "Kyoto s'il vous plaît",
+              "jp": "きょうとまでいくらですか",
+              "romaji": "Kyōto made ikura desu ka",
+              "kana": "kyうと まで いくら です か",
+              "fr": "Combien jusqu'à Kyoto ?",
               "correct": false,
-              "feedback": "On ne commande pas une ville comme un plat !",
-              "kana": "kyうと ください"
+              "feedback": "Tu demandes le prix, pas quel train prendre."
+            },
+            {
+              "jp": "きょうとにいきます",
+              "romaji": "Kyōto ni ikimasu",
+              "kana": "kyうと に いきます",
+              "fr": "Je vais à Kyoto",
+              "correct": false,
+              "feedback": "Tu affirmes ton trajet sans poser de question."
             }
           ],
           "situation_romaji": "Tu veux demander où est le train pour Kyoto."
@@ -5568,26 +5709,34 @@
             {
               "jp": "ありがとうございます",
               "romaji": "Arigatō gozaimasu",
+              "kana": "ありがtう ございます",
               "fr": "Merci beaucoup",
               "correct": true,
-              "feedback": "Parfait ! La forme polie complète, idéale avec un inconnu.",
-              "kana": "ありがtう ございます"
+              "feedback": "Parfait : forme polie complète avec un inconnu."
             },
             {
-              "jp": "おはよう",
-              "romaji": "Ohayō",
-              "fr": "Bonjour (matin)",
+              "jp": "どうも",
+              "romaji": "Dōmo",
+              "kana": "dうも",
+              "fr": "Merci (bref)",
               "correct": false,
-              "feedback": "C'est une salutation du matin, pas un remerciement.",
-              "kana": "おはyう"
+              "feedback": "Trop décontracté pour remercier un agent."
             },
             {
-              "jp": "はい",
-              "romaji": "Hai",
-              "fr": "Oui",
+              "jp": "おせわになりました",
+              "romaji": "Osewa ni narimashita",
+              "kana": "おせわ に なりました",
+              "fr": "Merci de votre aide (formel)",
               "correct": false,
-              "feedback": "« Oui » seul est un peu sec pour remercier.",
-              "kana": "はい"
+              "feedback": "Un peu trop solennel pour une simple indication."
+            },
+            {
+              "jp": "すみませんでした",
+              "romaji": "Sumimasen deshita",
+              "kana": "すみません でした",
+              "fr": "Je suis désolé",
+              "correct": false,
+              "feedback": "Tu t'excuses au lieu de remercier."
             }
           ],
           "situation_romaji": "L'agent indique le quai 5 : « 5番線です »"
@@ -5610,28 +5759,36 @@
           "question": "Elle veut le nom de ta réservation. Que dis-tu ?",
           "choix": [
             {
-              "jp": "ルカスで予約しました",
+              "jp": "ルカスでよやくしました",
               "romaji": "Lucas de yoyaku shimashita",
+              "kana": "lうcあs で よやく しました",
               "fr": "J'ai réservé au nom de Lucas",
               "correct": true,
-              "feedback": "Parfait ! « ~de yoyaku shimashita » = « j'ai réservé sous ~ ».",
-              "kana": "lうcあs で よやく しました"
+              "feedback": "Parfait : « ~de yoyaku shimashita » = « j'ai réservé sous le nom de ~ »."
             },
             {
-              "jp": "予約はありません",
-              "romaji": "Yoyaku wa arimasen",
-              "fr": "Je n'ai pas de réservation",
+              "jp": "ルカスといいます",
+              "romaji": "Lucas to iimasu",
+              "kana": "lうcあs と いいます",
+              "fr": "Je m'appelle Lucas",
               "correct": false,
-              "feedback": "Mais tu as réservé ! Tu te compliques la vie.",
-              "kana": "よやく わ ありません"
+              "feedback": "Tu donnes ton nom sans le relier à la réservation."
             },
             {
-              "jp": "いくらですか",
-              "romaji": "Ikura desu ka",
-              "fr": "Combien ça coûte ?",
+              "jp": "よやくをしたいです",
+              "romaji": "Yoyaku wo shitai desu",
+              "kana": "よやく を したい です",
+              "fr": "Je voudrais réserver",
               "correct": false,
-              "feedback": "Le prix viendra après. D'abord, donne ton nom.",
-              "kana": "いくら です か"
+              "feedback": "Tu as DÉJÀ réservé ; tu n'en fais pas une nouvelle."
+            },
+            {
+              "jp": "よやくはありますか",
+              "romaji": "Yoyaku wa arimasu ka",
+              "kana": "よやく わ あります か",
+              "fr": "Y a-t-il des réservations ?",
+              "correct": false,
+              "feedback": "Question vague qui ne donne pas ton nom."
             }
           ],
           "situation_romaji": "La réceptionniste demande : « ご予約のお名前は？ »"
@@ -5641,28 +5798,36 @@
           "question": "Comment poses-tu la question ?",
           "choix": [
             {
-              "jp": "朝ごはんは何時ですか",
-              "romaji": "Asagohan wa nanji desu ka",
-              "fr": "À quelle heure est le petit-déjeuner ?",
+              "jp": "あさごはんはなんじからですか",
+              "romaji": "Asagohan wa nanji kara desu ka",
+              "kana": "あさごはん わ なんじ から です か",
+              "fr": "À partir de quelle heure est le petit-déj ?",
               "correct": true,
-              "feedback": "Excellent ! « nanji desu ka » = « à quelle heure ? »",
-              "kana": "あさごはん わ なんじ です か"
+              "feedback": "Excellent : « nanji kara » = « à partir de quelle heure »."
             },
             {
-              "jp": "朝ごはんはおいしいですか",
-              "romaji": "Asagohan wa oishii desu ka",
-              "fr": "Le petit-déj est-il bon ?",
+              "jp": "あさごはんはどこですか",
+              "romaji": "Asagohan wa doko desu ka",
+              "kana": "あさごはん わ どこ です か",
+              "fr": "Où est le petit-déjeuner ?",
               "correct": false,
-              "feedback": "Question sympa, mais tu voulais l'heure !",
-              "kana": "あさごはん わ おいしい です か"
+              "feedback": "Tu demandes le lieu, pas l'heure."
             },
             {
-              "jp": "朝ごはんをください",
+              "jp": "あさごはんはいくらですか",
+              "romaji": "Asagohan wa ikura desu ka",
+              "kana": "あさごはん わ いくら です か",
+              "fr": "Combien coûte le petit-déj ?",
+              "correct": false,
+              "feedback": "Tu demandes le prix, pas l'horaire."
+            },
+            {
+              "jp": "あさごはんをください",
               "romaji": "Asagohan wo kudasai",
+              "kana": "あさごはん を ください",
               "fr": "Le petit-déjeuner svp",
               "correct": false,
-              "feedback": "Tu le commandes maintenant ? Demande plutôt l'heure.",
-              "kana": "あさごはん を ください"
+              "feedback": "Tu le commandes au lieu de demander l'heure."
             }
           ],
           "situation_romaji": "Tu veux demander à quelle heure est le petit-déjeuner."
@@ -5687,26 +5852,34 @@
             {
               "jp": "いくらですか",
               "romaji": "Ikura desu ka",
+              "kana": "いくら です か",
               "fr": "Combien ça coûte ?",
               "correct": true,
-              "feedback": "Parfait ! « Ikura desu ka » est indispensable pour faire les boutiques.",
-              "kana": "いくら です か"
+              "feedback": "Parfait : LA question pour connaître un prix."
             },
             {
-              "jp": "どこですか",
-              "romaji": "Doko desu ka",
-              "fr": "Où est-ce ?",
+              "jp": "おいくらまんえんですか",
+              "romaji": "O-ikura man'en desu ka",
+              "kana": "おいくら まんえん です か",
+              "fr": "Combien de dizaines de milliers ?",
               "correct": false,
-              "feedback": "Ça demande un lieu, pas un prix.",
-              "kana": "どこ です か"
+              "feedback": "Tournure incorrecte et présomptueuse sur le prix."
             },
             {
-              "jp": "何ですか",
-              "romaji": "Nan desu ka",
+              "jp": "たかいですか",
+              "romaji": "Takai desu ka",
+              "kana": "たかい です か",
+              "fr": "Est-ce cher ?",
+              "correct": false,
+              "feedback": "Question vague qui ne donne pas le prix exact."
+            },
+            {
+              "jp": "これはなんですか",
+              "romaji": "Kore wa nan desu ka",
+              "kana": "これ わ なん です か",
               "fr": "Qu'est-ce que c'est ?",
               "correct": false,
-              "feedback": "Tu demandes la nature de l'objet, pas son prix.",
-              "kana": "なん です か"
+              "feedback": "Tu demandes la nature de l'objet, pas son prix."
             }
           ],
           "situation_romaji": "Tu veux connaître le prix d'un article."
@@ -5716,28 +5889,36 @@
           "question": "Comment demandes-tu ?",
           "choix": [
             {
-              "jp": "カードで払えますか",
+              "jp": "カードではらえますか",
               "romaji": "Kādo de haraemasu ka",
+              "kana": "kあど で はらえます か",
               "fr": "Puis-je payer par carte ?",
               "correct": true,
-              "feedback": "Excellent ! Utile car beaucoup de petits commerces sont cash only au Japon.",
-              "kana": "kあど で はらえます か"
+              "feedback": "Excellent : utile car beaucoup de commerces sont cash only au Japon."
             },
             {
-              "jp": "カードです",
-              "romaji": "Kādo desu",
-              "fr": "C'est une carte",
+              "jp": "カードがありますか",
+              "romaji": "Kādo ga arimasu ka",
+              "kana": "kあど が あります か",
+              "fr": "Avez-vous une carte ?",
               "correct": false,
-              "feedback": "Tu décris ta carte sans demander si c'est accepté.",
-              "kana": "kあど です"
+              "feedback": "Tu demandes si LE COMMERÇANT a une carte : non-sens."
             },
             {
-              "jp": "お金がありません",
-              "romaji": "Okane ga arimasen",
-              "fr": "Je n'ai pas d'argent",
+              "jp": "げんきんでいいですか",
+              "romaji": "Genkin de ii desu ka",
+              "kana": "げんきん で いい です か",
+              "fr": "Puis-je payer en espèces ?",
               "correct": false,
-              "feedback": "Aïe, ça risque de poser problème !",
-              "kana": "おかね が ありません"
+              "feedback": "Possible, mais tu voulais justement payer par CARTE."
+            },
+            {
+              "jp": "カードはどこですか",
+              "romaji": "Kādo wa doko desu ka",
+              "kana": "kあど わ どこ です か",
+              "fr": "Où est la carte ?",
+              "correct": false,
+              "feedback": "Hors sujet."
             }
           ],
           "situation_romaji": "La vendeuse dit « 3000円です ». Tu veux payer par carte."
@@ -5760,28 +5941,36 @@
           "question": "Comment demandes-tu où se trouve le temple ?",
           "choix": [
             {
-              "jp": "浅草寺はどこですか",
+              "jp": "せんそうじはどこですか",
               "romaji": "Sensō-ji wa doko desu ka",
+              "kana": "せんsうじ わ どこ です か",
               "fr": "Où est le Sensō-ji ?",
               "correct": true,
-              "feedback": "Parfait ! La structure « ~wa doko desu ka » fonctionne pour tout lieu.",
-              "kana": "せんsうじ わ どこ です か"
+              "feedback": "Parfait : « ~wa doko desu ka » pour localiser un lieu."
             },
             {
-              "jp": "浅草寺はいくらですか",
-              "romaji": "Sensō-ji wa ikura desu ka",
-              "fr": "Combien coûte le Sensō-ji ?",
+              "jp": "せんそうじはとおいですか",
+              "romaji": "Sensō-ji wa tōi desu ka",
+              "kana": "せんsうじ わ tうい です か",
+              "fr": "Le Sensō-ji est-il loin ?",
               "correct": false,
-              "feedback": "Tu demandes le prix d'un temple !",
-              "kana": "せんsうじ わ いくら です か"
+              "feedback": "Bonne question mais elle ne te donne pas la direction."
             },
             {
-              "jp": "浅草寺です",
-              "romaji": "Sensō-ji desu",
-              "fr": "C'est le Sensō-ji",
+              "jp": "せんそうじにいきたいです",
+              "romaji": "Sensō-ji ni ikitai desu",
+              "kana": "せんsうじ に いきたい です",
+              "fr": "Je veux aller au Sensō-ji",
               "correct": false,
-              "feedback": "Tu l'affirmes au lieu de demander où il est.",
-              "kana": "せんsうじ です"
+              "feedback": "Tu exprimes une envie sans demander le chemin."
+            },
+            {
+              "jp": "せんそうじはなんじまでですか",
+              "romaji": "Sensō-ji wa nanji made desu ka",
+              "kana": "せんsうじ わ なんじ まで です か",
+              "fr": "Jusqu'à quelle heure ?",
+              "correct": false,
+              "feedback": "Tu demandes les horaires, pas la direction."
             }
           ],
           "situation_romaji": "Tu abordes un passant pour demander la direction."
@@ -5793,26 +5982,34 @@
             {
               "jp": "まっすぐ",
               "romaji": "Massugu",
+              "kana": "まっすぐ",
               "fr": "Tout droit",
               "correct": true,
-              "feedback": "Exact ! « Massugu » = tout droit. Très utile pour les directions.",
-              "kana": "まっすぐ"
+              "feedback": "Exact : « massugu » = tout droit."
             },
             {
-              "jp": "まっすぐ",
-              "romaji": "Massugu",
-              "fr": "À gauche",
-              "correct": false,
-              "feedback": "Non, « à gauche » se dit « hidari ».",
-              "kana": "まっすぐ"
-            },
-            {
-              "jp": "まっすぐ",
-              "romaji": "Massugu",
+              "jp": "みぎ",
+              "romaji": "Migi",
+              "kana": "みぎ",
               "fr": "À droite",
               "correct": false,
-              "feedback": "Non, « à droite » se dit « migi ».",
-              "kana": "まっすぐ"
+              "feedback": "« migi » = à droite, pas « tout droit »."
+            },
+            {
+              "jp": "ひだり",
+              "romaji": "Hidari",
+              "kana": "ひだり",
+              "fr": "À gauche",
+              "correct": false,
+              "feedback": "« hidari » = à gauche."
+            },
+            {
+              "jp": "うしろ",
+              "romaji": "Ushiro",
+              "kana": "うしろ",
+              "fr": "Derrière",
+              "correct": false,
+              "feedback": "« ushiro » = derrière."
             }
           ],
           "situation_romaji": "Le passant montre la direction : « まっすぐです »"
@@ -5835,28 +6032,36 @@
           "question": "Comment l'exprimes-tu ?",
           "choix": [
             {
-              "jp": "気分が悪いです",
+              "jp": "きぶんがわるいです",
               "romaji": "Kibun ga warui desu",
+              "kana": "きぶん が わるい です",
               "fr": "Je ne me sens pas bien",
               "correct": true,
-              "feedback": "Parfait ! Phrase essentielle à connaître en cas de souci de santé.",
-              "kana": "きぶん が わるい です"
+              "feedback": "Parfait : phrase clé pour signaler un malaise."
             },
             {
-              "jp": "元気です",
-              "romaji": "Genki desu",
+              "jp": "ぐあいがいいです",
+              "romaji": "Guai ga ii desu",
+              "kana": "ぐあい が いい です",
               "fr": "Je vais bien",
               "correct": false,
-              "feedback": "C'est le contraire de ce que tu ressens !",
-              "kana": "げんき です"
+              "feedback": "C'est l'inverse de ce que tu ressens."
             },
             {
-              "jp": "嬉しいです",
-              "romaji": "Ureshii desu",
-              "fr": "Je suis content",
+              "jp": "おなかがすきました",
+              "romaji": "Onaka ga sukimashita",
+              "kana": "おなか が すきました",
+              "fr": "J'ai faim",
               "correct": false,
-              "feedback": "Pas vraiment le moment d'exprimer ta joie.",
-              "kana": "うれしい です"
+              "feedback": "La faim n'est pas un malaise médical."
+            },
+            {
+              "jp": "つかれました",
+              "romaji": "Tsukaremashita",
+              "kana": "つかれました",
+              "fr": "Je suis fatigué",
+              "correct": false,
+              "feedback": "La fatigue seule ne traduit pas « se sentir mal »."
             }
           ],
           "situation_romaji": "Tu veux dire que tu ne te sens pas bien."
@@ -5866,28 +6071,36 @@
           "question": "Comment demandes-tu où elle est ?",
           "choix": [
             {
-              "jp": "薬局はどこですか",
+              "jp": "やっきょくはどこですか",
               "romaji": "Yakkyoku wa doko desu ka",
+              "kana": "やっきょく わ どこ です か",
               "fr": "Où est la pharmacie ?",
               "correct": true,
-              "feedback": "Excellent ! « Yakkyoku » = pharmacie. À mémoriser pour voyager serein.",
-              "kana": "やっきょく わ どこ です か"
+              "feedback": "Excellent : « yakkyoku » = pharmacie."
+            },
+            {
+              "jp": "びょういんはどこですか",
+              "romaji": "Byōin wa doko desu ka",
+              "kana": "byういん わ どこ です か",
+              "fr": "Où est l'hôpital ?",
+              "correct": false,
+              "feedback": "Pertinent mais tu cherchais une PHARMACIE, pas un hôpital."
+            },
+            {
+              "jp": "くすりはどこですか",
+              "romaji": "Kusuri wa doko desu ka",
+              "kana": "くすり わ どこ です か",
+              "fr": "Où sont les médicaments ?",
+              "correct": false,
+              "feedback": "Trop vague : « yakkyoku » désigne le lieu précis."
             },
             {
               "jp": "トイレはどこですか",
               "romaji": "Toire wa doko desu ka",
+              "kana": "といれ わ どこ です か",
               "fr": "Où sont les toilettes ?",
               "correct": false,
-              "feedback": "Utile aussi, mais ce n'est pas ce que tu cherches là !",
-              "kana": "といれ わ どこ です か"
-            },
-            {
-              "jp": "駅はどこですか",
-              "romaji": "Eki wa doko desu ka",
-              "fr": "Où est la gare ?",
-              "correct": false,
-              "feedback": "La gare ne te soignera pas !",
-              "kana": "えき わ どこ です か"
+              "feedback": "Hors sujet médical."
             }
           ],
           "situation_romaji": "Tu cherches une pharmacie."
@@ -5912,26 +6125,34 @@
             {
               "jp": "コーヒーをください",
               "romaji": "Kōhī wo kudasai",
+              "kana": "kうhい を ください",
               "fr": "Un café, s'il vous plaît",
               "correct": true,
-              "feedback": "Parfait ! Toujours la formule « ~wo kudasai » pour commander.",
-              "kana": "kうhい を ください"
+              "feedback": "Parfait : « ~wo kudasai » pour commander."
             },
             {
-              "jp": "コーヒーです",
-              "romaji": "Kōhī desu",
-              "fr": "C'est un café",
+              "jp": "コーヒーをのみたいです",
+              "romaji": "Kōhī wo nomitai desu",
+              "kana": "kうhい を のみたい です",
+              "fr": "Je voudrais boire un café",
               "correct": false,
-              "feedback": "Tu le décris au lieu de le commander.",
-              "kana": "kうhい です"
+              "feedback": "Exprime l'envie ; moins direct qu'une commande."
             },
             {
-              "jp": "コーヒーが好きです",
+              "jp": "コーヒーはありますか",
+              "romaji": "Kōhī wa arimasu ka",
+              "kana": "kうhい わ あります か",
+              "fr": "Avez-vous du café ?",
+              "correct": false,
+              "feedback": "Tu vérifies la disponibilité au lieu de commander."
+            },
+            {
+              "jp": "コーヒーがすきです",
               "romaji": "Kōhī ga suki desu",
+              "kana": "kうhい が すき です",
               "fr": "J'aime le café",
               "correct": false,
-              "feedback": "Sympa à savoir, mais ce n'est pas une commande !",
-              "kana": "kうhい が すき です"
+              "feedback": "Exprime un goût, pas une commande."
             }
           ],
           "situation_romaji": "Le serveur demande : « ご注文は？ »"
@@ -5941,28 +6162,36 @@
           "question": "Il veut savoir chaud ou froid. Tu veux un café chaud.",
           "choix": [
             {
-              "jp": "ホットでお願いします",
+              "jp": "ホットでおねがいします",
               "romaji": "Hotto de onegai shimasu",
+              "kana": "ほっと で おねがい します",
               "fr": "Chaud, s'il vous plaît",
               "correct": true,
-              "feedback": "Excellent ! « hotto » (hot) et « aisu » (ice) sont des emprunts courants.",
-              "kana": "ほっと で おねがい します"
+              "feedback": "Parfait : « hotto » (chaud) vs « aisu » (glacé)."
             },
             {
-              "jp": "アイスでお願いします",
+              "jp": "アイスでおねがいします",
               "romaji": "Aisu de onegai shimasu",
+              "kana": "あいす で おねがい します",
               "fr": "Glacé, s'il vous plaît",
               "correct": false,
-              "feedback": "« Aisu » = glacé. Tu voulais chaud !",
-              "kana": "あいす で おねがい します"
+              "feedback": "« aisu » = glacé ; tu voulais chaud."
             },
             {
-              "jp": "わかりません",
-              "romaji": "Wakarimasen",
-              "fr": "Je ne comprends pas",
+              "jp": "あついです",
+              "romaji": "Atsui desu",
+              "kana": "あつい です",
+              "fr": "C'est chaud / il fait chaud",
               "correct": false,
-              "feedback": "Honnête, mais essaie de répondre « hotto » !",
-              "kana": "わかりません"
+              "feedback": "Tu décris une sensation, tu ne réponds pas au choix."
+            },
+            {
+              "jp": "どちらでもいいです",
+              "romaji": "Dochira demo ii desu",
+              "kana": "どちら でも いい です",
+              "fr": "L'un ou l'autre",
+              "correct": false,
+              "feedback": "Tu esquives le choix au lieu de dire « chaud »."
             }
           ],
           "situation_romaji": "Il demande : « ホットですか、アイスですか？ »"
@@ -5985,28 +6214,36 @@
           "question": "Il propose de réchauffer ton onigiri. Tu acceptes.",
           "choix": [
             {
-              "jp": "はい、お願いします",
+              "jp": "はい、おねがいします",
               "romaji": "Hai, onegai shimasu",
+              "kana": "はい, おねがい します",
               "fr": "Oui, s'il vous plaît",
               "correct": true,
-              "feedback": "Parfait ! « Onegai shimasu » accompagne toute demande poliment.",
-              "kana": "はい, おねがい します"
+              "feedback": "Parfait : accepter poliment qu'on réchauffe."
             },
             {
-              "jp": "いいえ、結構です",
+              "jp": "はい、そうです",
+              "romaji": "Hai, sō desu",
+              "kana": "はい, sう です",
+              "fr": "Oui, c'est ça",
+              "correct": false,
+              "feedback": "« sō desu » confirme un fait, ne répond pas à « je réchauffe ? »."
+            },
+            {
+              "jp": "いいえ、けっこうです",
               "romaji": "Iie, kekkō desu",
+              "kana": "いいえ, けっkう です",
               "fr": "Non merci",
               "correct": false,
-              "feedback": "Tu refuses alors que tu voulais accepter !",
-              "kana": "いいえ, けっkう です"
+              "feedback": "Tu refuses alors que tu voulais accepter."
             },
             {
-              "jp": "いくらですか",
-              "romaji": "Ikura desu ka",
-              "fr": "Combien ?",
+              "jp": "あたためないでください",
+              "romaji": "Atatamenaide kudasai",
+              "kana": "あたためないで ください",
+              "fr": "Ne réchauffez pas",
               "correct": false,
-              "feedback": "Hors sujet : il demande pour le micro-ondes.",
-              "kana": "いくら です か"
+              "feedback": "L'inverse de ce que tu veux."
             }
           ],
           "situation_romaji": "Le caissier demande : « 温めますか？ »"
@@ -6016,28 +6253,36 @@
           "question": "Il propose un sac. Tu n'en veux pas (écolo !).",
           "choix": [
             {
-              "jp": "いいえ、大丈夫です",
+              "jp": "いいえ、だいじょうぶです",
               "romaji": "Iie, daijōbu desu",
+              "kana": "いいえ, だいjうぶ です",
               "fr": "Non, ça va",
               "correct": true,
-              "feedback": "Parfait ! « Daijōbu desu » = « ça ira / pas besoin », très pratique.",
-              "kana": "いいえ, だいjうぶ です"
+              "feedback": "Parfait : « daijōbu desu » pour refuser poliment le sac."
             },
             {
               "jp": "はい、ください",
               "romaji": "Hai, kudasai",
+              "kana": "はい, ください",
               "fr": "Oui, donnez",
               "correct": false,
-              "feedback": "Tu acceptes le sac alors que tu n'en voulais pas !",
-              "kana": "はい, ください"
+              "feedback": "Tu acceptes le sac alors que tu n'en voulais pas."
             },
             {
-              "jp": "ありがとう",
-              "romaji": "Arigatō",
-              "fr": "Merci",
+              "jp": "ふくろがほしいです",
+              "romaji": "Fukuro ga hoshii desu",
+              "kana": "ふくろ が ほしい です",
+              "fr": "Je veux un sac",
               "correct": false,
-              "feedback": "Poli, mais tu n'as pas répondu à sa question.",
-              "kana": "ありがtう"
+              "feedback": "Tu en demandes un, contraire à ton intention."
+            },
+            {
+              "jp": "わかりません",
+              "romaji": "Wakarimasen",
+              "kana": "わかりません",
+              "fr": "Je ne comprends pas",
+              "correct": false,
+              "feedback": "Esquive ; une réponse claire est attendue."
             }
           ],
           "situation_romaji": "Il demande : « 袋はいりますか？ »"
@@ -6060,28 +6305,36 @@
           "question": "Que dit-on pour trinquer ?",
           "choix": [
             {
-              "jp": "乾杯",
+              "jp": "かんぱい",
               "romaji": "Kanpai",
+              "kana": "かんぱい",
               "fr": "Santé !",
               "correct": true,
-              "feedback": "Parfait ! « Kanpai » est LE mot pour trinquer au Japon.",
-              "kana": "かんぱい"
+              "feedback": "Parfait : « kanpai » pour trinquer."
             },
             {
               "jp": "いただきます",
               "romaji": "Itadakimasu",
+              "kana": "いただきます",
               "fr": "Bon appétit",
               "correct": false,
-              "feedback": "C'est pour manger, pas pour trinquer.",
-              "kana": "いただきます"
+              "feedback": "Pour commencer à manger, pas pour trinquer."
             },
             {
-              "jp": "おめでとう",
-              "romaji": "Omedetō",
-              "fr": "Félicitations",
+              "jp": "おつかれさま",
+              "romaji": "Otsukaresama",
+              "kana": "おつかれさま",
+              "fr": "Bon courage / bravo",
               "correct": false,
-              "feedback": "Sauf si vous fêtez quelque chose, ce n'est pas pour trinquer.",
-              "kana": "おめでtう"
+              "feedback": "Salut entre collègues, pas un toast."
+            },
+            {
+              "jp": "ごちそうさま",
+              "romaji": "Gochisōsama",
+              "kana": "ごちsうさま",
+              "fr": "Merci pour le repas",
+              "correct": false,
+              "feedback": "Se dit APRÈS le repas, pas pour trinquer."
             }
           ],
           "situation_romaji": "Avant de boire, tout le monde lève son verre."
@@ -6091,28 +6344,36 @@
           "question": "Comment fais-tu ?",
           "choix": [
             {
-              "jp": "ビールをお願いします",
+              "jp": "ビールをおねがいします",
               "romaji": "Bīru wo onegai shimasu",
+              "kana": "bいる を おねがい します",
               "fr": "Une bière, s'il vous plaît",
               "correct": true,
-              "feedback": "Excellent ! « Onegai shimasu » est une variante polie de « kudasai ».",
-              "kana": "bいる を おねがい します"
+              "feedback": "Parfait : « onegai shimasu » variante polie de « kudasai »."
             },
             {
-              "jp": "ビールは高いです",
-              "romaji": "Bīru wa takai desu",
-              "fr": "La bière est chère",
+              "jp": "ビールにします",
+              "romaji": "Bīru ni shimasu",
+              "kana": "bいる に します",
+              "fr": "Je prends une bière",
               "correct": false,
-              "feedback": "Tu commentes le prix au lieu de commander !",
-              "kana": "bいる わ たかい です"
+              "feedback": "Correct mais moins poli pour héler un serveur."
             },
             {
-              "jp": "ビールですか",
-              "romaji": "Bīru desu ka",
-              "fr": "C'est de la bière ?",
+              "jp": "ビールはありますか",
+              "romaji": "Bīru wa arimasu ka",
+              "kana": "bいる わ あります か",
+              "fr": "Avez-vous de la bière ?",
               "correct": false,
-              "feedback": "Tu poses une question au lieu de commander.",
-              "kana": "bいる です か"
+              "feedback": "Tu vérifies au lieu de commander."
+            },
+            {
+              "jp": "ビールがのみたいです",
+              "romaji": "Bīru ga nomitai desu",
+              "kana": "bいる が のみたい です",
+              "fr": "J'ai envie de bière",
+              "correct": false,
+              "feedback": "Exprime l'envie, pas la commande."
             }
           ],
           "situation_romaji": "Tu veux commander une bière."
@@ -6135,28 +6396,36 @@
           "question": "Il veut ta destination. Tu vas à la gare de Tokyo.",
           "choix": [
             {
-              "jp": "東京駅までお願いします",
+              "jp": "とうきょうえきまでおねがいします",
               "romaji": "Tōkyō eki made onegai shimasu",
+              "kana": "tうkyう えき まで おねがい します",
               "fr": "Jusqu'à la gare de Tokyo, svp",
               "correct": true,
-              "feedback": "Parfait ! « ~made » = « jusqu'à ~ ». Formule clé en taxi.",
-              "kana": "tうkyう えき まで おねがい します"
+              "feedback": "Parfait : « ~made » = « jusqu'à »."
             },
             {
-              "jp": "東京駅です",
-              "romaji": "Tōkyō eki desu",
-              "fr": "C'est la gare de Tokyo",
+              "jp": "とうきょうえきにいきます",
+              "romaji": "Tōkyō eki ni ikimasu",
+              "kana": "tうkyう えき に いきます",
+              "fr": "Je vais à la gare de Tokyo",
               "correct": false,
-              "feedback": "Compréhensible, mais « ~made onegai shimasu » est plus naturel.",
-              "kana": "tうkyう えき です"
+              "feedback": "Tu annonces ton trajet sans formule de demande."
             },
             {
-              "jp": "東京駅はどこ",
-              "romaji": "Tōkyō eki wa doko",
+              "jp": "とうきょうえきはとおいですか",
+              "romaji": "Tōkyō eki wa tōi desu ka",
+              "kana": "tうkyう えき わ tうい です か",
+              "fr": "La gare est-elle loin ?",
+              "correct": false,
+              "feedback": "Tu demandes la distance, pas d'y être conduit."
+            },
+            {
+              "jp": "とうきょうえきはどこですか",
+              "romaji": "Tōkyō eki wa doko desu ka",
+              "kana": "tうkyう えき わ どこ です か",
               "fr": "Où est la gare ?",
               "correct": false,
-              "feedback": "C'est au chauffeur de le savoir, pas à toi de demander !",
-              "kana": "tうkyう えき わ どこ"
+              "feedback": "C'est au chauffeur de le savoir."
             }
           ],
           "situation_romaji": "Le chauffeur demande : « どちらまで？ »"
@@ -6168,26 +6437,34 @@
             {
               "jp": "ありがとうございました",
               "romaji": "Arigatō gozaimashita",
+              "kana": "ありがtう ございました",
               "fr": "Merci beaucoup (passé)",
               "correct": true,
-              "feedback": "Parfait ! Au passé « gozaimashita » pour un service rendu et terminé.",
-              "kana": "ありがtう ございました"
+              "feedback": "Parfait : au passé pour un service accompli."
             },
             {
-              "jp": "はじめまして",
-              "romaji": "Hajimemashite",
-              "fr": "Enchanté",
+              "jp": "ありがとうございます",
+              "romaji": "Arigatō gozaimasu",
+              "kana": "ありがtう ございます",
+              "fr": "Merci (présent)",
               "correct": false,
-              "feedback": "On dit ça en rencontrant quelqu'un, pas en partant !",
-              "kana": "はじめまして"
+              "feedback": "Au présent ; le service étant fini, le passé est plus juste."
+            },
+            {
+              "jp": "おつかれさまでした",
+              "romaji": "Otsukaresama deshita",
+              "kana": "おつかれさま でした",
+              "fr": "Merci de votre travail",
+              "correct": false,
+              "feedback": "Convient entre collègues, pas vraiment au chauffeur."
             },
             {
               "jp": "いってきます",
               "romaji": "Ittekimasu",
-              "fr": "J'y vais (et je reviens)",
+              "kana": "いってきます",
+              "fr": "J'y vais (et reviens)",
               "correct": false,
-              "feedback": "Formule pour quitter la maison, pas un taxi.",
-              "kana": "いってきます"
+              "feedback": "Formule pour quitter la maison."
             }
           ],
           "situation_romaji": "Tu arrives. Tu veux payer et descendre poliment."
@@ -6210,28 +6487,36 @@
           "question": "Comment demandes-tu un billet ?",
           "choix": [
             {
-              "jp": "チケットを一枚ください",
+              "jp": "チケットをいちまいください",
               "romaji": "Chiketto wo ichimai kudasai",
+              "kana": "ちけっと を いちまい ください",
               "fr": "Un billet, s'il vous plaît",
               "correct": true,
-              "feedback": "Parfait ! « ichimai » = un (objet plat). Les compteurs japonais en action !",
-              "kana": "ちけっと を いちまい ください"
+              "feedback": "Parfait : « ichimai » = un (objet plat). Les compteurs japonais !"
+            },
+            {
+              "jp": "チケットをひとつください",
+              "romaji": "Chiketto wo hitotsu kudasai",
+              "kana": "ちけっと を ひとつ ください",
+              "fr": "Un billet (compteur générique)",
+              "correct": false,
+              "feedback": "Compréhensible, mais un billet se compte « ichimai », pas « hitotsu »."
+            },
+            {
+              "jp": "チケットはいくらですか",
+              "romaji": "Chiketto wa ikura desu ka",
+              "kana": "ちけっと わ いくら です か",
+              "fr": "Combien coûte le billet ?",
+              "correct": false,
+              "feedback": "Tu demandes le prix au lieu d'en acheter un."
             },
             {
               "jp": "チケットはどこですか",
               "romaji": "Chiketto wa doko desu ka",
+              "kana": "ちけっと わ どこ です か",
               "fr": "Où est le billet ?",
               "correct": false,
-              "feedback": "Tu cherches un billet au lieu d'en acheter un.",
-              "kana": "ちけっと わ どこ です か"
-            },
-            {
-              "jp": "チケットです",
-              "romaji": "Chiketto desu",
-              "fr": "C'est un billet",
-              "correct": false,
-              "feedback": "Tu décris sans demander.",
-              "kana": "ちけっと です"
+              "feedback": "Tu cherches au lieu d'acheter."
             }
           ],
           "situation_romaji": "Tu veux acheter un billet d'entrée."
@@ -6241,28 +6526,36 @@
           "question": "Comment poses-tu la question ?",
           "choix": [
             {
-              "jp": "写真を撮ってもいいですか",
+              "jp": "しゃしんをとってもいいですか",
               "romaji": "Shashin wo totte mo ii desu ka",
+              "kana": "しゃしん を とって も いい です か",
               "fr": "Puis-je prendre des photos ?",
               "correct": true,
-              "feedback": "Excellent ! « ~te mo ii desu ka » = « est-ce permis de ~ ? » Très utile.",
-              "kana": "しゃしん を とって も いい です か"
+              "feedback": "Excellent : « ~te mo ii desu ka » = demander la permission."
             },
             {
-              "jp": "写真です",
-              "romaji": "Shashin desu",
-              "fr": "C'est une photo",
+              "jp": "しゃしんをとりたいです",
+              "romaji": "Shashin wo toritai desu",
+              "kana": "しゃしん を とりたい です",
+              "fr": "Je veux prendre des photos",
               "correct": false,
-              "feedback": "Ça ne demande pas la permission.",
-              "kana": "しゃしん です"
+              "feedback": "Exprime l'envie sans demander la permission."
             },
             {
-              "jp": "写真が好きです",
+              "jp": "しゃしんはだめですか",
+              "romaji": "Shashin wa dame desu ka",
+              "kana": "しゃしん わ だめ です か",
+              "fr": "Les photos sont interdites ?",
+              "correct": false,
+              "feedback": "Compréhensible mais formulé négativement et abrupt."
+            },
+            {
+              "jp": "しゃしんがすきです",
               "romaji": "Shashin ga suki desu",
+              "kana": "しゃしん が すき です",
               "fr": "J'aime les photos",
               "correct": false,
-              "feedback": "Tu exprimes un goût, pas une demande de permission.",
-              "kana": "しゃしん が すき です"
+              "feedback": "Exprime un goût, hors sujet."
             }
           ],
           "situation_romaji": "Tu veux savoir si on peut prendre des photos."
@@ -6285,28 +6578,36 @@
           "question": "On veut savoir d'où tu viens. Tu es français.",
           "choix": [
             {
-              "jp": "フランスから来ました",
+              "jp": "フランスからきました",
               "romaji": "Furansu kara kimashita",
+              "kana": "ふらんす から きました",
               "fr": "Je viens de France",
               "correct": true,
-              "feedback": "Parfait ! « ~kara kimashita » = « je viens de ~ ».",
-              "kana": "ふらんす から きました"
+              "feedback": "Parfait : « ~kara kimashita » = « je viens de »."
+            },
+            {
+              "jp": "フランスにいきました",
+              "romaji": "Furansu ni ikimashita",
+              "kana": "ふらんす に いきました",
+              "fr": "Je suis allé en France",
+              "correct": false,
+              "feedback": "« ni ikimashita » = tu y es ALLÉ ; ça ne dit pas ton origine."
+            },
+            {
+              "jp": "フランスにすんでいます",
+              "romaji": "Furansu ni sunde imasu",
+              "kana": "ふらんす に すんで います",
+              "fr": "J'habite en France",
+              "correct": false,
+              "feedback": "Proche, mais on attend l'origine avec « kara kimashita »."
             },
             {
               "jp": "フランスです",
               "romaji": "Furansu desu",
+              "kana": "ふらんす です",
               "fr": "C'est la France",
               "correct": false,
-              "feedback": "Un peu sec, mais compréhensible. La forme complète est meilleure.",
-              "kana": "ふらんす です"
-            },
-            {
-              "jp": "フランスが好きです",
-              "romaji": "Furansu ga suki desu",
-              "fr": "J'aime la France",
-              "correct": false,
-              "feedback": "Tu exprimes un goût, pas ton origine.",
-              "kana": "ふらんす が すき です"
+              "feedback": "Trop elliptique ; la forme complète est attendue."
             }
           ],
           "situation_romaji": "On te demande : « ご出身は？ »"
@@ -6318,26 +6619,34 @@
             {
               "jp": "いいえ、まだまだです",
               "romaji": "Iie, madamada desu",
+              "kana": "いいえ, まだまだ です",
               "fr": "Non, j'ai encore à apprendre",
               "correct": true,
-              "feedback": "Parfait ! La modestie est très valorisée au Japon. « Madamada » = « pas encore assez ».",
-              "kana": "いいえ, まだまだ です"
+              "feedback": "Parfait : la modestie est très valorisée face à un compliment."
             },
             {
-              "jp": "はい、上手です",
+              "jp": "そんなことないです",
+              "romaji": "Sonna koto nai desu",
+              "kana": "そんな こと ない です",
+              "fr": "Mais non, pas du tout",
+              "correct": false,
+              "feedback": "Modeste aussi, mais « madamada desu » colle mieux à l'apprentissage."
+            },
+            {
+              "jp": "はい、じょうずです",
               "romaji": "Hai, jōzu desu",
+              "kana": "はい, jうず です",
               "fr": "Oui, je suis doué",
               "correct": false,
-              "feedback": "Trop direct ! La modestie est de rigueur face à un compliment.",
-              "kana": "はい, jうず です"
+              "feedback": "Trop vantard : on minimise un compliment au Japon."
             },
             {
-              "jp": "ありがとう、さようなら",
-              "romaji": "Arigatō, sayōnara",
-              "fr": "Merci, au revoir",
+              "jp": "ありがとう、じょうずでしょう",
+              "romaji": "Arigatō, jōzu deshō",
+              "kana": "ありがtう, jうず でshう",
+              "fr": "Merci, n'est-ce pas que je suis doué",
               "correct": false,
-              "feedback": "Tu pars un peu vite après un compliment !",
-              "kana": "ありがtう, さyうなら"
+              "feedback": "Vantard et présomptueux."
             }
           ],
           "situation_romaji": "On te demande : « 日本語が上手ですね！ »"
@@ -6360,28 +6669,36 @@
           "question": "Elle te demande la raison de ta visite. Tu as de la fièvre.",
           "choix": [
             {
-              "jp": "熱があります",
+              "jp": "ねつがあります",
               "romaji": "Netsu ga arimasu",
+              "kana": "ねつ が あります",
               "fr": "J'ai de la fièvre",
               "correct": true,
-              "feedback": "Parfait. « Netsu ga arimasu » est clair et direct pour décrire un symptôme.",
-              "kana": "ねつ が あります"
+              "feedback": "Correct et direct pour décrire un symptôme."
             },
             {
-              "jp": "元気です",
+              "jp": "ねつがでました",
+              "romaji": "Netsu ga demashita",
+              "kana": "ねつ が でました",
+              "fr": "La fièvre est apparue",
+              "correct": false,
+              "feedback": "Acceptable, mais « arimasu » décrit mieux l'état présent."
+            },
+            {
+              "jp": "あたまがいたいです",
+              "romaji": "Atama ga itai desu",
+              "kana": "あたま が いたい です",
+              "fr": "J'ai mal à la tête",
+              "correct": false,
+              "feedback": "Symptôme réel mais pas celui-ci ; on parle de fièvre."
+            },
+            {
+              "jp": "げんきです",
               "romaji": "Genki desu",
+              "kana": "げんき です",
               "fr": "Je vais bien",
               "correct": false,
-              "feedback": "Alors pourquoi consulter ? Décris plutôt ton symptôme.",
-              "kana": "げんき です"
-            },
-            {
-              "jp": "おなかがすきました",
-              "romaji": "Onaka ga sukimashita",
-              "fr": "J'ai faim",
-              "correct": false,
-              "feedback": "Ce n'est pas un médecin qu'il te faut pour ça !",
-              "kana": "おなか が すきました"
+              "feedback": "Contradictoire avec une consultation."
             }
           ],
           "situation_romaji": "À l'accueil, la réceptionniste demande : « 今日はどうされましたか？ »"
@@ -6393,26 +6710,34 @@
             {
               "jp": "おとといからです",
               "romaji": "Ototoi kara desu",
+              "kana": "おととい から です",
               "fr": "Depuis avant-hier",
               "correct": true,
-              "feedback": "Excellent ! « Ototoi » = avant-hier. Précis et naturel.",
-              "kana": "おととい から です"
+              "feedback": "Parfait : « ototoi » = avant-hier."
             },
             {
-              "jp": "あしたからです",
-              "romaji": "Ashita kara desu",
-              "fr": "À partir de demain",
+              "jp": "きのうからです",
+              "romaji": "Kinō kara desu",
+              "kana": "きんう から です",
+              "fr": "Depuis hier",
               "correct": false,
-              "feedback": "On ne peut pas être malade depuis le futur !",
-              "kana": "あした から です"
+              "feedback": "« kinō » = hier ; ce n'est pas avant-hier."
             },
             {
-              "jp": "今からです",
+              "jp": "あさってからです",
+              "romaji": "Asatte kara desu",
+              "kana": "あさって から です",
+              "fr": "À partir d'après-demain",
+              "correct": false,
+              "feedback": "Dans le futur : impossible pour un symptôme présent."
+            },
+            {
+              "jp": "いまからです",
               "romaji": "Ima kara desu",
+              "kana": "いま から です",
               "fr": "À partir de maintenant",
               "correct": false,
-              "feedback": "Cela n'a pas de sens pour un symptôme déjà présent.",
-              "kana": "いま から です"
+              "feedback": "Incohérent pour un mal déjà installé."
             }
           ],
           "situation_romaji": "Elle te demande : « いつからですか？ »"
@@ -6422,28 +6747,36 @@
           "question": "D'autres symptômes ? Tu as aussi mal à la tête.",
           "choix": [
             {
-              "jp": "頭も痛いです",
+              "jp": "あたまもいたいです",
               "romaji": "Atama mo itai desu",
+              "kana": "あたま も いたい です",
               "fr": "J'ai aussi mal à la tête",
               "correct": true,
-              "feedback": "Parfait ! La particule « mo » (aussi) ajoute ce symptôme au précédent.",
-              "kana": "あたま も いたい です"
+              "feedback": "Parfait : « mo » (aussi) ajoute ce symptôme."
             },
             {
-              "jp": "頭はいいです",
-              "romaji": "Atama wa ii desu",
-              "fr": "Ma tête va bien",
+              "jp": "あたまがいたいです",
+              "romaji": "Atama ga itai desu",
+              "kana": "あたま が いたい です",
+              "fr": "J'ai mal à la tête",
               "correct": false,
-              "feedback": "Contradictoire si tu as mal ! « mo » exprime « aussi ».",
-              "kana": "あたま わ いい です"
+              "feedback": "Correct mais sans « mo », on perd l'idée de « en plus »."
             },
             {
-              "jp": "頭がありません",
-              "romaji": "Atama ga arimasen",
-              "fr": "Je n'ai pas de tête",
+              "jp": "あたまはいたくないです",
+              "romaji": "Atama wa itakunai desu",
+              "kana": "あたま わ いたくない です",
+              "fr": "Je n'ai pas mal à la tête",
               "correct": false,
-              "feedback": "Une réponse pour le moins inquiétante !",
-              "kana": "あたま が ありません"
+              "feedback": "Tu nies un symptôme que tu ressens."
+            },
+            {
+              "jp": "あたまがいいです",
+              "romaji": "Atama ga ii desu",
+              "kana": "あたま が いい です",
+              "fr": "Je suis intelligent",
+              "correct": false,
+              "feedback": "« atama ga ii » = être intelligent : contresens total."
             }
           ],
           "situation_romaji": "Le médecin t'examine et demande : « 他に症状はありますか？ »"
@@ -6455,26 +6788,34 @@
             {
               "jp": "あまりありません",
               "romaji": "Amari arimasen",
+              "kana": "あまり ありません",
               "fr": "Pas vraiment",
               "correct": true,
-              "feedback": "Excellent ! « Amari + négation » = « pas tellement ». Nuance très naturelle.",
-              "kana": "あまり ありません"
+              "feedback": "Parfait : « amari + négation » = « pas tellement »."
+            },
+            {
+              "jp": "ぜんぜんありません",
+              "romaji": "Zenzen arimasen",
+              "kana": "ぜんぜん ありません",
+              "fr": "Pas du tout",
+              "correct": false,
+              "feedback": "Trop catégorique ; « amari » nuance mieux « peu d'appétit »."
             },
             {
               "jp": "とてもあります",
               "romaji": "Totemo arimasu",
+              "kana": "とても あります",
               "fr": "Beaucoup",
               "correct": false,
-              "feedback": "Si tu as très faim, ce n'est pas le symptôme attendu.",
-              "kana": "とても あります"
+              "feedback": "Tu aurais bon appétit : pas le symptôme attendu."
             },
             {
-              "jp": "わかりません",
-              "romaji": "Wakarimasen",
-              "fr": "Je ne sais pas",
+              "jp": "すこしあります",
+              "romaji": "Sukoshi arimasu",
+              "kana": "すこし あります",
+              "fr": "Un peu",
               "correct": false,
-              "feedback": "Essaie d'être plus précis pour aider le médecin.",
-              "kana": "わかりません"
+              "feedback": "Sens opposé à « peu d'appétit »."
             }
           ],
           "situation_romaji": "Il demande : « 食欲はありますか？ »"
@@ -6486,26 +6827,34 @@
             {
               "jp": "わかりました。ありがとうございます",
               "romaji": "Wakarimashita. Arigatō gozaimasu",
-              "fr": "Compris. Merci beaucoup",
+              "kana": "わかりました. ありがtう ございます",
+              "fr": "Compris, merci",
               "correct": true,
-              "feedback": "Parfait ! « Wakarimashita » montre que tu as compris, suivi d'un remerciement poli.",
-              "kana": "わかりました. ありがtう ございます"
+              "feedback": "Parfait : accuser réception et remercier poliment."
             },
             {
-              "jp": "いいえ、結構です",
+              "jp": "そうですか",
+              "romaji": "Sō desu ka",
+              "kana": "sう です か",
+              "fr": "Ah bon ?",
+              "correct": false,
+              "feedback": "Réaction passive ; n'accepte pas vraiment la prescription."
+            },
+            {
+              "jp": "いいえ、けっこうです",
               "romaji": "Iie, kekkō desu",
+              "kana": "いいえ, けっkう です",
               "fr": "Non merci",
               "correct": false,
-              "feedback": "Tu refuses le traitement dont tu as besoin !",
-              "kana": "いいえ, けっkう です"
+              "feedback": "Tu refuses le traitement nécessaire."
             },
             {
-              "jp": "高いですね",
+              "jp": "たかいですね",
               "romaji": "Takai desu ne",
+              "kana": "たかい です ね",
               "fr": "C'est cher",
               "correct": false,
-              "feedback": "Un peu direct face au médecin qui te soigne.",
-              "kana": "たかい です ね"
+              "feedback": "Déplacé face au médecin."
             }
           ],
           "situation_romaji": "Le médecin conclut : « 風邪ですね。薬を出します »"
@@ -6517,26 +6866,34 @@
             {
               "jp": "ありがとうございます",
               "romaji": "Arigatō gozaimasu",
-              "fr": "Merci (à « prenez soin de vous »)",
+              "kana": "ありがtう ございます",
+              "fr": "Merci (à « soignez-vous »)",
               "correct": true,
-              "feedback": "Parfait ! « Odaiji ni » = « prenez soin de vous / soignez-vous bien ». On remercie simplement.",
-              "kana": "ありがtう ございます"
+              "feedback": "Parfait : on remercie après « odaiji ni »."
             },
             {
-              "jp": "お大事に",
+              "jp": "おだいじに",
               "romaji": "Odaiji ni",
-              "fr": "Prenez soin de vous (en retour)",
+              "kana": "おだいじ に",
+              "fr": "Prenez soin de vous",
               "correct": false,
-              "feedback": "C'est à TOI qu'on le souhaite ; le lui renvoyer est étrange ici.",
-              "kana": "おだいじ に"
+              "feedback": "C'est à TOI qu'on l'adresse ; le renvoyer est étrange."
             },
             {
-              "jp": "さようなら",
-              "romaji": "Sayōnara",
-              "fr": "Adieu",
+              "jp": "おつかれさまです",
+              "romaji": "Otsukaresama desu",
+              "kana": "おつかれさま です",
+              "fr": "Bon courage",
               "correct": false,
-              "feedback": "« Sayōnara » est trop définitif ; un simple merci suffit.",
-              "kana": "さyうなら"
+              "feedback": "Inadapté en quittant un médecin."
+            },
+            {
+              "jp": "しつれいします",
+              "romaji": "Shitsurei shimasu",
+              "kana": "しつれい します",
+              "fr": "Je me retire",
+              "correct": false,
+              "feedback": "Possible mais sec ; un merci est plus chaleureux."
             }
           ],
           "situation_romaji": "Il ajoute : « お大事に »"
@@ -6559,28 +6916,36 @@
           "question": "Que veux-tu faire ? Juste une coupe.",
           "choix": [
             {
-              "jp": "カットをお願いします",
+              "jp": "カットをおねがいします",
               "romaji": "Katto wo onegai shimasu",
+              "kana": "かっと を おねがい します",
               "fr": "Une coupe, s'il vous plaît",
               "correct": true,
-              "feedback": "Parfait ! « Katto » (cut) + « onegai shimasu » : clair et poli.",
-              "kana": "かっと を おねがい します"
+              "feedback": "Parfait : clair et poli."
             },
             {
-              "jp": "カットです",
-              "romaji": "Katto desu",
-              "fr": "C'est une coupe",
+              "jp": "カットにします",
+              "romaji": "Katto ni shimasu",
+              "kana": "かっと に します",
+              "fr": "Je prends une coupe",
               "correct": false,
-              "feedback": "Un peu brusque ; « onegai shimasu » est plus adapté pour une demande.",
-              "kana": "かっと です"
+              "feedback": "Correct mais moins poli pour une demande de service."
             },
             {
-              "jp": "カットはどこですか",
-              "romaji": "Katto wa doko desu ka",
-              "fr": "Où est la coupe ?",
+              "jp": "カットはいくらですか",
+              "romaji": "Katto wa ikura desu ka",
+              "kana": "かっと わ いくら です か",
+              "fr": "Combien la coupe ?",
               "correct": false,
-              "feedback": "Cela n'a pas de sens ici !",
-              "kana": "かっと わ どこ です か"
+              "feedback": "Tu demandes le prix, pas le service."
+            },
+            {
+              "jp": "カットができますか",
+              "romaji": "Katto ga dekimasu ka",
+              "kana": "かっと が できます か",
+              "fr": "Faites-vous des coupes ?",
+              "correct": false,
+              "feedback": "Inutile dans un salon : évidemment oui."
             }
           ],
           "situation_romaji": "Le coiffeur demande : « 今日はどうなさいますか？ »"
@@ -6590,28 +6955,36 @@
           "question": "Combien couper ? Tu veux juste un peu.",
           "choix": [
             {
-              "jp": "少しだけお願いします",
+              "jp": "すこしだけおねがいします",
               "romaji": "Sukoshi dake onegai shimasu",
-              "fr": "Juste un peu, s'il vous plaît",
+              "kana": "すこし だけ おねがい します",
+              "fr": "Juste un peu, svp",
               "correct": true,
-              "feedback": "Excellent ! « Sukoshi dake » = « juste un peu ». Évite les mauvaises surprises !",
-              "kana": "すこし だけ おねがい します"
+              "feedback": "Parfait : « sukoshi dake » évite les mauvaises surprises."
             },
             {
-              "jp": "全部切ってください",
+              "jp": "みじかくおねがいします",
+              "romaji": "Mijikaku onegai shimasu",
+              "kana": "みじかく おねがい します",
+              "fr": "Court, s'il vous plaît",
+              "correct": false,
+              "feedback": "« court » n'est pas « juste un peu » : risque de surprise."
+            },
+            {
+              "jp": "ぜんぶきってください",
               "romaji": "Zenbu kitte kudasai",
+              "kana": "ぜんぶ きって ください",
               "fr": "Coupez tout",
               "correct": false,
-              "feedback": "Attention, « zenbu » = tout ! Sauf si tu veux être rasé.",
-              "kana": "ぜんぶ きって ください"
+              "feedback": "« zenbu » = tout : attention !"
             },
             {
-              "jp": "切らないでください",
+              "jp": "きらないでください",
               "romaji": "Kiranaide kudasai",
+              "kana": "きらないで ください",
               "fr": "Ne coupez pas",
               "correct": false,
-              "feedback": "Alors pourquoi être venu chez le coiffeur ?",
-              "kana": "きらないで ください"
+              "feedback": "Pourquoi venir alors ?"
             }
           ],
           "situation_romaji": "Il demande : « どのくらい切りますか？ »"
@@ -6623,26 +6996,34 @@
             {
               "jp": "このままでいいです",
               "romaji": "Kono mama de ii desu",
+              "kana": "この まま で いい です",
               "fr": "Comme ça, c'est bien",
               "correct": true,
-              "feedback": "Parfait ! « Kono mama » = « tel quel / comme c'est ». Très pratique.",
-              "kana": "この まま で いい です"
+              "feedback": "Parfait : « kono mama » = « tel quel »."
             },
             {
-              "jp": "全部切ってください",
-              "romaji": "Zenbu kitte kudasai",
-              "fr": "Coupez tout",
+              "jp": "そのままにしてください",
+              "romaji": "Sono mama ni shite kudasai",
+              "kana": "その まま に して ください",
+              "fr": "Laissez tel quel",
               "correct": false,
-              "feedback": "Tu voulais la garder, pas la supprimer !",
-              "kana": "ぜんぶ きって ください"
+              "feedback": "Sens proche mais « kono mama de ii desu » est plus naturel ici."
+            },
+            {
+              "jp": "みじかくしてください",
+              "romaji": "Mijikaku shite kudasai",
+              "kana": "みじかく して ください",
+              "fr": "Raccourcissez",
+              "correct": false,
+              "feedback": "Tu voulais garder la frange, pas la couper."
             },
             {
               "jp": "わかりません",
               "romaji": "Wakarimasen",
+              "kana": "わかりません",
               "fr": "Je ne sais pas",
               "correct": false,
-              "feedback": "Essaie de décider pour éviter une surprise.",
-              "kana": "わかりません"
+              "feedback": "Décide pour éviter une surprise."
             }
           ],
           "situation_romaji": "Il demande : « 前髪はどうしますか？ »"
@@ -6652,28 +7033,36 @@
           "question": "Il demande si ça démange quelque part. Tout va bien.",
           "choix": [
             {
-              "jp": "大丈夫です",
+              "jp": "だいじょうぶです",
               "romaji": "Daijōbu desu",
+              "kana": "だいjうぶ です",
               "fr": "Ça va, merci",
               "correct": true,
-              "feedback": "Parfait ! « Daijōbu desu » = « tout va bien ». La réponse type à cette question rituelle.",
-              "kana": "だいjうぶ です"
+              "feedback": "Parfait : réponse type à « ça démange quelque part ? »."
             },
             {
-              "jp": "痛いです",
+              "jp": "かゆいです",
+              "romaji": "Kayui desu",
+              "kana": "かゆい です",
+              "fr": "Ça démange",
+              "correct": false,
+              "feedback": "Réponds ça seulement si c'est vrai ; ici tout va bien."
+            },
+            {
+              "jp": "いたいです",
               "romaji": "Itai desu",
+              "kana": "いたい です",
               "fr": "Ça fait mal",
               "correct": false,
-              "feedback": "Il demandait des démangeaisons, pas de la douleur !",
-              "kana": "いたい です"
+              "feedback": "On parlait de démangeaisons, pas de douleur."
             },
             {
-              "jp": "おいしいです",
-              "romaji": "Oishii desu",
-              "fr": "C'est délicieux",
+              "jp": "きもちいいです",
+              "romaji": "Kimochi ii desu",
+              "kana": "きもち いい です",
+              "fr": "C'est agréable",
               "correct": false,
-              "feedback": "On ne mange pas le shampoing !",
-              "kana": "おいしい です"
+              "feedback": "Gentil mais ne répond pas à la question posée."
             }
           ],
           "situation_romaji": "Pendant le shampoing, il demande : « 痒いところはありますか？ »"
@@ -6683,28 +7072,36 @@
           "question": "Il demande ton avis. Tu es très satisfait.",
           "choix": [
             {
-              "jp": "とても良いです。ありがとうございます",
+              "jp": "とてもいいです。ありがとうございます",
               "romaji": "Totemo ii desu. Arigatō gozaimasu",
-              "fr": "Très bien, merci beaucoup",
+              "kana": "とても いい です. ありがtう ございます",
+              "fr": "Très bien, merci",
               "correct": true,
-              "feedback": "Parfait ! Un compliment sincère suivi d'un remerciement, idéal.",
-              "kana": "とても いい です. ありがtう ございます"
+              "feedback": "Parfait : compliment sincère + remerciement."
             },
             {
-              "jp": "高いですね",
+              "jp": "まあまあです",
+              "romaji": "Māmā desu",
+              "kana": "mあmあ です",
+              "fr": "Bof, moyen",
+              "correct": false,
+              "feedback": "Tiède alors que tu es satisfait."
+            },
+            {
+              "jp": "たかいですね",
               "romaji": "Takai desu ne",
+              "kana": "たかい です ね",
               "fr": "C'est cher",
               "correct": false,
-              "feedback": "Il demande ton avis sur la coupe, pas sur le prix !",
-              "kana": "たかい です ね"
+              "feedback": "On demande ton avis sur la coupe, pas le prix."
             },
             {
-              "jp": "いいえ",
-              "romaji": "Iie",
-              "fr": "Non",
+              "jp": "みじかすぎます",
+              "romaji": "Mijikasugimasu",
+              "kana": "みじかすぎます",
+              "fr": "Trop court",
               "correct": false,
-              "feedback": "Un peu sec si tu es satisfait !",
-              "kana": "いいえ"
+              "feedback": "Exprime une déception que tu n'as pas."
             }
           ],
           "situation_romaji": "À la fin, il te montre le résultat : « いかがですか？ »"
@@ -6729,26 +7126,34 @@
             {
               "jp": "おはようございます",
               "romaji": "Ohayō gozaimasu",
-              "fr": "Bonjour (poli)",
+              "kana": "おはyう ございます",
+              "fr": "Bonjour (poli, matin)",
               "correct": true,
-              "feedback": "Parfait ! La version polie « gozaimasu » convient avec une personne âgée.",
-              "kana": "おはyう ございます"
+              "feedback": "Parfait avec une voisine âgée."
             },
             {
               "jp": "おはよう",
               "romaji": "Ohayō",
+              "kana": "おはyう",
               "fr": "Salut (familier)",
               "correct": false,
-              "feedback": "Trop familier avec une voisine âgée ; ajoute « gozaimasu ».",
-              "kana": "おはyう"
+              "feedback": "Trop familier avec une aînée."
+            },
+            {
+              "jp": "こんにちは",
+              "romaji": "Konnichiwa",
+              "kana": "こんにちわ",
+              "fr": "Bonjour (journée)",
+              "correct": false,
+              "feedback": "Correct mais le matin, « ohayō gozaimasu » est plus juste."
             },
             {
               "jp": "こんばんは",
               "romaji": "Konbanwa",
+              "kana": "こんばんわ",
               "fr": "Bonsoir",
               "correct": false,
-              "feedback": "C'est le matin, pas le soir !",
-              "kana": "こんばんわ"
+              "feedback": "C'est le matin."
             }
           ],
           "situation_romaji": "Elle te salue chaleureusement : « あら、おはようございます！ »"
@@ -6760,26 +7165,34 @@
             {
               "jp": "そうですね",
               "romaji": "Sō desu ne",
+              "kana": "sう です ね",
               "fr": "Oui, c'est vrai",
               "correct": true,
-              "feedback": "Parfait ! « Sō desu ne » est LA formule d'acquiescement dans une conversation.",
-              "kana": "sう です ね"
+              "feedback": "Parfait : acquiescement chaleureux qui entretient l'échange."
             },
             {
-              "jp": "いいえ、違います",
+              "jp": "そうですか",
+              "romaji": "Sō desu ka",
+              "kana": "sう です か",
+              "fr": "Ah bon ?",
+              "correct": false,
+              "feedback": "Marque la surprise/le doute : froid face à une évidence partagée."
+            },
+            {
+              "jp": "いいえ、ちがいます",
               "romaji": "Iie, chigaimasu",
+              "kana": "いいえ, ちがいます",
               "fr": "Non, c'est faux",
               "correct": false,
-              "feedback": "Contredire sur la météo casse la convivialité de l'échange !",
-              "kana": "いいえ, ちがいます"
+              "feedback": "Contredire sur la météo casse la convivialité."
             },
             {
               "jp": "わかりません",
               "romaji": "Wakarimasen",
+              "kana": "わかりません",
               "fr": "Je ne sais pas",
               "correct": false,
-              "feedback": "Difficile de ne pas savoir s'il fait beau !",
-              "kana": "わかりません"
+              "feedback": "Difficile d'ignorer qu'il fait beau."
             }
           ],
           "situation_romaji": "Elle remarque : « 今日はいい天気ですね »"
@@ -6791,26 +7204,34 @@
             {
               "jp": "エンジニアです",
               "romaji": "Enjinia desu",
+              "kana": "えんじにあ です",
               "fr": "Je suis ingénieur",
               "correct": true,
-              "feedback": "Parfait ! « ~desu » suffit pour donner sa profession simplement.",
-              "kana": "えんじにあ です"
+              "feedback": "Parfait : « ~desu » donne sa profession simplement."
+            },
+            {
+              "jp": "エンジニアをしています",
+              "romaji": "Enjinia wo shite imasu",
+              "kana": "えんじにあ を して います",
+              "fr": "Je travaille comme ingénieur",
+              "correct": false,
+              "feedback": "Correct mais on dit plutôt « ~wo shite imasu » sans l'article : nuance."
             },
             {
               "jp": "エンジニアがほしいです",
               "romaji": "Enjinia ga hoshii desu",
+              "kana": "えんじにあ が ほしい です",
               "fr": "Je veux un ingénieur",
               "correct": false,
-              "feedback": "« hoshii » = vouloir/désirer. Ça change tout le sens !",
-              "kana": "えんじにあ が ほしい です"
+              "feedback": "« hoshii » change tout le sens."
             },
             {
-              "jp": "エンジニアはどこですか",
-              "romaji": "Enjinia wa doko desu ka",
-              "fr": "Où est l'ingénieur ?",
+              "jp": "エンジニアになりたいです",
+              "romaji": "Enjinia ni naritai desu",
+              "kana": "えんじにあ に なりたい です",
+              "fr": "Je veux devenir ingénieur",
               "correct": false,
-              "feedback": "Elle parle de TON métier, pas d'un lieu.",
-              "kana": "えんじにあ わ どこ です か"
+              "feedback": "Tu l'es déjà ; ça parle d'un souhait futur."
             }
           ],
           "situation_romaji": "Elle demande : « お仕事は何ですか？ »"
@@ -6822,26 +7243,34 @@
             {
               "jp": "いえいえ、そんなことないです",
               "romaji": "Ie ie, sonna koto nai desu",
-              "fr": "Mais non, pas tant que ça",
+              "kana": "いえ いえ, そんな こと ない です",
+              "fr": "Mais non, pas tant",
               "correct": true,
-              "feedback": "Parfait ! La modestie est essentielle ; « sonna koto nai » minimise élégamment.",
-              "kana": "いえ いえ, そんな こと ない です"
+              "feedback": "Parfait : la modestie minimise élégamment le compliment."
+            },
+            {
+              "jp": "ありがとうございます",
+              "romaji": "Arigatō gozaimasu",
+              "kana": "ありがtう ございます",
+              "fr": "Merci beaucoup",
+              "correct": false,
+              "feedback": "Accepter franchement un compliment est moins idiomatique ici."
             },
             {
               "jp": "はい、すごいです",
               "romaji": "Hai, sugoi desu",
+              "kana": "はい, すごい です",
               "fr": "Oui, je suis génial",
               "correct": false,
-              "feedback": "Trop vantard ! La modestie est de rigueur au Japon.",
-              "kana": "はい, すごい です"
+              "feedback": "Vantard : à éviter."
             },
             {
-              "jp": "あなたもすごいです",
-              "romaji": "Anata mo sugoi desu",
-              "fr": "Vous aussi êtes géniale",
+              "jp": "あたりまえです",
+              "romaji": "Atarimae desu",
+              "kana": "あたりまえ です",
+              "fr": "C'est normal / évident",
               "correct": false,
-              "feedback": "Gentil, mais éviter « anata » avec une aînée ; et ça esquive le compliment.",
-              "kana": "あなた も すごい です"
+              "feedback": "Arrogant et déplacé."
             }
           ],
           "situation_romaji": "Elle s'extasie : « すごいですね！ »"
@@ -6851,28 +7280,36 @@
           "question": "Elle t'invite à prendre le thé un jour. Tu acceptes avec plaisir.",
           "choix": [
             {
-              "jp": "ぜひ、お願いします",
+              "jp": "ぜひ、おねがいします",
               "romaji": "Zehi, onegai shimasu",
+              "kana": "ぜひ, おねがい します",
               "fr": "Avec grand plaisir",
               "correct": true,
-              "feedback": "Parfait ! « Zehi » = « absolument / volontiers ». Réponse chaleureuse et polie.",
-              "kana": "ぜひ, おねがい します"
+              "feedback": "Parfait : « zehi » = volontiers, chaleureux et poli."
             },
             {
-              "jp": "いいえ、結構です",
+              "jp": "かんがえておきます",
+              "romaji": "Kangaete okimasu",
+              "kana": "かんがえて おきます",
+              "fr": "Je vais y réfléchir",
+              "correct": false,
+              "feedback": "Poli mais évasif ; tu voulais accepter avec plaisir."
+            },
+            {
+              "jp": "いいえ、けっこうです",
               "romaji": "Iie, kekkō desu",
+              "kana": "いいえ, けっkう です",
               "fr": "Non merci",
               "correct": false,
-              "feedback": "Tu refuses une invitation amicale, dommage !",
-              "kana": "いいえ, けっkう です"
+              "feedback": "Tu refuses une invitation amicale."
             },
             {
               "jp": "いくらですか",
               "romaji": "Ikura desu ka",
+              "kana": "いくら です か",
               "fr": "Combien ça coûte ?",
               "correct": false,
-              "feedback": "C'est une invitation, pas un commerce !",
-              "kana": "いくら です か"
+              "feedback": "C'est une invitation, pas un commerce."
             }
           ],
           "situation_romaji": "Elle te propose : « 今度、お茶でもどうですか？ »"
@@ -6882,28 +7319,36 @@
           "question": "Elle prend congé. Comment réponds-tu naturellement ?",
           "choix": [
             {
-              "jp": "また、よろしくお願いします",
+              "jp": "また、よろしくおねがいします",
               "romaji": "Mata, yoroshiku onegai shimasu",
+              "kana": "また, よろしく おねがい します",
               "fr": "À bientôt, au plaisir",
               "correct": true,
-              "feedback": "Parfait ! Termine la conversation poliment et chaleureusement.",
-              "kana": "また, よろしく おねがい します"
+              "feedback": "Parfait : clôture polie et chaleureuse."
+            },
+            {
+              "jp": "さようなら",
+              "romaji": "Sayōnara",
+              "kana": "さyうなら",
+              "fr": "Adieu",
+              "correct": false,
+              "feedback": "Trop définitif entre voisins qu'on reverra."
             },
             {
               "jp": "はじめまして",
               "romaji": "Hajimemashite",
+              "kana": "はじめまして",
               "fr": "Enchanté",
               "correct": false,
-              "feedback": "On dit ça en se rencontrant, pas en se quittant !",
-              "kana": "はじめまして"
+              "feedback": "Pour une première rencontre, pas un au revoir."
             },
             {
-              "jp": "いただきます",
-              "romaji": "Itadakimasu",
-              "fr": "Bon appétit",
+              "jp": "おやすみなさい",
+              "romaji": "Oyasumi nasai",
+              "kana": "おやすみ なさい",
+              "fr": "Bonne nuit",
               "correct": false,
-              "feedback": "Aucun rapport avec un au revoir !",
-              "kana": "いただきます"
+              "feedback": "Se dit le soir au coucher, pas ici."
             }
           ],
           "situation_romaji": "Elle conclut : « それじゃあ、また »"
@@ -6926,28 +7371,36 @@
           "question": "Que veux-tu envoyer ? Une carte postale en France.",
           "choix": [
             {
-              "jp": "フランスにハガキを送りたいです",
+              "jp": "フランスにハガキをおくりたいです",
               "romaji": "Furansu ni hagaki wo okuritai desu",
-              "fr": "Je veux envoyer une carte en France",
+              "kana": "ふらんす に はがき を おくりたい です",
+              "fr": "Envoyer une carte en France",
               "correct": true,
-              "feedback": "Excellent ! « ~ni ~wo okuritai desu » = « je veux envoyer ~ à ~ ». Structure complète maîtrisée.",
-              "kana": "ふらんす に はがき を おくりたい です"
+              "feedback": "Parfait : structure complète « ~ni ~wo okuritai desu »."
             },
             {
-              "jp": "ハガキです",
-              "romaji": "Hagaki desu",
-              "fr": "C'est une carte",
+              "jp": "フランスにハガキをだしたいです",
+              "romaji": "Furansu ni hagaki wo dashitai desu",
+              "kana": "ふらんす に はがき を だしたい です",
+              "fr": "Poster une carte en France",
               "correct": false,
-              "feedback": "Tu ne précises ni la destination ni l'intention d'envoyer.",
-              "kana": "はがき です"
+              "feedback": "« dasu » marche aussi, mais « okuru » est plus standard ici ; nuance fine."
             },
             {
               "jp": "ハガキがほしいです",
               "romaji": "Hagaki ga hoshii desu",
+              "kana": "はがき が ほしい です",
               "fr": "Je veux une carte",
               "correct": false,
-              "feedback": "« hoshii » = vouloir posséder. Tu veux l'ENVOYER, donc « okuritai ».",
-              "kana": "はがき が ほしい です"
+              "feedback": "« hoshii » = posséder ; tu veux l'ENVOYER."
+            },
+            {
+              "jp": "ハガキはどこですか",
+              "romaji": "Hagaki wa doko desu ka",
+              "kana": "はがき わ どこ です か",
+              "fr": "Où sont les cartes ?",
+              "correct": false,
+              "feedback": "Tu demandes leur emplacement."
             }
           ],
           "situation_romaji": "L'employé demande : « 何をお送りですか？ »"
@@ -6957,28 +7410,36 @@
           "question": "Avion ou bateau ? Tu es pressé, tu veux par avion.",
           "choix": [
             {
-              "jp": "航空便でお願いします",
+              "jp": "こうくうびんでおねがいします",
               "romaji": "Kōkūbin de onegai shimasu",
-              "fr": "Par avion, s'il vous plaît",
+              "kana": "kうkうびん で おねがい します",
+              "fr": "Par avion, svp",
               "correct": true,
-              "feedback": "Parfait ! « Kōkūbin » = courrier aérien (rapide). « Funabin » = par bateau (lent).",
-              "kana": "kうkうびん で おねがい します"
+              "feedback": "Parfait : « kōkūbin » = aérien (rapide)."
             },
             {
-              "jp": "船便でお願いします",
+              "jp": "そくたつでおねがいします",
+              "romaji": "Sokutatsu de onegai shimasu",
+              "kana": "そくたつ で おねがい します",
+              "fr": "En express, svp",
+              "correct": false,
+              "feedback": "« sokutatsu » = express, pas exactement « par avion »."
+            },
+            {
+              "jp": "ふなびんでおねがいします",
               "romaji": "Funabin de onegai shimasu",
+              "kana": "ふなびん で おねがい します",
               "fr": "Par bateau, svp",
               "correct": false,
-              "feedback": "« Funabin » est lent (plusieurs semaines) ! Tu voulais aller vite.",
-              "kana": "ふなびん で おねがい します"
+              "feedback": "« funabin » est lent ; tu voulais aller vite."
             },
             {
               "jp": "わかりません",
               "romaji": "Wakarimasen",
+              "kana": "わかりません",
               "fr": "Je ne sais pas",
               "correct": false,
-              "feedback": "Essaie de choisir : « kōkūbin » pour rapide.",
-              "kana": "わかりません"
+              "feedback": "Choisis « kōkūbin » pour rapide."
             }
           ],
           "situation_romaji": "Il demande : « 航空便ですか、船便ですか？ »"
@@ -6988,28 +7449,36 @@
           "question": "Tu veux confirmer le prix poliment.",
           "choix": [
             {
-              "jp": "1500円ですね",
+              "jp": "せんごひゃくえんですね",
               "romaji": "Sen gohyaku en desu ne",
+              "kana": "せん ごひゃく えん です ね",
               "fr": "1500 yens, c'est ça ?",
               "correct": true,
-              "feedback": "Parfait ! Reformuler avec « ~ne » confirme poliment l'information.",
-              "kana": "せん ごひゃく えん です ね"
+              "feedback": "Parfait : reformuler avec « ~ne » confirme poliment."
             },
             {
-              "jp": "高すぎます",
-              "romaji": "Takasugimasu",
-              "fr": "C'est beaucoup trop cher",
+              "jp": "せんごひゃくえんですか",
+              "romaji": "Sen gohyaku en desu ka",
+              "kana": "せん ごひゃく えん です か",
+              "fr": "1500 yens ?",
               "correct": false,
-              "feedback": "Un peu agressif pour un tarif postal officiel !",
-              "kana": "たかすぎます"
+              "feedback": "« ka » sonne comme un doute ; « ne » confirme plus naturellement."
             },
             {
-              "jp": "お金がありません",
+              "jp": "たかすぎます",
+              "romaji": "Takasugimasu",
+              "kana": "たかすぎます",
+              "fr": "Beaucoup trop cher",
+              "correct": false,
+              "feedback": "Agressif pour un tarif officiel."
+            },
+            {
+              "jp": "おかねがありません",
               "romaji": "Okane ga arimasen",
+              "kana": "おかね が ありません",
               "fr": "Je n'ai pas d'argent",
               "correct": false,
-              "feedback": "Problématique si tu veux envoyer ton colis !",
-              "kana": "おかね が ありません"
+              "feedback": "Problématique pour envoyer ton colis."
             }
           ],
           "situation_romaji": "Il pèse ton colis et annonce : « 1500円になります »"
@@ -7019,28 +7488,36 @@
           "question": "Il demande le contenu du colis. Ce sont des souvenirs.",
           "choix": [
             {
-              "jp": "お土産です",
+              "jp": "おみやげです",
               "romaji": "Omiyage desu",
+              "kana": "おみやげ です",
               "fr": "Des souvenirs",
               "correct": true,
-              "feedback": "Parfait ! « Omiyage » = souvenirs/cadeaux. Mot incontournable au Japon.",
-              "kana": "おみやげ です"
+              "feedback": "Parfait : « omiyage » = souvenirs/cadeaux."
+            },
+            {
+              "jp": "プレゼントです",
+              "romaji": "Purezento desu",
+              "kana": "ぷれぜんと です",
+              "fr": "Un cadeau",
+              "correct": false,
+              "feedback": "Acceptable, mais « omiyage » est le terme attendu pour un souvenir de voyage."
+            },
+            {
+              "jp": "ひみつです",
+              "romaji": "Himitsu desu",
+              "kana": "ひみつ です",
+              "fr": "C'est un secret",
+              "correct": false,
+              "feedback": "On ne plaisante pas avec le contenu déclaré."
             },
             {
               "jp": "わかりません",
               "romaji": "Wakarimasen",
+              "kana": "わかりません",
               "fr": "Je ne sais pas",
               "correct": false,
-              "feedback": "Tu sais ce que tu envoies ! C'est une question de douane.",
-              "kana": "わかりません"
-            },
-            {
-              "jp": "秘密です",
-              "romaji": "Himitsu desu",
-              "fr": "C'est un secret",
-              "correct": false,
-              "feedback": "On ne plaisante pas avec le contenu déclaré d'un colis !",
-              "kana": "ひみつ です"
+              "feedback": "Tu sais ce que tu envoies."
             }
           ],
           "situation_romaji": "Il demande : « 中身は何ですか？ »"
@@ -7052,26 +7529,34 @@
             {
               "jp": "ありがとうございました",
               "romaji": "Arigatō gozaimashita",
+              "kana": "ありがtう ございました",
               "fr": "Merci beaucoup (passé)",
               "correct": true,
-              "feedback": "Parfait ! On rend le remerciement au passé, le service étant accompli.",
-              "kana": "ありがtう ございました"
+              "feedback": "Parfait : au passé, service accompli."
             },
             {
-              "jp": "こんにちは",
-              "romaji": "Konnichiwa",
-              "fr": "Bonjour",
+              "jp": "ありがとうございます",
+              "romaji": "Arigatō gozaimasu",
+              "kana": "ありがtう ございます",
+              "fr": "Merci (présent)",
               "correct": false,
-              "feedback": "Une salutation en partant, c'est étrange !",
-              "kana": "こんにちわ"
+              "feedback": "Le service étant fini, le passé est plus juste."
+            },
+            {
+              "jp": "おせわになりました",
+              "romaji": "Osewa ni narimashita",
+              "kana": "おせわ に なりました",
+              "fr": "Merci de votre aide",
+              "correct": false,
+              "feedback": "Un peu solennel pour un guichet postal."
             },
             {
               "jp": "もういいです",
               "romaji": "Mō ii desu",
+              "kana": "mう いい です",
               "fr": "Ça suffit",
               "correct": false,
-              "feedback": "Cela peut sembler agacé, à éviter !",
-              "kana": "mう いい です"
+              "feedback": "Peut sembler agacé."
             }
           ],
           "situation_romaji": "Transaction finie, il dit : « ありがとうございました »"

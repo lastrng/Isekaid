@@ -1751,6 +1751,9 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
   const [picked,setPicked] = useState(null);
   const [score,setScore] = useState(0);
   const [finished,setFinished] = useState(false);
+  // Romaji masqué par défaut dès le niveau Intermédiaire (mais affichable)
+  const hideRomajiByLevel = s.niveau==="Intermédiaire" || s.niveau==="Avancé";
+  const [showRomaji,setShowRomaji] = useState(!hideRomajiByLevel);
   const etape = s.etapes[step];
 
   const choose = (choix)=>{
@@ -1823,7 +1826,14 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
           <div style={{fontSize:15,color:C.text,lineHeight:1.55}}>{script==="romaji" && etape.situation_romaji ? etape.situation_romaji : etape.situation}</div>
         </div>
 
-        <div style={{fontSize:13,color:C.t2,fontWeight:500,marginBottom:14}}>{etape.question}</div>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,gap:10}}>
+          <div style={{fontSize:13,color:C.t2,fontWeight:500,flex:1}}>{etape.question}</div>
+          {hideRomajiByLevel && (
+            <button onClick={()=>setShowRomaji(v=>!v)} className="pop-press" style={{flexShrink:0,fontSize:11,padding:"5px 11px",background:showRomaji?C.s2:"transparent",border:`1px solid ${showRomaji?s.couleur+"55":C.border}`,borderRadius:16,color:showRomaji?s.couleur:C.t3,cursor:"pointer",whiteSpace:"nowrap"}}>
+              {showRomaji ? "あ Masquer rōmaji" : "A Afficher rōmaji"}
+            </button>
+          )}
+        </div>
 
         {/* Choices */}
         <div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -1838,7 +1848,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
                 <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
                   <div style={{flex:1,minWidth:0}}>
                     {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(c, script)}</div>}
-                    {c.jp && <div style={{fontSize:11,color:C.t3,fontStyle:"italic",marginBottom:3}}>{jpSub(c, script)}</div>}
+                    {c.jp && showRomaji && jpSub(c, script) && <div style={{fontSize:11,color:C.t3,fontStyle:"italic",marginBottom:3}}>{jpSub(c, script)}</div>}
                     <div style={{fontSize:13,color:C.t2}}>{c.fr}</div>
                   </div>
                   {picked && c.jp && <SpeakButton C={C} text={c.jp} color={s.couleur}/>}
@@ -1862,7 +1872,10 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
 
 function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
   const [active,setActive] = useState(null);
-  const scenarios = db?.scenarios || [];
+  const LEVEL_ORDER = { "Débutant":0, "Intermédiaire":1, "Avancé":2 };
+  const scenarios = [...(db?.scenarios || [])].sort((a,b)=>
+    (LEVEL_ORDER[a.niveau]??1) - (LEVEL_ORDER[b.niveau]??1)
+  );
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   const done = (s)=> scenariosDone?.includes(s.id);
@@ -1888,30 +1901,42 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
           <div style={{fontSize:12,color:C.t2,lineHeight:1.5}}>Entraîne-toi dans de vraies situations japonaises. Complète les scénarios pour gagner des clés 🔑 et de l'XP.</div>
         </div>
 
-        {/* Liste des scénarios */}
+        {/* Liste des scénarios, groupés par niveau */}
         <div style={{display:"flex",flexDirection:"column",gap:12}} className="stagger">
           {scenarios.map((s,i)=>{
             const isDone = done(s);
+            const prevLevel = i>0 ? scenarios[i-1].niveau : null;
+            const showSeparator = s.niveau !== prevLevel;
+            const levelEmoji = {"Débutant":"🟢","Intermédiaire":"🟡","Avancé":"🔴"}[s.niveau] || "";
             return(
-              <div key={i} className="lift" onClick={()=>setActive(s)} style={{position:"relative",borderRadius:18,overflow:"hidden",cursor:"pointer",border:`1px solid ${isDone?"rgba(78,128,96,0.3)":s.couleur+"44"}`,boxShadow:isDone?"0 2px 12px rgba(58,102,69,0.08)":"none"}}>
-                {/* Barre couleur en haut */}
-                <div style={{height:3,background:`linear-gradient(90deg,${s.couleur},${s.couleur}44)`}}/>
-                <div style={{background:`linear-gradient(135deg,${s.couleur}18 0%,transparent 100%)`,padding:"16px 18px"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:14}}>
-                    <div style={{width:52,height:52,borderRadius:14,background:`${s.couleur}22`,border:`1px solid ${s.couleur}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0}}>{s.emoji}</div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
-                        <span style={{fontSize:15,color:C.text,fontWeight:600}}>{s.titre}</span>
-                        <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</span>
+              <div key={i}>
+                {showSeparator && (
+                  <div style={{display:"flex",alignItems:"center",gap:8,margin:i===0?"0 0 12px":"16px 0 12px"}}>
+                    <div style={{flex:1,height:1,background:C.border}}/>
+                    <span style={{fontSize:10,color:C.t3,letterSpacing:".15em",textTransform:"uppercase",flexShrink:0}}>{levelEmoji} {s.niveau}</span>
+                    <div style={{flex:1,height:1,background:C.border}}/>
+                  </div>
+                )}
+                <div className="lift" onClick={()=>setActive(s)} style={{position:"relative",borderRadius:18,overflow:"hidden",cursor:"pointer",border:`1px solid ${isDone?"rgba(78,128,96,0.3)":s.couleur+"44"}`,boxShadow:isDone?"0 2px 12px rgba(58,102,69,0.08)":"none"}}>
+                  {/* Barre couleur en haut */}
+                  <div style={{height:3,background:`linear-gradient(90deg,${s.couleur},${s.couleur}44)`}}/>
+                  <div style={{background:`linear-gradient(135deg,${s.couleur}18 0%,transparent 100%)`,padding:"16px 18px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:14}}>
+                      <div style={{width:52,height:52,borderRadius:14,background:`${s.couleur}22`,border:`1px solid ${s.couleur}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0}}>{s.emoji}</div>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
+                          <span style={{fontSize:15,color:C.text,fontWeight:600}}>{s.titre}</span>
+                          <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</span>
+                        </div>
+                        <div style={{fontSize:12,color:C.t2,lineHeight:1.4,marginBottom:8}}>{s.contexte}</div>
+                        <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
+                          <span style={{fontSize:10,padding:"3px 9px",border:`1px solid ${s.couleur}55`,borderRadius:20,color:s.couleur,fontWeight:500}}>{s.niveau}</span>
+                          <span style={{fontSize:10,padding:"3px 9px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>+{s.recompense_cles} 🔑 · +{s.recompense_xp} XP</span>
+                          {isDone && <span style={{fontSize:10,padding:"3px 9px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:20,color:C.green}}>✓ Complété</span>}
+                        </div>
                       </div>
-                      <div style={{fontSize:12,color:C.t2,lineHeight:1.4,marginBottom:8}}>{s.contexte}</div>
-                      <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
-                        <span style={{fontSize:10,padding:"3px 9px",border:`1px solid ${s.couleur}55`,borderRadius:20,color:s.couleur,fontWeight:500}}>{s.niveau}</span>
-                        <span style={{fontSize:10,padding:"3px 9px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>+{s.recompense_cles} 🔑 · +{s.recompense_xp} XP</span>
-                        {isDone && <span style={{fontSize:10,padding:"3px 9px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:20,color:C.green}}>✓ Complété</span>}
-                      </div>
+                      <span style={{fontSize:20,color:isDone?C.green:acc.accent,flexShrink:0}}>{isDone?"✓":"›"}</span>
                     </div>
-                    <span style={{fontSize:20,color:isDone?C.green:acc.accent,flexShrink:0}}>{isDone?"✓":"›"}</span>
                   </div>
                 </div>
               </div>
