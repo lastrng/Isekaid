@@ -239,6 +239,7 @@ button{font-family:inherit;}
 @keyframes heartbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.15)}30%{transform:scale(1)}45%{transform:scale(1.1)}60%{transform:scale(1)}}
 @keyframes flameFlicker{0%,100%{transform:scale(1) rotate(-2deg);filter:brightness(1)}50%{transform:scale(1.12) rotate(2deg);filter:brightness(1.25)}}
 @keyframes slideInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bubbleIn{0%{opacity:0;transform:translateY(34px) scale(.92)}60%{opacity:1;transform:translateY(-4px) scale(1.02)}100%{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes slideInRight{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
 @keyframes zoomBadge{0%{transform:scale(0) rotate(-180deg);opacity:0}60%{transform:scale(1.15) rotate(10deg);opacity:1}100%{transform:scale(1) rotate(0)}}
 @keyframes ring{0%{box-shadow:0 0 0 0 rgba(201,70,61,.5)}70%{box-shadow:0 0 0 14px rgba(201,70,61,0)}100%{box-shadow:0 0 0 0 rgba(201,70,61,0)}}
@@ -4327,12 +4328,12 @@ function DailyWelcome({C, streak, dailyInfo, onClose}){
   return(
     <>
       <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:300,backdropFilter:"blur(3px)"}}/>
+      <div style={{position:"fixed",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"min(86vw,340px)",zIndex:301}}>
       <div style={{
-        position:"fixed", top:"50%", left:"50%", transform:"translate(-50%,-50%)",
-        width:"min(86vw,340px)", zIndex:301, background:C.s1,
+        background:C.s1,
         borderRadius:22, padding:"32px 26px 26px", textAlign:"center",
-        animation:"popBounce .55s cubic-bezier(.34,1.56,.64,1)",
-        boxShadow:"0 24px 80px rgba(0,0,0,0.4)", border:`1px solid ${milestone?"rgba(201,70,61,0.5)":C.border}`
+        animation:"bubbleIn .5s cubic-bezier(.34,1.56,.64,1) both",
+        boxShadow:"0 24px 80px rgba(0,0,0,0.4)", border:`1px solid ${milestone?"rgba(201,70,61,0.5)":C.border}`, position:"relative"
       }}>
         {milestone && (
           <div style={{position:"absolute",inset:0,overflow:"hidden",borderRadius:22,pointerEvents:"none"}}>
@@ -4382,6 +4383,7 @@ function DailyWelcome({C, streak, dailyInfo, onClose}){
         <button onClick={onClose} className="pop-press" style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",animation:milestone?"ring 1.4s ease .6s 2":"none"}}>
           {milestone ? "Génial ! →" : "Continuer l'aventure →"}
         </button>
+      </div>
       </div>
     </>
   );
@@ -4613,8 +4615,10 @@ function GuidedTour({C, step, onNext, onPrev, onSkip, onFinish, dontShowAgain, s
     <>
       {/* Voile sombre — laisse voir la section derrière */}
       <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:300,backdropFilter:"blur(1px)"}}/>
-      {/* Carte d'explication, ancrée en bas (au-dessus de la nav) */}
-      <div key={step} style={{position:"fixed",left:"50%",bottom:90,transform:"translateX(-50%)",width:"min(90vw,360px)",zIndex:301,background:C.s1,borderRadius:18,padding:"22px 22px 18px",boxShadow:"0 20px 60px rgba(0,0,0,0.45)",border:`1px solid ${C.border}`,animation:"slideInUp .4s cubic-bezier(.34,1.56,.64,1)"}}>
+      {/* Conteneur de positionnement (centrage horizontal) — ne porte AUCUNE animation */}
+      <div style={{position:"fixed",left:"50%",bottom:90,transform:"translateX(-50%)",width:"min(90vw,360px)",zIndex:301}}>
+        {/* Carte animée (l'animation ne touche que cet enfant, pas le centrage) */}
+        <div key={step} style={{background:C.s1,borderRadius:18,padding:"22px 22px 18px",boxShadow:"0 20px 60px rgba(0,0,0,0.45)",border:`1px solid ${C.border}`,animation:"bubbleIn .42s cubic-bezier(.34,1.56,.64,1) both"}}>
         {/* Skip en haut à droite */}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
           <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>Découverte · {step+1}/{TOUR_STEPS.length}</span>
@@ -4640,6 +4644,7 @@ function GuidedTour({C, step, onNext, onPrev, onSkip, onFinish, dontShowAgain, s
           <button onClick={last ? onFinish : onNext} className="pop-press" style={{flex:1,padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
             {last ? "Terminer 🌸" : "Suivant →"}
           </button>
+        </div>
         </div>
       </div>
     </>
