@@ -2916,6 +2916,9 @@ function ComprehensionRead({ C, db, script, onRecord }){
   const [showText, setShowText] = useState(false); // texte caché par défaut ? Non : écrite = on lit. On montre.
   const [answers, setAnswers] = useState({});
   const [showTrad, setShowTrad] = useState(false);
+  const topRef = useRef(null);
+  // Au changement d'exercice, on remonte sur le texte de départ
+  useEffect(()=>{ if(topRef.current) topRef.current.scrollIntoView({block:"start"}); }, [idx]);
   const exo = exos[idx];
 
   if(!exo) return <div style={{padding:"20px",color:C.t2,fontSize:13}}>Aucun exercice disponible.</div>;
@@ -2939,7 +2942,7 @@ function ComprehensionRead({ C, db, script, onRecord }){
                  : exo.texte_jp;
 
   return(
-    <div>
+    <div ref={topRef} style={{scrollMarginTop:60}}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
         <div style={{fontSize:15,color:C.text,fontWeight:600}}>📖 {exo.titre}</div>
         <span style={{fontSize:11,color:C.t3,fontWeight:600}}>{idx+1}/{exos.length} · {exo.niveau}</span>
@@ -3003,6 +3006,8 @@ function ComprehensionListen({ C, db, script }){
   const [idx, setIdx] = useState(0);
   const [revealed, setRevealed] = useState(false); // texte caché par défaut
   const [answers, setAnswers] = useState({});
+  const topRef = useRef(null);
+  useEffect(()=>{ if(topRef.current) topRef.current.scrollIntoView({block:"start"}); }, [idx]);
   const exo = exos[idx];
 
   if(!exo) return <div style={{padding:"20px",color:C.t2,fontSize:13}}>Aucun exercice disponible.</div>;
@@ -3016,7 +3021,7 @@ function ComprehensionListen({ C, db, script }){
   const next = ()=>{ setAnswers({}); setRevealed(false); if(idx+1<exos.length) setIdx(idx+1); else setIdx(0); };
 
   return(
-    <div>
+    <div ref={topRef} style={{scrollMarginTop:60}}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
         <div style={{fontSize:15,color:C.text,fontWeight:600}}>🎧 {exo.titre}</div>
         <span style={{fontSize:11,color:C.t3,fontWeight:600}}>{idx+1}/{exos.length} · {exo.niveau}</span>
@@ -3085,6 +3090,9 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   const [pathStep,setPathStep] = useState(null);   // active path step (detail)
   const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
   const [learnMode,setLearnMode] = useState(null);   // null = choix | "path" | "alphabets" | "situations" | "read" | "listen"
+  const scrollRef = useRef(null);
+  // Remet le scroll en haut quand on change de mode (sinon on atterrit sur les questions)
+  useEffect(()=>{ if(scrollRef.current) scrollRef.current.scrollTop = 0; }, [learnMode]);
   const situations = db?.situations || [];
   const kp = kanaProgress || {};
   const completed = pathProgress?.completed || [];
@@ -3232,7 +3240,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div ref={scrollRef} style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
       {/* En-tête sticky */}
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
