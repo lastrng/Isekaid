@@ -1,0 +1,518 @@
+{
+  "wagashi": {
+    "image": "/images/wiki/wagashi.jpg",
+    "author": "Japanexperterna.se",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hotaru_wagashi.jpg"
+  },
+  "onigiri": {
+    "image": "/images/wiki/onigiri.jpg",
+    "author": "yomi955",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Salmon_onigiri_by_yomi955.jpg"
+  },
+  "ramen": {
+    "image": "/images/wiki/ramen.jpg",
+    "author": "Ocdp",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ramen_Jump_002.jpg"
+  },
+  "sushi": {
+    "image": "/images/wiki/sushi.jpg",
+    "author": "Yumi Kimura",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Various_sushi,_beautiful_October_night_at_midnight.jpg"
+  },
+  "sashimi": {
+    "image": "/images/wiki/sashimi.jpg",
+    "author": "jetalone from Izakaya Izumi in Kagoshima, Kagoshima, at a restaurant.\nHHR3+WG 鹿児",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kibinago_sashimi_by_jetalone_in_Kagoshima.jpg"
+  },
+  "tempura": {
+    "image": "/images/wiki/tempura.jpg",
+    "author": "Ocdp",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tempura_002.jpg"
+  },
+  "yakitori": {
+    "image": "/images/wiki/yakitori.jpg",
+    "author": "竹麦魚(Searobin)",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cooking_yakitori.jpg"
+  },
+  "okonomiyaki": {
+    "image": "/images/wiki/okonomiyaki.jpg",
+    "author": "pelican from Tokyo, Japan",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Okonomiyaki_with_tomato_and_cheeze_(4716607523).jpg"
+  },
+  "takoyaki": {
+    "image": "/images/wiki/takoyaki.jpg",
+    "author": "heiwa4126",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Takoyaki_by_yomi955.jpg"
+  },
+  "mochi": {
+    "image": "/images/wiki/mochi.jpg",
+    "author": "Auteur inconnu",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Rice_Cake.jpg"
+  },
+  "matcha": {
+    "image": "/images/wiki/matcha.jpg",
+    "author": "Evanhoever",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Matcha_Scoop.jpg"
+  },
+  "sake": {
+    "image": "/images/wiki/sake.jpg",
+    "author": "TrafficJan82",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Common_alcoholic_beverages.jpg"
+  },
+  "saké": {
+    "image": "/images/wiki/sak.jpg",
+    "author": "TrafficJan82",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Common_alcoholic_beverages.jpg"
+  },
+  "miso": {
+    "image": "/images/wiki/miso.jpg",
+    "author": "https://publicdomainq.net/miso-0018849/",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Miso_001.jpg"
+  },
+  "dashi": {
+    "image": "/images/wiki/dashi.jpg",
+    "author": "Hadashijapan",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:HADASHI_%E8%B7%A3_(_%E3%81%AF%E3%81%A0%E3%81%97_).JPG"
+  },
+  "udon": {
+    "image": "/images/wiki/udon.jpg",
+    "author": "udono",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Udon_by_udono.jpg"
+  },
+  "soba": {
+    "image": "/images/wiki/soba.jpg",
+    "author": "Eric I. E. from Roppongi, Minato, Tokyo",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Soba_and_curry_soba_in_Roppongi_by_Eric_I._E.jpg"
+  },
+  "izakaya": {
+    "image": "/images/wiki/izakaya.jpg",
+    "author": "Syced",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Quality_izakaya_in_Ebisu_2.jpg"
+  },
+  "konbini": {
+    "image": "/images/wiki/konbini.jpg",
+    "author": "Martin Falbisoner",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Convenience_Store_Shelf,_Tokyo_2014.jpg"
+  },
+  "bento": {
+    "image": "/images/wiki/bento.jpg",
+    "author": "Blue Lotus",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Bento_at_Hanabishi,_Koyasan.jpg"
+  },
+  "dorayaki": {
+    "image": "/images/wiki/dorayaki.jpg",
+    "author": "Ocdp",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Dorayaki_003.jpg"
+  },
+  "anko": {
+    "image": "/images/wiki/anko.jpg",
+    "author": "Midori",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Red_bean_paste_anko.JPG"
+  },
+  "umeboshi": {
+    "image": "/images/wiki/umeboshi.jpg",
+    "author": "SEKIUCHI",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Umeboshi.jpg"
+  },
+  "wasabi": {
+    "image": "/images/wiki/wasabi.jpg",
+    "author": "Qwert1234",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Wasabia_japonica_4.JPG"
+  },
+  "shōchu": {
+    "image": "/images/wiki/sh-chu.jpg",
+    "author": "薩摩焼酎・奄美黒糖焼酎 鹿児島県酒造組合",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E7%84%BC%E9%85%8E%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%882016_%E6%8A%BD%E9%81%B8%E3%83%9C%E3%83%83%E3%82%AF%E3%82%B9_(30273586334).jpg"
+  },
+  "shochu": {
+    "image": "/images/wiki/shochu.jpg",
+    "author": "awayukin",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E9%B9%BF%E5%85%90%E5%B3%B6%E4%B8%AD%E5%A4%AE%E9%A7%85_SATSUMA%E7%84%BC%E9%85%8EBAR_(5025030443).jpg"
+  },
+  "onsen": {
+    "image": "/images/wiki/onsen.jpg",
+    "author": "Brocken Inaglory",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Dead_trees_at_Mammoth_Hot_Springs.jpg"
+  },
+  "sento": {
+    "image": "/images/wiki/sento.jpg",
+    "author": "Torii Kiyonaga, 1752–1815\nderivative work: Torsodog (talk)",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Kiyonaga_bathhouse_women-2.jpg"
+  },
+  "sentō": {
+    "image": "/images/wiki/sent.jpg",
+    "author": "Torii Kiyonaga, 1752–1815\nderivative work: Torsodog (talk)",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Kiyonaga_bathhouse_women-2.jpg"
+  },
+  "ryokan": {
+    "image": "/images/wiki/ryokan.jpg",
+    "author": "STA3816",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ryokan_Kashima_Honkan.jpg"
+  },
+  "torii": {
+    "image": "/images/wiki/torii.jpg",
+    "author": "Rdsmith4",
+    "licence": "CC BY-SA 2.5",
+    "source": "https://commons.wikimedia.org/wiki/File:Itsukushima_torii_angle.jpg"
+  },
+  "shrine": {
+    "image": "/images/wiki/shrine.jpg",
+    "author": "Basile Morin",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Golden_gate_of_Ueno_T%C5%8Dsh%C5%8D-g%C5%AB_Shinto_shrine,_Tokyo,_Japan.jpg"
+  },
+  "jinja": {
+    "image": "/images/wiki/jinja.jpg",
+    "author": "Basile Morin",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Golden_gate_of_Ueno_T%C5%8Dsh%C5%8D-g%C5%AB_Shinto_shrine,_Tokyo,_Japan.jpg"
+  },
+  "genkan": {
+    "image": "/images/wiki/genkan.jpg",
+    "author": "Fg2",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Genkan-M9778.jpg"
+  },
+  "tatami": {
+    "image": "/images/wiki/tatami.jpg",
+    "author": "Rosewoman",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tatami_being_repaired;_December_2018_(02).jpg"
+  },
+  "kotatsu": {
+    "image": "/images/wiki/kotatsu.jpg",
+    "author": "Tim Notari (tastefulTN)",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kotatsu-tastefulTN.jpg"
+  },
+  "fusuma": {
+    "image": "/images/wiki/fusuma.jpg",
+    "author": "Kanō Sansetsu",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E8%80%81%E6%A2%85%E5%9B%B3%E8%A5%96-Old_Plum_MET_DP148763.jpg"
+  },
+  "shoji": {
+    "image": "/images/wiki/shoji.jpg",
+    "author": "Akiyoshi's Room",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:%E9%9A%9C%E5%AD%90%E3%81%AB%E6%98%A0%E3%82%8B%E5%BD%B1Img568.jpg"
+  },
+  "honne": {
+    "image": "/images/wiki/honne.jpg",
+    "author": "Fin-den-der",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Bieberbach_(H%C3%B6nne)_II.JPG"
+  },
+  "tatemae": {
+    "image": "/images/wiki/tatemae.jpg",
+    "author": "Fin-den-der",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Bieberbach_(H%C3%B6nne)_II.JPG"
+  },
+  "senpai": {
+    "image": "/images/wiki/senpai.jpg",
+    "author": "Zompige Oma",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:*augh*.png"
+  },
+  "kohai": {
+    "image": "/images/wiki/kohai.jpg",
+    "author": "功刀靖雄",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:21%E4%B8%96%E7%B4%80%E3%81%AE%E5%BE%8C%E8%BC%A9%E3%81%9F%E3%81%A1%E3%81%B8_%E2%80%95_%E7%AD%91%E6%B3%A2%E5%A4%A7%E7%A1%AC%E5%BC%8F%E9%87%8E%E7%90%83%E9%83%A8%E5%89%B5%E9%83%A8%E7%99%BE%E5%8D%81%E5%91%A8%E5%B9%B4%E8%A8%98%E5%BF%B5%E8%AA%8C_%E2%80%95.jpg"
+  },
+  "kōhai": {
+    "image": "/images/wiki/k-hai.jpg",
+    "author": "功刀靖雄",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:21%E4%B8%96%E7%B4%80%E3%81%AE%E5%BE%8C%E8%BC%A9%E3%81%9F%E3%81%A1%E3%81%B8_%E2%80%95_%E7%AD%91%E6%B3%A2%E5%A4%A7%E7%A1%AC%E5%BC%8F%E9%87%8E%E7%90%83%E9%83%A8%E5%89%B5%E9%83%A8%E7%99%BE%E5%8D%81%E5%91%A8%E5%B9%B4%E8%A8%98%E5%BF%B5%E8%AA%8C_%E2%80%95.jpg"
+  },
+  "wa": {
+    "image": "/images/wiki/wa.jpg",
+    "author": "See user in the \"File history\" section.",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E5%92%8C-bw.png"
+  },
+  "giri": {
+    "image": "/images/wiki/giri.jpg",
+    "author": "Rembrandt",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Rembrandt_-_Samson_threatened_his_father-in-law_-_Google_Art_Project.jpg"
+  },
+  "nemawashi": {
+    "image": "/images/wiki/nemawashi.jpg",
+    "author": "kontenten from Japan.",
+    "licence": "CC BY 2.1 jp",
+    "source": "https://commons.wikimedia.org/wiki/File:Tejime_01.jpg"
+  },
+  "shokunin": {
+    "image": "/images/wiki/shokunin.jpg",
+    "author": "Auteur inconnu",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Bamun_artisan.jpg"
+  },
+  "ikigai": {
+    "image": "/images/wiki/ikigai.jpg",
+    "author": "en:User:Nimbosa derived from works by Dennis Bodor (SVG) and Emmy van Deurzen (J",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ikigai-EN-optimized-PNG.png"
+  },
+  "mottainai": {
+    "image": "/images/wiki/mottainai.jpg",
+    "author": "Thomas MusicaJack",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Yamatsuri_Mottainai_Library.jpg"
+  },
+  "wabi-sabi": {
+    "image": "/images/wiki/wabi-sabi.jpg",
+    "author": "Stephane D'Alu",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:RyoanJi-Dry_garden.jpg"
+  },
+  "mono no aware": {
+    "image": "/images/wiki/mono-no-aware.jpg",
+    "author": "Totoya Hokkei",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Men_Dancing_To_Samisen.jpg"
+  },
+  "kintsugi": {
+    "image": "/images/wiki/kintsugi.jpg",
+    "author": "Daderot",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tea_bowl,_Korea,_Joseon_dynasty,_16th_century_AD,_Mishima-hakeme_type,_buncheong_ware,_stoneware_with_white_engobe_and_translucent,_greenish-gray_glaze,_gold_lacquer_-_Ethnological_Museum,_Berlin_-_DSC02061.JPG"
+  },
+  "ma": {
+    "image": "/images/wiki/ma.jpg",
+    "author": "See user in the \"File history\" section.",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E9%96%93-bw.png"
+  },
+  "omakase": {
+    "image": "/images/wiki/omakase.jpg",
+    "author": "Amandaerfeng",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Omakase_uni.jpg"
+  },
+  "omotenashi": {
+    "image": "/images/wiki/omotenashi.jpg",
+    "author": "Asturio Cantabrio",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kumano_Kodo_Omotenashi_Kan_2020-01_ac_(2).jpg"
+  },
+  "keigo": {
+    "image": "/images/wiki/keigo.jpg",
+    "author": "Joi Ito",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Keigo_Oyamada,_crop.jpg"
+  },
+  "hanami": {
+    "image": "/images/wiki/hanami.jpg",
+    "author": "Hiroshige, Utagawa; Kihei, Sanoya",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Cherry-Blossom_Viewing_at_Asuka_Hill_(Asukayama_hanami).jpg"
+  },
+  "matsuri": {
+    "image": "/images/wiki/matsuri.jpg",
+    "author": "Syced",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E6%9C%AD%E5%B9%8C%E5%A4%8F%E7%A5%AD%E3%82%8A_2009.jpg"
+  },
+  "sakura": {
+    "image": "/images/wiki/sakura.jpg",
+    "author": "Midori",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Lake_Kawaguchiko_Sakura_Mount_Fuji_4.JPG"
+  },
+  "omikuji": {
+    "image": "/images/wiki/omikuji.jpg",
+    "author": "Matt Lucht",
+    "licence": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E3%81%8A%E3%81%BF%E3%81%8F%E3%81%98%E3%81%AE_%E3%81%8F%E3%81%9A%E5%85%A5%E3%82%8C_(6213817623).png"
+  },
+  "omamori": {
+    "image": "/images/wiki/omamori.jpg",
+    "author": "Leongboy1",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Variousomamori.jpg"
+  },
+  "obon": {
+    "image": "/images/wiki/obon.jpg",
+    "author": "Auteur inconnu",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Osurasma,_or_praying_a_soul_out_of_purgatory-J._M._W._Silver.jpg"
+  },
+  "yukata": {
+    "image": "/images/wiki/yukata.jpg",
+    "author": "Corpse Reviver",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Himeji_Yukata_Matsuri_2009p1_006.jpg"
+  },
+  "kimono": {
+    "image": "/images/wiki/kimono.jpg",
+    "author": "投稿者によるスキャン",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Kimono-coat_1956.jpg"
+  },
+  "nori": {
+    "image": "/images/wiki/nori.jpg",
+    "author": "Alice Wiegand, (Lyzzy)",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nori.jpg"
+  },
+  "omiyage": {
+    "image": "/images/wiki/omiyage.jpg",
+    "author": "Wpktsfs",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Souvenirs.jpg"
+  },
+  "tanabata": {
+    "image": "/images/wiki/tanabata.jpg",
+    "author": "Torii Kiyonaga",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:%E5%AD%90%E5%AE%9D%E4%BA%94%E7%AF%80%E9%81%8A_%E4%B8%83%E5%A4%95.jpg"
+  },
+  "setsubun": {
+    "image": "/images/wiki/setsubun.jpg",
+    "author": "Auteur inconnu",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Setsubun.jpg"
+  },
+  "hatsumode": {
+    "image": "/images/wiki/hatsumode.jpg",
+    "author": "七厩拓",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hatsum%C5%8Dde_in_Takekoma-jinja_1.jpg"
+  },
+  "ikebana": {
+    "image": "/images/wiki/ikebana.jpg",
+    "author": "Joe Mabel",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ikebana_-_Yoshiko_Nakamura_01B.jpg"
+  },
+  "origami": {
+    "image": "/images/wiki/origami.jpg",
+    "author": "Auteur inconnu",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Orizuru.jpg"
+  },
+  "haiku": {
+    "image": "/images/wiki/haiku.jpg",
+    "author": "Marc Vew",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Haiku_Aarschot.jpg"
+  },
+  "haïku": {
+    "image": "/images/wiki/ha-ku.jpg",
+    "author": "Marc Vew",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Haiku_Aarschot.jpg"
+  },
+  "taiko": {
+    "image": "/images/wiki/taiko.jpg",
+    "author": "Mbrickn",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Taiko_Drummers.jpg"
+  },
+  "shamisen": {
+    "image": "/images/wiki/shamisen.jpg",
+    "author": "AnonymousUnknown author",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Oni_with_Shamisen_%E9%AC%BC%E4%B8%89%E5%91%B3%E7%B7%9A_Otsu-e.tif"
+  },
+  "fuji": {
+    "image": "/images/wiki/fuji.jpg",
+    "author": "U.S. Navy photo by Lt. j.g. Andrew Leatherwood",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Grumman_E-2C_Hawkeyes_of_VAW-115_fly_past_Mount_Fuji_on_15_February_2007_(070215-N-2604L-024).jpg"
+  },
+  "momiji": {
+    "image": "/images/wiki/momiji.jpg",
+    "author": "Rbrechko",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:21-224-5054_NNP_Synevyr_RB_18.jpg"
+  },
+  "ume": {
+    "image": "/images/wiki/ume.jpg",
+    "author": "Berrucomons",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2909_vallon_moy_res.jpg"
+  },
+  "sugi": {
+    "image": "/images/wiki/sugi.jpg",
+    "author": "Yosemite",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Jhomonsugi_in_Yaku_Island_Japan_001.JPG"
+  },
+  "sensei": {
+    "image": "/images/wiki/sensei.jpg",
+    "author": "Auteur inconnu",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Bai_Juyi.jpg"
+  },
+  "san": {
+    "image": "/images/wiki/san.jpg",
+    "author": "studio IRONY",
+    "licence": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Iyo-sangawa_Station.jpg"
+  },
+  "chan": {
+    "image": "/images/wiki/chan.jpg",
+    "author": "Böhringer Friedrich",
+    "licence": "CC BY-SA 2.5",
+    "source": "https://commons.wikimedia.org/wiki/File:Juppentracht_08a.JPG"
+  },
+  "kun": {
+    "image": "/images/wiki/kun.jpg",
+    "author": "Fondycardinals",
+    "licence": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:O_Kun_de_Kun_Falls_Close.jpg"
+  },
+  "geisha": {
+    "image": "/images/wiki/geisha.jpg",
+    "author": "Unknown Artist, Unknown School",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyo_Geisha_with_Shamisen_c1870s,.jpg"
+  },
+  "samurai": {
+    "image": "/images/wiki/samurai.jpg",
+    "author": "See user in the \"File history\" section.",
+    "licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:%E4%BE%8D-red.png"
+  },
+  "ninja": {
+    "image": "/images/wiki/ninja.jpg",
+    "author": "Joey Gannon",
+    "licence": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ninja_The_Last_Thing_You_See.jpg"
+  }
+}

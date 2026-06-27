@@ -1,1 +1,740 @@
-{}
+{
+  "senso-ji": {
+    "photo": "/images/lieux-photos/senso-ji.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%B5%85%E8%8D%89%E5%AF%BA"
+  },
+  "shibuya-crossing": {
+    "photo": "/images/lieux-photos/shibuya-crossing.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Shibuya_Scramble_crossing.jpg"
+  },
+  "teamlab": {
+    "photo": "/images/lieux-photos/teamlab.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E3%83%81%E3%83%BC%E3%83%A0%E3%83%A9%E3%83%9C"
+  },
+  "ichiran": {
+    "photo": "/images/lieux-photos/ichiran.jpg",
+    "photo_author": "Redd Angelo reddangelo16",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Shibuya_(Unsplash).jpg"
+  },
+  "park-hyatt": {
+    "photo": "/images/lieux-photos/park-hyatt.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Shinjuku_Park_Tower_2.jpg"
+  },
+  "akihabara": {
+    "photo": "/images/lieux-photos/akihabara.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E7%A7%8B%E8%91%89%E5%8E%9F"
+  },
+  "fushimi-inari": {
+    "photo": "/images/lieux-photos/fushimi-inari.jpg",
+    "photo_author": "Redd Angelo reddangelo16",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Lost_in_Japan_(Unsplash).jpg"
+  },
+  "kinkaku-ji": {
+    "photo": "/images/lieux-photos/kinkaku-ji.jpg",
+    "photo_author": "Kendall Henderson kendallhenderson",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kinkaku-ji_golden_temple_(Unsplash).jpg"
+  },
+  "arashiyama": {
+    "photo": "/images/lieux-photos/arashiyama.jpg",
+    "photo_author": "Jørgen Håland jhaland",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Arashiyama,_Kyoto,_Japan_(Unsplash).jpg"
+  },
+  "nishiki": {
+    "photo": "/images/lieux-photos/nishiki.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E9%8C%A6%E5%B8%82%E5%A0%B4"
+  },
+  "ryokan-kyoto": {
+    "photo": "/images/lieux-photos/ryokan-kyoto.jpg",
+    "photo_author": "Redd Angelo reddangelo16",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Clothing_store_window_(Unsplash).jpg"
+  },
+  "dotonbori": {
+    "photo": "/images/lieux-photos/dotonbori.jpg",
+    "photo_author": "Mr.Naka guutarabunko",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Doutonbori_Osaka_Japan_Late1990%27s.jpg"
+  },
+  "osaka-castle": {
+    "photo": "/images/lieux-photos/osaka-castle.jpg",
+    "photo_author": "Balon Greyjoy",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:20190121_Skyline_from_Osaka_Castle-2.jpg"
+  },
+  "takoyaki": {
+    "photo": "/images/lieux-photos/takoyaki.jpg",
+    "photo_author": "DimiTalen",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:People_with_transparent_umbrellas_in_D%C5%8Dtonbori,_Osaka,_2016.jpg"
+  },
+  "kuromon": {
+    "photo": "/images/lieux-photos/kuromon.jpg",
+    "photo_author": "ほっきー",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E9%BB%92%E9%96%80%E5%B8%82%E5%A0%B4_2024(1).jpg"
+  },
+  "shinsaibashi": {
+    "photo": "/images/lieux-photos/shinsaibashi.jpg",
+    "photo_author": "Tokumeigakarinoaoshima",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Y!mobile_Shinsaibashi_Chuo_at_night.JPG"
+  },
+  "nara-park": {
+    "photo": "/images/lieux-photos/nara-park.jpg",
+    "photo_author": "Carl Flor carlflor",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Deer_Nara_(Unsplash).jpg"
+  },
+  "todai-ji": {
+    "photo": "/images/lieux-photos/todai-ji.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%9D%B1%E5%A4%A7%E5%AF%BA"
+  },
+  "kasuga": {
+    "photo": "/images/lieux-photos/kasuga.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%98%A5%E6%97%A5%E5%A4%A7%E7%A4%BE"
+  },
+  "peace-park": {
+    "photo": "/images/lieux-photos/peace-park.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hiroshima_Peace_Memorial_2.jpg"
+  },
+  "miyajima": {
+    "photo": "/images/lieux-photos/miyajima.jpg",
+    "photo_author": "Balon Greyjoy",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:20181111_Itsukushima_Shrine_torii-2.jpg"
+  },
+  "okonomiyaki-hiro": {
+    "photo": "/images/lieux-photos/okonomiyaki-hiro.jpg",
+    "photo_author": "Lmadcap from Tokyo, Japan",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Waiting_for_the_signal_(4793782396).jpg"
+  },
+  "shukkeien": {
+    "photo": "/images/lieux-photos/shukkeien.jpg",
+    "photo_author": "かるちる",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:A-bombed_tree_(pinus_thunbergii,_E13a25-03)_No.1.jpg"
+  },
+  "onsen-hakone": {
+    "photo": "/images/lieux-photos/onsen-hakone.jpg",
+    "photo_author": "laiet17",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Epicopeia_hainesii_109657173.jpg"
+  },
+  "owakudani": {
+    "photo": "/images/lieux-photos/owakudani.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E5%A4%A7%E6%B6%8C%E8%B0%B7"
+  },
+  "open-air-museum": {
+    "photo": "/images/lieux-photos/open-air-museum.jpg",
+    "photo_author": "Antoine Bourdelle",
+    "photo_licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:HeraclesArcher_Gora-Hakone_20180829.jpg"
+  },
+  "ryokan-hakone": {
+    "photo": "/images/lieux-photos/ryokan-hakone.jpg",
+    "photo_author": "Alvinz",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hakone-Yumoto_2018-07-12.jpg"
+  },
+  "meiji-jingu": {
+    "photo": "/images/lieux-photos/meiji-jingu.jpg",
+    "photo_author": "Gideon Peter Caringal gcaringal",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Meiji_Jingu,_Shibuya-ku,_Japan_(Unsplash).jpg"
+  },
+  "tokyo-tower": {
+    "photo": "/images/lieux-photos/tokyo-tower.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E3%82%BF%E3%83%AF%E3%83%BC"
+  },
+  "tsukiji": {
+    "photo": "/images/lieux-photos/tsukiji.jpg",
+    "photo_author": "Jonathan Forage jonathanforage",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sashimi_at_the_Tsukiji_Markets_-_Tokyo_Japan_(Unsplash).jpg"
+  },
+  "ueno-park": {
+    "photo": "/images/lieux-photos/ueno-park.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E4%B8%8A%E9%87%8E%E5%85%AC%E5%9C%92"
+  },
+  "teamlab-borderless": {
+    "photo": "/images/lieux-photos/teamlab-borderless.jpg",
+    "photo_author": "投稿者",
+    "photo_licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Nissin_Donbei_noodle_stand,_Shibuya_Sta_Tokyo_2012.JPG"
+  },
+  "kiyomizu-dera": {
+    "photo": "/images/lieux-photos/kiyomizu-dera.jpg",
+    "photo_author": "Jimmy Bay jimmymystic",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kiyomizu-dera,_Ky%C5%8Dto-shi,_Japan_(Unsplash).jpg"
+  },
+  "ginkaku-ji-kyoto": {
+    "photo": "/images/lieux-photos/ginkaku-ji-kyoto.jpg",
+    "photo_author": "Yiannis Theologos Michellis",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Japan_Japan_2011_15_(7024877331).jpg"
+  },
+  "gion": {
+    "photo": "/images/lieux-photos/gion.jpg",
+    "photo_author": "Redd Angelo reddangelo16",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Clothing_store_window_(Unsplash).jpg"
+  },
+  "nijo-castle": {
+    "photo": "/images/lieux-photos/nijo-castle.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E4%BA%8C%E6%9D%A1%E5%9F%8E"
+  },
+  "sumiyoshi": {
+    "photo": "/images/lieux-photos/sumiyoshi.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E4%BD%8F%E5%90%89%E5%A4%A7%E7%A4%BE"
+  },
+  "shinsekai": {
+    "photo": "/images/lieux-photos/shinsekai.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%96%B0%E4%B8%96%E7%95%8C"
+  },
+  "himeji-castle": {
+    "photo": "/images/lieux-photos/himeji-castle.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E5%A7%AB%E8%B7%AF%E5%9F%8E"
+  },
+  "kenroku-en": {
+    "photo": "/images/lieux-photos/kenroku-en.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E5%85%BC%E5%85%AD%E5%9C%92"
+  },
+  "higashi-chaya": {
+    "photo": "/images/lieux-photos/higashi-chaya.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E3%81%B2%E3%81%8C%E3%81%97%E8%8C%B6%E5%B1%8B%E8%A1%97"
+  },
+  "shirakawa-go": {
+    "photo": "/images/lieux-photos/shirakawa-go.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E7%99%BD%E5%B7%9D%E9%83%B7"
+  },
+  "byodo-in": {
+    "photo": "/images/lieux-photos/byodo-in.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E5%B9%B3%E7%AD%89%E9%99%A2"
+  },
+  "uji-matcha": {
+    "photo": "/images/lieux-photos/uji-matcha.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E5%AE%87%E6%B2%BB%E6%8A%B9%E8%8C%B6"
+  },
+  "takeshita-dori": {
+    "photo": "/images/lieux-photos/takeshita-dori.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E7%AB%B9%E4%B8%8B%E9%80%9A%E3%82%8A"
+  },
+  "meiji-jingu-gyoen": {
+    "photo": "/images/lieux-photos/meiji-jingu-gyoen.jpg",
+    "photo_author": "Brian Adler",
+    "photo_licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Meiji_Shrine_Inner_Garden.JPG"
+  },
+  "shibuya-sky": {
+    "photo": "/images/lieux-photos/shibuya-sky.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%B8%8B%E8%B0%B7%E3%82%B9%E3%82%AB%E3%82%A4"
+  },
+  "shinjuku-gyoen": {
+    "photo": "/images/lieux-photos/shinjuku-gyoen.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%96%B0%E5%AE%BF%E5%BE%A1%E8%8B%91"
+  },
+  "omoide-yokocho": {
+    "photo": "/images/lieux-photos/omoide-yokocho.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%80%9D%E3%81%84%E5%87%BA%E6%A8%AA%E4%B8%81"
+  },
+  "golden-gai": {
+    "photo": "/images/lieux-photos/golden-gai.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E3%82%B4%E3%83%BC%E3%83%AB%E3%83%87%E3%83%B3%E8%A1%97"
+  },
+  "ginza": {
+    "photo": "/images/lieux-photos/ginza.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E9%8A%80%E5%BA%A7"
+  },
+  "teamlab-planets": {
+    "photo": "/images/lieux-photos/teamlab-planets.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E3%83%81%E3%83%BC%E3%83%A0%E3%83%A9%E3%83%9C%E3%83%97%E3%83%A9%E3%83%8D%E3%83%83%E3%83%84"
+  },
+  "yanaka-ginza": {
+    "photo": "/images/lieux-photos/yanaka-ginza.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E8%B0%B7%E4%B8%AD%E9%8A%80%E5%BA%A7"
+  },
+  "nakamise": {
+    "photo": "/images/lieux-photos/nakamise.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E4%BB%B2%E8%A6%8B%E4%B8%96%E9%80%9A%E3%82%8A"
+  },
+  "odaiba": {
+    "photo": "/images/lieux-photos/odaiba.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E3%81%8A%E5%8F%B0%E5%A0%B4"
+  },
+  "kappabashi": {
+    "photo": "/images/lieux-photos/kappabashi.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E3%81%8B%E3%81%A3%E3%81%B1%E6%A9%8B"
+  },
+  "shimokitazawa": {
+    "photo": "/images/lieux-photos/shimokitazawa.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E4%B8%8B%E5%8C%97%E6%B2%A2"
+  },
+  "sumida-river": {
+    "photo": "/images/lieux-photos/sumida-river.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E9%9A%85%E7%94%B0%E5%B7%9D"
+  },
+  "ameyoko": {
+    "photo": "/images/lieux-photos/ameyoko.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%A1%E6%A8%AA"
+  },
+  "sanctuaire-asakusa": {
+    "photo": "/images/lieux-photos/sanctuaire-asakusa.jpg",
+    "photo_author": "Redd Angelo reddangelo16",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Senso-Ji_Temple_(Unsplash).jpg"
+  },
+  "teamlab-planets-tokyo-dmm": {
+    "photo": "/images/lieux-photos/teamlab-planets-tokyo-dmm.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E3%83%81%E3%83%BC%E3%83%A0%E3%83%A9%E3%83%9C%E3%83%97%E3%83%A9%E3%83%8D%E3%83%83%E3%83%84"
+  },
+  "shinjuku-gyoen-park": {
+    "photo": "/images/lieux-photos/shinjuku-gyoen-park.jpg",
+    "photo_author": "Arol Viñolas arol",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Shinjuku_Gyoen_National_Garden,_Shinjuku-ku,_Japan_(Unsplash).jpg"
+  },
+  "kaminarimon-gate": {
+    "photo": "/images/lieux-photos/kaminarimon-gate.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E9%9B%B7%E9%96%80"
+  },
+  "musee-national-de-tokyo": {
+    "photo": "/images/lieux-photos/musee-national-de-tokyo.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E5%9B%BD%E7%AB%8B%E5%8D%9A%E7%89%A9%E9%A4%A8"
+  },
+  "unicorn-gundam": {
+    "photo": "/images/lieux-photos/unicorn-gundam.jpg",
+    "photo_author": "先従隗始",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Diver_City_Tokyo_20211127_02.jpg"
+  },
+  "musee-national-de-la-nature-et-des-scien": {
+    "photo": "/images/lieux-photos/musee-national-de-la-nature-et-des-scien.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E5%9B%BD%E7%AB%8B%E7%A7%91%E5%AD%A6%E5%8D%9A%E7%89%A9%E9%A4%A8"
+  },
+  "teamlab-borderless-mori-building-digital": {
+    "photo": "/images/lieux-photos/teamlab-borderless-mori-building-digital.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Azabudai_Hills,_opening_day_39.jpg"
+  },
+  "shibuya-crossing-chijk9": {
+    "photo": "/images/lieux-photos/shibuya-crossing-chijk9.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%B8%8B%E8%B0%B7%E3%82%B9%E3%82%AF%E3%83%A9%E3%83%B3%E3%83%96%E3%83%AB%E4%BA%A4%E5%B7%AE%E7%82%B9"
+  },
+  "musee-ghibli": {
+    "photo": "/images/lieux-photos/musee-ghibli.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E4%B8%89%E9%B7%B9%E3%81%AE%E6%A3%AE%E3%82%B8%E3%83%96%E3%83%AA%E7%BE%8E%E8%A1%93%E9%A4%A8"
+  },
+  "zojo-ji": {
+    "photo": "/images/lieux-photos/zojo-ji.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E5%A2%97%E4%B8%8A%E5%AF%BA"
+  },
+  "musee-national-de-l-art-occidental": {
+    "photo": "/images/lieux-photos/musee-national-de-l-art-occidental.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E5%9B%BD%E7%AB%8B%E8%A5%BF%E6%B4%8B%E7%BE%8E%E8%A1%93%E9%A4%A8"
+  },
+  "gotoku-ji": {
+    "photo": "/images/lieux-photos/gotoku-ji.jpg",
+    "photo_author": "Niwrat",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Maneki-neko_(Japanese_Lucky_Cat)_Statues_at_Gotokuji_Temple,_Tokyo.jpg"
+  },
+  "siege-du-gouvernement-metropolitain-de-t": {
+    "photo": "/images/lieux-photos/siege-du-gouvernement-metropolitain-de-t.jpg",
+    "photo_author": "Julia Caesar juliacaesar",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyo,_Japan_(Unsplash_mEaYSkucTys).jpg"
+  },
+  "musee-nezu": {
+    "photo": "/images/lieux-photos/musee-nezu.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%A0%B9%E6%B4%A5%E7%BE%8E%E8%A1%93%E9%A4%A8"
+  },
+  "asakusa-jinja": {
+    "photo": "/images/lieux-photos/asakusa-jinja.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://ja.wikipedia.org/wiki/%E6%B5%85%E8%8D%89%E7%A5%9E%E7%A4%BE"
+  },
+  "marunouchi-tokyo-station-square": {
+    "photo": "/images/lieux-photos/marunouchi-tokyo-station-square.jpg",
+    "photo_author": "Bernard Spragg. NZ from Christchurch, New Zealand This photo was taken with Pana",
+    "photo_licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyo_Station_._(42455223202).jpg"
+  },
+  "asakusa-culture-tourist-information-cent": {
+    "photo": "/images/lieux-photos/asakusa-culture-tourist-information-cent.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://en.wikipedia.org/wiki/Asakusa%20Culture%20Tourist%20Information%20Center"
+  },
+  "samurai-museum-tokyo-shinjuku": {
+    "photo": "/images/lieux-photos/samurai-museum-tokyo-shinjuku.jpg",
+    "photo_author": "Bernard Spragg. NZ from Christchurch, New Zealand",
+    "photo_licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Hanazono_shrine._Shinjuku._Tokyo._(42654941572).jpg"
+  },
+  "mosquee-de-tokyo": {
+    "photo": "/images/lieux-photos/mosquee-de-tokyo.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Streetview_in_Shibuya-ku_(23304).jpg"
+  },
+  "artizon-museum": {
+    "photo": "/images/lieux-photos/artizon-museum.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Mitsui_Garden_Hotel_Kyobashi.jpg"
+  },
+  "suga-shrine": {
+    "photo": "/images/lieux-photos/suga-shrine.jpg",
+    "photo_author": "ウィキ太郎(Wiki Taro)",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Y%C5%8CUNJI_or_YOUUNJI_OIWAINARI_Temple_Shinjuku_Tokyo.jpg"
+  },
+  "hozomon": {
+    "photo": "/images/lieux-photos/hozomon.jpg",
+    "photo_author": "Wikipedia",
+    "photo_licence": "voir source",
+    "source": "https://en.wikipedia.org/wiki/H%C5%8Dz%C5%8Dmon"
+  },
+  "matsuchiyama-shoden": {
+    "photo": "/images/lieux-photos/matsuchiyama-shoden.jpg",
+    "photo_author": "先従隗始",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%C5%8Csawasan_Honry%C5%AB-ji_Temple_20210501_02.jpg"
+  },
+  "ninja-experience-cafe-asakusa-in-tokyo": {
+    "photo": "/images/lieux-photos/ninja-experience-cafe-asakusa-in-tokyo.jpg",
+    "photo_author": "Lauren Livingston laurenlivingston",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Foggy_Cityscape_(Unsplash).jpg"
+  },
+  "intermediatheque": {
+    "photo": "/images/lieux-photos/intermediatheque.jpg",
+    "photo_author": "Saigen Jiro",
+    "photo_licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:%E4%BC%9D%E3%82%A2%E3%82%A4%E3%83%B3%E3%82%B7%E3%83%A5%E3%82%BF%E3%82%A4%E3%83%B3%E3%83%BB%E3%82%A8%E3%83%AC%E3%83%99%E3%83%BC%E3%82%BF%E3%83%BC.JPG"
+  },
+  "tokiwaso-manga-museum": {
+    "photo": "/images/lieux-photos/tokiwaso-manga-museum.jpg",
+    "photo_author": "Asanagi",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nihon_Kajo_Puplishing_headquarters_2026-04-26.jpg"
+  },
+  "asakura-museum-of-sculpture": {
+    "photo": "/images/lieux-photos/asakura-museum-of-sculpture.jpg",
+    "photo_author": "Abasaa",
+    "photo_licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Ryusen-ji_(Yanaka,_Taito).JPG"
+  },
+  "moheji-shinmaru-build": {
+    "photo": "/images/lieux-photos/moheji-shinmaru-build.jpg",
+    "photo_author": "Bernard Spragg. NZ from Christchurch, New Zealand",
+    "photo_licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyo_Station._(53219153729).jpg"
+  },
+  "yamaka-sakaba": {
+    "photo": "/images/lieux-photos/yamaka-sakaba.jpg",
+    "photo_author": "Clay Banks claybanks1989",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Local_restaurant_in_Tokyo_(Unsplash).jpg"
+  },
+  "fukumimi-shinjuku": {
+    "photo": "/images/lieux-photos/fukumimi-shinjuku.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyu_Stay_Shinjuku.jpg"
+  },
+  "kinka-sushi-bar-izakaya": {
+    "photo": "/images/lieux-photos/kinka-sushi-bar-izakaya.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Shibuya_Parco.jpg"
+  },
+  "izumo-asakusa-yokocho": {
+    "photo": "/images/lieux-photos/izumo-asakusa-yokocho.jpg",
+    "photo_author": "Matthide127",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:20240117_Asakusa_Rockza_13.29.32.jpg"
+  },
+  "zekkocho-teppen": {
+    "photo": "/images/lieux-photos/zekkocho-teppen.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Streetviews_around_Shinjuku_(20125).jpg"
+  },
+  "shintoku-tsukada-nojo-akihabara-manseiba": {
+    "photo": "/images/lieux-photos/shintoku-tsukada-nojo-akihabara-manseiba.jpg",
+    "photo_author": "Matthide127",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:20240119_Edion_Akiba_17.06.45.jpg"
+  },
+  "yakiton-daio-ueno": {
+    "photo": "/images/lieux-photos/yakiton-daio-ueno.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ameyoko_June_2022.jpg"
+  },
+  "izakaya-ikunara-orenchi-kuru": {
+    "photo": "/images/lieux-photos/izakaya-ikunara-orenchi-kuru.jpg",
+    "photo_author": "Asanagi",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:TUC_Shop_Ikebukuro_Ebisu-dori_branch_2023-10-01.jpg"
+  },
+  "akihabara-electric-town": {
+    "photo": "/images/lieux-photos/akihabara-electric-town.jpg",
+    "photo_author": "Jmho",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Akiba_denkigai.jpg"
+  },
+  "nintendo-tokyo-shibuya-japan": {
+    "photo": "/images/lieux-photos/nintendo-tokyo-shibuya-japan.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Shibuya_PARCO_4.jpg"
+  },
+  "kindal-nakameguro-second-hand-store": {
+    "photo": "/images/lieux-photos/kindal-nakameguro-second-hand-store.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Walk_in_Nakameguro_2.jpg"
+  },
+  "mixthinks-harajuku-store": {
+    "photo": "/images/lieux-photos/mixthinks-harajuku-store.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Street_views_around_Harajuku.jpg"
+  },
+  "mardi-mercredi-daikanyama": {
+    "photo": "/images/lieux-photos/mardi-mercredi-daikanyama.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%22Cirty_library%22_in_Daikanyama.jpg"
+  },
+  "trefacstyle-shimokitazawa-east-exit": {
+    "photo": "/images/lieux-photos/trefacstyle-shimokitazawa-east-exit.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Walk_in_Shimokitazawa_7.jpg"
+  },
+  "traveler-s-factory-nakameguro": {
+    "photo": "/images/lieux-photos/traveler-s-factory-nakameguro.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E6%9D%B1%E4%BA%AC%E5%92%8C%E6%9C%8D%E6%9F%93%E8%89%B2%E7%BE%8E%E8%A1%93%E5%B0%88%E9%96%80%E5%AD%B8%E6%A0%A1.jpg"
+  },
+  "tsukiji-peppers-cafe": {
+    "photo": "/images/lieux-photos/tsukiji-peppers-cafe.jpg",
+    "photo_author": "経済特区",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E7%AF%89%E5%9C%B0%E3%83%9A%E3%83%83%E3%83%91%E3%83%BC%E3%82%BA%E3%82%AB%E3%83%95%E3%82%A720240817143057_IMG_1027_01.jpg"
+  },
+  "gyumon-halal-wagyu-ramen-shibuya": {
+    "photo": "/images/lieux-photos/gyumon-halal-wagyu-ramen-shibuya.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Details_of_Shibuya_Hikarie_(42234).jpg"
+  },
+  "age-3-ginza": {
+    "photo": "/images/lieux-photos/age-3-ginza.jpg",
+    "photo_author": "Redd Angelo reddangelo16",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:On_our_way_to_tsukiji_fish_market_in_Tokyo_(Unsplash).jpg"
+  },
+  "gyopao-gyoza-roppongi": {
+    "photo": "/images/lieux-photos/gyopao-gyoza-roppongi.jpg",
+    "photo_author": "経済特区",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E8%82%89%E6%B1%81%E6%B0%B4%E9%A4%83%E5%AD%90_%E9%A4%83%E5%8C%85_%E5%85%AD%E6%9C%AC%E6%9C%A8%E4%BA%A4%E5%B7%AE%E7%82%B920250621_02.jpg"
+  },
+  "tsukishima-monja-kuuya-shibuya": {
+    "photo": "/images/lieux-photos/tsukishima-monja-kuuya-shibuya.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E8%BF%91%E6%B1%9F%E7%89%9B_2.jpg"
+  },
+  "maidreamin-heaven-s-gate-live-restaurant": {
+    "photo": "/images/lieux-photos/maidreamin-heaven-s-gate-live-restaurant.jpg",
+    "photo_author": "Matthide127",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:20240118_Akihabara_Station_Electric_Town.jpg"
+  },
+  "gyukatsu-motomura-shibuya-branch": {
+    "photo": "/images/lieux-photos/gyukatsu-motomura-shibuya-branch.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Shibuya_Stream_during_covid_3.jpg"
+  },
+  "ramen-kamo-to-negi-ueno-okachimachi-main": {
+    "photo": "/images/lieux-photos/ramen-kamo-to-negi-ueno-okachimachi-main.jpg",
+    "photo_author": "Matthide127",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:20240119_Okachimachi_Ekimae-d%C5%8Dri_10.30.51.jpg"
+  },
+  "mipig-cafe-harajuku": {
+    "photo": "/images/lieux-photos/mipig-cafe-harajuku.jpg",
+    "photo_author": "らいちょうざるそば",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E3%83%96%E3%83%A9%E3%83%BC%E3%83%A0%E3%82%B9%E3%81%AE%E5%B0%8F%E5%BE%84%E3%80%812024%E5%B9%B48%E6%9C%8829%E6%97%A5%E6%92%AE%E5%BD%B1.jpg"
+  },
+  "samoyed-cafe-moffu-harajuku-samoyed-loun": {
+    "photo": "/images/lieux-photos/samoyed-cafe-moffu-harajuku-samoyed-loun.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Harajuku_walk_-98172.jpeg"
+  },
+  "owl-cafe-tokyo": {
+    "photo": "/images/lieux-photos/owl-cafe-tokyo.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E5%8A%A0%E8%B3%80%E9%9B%BB%E5%AD%90%E6%9C%AC%E7%A4%BE.jpg"
+  },
+  "harajuku-kawaii-land-kyun-kyun-animal-pe": {
+    "photo": "/images/lieux-photos/harajuku-kawaii-land-kyun-kyun-animal-pe.jpg",
+    "photo_author": "Asanagi",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Harajuku_RUIDO_2026-01-15.jpg"
+  },
+  "age-3-asakusa": {
+    "photo": "/images/lieux-photos/age-3-asakusa.jpg",
+    "photo_author": "経済特区",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Asakusa_Hanayashiki2025070_03.jpg"
+  },
+  "afuri-harajuku": {
+    "photo": "/images/lieux-photos/afuri-harajuku.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Imperial_station_site,_in_Harajuku_5.jpg"
+  },
+  "owl-village-cafe-harajuku": {
+    "photo": "/images/lieux-photos/owl-village-cafe-harajuku.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Buildings_in_Shibuya-ku_18.jpg"
+  },
+  "pignic-cafe-asakusa-mini-pig-cafe": {
+    "photo": "/images/lieux-photos/pignic-cafe-asakusa-mini-pig-cafe.jpg",
+    "photo_author": "Vitor Coelho Nisida from São Paulo, Brasil",
+    "photo_licence": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:-i---i-_(53027655627).jpg"
+  },
+  "tsujita-ginza": {
+    "photo": "/images/lieux-photos/tsujita-ginza.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E7%B4%99%E3%83%91%E3%83%AB%E3%83%97%E4%BC%9A%E9%A4%A8_Japan_Technical_Association_of_the_Pulp_and_Paper_Industry.jpg"
+  },
+  "halal-wagyu-ramen-shinjuku-tei-ginza-tok": {
+    "photo": "/images/lieux-photos/halal-wagyu-ramen-shinjuku-tei-ginza-tok.jpg",
+    "photo_author": "妖精書士",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Recruit_GINZA8_building.jpg"
+  },
+  "kobe-beef-daia-asakusa-don-kihoute-store": {
+    "photo": "/images/lieux-photos/kobe-beef-daia-asakusa-don-kihoute-store.jpg",
+    "photo_author": "Matthide127",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:20250109_Asakusa_Rockza_12.24.44.jpg"
+  },
+  "afuri-karakurenai-harajuku": {
+    "photo": "/images/lieux-photos/afuri-karakurenai-harajuku.jpg",
+    "photo_author": "Syced",
+    "photo_licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Athleta_2.jpg"
+  }
+}

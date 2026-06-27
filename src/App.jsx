@@ -156,7 +156,7 @@ const ACHIEVEMENTS = [
   {id:"streak3",    emoji:"🔥", label:"En route",           desc:"Atteins 3 jours de streak",                check:c=>(c.streak?.count||0)>=3 || (c.streak?.best||0)>=3},
   {id:"streak7",    emoji:"⚡", label:"Régulier",           desc:"Atteins 7 jours de streak",                check:c=>(c.streak?.count||0)>=7 || (c.streak?.best||0)>=7},
   {id:"streak30",   emoji:"🏯", label:"Inébranlable",       desc:"Atteins 30 jours de streak",               check:c=>(c.streak?.best||0)>=30},
-  {id:"first_key",  emoji:"🔑", label:"Premier trésor",     desc:"Gagne ta première clé",                    check:c=>(c.streak?.totalKeysEarned||0)>=1},
+  {id:"first_day2", emoji:"✨", label:"Première étincelle", desc:"Commence ton aventure",                    check:c=>(c.streak?.count||0)>=1},
   {id:"unlock1",    emoji:"🗝️", label:"Explorateur",        desc:"Débloque une catégorie",                   check:c=>Object.values(c.unlocks||{}).filter(Boolean).length>=2},
   {id:"unlock_all", emoji:"🗾", label:"Tout vu",            desc:"Débloque toutes les catégories",           check:c=>["traditions","vie_quotidienne","codes_sociaux","regions"].every(k=>c.unlocks?.[k])},
   {id:"scen1",      emoji:"🗣️", label:"Premier dialogue",   desc:"Réussis ton premier scénario",             check:c=>(c.scenProgress?.done?.length||0)>=1},
@@ -165,8 +165,8 @@ const ACHIEVEMENTS = [
   {id:"kana_hira",  emoji:"📜", label:"Maître hiragana",    desc:"Maîtrise tout l'hiragana",                 check:c=>kanaMasteredIn(c.kanaProgress,"hira")>=46},
   {id:"kana_kata",  emoji:"📖", label:"Maître katakana",    desc:"Maîtrise tout le katakana",                check:c=>kanaMasteredIn(c.kanaProgress,"kata")>=46},
   {id:"fav5",       emoji:"❤️", label:"Collectionneur",     desc:"Ajoute 5 favoris",                         check:c=>(c.favs?.length||0)>=5},
-  {id:"xp250",      emoji:"🧭", label:"Connaisseur",        desc:"Atteins 250 XP",                           check:c=>(c.xp||0)>=250},
-  {id:"xp520",      emoji:"🎌", label:"Maître du Japon",    desc:"Atteins 520 XP",                           check:c=>(c.xp||0)>=520},
+  {id:"day14",      emoji:"🧭", label:"Connaisseur",        desc:"Atteins 14 jours de streak",              check:c=>(c.streak?.count||0)>=14||(c.streak?.best||0)>=14},
+  {id:"day30",      emoji:"🎌", label:"Maître du Japon",    desc:"Atteins 30 jours de streak",              check:c=>(c.streak?.count||0)>=30||(c.streak?.best||0)>=30},
   {id:"tokyo_ready",emoji:"🗼", label:"Prêt pour Tokyo",     desc:"Termine le parcours « Survivre à Tokyo »", check:c=>(c.pathProgress?.completed?.length||0)>=8},
 ];
 // Helpers de comptage kana (dépendent de HIRAGANA/KATAKANA définis plus bas)
@@ -590,16 +590,18 @@ function SongCard({C,data,fav,onFav,wikiMap,onWikiTap}){
   );
 }
 
-function StreakSection({C,streak}){
+function StreakSection({C,streak,isPremium}){
   const count = streak?.count || 0;
   const best  = streak?.best  || 0;
+  const freezes = streak?.freezes || 0;
   const dow=new Date().getDay(), todayIdx=dow===0?6:dow-1;
   const days=["L","M","M","J","V","S","D"];
 
-  // Next milestone among common targets
-  const milestones=[7,14,30,60,100,365];
-  const nextGoal = milestones.find(m=>m>count) || count;
-  const progress = Math.min(count/nextGoal,1);
+  // Prochain DÉBLOCAGE de contenu (bien plus motivant qu'un jalon abstrait)
+  const nextUnlock = UNLOCK_SCHEDULE.find(u=>u.day>count);
+  const nextGoal = nextUnlock ? nextUnlock.day : (count || 1);
+  const prevUnlockDay = [...UNLOCK_SCHEDULE].reverse().find(u=>u.day<=count)?.day || 0;
+  const progress = nextUnlock ? Math.min((count-prevUnlockDay)/(nextGoal-prevUnlockDay),1) : 1;
 
   return(
     <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
@@ -611,22 +613,22 @@ function StreakSection({C,streak}){
             <span style={{fontSize:13,color:C.t2}}>jour{count>1?"s":""}</span>
           </div>
           <div style={{fontSize:11,color:C.t3,marginTop:3}}>
-            {count>=nextGoal ? "Record en cours ! 🎉" : `Prochain jalon : ${nextGoal} jours 🎯`}
+            {isPremium ? "✨ Premium — tout débloqué" : nextUnlock ? `Bientôt : ${nextUnlock.emoji} ${nextUnlock.label}` : "Tout débloqué ! 🎉"}
           </div>
         </div>
         <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(201,70,61,0.08)",border:"1.5px solid rgba(201,70,61,0.22)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",animation:count>0?"glow 2.5s ease infinite":"none"}}>
           <span style={{fontSize:22}}>🔥</span>
         </div>
       </div>
-      <div style={{marginBottom:16}}>
+      {!isPremium && nextUnlock && <div style={{marginBottom:16}}>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-          <span style={{fontSize:10,color:C.t3}}>Vers {nextGoal} jours consécutifs</span>
+          <span style={{fontSize:10,color:C.t3}}>{nextUnlock.emoji} {nextUnlock.label} au jour {nextGoal}</span>
           <span style={{fontSize:11,color:C.red,fontWeight:500}}>{count} / {nextGoal}</span>
         </div>
         <div style={{height:4,background:C.s3,borderRadius:2,overflow:"hidden"}}>
           <div style={{height:"100%",width:`${progress*100}%`,background:C.red,borderRadius:2,transition:"width .5s ease"}}/>
         </div>
-      </div>
+      </div>}
       {/* Weekly view — fill the last `count` days up to today */}
       <div style={{display:"flex",gap:5,justifyContent:"space-between",marginBottom:18}}>
         {days.map((lbl,i)=>{
@@ -645,13 +647,16 @@ function StreakSection({C,streak}){
           );
         })}
       </div>
-      {/* Best streak record */}
+      {/* Best streak record + jokers */}
       <div style={{paddingTop:14,borderTop:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           <span style={{fontSize:16}}>🏆</span>
-          <span style={{fontSize:12,color:C.t2}}>Meilleur streak</span>
+          <span style={{fontSize:12,color:C.t2}}>Meilleur : <b style={{color:C.text}}>{best}j</b></span>
         </div>
-        <span style={{fontSize:14,color:C.text,fontWeight:600}}>{best} jour{best>1?"s":""}</span>
+        <div style={{display:"flex",alignItems:"center",gap:6,padding:"5px 11px",background:"rgba(90,184,232,0.08)",border:"1px solid rgba(90,184,232,0.25)",borderRadius:16}} title="Un joker protège ton streak si tu rates un jour">
+          <span style={{fontSize:14}}>🧊</span>
+          <span style={{fontSize:12,color:C.text,fontWeight:600}}>{freezes} joker{freezes>1?"s":""}</span>
+        </div>
       </div>
     </div>
   );
@@ -741,13 +746,92 @@ function Slider({C, children}){
 }
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
-function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab}){
+// ─── Rappel intelligent in-app : combine streak en danger, défi non fait,
+//     et déblocage imminent. Choisit le message le plus pertinent du moment.
+function computeReminder({ streak, mission, db, isPremium, today }){
+  const count = streak?.count || 0;
+  const last = streak?.last || null;
+  const freezes = streak?.freezes || 0;
+  const activeToday = last === today;
+  const missionDone = (mission?.done?.length || 0) >= 3;
+
+  // 1. Streak en danger : pas encore actif aujourd'hui ET un streak en cours à protéger
+  if(!activeToday && count >= 1){
+    const willUseFreeze = freezes > 0;
+    return {
+      kind:"danger",
+      emoji:"🔥",
+      title:`Protège ton streak de ${count} jour${count>1?"s":""} !`,
+      text: willUseFreeze
+        ? `Fais une activité aujourd'hui. Sinon, un joker 🧊 sera utilisé pour te sauver.`
+        : `Tu n'as plus de joker — fais une activité aujourd'hui pour ne pas repartir de zéro.`,
+      cta:"Faire une activité", target:"learn",
+      color:"#C9463D", bg:"rgba(201,70,61,0.08)", border:"rgba(201,70,61,0.3)",
+    };
+  }
+
+  // 2. Déblocage imminent (demain ou après-demain) — la carotte
+  if(!isPremium){
+    const nextUnlock = UNLOCK_SCHEDULE.find(u=>u.day>count);
+    if(nextUnlock){
+      const remaining = nextUnlock.day - count;
+      if(remaining <= 2 && remaining >= 1){
+        return {
+          kind:"unlock",
+          emoji: nextUnlock.emoji,
+          title:`${nextUnlock.label} dans ${remaining} jour${remaining>1?"s":""} !`,
+          text:`Continue ton streak : « ${nextUnlock.label} » se débloque très bientôt 🔓`,
+          cta:"Voir ma progression", target:"home",
+          color:"#4E8060", bg:"rgba(78,128,96,0.08)", border:"rgba(78,128,96,0.3)",
+        };
+      }
+    }
+  }
+
+  // 3. Défi du jour non terminé (actif aujourd'hui mais mission incomplète)
+  if(activeToday && !missionDone){
+    const defi = db?.defis_jour?.length ? pickDaily(db.defis_jour, today, "defi") : null;
+    if(defi){
+      return {
+        kind:"challenge",
+        emoji: defi.emoji,
+        title:"Ton défi du jour t'attend",
+        text: defi.titre,
+        cta: defi.cta || "Relever", target: defi.cible || "home",
+        color:"#C97D3C", bg:"rgba(201,125,60,0.08)", border:"rgba(201,125,60,0.3)",
+      };
+    }
+  }
+
+  return null; // rien de pertinent à rappeler
+}
+
+function SmartReminder({ C, reminder, onGo, onDismiss }){
+  if(!reminder) return null;
+  return(
+    <div style={{marginBottom:22,padding:"15px 16px",borderRadius:15,background:reminder.bg,border:`1px solid ${reminder.border}`,position:"relative",animation:"bubbleIn .45s cubic-bezier(.34,1.56,.64,1) both"}}>
+      <div onClick={onDismiss} style={{position:"absolute",top:10,right:12,fontSize:15,color:C.t3,cursor:"pointer",lineHeight:1,padding:2}}>×</div>
+      <div style={{display:"flex",alignItems:"flex-start",gap:13}}>
+        <span style={{fontSize:30,flexShrink:0,animation:reminder.kind==="danger"?"heartbeat 1.4s ease infinite":"floatY 3s ease-in-out infinite"}}>{reminder.emoji}</span>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:3,paddingRight:14}}>{reminder.title}</div>
+          <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginBottom:11}}>{reminder.text}</div>
+          <button onClick={()=>onGo(reminder.target)} className="pop-press" style={{display:"inline-flex",alignItems:"center",gap:6,padding:"8px 15px",background:reminder.color,border:"none",borderRadius:20,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer"}}>
+            {reminder.cta} <span>→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium}){
   const [expr,  setExpr]  = useState(null);
   const [cult,  setCult]  = useState(null);
   const [repas, setRepas] = useState(null);
-  const [song,  setSong]  = useState(null);
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
+  const [reminderDismissed, setReminderDismissed] = useState(false);
   const loaded = useRef(false);
 
   // Auto-alternate streak badge every 3s
@@ -773,9 +857,6 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
       setExpr(  explore ? pick(db.expressions) : pickDaily(db.expressions, today, "expr"));
       setCult(  explore ? pick(db.culture)     : pickDaily(db.culture,     today, "cult"));
       setRepas( explore ? pick(db.repas)       : pickDaily(db.repas,       today, "repas"));
-    }
-    if(!which || which==="song") {
-      setSong(  explore ? pick(db.songs)       : pickDaily(db.songs,       today, "song"));
     }
   };
 
@@ -821,6 +902,15 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           <span style={{fontSize:13,color:C.t3}}>Rechercher un mot, plat, tradition…</span>
         </div>
 
+        {/* Rappel intelligent (streak en danger / défi / déblocage imminent) */}
+        {!reminderDismissed && (()=>{
+          let remindersOn = true;
+          try { remindersOn = localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch {}
+          if(!remindersOn) return null;
+          const reminder = computeReminder({ streak, mission, db, isPremium, today });
+          return <SmartReminder C={C} reminder={reminder} onGo={(t)=>onGoTab && onGoTab(t)} onDismiss={()=>setReminderDismissed(true)}/>;
+        })()}
+
         {/* Mission du jour */}
         {mission && (()=>{
           const done = mission.done || [];
@@ -851,7 +941,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
                   );
                 })}
               </div>
-              {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>🔑 +1 clé bonus gagnée aujourd'hui !</div>}
+              {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>🎉 Mission du jour accomplie !</div>}
             </div>
           );
         })()}
@@ -942,22 +1032,44 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           )}
         </div>
 
-        {/* Section 2 — Song of the Day */}
-        <SH C={C} kanji="音" title="Song of the Day" sub="Musique japonaise du jour" onRefresh={()=>refresh("song",true)}/>
-        <div style={{marginBottom:28}}>
-          <SongCard C={C} data={song} fav={song&&isFav("song",song)} onFav={song&&(()=>toggleFav("song",song))} wikiMap={wikiMap} onWikiTap={onWikiTap}/>
-        </div>
+        {/* Section 2 — Défi du jour (varie chaque jour) */}
+        {db?.defis_jour?.length > 0 && (()=>{
+          const defi = pickDaily(db.defis_jour, today, "defi");
+          if(!defi) return null;
+          return(
+            <>
+              <SH C={C} kanji="挑" title="Défi du jour" sub="Ton objectif pour aujourd'hui" />
+              <div className="lift" onClick={()=>onGoTab && onGoTab(defi.cible)} style={{marginBottom:28,padding:"22px 20px",borderRadius:18,cursor:"pointer",position:"relative",overflow:"hidden",background:`linear-gradient(140deg,${seasonAccent.soft},transparent 75%)`,border:`1px solid ${seasonAccent.accent}33`,boxShadow:"0 2px 14px rgba(0,0,0,0.04)"}}>
+                <div style={{fontSize:80,position:"absolute",top:-18,right:-6,opacity:0.06}}>{defi.emoji}</div>
+                <div style={{position:"relative"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+                    <span style={{fontSize:38,display:"inline-block",animation:"floatY 3s ease-in-out infinite"}}>{defi.emoji}</span>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:9,color:seasonAccent.accent,letterSpacing:".2em",textTransform:"uppercase",marginBottom:2}}>挑戦 · Challenge</div>
+                      <div style={{fontSize:17,color:C.text,fontWeight:600,lineHeight:1.25}}>{defi.titre}</div>
+                    </div>
+                  </div>
+                  <div style={{fontSize:13,color:C.t2,lineHeight:1.55,marginBottom:14}}>{defi.desc}</div>
+                  <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"9px 16px",background:seasonAccent.accent,borderRadius:22,boxShadow:`0 4px 12px ${seasonAccent.accent}44`}}>
+                    <span style={{fontSize:13,color:"#fff",fontWeight:600}}>{defi.cta}</span>
+                    <span style={{fontSize:13,color:"#fff"}}>→</span>
+                  </div>
+                </div>
+              </div>
+            </>
+          );
+        })()}
 
         {/* Section 3 — Streak */}
         <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
-        <StreakSection C={C} streak={streak}/>
+        <StreakSection C={C} streak={streak} isPremium={isPremium}/>
       </div>
     </div>
   );
 }
 
 // ─── Other screens
-function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory}){
+function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,onOpenPremium}){
   const [view,setView] = useState(null);
   const [viewFilter,setViewFilter] = useState(null);
   const [confirmCat,setConfirmCat] = useState(null);
@@ -971,17 +1083,14 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
   if(view==="vie")        return <VieScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
   if(view==="histoire")   return <HistoireScreen C={C} db={db} script={script} onBack={()=>setView(null)}/>;
 
-  const keys = streak?.keys || 0;
   const tryOpen = (mod)=>{
     if(!mod.cat) return;
     if(isUnlocked(mod.cat)){ setViewFilter(mod.filter||null); setView(mod.route); return; }
     setConfirmCat(mod.cat);
   };
   const doUnlock = (catKey)=>{
-    const res = unlockCategory(catKey);
+    // Plus de déblocage manuel : on ferme juste la modale (info seulement).
     setConfirmCat(null);
-    if(res.ok){ setToast("Catégorie débloquée ! 🎉"); setTimeout(()=>setToast(null),2200); }
-    else if(res.reason==="keys"){ setToast("Pas assez de clés 🔑"); setTimeout(()=>setToast(null),2200); }
   };
 
   return(
@@ -994,8 +1103,8 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
             <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Bunka wo sagasu":script==="kana"?"ぶんかをさがす":"文化を探す"}</div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:5,padding:"7px 12px",background:`${acc.soft}`,border:`1px solid ${acc.accent}44`,borderRadius:20}}>
-            <span style={{fontSize:14}}>🔑</span>
-            <span style={{fontSize:14,fontWeight:700,color:C.text}}>{keys}</span>
+            <span style={{fontSize:14}}>🔥</span>
+            <span style={{fontSize:14,fontWeight:700,color:C.text}}>{streak?.count||0}j</span>
           </div>
         </div>
       </div>
@@ -1033,7 +1142,7 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
                     </div>
                     {unlocked
                       ? <span style={{fontSize:18,color:acc.accent}}>›</span>
-                      : <span style={{fontSize:11,padding:"5px 11px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:16,color:C.t2,whiteSpace:"nowrap",flexShrink:0}}>🔒 {lockDef?.cost} 🔑</span>}
+                      : <span style={{fontSize:11,padding:"5px 11px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:16,color:C.t2,whiteSpace:"nowrap",flexShrink:0}}>🔒 Jour {lockDef?.day}</span>}
                   </div>
                 );
               })}
@@ -1041,29 +1150,39 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
           </div>
         ))}
 
-        {/* Hint clés */}
+        {/* Hint déblocage par streak */}
         <div style={{padding:"13px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6}}>
-          🔑 Tu gagnes <b style={{color:C.t2}}>1 clé par jour</b> de connexion. Utilise-les pour débloquer des sections.
+          🔓 Le contenu se débloque <b style={{color:C.t2}}>au fil de ton streak</b> : reviens chaque jour et les sections s'ouvrent progressivement. <b style={{color:C.t2}}>Premium</b> débloque tout immédiatement.
         </div>
       </div>
 
       {/* Toast */}
       {toast && <div style={{position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",background:C.text,color:C.bg,padding:"11px 22px",borderRadius:20,fontSize:13,fontWeight:600,zIndex:200,animation:"toastUp .5s cubic-bezier(.34,1.56,.64,1)",boxShadow:"0 8px 24px rgba(0,0,0,0.25)",whiteSpace:"nowrap"}}>{toast}</div>}
 
-      {/* Modale unlock */}
+      {/* Modale info déblocage */}
       {confirmCat && (()=>{
         const def = LOCKABLE[confirmCat];
+        const current = streak?.count || 0;
+        const remaining = def ? Math.max(def.day - current, 0) : 0;
         return(
           <div onClick={()=>setConfirmCat(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
             <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:440,background:C.s1,borderRadius:"22px 22px 0 0",padding:"26px 22px 32px",animation:"fadeUp .3s ease"}}>
               <div style={{textAlign:"center",marginBottom:18}}>
                 <div style={{fontSize:36,marginBottom:8}}>{def?.emoji}</div>
                 <div style={{fontSize:18,color:C.text,fontWeight:600,marginBottom:6}}>{def?.label}</div>
-                <div style={{fontSize:13,color:C.t2}}>Déverrouiller pour <b style={{color:C.text}}>{def?.cost} clé{def?.cost>1?"s":""} 🔑</b></div>
+                <div style={{fontSize:13,color:C.t2,lineHeight:1.6}}>
+                  Se débloque au <b style={{color:C.text}}>jour {def?.day}</b> de ton streak.<br/>
+                  {remaining>0
+                    ? <>Plus que <b style={{color:C.red}}>{remaining} jour{remaining>1?"s":""}</b> de connexion quotidienne 🔥</>
+                    : <span style={{color:C.green}}>Tu as atteint ce palier ! Rouvre l'app demain pour confirmer.</span>}
+                </div>
+              </div>
+              <div style={{padding:"12px 14px",background:"rgba(201,168,76,0.08)",border:"1px solid rgba(201,168,76,0.25)",borderRadius:12,marginBottom:16,textAlign:"center"}}>
+                <div style={{fontSize:12,color:C.t2}}>✨ Pas envie d'attendre ? <b style={{color:C.text}}>Premium</b> débloque tout, tout de suite.</div>
               </div>
               <div style={{display:"flex",gap:10}}>
-                <button onClick={()=>setConfirmCat(null)} style={{flex:1,padding:"13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:14,cursor:"pointer"}}>Annuler</button>
-                <button onClick={()=>doUnlock(confirmCat)} style={{flex:1,padding:"13px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Débloquer</button>
+                <button onClick={()=>setConfirmCat(null)} style={{flex:1,padding:"13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:14,cursor:"pointer"}}>Compris</button>
+                <button onClick={()=>{setConfirmCat(null); onOpenPremium&&onOpenPremium();}} style={{flex:1,padding:"13px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Voir Premium</button>
               </div>
             </div>
           </div>
@@ -1795,7 +1914,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
         {passed && (
           <div style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden"}}>
             {Array.from({length:pct===100?18:12}).map((_,i)=>(
-              <div key={i} style={{position:"absolute",top:"-10%",left:`${(i*6+4)%100}%`,fontSize:`${12+(i%3)*6}px`,animation:`fall ${1.6+(i%4)*0.4}s ease-in ${(i%6)*0.12}s both`}}>{["🎊","✨","🔑","🎌","⭐","🌸"][i%6]}</div>
+              <div key={i} style={{position:"absolute",top:"-10%",left:`${(i*6+4)%100}%`,fontSize:`${12+(i%3)*6}px`,animation:`fall ${1.6+(i%4)*0.4}s ease-in ${(i%6)*0.12}s both`}}>{["🎊","✨","🎉","🎌","⭐","🌸"][i%6]}</div>
             ))}
           </div>
         )}
@@ -1803,14 +1922,14 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
         <div style={{fontSize:22,color:C.text,fontWeight:500,marginBottom:6,animation:"fadeUp .4s ease .1s both"}}>{pct===100?"Parfait !":passed?"Bien joué !":"Continue à pratiquer"}</div>
         <div style={{fontSize:15,color:C.t2,marginBottom:8,animation:"fadeUp .4s ease .18s both"}}>Score : <b style={{color:s.couleur}}>{score}</b> / {s.etapes.length} ({pct}%)</div>
         {earned ? (
-          <div style={{margin:"18px 0",padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14,animation:"popBounce .6s cubic-bezier(.34,1.56,.64,1) .3s both"}}>
-            <div style={{fontSize:13,color:C.text,fontWeight:600,marginBottom:4}}>Récompense débloquée 🎁</div>
-            <div style={{fontSize:14,color:C.t2}}>+{s.recompense_cles} 🔑 · +{s.recompense_xp} XP</div>
+          <div style={{margin:"18px 0",padding:"16px",background:"rgba(78,128,96,0.1)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:14,animation:"popBounce .6s cubic-bezier(.34,1.56,.64,1) .3s both"}}>
+            <div style={{fontSize:13,color:C.green,fontWeight:600,marginBottom:4}}>Scénario validé ! ✓</div>
+            <div style={{fontSize:13,color:C.t2}}>Tu maîtrises cette situation 🎌</div>
           </div>
         ) : alreadyDone && passed ? (
-          <div style={{margin:"18px 0",fontSize:12,color:C.t3}}>Déjà complété — récompense déjà obtenue ✓</div>
+          <div style={{margin:"18px 0",fontSize:12,color:C.t3}}>Déjà complété ✓</div>
         ) : !passed ? (
-          <div style={{margin:"18px 0",fontSize:12,color:C.t3}}>Atteins 70% pour gagner la récompense 🔑</div>
+          <div style={{margin:"18px 0",fontSize:12,color:C.t3}}>Atteins 70% pour valider ce scénario</div>
         ) : null}
         <div style={{display:"flex",gap:11,marginTop:8}}>
           <button onClick={()=>{setStep(0);setPicked(null);setScore(0);setFinished(false);}} className="pop-press" style={{flex:1,padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Recommencer</button>
@@ -1912,7 +2031,7 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
         {/* Intro */}
         <div style={{padding:"14px 16px",background:acc.soft,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:20,display:"flex",alignItems:"center",gap:12}}>
           <span style={{fontSize:24}}>🎭</span>
-          <div style={{fontSize:12,color:C.t2,lineHeight:1.5}}>Entraîne-toi dans de vraies situations japonaises. Complète les scénarios pour gagner des clés 🔑 et de l'XP.</div>
+          <div style={{fontSize:12,color:C.t2,lineHeight:1.5}}>Entraîne-toi dans de vraies situations japonaises et valide chaque scénario pour progresser.</div>
         </div>
 
         {/* Liste des scénarios, groupés par niveau */}
@@ -1945,7 +2064,7 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
                         <div style={{fontSize:12,color:C.t2,lineHeight:1.4,marginBottom:8}}>{s.contexte}</div>
                         <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
                           <span style={{fontSize:10,padding:"3px 9px",border:`1px solid ${s.couleur}55`,borderRadius:20,color:s.couleur,fontWeight:500}}>{s.niveau}</span>
-                          <span style={{fontSize:10,padding:"3px 9px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>+{s.recompense_cles} 🔑 · +{s.recompense_xp} XP</span>
+                          <span style={{fontSize:10,padding:"3px 9px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>{s.etapes.length} étapes</span>
                           {isDone && <span style={{fontSize:10,padding:"3px 9px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:20,color:C.green}}>✓ Complété</span>}
                         </div>
                       </div>
@@ -2460,30 +2579,249 @@ function tripFromPreconcu(p){
   };
 }
 
-function SituationDetail({C, s, onBack, script}){
+// ─── Générateur d'image partageable (Canvas natif) ───────────────────────────
+// Dessine une fiche de situation en image PNG (carré 1:1 ou vertical 9:16),
+// façon carrousel éditorial, avec la marque Isekai'd. Pensé pour le japonais.
+function generateSituationImage(situation, { format="square", script="kana" } = {}){
+  return new Promise((resolve)=>{
+    const W = 1080;
+    const H = format==="story" ? 1920 : 1080;
+    const canvas = document.createElement("canvas");
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext("2d");
+
+    // Palette éditoriale (papier crème + encre)
+    const paper = "#F3EEE3", ink = "#23201B", inkSoft = "rgba(35,32,27,0.55)", accent = "#B5703C", hair = "rgba(35,32,27,0.13)";
+    ctx.fillStyle = paper; ctx.fillRect(0,0,W,H);
+
+    const M = 96;                       // marge latérale
+    let y = format==="story" ? 230 : 130;
+
+    // Eyebrow
+    ctx.fillStyle = accent;
+    ctx.font = "600 26px 'Noto Sans JP', sans-serif";
+    ctx.textBaseline = "alphabetic";
+    ctx.fillText("会話 · LE SCRIPT", M, y);
+    y += 70;
+
+    // Emoji + titre
+    ctx.font = "72px 'Noto Color Emoji','Noto Sans JP',sans-serif";
+    ctx.fillText(situation.emoji||"🎌", M, y+8);
+    ctx.fillStyle = ink;
+    ctx.font = "300 64px 'Noto Serif JP', serif";
+    ctx.fillText(situation.titre, M+110, y);
+    y += 38;
+    ctx.fillStyle = inkSoft;
+    ctx.font = "30px 'Noto Serif JP', serif";
+    ctx.fillText(situation.nom_jp||"", M+110, y);
+    y += 50;
+
+    // Trait d'accent
+    ctx.fillStyle = accent; ctx.fillRect(M, y, 80, 4);
+    y += 60;
+
+    // Phrases (on en met autant que la place le permet sans déborder)
+    const maxPhrases = format==="story" ? 6 : 3;
+    const phrases = (situation.phrases||[]).slice(0, maxPhrases);
+    const jpField = (p)=> script==="romaji" ? p.romaji : (script==="kanji" ? p.jp : (p.kana||p.jp));
+    const subField = (p)=> script==="romaji" ? "" : p.romaji;
+
+    phrases.forEach((p)=>{
+      // filet
+      ctx.strokeStyle = hair; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(M,y); ctx.lineTo(W-M,y); ctx.stroke();
+      y += 50;
+      // JP principal
+      ctx.fillStyle = ink;
+      ctx.font = "44px 'Noto Serif JP', serif";
+      ctx.fillText(jpField(p), M, y);
+      y += 42;
+      // lecture (romaji)
+      if(subField(p)){
+        ctx.fillStyle = inkSoft;
+        ctx.font = "italic 28px 'Noto Serif JP', serif";
+        ctx.fillText(subField(p), M, y);
+        y += 18;
+      }
+      // traduction FR (alignée à droite)
+      ctx.fillStyle = accent;
+      ctx.font = "italic 28px 'Noto Serif JP', serif";
+      ctx.textAlign = "right";
+      ctx.fillText(p.fr, W-M, y);
+      ctx.textAlign = "left";
+      y += 50;
+    });
+
+    // Teaser : phrases restantes (incite à ouvrir l'app)
+    const remaining = (situation.phrases||[]).length - phrases.length;
+    if(remaining > 0){
+      ctx.fillStyle = inkSoft;
+      ctx.font = "italic 26px 'Noto Serif JP', serif";
+      ctx.fillText(`+ ${remaining} autre${remaining>1?"s":""} dans l'app`, M, y+10);
+    }
+
+    // Pied de page : marque Isekai'd
+    const footY = H - (format==="story" ? 150 : 90);
+    ctx.strokeStyle = hair; ctx.beginPath(); ctx.moveTo(M,footY-40); ctx.lineTo(W-M,footY-40); ctx.stroke();
+    ctx.fillStyle = ink;
+    ctx.font = "600 30px 'Noto Sans JP', sans-serif";
+    ctx.fillText("異世界 · Isekai'd", M, footY);
+    ctx.fillStyle = inkSoft;
+    ctx.font = "26px 'Noto Sans JP', sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText("Apprends le japonais en voyageant", W-M, footY);
+    ctx.textAlign = "left";
+
+    // Export — on attend un tick pour que les polices soient prêtes
+    setTimeout(()=>{
+      canvas.toBlob((blob)=>resolve(blob), "image/png");
+    }, 50);
+  });
+}
+
+// Partage natif avec repli téléchargement
+async function shareImageBlob(blob, filename="isekaid.png", shareText=""){
+  const file = new File([blob], filename, { type:"image/png" });
+  // Web Share API niveau 2 (fichiers)
+  if(navigator.canShare && navigator.canShare({ files:[file] })){
+    try {
+      await navigator.share({ files:[file], text:shareText });
+      return "shared";
+    } catch(e){
+      if(e.name==="AbortError") return "cancelled";
+    }
+  }
+  // Repli : téléchargement
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  return "downloaded";
+}
+
+// Modale de partage : choix du format + aperçu + actions
+function ShareSheet({ C, situation, script, onClose }){
+  const [format, setFormat] = useState("square");
+  const [busy, setBusy] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [status, setStatus] = useState(null);
+
+  // Génère l'aperçu à chaque changement de format
+  useEffect(()=>{
+    let alive = true; let lastUrl = null;
+    setBusy(true);
+    generateSituationImage(situation, { format, script }).then(blob=>{
+      if(!alive || !blob) return;
+      lastUrl = URL.createObjectURL(blob);
+      setPreviewUrl(lastUrl); setBusy(false);
+    });
+    return ()=>{ alive=false; if(lastUrl) URL.revokeObjectURL(lastUrl); };
+  }, [format, situation, script]);
+
+  const doShare = async ()=>{
+    setBusy(true);
+    const blob = await generateSituationImage(situation, { format, script });
+    const res = await shareImageBlob(blob, `isekaid-${situation.id}.png`, `${situation.titre} — appris avec Isekai'd 🎌`);
+    setStatus(res); setBusy(false);
+    if(res==="shared" || res==="downloaded") setTimeout(onClose, 900);
+  };
+
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
-      <div style={{padding:"50px 20px 20px"}}>
-        <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:20}}>‹ Situations</button>
-        <div style={{fontSize:46,marginBottom:8}}>{s.emoji}</div>
-        <div style={{fontSize:26,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{s.titre}</div>
-        <div style={{fontSize:14,color:C.t3,fontFamily:"'Noto Serif JP',serif",marginBottom:10}}>{s.nom_jp}</div>
-        <div style={{fontSize:13,color:C.t2,fontStyle:"italic",lineHeight:1.5}}>{s.contexte}</div>
+    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.65)",zIndex:400,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+      <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:460,background:C.s1,borderRadius:"22px 22px 0 0",padding:"22px 20px 30px",animation:"fadeUp .3s ease",maxHeight:"92vh",overflowY:"auto"}}>
+        <div style={{textAlign:"center",marginBottom:16}}>
+          <div style={{width:38,height:4,background:C.border,borderRadius:2,margin:"0 auto 16px"}}/>
+          <div style={{fontSize:17,color:C.text,fontWeight:600}}>Partager cette fiche</div>
+          <div style={{fontSize:12,color:C.t3,marginTop:3}}>Une image prête pour tes réseaux</div>
+        </div>
+
+        {/* Choix du format */}
+        <div style={{display:"flex",gap:10,marginBottom:18}}>
+          {[{id:"square",label:"Carré",sub:"Post 1:1"},{id:"story",label:"Vertical",sub:"Story 9:16"}].map(f=>(
+            <button key={f.id} onClick={()=>setFormat(f.id)} style={{flex:1,padding:"12px",borderRadius:12,border:`1px solid ${format===f.id?C.red:C.border}`,background:format===f.id?`${C.red}11`:C.s2,cursor:"pointer"}}>
+              <div style={{fontSize:13,color:format===f.id?C.red:C.text,fontWeight:600}}>{f.label}</div>
+              <div style={{fontSize:10,color:C.t3,marginTop:2}}>{f.sub}</div>
+            </button>
+          ))}
+        </div>
+
+        {/* Aperçu */}
+        <div style={{display:"flex",justifyContent:"center",marginBottom:18,minHeight:180}}>
+          {previewUrl ? (
+            <img src={previewUrl} alt="Aperçu" style={{maxWidth:format==="story"?"56%":"82%",maxHeight:300,borderRadius:12,border:`1px solid ${C.border}`,boxShadow:"0 8px 28px rgba(0,0,0,0.2)",opacity:busy?0.5:1,transition:"opacity .2s"}}/>
+          ) : (
+            <div style={{display:"flex",alignItems:"center",color:C.t3,fontSize:13}}>Génération…</div>
+          )}
+        </div>
+
+        {/* Action */}
+        <button onClick={doShare} disabled={busy} className="pop-press" style={{width:"100%",padding:"15px",background:C.red,border:"none",borderRadius:13,color:"#fff",fontSize:14,fontWeight:700,cursor:busy?"wait":"pointer",opacity:busy?0.7:1}}>
+          {busy ? "Préparation…" : "📤 Partager / Enregistrer"}
+        </button>
+        {status==="cancelled" && <div style={{textAlign:"center",fontSize:12,color:C.t3,marginTop:10}}>Partage annulé</div>}
+        {status==="downloaded" && <div style={{textAlign:"center",fontSize:12,color:C.green,marginTop:10}}>Image enregistrée ✓</div>}
+        <div style={{fontSize:11,color:C.t3,textAlign:"center",marginTop:12,lineHeight:1.5}}>L'image inclut ta marque Isekai'd. Parfait pour Instagram, TikTok ou tes amis 🌸</div>
       </div>
-      <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
+    </div>
+  );
+}
+
+function SituationDetail({C, s, onBack, script}){
+  const [showShare, setShowShare] = useState(false);
+  // Palette éditoriale "fiche magazine" — crème en clair, encre profonde en sombre,
+  // distincte du reste de l'app pour un effet "carte à collectionner".
+  const dark = C.bg === "#0F0B08";
+  const paper = dark ? "#1C1B22" : "#F3EEE3";
+  const ink   = dark ? "#EDE6D8" : "#23201B";
+  const inkSoft = dark ? "rgba(237,230,216,0.62)" : "rgba(35,32,27,0.6)";
+  const accent = "#B5703C"; // ambre éditorial
+  const hair  = dark ? "rgba(237,230,216,0.14)" : "rgba(35,32,27,0.12)";
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:paper,animation:"fadeIn .3s ease",fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{padding:"50px 22px 0",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
+        <button onClick={onBack} style={{background:"transparent",border:`1px solid ${hair}`,borderRadius:20,padding:"7px 14px",color:inkSoft,fontSize:12,cursor:"pointer"}}>‹ Situations</button>
+        <button onClick={()=>setShowShare(true)} className="pop-press" style={{display:"inline-flex",alignItems:"center",gap:6,background:accent,border:"none",borderRadius:20,padding:"8px 15px",color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer"}}>
+          <span>📤</span> Partager
+        </button>
+      </div>
+
+      {/* En-tête éditorial */}
+      <div style={{padding:"26px 24px 22px"}}>
+        <div style={{fontSize:11,color:accent,letterSpacing:".28em",textTransform:"uppercase",fontWeight:700,marginBottom:18}}>会話 · Le script</div>
+        <div style={{display:"flex",alignItems:"baseline",gap:12,marginBottom:14}}>
+          <span style={{fontSize:40}}>{s.emoji}</span>
+          <div>
+            <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:400,color:ink,lineHeight:1.05}}>{s.titre}</div>
+            <div style={{fontSize:14,color:inkSoft,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</div>
+          </div>
+        </div>
+        <div style={{width:40,height:2,background:accent,marginBottom:14}}/>
+        <div style={{fontSize:14,color:inkSoft,fontStyle:"italic",lineHeight:1.6,fontFamily:"'Noto Serif JP',serif"}}>{s.contexte}</div>
+        <div style={{fontSize:11,color:accent,marginTop:14,letterSpacing:".05em"}}>{s.phrases.length} phrases · de l'arrivée au départ</div>
+      </div>
+
+      {/* Liste de phrases — style éditorial : ligne par ligne, traduction à droite */}
+      <div style={{padding:"0 24px 110px"}}>
         {s.phrases.map((p,i)=>(
-          <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"15px 16px"}}>
-            <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10}}>
+          <div key={i} style={{paddingTop:18,paddingBottom:18,borderTop:`1px solid ${hair}`,animation:`fadeUp .4s ease ${i*0.05}s both`}}>
+            <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}}>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:4,lineHeight:1.4}}>{jpMain(p, script)}</div>
-                <div style={{fontSize:12,color:C.gold,fontStyle:"italic",marginBottom:5}}>{jpSub(p, script)}</div>
-                <div style={{fontSize:13,color:C.t2}}>{p.fr}</div>
+                <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",color:ink,marginBottom:5,lineHeight:1.35}}>{jpMain(p, script)}</div>
+                <div style={{fontSize:13,color:inkSoft,fontStyle:"italic",fontFamily:"'Noto Serif JP',serif"}}>{jpSub(p, script)}</div>
               </div>
-              <SpeakButton C={C} text={p.jp} color={C.gold}/>
+              <SpeakButton C={C} text={p.jp} color={accent}/>
             </div>
+            <div style={{fontSize:13,color:inkSoft,marginTop:8,textAlign:"right",fontFamily:"'Noto Serif JP',serif",fontStyle:"italic"}}>{p.fr}</div>
           </div>
         ))}
+        {/* Pied éditorial */}
+        <div style={{borderTop:`1px solid ${hair}`,marginTop:6,paddingTop:18,textAlign:"center"}}>
+          <div style={{fontSize:13,color:inkSoft,fontStyle:"italic",fontFamily:"'Noto Serif JP',serif",lineHeight:1.5}}>Apprends les lignes une fois. Utilise-les à chaque fois.</div>
+          <div style={{fontSize:10,color:accent,letterSpacing:".25em",textTransform:"uppercase",marginTop:10}}>異世界 · Isekai'd</div>
+        </div>
       </div>
+      {showShare && <ShareSheet C={C} situation={s} script={script} onClose={()=>setShowShare(false)}/>}
     </div>
   );
 }
@@ -3080,16 +3418,25 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
         {/* Situations courantes */}
         <div style={{display:"flex",flexDirection:"column",gap:10}} className="stagger">
           {situations.map((s,i)=>(
-            <div key={i} className="lift" onClick={()=>setSituation(s)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"14px 16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer"}}>
-              <div style={{width:44,height:44,borderRadius:11,background:C.s2,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{s.emoji}</div>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{display:"flex",alignItems:"baseline",gap:8}}>
-                  <span style={{fontSize:15,color:C.text,fontWeight:500}}>{s.titre}</span>
-                  <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</span>
+            <div key={i} className="lift" onClick={()=>setSituation(s)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"15px 16px",cursor:"pointer"}}>
+              <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:10}}>
+                <div style={{width:44,height:44,borderRadius:11,background:C.s2,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{s.emoji}</div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:"flex",alignItems:"baseline",gap:8}}>
+                    <span style={{fontSize:15,color:C.text,fontWeight:500}}>{s.titre}</span>
+                    <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</span>
+                  </div>
+                  <div style={{fontSize:11,color:C.t2,lineHeight:1.45,marginTop:2}}>{s.phrases.length} phrases · de l'arrivée au départ</div>
                 </div>
-                <div style={{fontSize:12,color:C.t2,lineHeight:1.45,marginTop:3}}>{s.phrases.length} phrases utiles</div>
+                <span style={{fontSize:18,color:C.t3,flexShrink:0}}>›</span>
               </div>
-              <span style={{fontSize:18,color:C.t3,flexShrink:0}}>›</span>
+              {/* Aperçu de la première phrase — façon couverture de carrousel */}
+              {s.phrases?.[0] && (
+                <div style={{padding:"10px 13px",background:C.s2,borderRadius:10,borderLeft:`2px solid ${C.red}`}}>
+                  <div style={{fontSize:14,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(s.phrases[0], script)}</div>
+                  <div style={{fontSize:11,color:C.t3,fontStyle:"italic"}}>{s.phrases[0].fr}</div>
+                </div>
+              )}
             </div>
           ))}
           {situations.length===0 && <div style={{padding:"18px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
@@ -3101,6 +3448,104 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
 }
 
 // ─── Onglet Voyage (à venir) ──────────────────────────────────────────────────
+// ─── Fiche itinéraire visuelle (style "Japan Travel Guide") ───────────────────
+// Transforme un voyage préconçu en une belle timeline illustrée, jour par jour.
+function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenLieu }){
+  const [dayIdx, setDayIdx] = useState(0);
+  const jours = trip.jours || [];
+  const day = jours[dayIdx];
+  const ville = day && villeById[day.villeId];
+  // Icône de transport selon une heuristique simple
+  const transportIcon = (i)=> i===0 ? null : "🚶";
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      {/* En-tête éditorial */}
+      <div style={{padding:"50px 20px 0",background:C.bg}}>
+        <button onClick={onClose} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"6px 13px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:16}}>‹ Retour</button>
+      </div>
+
+      {/* Bannière titre — style magazine */}
+      <div style={{margin:"0 20px 18px",borderRadius:20,overflow:"hidden",position:"relative",background:`linear-gradient(150deg,${C.red}28,${C.gold}18 70%,transparent)`,border:`1px solid ${C.border}`}}>
+        <div style={{padding:"24px 22px"}}>
+          <div style={{fontSize:10,color:C.red,letterSpacing:".25em",textTransform:"uppercase",marginBottom:8,fontWeight:600}}>旅程 · Itinéraire</div>
+          <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.1,marginBottom:8}}>{trip.titre}</div>
+          <div style={{fontSize:12,color:C.t2,lineHeight:1.55,marginBottom:12}}>{trip.description}</div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            <span style={{fontSize:11,padding:"4px 11px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>🗓️ {trip.duree} jours</span>
+            <span style={{fontSize:11,padding:"4px 11px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>{trip.emoji} {trip.niveau}</span>
+            <span style={{fontSize:11,padding:"4px 11px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>📍 {trip.villes.map(id=>villeById[id]?.nom||id).join(" · ")}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Sélecteur de jour — onglets horizontaux */}
+      <div style={{display:"flex",gap:8,overflowX:"auto",padding:"0 20px 16px",WebkitOverflowScrolling:"touch"}}>
+        {jours.map((j,i)=>(
+          <button key={i} onClick={()=>setDayIdx(i)} className="pop-press" style={{flexShrink:0,padding:"8px 15px",borderRadius:20,border:`1px solid ${i===dayIdx?C.red:C.border}`,background:i===dayIdx?C.red:C.s1,color:i===dayIdx?"#fff":C.t2,fontSize:12,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}>
+            Jour {j.num}
+          </button>
+        ))}
+      </div>
+
+      {/* Timeline du jour sélectionné */}
+      <div key={dayIdx} className="screen-in" style={{padding:"0 20px 20px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
+          <span style={{fontSize:22}}>{ville?.emoji}</span>
+          <div>
+            <div style={{fontSize:16,color:C.text,fontWeight:600}}>{day?.titre || `Jour ${day?.num}`}</div>
+            <div style={{fontSize:11,color:C.t3}}>{ville?.nom}</div>
+          </div>
+        </div>
+
+        {/* Étapes en timeline verticale */}
+        <div style={{position:"relative"}}>
+          {(day?.etapes||[]).map((e,i)=>{
+            const l = lieuById[e.lieuId];
+            if(!l) return null;
+            const isLast = i === day.etapes.length-1;
+            const img = l.photo || l.image;
+            return(
+              <div key={i} style={{display:"flex",gap:14,position:"relative",paddingBottom:isLast?0:18}}>
+                {/* Colonne timeline : heure + point + ligne */}
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,width:48}}>
+                  <div style={{fontSize:13,fontWeight:700,color:C.red,marginBottom:6,fontFamily:"'Noto Serif JP',serif"}}>{e.heure||""}</div>
+                  <div style={{width:38,height:38,borderRadius:"50%",background:`${C.red}18`,border:`2px solid ${C.red}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0,zIndex:1}}>{l.emoji}</div>
+                  {!isLast && <div style={{width:2,flex:1,background:`${C.red}33`,marginTop:4,minHeight:30}}/>}
+                </div>
+                {/* Carte du lieu */}
+                <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(l.id)} style={{flex:1,minWidth:0,background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden",cursor:"pointer",marginBottom:2}}>
+                  {img && <div style={{height:110,position:"relative",background:C.s2}}>
+                    <img src={img} alt={l.nom} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover"}} onError={(e)=>{e.target.style.display="none";}}/>
+                  </div>}
+                  <div style={{padding:"11px 13px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:3}}>
+                      <span style={{fontSize:14,color:C.text,fontWeight:600}}>{l.nom}</span>
+                      {l.nom_jp && <span style={{fontSize:10,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{l.nom_jp}</span>}
+                    </div>
+                    <div style={{fontSize:11,color:C.t2,lineHeight:1.45,marginBottom:6}}>{(l.description||"").slice(0,90)}{(l.description||"").length>90?"…":""}</div>
+                    <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                      {l.categorie && <span style={{fontSize:9,padding:"2px 8px",background:C.s2,borderRadius:12,color:C.t3}}>{l.categorie}</span>}
+                      {l.duree && <span style={{fontSize:9,padding:"2px 8px",background:C.s2,borderRadius:12,color:C.t3}}>⏱️ {l.duree}</span>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* CTA : adopter l'itinéraire */}
+      <div style={{padding:"4px 20px 110px"}}>
+        <button onClick={onAdopt} className="pop-press" style={{width:"100%",padding:"15px",background:C.red,border:"none",borderRadius:14,color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",boxShadow:`0 4px 16px ${C.red}44`}}>
+          Utiliser cet itinéraire →
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
@@ -3113,8 +3558,11 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
   // vues : "home" | "browse" (préconçus) | "create" | "trip"
   const [view, setView] = useState("home");
   const [activeTripId, setActiveTripId] = useState(null);
+  const [previewPreco, setPreviewPreco] = useState(null); // voyage préconçu en aperçu visuel
   const [showPremium, setShowPremium] = useState(false);
   const pushTimer = useRef(null);
+  // Index lieux pour les fiches visuelles
+  const lieuByIdGlobal = useMemo(()=>Object.fromEntries((db?.lieux||[]).map(l=>[l.id,l])), [db]);
 
   // ── Sync cloud : pull au login ──
   useEffect(()=>{
@@ -3160,6 +3608,14 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
     return <VoyageCreate C={C} villes={villes} onCancel={()=>setView("home")} onCreate={createTrip}/>;
   }
   // ─── Vue : préconçus ───
+  // ─── Vue : aperçu visuel d'un itinéraire préconçu ───
+  if(previewPreco){
+    return <ItineraryCard C={C} trip={previewPreco} lieuById={lieuByIdGlobal} villeById={villeById}
+              onClose={()=>setPreviewPreco(null)}
+              onAdopt={()=>{ const p=previewPreco; setPreviewPreco(null); tryAdopt(p); }}
+              onOpenLieu={null}/>;
+  }
+
   if(view==="browse"){
     return(
       <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
@@ -3170,7 +3626,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
         </div>
         <div style={{padding:"18px 20px 110px"}} className="stagger">
           {preconcus.map(p=>(
-            <div key={p.id} className="lift" style={{marginBottom:14,background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,overflow:"hidden",cursor:"pointer"}} onClick={()=>{setActiveTripId("preview_"+p.id);}}>
+            <div key={p.id} className="lift" style={{marginBottom:14,background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,overflow:"hidden",cursor:"pointer"}} onClick={()=>{setPreviewPreco(p);}}>
               <div style={{height:84,background:`linear-gradient(135deg,${C.red}22,${C.gold}18)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:38,position:"relative"}}>
                 {p.emoji}
                 <span style={{position:"absolute",bottom:8,left:12,fontSize:9,color:C.text,background:C.s1,padding:"3px 9px",borderRadius:12,opacity:0.9}}>{p.niveau}</span>
@@ -3912,7 +4368,7 @@ const PREMIUM_PLANS = [
 const PREMIUM_PERKS = [
   { emoji:"🚫", title:"Sans publicité", desc:"Profite de l'app sans aucune interruption." },
   { emoji:"🗺️", title:"Voyages illimités", desc:"Planifie autant de voyages que tu veux, plus de limite." },
-  { emoji:"🔓", title:"Tout le contenu débloqué", desc:"Accède immédiatement à toutes les sections, sans clés." },
+  { emoji:"🔓", title:"Tout le contenu débloqué", desc:"Accède immédiatement à toutes les sections, sans attendre les paliers de streak." },
   { emoji:"📍", title:"Lieux personnalisés", desc:"Ajoute tes propres adresses à tes itinéraires." },
 ];
 
@@ -4030,6 +4486,14 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
 
 function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
+  const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
+  const setReminders = (fn)=>{
+    setRemindersState(prev=>{
+      const next = typeof fn==="function" ? fn(prev) : fn;
+      try { localStorage.setItem("isekaid_reminders_v1", next?"on":"off"); } catch {}
+      return next;
+    });
+  };
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
   const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
   // next title progress
@@ -4107,10 +4571,10 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,fa
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
             <div style={{display:"flex",alignItems:"center",gap:7}}>
               <span style={{fontSize:16,display:"inline-block",animation:"floatY 3s ease-in-out infinite"}}>⭐</span>
-              <span style={{fontSize:13,color:C.text,fontWeight:600}}>{xp||0} XP</span>
+              <span style={{fontSize:13,color:C.text,fontWeight:600}}>{xp||0} jour{(xp||0)>1?"s":""} 🔥</span>
             </div>
             <div style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.18)",borderRadius:20}}>
-              <span style={{fontSize:12}}>🔑</span><span style={{fontSize:12,fontWeight:700,color:C.text}}>{streak?.keys||0}</span>
+              <span style={{fontSize:12}}>🔥</span><span style={{fontSize:12,fontWeight:700,color:C.text}}>{streak?.count||0}j</span>
             </div>
           </div>
           <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:7,position:"relative"}}>
@@ -4118,7 +4582,7 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,fa
             <div style={{position:"absolute",inset:0,width:`${progress*100}%`,background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent)",backgroundSize:"200% 100%",animation:"shimmer 2.5s ease infinite",borderRadius:3,pointerEvents:"none"}}/>
           </div>
           <div style={{fontSize:11,color:C.t3}}>
-            {nextTier ? <>Prochain titre : <b style={{color:C.t2}}>{nextTier.emoji} {nextTier.title}</b> à {nextTier.min} XP</> : "Titre maximal atteint ! 🎌"}
+            {nextTier ? <>Prochain titre : <b style={{color:C.t2}}>{nextTier.emoji} {nextTier.title}</b> à {nextTier.min} jours</> : "Titre maximal atteint ! 🎌"}
           </div>
         </div>
         {/* Kana mastery */}
@@ -4159,11 +4623,22 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,fa
           </div>
         </div>
 
+        {/* Rappels quotidiens */}
+        <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div style={{flex:1,paddingRight:12}}>
+            <div style={{fontSize:13,color:C.text,marginBottom:2}}>🔔 Rappels quotidiens</div>
+            <div style={{fontSize:11,color:C.t3,lineHeight:1.4}}>Reçois un rappel pour protéger ton streak et faire ton défi du jour.</div>
+          </div>
+          <div onClick={()=>setReminders(r=>!r)} style={{width:48,height:26,borderRadius:13,background:reminders?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
+            <div style={{position:"absolute",top:3,left:reminders?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
+          </div>
+        </div>
+
         {/* Sélecteur d'accent (déblocable par XP) */}
         <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
           <div style={{marginBottom:12}}>
             <div style={{fontSize:13,color:C.text,marginBottom:2}}>🎨 Couleur d'accent</div>
-            <div style={{fontSize:11,color:C.t3}}>Débloque de nouvelles teintes en gagnant de l'XP</div>
+            <div style={{fontSize:11,color:C.t3}}>Débloque de nouvelles teintes au fil de ton streak 🔥</div>
           </div>
           <div style={{display:"flex",flexWrap:"wrap",gap:10}}>
             {ACCENT_THEMES.map(a=>{
@@ -4181,7 +4656,7 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,fa
           {(()=>{
             const next = ACCENT_THEMES.find(a=>(xp||0) < a.minXp);
             if(!next) return <div style={{fontSize:10,color:C.gold,marginTop:10}}>✨ Toutes les couleurs débloquées — bravo !</div>;
-            return <div style={{fontSize:10,color:C.t3,marginTop:10}}>Prochaine : {next.emoji} {next.label} à {next.minXp} XP (encore {next.minXp-(xp||0)} XP)</div>;
+            return <div style={{fontSize:10,color:C.t3,marginTop:10}}>Prochaine : {next.emoji} {next.label} au jour {next.minXp} (encore {next.minXp-(xp||0)} jour{next.minXp-(xp||0)>1?"s":""})</div>;
           })()}
         </div>
         {/* DB stats */}
@@ -4314,16 +4789,15 @@ function AchievementPopup({C, achievement, onClose}){
 }
 
 // ─── Daily welcome popup (streak + clé) ───────────────────────────────────────
-function DailyWelcome({C, streak, dailyInfo, onClose}){
+function DailyWelcome({C, streak, dailyInfo, onClose, isPremium}){
   const count = streak?.count || 0;
-  const keys = streak?.keys || 0;
   const freezes = streak?.freezes || 0;
   const milestone = dailyInfo?.milestone || null;
   const frozenUsed = dailyInfo?.frozenUsed || false;
-  const keysGained = 1 + (milestone?.bonus || 0);
-  const NEXT = [7,14,30,60,100];
-  const nextGoal = NEXT.find(d=>d>count);
-  const daysToNext = nextGoal ? nextGoal - count : null;
+  // Prochain contenu à débloquer via le streak
+  const nextUnlock = UNLOCK_SCHEDULE.find(u=>u.day>count);
+  const justUnlocked = UNLOCK_SCHEDULE.find(u=>u.day===count);
+  const daysToNext = nextUnlock ? nextUnlock.day - count : null;
 
   return(
     <>
@@ -4338,7 +4812,7 @@ function DailyWelcome({C, streak, dailyInfo, onClose}){
         {milestone && (
           <div style={{position:"absolute",inset:0,overflow:"hidden",borderRadius:22,pointerEvents:"none"}}>
             {Array.from({length:14}).map((_,i)=>(
-              <div key={i} style={{position:"absolute",top:"-10%",left:`${(i*7+5)%100}%`,fontSize:`${12+(i%3)*5}px`,animation:`fall ${1.5+(i%4)*0.4}s ease-in ${(i%5)*0.15}s both`}}>{["🎊","✨","🔑","🎌","⭐"][i%5]}</div>
+              <div key={i} style={{position:"absolute",top:"-10%",left:`${(i*7+5)%100}%`,fontSize:`${12+(i%3)*5}px`,animation:`fall ${1.5+(i%4)*0.4}s ease-in ${(i%5)*0.15}s both`}}>{["🎊","✨","🎉","🎌","⭐"][i%5]}</div>
             ))}
           </div>
         )}
@@ -4368,16 +4842,27 @@ function DailyWelcome({C, streak, dailyInfo, onClose}){
           </div>
         )}
 
-        <div style={{padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14,marginBottom:milestone||daysToNext?14:22}}>
-          <div style={{fontSize:38,marginBottom:6,display:"inline-block",animation:"zoomBadge .6s cubic-bezier(.34,1.56,.64,1) .25s both"}}>🔑</div>
-          <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:3}}>
-            +{keysGained} clé{keysGained>1?"s":""} gagnée{keysGained>1?"s":""} !{milestone && <span style={{color:C.gold}}> (dont +{milestone.bonus} bonus)</span>}
+        {/* Déblocage du jour, ou progression vers le prochain */}
+        {justUnlocked && !isPremium ? (
+          <div style={{padding:"16px",background:"rgba(78,128,96,0.1)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:14,marginBottom:daysToNext?14:22}}>
+            <div style={{fontSize:38,marginBottom:6,display:"inline-block",animation:"zoomBadge .6s cubic-bezier(.34,1.56,.64,1) .25s both"}}>{justUnlocked.emoji}</div>
+            <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:3}}>Nouveau contenu débloqué !</div>
+            <div style={{fontSize:13,color:C.t2}}>« <b style={{color:C.green}}>{justUnlocked.label}</b> » est maintenant accessible 🎉</div>
           </div>
-          <div style={{fontSize:12,color:C.t2}}>Tu as maintenant <b style={{color:C.red}}>{keys} clé{keys>1?"s":""}</b> à dépenser</div>
-        </div>
-
-        {daysToNext && !milestone && (
-          <div style={{fontSize:11,color:C.t3,marginBottom:18}}>Plus que <b style={{color:C.text}}>{daysToNext} jour{daysToNext>1?"s":""}</b> avant le palier <b>{nextGoal} jours</b> 🏆</div>
+        ) : nextUnlock && !isPremium ? (
+          <div style={{padding:"16px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.2)",borderRadius:14,marginBottom:14}}>
+            <div style={{fontSize:32,marginBottom:6,display:"inline-block",animation:"floatY 3s ease-in-out infinite"}}>{nextUnlock.emoji}</div>
+            <div style={{fontSize:13,color:C.text,fontWeight:600,marginBottom:3}}>Prochain déblocage : {nextUnlock.label}</div>
+            <div style={{fontSize:12,color:C.t2}}>Plus que <b style={{color:C.red}}>{daysToNext} jour{daysToNext>1?"s":""}</b> de streak 🔓</div>
+          </div>
+        ) : isPremium ? (
+          <div style={{padding:"14px",background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:14,marginBottom:18}}>
+            <div style={{fontSize:13,color:C.text,fontWeight:600}}>✨ Premium — tout est débloqué</div>
+          </div>
+        ) : (
+          <div style={{padding:"14px",background:"rgba(78,128,96,0.08)",border:"1px solid rgba(78,128,96,0.25)",borderRadius:14,marginBottom:18}}>
+            <div style={{fontSize:13,color:C.green,fontWeight:600}}>🎉 Tout le contenu gratuit est débloqué !</div>
+          </div>
         )}
 
         <button onClick={onClose} className="pop-press" style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",animation:milestone?"ring 1.4s ease .6s 2":"none"}}>
@@ -4601,10 +5086,10 @@ function Onboarding({onComplete}){
 // Parcours guidé contextuel : chaque étape pointe une section (onglet) réelle
 const TOUR_STEPS = [
   {tab:"home",      emoji:"🏠", title:"L'accueil",        text:"Ton rendez-vous quotidien : proverbe du jour, recommandations selon tes goûts, et ta sélection « Daily Japan ». Reviens chaque jour pour du nouveau contenu et garder ta série 🔥."},
-  {tab:"explore",   emoji:"🗺️", title:"Explorer",          text:"Découvre traditions, vie quotidienne, codes sociaux et régions. Certaines catégories se débloquent avec les clés 🔑 que tu gagnes chaque jour."},
-  {tab:"scenarios", emoji:"🎭", title:"Scénarios",        text:"Des dialogues interactifs à embranchements pour t'entraîner à de vraies conversations. Réussis-les pour gagner des clés et de l'XP."},
+  {tab:"explore",   emoji:"🗺️", title:"Explorer",          text:"Découvre traditions, vie quotidienne, codes sociaux et régions. Les catégories se débloquent au fil de ton streak quotidien 🔥."},
+  {tab:"scenarios", emoji:"🎭", title:"Scénarios",        text:"Des dialogues interactifs pour t'entraîner à de vraies conversations. Valide-les pour suivre ta progression."},
   {tab:"learn",     emoji:"🎴", title:"Apprendre",         text:"Le cœur de l'app : le parcours « Survivre à Tokyo » étape par étape, ou l'entraînement libre (flashcards de kana, situations). Avec prononciation audio 🔊."},
-  {tab:"profile",   emoji:"🏆", title:"Ton profil",        text:"Suis ta progression : titre, XP, maîtrise des syllabaires, badges débloqués et tes favoris. Tout est synchronisé sur ton compte."},
+  {tab:"profile",   emoji:"🏆", title:"Ton profil",        text:"Suis ta progression : titre, streak, maîtrise des syllabaires, badges débloqués et tes favoris. Tout est synchronisé sur ton compte."},
 ];
 
 function GuidedTour({C, step, onNext, onPrev, onSkip, onFinish, dontShowAgain, setDontShowAgain}){
@@ -4759,31 +5244,40 @@ function loadStreak(){
   try { const raw=localStorage.getItem(STREAK_KEY); return raw?JSON.parse(raw):null; }
   catch { return null; }
 }
-// Returns { count, best, last, keys } updated for "today"
+// Returns { count, best, last, freezes, lastFreezeRecharge } updated for "today"
+// Streak consécutif avec 1 joker rechargeable (1 tous les 7 jours actifs).
 function touchStreak(){
   const today = dayKey();
   let s = loadStreak();
-  let gainedKey = false;
   if(!s || !s.last){
-    s = { count:1, best:1, last:today, keys:1, totalKeysEarned:1 };
-    gainedKey = true;
+    s = { count:1, best:1, last:today, freezes:1, freezeBase:0 };
   } else if(s.last === today){
-    // already counted today — no change, ensure keys fields exist
-    if(s.keys===undefined) s.keys = 0;
-    if(s.totalKeysEarned===undefined) s.totalKeysEarned = s.keys;
+    // déjà compté aujourd'hui — rien à faire
   } else {
     const gap = daysBetween(s.last, today);
-    if(gap === 1) s.count += 1;        // consecutive day
-    else if(gap >= 2) s.count = 1;     // streak broken (keys are kept!)
+    if(gap === 1){
+      s.count += 1;                       // jour consécutif
+    } else if(gap === 2 && (s.freezes||0) > 0){
+      // 1 jour manqué mais un joker disponible → on consomme le joker, streak préservé
+      s.freezes -= 1;
+      s.count += 1;
+      s.frozenUsed = true;
+    } else {
+      s.count = 1;                        // streak cassé
+      s.frozenUsed = false;
+    }
     s.last = today;
     if(s.count > (s.best||0)) s.best = s.count;
-    // +1 key per active day
-    s.keys = (s.keys||0) + 1;
-    s.totalKeysEarned = (s.totalKeysEarned||0) + 1;
-    gainedKey = true;
   }
+  // Recharge d'un joker tous les 7 jours de streak (max 2 en réserve)
+  const base = s.freezeBase || 0;
+  if(s.count - base >= 7){
+    s.freezes = Math.min((s.freezes||0) + 1, 2);
+    s.freezeBase = s.count;
+  }
+  if(s.freezes === undefined) s.freezes = 1;
   try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
-  return {...s, gainedKey};
+  return {...s};
 }
 function saveStreak(s){
   try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
@@ -4797,23 +5291,29 @@ function loadScenarioProgress(){
   catch { return {done:[],xp:0}; }
 }
 function saveScenarioProgress(p){ try { localStorage.setItem(SCEN_KEY, JSON.stringify(p)); } catch {} }
-// Catégories verrouillables : coût en clés + XP accordé
-const LOCKABLE = {
-  traditions:    {label:"Traditions",      emoji:"⛩️", cost:0, xp:100, free:true},
-  vie_quotidienne:{label:"Vie quotidienne", emoji:"🏙️", cost:1, xp:120, free:false},
-  codes_sociaux: {label:"Codes sociaux",   emoji:"🤫", cost:5, xp:150, free:false},
-  regions:       {label:"Régions du Japon",emoji:"🗾", cost:5, xp:150, free:false},
-  histoire:      {label:"Histoire",        emoji:"📜", cost:3, xp:130, free:false},
-};
+// ─── Déblocage progressif par paliers de streak (jours consécutifs) ───────────
+// L'essentiel s'ouvre en 1 semaine ; tout le contenu gratuit en 1 mois.
+// Premium (payant) débloque tout immédiatement.
+const UNLOCK_SCHEDULE = [
+  { day:1,  cat:"traditions",      label:"Traditions",        emoji:"⛩️" },
+  { day:3,  cat:"vie_quotidienne", label:"Vie quotidienne",   emoji:"🏙️" },
+  { day:5,  cat:"codes_sociaux",   label:"Codes sociaux",     emoji:"🤫" },
+  { day:7,  cat:"histoire",        label:"Histoire",          emoji:"📜" },
+  { day:14, cat:"regions",         label:"Régions du Japon",  emoji:"🗾" },
+];
+// Le palier "1 mois" : au-delà de J30, marqueur que tout le gratuit est ouvert.
+const FULL_FREE_DAY = 30;
+// Compat : map cat -> palier (pour savoir à quel jour une catégorie s'ouvre)
+const LOCKABLE = UNLOCK_SCHEDULE.reduce((acc,u)=>{ acc[u.cat]={label:u.label,emoji:u.emoji,day:u.day,free:u.day<=1}; return acc; },{});
 // Paliers de titres selon l'XP total
 // ─── Accents déblocables par XP (cosmétique, motivationnel) ───
 const ACCENT_THEMES = [
   { id:"classic",  label:"Rouge impérial", jp:"朱",   color:"#C9463D", minXp:0,   emoji:"🔴" },
-  { id:"sakura",   label:"Sakura",         jp:"桜",   color:"#E08BA8", minXp:100, emoji:"🌸" },
-  { id:"matcha",   label:"Matcha",         jp:"抹茶", color:"#7BA05B", minXp:250, emoji:"🍵" },
-  { id:"indigo",   label:"Indigo",         jp:"藍",   color:"#3F6CA6", minXp:400, emoji:"🟦" },
-  { id:"gold",     label:"Or de Kanazawa", jp:"金",   color:"#C9A84C", minXp:520, emoji:"🟡" },
-  { id:"sumi",     label:"Encre de Sumi",  jp:"墨",   color:"#5A5560", minXp:700, emoji:"⚫" },
+  { id:"sakura",   label:"Sakura",         jp:"桜",   color:"#E08BA8", minXp:3,   emoji:"🌸" },
+  { id:"matcha",   label:"Matcha",         jp:"抹茶", color:"#7BA05B", minXp:7,   emoji:"🍵" },
+  { id:"indigo",   label:"Indigo",         jp:"藍",   color:"#3F6CA6", minXp:14,  emoji:"🟦" },
+  { id:"gold",     label:"Or de Kanazawa", jp:"金",   color:"#C9A84C", minXp:30,  emoji:"🟡" },
+  { id:"sumi",     label:"Encre de Sumi",  jp:"墨",   color:"#5A5560", minXp:60,  emoji:"⚫" },
 ];
 const ACCENT_KEY = "isekaid_accent_v1";
 function loadAccent(){ try { return localStorage.getItem(ACCENT_KEY) || "classic"; } catch { return "classic"; } }
@@ -4821,11 +5321,11 @@ function saveAccent(id){ try { localStorage.setItem(ACCENT_KEY, id); } catch {} 
 
 const TITLES = [
   {min:0,    title:"Curieux du Japon",   jp:"興味",   emoji:"🌱"},
-  {min:100,  title:"Voyageur novice",    jp:"旅人",   emoji:"🎒"},
-  {min:250,  title:"Explorateur",        jp:"探検家", emoji:"🧭"},
-  {min:400,  title:"Initié culturel",    jp:"文化人", emoji:"🎴"},
-  {min:520,  title:"Connaisseur",        jp:"通",     emoji:"🏮"},
-  {min:9999, title:"Maître du Japon",    jp:"達人",   emoji:"🎌"},
+  {min:3,    title:"Voyageur novice",    jp:"旅人",   emoji:"🎒"},
+  {min:7,    title:"Explorateur",        jp:"探検家", emoji:"🧭"},
+  {min:14,   title:"Initié culturel",    jp:"文化人", emoji:"🎴"},
+  {min:30,   title:"Connaisseur",        jp:"通",     emoji:"🏮"},
+  {min:60,   title:"Maître du Japon",    jp:"達人",   emoji:"🎌"},
 ];
 function loadUnlocks(){
   try { const raw=localStorage.getItem(UNLOCK_KEY); return raw?JSON.parse(raw):null; }
@@ -4850,14 +5350,14 @@ function loadPremium(){
 }
 function savePremium(p){ try { localStorage.setItem(PREMIUM_KEY, JSON.stringify(p)); } catch {} }
 
-function computeXP(unlocks, scenXP){
-  let xp = scenXP || 0;
-  Object.keys(unlocks||{}).forEach(k=>{ if(unlocks[k] && LOCKABLE[k]) xp += LOCKABLE[k].xp; });
-  return xp;
+// La progression cosmétique (titres, accents) est désormais basée sur le STREAK
+// (nombre de jours de régularité), et non plus sur l'XP (système retiré).
+function computeXP(unlocks, scenXP, streakCount){
+  return streakCount || 0;   // "xp" = jours de streak, pour compat avec l'UI existante
 }
-function titleForXP(xp){
+function titleForXP(days){
   let t = TITLES[0];
-  for(const tier of TITLES){ if(xp >= tier.min) t = tier; }
+  for(const tier of TITLES){ if(days >= tier.min) t = tier; }
   return t;
 }
 
@@ -4933,32 +5433,33 @@ export default function IsekaidApp(){
     });
   };
 
-  const xp = computeXP(unlocks, scenProgress.xp);
+  const xp = computeXP(unlocks, scenProgress.xp, streak?.count || 0);
   const rank = titleForXP(xp);
 
-  // Complete a scenario: grant keys + XP once
+  // Terminer un scénario : on marque juste comme complété (plus de clés ni d'XP)
   const completeScenario = (s)=>{
     if(scenProgress.done.includes(s.id)) return;
-    const newProg = {done:[...scenProgress.done, s.id], xp:(scenProgress.xp||0)+s.recompense_xp};
+    const newProg = {done:[...scenProgress.done, s.id], xp:0};
     setScenProgress(newProg); saveScenarioProgress(newProg);
-    const newStreak = {...streak, keys:(streak.keys||0)+s.recompense_cles};
-    setStreak(newStreak); saveStreak(newStreak);
   };
 
-  // Unlock a category: spend keys, grant XP via unlock state
+  // Une catégorie est débloquée si : premium, OU pas verrouillable, OU le streak
+  // a atteint le palier de jours requis.
+  const isUnlocked = (catKey)=>{
+    if(isPremium) return true;
+    const def = LOCKABLE[catKey];
+    if(!def) return true;                 // contenu non soumis à palier = libre
+    const dayReached = (streak?.count || 0) >= def.day || (streak?.best || 0) >= def.day;
+    return dayReached;
+  };
+  // Plus de déblocage manuel par clés : le déblocage est automatique via le streak.
+  // (Fonction conservée pour compat d'appel mais sans effet de monnaie.)
   const unlockCategory = (catKey)=>{
     const def = LOCKABLE[catKey];
-    if(!def || unlocks[catKey]) return {ok:false, reason:"already"};
-    if((streak.keys||0) < def.cost) return {ok:false, reason:"keys"};
-    // spend keys
-    const newStreak = {...streak, keys:(streak.keys||0)-def.cost};
-    setStreak(newStreak); saveStreak(newStreak);
-    // unlock
-    const newUnlocks = {...unlocks, [catKey]:true};
-    setUnlocks(newUnlocks); saveUnlocks(newUnlocks);
-    return {ok:true};
+    if(!def) return {ok:false, reason:"already"};
+    if(isUnlocked(catKey)) return {ok:true};
+    return {ok:false, reason:"day", day:def.day};
   };
-  const isUnlocked = (catKey)=> isPremium || !LOCKABLE[catKey] || !!unlocks[catKey];
   const [wikiEntry,setWikiEntry]=useState(null);
   const [showWelcome,setShowWelcome]=useState(false);
   const [welcomeQueued,setWelcomeQueued]=useState(false);
@@ -4973,7 +5474,7 @@ export default function IsekaidApp(){
       const m = {...prev, done};
       if(done.length>=DAILY_TASKS.length && !prev.claimed){
         m.claimed = true;
-        setStreak(s=>{ const ns={...s, keys:(s.keys||0)+1, totalKeysEarned:(s.totalKeysEarned||0)+1}; saveStreak(ns); return ns; });
+        /* mission accomplie : plus de récompense en clés (système retiré) */
         setMissionReward(true);
       }
       saveMission(m);
@@ -5184,8 +5685,8 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className="screen-in" style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab}/>}
-              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium}/>}
+              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
@@ -5199,10 +5700,10 @@ export default function IsekaidApp(){
             {/* Global wiki panel — available everywhere */}
             {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
             {/* Daily welcome popup — jamais pendant le parcours guidé */}
-            {showWelcome && tourStep===-1 && <DailyWelcome C={C} streak={streak} dailyInfo={dailyInfo} onClose={()=>setShowWelcome(false)}/>}
+            {showWelcome && tourStep===-1 && <DailyWelcome C={C} streak={streak} dailyInfo={dailyInfo} isPremium={isPremium} onClose={()=>setShowWelcome(false)}/>}
             {missionReward && (
               <div onClick={()=>setMissionReward(false)} style={{position:"fixed",bottom:96,left:"50%",transform:"translateX(-50%)",zIndex:320,background:C.green,color:"#fff",padding:"13px 22px",borderRadius:24,fontSize:13,fontWeight:600,boxShadow:"0 6px 24px rgba(58,102,69,0.4)",animation:"fadeUp .35s ease",display:"flex",alignItems:"center",gap:9,whiteSpace:"nowrap"}}>
-                🎯 Mission accomplie ! <span style={{opacity:0.9}}>+1 clé 🔑</span>
+                🎯 Mission accomplie ! <span style={{opacity:0.9}}>Bravo 🎌</span>
               </div>
             )}
             {/* Global search */}

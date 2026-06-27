@@ -4591,7 +4591,7 @@
           "jp": "メニューをください",
           "romaji": "Menyū wo kudasai",
           "fr": "Le menu, s'il vous plaît",
-          "kana": "めんyう を ください"
+          "kana": "めにゅー を ください"
         },
         {
           "jp": "これをください",
@@ -4621,7 +4621,7 @@
           "jp": "ごちそうさまでした",
           "romaji": "Gochisōsama deshita",
           "fr": "Merci pour le repas (en partant)",
-          "kana": "ごちsうさま でした"
+          "kana": "ごちそうさま でした"
         },
         {
           "jp": "二人です",
@@ -4672,13 +4672,13 @@
           "jp": "カードで払えますか？",
           "romaji": "Kādo de haraemasu ka?",
           "fr": "Puis-je payer par carte ?",
-          "kana": "kあど で はらえます か?"
+          "kana": "かーど で はらえます か?"
         },
         {
           "jp": "大丈夫です",
           "romaji": "Daijōbu desu",
           "fr": "Ça va / Non merci (pour refuser poliment)",
-          "kana": "だいjうぶ です"
+          "kana": "だいじょうぶ です"
         },
         {
           "jp": "これはいくらですか？",
@@ -4711,7 +4711,7 @@
           "jp": "東京駅までいくらですか？",
           "romaji": "Tōkyō-eki made ikura desu ka?",
           "fr": "Combien jusqu'à la gare de Tokyo ?",
-          "kana": "tうkyうえき まで いくら です か?"
+          "kana": "とうきょうえき まで いくら です か?"
         },
         {
           "jp": "この電車は新宿に止まりますか？",
@@ -4793,6 +4793,30 @@
           "romaji": "Mite iru dake desu",
           "fr": "Je regarde juste (merci)",
           "kana": "みて いる だけ です"
+        },
+        {
+          "jp": "試着してもいいですか？",
+          "romaji": "Shichaku shite mo ii desu ka?",
+          "fr": "Puis-je essayer ?",
+          "kana": "しちゃく して も いい です か?"
+        },
+        {
+          "jp": "他の色はありますか？",
+          "romaji": "Hoka no iro wa arimasu ka?",
+          "fr": "Avez-vous d'autres couleurs ?",
+          "kana": "ほか の いろ わ あります か?"
+        },
+        {
+          "jp": "免税できますか？",
+          "romaji": "Menzei dekimasu ka?",
+          "fr": "Puis-je être détaxé(e) ?",
+          "kana": "めんぜい できます か?"
+        },
+        {
+          "jp": "袋をください",
+          "romaji": "Fukuro wo kudasai",
+          "fr": "Un sac, s'il vous plaît",
+          "kana": "ふくろ を ください"
         }
       ]
     },
@@ -4807,7 +4831,7 @@
           "jp": "チェックインお願いします",
           "romaji": "Chekku-in onegaishimasu",
           "fr": "Je voudrais faire le check-in",
-          "kana": "cへっくいん おねがいします"
+          "kana": "ちぇっくいん おねがいします"
         },
         {
           "jp": "予約しています",
@@ -4825,13 +4849,37 @@
           "jp": "朝食は何時ですか？",
           "romaji": "Chōshoku wa nan-ji desu ka?",
           "fr": "À quelle heure est le petit-déjeuner ?",
-          "kana": "chうしょく わ なんじ です か?"
+          "kana": "ちょうしょく わ なんじ です か?"
         },
         {
           "jp": "荷物を預けられますか？",
           "romaji": "Nimotsu wo azukeraremasu ka?",
           "fr": "Puis-je laisser mes bagages ?",
           "kana": "にもつ を あずけられます か?"
+        },
+        {
+          "jp": "チェックインをお願いします",
+          "romaji": "Chekku-in wo onegaishimasu",
+          "fr": "Je voudrais m'enregistrer",
+          "kana": "ちぇっくいん を おねがいします"
+        },
+        {
+          "jp": "荷物を預かってもらえますか？",
+          "romaji": "Nimotsu wo azukatte moraemasu ka?",
+          "fr": "Pouvez-vous garder mes bagages ?",
+          "kana": "にもつ を あずかって もらえます か?"
+        },
+        {
+          "jp": "Wi-Fiのパスワードは何ですか？",
+          "romaji": "Wi-Fi no pasuwādo wa nan desu ka?",
+          "fr": "Quel est le mot de passe Wi-Fi ?",
+          "kana": "Wi-Fi の ぱすわーど わ なん です か?"
+        },
+        {
+          "jp": "朝食は何時からですか？",
+          "romaji": "Chōshoku wa nanji kara desu ka?",
+          "fr": "À partir de quelle heure le petit-déjeuner ?",
+          "kana": "ちょうしょく わ なんじ から です か?"
         }
       ]
     },
@@ -4882,13 +4930,13 @@
           "jp": "病院はどこですか？",
           "romaji": "Byōin wa doko desu ka?",
           "fr": "Où est l'hôpital ?",
-          "kana": "byういん わ どこ です か?"
+          "kana": "びょういん わ どこ です か?"
         },
         {
           "jp": "もう一度お願いします",
           "romaji": "Mō ichido onegaishimasu",
           "fr": "Encore une fois, s'il vous plaît",
-          "kana": "mう いちど おねがいします"
+          "kana": "もう いちど おねがいします"
         },
         {
           "jp": "ゆっくり話してください",
@@ -4909,7 +4957,7 @@
           "jp": "おはようございます",
           "romaji": "Ohayō gozaimasu",
           "fr": "Bonjour (le matin)",
-          "kana": "おはyう ございます"
+          "kana": "おはよう ございます"
         },
         {
           "jp": "こんにちは",
@@ -4921,7 +4969,7 @@
           "jp": "ありがとうございます",
           "romaji": "Arigatō gozaimasu",
           "fr": "Merci beaucoup",
-          "kana": "ありがtう ございます"
+          "kana": "ありがとう ございます"
         },
         {
           "jp": "すみません",
@@ -4939,7 +4987,7 @@
           "jp": "さようなら",
           "romaji": "Sayōnara",
           "fr": "Au revoir",
-          "kana": "さyうなら"
+          "kana": "さようなら"
         },
         {
           "jp": "いいえ",
@@ -4957,7 +5005,187 @@
           "jp": "どうぞ",
           "romaji": "Dōzo",
           "fr": "Je vous en prie / Allez-y",
-          "kana": "dうぞ"
+          "kana": "どうぞ"
+        }
+      ]
+    },
+    {
+      "id": "aeroport",
+      "titre": "À l'aéroport",
+      "nom_jp": "空港",
+      "emoji": "✈️",
+      "contexte": "Arriver, passer l'immigration, récupérer ses bagages et trouver son transport.",
+      "phrases": [
+        {
+          "jp": "観光で来ました",
+          "romaji": "Kankō de kimashita",
+          "fr": "Je viens pour le tourisme",
+          "kana": "かんこう で きました"
+        },
+        {
+          "jp": "荷物はどこですか？",
+          "romaji": "Nimotsu wa doko desu ka?",
+          "fr": "Où sont les bagages ?",
+          "kana": "にもつ わ どこ です か?"
+        },
+        {
+          "jp": "両替はどこですか？",
+          "romaji": "Ryōgae wa doko desu ka?",
+          "fr": "Où change-t-on de l'argent ?",
+          "kana": "りょうがえ わ どこ です か?"
+        },
+        {
+          "jp": "電車の乗り場はどこですか？",
+          "romaji": "Densha no noriba wa doko desu ka?",
+          "fr": "Où est l'embarquement du train ?",
+          "kana": "でんしゃ の のりば わ どこ です か?"
+        },
+        {
+          "jp": "SIMカードを買いたいです",
+          "romaji": "SIM kādo wo kaitai desu",
+          "fr": "Je voudrais acheter une carte SIM",
+          "kana": "SIMかーど を かいたい です"
+        },
+        {
+          "jp": "これは持ち込めますか？",
+          "romaji": "Kore wa mochikomemasu ka?",
+          "fr": "Puis-je emporter ceci (en cabine) ?",
+          "kana": "これ わ もちこめます か?"
+        }
+      ]
+    },
+    {
+      "id": "taxi",
+      "titre": "En taxi",
+      "nom_jp": "タクシー",
+      "emoji": "🚕",
+      "contexte": "Héler un taxi, donner sa destination, payer. Les portes s'ouvrent automatiquement !",
+      "phrases": [
+        {
+          "jp": "ここまでお願いします",
+          "romaji": "Koko made onegaishimasu",
+          "fr": "Jusqu'ici, s'il vous plaît (en montrant)",
+          "kana": "ここ まで おねがいします"
+        },
+        {
+          "jp": "この住所までお願いします",
+          "romaji": "Kono jūsho made onegaishimasu",
+          "fr": "À cette adresse, s'il vous plaît",
+          "kana": "この じゅうしょ まで おねがいします"
+        },
+        {
+          "jp": "急いでいます",
+          "romaji": "Isoideimasu",
+          "fr": "Je suis pressé(e)",
+          "kana": "いそいでいます"
+        },
+        {
+          "jp": "ここで止めてください",
+          "romaji": "Koko de tomete kudasai",
+          "fr": "Arrêtez-vous ici, s'il vous plaît",
+          "kana": "ここ で とめて ください"
+        },
+        {
+          "jp": "カードは使えますか？",
+          "romaji": "Kādo wa tsukaemasu ka?",
+          "fr": "Acceptez-vous la carte ?",
+          "kana": "かーど わ つかえます か?"
+        },
+        {
+          "jp": "領収書をください",
+          "romaji": "Ryōshūsho wo kudasai",
+          "fr": "Un reçu, s'il vous plaît",
+          "kana": "りょうしゅうしょ を ください"
+        }
+      ]
+    },
+    {
+      "id": "pharmacie",
+      "titre": "À la pharmacie",
+      "nom_jp": "薬局",
+      "emoji": "💊",
+      "contexte": "Expliquer un symptôme et trouver le bon médicament. Utile en voyage.",
+      "phrases": [
+        {
+          "jp": "頭が痛いです",
+          "romaji": "Atama ga itai desu",
+          "fr": "J'ai mal à la tête",
+          "kana": "あたま が いたい です"
+        },
+        {
+          "jp": "お腹が痛いです",
+          "romaji": "Onaka ga itai desu",
+          "fr": "J'ai mal au ventre",
+          "kana": "おなか が いたい です"
+        },
+        {
+          "jp": "風邪薬はありますか？",
+          "romaji": "Kazegusuri wa arimasu ka?",
+          "fr": "Avez-vous un médicament contre le rhume ?",
+          "kana": "かぜぐすり わ あります か?"
+        },
+        {
+          "jp": "熱があります",
+          "romaji": "Netsu ga arimasu",
+          "fr": "J'ai de la fièvre",
+          "kana": "ねつ が あります"
+        },
+        {
+          "jp": "これはどう飲みますか？",
+          "romaji": "Kore wa dō nomimasu ka?",
+          "fr": "Comment prend-on ceci ?",
+          "kana": "これ わ どう のみます か?"
+        },
+        {
+          "jp": "アレルギーがあります",
+          "romaji": "Arerugī ga arimasu",
+          "fr": "J'ai des allergies",
+          "kana": "あれるぎー が あります"
+        }
+      ]
+    },
+    {
+      "id": "tourisme",
+      "titre": "Visiter & photographier",
+      "nom_jp": "観光",
+      "emoji": "📸",
+      "contexte": "Demander son chemin, l'entrée d'un site, ou prendre une photo poliment.",
+      "phrases": [
+        {
+          "jp": "写真を撮ってもいいですか？",
+          "romaji": "Shashin wo totte mo ii desu ka?",
+          "fr": "Puis-je prendre une photo ?",
+          "kana": "しゃしん を とって も いい です か?"
+        },
+        {
+          "jp": "写真を撮ってもらえますか？",
+          "romaji": "Shashin wo totte moraemasu ka?",
+          "fr": "Pouvez-vous me prendre en photo ?",
+          "kana": "しゃしん を とって もらえます か?"
+        },
+        {
+          "jp": "入場料はいくらですか？",
+          "romaji": "Nyūjōryō wa ikura desu ka?",
+          "fr": "Combien coûte l'entrée ?",
+          "kana": "にゅうじょうりょう わ いくら です か?"
+        },
+        {
+          "jp": "何時まで開いていますか？",
+          "romaji": "Nanji made aiteimasu ka?",
+          "fr": "Jusqu'à quelle heure est-ce ouvert ?",
+          "kana": "なんじ まで あいています か?"
+        },
+        {
+          "jp": "駅はどっちですか？",
+          "romaji": "Eki wa dotchi desu ka?",
+          "fr": "De quel côté est la gare ?",
+          "kana": "えき わ どっち です か?"
+        },
+        {
+          "jp": "パンフレットはありますか？",
+          "romaji": "Panfuretto wa arimasu ka?",
+          "fr": "Avez-vous une brochure ?",
+          "kana": "ぱんふれっと わ あります か?"
         }
       ]
     }
@@ -5020,7 +5248,7 @@
             {
               "jp": "ルカスと申します",
               "romaji": "Lucas to mōshimasu",
-              "kana": "lうcあs と mうします",
+              "kana": "ルカス と もうします",
               "fr": "Je me nomme Lucas (poli)",
               "correct": true,
               "feedback": "Excellent ! « ~to mōshimasu » est la forme humble et polie pour donner son nom."
@@ -5028,7 +5256,7 @@
             {
               "jp": "ルカスです",
               "romaji": "Lucas desu",
-              "kana": "lうcあs です",
+              "kana": "ルカス です",
               "fr": "Je suis Lucas",
               "correct": false,
               "feedback": "Correct mais plus familier ; « to mōshimasu » est plus poli en présentation."
@@ -5036,7 +5264,7 @@
             {
               "jp": "ルカスといいます",
               "romaji": "Lucas to iimasu",
-              "kana": "lうcあs と いいます",
+              "kana": "ルカス と いいます",
               "fr": "On m'appelle Lucas",
               "correct": false,
               "feedback": "Acceptable, mais « to mōshimasu » est le registre le plus poli ici."
@@ -5044,7 +5272,7 @@
             {
               "jp": "ルカスがいます",
               "romaji": "Lucas ga imasu",
-              "kana": "lうcあs が います",
+              "kana": "ルカス が います",
               "fr": "Il y a Lucas",
               "correct": false,
               "feedback": "« ga imasu » signifie « il y a » : on dirait que tu parles d'une autre personne !"
@@ -5111,7 +5339,7 @@
             {
               "jp": "ありがとうございます",
               "romaji": "Arigatō gozaimasu",
-              "kana": "ありがtう ございます",
+              "kana": "ありがとう ございます",
               "fr": "Merci beaucoup",
               "correct": true,
               "feedback": "Correct ! Forme polie au présent, idéale envers quelqu'un qu'on ne connaît pas."
@@ -5119,7 +5347,7 @@
             {
               "jp": "ありがとう",
               "romaji": "Arigatō",
-              "kana": "ありがtう",
+              "kana": "ありがとう",
               "fr": "Merci (familier)",
               "correct": false,
               "feedback": "Trop familier dans un contexte poli ; ajoute « gozaimasu »."
@@ -5127,7 +5355,7 @@
             {
               "jp": "どういたしまして",
               "romaji": "Dō itashimashite",
-              "kana": "dう いたしまして",
+              "kana": "どう いたしまして",
               "fr": "Je vous en prie",
               "correct": false,
               "feedback": "C'est la RÉPONSE à un merci, pas le remerciement lui-même !"
@@ -5135,7 +5363,7 @@
             {
               "jp": "おめでとうございます",
               "romaji": "Omedetō gozaimasu",
-              "kana": "おめでtう ございます",
+              "kana": "おめでとう ございます",
               "fr": "Félicitations",
               "correct": false,
               "feedback": "On félicite, on ne remercie pas : le verbe est différent."
@@ -5197,7 +5425,7 @@
             {
               "jp": "そうですね",
               "romaji": "Sō desu ne",
-              "kana": "sう です ね",
+              "kana": "そう です ね",
               "fr": "C'est vrai",
               "correct": false,
               "feedback": "Simple acquiescement ; ne renvoie pas le remerciement."
@@ -5280,7 +5508,7 @@
             {
               "jp": "もうしわけありません",
               "romaji": "Mōshiwake arimasen",
-              "kana": "mうしわけ ありません",
+              "kana": "もうしわけ ありません",
               "fr": "Je suis vraiment désolé (formel)",
               "correct": true,
               "feedback": "Parfait : excuse formelle et sincère, adaptée à une faute sérieuse."
@@ -5335,7 +5563,7 @@
             {
               "jp": "だいじょうぶです",
               "romaji": "Daijōbu desu",
-              "kana": "だいjうぶ です",
+              "kana": "だいじょうぶ です",
               "fr": "Ça va",
               "correct": false,
               "feedback": "Minimise alors que tu viens de t'excuser : incohérent."
@@ -5410,7 +5638,7 @@
             {
               "jp": "カードではらいます",
               "romaji": "Kādo de haraimasu",
-              "kana": "kあど で はらいます",
+              "kana": "かーど で はらいます",
               "fr": "Je paie par carte",
               "correct": true,
               "feedback": "Parfait : « ~de haraimasu » indique le moyen de paiement."
@@ -5418,7 +5646,7 @@
             {
               "jp": "カードがほしいです",
               "romaji": "Kādo ga hoshii desu",
-              "kana": "kあど が ほしい です",
+              "kana": "かーど が ほしい です",
               "fr": "Je veux une carte",
               "correct": false,
               "feedback": "« hoshii » = désirer posséder ; tu veux PAYER avec, pas en obtenir une."
@@ -5426,7 +5654,7 @@
             {
               "jp": "カードはどこですか",
               "romaji": "Kādo wa doko desu ka",
-              "kana": "kあど わ どこ です か",
+              "kana": "かーど わ どこ です か",
               "fr": "Où est la carte ?",
               "correct": false,
               "feedback": "Hors sujet : tu annonces ton moyen de paiement."
@@ -5434,7 +5662,7 @@
             {
               "jp": "カードです",
               "romaji": "Kādo desu",
-              "kana": "kあど です",
+              "kana": "かーど です",
               "fr": "C'est une carte",
               "correct": false,
               "feedback": "Décrit sans dire que tu veux payer avec."
@@ -5449,7 +5677,7 @@
             {
               "jp": "レシートはけっこうです",
               "romaji": "Reshīto wa kekkō desu",
-              "kana": "れshいと わ けっkう です",
+              "kana": "れしーと わ けっこう です",
               "fr": "Pas besoin de reçu",
               "correct": true,
               "feedback": "Excellent : « kekkō desu » = « ça ira / pas besoin », poli pour refuser."
@@ -5457,7 +5685,7 @@
             {
               "jp": "レシートをください",
               "romaji": "Reshīto wo kudasai",
-              "kana": "れshいと を ください",
+              "kana": "れしーと を ください",
               "fr": "Donnez-moi le reçu",
               "correct": false,
               "feedback": "Tu en demandes un alors que tu voulais refuser."
@@ -5465,7 +5693,7 @@
             {
               "jp": "レシートはどこですか",
               "romaji": "Reshīto wa doko desu ka",
-              "kana": "れshいと わ どこ です か",
+              "kana": "れしーと わ どこ です か",
               "fr": "Où est le reçu ?",
               "correct": false,
               "feedback": "Question d'emplacement, hors contexte."
@@ -5473,7 +5701,7 @@
             {
               "jp": "レシートがありません",
               "romaji": "Reshīto ga arimasen",
-              "kana": "れshいと が ありません",
+              "kana": "れしーと が ありません",
               "fr": "Il n'y a pas de reçu",
               "correct": false,
               "feedback": "Tu constates une absence au lieu de refuser poliment."
@@ -5540,7 +5768,7 @@
             {
               "jp": "ラーメンをください",
               "romaji": "Rāmen wo kudasai",
-              "kana": "rあめん を ください",
+              "kana": "らーめん を ください",
               "fr": "Un ramen, s'il vous plaît",
               "correct": true,
               "feedback": "Parfait : « ~wo kudasai » est la formule pour commander."
@@ -5548,7 +5776,7 @@
             {
               "jp": "ラーメンにします",
               "romaji": "Rāmen ni shimasu",
-              "kana": "rあめん に します",
+              "kana": "らーめん に します",
               "fr": "Je vais prendre un ramen",
               "correct": false,
               "feedback": "Correct en soi, mais moins direct pour une commande au comptoir."
@@ -5556,7 +5784,7 @@
             {
               "jp": "ラーメンはありますか",
               "romaji": "Rāmen wa arimasu ka",
-              "kana": "rあめん わ あります か",
+              "kana": "らーめん わ あります か",
               "fr": "Avez-vous des ramen ?",
               "correct": false,
               "feedback": "Tu vérifies la disponibilité au lieu de commander."
@@ -5564,7 +5792,7 @@
             {
               "jp": "ラーメンがたべたいです",
               "romaji": "Rāmen ga tabetai desu",
-              "kana": "rあめん が たべたい です",
+              "kana": "らーめん が たべたい です",
               "fr": "J'ai envie de ramen",
               "correct": false,
               "feedback": "Exprime une envie ; pas encore une commande passée au serveur."
@@ -5579,7 +5807,7 @@
             {
               "jp": "ごちそうさまでした",
               "romaji": "Gochisōsama deshita",
-              "kana": "ごちsうさま でした",
+              "kana": "ごちそsさま でした",
               "fr": "Merci pour le repas",
               "correct": true,
               "feedback": "Parfait : formule rituelle après avoir mangé."
@@ -5647,7 +5875,7 @@
             {
               "jp": "おはようございます",
               "romaji": "Ohayō gozaimasu",
-              "kana": "おはyう ございます",
+              "kana": "おはよう ございます",
               "fr": "Bonjour (matin)",
               "correct": false,
               "feedback": "Une salutation ne sert pas à demander de l'aide."
@@ -5670,7 +5898,7 @@
             {
               "jp": "きょうとへいくでんしゃはどれですか",
               "romaji": "Kyōto e iku densha wa dore desu ka",
-              "kana": "kyうと え いく でんしゃ わ どれ です か",
+              "kana": "きょtと え いく でんしゃ わ どれ です か",
               "fr": "Quel train va à Kyoto ?",
               "correct": true,
               "feedback": "Excellent : « dore » (lequel) pour choisir parmi plusieurs trains."
@@ -5678,7 +5906,7 @@
             {
               "jp": "きょうとはどこですか",
               "romaji": "Kyōto wa doko desu ka",
-              "kana": "kyうと わ どこ です か",
+              "kana": "きょtと わ どこ です か",
               "fr": "Où est Kyoto ?",
               "correct": false,
               "feedback": "Tu demandes où est la VILLE, pas quel train la dessert."
@@ -5686,7 +5914,7 @@
             {
               "jp": "きょうとまでいくらですか",
               "romaji": "Kyōto made ikura desu ka",
-              "kana": "kyうと まで いくら です か",
+              "kana": "きょtと まで いくら です か",
               "fr": "Combien jusqu'à Kyoto ?",
               "correct": false,
               "feedback": "Tu demandes le prix, pas quel train prendre."
@@ -5694,7 +5922,7 @@
             {
               "jp": "きょうとにいきます",
               "romaji": "Kyōto ni ikimasu",
-              "kana": "kyうと に いきます",
+              "kana": "きょtと に いきます",
               "fr": "Je vais à Kyoto",
               "correct": false,
               "feedback": "Tu affirmes ton trajet sans poser de question."
@@ -5709,7 +5937,7 @@
             {
               "jp": "ありがとうございます",
               "romaji": "Arigatō gozaimasu",
-              "kana": "ありがtう ございます",
+              "kana": "ありがとう ございます",
               "fr": "Merci beaucoup",
               "correct": true,
               "feedback": "Parfait : forme polie complète avec un inconnu."
@@ -5717,7 +5945,7 @@
             {
               "jp": "どうも",
               "romaji": "Dōmo",
-              "kana": "dうも",
+              "kana": "どmも",
               "fr": "Merci (bref)",
               "correct": false,
               "feedback": "Trop décontracté pour remercier un agent."
@@ -5761,7 +5989,7 @@
             {
               "jp": "ルカスでよやくしました",
               "romaji": "Lucas de yoyaku shimashita",
-              "kana": "lうcあs で よやく しました",
+              "kana": "ルカス で よやく しました",
               "fr": "J'ai réservé au nom de Lucas",
               "correct": true,
               "feedback": "Parfait : « ~de yoyaku shimashita » = « j'ai réservé sous le nom de ~ »."
@@ -5769,7 +5997,7 @@
             {
               "jp": "ルカスといいます",
               "romaji": "Lucas to iimasu",
-              "kana": "lうcあs と いいます",
+              "kana": "ルカス と いいます",
               "fr": "Je m'appelle Lucas",
               "correct": false,
               "feedback": "Tu donnes ton nom sans le relier à la réservation."
@@ -5891,7 +6119,7 @@
             {
               "jp": "カードではらえますか",
               "romaji": "Kādo de haraemasu ka",
-              "kana": "kあど で はらえます か",
+              "kana": "かーど で はらえます か",
               "fr": "Puis-je payer par carte ?",
               "correct": true,
               "feedback": "Excellent : utile car beaucoup de commerces sont cash only au Japon."
@@ -5899,7 +6127,7 @@
             {
               "jp": "カードがありますか",
               "romaji": "Kādo ga arimasu ka",
-              "kana": "kあど が あります か",
+              "kana": "かーど が あります か",
               "fr": "Avez-vous une carte ?",
               "correct": false,
               "feedback": "Tu demandes si LE COMMERÇANT a une carte : non-sens."
@@ -5915,7 +6143,7 @@
             {
               "jp": "カードはどこですか",
               "romaji": "Kādo wa doko desu ka",
-              "kana": "kあど わ どこ です か",
+              "kana": "かーど わ どこ です か",
               "fr": "Où est la carte ?",
               "correct": false,
               "feedback": "Hors sujet."
@@ -5943,7 +6171,7 @@
             {
               "jp": "せんそうじはどこですか",
               "romaji": "Sensō-ji wa doko desu ka",
-              "kana": "せんsうじ わ どこ です か",
+              "kana": "せんそ-じ わ どこ です か",
               "fr": "Où est le Sensō-ji ?",
               "correct": true,
               "feedback": "Parfait : « ~wa doko desu ka » pour localiser un lieu."
@@ -5951,7 +6179,7 @@
             {
               "jp": "せんそうじはとおいですか",
               "romaji": "Sensō-ji wa tōi desu ka",
-              "kana": "せんsうじ わ tうい です か",
+              "kana": "せんそ-じ わ とiい です か",
               "fr": "Le Sensō-ji est-il loin ?",
               "correct": false,
               "feedback": "Bonne question mais elle ne te donne pas la direction."
@@ -5959,7 +6187,7 @@
             {
               "jp": "せんそうじにいきたいです",
               "romaji": "Sensō-ji ni ikitai desu",
-              "kana": "せんsうじ に いきたい です",
+              "kana": "せんそ-じ に いきたい です",
               "fr": "Je veux aller au Sensō-ji",
               "correct": false,
               "feedback": "Tu exprimes une envie sans demander le chemin."
@@ -5967,7 +6195,7 @@
             {
               "jp": "せんそうじはなんじまでですか",
               "romaji": "Sensō-ji wa nanji made desu ka",
-              "kana": "せんsうじ わ なんじ まで です か",
+              "kana": "せんそ-じ わ なんじ まで です か",
               "fr": "Jusqu'à quelle heure ?",
               "correct": false,
               "feedback": "Tu demandes les horaires, pas la direction."
@@ -6081,7 +6309,7 @@
             {
               "jp": "びょういんはどこですか",
               "romaji": "Byōin wa doko desu ka",
-              "kana": "byういん わ どこ です か",
+              "kana": "びょiいん わ どこ です か",
               "fr": "Où est l'hôpital ?",
               "correct": false,
               "feedback": "Pertinent mais tu cherchais une PHARMACIE, pas un hôpital."
@@ -6125,7 +6353,7 @@
             {
               "jp": "コーヒーをください",
               "romaji": "Kōhī wo kudasai",
-              "kana": "kうhい を ください",
+              "kana": "こhひい を ください",
               "fr": "Un café, s'il vous plaît",
               "correct": true,
               "feedback": "Parfait : « ~wo kudasai » pour commander."
@@ -6133,7 +6361,7 @@
             {
               "jp": "コーヒーをのみたいです",
               "romaji": "Kōhī wo nomitai desu",
-              "kana": "kうhい を のみたい です",
+              "kana": "こhひい を のみたい です",
               "fr": "Je voudrais boire un café",
               "correct": false,
               "feedback": "Exprime l'envie ; moins direct qu'une commande."
@@ -6141,7 +6369,7 @@
             {
               "jp": "コーヒーはありますか",
               "romaji": "Kōhī wa arimasu ka",
-              "kana": "kうhい わ あります か",
+              "kana": "こhひい わ あります か",
               "fr": "Avez-vous du café ?",
               "correct": false,
               "feedback": "Tu vérifies la disponibilité au lieu de commander."
@@ -6149,7 +6377,7 @@
             {
               "jp": "コーヒーがすきです",
               "romaji": "Kōhī ga suki desu",
-              "kana": "kうhい が すき です",
+              "kana": "こhひい が すき です",
               "fr": "J'aime le café",
               "correct": false,
               "feedback": "Exprime un goût, pas une commande."
@@ -6224,7 +6452,7 @@
             {
               "jp": "はい、そうです",
               "romaji": "Hai, sō desu",
-              "kana": "はい, sう です",
+              "kana": "はい, そう です",
               "fr": "Oui, c'est ça",
               "correct": false,
               "feedback": "« sō desu » confirme un fait, ne répond pas à « je réchauffe ? »."
@@ -6232,7 +6460,7 @@
             {
               "jp": "いいえ、けっこうです",
               "romaji": "Iie, kekkō desu",
-              "kana": "いいえ, けっkう です",
+              "kana": "いいえ, けっこう です",
               "fr": "Non merci",
               "correct": false,
               "feedback": "Tu refuses alors que tu voulais accepter."
@@ -6255,7 +6483,7 @@
             {
               "jp": "いいえ、だいじょうぶです",
               "romaji": "Iie, daijōbu desu",
-              "kana": "いいえ, だいjうぶ です",
+              "kana": "いいえ, だいじょうぶ です",
               "fr": "Non, ça va",
               "correct": true,
               "feedback": "Parfait : « daijōbu desu » pour refuser poliment le sac."
@@ -6331,7 +6559,7 @@
             {
               "jp": "ごちそうさま",
               "romaji": "Gochisōsama",
-              "kana": "ごちsうさま",
+              "kana": "ごちそsさま",
               "fr": "Merci pour le repas",
               "correct": false,
               "feedback": "Se dit APRÈS le repas, pas pour trinquer."
@@ -6346,7 +6574,7 @@
             {
               "jp": "ビールをおねがいします",
               "romaji": "Bīru wo onegai shimasu",
-              "kana": "bいる を おねがい します",
+              "kana": "びrる を おねがい します",
               "fr": "Une bière, s'il vous plaît",
               "correct": true,
               "feedback": "Parfait : « onegai shimasu » variante polie de « kudasai »."
@@ -6354,7 +6582,7 @@
             {
               "jp": "ビールにします",
               "romaji": "Bīru ni shimasu",
-              "kana": "bいる に します",
+              "kana": "びrる に します",
               "fr": "Je prends une bière",
               "correct": false,
               "feedback": "Correct mais moins poli pour héler un serveur."
@@ -6362,7 +6590,7 @@
             {
               "jp": "ビールはありますか",
               "romaji": "Bīru wa arimasu ka",
-              "kana": "bいる わ あります か",
+              "kana": "びrる わ あります か",
               "fr": "Avez-vous de la bière ?",
               "correct": false,
               "feedback": "Tu vérifies au lieu de commander."
@@ -6370,7 +6598,7 @@
             {
               "jp": "ビールがのみたいです",
               "romaji": "Bīru ga nomitai desu",
-              "kana": "bいる が のみたい です",
+              "kana": "びrる が のみたい です",
               "fr": "J'ai envie de bière",
               "correct": false,
               "feedback": "Exprime l'envie, pas la commande."
@@ -6398,7 +6626,7 @@
             {
               "jp": "とうきょうえきまでおねがいします",
               "romaji": "Tōkyō eki made onegai shimasu",
-              "kana": "tうkyう えき まで おねがい します",
+              "kana": "とkきょう えき まで おねがい します",
               "fr": "Jusqu'à la gare de Tokyo, svp",
               "correct": true,
               "feedback": "Parfait : « ~made » = « jusqu'à »."
@@ -6406,7 +6634,7 @@
             {
               "jp": "とうきょうえきにいきます",
               "romaji": "Tōkyō eki ni ikimasu",
-              "kana": "tうkyう えき に いきます",
+              "kana": "とkきょう えき に いきます",
               "fr": "Je vais à la gare de Tokyo",
               "correct": false,
               "feedback": "Tu annonces ton trajet sans formule de demande."
@@ -6414,7 +6642,7 @@
             {
               "jp": "とうきょうえきはとおいですか",
               "romaji": "Tōkyō eki wa tōi desu ka",
-              "kana": "tうkyう えき わ tうい です か",
+              "kana": "とkきょう えき わ とiい です か",
               "fr": "La gare est-elle loin ?",
               "correct": false,
               "feedback": "Tu demandes la distance, pas d'y être conduit."
@@ -6422,7 +6650,7 @@
             {
               "jp": "とうきょうえきはどこですか",
               "romaji": "Tōkyō eki wa doko desu ka",
-              "kana": "tうkyう えき わ どこ です か",
+              "kana": "とkきょう えき わ どこ です か",
               "fr": "Où est la gare ?",
               "correct": false,
               "feedback": "C'est au chauffeur de le savoir."
@@ -6437,7 +6665,7 @@
             {
               "jp": "ありがとうございました",
               "romaji": "Arigatō gozaimashita",
-              "kana": "ありがtう ございました",
+              "kana": "ありがとう ございました",
               "fr": "Merci beaucoup (passé)",
               "correct": true,
               "feedback": "Parfait : au passé pour un service accompli."
@@ -6445,7 +6673,7 @@
             {
               "jp": "ありがとうございます",
               "romaji": "Arigatō gozaimasu",
-              "kana": "ありがtう ございます",
+              "kana": "ありがとう ございます",
               "fr": "Merci (présent)",
               "correct": false,
               "feedback": "Au présent ; le service étant fini, le passé est plus juste."
@@ -6635,7 +6863,7 @@
             {
               "jp": "はい、じょうずです",
               "romaji": "Hai, jōzu desu",
-              "kana": "はい, jうず です",
+              "kana": "はい, じょzず です",
               "fr": "Oui, je suis doué",
               "correct": false,
               "feedback": "Trop vantard : on minimise un compliment au Japon."
@@ -6643,7 +6871,7 @@
             {
               "jp": "ありがとう、じょうずでしょう",
               "romaji": "Arigatō, jōzu deshō",
-              "kana": "ありがtう, jうず でshう",
+              "kana": "ありがと,, じょzず でしょう",
               "fr": "Merci, n'est-ce pas que je suis doué",
               "correct": false,
               "feedback": "Vantard et présomptueux."
@@ -6827,7 +7055,7 @@
             {
               "jp": "わかりました。ありがとうございます",
               "romaji": "Wakarimashita. Arigatō gozaimasu",
-              "kana": "わかりました. ありがtう ございます",
+              "kana": "わかりました. ありがとう ございます",
               "fr": "Compris, merci",
               "correct": true,
               "feedback": "Parfait : accuser réception et remercier poliment."
@@ -6835,7 +7063,7 @@
             {
               "jp": "そうですか",
               "romaji": "Sō desu ka",
-              "kana": "sう です か",
+              "kana": "そう です か",
               "fr": "Ah bon ?",
               "correct": false,
               "feedback": "Réaction passive ; n'accepte pas vraiment la prescription."
@@ -6843,7 +7071,7 @@
             {
               "jp": "いいえ、けっこうです",
               "romaji": "Iie, kekkō desu",
-              "kana": "いいえ, けっkう です",
+              "kana": "いいえ, けっこう です",
               "fr": "Non merci",
               "correct": false,
               "feedback": "Tu refuses le traitement nécessaire."
@@ -6866,7 +7094,7 @@
             {
               "jp": "ありがとうございます",
               "romaji": "Arigatō gozaimasu",
-              "kana": "ありがtう ございます",
+              "kana": "ありがとう ございます",
               "fr": "Merci (à « soignez-vous »)",
               "correct": true,
               "feedback": "Parfait : on remercie après « odaiji ni »."
@@ -7035,7 +7263,7 @@
             {
               "jp": "だいじょうぶです",
               "romaji": "Daijōbu desu",
-              "kana": "だいjうぶ です",
+              "kana": "だいじょうぶ です",
               "fr": "Ça va, merci",
               "correct": true,
               "feedback": "Parfait : réponse type à « ça démange quelque part ? »."
@@ -7074,7 +7302,7 @@
             {
               "jp": "とてもいいです。ありがとうございます",
               "romaji": "Totemo ii desu. Arigatō gozaimasu",
-              "kana": "とても いい です. ありがtう ございます",
+              "kana": "Totemo いい です. ありがとう ございます",
               "fr": "Très bien, merci",
               "correct": true,
               "feedback": "Parfait : compliment sincère + remerciement."
@@ -7082,7 +7310,7 @@
             {
               "jp": "まあまあです",
               "romaji": "Māmā desu",
-              "kana": "mあmあ です",
+              "kana": "まmまあ です",
               "fr": "Bof, moyen",
               "correct": false,
               "feedback": "Tiède alors que tu es satisfait."
@@ -7126,7 +7354,7 @@
             {
               "jp": "おはようございます",
               "romaji": "Ohayō gozaimasu",
-              "kana": "おはyう ございます",
+              "kana": "おはよう ございます",
               "fr": "Bonjour (poli, matin)",
               "correct": true,
               "feedback": "Parfait avec une voisine âgée."
@@ -7134,7 +7362,7 @@
             {
               "jp": "おはよう",
               "romaji": "Ohayō",
-              "kana": "おはyう",
+              "kana": "おはよう",
               "fr": "Salut (familier)",
               "correct": false,
               "feedback": "Trop familier avec une aînée."
@@ -7165,7 +7393,7 @@
             {
               "jp": "そうですね",
               "romaji": "Sō desu ne",
-              "kana": "sう です ね",
+              "kana": "そう です ね",
               "fr": "Oui, c'est vrai",
               "correct": true,
               "feedback": "Parfait : acquiescement chaleureux qui entretient l'échange."
@@ -7173,7 +7401,7 @@
             {
               "jp": "そうですか",
               "romaji": "Sō desu ka",
-              "kana": "sう です か",
+              "kana": "そう です か",
               "fr": "Ah bon ?",
               "correct": false,
               "feedback": "Marque la surprise/le doute : froid face à une évidence partagée."
@@ -7251,7 +7479,7 @@
             {
               "jp": "ありがとうございます",
               "romaji": "Arigatō gozaimasu",
-              "kana": "ありがtう ございます",
+              "kana": "ありがとう ございます",
               "fr": "Merci beaucoup",
               "correct": false,
               "feedback": "Accepter franchement un compliment est moins idiomatique ici."
@@ -7298,7 +7526,7 @@
             {
               "jp": "いいえ、けっこうです",
               "romaji": "Iie, kekkō desu",
-              "kana": "いいえ, けっkう です",
+              "kana": "いいえ, けっこう です",
               "fr": "Non merci",
               "correct": false,
               "feedback": "Tu refuses une invitation amicale."
@@ -7329,7 +7557,7 @@
             {
               "jp": "さようなら",
               "romaji": "Sayōnara",
-              "kana": "さyうなら",
+              "kana": "さよnなら",
               "fr": "Adieu",
               "correct": false,
               "feedback": "Trop définitif entre voisins qu'on reverra."
@@ -7412,7 +7640,7 @@
             {
               "jp": "こうくうびんでおねがいします",
               "romaji": "Kōkūbin de onegai shimasu",
-              "kana": "kうkうびん で おねがい します",
+              "kana": "こkくiびん で おねがい します",
               "fr": "Par avion, svp",
               "correct": true,
               "feedback": "Parfait : « kōkūbin » = aérien (rapide)."
@@ -7529,7 +7757,7 @@
             {
               "jp": "ありがとうございました",
               "romaji": "Arigatō gozaimashita",
-              "kana": "ありがtう ございました",
+              "kana": "ありがとう ございました",
               "fr": "Merci beaucoup (passé)",
               "correct": true,
               "feedback": "Parfait : au passé, service accompli."
@@ -7537,7 +7765,7 @@
             {
               "jp": "ありがとうございます",
               "romaji": "Arigatō gozaimasu",
-              "kana": "ありがtう ございます",
+              "kana": "ありがとう ございます",
               "fr": "Merci (présent)",
               "correct": false,
               "feedback": "Le service étant fini, le passé est plus juste."
@@ -7553,7 +7781,7 @@
             {
               "jp": "もういいです",
               "romaji": "Mō ii desu",
-              "kana": "mう いい です",
+              "kana": "もう いい です",
               "fr": "Ça suffit",
               "correct": false,
               "feedback": "Peut sembler agacé."
@@ -11496,13 +11724,16 @@
           "titre": "Tokyo historique",
           "etapes": [
             {
-              "lieuId": "senso-ji"
+              "lieuId": "senso-ji",
+              "heure": "9:00"
             },
             {
-              "lieuId": "akihabara"
+              "lieuId": "akihabara",
+              "heure": "11:00"
             },
             {
-              "lieuId": "ichiran"
+              "lieuId": "ichiran",
+              "heure": "13:00"
             }
           ]
         },
@@ -11512,10 +11743,12 @@
           "titre": "Tokyo moderne",
           "etapes": [
             {
-              "lieuId": "shibuya-crossing"
+              "lieuId": "shibuya-crossing",
+              "heure": "9:00"
             },
             {
-              "lieuId": "teamlab"
+              "lieuId": "teamlab",
+              "heure": "11:00"
             }
           ]
         },
@@ -11525,13 +11758,16 @@
           "titre": "Détente à Hakone",
           "etapes": [
             {
-              "lieuId": "owakudani"
+              "lieuId": "owakudani",
+              "heure": "9:00"
             },
             {
-              "lieuId": "onsen-hakone"
+              "lieuId": "onsen-hakone",
+              "heure": "11:00"
             },
             {
-              "lieuId": "ryokan-hakone"
+              "lieuId": "ryokan-hakone",
+              "heure": "13:00"
             }
           ]
         },
@@ -11541,10 +11777,12 @@
           "titre": "Kyoto spirituel",
           "etapes": [
             {
-              "lieuId": "fushimi-inari"
+              "lieuId": "fushimi-inari",
+              "heure": "9:00"
             },
             {
-              "lieuId": "nishiki"
+              "lieuId": "nishiki",
+              "heure": "11:00"
             }
           ]
         },
@@ -11554,10 +11792,12 @@
           "titre": "Temples de Kyoto",
           "etapes": [
             {
-              "lieuId": "kinkaku-ji"
+              "lieuId": "kinkaku-ji",
+              "heure": "9:00"
             },
             {
-              "lieuId": "arashiyama"
+              "lieuId": "arashiyama",
+              "heure": "11:00"
             }
           ]
         },
@@ -11567,13 +11807,16 @@
           "titre": "Osaka gourmand",
           "etapes": [
             {
-              "lieuId": "osaka-castle"
+              "lieuId": "osaka-castle",
+              "heure": "9:00"
             },
             {
-              "lieuId": "dotonbori"
+              "lieuId": "dotonbori",
+              "heure": "11:00"
             },
             {
-              "lieuId": "takoyaki"
+              "lieuId": "takoyaki",
+              "heure": "13:00"
             }
           ]
         },
@@ -11583,10 +11826,12 @@
           "titre": "Derniers achats",
           "etapes": [
             {
-              "lieuId": "kuromon"
+              "lieuId": "kuromon",
+              "heure": "9:00"
             },
             {
-              "lieuId": "shinsaibashi"
+              "lieuId": "shinsaibashi",
+              "heure": "11:00"
             }
           ]
         }
@@ -11612,10 +11857,12 @@
           "titre": "Sanctuaires de Kyoto",
           "etapes": [
             {
-              "lieuId": "fushimi-inari"
+              "lieuId": "fushimi-inari",
+              "heure": "9:00"
             },
             {
-              "lieuId": "kinkaku-ji"
+              "lieuId": "kinkaku-ji",
+              "heure": "11:00"
             }
           ]
         },
@@ -11625,10 +11872,12 @@
           "titre": "Kyoto nature & ryokan",
           "etapes": [
             {
-              "lieuId": "arashiyama"
+              "lieuId": "arashiyama",
+              "heure": "9:00"
             },
             {
-              "lieuId": "ryokan-kyoto"
+              "lieuId": "ryokan-kyoto",
+              "heure": "11:00"
             }
           ]
         },
@@ -11638,13 +11887,16 @@
           "titre": "Nara et ses daims",
           "etapes": [
             {
-              "lieuId": "nara-park"
+              "lieuId": "nara-park",
+              "heure": "9:00"
             },
             {
-              "lieuId": "todai-ji"
+              "lieuId": "todai-ji",
+              "heure": "11:00"
             },
             {
-              "lieuId": "kasuga"
+              "lieuId": "kasuga",
+              "heure": "13:00"
             }
           ]
         },
@@ -11654,10 +11906,12 @@
           "titre": "Mémoire d'Hiroshima",
           "etapes": [
             {
-              "lieuId": "peace-park"
+              "lieuId": "peace-park",
+              "heure": "9:00"
             },
             {
-              "lieuId": "shukkeien"
+              "lieuId": "shukkeien",
+              "heure": "11:00"
             }
           ]
         },
@@ -11667,10 +11921,12 @@
           "titre": "Île sacrée de Miyajima",
           "etapes": [
             {
-              "lieuId": "miyajima"
+              "lieuId": "miyajima",
+              "heure": "9:00"
             },
             {
-              "lieuId": "okonomiyaki-hiro"
+              "lieuId": "okonomiyaki-hiro",
+              "heure": "11:00"
             }
           ]
         }
@@ -11694,10 +11950,12 @@
           "titre": "Tokyo traditionnel",
           "etapes": [
             {
-              "lieuId": "senso-ji"
+              "lieuId": "senso-ji",
+              "heure": "9:00"
             },
             {
-              "lieuId": "ichiran"
+              "lieuId": "ichiran",
+              "heure": "11:00"
             }
           ]
         },
@@ -11707,10 +11965,12 @@
           "titre": "Pop culture",
           "etapes": [
             {
-              "lieuId": "akihabara"
+              "lieuId": "akihabara",
+              "heure": "9:00"
             },
             {
-              "lieuId": "shibuya-crossing"
+              "lieuId": "shibuya-crossing",
+              "heure": "11:00"
             }
           ]
         },
@@ -11720,10 +11980,12 @@
           "titre": "Art & modernité",
           "etapes": [
             {
-              "lieuId": "teamlab"
+              "lieuId": "teamlab",
+              "heure": "9:00"
             },
             {
-              "lieuId": "park-hyatt"
+              "lieuId": "park-hyatt",
+              "heure": "11:00"
             }
           ]
         }
@@ -11749,10 +12011,12 @@
           "titre": "Street food d'Osaka",
           "etapes": [
             {
-              "lieuId": "dotonbori"
+              "lieuId": "dotonbori",
+              "heure": "9:00"
             },
             {
-              "lieuId": "takoyaki"
+              "lieuId": "takoyaki",
+              "heure": "11:00"
             }
           ]
         },
@@ -11762,10 +12026,12 @@
           "titre": "Marché Kuromon",
           "etapes": [
             {
-              "lieuId": "kuromon"
+              "lieuId": "kuromon",
+              "heure": "9:00"
             },
             {
-              "lieuId": "shinsaibashi"
+              "lieuId": "shinsaibashi",
+              "heure": "11:00"
             }
           ]
         },
@@ -11775,10 +12041,12 @@
           "titre": "Cuisine de Kyoto",
           "etapes": [
             {
-              "lieuId": "nishiki"
+              "lieuId": "nishiki",
+              "heure": "9:00"
             },
             {
-              "lieuId": "fushimi-inari"
+              "lieuId": "fushimi-inari",
+              "heure": "11:00"
             }
           ]
         },
@@ -11788,10 +12056,12 @@
           "titre": "Douceurs de Nara",
           "etapes": [
             {
-              "lieuId": "mochi-nara"
+              "lieuId": "mochi-nara",
+              "heure": "9:00"
             },
             {
-              "lieuId": "nara-park"
+              "lieuId": "nara-park",
+              "heure": "11:00"
             }
           ]
         }
@@ -12024,6 +12294,70 @@
         }
       ],
       "texte_kana": "つぎはとうきょうえきです。おおりのかたはおわすれもののないようにごちゅういください。ありがとうございました。"
+    },
+    {
+      "id": "ce-gare",
+      "titre": "À la gare",
+      "niveau": "Débutant",
+      "emoji": "🚉",
+      "texte_jp": "東京駅から京都駅まで、新幹線で約2時間半かかります。指定席は5000円です。自由席は4000円です。",
+      "texte_romaji": "Tōkyō-eki kara Kyōto-eki made, shinkansen de yaku ni-jikan-han kakarimasu. Shiteiseki wa 5000 en desu. Jiyūseki wa 4000 en desu.",
+      "texte_kana": "とうきょうえき から きょうとえき まで、しんかんせん で やく にじかんはん かかります。していせき は ５０００えん です。じゆうせき は ４０００えん です。",
+      "traduction": "De la gare de Tokyo à celle de Kyoto, le Shinkansen met environ 2h30. Une place réservée coûte 5000 yens. Une place libre, 4000 yens.",
+      "questions": [
+        {
+          "q": "Combien de temps dure le trajet ?",
+          "choix": [
+            "Environ 2h30",
+            "Environ 1h",
+            "Environ 4h"
+          ],
+          "correct": 0,
+          "feedback": "« 約2時間半 » (yaku ni-jikan-han) = environ 2 heures et demie."
+        },
+        {
+          "q": "Quelle place est la moins chère ?",
+          "choix": [
+            "La place libre (自由席)",
+            "La place réservée (指定席)",
+            "Les deux au même prix"
+          ],
+          "correct": 0,
+          "feedback": "自由席 (jiyūseki) à 4000円 < 指定席 (shiteiseki) à 5000円."
+        }
+      ]
+    },
+    {
+      "id": "ce-restaurant",
+      "titre": "Le menu du midi",
+      "niveau": "Intermédiaire",
+      "emoji": "🍱",
+      "texte_jp": "本日のランチセットは、ラーメンと餃子で900円です。ドリンクは別料金です。11時から14時まで注文できます。",
+      "texte_romaji": "Honjitsu no ranchi setto wa, rāmen to gyōza de 900 en desu. Dorinku wa betsu ryōkin desu. 11-ji kara 14-ji made chūmon dekimasu.",
+      "texte_kana": "ほんじつ の らんち せっと は、らーめん と ぎょうざ で ９００えん です。どりんく は べつりょうきん です。１１じ から １４じ まで ちゅうもん できます。",
+      "traduction": "Le menu du jour, c'est ramen + gyoza pour 900 yens. Les boissons sont en supplément. On peut commander de 11h à 14h.",
+      "questions": [
+        {
+          "q": "Qu'inclut le menu du jour ?",
+          "choix": [
+            "Ramen et gyoza",
+            "Ramen et boisson",
+            "Gyoza et dessert"
+          ],
+          "correct": 0,
+          "feedback": "« ラーメンと餃子 » = ramen et gyoza. La boisson est en supplément (別料金)."
+        },
+        {
+          "q": "Jusqu'à quelle heure peut-on commander ?",
+          "choix": [
+            "14h",
+            "11h",
+            "16h"
+          ],
+          "correct": 0,
+          "feedback": "« 11時から14時まで » = de 11h à 14h."
+        }
+      ]
     }
   ],
   "comprehension_orale": [
@@ -12154,6 +12488,188 @@
         }
       ],
       "audio_kana": "まっすぐいって、ふたつめのかどをみぎにまがってください。"
+    },
+    {
+      "id": "co-train-annonce",
+      "titre": "Annonce dans le train",
+      "niveau": "Intermédiaire",
+      "emoji": "🚃",
+      "audio_jp": "次は渋谷、渋谷です。お出口は右側です。お忘れ物のないようご注意ください。",
+      "audio_romaji": "Tsugi wa Shibuya, Shibuya desu. Odeguchi wa migigawa desu. Owasuremono no nai yō go-chūi kudasai.",
+      "audio_kana": "つぎ は しぶや、しぶや です。おでぐち は みぎがわ です。おわすれもの の ない よう ごちゅうい ください。",
+      "traduction": "Prochain arrêt : Shibuya, Shibuya. La sortie est sur la droite. Veillez à ne rien oublier.",
+      "questions": [
+        {
+          "q": "Quelle est la prochaine station ?",
+          "choix": [
+            "Shibuya",
+            "Shinjuku",
+            "Tokyo"
+          ],
+          "correct": 0,
+          "feedback": "« 次は渋谷 » (tsugi wa Shibuya) = prochain arrêt Shibuya."
+        },
+        {
+          "q": "De quel côté est la sortie ?",
+          "choix": [
+            "À droite",
+            "À gauche",
+            "Au fond"
+          ],
+          "correct": 0,
+          "feedback": "« 右側 » (migigawa) = côté droit."
+        }
+      ]
+    },
+    {
+      "id": "co-cafe-comptoir",
+      "titre": "Au comptoir du café",
+      "niveau": "Débutant",
+      "emoji": "☕",
+      "audio_jp": "ご注文はお決まりですか？ホットとアイス、どちらになさいますか？",
+      "audio_romaji": "Go-chūmon wa okimari desu ka? Hotto to aisu, dochira ni nasaimasu ka?",
+      "audio_kana": "ごちゅうもん は おきまり です か？ほっと と あいす、どちら に なさいます か？",
+      "traduction": "Avez-vous choisi ? Chaud ou glacé, que prenez-vous ?",
+      "questions": [
+        {
+          "q": "Que demande le serveur ?",
+          "choix": [
+            "Chaud ou glacé",
+            "Sur place ou à emporter",
+            "Petit ou grand"
+          ],
+          "correct": 0,
+          "feedback": "« ホットとアイス » = chaud ou glacé."
+        },
+        {
+          "q": "Où est-on probablement ?",
+          "choix": [
+            "Dans un café",
+            "À la poste",
+            "À la banque"
+          ],
+          "correct": 0,
+          "feedback": "Le choix chaud/glacé indique un café."
+        }
+      ]
+    },
+    {
+      "id": "co-chemin-gare",
+      "titre": "Le chemin vers la gare",
+      "niveau": "Intermédiaire",
+      "emoji": "🧭",
+      "audio_jp": "すみません、駅はまっすぐ行って、二つ目の信号を右です。歩いて5分くらいです。",
+      "audio_romaji": "Sumimasen, eki wa massugu itte, futatsume no shingō wo migi desu. Aruite go-fun kurai desu.",
+      "audio_kana": "すみません、えき は まっすぐ いって、ふたつめ の しんごう を みぎ です。あるいて ５ふん くらい です。",
+      "traduction": "Excusez-moi, pour la gare : tout droit, à droite au deuxième feu. Environ 5 min à pied.",
+      "questions": [
+        {
+          "q": "Où tourner à droite ?",
+          "choix": [
+            "Au deuxième feu",
+            "Au premier feu",
+            "À la gare"
+          ],
+          "correct": 0,
+          "feedback": "« 二つ目の信号を右 » = à droite au deuxième feu."
+        },
+        {
+          "q": "Combien de temps à pied ?",
+          "choix": [
+            "5 minutes",
+            "15 minutes",
+            "30 minutes"
+          ],
+          "correct": 0,
+          "feedback": "« 歩いて5分くらい » = environ 5 min."
+        }
+      ]
+    }
+  ],
+  "defis_jour": [
+    {
+      "emoji": "🎴",
+      "titre": "Maîtrise un syllabaire",
+      "desc": "Révise une ligne de hiragana ou katakana dans Apprendre.",
+      "cible": "learn",
+      "cta": "Réviser"
+    },
+    {
+      "emoji": "💬",
+      "titre": "Joue un scénario",
+      "desc": "Complète une situation de conversation de ton choix.",
+      "cible": "scenarios",
+      "cta": "S'entraîner"
+    },
+    {
+      "emoji": "⛩️",
+      "titre": "Découvre une tradition",
+      "desc": "Lis une entrée dans la section Traditions.",
+      "cible": "explore",
+      "cta": "Explorer"
+    },
+    {
+      "emoji": "📖",
+      "titre": "Lis la compréhension du jour",
+      "desc": "Fais un exercice de compréhension écrite.",
+      "cible": "learn",
+      "cta": "Lire"
+    },
+    {
+      "emoji": "🎧",
+      "titre": "Teste ton oreille",
+      "desc": "Écoute un exercice de compréhension orale sans regarder le texte.",
+      "cible": "learn",
+      "cta": "Écouter"
+    },
+    {
+      "emoji": "🗺️",
+      "titre": "Planifie une étape",
+      "desc": "Ajoute un lieu à un voyage dans l'onglet Voyage.",
+      "cible": "voyage",
+      "cta": "Planifier"
+    },
+    {
+      "emoji": "✍️",
+      "titre": "Dessine un kana",
+      "desc": "Entraîne-toi à tracer un caractère dans le mode dessin.",
+      "cible": "learn",
+      "cta": "Dessiner"
+    },
+    {
+      "emoji": "🍣",
+      "titre": "Explore la gastronomie",
+      "desc": "Découvre un plat ou un mot lié à la cuisine japonaise.",
+      "cible": "explore",
+      "cta": "Découvrir"
+    },
+    {
+      "emoji": "🤫",
+      "titre": "Apprends un code social",
+      "desc": "Lis une règle de savoir-vivre japonais (si débloqué).",
+      "cible": "explore",
+      "cta": "Apprendre"
+    },
+    {
+      "emoji": "🎯",
+      "titre": "Conversation avancée",
+      "desc": "Tente un scénario de niveau avancé.",
+      "cible": "scenarios",
+      "cta": "Relever le défi"
+    },
+    {
+      "emoji": "🌸",
+      "titre": "Mot du jour",
+      "desc": "Retiens une nouvelle expression et son contexte d'usage.",
+      "cible": "home",
+      "cta": "Voir"
+    },
+    {
+      "emoji": "🏯",
+      "titre": "Voyage virtuel",
+      "desc": "Consulte la fiche d'un lieu emblématique du Japon.",
+      "cible": "explore",
+      "cta": "Visiter"
     }
   ]
 }
