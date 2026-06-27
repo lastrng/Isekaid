@@ -1074,6 +1074,7 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
   const [viewFilter,setViewFilter] = useState(null);
   const [confirmCat,setConfirmCat] = useState(null);
   const [toast,setToast] = useState(null);
+  const [sectionFilter,setSectionFilter] = useState("all");
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
 
@@ -1096,8 +1097,8 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
       {/* En-tête sticky */}
-      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+      <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
           <div>
             <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>探 · EXPLORER</div>
             <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Bunka wo sagasu":script==="kana"?"ぶんかをさがす":"文化を探す"}</div>
@@ -1107,11 +1108,22 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
             <span style={{fontSize:14,fontWeight:700,color:C.text}}>{streak?.count||0}j</span>
           </div>
         </div>
+        {/* Filtre par section */}
+        <div style={{display:"flex",gap:8,overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:2}}>
+          {[{id:"all",label:"Tout",emoji:"✨"}, ...EXPLORE_SECTIONS.map(s=>({id:s.id,label:s.label,emoji:s.emoji}))].map(f=>{
+            const on = sectionFilter===f.id;
+            return(
+              <button key={f.id} onClick={()=>setSectionFilter(f.id)} className="pop-press" style={{flexShrink:0,padding:"7px 13px",borderRadius:18,border:`1px solid ${on?acc.accent:C.border}`,background:on?acc.accent:C.s1,color:on?"#fff":C.t2,fontSize:12,fontWeight:on?600:500,cursor:"pointer",whiteSpace:"nowrap"}}>
+                {f.emoji} {f.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div style={{padding:"18px 20px 110px"}}>
-        {/* 3 sections */}
-        {EXPLORE_SECTIONS.map(section=>(
+        {/* 3 sections (filtrées) */}
+        {EXPLORE_SECTIONS.filter(section=> sectionFilter==="all" || section.id===sectionFilter).map(section=>(
           <div key={section.id} style={{marginBottom:28}}>
             {/* Titre de section */}
             <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
@@ -2005,10 +2017,12 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
 
 function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
   const [active,setActive] = useState(null);
+  const [levelFilter,setLevelFilter] = useState("Tous");
   const LEVEL_ORDER = { "Débutant":0, "Intermédiaire":1, "Avancé":2 };
-  const scenarios = [...(db?.scenarios || [])].sort((a,b)=>
+  const allScenarios = [...(db?.scenarios || [])].sort((a,b)=>
     (LEVEL_ORDER[a.niveau]??1) - (LEVEL_ORDER[b.niveau]??1)
   );
+  const scenarios = levelFilter==="Tous" ? allScenarios : allScenarios.filter(s=>s.niveau===levelFilter);
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   const done = (s)=> scenariosDone?.includes(s.id);
@@ -2019,11 +2033,27 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
       {/* Header sticky */}
-      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+      <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>場 · SCÉNARIOS</div>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:12}}>
           <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Shinario":script==="kana"?"シナリオ":"シナリオ"}</div>
-          {totalDone>0 && <div style={{fontSize:12,color:acc.accent,fontWeight:500}}>{totalDone}/{scenarios.length} complétés</div>}
+          {totalDone>0 && <div style={{fontSize:12,color:acc.accent,fontWeight:500}}>{totalDone}/{allScenarios.length} complétés</div>}
+        </div>
+        {/* Filtre par difficulté */}
+        <div style={{display:"flex",gap:8,overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:2}}>
+          {[
+            {id:"Tous",label:"Tous",emoji:"📋"},
+            {id:"Débutant",label:"Débutant",emoji:"🟢"},
+            {id:"Intermédiaire",label:"Intermédiaire",emoji:"🟡"},
+            {id:"Avancé",label:"Avancé",emoji:"🔴"},
+          ].map(f=>{
+            const on = levelFilter===f.id;
+            return(
+              <button key={f.id} onClick={()=>setLevelFilter(f.id)} className="pop-press" style={{flexShrink:0,padding:"7px 13px",borderRadius:18,border:`1px solid ${on?acc.accent:C.border}`,background:on?acc.accent:C.s1,color:on?"#fff":C.t2,fontSize:12,fontWeight:on?600:500,cursor:"pointer",whiteSpace:"nowrap"}}>
+                {f.emoji} {f.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -2039,7 +2069,7 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
           {scenarios.map((s,i)=>{
             const isDone = done(s);
             const prevLevel = i>0 ? scenarios[i-1].niveau : null;
-            const showSeparator = s.niveau !== prevLevel;
+            const showSeparator = levelFilter==="Tous" && s.niveau !== prevLevel;
             const levelEmoji = {"Débutant":"🟢","Intermédiaire":"🟡","Avancé":"🔴"}[s.niveau] || "";
             return(
               <div key={i}>
