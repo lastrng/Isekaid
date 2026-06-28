@@ -832,6 +832,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   const [reminderDismissed, setReminderDismissed] = useState(false);
+  const [shareProverb, setShareProverb] = useState(null);
   const loaded = useRef(false);
 
   // Auto-alternate streak badge every 3s
@@ -961,7 +962,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
               <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:8}}>{jpSub(prov, script)}</div>
               <div style={{fontSize:13,color:C.text,fontWeight:500,marginBottom:4}}>« {prov.fr} »</div>
               <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginBottom:12}}>{prov.sens}</div>
-              <button onClick={()=>shareContent(`${prov.jp} (${prov.romaji})\n« ${prov.fr} »\n${prov.sens}\n\n— Proverbe du jour sur Isekai'd 🎌`)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2,fontSize:11,cursor:"pointer"}}>
+              <button onClick={()=>setShareProverb(prov)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2,fontSize:11,cursor:"pointer"}}>
                 <span style={{fontSize:13}}>📤</span> Partager
               </button>
             </div>
@@ -1064,6 +1065,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
         <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
         <StreakSection C={C} streak={streak} isPremium={isPremium}/>
       </div>
+      {shareProverb && <ProverbShareSheet C={C} prov={shareProverb} script={script} onClose={()=>setShareProverb(null)}/>}
     </div>
   );
 }
@@ -2710,6 +2712,105 @@ function generateSituationImage(situation, { format="square", script="kana" } = 
 }
 
 // Partage natif avec repli téléchargement
+// ─── Template dédié : image partageable d'un PROVERBE ─────────────────────────
+// Composition centrée et poétique, distincte des fiches de situation.
+function generateProverbImage(prov, { format="square", script="kana" } = {}){
+  return new Promise((resolve)=>{
+    const W = 1080;
+    const H = format==="story" ? 1920 : 1080;
+    const canvas = document.createElement("canvas");
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext("2d");
+
+    // Fond : dégradé encre profonde, ambiance "estampe nocturne"
+    const grad = ctx.createLinearGradient(0,0,W,H);
+    grad.addColorStop(0, "#17120E");
+    grad.addColorStop(1, "#241A12");
+    ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+
+    const cx = W/2;
+    const gold = "#C9A84C", cream = "#F2EAD9", creamSoft = "rgba(242,234,217,0.6)";
+
+    // Grand kanji filigrane "諺" (proverbe) en fond
+    ctx.fillStyle = "rgba(201,168,76,0.06)";
+    ctx.font = "600 560px 'Noto Serif JP', serif";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText("諺", cx, H/2);
+
+    ctx.textBaseline = "alphabetic";
+
+    // Eyebrow
+    let y = format==="story" ? 360 : 180;
+    ctx.fillStyle = gold;
+    ctx.font = "600 28px 'Noto Sans JP', sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("諺 · PROVERBE JAPONAIS", cx, y);
+    y += 28;
+    // petit trait
+    ctx.fillStyle = gold; ctx.fillRect(cx-30, y, 60, 3);
+    y += format==="story" ? 180 : 130;
+
+    // Le proverbe en JP (gros, serif, centré) — wrap si nécessaire
+    const jpText = script==="romaji" ? prov.romaji : (script==="kanji" ? prov.jp : (prov.kana||prov.jp));
+    ctx.fillStyle = cream;
+    ctx.font = "300 78px 'Noto Serif JP', serif";
+    wrapCentered(ctx, jpText, cx, y, W-200, 96);
+    y += measureWrapHeight(ctx, jpText, W-200, 96) + 40;
+
+    // Lecture (romaji) en italique
+    if(script!=="romaji"){
+      ctx.fillStyle = gold;
+      ctx.font = "italic 36px 'Noto Serif JP', serif";
+      ctx.fillText(prov.romaji, cx, y);
+      y += 80;
+    }
+
+    // Traduction française entre guillemets
+    ctx.fillStyle = cream;
+    ctx.font = "italic 44px 'Noto Serif JP', serif";
+    wrapCentered(ctx, `« ${prov.fr} »`, cx, y, W-220, 58);
+    y += measureWrapHeight(ctx, `« ${prov.fr} »`, W-220, 58) + 46;
+
+    // Le sens (explication) en plus petit, gris
+    if(prov.sens){
+      ctx.fillStyle = creamSoft;
+      ctx.font = "32px 'Noto Sans JP', sans-serif";
+      wrapCentered(ctx, prov.sens, cx, y, W-260, 46);
+    }
+
+    // Pied : marque Isekai'd
+    ctx.fillStyle = creamSoft;
+    ctx.font = "600 30px 'Noto Sans JP', sans-serif";
+    ctx.fillText("異世界 · Isekai'd", cx, H - (format==="story" ? 150 : 90));
+
+    ctx.textAlign = "left";
+    setTimeout(()=>{ canvas.toBlob((b)=>resolve(b), "image/png"); }, 50);
+  });
+}
+
+// Helpers de wrap centré pour le canvas
+function wrapCentered(ctx, text, cx, startY, maxW, lineH){
+  const words = String(text).split(" ");
+  let line = "", y = startY;
+  for(const w of words){
+    const test = line ? line+" "+w : w;
+    if(ctx.measureText(test).width > maxW && line){
+      ctx.fillText(line, cx, y); line = w; y += lineH;
+    } else line = test;
+  }
+  if(line) ctx.fillText(line, cx, y);
+}
+function measureWrapHeight(ctx, text, maxW, lineH){
+  const words = String(text).split(" ");
+  let line = "", lines = 1;
+  for(const w of words){
+    const test = line ? line+" "+w : w;
+    if(ctx.measureText(test).width > maxW && line){ lines++; line = w; }
+    else line = test;
+  }
+  return (lines-1)*lineH;
+}
+
 async function shareImageBlob(blob, filename="isekaid.png", shareText=""){
   const file = new File([blob], filename, { type:"image/png" });
   // Web Share API niveau 2 (fichiers)
@@ -2791,6 +2892,66 @@ function ShareSheet({ C, situation, script, onClose }){
         {status==="cancelled" && <div style={{textAlign:"center",fontSize:12,color:C.t3,marginTop:10}}>Partage annulé</div>}
         {status==="downloaded" && <div style={{textAlign:"center",fontSize:12,color:C.green,marginTop:10}}>Image enregistrée ✓</div>}
         <div style={{fontSize:11,color:C.t3,textAlign:"center",marginTop:12,lineHeight:1.5}}>L'image inclut ta marque Isekai'd. Parfait pour Instagram, TikTok ou tes amis 🌸</div>
+      </div>
+    </div>
+  );
+}
+
+// Modale de partage dédiée au proverbe du jour
+function ProverbShareSheet({ C, prov, script, onClose }){
+  const [format, setFormat] = useState("square");
+  const [busy, setBusy] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [status, setStatus] = useState(null);
+
+  useEffect(()=>{
+    let alive = true; let lastUrl = null;
+    setBusy(true);
+    generateProverbImage(prov, { format, script }).then(blob=>{
+      if(!alive || !blob) return;
+      lastUrl = URL.createObjectURL(blob);
+      setPreviewUrl(lastUrl); setBusy(false);
+    });
+    return ()=>{ alive=false; if(lastUrl) URL.revokeObjectURL(lastUrl); };
+  }, [format, prov, script]);
+
+  const doShare = async ()=>{
+    setBusy(true);
+    const blob = await generateProverbImage(prov, { format, script });
+    const res = await shareImageBlob(blob, `isekaid-proverbe.png`, `« ${prov.fr} » — proverbe japonais du jour sur Isekai'd 🎌`);
+    setStatus(res); setBusy(false);
+    if(res==="shared" || res==="downloaded") setTimeout(onClose, 900);
+  };
+
+  return(
+    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.65)",zIndex:400,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+      <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:460,background:C.s1,borderRadius:"22px 22px 0 0",padding:"22px 20px 30px",animation:"fadeUp .3s ease",maxHeight:"92vh",overflowY:"auto"}}>
+        <div style={{textAlign:"center",marginBottom:16}}>
+          <div style={{width:38,height:4,background:C.border,borderRadius:2,margin:"0 auto 16px"}}/>
+          <div style={{fontSize:17,color:C.text,fontWeight:600}}>Partager ce proverbe</div>
+          <div style={{fontSize:12,color:C.t3,marginTop:3}}>Une image prête pour tes réseaux</div>
+        </div>
+        <div style={{display:"flex",gap:10,marginBottom:18}}>
+          {[{id:"square",label:"Carré",sub:"Post 1:1"},{id:"story",label:"Vertical",sub:"Story 9:16"}].map(f=>(
+            <button key={f.id} onClick={()=>setFormat(f.id)} style={{flex:1,padding:"12px",borderRadius:12,border:`1px solid ${format===f.id?C.gold:C.border}`,background:format===f.id?`${C.gold}18`:C.s2,cursor:"pointer"}}>
+              <div style={{fontSize:13,color:format===f.id?C.gold:C.text,fontWeight:600}}>{f.label}</div>
+              <div style={{fontSize:10,color:C.t3,marginTop:2}}>{f.sub}</div>
+            </button>
+          ))}
+        </div>
+        <div style={{display:"flex",justifyContent:"center",marginBottom:18,minHeight:180}}>
+          {previewUrl ? (
+            <img src={previewUrl} alt="Aperçu" style={{maxWidth:format==="story"?"56%":"82%",maxHeight:300,borderRadius:12,border:`1px solid ${C.border}`,boxShadow:"0 8px 28px rgba(0,0,0,0.2)",opacity:busy?0.5:1,transition:"opacity .2s"}}/>
+          ) : (
+            <div style={{display:"flex",alignItems:"center",color:C.t3,fontSize:13}}>Génération…</div>
+          )}
+        </div>
+        <button onClick={doShare} disabled={busy} className="pop-press" style={{width:"100%",padding:"15px",background:C.gold,border:"none",borderRadius:13,color:"#1A1410",fontSize:14,fontWeight:700,cursor:busy?"wait":"pointer",opacity:busy?0.7:1}}>
+          {busy ? "Préparation…" : "📤 Partager / Enregistrer"}
+        </button>
+        {status==="cancelled" && <div style={{textAlign:"center",fontSize:12,color:C.t3,marginTop:10}}>Partage annulé</div>}
+        {status==="downloaded" && <div style={{textAlign:"center",fontSize:12,color:C.green,marginTop:10}}>Image enregistrée ✓</div>}
+        <div style={{fontSize:11,color:C.t3,textAlign:"center",marginTop:12,lineHeight:1.5}}>L'image inclut ta marque Isekai'd 🌸</div>
       </div>
     </div>
   );
