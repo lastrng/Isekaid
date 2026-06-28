@@ -3162,17 +3162,37 @@ function CheckpointQuiz({C, pool, distractorPool, onPass, onExit, passRatio=0.7,
 
 // ── Compréhension écrite : lire un texte JP + répondre ──
 function ComprehensionRead({ C, db, script, onRecord }){
-  const exos = db?.comprehension_ecrite || [];
+  const allExos = db?.comprehension_ecrite || [];
+  const LEVELS = ["Débutant","Intermédiaire","Avancé"];
+  const [level, setLevel] = useState("Débutant");
+  const exos = allExos.filter(e=>e.niveau===level);
   const [idx, setIdx] = useState(0);
   const [showText, setShowText] = useState(false); // texte caché par défaut ? Non : écrite = on lit. On montre.
   const [answers, setAnswers] = useState({});
   const [showTrad, setShowTrad] = useState(false);
   const topRef = useRef(null);
-  // Au changement d'exercice, on remonte sur le texte de départ
-  useEffect(()=>{ if(topRef.current) topRef.current.scrollIntoView({block:"start"}); }, [idx]);
+  // Au changement d'exercice ou de niveau, on remonte sur le texte de départ
+  useEffect(()=>{ if(topRef.current) topRef.current.scrollIntoView({block:"start"}); }, [idx, level]);
+  // Reset l'index quand on change de niveau
+  useEffect(()=>{ setIdx(0); setAnswers({}); setShowTrad(false); }, [level]);
   const exo = exos[idx];
 
-  if(!exo) return <div style={{padding:"20px",color:C.t2,fontSize:13}}>Aucun exercice disponible.</div>;
+  const levelChips = (
+    <div style={{display:"flex",gap:8,overflowX:"auto",WebkitOverflowScrolling:"touch",marginBottom:16,paddingBottom:2}}>
+      {LEVELS.map(lv=>{
+        const on = level===lv;
+        const emoji = {"Débutant":"🟢","Intermédiaire":"🟡","Avancé":"🔴"}[lv];
+        const count = allExos.filter(e=>e.niveau===lv).length;
+        return(
+          <button key={lv} onClick={()=>setLevel(lv)} className="pop-press" style={{flexShrink:0,padding:"7px 13px",borderRadius:18,border:`1px solid ${on?C.red:C.border}`,background:on?C.red:C.s1,color:on?"#fff":C.t2,fontSize:12,fontWeight:on?600:500,cursor:"pointer",whiteSpace:"nowrap"}}>
+            {emoji} {lv} ({count})
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  if(!exo) return <div>{levelChips}<div style={{padding:"20px",color:C.t2,fontSize:13}}>Aucun exercice à ce niveau.</div></div>;
 
   const pick = (qi, ci)=>{
     if(answers[qi]!==undefined) return;
@@ -3194,6 +3214,7 @@ function ComprehensionRead({ C, db, script, onRecord }){
 
   return(
     <div ref={topRef} style={{scrollMarginTop:60}}>
+      {levelChips}
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
         <div style={{fontSize:15,color:C.text,fontWeight:600}}>📖 {exo.titre}</div>
         <span style={{fontSize:11,color:C.t3,fontWeight:600}}>{idx+1}/{exos.length} · {exo.niveau}</span>
@@ -3253,15 +3274,34 @@ function ComprehensionRead({ C, db, script, onRecord }){
 
 // ── Compréhension orale : écouter (texte caché) + répondre ──
 function ComprehensionListen({ C, db, script }){
-  const exos = db?.comprehension_orale || [];
+  const allExos = db?.comprehension_orale || [];
+  const LEVELS = ["Débutant","Intermédiaire","Avancé"];
+  const [level, setLevel] = useState("Débutant");
+  const exos = allExos.filter(e=>e.niveau===level);
   const [idx, setIdx] = useState(0);
   const [revealed, setRevealed] = useState(false); // texte caché par défaut
   const [answers, setAnswers] = useState({});
   const topRef = useRef(null);
-  useEffect(()=>{ if(topRef.current) topRef.current.scrollIntoView({block:"start"}); }, [idx]);
+  useEffect(()=>{ if(topRef.current) topRef.current.scrollIntoView({block:"start"}); }, [idx, level]);
+  useEffect(()=>{ setIdx(0); setAnswers({}); setRevealed(false); }, [level]);
   const exo = exos[idx];
 
-  if(!exo) return <div style={{padding:"20px",color:C.t2,fontSize:13}}>Aucun exercice disponible.</div>;
+  const levelChips = (
+    <div style={{display:"flex",gap:8,overflowX:"auto",WebkitOverflowScrolling:"touch",marginBottom:16,paddingBottom:2}}>
+      {LEVELS.map(lv=>{
+        const on = level===lv;
+        const emoji = {"Débutant":"🟢","Intermédiaire":"🟡","Avancé":"🔴"}[lv];
+        const count = allExos.filter(e=>e.niveau===lv).length;
+        return(
+          <button key={lv} onClick={()=>setLevel(lv)} className="pop-press" style={{flexShrink:0,padding:"7px 13px",borderRadius:18,border:`1px solid ${on?"#9A6A8A":C.border}`,background:on?"#9A6A8A":C.s1,color:on?"#fff":C.t2,fontSize:12,fontWeight:on?600:500,cursor:"pointer",whiteSpace:"nowrap"}}>
+            {emoji} {lv} ({count})
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  if(!exo) return <div>{levelChips}<div style={{padding:"20px",color:C.t2,fontSize:13}}>Aucun exercice à ce niveau.</div></div>;
 
   const pick = (qi, ci)=>{
     if(answers[qi]!==undefined) return;
@@ -3273,6 +3313,7 @@ function ComprehensionListen({ C, db, script }){
 
   return(
     <div ref={topRef} style={{scrollMarginTop:60}}>
+      {levelChips}
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
         <div style={{fontSize:15,color:C.text,fontWeight:600}}>🎧 {exo.titre}</div>
         <span style={{fontSize:11,color:C.t3,fontWeight:600}}>{idx+1}/{exos.length} · {exo.niveau}</span>

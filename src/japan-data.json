@@ -12358,6 +12358,1158 @@
           "feedback": "« 11時から14時まで » = de 11h à 14h."
         }
       ]
+    },
+    {
+      "id": "ce-d-konbini2",
+      "titre": "Au konbini",
+      "emoji": "🏪",
+      "texte_jp": "いらっしゃいませ。袋はいりますか？はい、3円です。",
+      "texte_romaji": "Irasshaimase. Fukuro wa irimasu ka? Hai, 3 en desu.",
+      "texte_kana": "いらっしゃいませ。ふくろ は いります か？はい、３えん です。",
+      "traduction": "Bienvenue. Voulez-vous un sac ? Oui, ça fait 3 yens.",
+      "questions": [
+        {
+          "q": "Que propose le vendeur ?",
+          "choix": [
+            "Un sac",
+            "Un café",
+            "Un reçu"
+          ],
+          "correct": 0,
+          "feedback": "袋 (fukuro) = sac."
+        },
+        {
+          "q": "Combien coûte-t-il ?",
+          "choix": [
+            "3 yens",
+            "30 yens",
+            "300 yens"
+          ],
+          "correct": 0,
+          "feedback": "3円 = 3 yens."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-horaire",
+      "titre": "Horaires du magasin",
+      "emoji": "🕐",
+      "texte_jp": "営業時間：午前10時から午後8時まで。月曜日は休みです。",
+      "texte_romaji": "Eigyō jikan: gozen 10-ji kara gogo 8-ji made. Getsuyōbi wa yasumi desu.",
+      "texte_kana": "えいぎょうじかん：ごぜん１０じ から ごご８じ まで。げつようび は やすみ です。",
+      "traduction": "Horaires : de 10h à 20h. Fermé le lundi.",
+      "questions": [
+        {
+          "q": "À quelle heure ouvre le magasin ?",
+          "choix": [
+            "10h",
+            "8h",
+            "20h"
+          ],
+          "correct": 0,
+          "feedback": "午前10時 = 10h du matin."
+        },
+        {
+          "q": "Quel jour est-il fermé ?",
+          "choix": [
+            "Lundi",
+            "Dimanche",
+            "Samedi"
+          ],
+          "correct": 0,
+          "feedback": "月曜日 (getsuyōbi) = lundi."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-menu",
+      "titre": "Le menu",
+      "emoji": "🍜",
+      "texte_jp": "ラーメン 800円。チャーハン 600円。餃子 400円。お茶は無料です。",
+      "texte_romaji": "Rāmen 800 en. Chāhan 600 en. Gyōza 400 en. Ocha wa muryō desu.",
+      "texte_kana": "らーめん ８００えん。ちゃーはん ６００えん。ぎょうざ ４００えん。おちゃ は むりょう です。",
+      "traduction": "Ramen 800 yens. Riz frit 600 yens. Gyoza 400 yens. Le thé est gratuit.",
+      "questions": [
+        {
+          "q": "Quel plat est le plus cher ?",
+          "choix": [
+            "Le ramen",
+            "Le riz frit",
+            "Les gyoza"
+          ],
+          "correct": 0,
+          "feedback": "ラーメン 800円, le plus cher."
+        },
+        {
+          "q": "Qu'est-ce qui est gratuit ?",
+          "choix": [
+            "Le thé",
+            "Le riz",
+            "Les gyoza"
+          ],
+          "correct": 0,
+          "feedback": "お茶は無料 (muryō) = thé gratuit."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-meteo2",
+      "titre": "La météo",
+      "emoji": "☀️",
+      "texte_jp": "今日は晴れです。明日は雨です。気温は25度です。",
+      "texte_romaji": "Kyō wa hare desu. Ashita wa ame desu. Kion wa 25 do desu.",
+      "texte_kana": "きょう は はれ です。あした は あめ です。きおん は ２５ど です。",
+      "traduction": "Aujourd'hui il fait beau. Demain il pleuvra. La température est de 25 degrés.",
+      "questions": [
+        {
+          "q": "Quel temps fera-t-il demain ?",
+          "choix": [
+            "De la pluie",
+            "Du soleil",
+            "De la neige"
+          ],
+          "correct": 0,
+          "feedback": "明日は雨 = demain, pluie."
+        },
+        {
+          "q": "Quelle est la température ?",
+          "choix": [
+            "25 degrés",
+            "15 degrés",
+            "35 degrés"
+          ],
+          "correct": 0,
+          "feedback": "25度 = 25 degrés."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-presentation",
+      "titre": "Se présenter",
+      "emoji": "👤",
+      "texte_jp": "私はマリーです。フランス人です。学生です。よろしくお願いします。",
+      "texte_romaji": "Watashi wa Marī desu. Furansujin desu. Gakusei desu. Yoroshiku onegaishimasu.",
+      "texte_kana": "わたし は まりー です。ふらんすじん です。がくせい です。よろしく おねがいします。",
+      "traduction": "Je suis Marie. Je suis française. Je suis étudiante. Enchantée.",
+      "questions": [
+        {
+          "q": "Quelle est la nationalité de Marie ?",
+          "choix": [
+            "Française",
+            "Japonaise",
+            "Anglaise"
+          ],
+          "correct": 0,
+          "feedback": "フランス人 = française."
+        },
+        {
+          "q": "Que fait-elle ?",
+          "choix": [
+            "Étudiante",
+            "Professeure",
+            "Médecin"
+          ],
+          "correct": 0,
+          "feedback": "学生 (gakusei) = étudiant(e)."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-famille",
+      "titre": "Ma famille",
+      "emoji": "👨‍👩‍👧",
+      "texte_jp": "家族は四人です。父と母と妹がいます。犬もいます。",
+      "texte_romaji": "Kazoku wa yonin desu. Chichi to haha to imōto ga imasu. Inu mo imasu.",
+      "texte_kana": "かぞく は よにん です。ちち と はは と いもうと が います。いぬ も います。",
+      "traduction": "Ma famille compte quatre personnes. Il y a mon père, ma mère et ma petite sœur. Il y a aussi un chien.",
+      "questions": [
+        {
+          "q": "Combien de personnes dans la famille ?",
+          "choix": [
+            "Quatre",
+            "Trois",
+            "Cinq"
+          ],
+          "correct": 0,
+          "feedback": "四人 (yonin) = 4 personnes."
+        },
+        {
+          "q": "Quel animal ont-ils ?",
+          "choix": [
+            "Un chien",
+            "Un chat",
+            "Un oiseau"
+          ],
+          "correct": 0,
+          "feedback": "犬 (inu) = chien."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-courses",
+      "titre": "La liste de courses",
+      "emoji": "🛒",
+      "texte_jp": "卵、牛乳、パン、りんごを買います。全部で1000円ぐらいです。",
+      "texte_romaji": "Tamago, gyūnyū, pan, ringo wo kaimasu. Zenbu de 1000 en gurai desu.",
+      "texte_kana": "たまご、ぎゅうにゅう、ぱん、りんご を かいます。ぜんぶ で １０００えん ぐらい です。",
+      "traduction": "J'achète des œufs, du lait, du pain et des pommes. En tout, environ 1000 yens.",
+      "questions": [
+        {
+          "q": "Quel fruit achète-t-on ?",
+          "choix": [
+            "Des pommes",
+            "Des oranges",
+            "Des bananes"
+          ],
+          "correct": 0,
+          "feedback": "りんご (ringo) = pomme."
+        },
+        {
+          "q": "Quel est le total ?",
+          "choix": [
+            "Environ 1000 yens",
+            "Exactement 1000 yens",
+            "100 yens"
+          ],
+          "correct": 0,
+          "feedback": "1000円ぐらい (gurai) = environ 1000 yens."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-train2",
+      "titre": "Le quai",
+      "emoji": "🚆",
+      "texte_jp": "次の電車は3番線です。9時15分に出発します。",
+      "texte_romaji": "Tsugi no densha wa 3-bansen desu. 9-ji 15-fun ni shuppatsu shimasu.",
+      "texte_kana": "つぎ の でんしゃ は ３ばんせん です。９じ １５ふん に しゅっぱつ します。",
+      "traduction": "Le prochain train est sur la voie 3. Il part à 9h15.",
+      "questions": [
+        {
+          "q": "Sur quelle voie est le train ?",
+          "choix": [
+            "Voie 3",
+            "Voie 9",
+            "Voie 15"
+          ],
+          "correct": 0,
+          "feedback": "3番線 (bansen) = voie 3."
+        },
+        {
+          "q": "À quelle heure part-il ?",
+          "choix": [
+            "9h15",
+            "3h15",
+            "9h50"
+          ],
+          "correct": 0,
+          "feedback": "9時15分 = 9h15."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-cafe",
+      "titre": "Au café",
+      "emoji": "☕",
+      "texte_jp": "コーヒーは350円です。ケーキは450円です。セットは700円です。",
+      "texte_romaji": "Kōhī wa 350 en desu. Kēki wa 450 en desu. Setto wa 700 en desu.",
+      "texte_kana": "こーひー は ３５０えん です。けーき は ４５０えん です。せっと は ７００えん です。",
+      "traduction": "Le café coûte 350 yens. Le gâteau 450 yens. Le menu (set) 700 yens.",
+      "questions": [
+        {
+          "q": "Combien coûte le menu set ?",
+          "choix": [
+            "700 yens",
+            "350 yens",
+            "450 yens"
+          ],
+          "correct": 0,
+          "feedback": "セット = 700円."
+        },
+        {
+          "q": "Le set est-il avantageux ?",
+          "choix": [
+            "Oui (800→700)",
+            "Non",
+            "Même prix"
+          ],
+          "correct": 0,
+          "feedback": "350+450=800, le set à 700 est moins cher."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-panneau",
+      "titre": "Le panneau",
+      "emoji": "🚭",
+      "texte_jp": "ここは禁煙です。写真禁止。飲食禁止。",
+      "texte_romaji": "Koko wa kin'en desu. Shashin kinshi. Inshoku kinshi.",
+      "texte_kana": "ここ は きんえん です。しゃしん きんし。いんしょく きんし。",
+      "traduction": "Ici, c'est non-fumeur. Photos interdites. Manger et boire interdits.",
+      "questions": [
+        {
+          "q": "Peut-on prendre des photos ?",
+          "choix": [
+            "Non",
+            "Oui",
+            "Seulement dehors"
+          ],
+          "correct": 0,
+          "feedback": "写真禁止 (kinshi) = photos interdites."
+        },
+        {
+          "q": "Peut-on fumer ?",
+          "choix": [
+            "Non",
+            "Oui",
+            "Dans un coin"
+          ],
+          "correct": 0,
+          "feedback": "禁煙 (kin'en) = non-fumeur."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-anniversaire",
+      "titre": "L'anniversaire",
+      "emoji": "🎂",
+      "texte_jp": "明日は誕生日です。友達とレストランに行きます。とても楽しみです。",
+      "texte_romaji": "Ashita wa tanjōbi desu. Tomodachi to resutoran ni ikimasu. Totemo tanoshimi desu.",
+      "texte_kana": "あした は たんじょうび です。ともだち と れすとらん に いきます。とても たのしみ です。",
+      "traduction": "Demain c'est mon anniversaire. Je vais au restaurant avec des amis. J'ai vraiment hâte.",
+      "questions": [
+        {
+          "q": "Que fait la personne demain ?",
+          "choix": [
+            "Va au restaurant",
+            "Reste à la maison",
+            "Travaille"
+          ],
+          "correct": 0,
+          "feedback": "レストランに行きます = va au restaurant."
+        },
+        {
+          "q": "Avec qui ?",
+          "choix": [
+            "Des amis",
+            "Sa famille",
+            "Seule"
+          ],
+          "correct": 0,
+          "feedback": "友達と (tomodachi to) = avec des amis."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-d-direction2",
+      "titre": "L'adresse",
+      "emoji": "🗺️",
+      "texte_jp": "銀行は駅の前です。コンビニの隣です。歩いて2分です。",
+      "texte_romaji": "Ginkō wa eki no mae desu. Konbini no tonari desu. Aruite 2-fun desu.",
+      "texte_kana": "ぎんこう は えき の まえ です。こんびに の となり です。あるいて ２ふん です。",
+      "traduction": "La banque est devant la gare. À côté du konbini. À 2 minutes à pied.",
+      "questions": [
+        {
+          "q": "Où est la banque ?",
+          "choix": [
+            "Devant la gare",
+            "Derrière la gare",
+            "Loin de la gare"
+          ],
+          "correct": 0,
+          "feedback": "駅の前 (eki no mae) = devant la gare."
+        },
+        {
+          "q": "Combien de temps à pied ?",
+          "choix": [
+            "2 minutes",
+            "20 minutes",
+            "12 minutes"
+          ],
+          "correct": 0,
+          "feedback": "歩いて2分 = 2 min à pied."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "ce-i-hotel",
+      "titre": "Réservation d'hôtel",
+      "emoji": "🏨",
+      "texte_jp": "ご予約ありがとうございます。チェックインは午後3時から、チェックアウトは午前11時までです。朝食は別料金で1500円です。",
+      "texte_romaji": "Go-yoyaku arigatō gozaimasu. Chekku-in wa gogo 3-ji kara, chekku-auto wa gozen 11-ji made desu. Chōshoku wa betsu ryōkin de 1500 en desu.",
+      "texte_kana": "ごよやく ありがとうございます。ちぇっくいん は ごご３じ から、ちぇっくあうと は ごぜん１１じ まで です。ちょうしょく は べつりょうきん で １５００えん です。",
+      "traduction": "Merci pour votre réservation. Le check-in est à partir de 15h, le check-out jusqu'à 11h. Le petit-déjeuner est en supplément à 1500 yens.",
+      "questions": [
+        {
+          "q": "À partir de quelle heure le check-in ?",
+          "choix": [
+            "15h",
+            "11h",
+            "3h du matin"
+          ],
+          "correct": 0,
+          "feedback": "午後3時 = 15h."
+        },
+        {
+          "q": "Le petit-déjeuner est-il inclus ?",
+          "choix": [
+            "Non, en supplément",
+            "Oui, gratuit",
+            "Seulement le week-end"
+          ],
+          "correct": 0,
+          "feedback": "別料金 (betsu ryōkin) = supplément."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-meteo3",
+      "titre": "Bulletin météo",
+      "emoji": "🌦️",
+      "texte_jp": "週末の天気をお知らせします。土曜日は一日中晴れますが、日曜日は午後から雨が降るでしょう。お出かけの際は傘をお持ちください。",
+      "texte_romaji": "Shūmatsu no tenki wo oshirase shimasu. Doyōbi wa ichinichijū haremasu ga, nichiyōbi wa gogo kara ame ga furu deshō. Odekake no sai wa kasa wo omochi kudasai.",
+      "texte_kana": "しゅうまつ の てんき を おしらせ します。どようび は いちにちじゅう はれます が、にちようび は ごご から あめ が ふる でしょう。おでかけ の さい は かさ を おもち ください。",
+      "traduction": "Voici la météo du week-end. Samedi sera ensoleillé toute la journée, mais dimanche il pleuvra à partir de l'après-midi. Pensez à prendre un parapluie en sortant.",
+      "questions": [
+        {
+          "q": "Quel temps fera-t-il samedi ?",
+          "choix": [
+            "Ensoleillé toute la journée",
+            "Pluvieux",
+            "Nuageux le matin"
+          ],
+          "correct": 0,
+          "feedback": "一日中晴れます = ensoleillé toute la journée."
+        },
+        {
+          "q": "Quand pleuvra-t-il dimanche ?",
+          "choix": [
+            "L'après-midi",
+            "Le matin",
+            "Toute la journée"
+          ],
+          "correct": 0,
+          "feedback": "午後から雨 = pluie à partir de l'après-midi."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-email",
+      "titre": "Un e-mail professionnel",
+      "emoji": "📧",
+      "texte_jp": "会議の時間が変更になりました。明日の午後2時から3時に変わりました。場所は同じ会議室です。よろしくお願いします。",
+      "texte_romaji": "Kaigi no jikan ga henkō ni narimashita. Ashita no gogo 2-ji kara 3-ji ni kawarimashita. Basho wa onaji kaigishitsu desu.",
+      "texte_kana": "かいぎ の じかん が へんこう に なりました。あした の ごご２じ から ３じ に かわりました。ばしょ は おなじ かいぎしつ です。よろしく おねがいします。",
+      "traduction": "L'horaire de la réunion a changé. Demain, ce sera de 14h à 15h au lieu de l'horaire prévu. Le lieu reste la même salle de réunion.",
+      "questions": [
+        {
+          "q": "Qu'est-ce qui a changé ?",
+          "choix": [
+            "L'horaire de la réunion",
+            "Le lieu",
+            "La date"
+          ],
+          "correct": 0,
+          "feedback": "時間が変更 = l'horaire a changé."
+        },
+        {
+          "q": "Le lieu a-t-il changé ?",
+          "choix": [
+            "Non, même salle",
+            "Oui",
+            "Pas précisé"
+          ],
+          "correct": 0,
+          "feedback": "場所は同じ = même lieu."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-recette",
+      "titre": "Une recette",
+      "emoji": "🍳",
+      "texte_jp": "まず、卵を二つ割ります。次に、塩を少し入れて混ぜます。それから、フライパンで3分焼きます。最後に、ご飯と一緒に食べます。",
+      "texte_romaji": "Mazu, tamago wo futatsu warimasu. Tsugi ni, shio wo sukoshi irete mazemasu. Sorekara, furaipan de 3-pun yakimasu. Saigo ni, gohan to issho ni tabemasu.",
+      "texte_kana": "まず、たまご を ふたつ わります。つぎ に、しお を すこし いれて まぜます。それから、ふらいぱん で ３ぷん やきます。さいご に、ごはん と いっしょ に たべます。",
+      "traduction": "D'abord, cassez deux œufs. Ensuite, ajoutez un peu de sel et mélangez. Puis, faites cuire 3 minutes à la poêle. Enfin, mangez avec du riz.",
+      "questions": [
+        {
+          "q": "Combien d'œufs faut-il ?",
+          "choix": [
+            "Deux",
+            "Trois",
+            "Un"
+          ],
+          "correct": 0,
+          "feedback": "卵を二つ (futatsu) = deux œufs."
+        },
+        {
+          "q": "Combien de temps de cuisson ?",
+          "choix": [
+            "3 minutes",
+            "5 minutes",
+            "10 minutes"
+          ],
+          "correct": 0,
+          "feedback": "3分焼きます = cuire 3 minutes."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-annonce2",
+      "titre": "Annonce du musée",
+      "emoji": "🏛️",
+      "texte_jp": "本日は特別展を開催しております。入場は午後5時まで、閉館は午後5時半です。写真撮影は一部のみ可能です。",
+      "texte_romaji": "Honjitsu wa tokubetsuten wo kaisai shite orimasu. Nyūjō wa gogo 5-ji made, heikan wa gogo 5-ji han desu. Shashin satsuei wa ichibu nomi kanō desu.",
+      "texte_kana": "ほんじつ は とくべつてん を かいさい して おります。にゅうじょう は ごご５じ まで、へいかん は ごご５じはん です。しゃしんさつえい は いちぶ のみ かのう です。",
+      "traduction": "Aujourd'hui se tient une exposition spéciale. L'entrée est possible jusqu'à 17h, la fermeture est à 17h30. Les photos ne sont autorisées que dans certaines zones.",
+      "questions": [
+        {
+          "q": "Jusqu'à quand peut-on entrer ?",
+          "choix": [
+            "17h",
+            "17h30",
+            "18h"
+          ],
+          "correct": 0,
+          "feedback": "入場は午後5時まで = entrée jusqu'à 17h."
+        },
+        {
+          "q": "Peut-on prendre des photos partout ?",
+          "choix": [
+            "Non, certaines zones seulement",
+            "Oui partout",
+            "Non, nulle part"
+          ],
+          "correct": 0,
+          "feedback": "一部のみ (ichibu nomi) = seulement une partie."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-sante",
+      "titre": "Chez le médecin",
+      "emoji": "🏥",
+      "texte_jp": "この薬は一日三回、食後に飲んでください。三日分あります。熱が下がらない場合は、また来てください。",
+      "texte_romaji": "Kono kusuri wa ichinichi sankai, shokugo ni nonde kudasai. Mikkabun arimasu. Netsu ga sagaranai baai wa, mata kite kudasai.",
+      "texte_kana": "この くすり は いちにち さんかい、しょくご に のんで ください。みっかぶん あります。ねつ が さがらない ばあい は、また きて ください。",
+      "traduction": "Prenez ce médicament trois fois par jour, après les repas. Il y en a pour trois jours. Si la fièvre ne baisse pas, revenez.",
+      "questions": [
+        {
+          "q": "Quand prendre le médicament ?",
+          "choix": [
+            "Après les repas",
+            "Avant les repas",
+            "Le matin seulement"
+          ],
+          "correct": 0,
+          "feedback": "食後 (shokugo) = après le repas."
+        },
+        {
+          "q": "Pour combien de jours ?",
+          "choix": [
+            "Trois jours",
+            "Une semaine",
+            "Un jour"
+          ],
+          "correct": 0,
+          "feedback": "三日分 (mikkabun) = pour 3 jours."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-invitation",
+      "titre": "Une invitation",
+      "emoji": "🎉",
+      "texte_jp": "来週の土曜日、家でパーティーをします。夜7時から始まります。飲み物は用意しますが、何か食べ物を持ってきてください。",
+      "texte_romaji": "Raishū no doyōbi, ie de pātī wo shimasu. Yoru 7-ji kara hajimarimasu. Nomimono wa yōi shimasu ga, nanika tabemono wo motte kite kudasai.",
+      "texte_kana": "らいしゅう の どようび、いえ で ぱーてぃー を します。よる７じ から はじまります。のみもの は ようい します が、なにか たべもの を もって きて ください。",
+      "traduction": "Samedi prochain, je fais une fête à la maison. Ça commence à 19h. Je prépare les boissons, mais apportez quelque chose à manger.",
+      "questions": [
+        {
+          "q": "Que faut-il apporter ?",
+          "choix": [
+            "De la nourriture",
+            "Des boissons",
+            "Rien"
+          ],
+          "correct": 0,
+          "feedback": "食べ物を持ってきて = apportez à manger."
+        },
+        {
+          "q": "À quelle heure commence la fête ?",
+          "choix": [
+            "19h",
+            "17h",
+            "21h"
+          ],
+          "correct": 0,
+          "feedback": "夜7時 = 19h."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-voyage",
+      "titre": "Plan de voyage",
+      "emoji": "🗾",
+      "texte_jp": "来月、京都へ三泊四日で旅行します。お寺やお庭を見たいです。紅葉の季節なので、とても綺麗だと思います。",
+      "texte_romaji": "Raigetsu, Kyōto e sanpaku yokka de ryokō shimasu. Otera ya oniwa wo mitai desu. Kōyō no kisetsu nanode, totemo kirei da to omoimasu.",
+      "texte_kana": "らいげつ、きょうと へ さんぱく よっか で りょこう します。おてら や おにわ を みたい です。こうよう の きせつ なので、とても きれい だ と おもいます。",
+      "traduction": "Le mois prochain, je voyage à Kyoto pour 4 jours et 3 nuits. Je veux voir des temples et des jardins. Comme c'est la saison des feuilles d'automne, je pense que ce sera très beau.",
+      "questions": [
+        {
+          "q": "Combien de temps dure le voyage ?",
+          "choix": [
+            "4 jours / 3 nuits",
+            "3 jours / 4 nuits",
+            "1 semaine"
+          ],
+          "correct": 0,
+          "feedback": "三泊四日 (sanpaku yokka) = 3 nuits 4 jours."
+        },
+        {
+          "q": "Quelle saison est-ce ?",
+          "choix": [
+            "L'automne (kōyō)",
+            "Le printemps",
+            "L'été"
+          ],
+          "correct": 0,
+          "feedback": "紅葉 (kōyō) = feuilles d'automne."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-banque",
+      "titre": "À la banque",
+      "emoji": "🏦",
+      "texte_jp": "口座を開きたいのですが、パスポートと印鑑が必要です。今日は印鑑をお持ちですか？なければ、サインでも大丈夫です。",
+      "texte_romaji": "Kōza wo hirakitai no desu ga, pasupōto to inkan ga hitsuyō desu. Kyō wa inkan wo omochi desu ka? Nakereba, sain demo daijōbu desu.",
+      "texte_kana": "こうざ を ひらきたい の です が、ぱすぽーと と いんかん が ひつよう です。きょう は いんかん を おもち です か？なければ、さいん でも だいじょうぶ です。",
+      "traduction": "Je voudrais ouvrir un compte, mais il faut un passeport et un sceau (inkan). Avez-vous votre sceau aujourd'hui ? Sinon, une signature suffit.",
+      "questions": [
+        {
+          "q": "Que faut-il pour ouvrir un compte ?",
+          "choix": [
+            "Passeport et sceau",
+            "Seulement de l'argent",
+            "Une photo"
+          ],
+          "correct": 0,
+          "feedback": "パスポートと印鑑 = passeport et sceau."
+        },
+        {
+          "q": "Si on n'a pas de sceau ?",
+          "choix": [
+            "Une signature suffit",
+            "On ne peut pas",
+            "Il faut revenir"
+          ],
+          "correct": 0,
+          "feedback": "サインでも大丈夫 = une signature convient."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-meteo-saison",
+      "titre": "Les saisons",
+      "emoji": "🍃",
+      "texte_jp": "日本には四季があります。春は桜、夏は祭り、秋は紅葉、冬は雪が楽しめます。一番好きな季節は人によって違います。",
+      "texte_romaji": "Nihon ni wa shiki ga arimasu. Haru wa sakura, natsu wa matsuri, aki wa kōyō, fuyu wa yuki ga tanoshimemasu. Ichiban suki na kisetsu wa hito ni yotte chigaimasu.",
+      "texte_kana": "にほん に は しき が あります。はる は さくら、なつ は まつり、あき は こうよう、ふゆ は ゆき が たのしめます。いちばん すき な きせつ は ひと に よって ちがいます。",
+      "traduction": "Le Japon a quatre saisons. Au printemps les cerisiers, en été les festivals, en automne les feuilles rouges, en hiver la neige. La saison préférée varie selon les personnes.",
+      "questions": [
+        {
+          "q": "Qu'apprécie-t-on en été ?",
+          "choix": [
+            "Les festivals",
+            "La neige",
+            "Les cerisiers"
+          ],
+          "correct": 0,
+          "feedback": "夏は祭り (matsuri) = festivals en été."
+        },
+        {
+          "q": "Combien de saisons au Japon ?",
+          "choix": [
+            "Quatre",
+            "Deux",
+            "Trois"
+          ],
+          "correct": 0,
+          "feedback": "四季 (shiki) = quatre saisons."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-colis",
+      "titre": "Livraison de colis",
+      "emoji": "📦",
+      "texte_jp": "お荷物のお届けに参りましたが、ご不在でした。再配達をご希望の方は、明日までにお電話ください。",
+      "texte_romaji": "Onimotsu no otodoke ni mairimashita ga, gofuzai deshita. Saihaitatsu wo go-kibō no kata wa, ashita made ni odenwa kudasai.",
+      "texte_kana": "おにもつ の おとどけ に まいりました が、ごふざい でした。さいはいたつ を ごきぼう の かた は、あした まで に おでんわ ください。",
+      "traduction": "Nous sommes venus livrer votre colis, mais vous étiez absent. Pour une nouvelle livraison, appelez avant demain.",
+      "questions": [
+        {
+          "q": "Pourquoi le colis n'a pas été livré ?",
+          "choix": [
+            "Absence du destinataire",
+            "Mauvaise adresse",
+            "Colis perdu"
+          ],
+          "correct": 0,
+          "feedback": "ご不在 (gofuzai) = absent."
+        },
+        {
+          "q": "Que faire pour une relivraison ?",
+          "choix": [
+            "Appeler avant demain",
+            "Aller au bureau",
+            "Attendre"
+          ],
+          "correct": 0,
+          "feedback": "明日までにお電話 = appeler avant demain."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-i-restaurant3",
+      "titre": "Réserver une table",
+      "emoji": "🍽️",
+      "texte_jp": "申し訳ございませんが、今夜は満席です。明日の夜でしたら、7時か9時に空きがございます。何名様でしょうか？",
+      "texte_romaji": "Mōshiwake gozaimasen ga, kon'ya wa manseki desu. Ashita no yoru deshitara, 7-ji ka 9-ji ni aki ga gozaimasu. Nanmei-sama deshō ka?",
+      "texte_kana": "もうしわけ ございません が、こんや は まんせき です。あした の よる でしたら、７じ か ９じ に あき が ございます。なんめいさま でしょう か？",
+      "traduction": "Nous sommes désolés, mais c'est complet ce soir. Pour demain soir, il y a de la place à 19h ou 21h. Pour combien de personnes ?",
+      "questions": [
+        {
+          "q": "Y a-t-il de la place ce soir ?",
+          "choix": [
+            "Non, c'est complet",
+            "Oui, à 19h",
+            "Oui, à 21h"
+          ],
+          "correct": 0,
+          "feedback": "満席 (manseki) = complet."
+        },
+        {
+          "q": "Quels créneaux demain ?",
+          "choix": [
+            "19h ou 21h",
+            "18h ou 20h",
+            "Midi"
+          ],
+          "correct": 0,
+          "feedback": "7時か9時 = 19h ou 21h."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "ce-a-travail",
+      "titre": "Note de service",
+      "emoji": "💼",
+      "texte_jp": "在宅勤務制度について、来月から週二回まで利用可能となります。希望者は上司に申請してください。なお、業務に支障が出る場合は認められないことがあります。",
+      "texte_romaji": "Zaitaku kinmu seido ni tsuite, raigetsu kara shū nikai made riyō kanō to narimasu. Kibōsha wa jōshi ni shinsei shite kudasai. Nao, gyōmu ni shishō ga deru baai wa mitomerarenai koto ga arimasu.",
+      "texte_kana": "ざいたく きんむ せいど に ついて、らいげつ から しゅう にかい まで りよう かのう と なります。きぼうしゃ は じょうし に しんせい して ください。なお、ぎょうむ に ししょう が でる ばあい は みとめられない こと が あります。",
+      "traduction": "Concernant le télétravail, il sera possible jusqu'à deux fois par semaine à partir du mois prochain. Les intéressés doivent en faire la demande à leur supérieur. Par ailleurs, cela peut être refusé si le travail en pâtit.",
+      "questions": [
+        {
+          "q": "Combien de jours de télétravail au maximum ?",
+          "choix": [
+            "Deux par semaine",
+            "Tous les jours",
+            "Un par mois"
+          ],
+          "correct": 0,
+          "feedback": "週二回まで = jusqu'à 2 fois par semaine."
+        },
+        {
+          "q": "Peut-il être refusé ?",
+          "choix": [
+            "Oui, si le travail en souffre",
+            "Non, jamais",
+            "Seulement aux nouveaux"
+          ],
+          "correct": 0,
+          "feedback": "支障が出る場合は認められない = refusé si gêne le travail."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-environnement",
+      "titre": "Article : environnement",
+      "emoji": "🌏",
+      "texte_jp": "近年、プラスチックごみの削減が世界的な課題となっている。日本でもレジ袋の有料化が始まり、多くの人がエコバッグを持ち歩くようになった。しかし、根本的な解決にはまだ遠い。",
+      "texte_romaji": "Kinnen, purasuchikku gomi no sakugen ga sekaiteki na kadai to natte iru. Nihon demo rejibukuro no yūryōka ga hajimari, ōku no hito ga ekobaggu wo mochiaruku yō ni natta. Shikashi, konponteki na kaiketsu ni wa mada tōi.",
+      "texte_kana": "きんねん、ぷらすちっく ごみ の さくげん が せかいてき な かだい と なって いる。にほん でも れじぶくろ の ゆうりょうか が はじまり、おおく の ひと が えこばっぐ を もちあるく よう に なった。しかし、こんぽんてき な かいけつ に は まだ とおい。",
+      "traduction": "Ces dernières années, la réduction des déchets plastiques est devenue un enjeu mondial. Au Japon aussi, les sacs plastiques sont devenus payants et beaucoup de gens transportent désormais un sac réutilisable. Mais on est encore loin d'une solution de fond.",
+      "questions": [
+        {
+          "q": "Quel changement au Japon est mentionné ?",
+          "choix": [
+            "Sacs plastiques payants",
+            "Interdiction du plastique",
+            "Taxe carbone"
+          ],
+          "correct": 0,
+          "feedback": "レジ袋の有料化 = sacs plastiques payants."
+        },
+        {
+          "q": "Le problème est-il résolu ?",
+          "choix": [
+            "Non, loin d'une solution de fond",
+            "Oui, totalement",
+            "Bientôt"
+          ],
+          "correct": 0,
+          "feedback": "根本的な解決にはまだ遠い = encore loin."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-keigo",
+      "titre": "Demande polie (keigo)",
+      "emoji": "🙇",
+      "texte_jp": "恐れ入りますが、お客様の予約は確認できませんでした。お手数をおかけしますが、予約番号をお知らせいただけますでしょうか。",
+      "texte_romaji": "Osore irimasu ga, okyaku-sama no yoyaku wa kakunin dekimasen deshita. Otesū wo okake shimasu ga, yoyaku bangō wo oshirase itadakemasu deshō ka.",
+      "texte_kana": "おそれいります が、おきゃくさま の よやく は かくにん できません でした。おてすう を おかけ します が、よやく ばんごう を おしらせ いただけます でしょう か。",
+      "traduction": "Je suis navré, mais nous n'avons pas pu confirmer votre réservation. Désolé de vous déranger, mais pourriez-vous nous communiquer votre numéro de réservation ?",
+      "questions": [
+        {
+          "q": "Quel est le problème ?",
+          "choix": [
+            "Réservation introuvable",
+            "Paiement refusé",
+            "Chambre indisponible"
+          ],
+          "correct": 0,
+          "feedback": "予約は確認できませんでした = réservation pas confirmée."
+        },
+        {
+          "q": "Que demande-t-on au client ?",
+          "choix": [
+            "Le numéro de réservation",
+            "Son passeport",
+            "De rappeler"
+          ],
+          "correct": 0,
+          "feedback": "予約番号をお知らせ = communiquer le numéro."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-societe",
+      "titre": "Société : vieillissement",
+      "emoji": "👴",
+      "texte_jp": "日本は世界で最も高齢化が進んだ国の一つである。労働力の不足を補うため、政府は外国人労働者の受け入れを拡大する方針を示している。",
+      "texte_romaji": "Nihon wa sekai de mottomo kōreika ga susunda kuni no hitotsu de aru. Rōdōryoku no fusoku wo oginau tame, seifu wa gaikokujin rōdōsha no ukeire wo kakudai suru hōshin wo shimeshite iru.",
+      "texte_kana": "にほん は せかい で もっとも こうれいか が すすんだ くに の ひとつ で ある。ろうどうりょく の ふそく を おぎなう ため、せいふ は がいこくじん ろうどうしゃ の うけいれ を かくだい する ほうしん を しめして いる。",
+      "traduction": "Le Japon est l'un des pays les plus vieillissants au monde. Pour combler le manque de main-d'œuvre, le gouvernement affiche une politique d'élargissement de l'accueil de travailleurs étrangers.",
+      "questions": [
+        {
+          "q": "Quel problème démographique ?",
+          "choix": [
+            "Le vieillissement",
+            "La surpopulation",
+            "L'exode rural"
+          ],
+          "correct": 0,
+          "feedback": "高齢化 (kōreika) = vieillissement."
+        },
+        {
+          "q": "Quelle solution du gouvernement ?",
+          "choix": [
+            "Accueillir plus de travailleurs étrangers",
+            "Augmenter les impôts",
+            "Fermer les frontières"
+          ],
+          "correct": 0,
+          "feedback": "外国人労働者の受け入れを拡大 = élargir l'accueil de travailleurs étrangers."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-tradition",
+      "titre": "Essai : tradition et modernité",
+      "emoji": "⛩️",
+      "texte_jp": "日本の魅力の一つは、伝統と現代が共存している点だろう。最新技術のビルの隣に古い神社があり、人々は当たり前のように両方を行き来する。この調和こそが日本らしさだと言える。",
+      "texte_romaji": "Nihon no miryoku no hitotsu wa, dentō to gendai ga kyōzon shite iru ten darō. Saishin gijutsu no biru no tonari ni furui jinja ga ari, hitobito wa atarimae no yō ni ryōhō wo ikiki suru. Kono chōwa koso ga Nihon-rashisa da to ieru.",
+      "texte_kana": "にほん の みりょく の ひとつ は、でんとう と げんだい が きょうぞん して いる てん だろう。さいしん ぎじゅつ の びる の となり に ふるい じんじゃ が あり、ひとびと は あたりまえ の よう に りょうほう を いきき する。この ちょうわ こそ が にほんらしさ だ と いえる。",
+      "traduction": "L'un des charmes du Japon réside sans doute dans la coexistence de la tradition et de la modernité. À côté d'un immeuble high-tech se trouve un vieux sanctuaire, et les gens passent de l'un à l'autre tout naturellement. C'est précisément cette harmonie qui fait le caractère japonais.",
+      "questions": [
+        {
+          "q": "Quel est le charme évoqué ?",
+          "choix": [
+            "Coexistence tradition/modernité",
+            "La technologie seule",
+            "Les vieux temples"
+          ],
+          "correct": 0,
+          "feedback": "伝統と現代が共存 = coexistence tradition et modernité."
+        },
+        {
+          "q": "Qu'est-ce qui définit le « caractère japonais » ?",
+          "choix": [
+            "Cette harmonie",
+            "La vitesse",
+            "La discipline"
+          ],
+          "correct": 0,
+          "feedback": "この調和こそが日本らしさ = cette harmonie fait le caractère japonais."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-economie",
+      "titre": "Brève économique",
+      "emoji": "📈",
+      "texte_jp": "円安の影響で、訪日外国人観光客が急増している。観光業界にとっては追い風だが、輸入品の価格上昇により、国内の家計には負担が増している。",
+      "texte_romaji": "En'yasu no eikyō de, hōnichi gaikokujin kankōkyaku ga kyūzō shite iru. Kankō gyōkai ni totte wa oikaze da ga, yunyūhin no kakaku jōshō ni yori, kokunai no kakei ni wa futan ga mashite iru.",
+      "texte_kana": "えんやす の えいきょう で、ほうにち がいこくじん かんこうきゃく が きゅうぞう して いる。かんこう ぎょうかい に とって は おいかぜ だ が、ゆにゅうひん の かかく じょうしょう に より、こくない の かけい に は ふたん が まして いる。",
+      "traduction": "En raison de la faiblesse du yen, le nombre de touristes étrangers au Japon explose. C'est un vent favorable pour le tourisme, mais la hausse du prix des produits importés pèse de plus en plus sur les ménages du pays.",
+      "questions": [
+        {
+          "q": "Pourquoi les touristes affluent-ils ?",
+          "choix": [
+            "Le yen est faible",
+            "Les prix baissent",
+            "Nouveaux vols"
+          ],
+          "correct": 0,
+          "feedback": "円安 (en'yasu) = yen faible."
+        },
+        {
+          "q": "Quel est l'inconvénient mentionné ?",
+          "choix": [
+            "Hausse du prix des importations",
+            "Trop de touristes",
+            "Manque d'hôtels"
+          ],
+          "correct": 0,
+          "feedback": "輸入品の価格上昇 = hausse des prix d'importation."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-litterature",
+      "titre": "Extrait littéraire",
+      "emoji": "📖",
+      "texte_jp": "窓の外には、ただ白い雪が静かに降り続けていた。彼女は何も言わず、ずっとその様子を眺めていた。時間が止まったかのような、不思議な午後だった。",
+      "texte_romaji": "Mado no soto ni wa, tada shiroi yuki ga shizuka ni furitsuzukete ita. Kanojo wa nani mo iwazu, zutto sono yōsu wo nagamete ita. Jikan ga tomatta ka no yō na, fushigi na gogo datta.",
+      "texte_kana": "まど の そと に は、ただ しろい ゆき が しずか に ふりつづけて いた。かのじょ は なに も いわず、ずっと その ようす を ながめて いた。じかん が とまった か の よう な、ふしぎ な ごご だった。",
+      "traduction": "Dehors, par la fenêtre, la neige blanche continuait simplement de tomber en silence. Elle ne disait rien, contemplant longuement ce spectacle. C'était un après-midi étrange, comme si le temps s'était arrêté.",
+      "questions": [
+        {
+          "q": "Que fait le personnage ?",
+          "choix": [
+            "Regarde la neige en silence",
+            "Parle beaucoup",
+            "Dort"
+          ],
+          "correct": 0,
+          "feedback": "何も言わず眺めていた = regarde sans rien dire."
+        },
+        {
+          "q": "Quelle atmosphère est décrite ?",
+          "choix": [
+            "Le temps semble arrêté",
+            "Agitée",
+            "Joyeuse"
+          ],
+          "correct": 0,
+          "feedback": "時間が止まったかのよう = comme si le temps s'arrêtait."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-techno",
+      "titre": "Technologie et société",
+      "emoji": "🤖",
+      "texte_jp": "人工知能の発展により、私たちの生活は便利になった一方で、新たな課題も生まれている。仕事の在り方や、人と人とのつながりについて、改めて考える必要があるのではないだろうか。",
+      "texte_romaji": "Jinkō chinō no hatten ni yori, watashitachi no seikatsu wa benri ni natta ippō de, arata na kadai mo umarete iru. Shigoto no arikata ya, hito to hito to no tsunagari ni tsuite, aratamete kangaeru hitsuyō ga aru no de wa nai darō ka.",
+      "texte_kana": "じんこう ちのう の はってん に より、わたしたち の せいかつ は べんり に なった いっぽう で、あらた な かだい も うまれて いる。しごと の ありかた や、ひと と ひと と の つながり に ついて、あらためて かんがえる ひつよう が ある の で は ない だろう か。",
+      "traduction": "Avec le développement de l'intelligence artificielle, notre vie est devenue plus pratique, mais de nouveaux défis émergent aussi. Ne faudrait-il pas repenser la nature du travail et les liens entre les personnes ?",
+      "questions": [
+        {
+          "q": "Quel double effet de l'IA est décrit ?",
+          "choix": [
+            "Pratique mais nouveaux défis",
+            "Que des avantages",
+            "Que des problèmes"
+          ],
+          "correct": 0,
+          "feedback": "便利になった一方で、新たな課題も = pratique mais aussi nouveaux défis."
+        },
+        {
+          "q": "Que suggère l'auteur ?",
+          "choix": [
+            "Repenser travail et liens humains",
+            "Interdire l'IA",
+            "Ne rien changer"
+          ],
+          "correct": 0,
+          "feedback": "改めて考える必要 = besoin de repenser."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-discours",
+      "titre": "Discours de remerciement",
+      "emoji": "🎤",
+      "texte_jp": "本日はお忙しい中、お集まりいただき誠にありがとうございます。皆様のご支援のおかげで、ここまで参ることができました。今後とも変わらぬご厚情を賜りますようお願い申し上げます。",
+      "texte_romaji": "Honjitsu wa oisogashii naka, oatsumari itadaki makoto ni arigatō gozaimasu. Minasama no go-shien no okage de, koko made mairu koto ga dekimashita. Kongo tomo kawaranu go-kōjō wo tamawarimasu yō onegai mōshiagemasu.",
+      "texte_kana": "ほんじつ は おいそがしい なか、おあつまり いただき まこと に ありがとうございます。みなさま の ごしえん の おかげ で、ここ まで まいる こと が できました。こんご とも かわらぬ ごこうじょう を たまわります よう おねがい もうしあげます。",
+      "traduction": "Merci infiniment d'être venus aujourd'hui malgré vos emplois du temps chargés. C'est grâce à votre soutien à tous que nous avons pu arriver jusqu'ici. Nous vous prions de bien vouloir continuer à nous accorder votre bienveillance.",
+      "questions": [
+        {
+          "q": "Quel est le registre de ce texte ?",
+          "choix": [
+            "Très poli (keigo formel)",
+            "Familier",
+            "Neutre"
+          ],
+          "correct": 0,
+          "feedback": "賜ります, 申し上げます = keigo très formel."
+        },
+        {
+          "q": "Grâce à quoi le succès est-il attribué ?",
+          "choix": [
+            "Au soutien de tous",
+            "À la chance",
+            "Au travail seul"
+          ],
+          "correct": 0,
+          "feedback": "皆様のご支援のおかげ = grâce au soutien de tous."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-mukashi",
+      "titre": "Conte traditionnel",
+      "emoji": "🏯",
+      "texte_jp": "昔々、ある村に貧しいが心の優しいおじいさんが住んでいた。ある日、おじいさんは傷ついた鶴を助けた。その夜、美しい娘が訪ねてきて、一晩泊めてほしいと頼んだ。",
+      "texte_romaji": "Mukashi mukashi, aru mura ni mazushii ga kokoro no yasashii ojiisan ga sunde ita. Aru hi, ojiisan wa kizutsuita tsuru wo tasuketa. Sono yoru, utsukushii musume ga tazunete kite, hitoban tomete hoshii to tanonda.",
+      "texte_kana": "むかしむかし、ある むら に まずしい が こころ の やさしい おじいさん が すんで いた。ある ひ、おじいさん は きずついた つる を たすけた。その よる、うつくしい むすめ が たずねて きて、ひとばん とめて ほしい と たのんだ。",
+      "traduction": "Il y a très longtemps, dans un village vivait un vieil homme pauvre mais au cœur bon. Un jour, il sauva une grue blessée. Cette nuit-là, une belle jeune fille vint frapper à sa porte et demanda à être hébergée pour une nuit.",
+      "questions": [
+        {
+          "q": "Quel animal le vieil homme sauve-t-il ?",
+          "choix": [
+            "Une grue",
+            "Un renard",
+            "Un chat"
+          ],
+          "correct": 0,
+          "feedback": "鶴 (tsuru) = grue."
+        },
+        {
+          "q": "Qui vient le soir ?",
+          "choix": [
+            "Une belle jeune fille",
+            "Un marchand",
+            "Un samouraï"
+          ],
+          "correct": 0,
+          "feedback": "美しい娘 = une belle jeune fille."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-editorial",
+      "titre": "Éditorial : éducation",
+      "emoji": "🎓",
+      "texte_jp": "暗記中心の教育から、自分で考える力を育てる教育への転換が求められている。答えのない問題に向き合う力こそ、これからの時代に必要とされるだろう。",
+      "texte_romaji": "Anki chūshin no kyōiku kara, jibun de kangaeru chikara wo sodateru kyōiku e no tenkan ga motomerarete iru. Kotae no nai mondai ni mukiau chikara koso, kore kara no jidai ni hitsuyō to sareru darō.",
+      "texte_kana": "あんき ちゅうしん の きょういく から、じぶん で かんがえる ちから を そだてる きょういく へ の てんかん が もとめられて いる。こたえ の ない もんだい に むきあう ちから こそ、これ から の じだい に ひつよう と される だろう。",
+      "traduction": "On réclame un passage d'une éducation centrée sur la mémorisation à une éducation qui développe la capacité de penser par soi-même. C'est justement la capacité d'affronter des problèmes sans réponse qui sera nécessaire à l'avenir.",
+      "questions": [
+        {
+          "q": "Vers quel type d'éducation veut-on aller ?",
+          "choix": [
+            "Penser par soi-même",
+            "Plus de mémorisation",
+            "Moins d'écoles"
+          ],
+          "correct": 0,
+          "feedback": "自分で考える力 = penser par soi-même."
+        },
+        {
+          "q": "Quelle capacité sera nécessaire ?",
+          "choix": [
+            "Affronter des problèmes sans réponse",
+            "Mémoriser vite",
+            "Obéir"
+          ],
+          "correct": 0,
+          "feedback": "答えのない問題に向き合う力 = affronter les problèmes sans réponse."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "ce-a-haiku",
+      "titre": "Le haïku",
+      "emoji": "🍂",
+      "texte_jp": "俳句は世界で最も短い詩と言われる。五・七・五の十七音で、季節の言葉を入れるのが基本である。短いからこそ、読む人の想像力に多くを委ねる。",
+      "texte_romaji": "Haiku wa sekai de mottomo mijikai shi to iwareru. Go-shichi-go no jūnana-on de, kisetsu no kotoba wo ireru no ga kihon de aru. Mijikai kara koso, yomu hito no sōzōryoku ni ōku wo yudaneru.",
+      "texte_kana": "はいく は せかい で もっとも みじかい し と いわれる。ご・しち・ご の じゅうなな おん で、きせつ の ことば を いれる の が きほん で ある。みじかい から こそ、よむ ひと の そうぞうりょく に おおく を ゆだねる。",
+      "traduction": "Le haïku est dit le plus court poème du monde. Composé de 17 sons en 5-7-5, il inclut en principe un mot de saison. C'est justement parce qu'il est court qu'il laisse beaucoup à l'imagination du lecteur.",
+      "questions": [
+        {
+          "q": "Combien de sons compte un haïku ?",
+          "choix": [
+            "17 (5-7-5)",
+            "31",
+            "12"
+          ],
+          "correct": 0,
+          "feedback": "五・七・五の十七音 = 17 sons en 5-7-5."
+        },
+        {
+          "q": "Qu'est-ce qui est laissé au lecteur ?",
+          "choix": [
+            "L'imagination",
+            "La conclusion",
+            "Le titre"
+          ],
+          "correct": 0,
+          "feedback": "想像力に委ねる = confié à l'imagination."
+        }
+      ],
+      "niveau": "Avancé"
     }
   ],
   "comprehension_orale": [
@@ -12584,6 +13736,1158 @@
           "feedback": "« 歩いて5分くらい » = environ 5 min."
         }
       ]
+    },
+    {
+      "id": "co-d-heure2",
+      "titre": "Quelle heure ?",
+      "emoji": "🕐",
+      "audio_jp": "すみません、今何時ですか？三時半です。",
+      "audio_romaji": "Sumimasen, ima nanji desu ka? Sanji han desu.",
+      "audio_kana": "すみません、いま なんじ です か？さんじ はん です。",
+      "traduction": "Excusez-moi, quelle heure est-il ? Il est 15h30.",
+      "questions": [
+        {
+          "q": "Quelle heure est-il ?",
+          "choix": [
+            "15h30",
+            "3h",
+            "13h"
+          ],
+          "correct": 0,
+          "feedback": "三時半 = 3h et demie."
+        },
+        {
+          "q": "Que fait la personne ?",
+          "choix": [
+            "Demande l'heure",
+            "Demande son chemin",
+            "Commande"
+          ],
+          "correct": 0,
+          "feedback": "今何時 = quelle heure."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-cafe2",
+      "titre": "Commander un café",
+      "emoji": "☕",
+      "audio_jp": "コーヒーを一つお願いします。ホットですか、アイスですか？ホットでお願いします。",
+      "audio_romaji": "Kōhī wo hitotsu onegaishimasu. Hotto desu ka, aisu desu ka? Hotto de onegaishimasu.",
+      "audio_kana": "こーひー を ひとつ おねがいします。ほっと です か、あいす です か？ほっと で おねがいします。",
+      "traduction": "Un café s'il vous plaît. Chaud ou glacé ? Chaud, s'il vous plaît.",
+      "questions": [
+        {
+          "q": "Que commande le client ?",
+          "choix": [
+            "Un café",
+            "Un thé",
+            "Un jus"
+          ],
+          "correct": 0,
+          "feedback": "コーヒー = café."
+        },
+        {
+          "q": "Chaud ou glacé ?",
+          "choix": [
+            "Chaud",
+            "Glacé",
+            "Tiède"
+          ],
+          "correct": 0,
+          "feedback": "ホット = chaud."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-meteo4",
+      "titre": "Le temps demain",
+      "emoji": "🌧️",
+      "audio_jp": "明日の天気はどうですか？雨が降ります。傘が必要です。",
+      "audio_romaji": "Ashita no tenki wa dō desu ka? Ame ga furimasu. Kasa ga hitsuyō desu.",
+      "audio_kana": "あした の てんき は どう です か？あめ が ふります。かさ が ひつよう です。",
+      "traduction": "Quel temps demain ? Il pleuvra. Un parapluie est nécessaire.",
+      "questions": [
+        {
+          "q": "Quel temps demain ?",
+          "choix": [
+            "Pluie",
+            "Soleil",
+            "Neige"
+          ],
+          "correct": 0,
+          "feedback": "雨が降ります = il pleut."
+        },
+        {
+          "q": "Que faut-il ?",
+          "choix": [
+            "Un parapluie",
+            "Un manteau",
+            "Rien"
+          ],
+          "correct": 0,
+          "feedback": "傘が必要 = parapluie nécessaire."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-achat",
+      "titre": "Combien ça coûte ?",
+      "emoji": "💴",
+      "audio_jp": "これはいくらですか？500円です。じゃあ、これをください。",
+      "audio_romaji": "Kore wa ikura desu ka? 500 en desu. Jā, kore wo kudasai.",
+      "audio_kana": "これ は いくら です か？５００えん です。じゃあ、これ を ください。",
+      "traduction": "Combien ça coûte ? 500 yens. Bon, je prends ça.",
+      "questions": [
+        {
+          "q": "Quel est le prix ?",
+          "choix": [
+            "500 yens",
+            "50 yens",
+            "5000 yens"
+          ],
+          "correct": 0,
+          "feedback": "500円."
+        },
+        {
+          "q": "Le client achète-t-il ?",
+          "choix": [
+            "Oui",
+            "Non",
+            "Il hésite"
+          ],
+          "correct": 0,
+          "feedback": "これをください = je prends ça."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-saluer",
+      "titre": "Bonjour le matin",
+      "emoji": "🌅",
+      "audio_jp": "おはようございます。今日はいい天気ですね。そうですね、気持ちいいです。",
+      "audio_romaji": "Ohayō gozaimasu. Kyō wa ii tenki desu ne. Sō desu ne, kimochi ii desu.",
+      "audio_kana": "おはようございます。きょう は いい てんき です ね。そう です ね、きもちいい です。",
+      "traduction": "Bonjour. Il fait beau aujourd'hui, n'est-ce pas ? Oui, c'est agréable.",
+      "questions": [
+        {
+          "q": "Quel moment de la journée ?",
+          "choix": [
+            "Le matin",
+            "Le soir",
+            "La nuit"
+          ],
+          "correct": 0,
+          "feedback": "おはよう = bonjour (matin)."
+        },
+        {
+          "q": "Quel temps fait-il ?",
+          "choix": [
+            "Beau",
+            "Pluvieux",
+            "Froid"
+          ],
+          "correct": 0,
+          "feedback": "いい天気 = beau temps."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-resto2",
+      "titre": "Au restaurant",
+      "emoji": "🍱",
+      "audio_jp": "ご注文は？親子丼を一つお願いします。かしこまりました。",
+      "audio_romaji": "Go-chūmon wa? Oyakodon wo hitotsu onegaishimasu. Kashikomarimashita.",
+      "audio_kana": "ごちゅうもん は？おやこどん を ひとつ おねがいします。かしこまりました。",
+      "traduction": "Votre commande ? Un oyakodon, s'il vous plaît. Bien, entendu.",
+      "questions": [
+        {
+          "q": "Que commande le client ?",
+          "choix": [
+            "Un oyakodon",
+            "Un ramen",
+            "Un curry"
+          ],
+          "correct": 0,
+          "feedback": "親子丼 = oyakodon."
+        },
+        {
+          "q": "Combien en commande-t-il ?",
+          "choix": [
+            "Un",
+            "Deux",
+            "Trois"
+          ],
+          "correct": 0,
+          "feedback": "一つ (hitotsu) = un."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-tel",
+      "titre": "Au téléphone",
+      "emoji": "📞",
+      "audio_jp": "もしもし、田中さんですか？はい、そうです。鈴木です。",
+      "audio_romaji": "Moshimoshi, Tanaka-san desu ka? Hai, sō desu. Suzuki desu.",
+      "audio_kana": "もしもし、たなかさん です か？はい、そう です。すずき です。",
+      "traduction": "Allô, c'est M. Tanaka ? Oui, c'est moi. Ici Suzuki.",
+      "questions": [
+        {
+          "q": "Qui appelle ?",
+          "choix": [
+            "Suzuki",
+            "Tanaka",
+            "Yamada"
+          ],
+          "correct": 0,
+          "feedback": "鈴木です = ici Suzuki."
+        },
+        {
+          "q": "Qui décroche ?",
+          "choix": [
+            "Tanaka",
+            "Suzuki",
+            "Personne"
+          ],
+          "correct": 0,
+          "feedback": "はい、そうです = oui c'est Tanaka."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-magasin",
+      "titre": "Où sont les toilettes ?",
+      "emoji": "🚻",
+      "audio_jp": "すみません、トイレはどこですか？あちらです。ありがとうございます。",
+      "audio_romaji": "Sumimasen, toire wa doko desu ka? Achira desu. Arigatō gozaimasu.",
+      "audio_kana": "すみません、といれ は どこ です か？あちら です。ありがとうございます。",
+      "traduction": "Excusez-moi, où sont les toilettes ? Par là. Merci.",
+      "questions": [
+        {
+          "q": "Que cherche la personne ?",
+          "choix": [
+            "Les toilettes",
+            "La sortie",
+            "La caisse"
+          ],
+          "correct": 0,
+          "feedback": "トイレ = toilettes."
+        },
+        {
+          "q": "Où sont-elles ?",
+          "choix": [
+            "Par là (achira)",
+            "Ici",
+            "En haut"
+          ],
+          "correct": 0,
+          "feedback": "あちら = par là."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-invitation2",
+      "titre": "Une invitation",
+      "emoji": "🎬",
+      "audio_jp": "週末、映画を見に行きませんか？いいですね、行きましょう。",
+      "audio_romaji": "Shūmatsu, eiga wo mi ni ikimasen ka? Ii desu ne, ikimashō.",
+      "audio_kana": "しゅうまつ、えいが を み に いきません か？いい です ね、いきましょう。",
+      "traduction": "Tu ne veux pas aller voir un film ce week-end ? Bonne idée, allons-y.",
+      "questions": [
+        {
+          "q": "Quelle est la proposition ?",
+          "choix": [
+            "Aller au cinéma",
+            "Dîner",
+            "Faire du sport"
+          ],
+          "correct": 0,
+          "feedback": "映画を見に行く = aller voir un film."
+        },
+        {
+          "q": "L'autre accepte-t-il ?",
+          "choix": [
+            "Oui",
+            "Non",
+            "Il hésite"
+          ],
+          "correct": 0,
+          "feedback": "行きましょう = allons-y."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-famille2",
+      "titre": "Présenter sa famille",
+      "emoji": "👪",
+      "audio_jp": "兄弟はいますか？はい、兄が一人います。お姉さんは？いません。",
+      "audio_romaji": "Kyōdai wa imasu ka? Hai, ani ga hitori imasu. Onēsan wa? Imasen.",
+      "audio_kana": "きょうだい は います か？はい、あに が ひとり います。おねえさん は？いません。",
+      "traduction": "As-tu des frères et sœurs ? Oui, j'ai un grand frère. Une grande sœur ? Non.",
+      "questions": [
+        {
+          "q": "A-t-il un grand frère ?",
+          "choix": [
+            "Oui",
+            "Non",
+            "Deux"
+          ],
+          "correct": 0,
+          "feedback": "兄が一人 = un grand frère."
+        },
+        {
+          "q": "A-t-il une grande sœur ?",
+          "choix": [
+            "Non",
+            "Oui",
+            "Deux"
+          ],
+          "correct": 0,
+          "feedback": "いません = il n'y en a pas."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-hobby",
+      "titre": "Les loisirs",
+      "emoji": "🎸",
+      "audio_jp": "趣味は何ですか？音楽が好きです。ギターを弾きます。",
+      "audio_romaji": "Shumi wa nan desu ka? Ongaku ga suki desu. Gitā wo hikimasu.",
+      "audio_kana": "しゅみ は なん です か？おんがく が すき です。ぎたー を ひきます。",
+      "traduction": "Quel est ton loisir ? J'aime la musique. Je joue de la guitare.",
+      "questions": [
+        {
+          "q": "Qu'aime cette personne ?",
+          "choix": [
+            "La musique",
+            "Le sport",
+            "La lecture"
+          ],
+          "correct": 0,
+          "feedback": "音楽が好き = aime la musique."
+        },
+        {
+          "q": "De quel instrument joue-t-elle ?",
+          "choix": [
+            "La guitare",
+            "Le piano",
+            "La batterie"
+          ],
+          "correct": 0,
+          "feedback": "ギター = guitare."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-d-station",
+      "titre": "Quelle station ?",
+      "emoji": "🚇",
+      "audio_jp": "東京駅はここから何駅ですか？三駅です。約十分です。",
+      "audio_romaji": "Tōkyō-eki wa koko kara nan-eki desu ka? San-eki desu. Yaku juppun desu.",
+      "audio_kana": "とうきょうえき は ここ から なんえき です か？さんえき です。やく じゅっぷん です。",
+      "traduction": "Combien de stations jusqu'à Tokyo d'ici ? Trois stations. Environ 10 minutes.",
+      "questions": [
+        {
+          "q": "Combien de stations ?",
+          "choix": [
+            "Trois",
+            "Une",
+            "Dix"
+          ],
+          "correct": 0,
+          "feedback": "三駅 = 3 stations."
+        },
+        {
+          "q": "Combien de temps ?",
+          "choix": [
+            "10 minutes",
+            "30 minutes",
+            "3 minutes"
+          ],
+          "correct": 0,
+          "feedback": "約十分 = environ 10 min."
+        }
+      ],
+      "niveau": "Débutant"
+    },
+    {
+      "id": "co-i-train2",
+      "titre": "Changement de train",
+      "emoji": "🚉",
+      "audio_jp": "次の駅で快速電車に乗り換えてください。三番線です。お乗り換えの際は足元にご注意ください。",
+      "audio_romaji": "Tsugi no eki de kaisoku densha ni norikaete kudasai. San-bansen desu. Onorikae no sai wa ashimoto ni go-chūi kudasai.",
+      "audio_kana": "つぎ の えき で かいそく でんしゃ に のりかえて ください。さんばんせん です。おのりかえ の さい は あしもと に ごちゅうい ください。",
+      "traduction": "Au prochain arrêt, changez pour le train rapide. C'est la voie 3. Attention à vos pieds lors du changement.",
+      "questions": [
+        {
+          "q": "Pour quel train changer ?",
+          "choix": [
+            "Le rapide",
+            "L'omnibus",
+            "L'express"
+          ],
+          "correct": 0,
+          "feedback": "快速電車 = train rapide."
+        },
+        {
+          "q": "Quelle voie ?",
+          "choix": [
+            "Voie 3",
+            "Voie 1",
+            "Voie 2"
+          ],
+          "correct": 0,
+          "feedback": "三番線 = voie 3."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-rdv",
+      "titre": "Prendre rendez-vous",
+      "emoji": "📅",
+      "audio_jp": "来週の水曜日、午後はご都合いかがですか？水曜日は難しいですが、木曜日なら大丈夫です。",
+      "audio_romaji": "Raishū no suiyōbi, gogo wa go-tsugō ikaga desu ka? Suiyōbi wa muzukashii desu ga, mokuyōbi nara daijōbu desu.",
+      "audio_kana": "らいしゅう の すいようび、ごご は ごつごう いかが です か？すいようび は むずかしい です が、もくようび なら だいじょうぶ です。",
+      "traduction": "Mercredi prochain l'après-midi vous convient-il ? Mercredi c'est difficile, mais jeudi ça va.",
+      "questions": [
+        {
+          "q": "Quel jour est proposé d'abord ?",
+          "choix": [
+            "Mercredi",
+            "Jeudi",
+            "Vendredi"
+          ],
+          "correct": 0,
+          "feedback": "水曜日 = mercredi."
+        },
+        {
+          "q": "Quel jour convient finalement ?",
+          "choix": [
+            "Jeudi",
+            "Mercredi",
+            "Lundi"
+          ],
+          "correct": 0,
+          "feedback": "木曜日なら大丈夫 = jeudi ça va."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-meteo5",
+      "titre": "Alerte météo",
+      "emoji": "⛈️",
+      "audio_jp": "台風が近づいています。明日は電車が止まる可能性があります。外出はお控えください。",
+      "audio_romaji": "Taifū ga chikazuite imasu. Ashita wa densha ga tomaru kanōsei ga arimasu. Gaishutsu wa ohikae kudasai.",
+      "audio_kana": "たいふう が ちかづいて います。あした は でんしゃ が とまる かのうせい が あります。がいしゅつ は おひかえ ください。",
+      "traduction": "Un typhon approche. Demain, les trains risquent d'être arrêtés. Évitez de sortir.",
+      "questions": [
+        {
+          "q": "Quel phénomène approche ?",
+          "choix": [
+            "Un typhon",
+            "Un séisme",
+            "La neige"
+          ],
+          "correct": 0,
+          "feedback": "台風 (taifū) = typhon."
+        },
+        {
+          "q": "Que conseille-t-on ?",
+          "choix": [
+            "Éviter de sortir",
+            "Prendre le train",
+            "Aller travailler"
+          ],
+          "correct": 0,
+          "feedback": "外出はお控え = évitez de sortir."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-resto3",
+      "titre": "Allergies au restaurant",
+      "emoji": "🥜",
+      "audio_jp": "卵アレルギーがあるのですが、この料理は大丈夫ですか？少々お待ちください。確認してまいります。",
+      "audio_romaji": "Tamago arerugī ga aru no desu ga, kono ryōri wa daijōbu desu ka? Shōshō omachi kudasai. Kakunin shite mairimasu.",
+      "audio_kana": "たまご あれるぎー が ある の です が、この りょうり は だいじょうぶ です か？しょうしょう おまち ください。かくにん して まいります。",
+      "traduction": "J'ai une allergie aux œufs, est-ce que ce plat est OK ? Un instant, je vais vérifier.",
+      "questions": [
+        {
+          "q": "À quoi le client est-il allergique ?",
+          "choix": [
+            "Aux œufs",
+            "Aux arachides",
+            "Au lait"
+          ],
+          "correct": 0,
+          "feedback": "卵アレルギー = allergie aux œufs."
+        },
+        {
+          "q": "Que fait le serveur ?",
+          "choix": [
+            "Va vérifier",
+            "Refuse",
+            "Sert quand même"
+          ],
+          "correct": 0,
+          "feedback": "確認してまいります = je vais vérifier."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-hotel2",
+      "titre": "À la réception",
+      "emoji": "🛎️",
+      "audio_jp": "チェックアウトは何時までですか？午前十一時までです。荷物は預かれますか？はい、夕方まで大丈夫です。",
+      "audio_romaji": "Chekku-auto wa nanji made desu ka? Gozen jūichi-ji made desu. Nimotsu wa azukaremasu ka? Hai, yūgata made daijōbu desu.",
+      "audio_kana": "ちぇっくあうと は なんじ まで です か？ごぜん じゅういちじ まで です。にもつ は あずかれます か？はい、ゆうがた まで だいじょうぶ です。",
+      "traduction": "Jusqu'à quelle heure le check-out ? Jusqu'à 11h. Pouvez-vous garder mes bagages ? Oui, jusqu'au soir.",
+      "questions": [
+        {
+          "q": "Heure limite de check-out ?",
+          "choix": [
+            "11h",
+            "midi",
+            "10h"
+          ],
+          "correct": 0,
+          "feedback": "十一時 = 11h."
+        },
+        {
+          "q": "Jusqu'à quand garder les bagages ?",
+          "choix": [
+            "Le soir",
+            "Midi",
+            "Une heure"
+          ],
+          "correct": 0,
+          "feedback": "夕方まで = jusqu'au soir."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-magasin2",
+      "titre": "En rupture de stock",
+      "emoji": "👕",
+      "audio_jp": "このシャツのMサイズはありますか？申し訳ありません、ただいま品切れです。来週入荷予定です。",
+      "audio_romaji": "Kono shatsu no M saizu wa arimasu ka? Mōshiwake arimasen, tadaima shinagire desu. Raishū nyūka yotei desu.",
+      "audio_kana": "この しゃつ の Mさいず は あります か？もうしわけ ありません、ただいま しなぎれ です。らいしゅう にゅうか よてい です。",
+      "traduction": "Avez-vous cette chemise en taille M ? Désolé, c'est en rupture actuellement. Réapprovisionnement prévu la semaine prochaine.",
+      "questions": [
+        {
+          "q": "Quelle taille demande le client ?",
+          "choix": [
+            "M",
+            "L",
+            "S"
+          ],
+          "correct": 0,
+          "feedback": "Mサイズ = taille M."
+        },
+        {
+          "q": "Quand le réassort ?",
+          "choix": [
+            "La semaine prochaine",
+            "Demain",
+            "Jamais"
+          ],
+          "correct": 0,
+          "feedback": "来週入荷予定 = réassort semaine prochaine."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-banque2",
+      "titre": "Retrait d'argent",
+      "emoji": "🏧",
+      "audio_jp": "この機械は英語が使えますか？はい、画面の右上で言語を変えられます。ありがとう、助かります。",
+      "audio_romaji": "Kono kikai wa eigo ga tsukaemasu ka? Hai, gamen no migiue de gengo wo kaeraremasu. Arigatō, tasukarimasu.",
+      "audio_kana": "この きかい は えいご が つかえます か？はい、がめん の みぎうえ で げんご を かえられます。ありがとう、たすかります。",
+      "traduction": "Cette machine fonctionne-t-elle en anglais ? Oui, vous pouvez changer la langue en haut à droite de l'écran. Merci, ça m'aide.",
+      "questions": [
+        {
+          "q": "Que demande la personne ?",
+          "choix": [
+            "Si l'anglais est disponible",
+            "Le solde",
+            "Un reçu"
+          ],
+          "correct": 0,
+          "feedback": "英語が使えますか = l'anglais est-il utilisable."
+        },
+        {
+          "q": "Où changer la langue ?",
+          "choix": [
+            "En haut à droite",
+            "En bas",
+            "Au centre"
+          ],
+          "correct": 0,
+          "feedback": "画面の右上 = en haut à droite."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-cours",
+      "titre": "À l'école de langue",
+      "emoji": "🏫",
+      "audio_jp": "宿題は明日までに出してください。もし分からないところがあれば、メールで質問してもいいですよ。",
+      "audio_romaji": "Shukudai wa ashita made ni dashite kudasai. Moshi wakaranai tokoro ga areba, mēru de shitsumon shite mo ii desu yo.",
+      "audio_kana": "しゅくだい は あした まで に だして ください。もし わからない ところ が あれば、めーる で しつもん して も いい です よ。",
+      "traduction": "Rendez le devoir pour demain. Si quelque chose n'est pas clair, vous pouvez poser des questions par e-mail.",
+      "questions": [
+        {
+          "q": "Pour quand le devoir ?",
+          "choix": [
+            "Demain",
+            "La semaine prochaine",
+            "Aujourd'hui"
+          ],
+          "correct": 0,
+          "feedback": "明日までに = pour demain."
+        },
+        {
+          "q": "Comment poser une question ?",
+          "choix": [
+            "Par e-mail",
+            "Par téléphone",
+            "En personne"
+          ],
+          "correct": 0,
+          "feedback": "メールで質問 = questions par e-mail."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-pharmacie",
+      "titre": "Conseil pharmacie",
+      "emoji": "💊",
+      "audio_jp": "この薬は眠くなることがあります。運転する前には飲まないでください。一日二回までです。",
+      "audio_romaji": "Kono kusuri wa nemuku naru koto ga arimasu. Unten suru mae ni wa nomanaide kudasai. Ichinichi nikai made desu.",
+      "audio_kana": "この くすり は ねむく なる こと が あります。うんてん する まえ に は のまないで ください。いちにち にかい まで です。",
+      "traduction": "Ce médicament peut donner sommeil. Ne le prenez pas avant de conduire. Deux fois par jour maximum.",
+      "questions": [
+        {
+          "q": "Quel effet secondaire ?",
+          "choix": [
+            "La somnolence",
+            "Des maux de tête",
+            "Rien"
+          ],
+          "correct": 0,
+          "feedback": "眠くなる = donne sommeil."
+        },
+        {
+          "q": "Quand ne pas le prendre ?",
+          "choix": [
+            "Avant de conduire",
+            "Le matin",
+            "Après manger"
+          ],
+          "correct": 0,
+          "feedback": "運転する前 = avant de conduire."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-reservation",
+      "titre": "Réserver par téléphone",
+      "emoji": "☎️",
+      "audio_jp": "二名で予約したいのですが、金曜日の夜は空いていますか？金曜日は満席ですが、土曜日なら七時に取れます。",
+      "audio_romaji": "Nimei de yoyaku shitai no desu ga, kin'yōbi no yoru wa aite imasu ka? Kin'yōbi wa manseki desu ga, doyōbi nara shichi-ji ni toremasu.",
+      "audio_kana": "にめい で よやく したい の です が、きんようび の よる は あいて います か？きんようび は まんせき です が、どようび なら しちじ に とれます。",
+      "traduction": "Je voudrais réserver pour deux, vendredi soir est-il libre ? Vendredi c'est complet, mais samedi je peux à 19h.",
+      "questions": [
+        {
+          "q": "Pour combien de personnes ?",
+          "choix": [
+            "Deux",
+            "Trois",
+            "Quatre"
+          ],
+          "correct": 0,
+          "feedback": "二名 = 2 personnes."
+        },
+        {
+          "q": "Quel jour est disponible ?",
+          "choix": [
+            "Samedi",
+            "Vendredi",
+            "Dimanche"
+          ],
+          "correct": 0,
+          "feedback": "土曜日なら = samedi possible."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-perdu",
+      "titre": "Objet perdu",
+      "emoji": "🎒",
+      "audio_jp": "電車にかばんを忘れてしまいました。何線ですか？山手線です。では、終点の駅に問い合わせてください。",
+      "audio_romaji": "Densha ni kaban wo wasurete shimaimashita. Nani-sen desu ka? Yamanote-sen desu. Dewa, shūten no eki ni toiawasete kudasai.",
+      "audio_kana": "でんしゃ に かばん を わすれて しまいました。なにせん です か？やまのてせん です。では、しゅうてん の えき に といあわせて ください。",
+      "traduction": "J'ai oublié mon sac dans le train. Quelle ligne ? La ligne Yamanote. Alors, renseignez-vous à la gare terminus.",
+      "questions": [
+        {
+          "q": "Qu'a oublié la personne ?",
+          "choix": [
+            "Son sac",
+            "Son parapluie",
+            "Son téléphone"
+          ],
+          "correct": 0,
+          "feedback": "かばん = sac."
+        },
+        {
+          "q": "Quelle ligne ?",
+          "choix": [
+            "Yamanote",
+            "Chuo",
+            "Ginza"
+          ],
+          "correct": 0,
+          "feedback": "山手線 = ligne Yamanote."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-i-meteo-tv",
+      "titre": "Météo à la télé",
+      "emoji": "📺",
+      "audio_jp": "明日は全国的に晴れるでしょう。ただし、北海道では雪が予想されます。気温は東京で十五度の予想です。",
+      "audio_romaji": "Ashita wa zenkokuteki ni hareru deshō. Tadashi, Hokkaidō de wa yuki ga yosō saremasu. Kion wa Tōkyō de jūgo-do no yosō desu.",
+      "audio_kana": "あした は ぜんこくてき に はれる でしょう。ただし、ほっかいどう で は ゆき が よそう されます。きおん は とうきょう で じゅうごど の よそう です。",
+      "traduction": "Demain il fera beau dans tout le pays. Toutefois, de la neige est prévue à Hokkaido. La température sera de 15 degrés à Tokyo.",
+      "questions": [
+        {
+          "q": "Quel temps général demain ?",
+          "choix": [
+            "Beau",
+            "Pluvieux",
+            "Orageux"
+          ],
+          "correct": 0,
+          "feedback": "全国的に晴れる = beau partout."
+        },
+        {
+          "q": "Où neigera-t-il ?",
+          "choix": [
+            "À Hokkaido",
+            "À Tokyo",
+            "À Osaka"
+          ],
+          "correct": 0,
+          "feedback": "北海道では雪 = neige à Hokkaido."
+        }
+      ],
+      "niveau": "Intermédiaire"
+    },
+    {
+      "id": "co-a-annonce-vol",
+      "titre": "Annonce à l'aéroport",
+      "emoji": "✈️",
+      "audio_jp": "パリ行き、JL415便をご利用のお客様にご案内いたします。出発が悪天候のため、約一時間遅れる見込みです。ご迷惑をおかけし申し訳ございません。",
+      "audio_romaji": "Pari-yuki, JL415-bin wo go-riyō no okyaku-sama ni go-annai itashimasu. Shuppatsu ga akutenkō no tame, yaku ichi-jikan okureru mikomi desu. Go-meiwaku wo okake shi mōshiwake gozaimasen.",
+      "audio_kana": "ぱりゆき、JL415びん を ごりよう の おきゃくさま に ごあんない いたします。しゅっぱつ が あくてんこう の ため、やく いちじかん おくれる みこみ です。ごめいわく を おかけ し もうしわけ ございません。",
+      "traduction": "Avis aux passagers du vol JL415 à destination de Paris. En raison du mauvais temps, le départ devrait être retardé d'environ une heure. Nous vous prions de nous excuser pour la gêne occasionnée.",
+      "questions": [
+        {
+          "q": "Quelle est la destination ?",
+          "choix": [
+            "Paris",
+            "Londres",
+            "New York"
+          ],
+          "correct": 0,
+          "feedback": "パリ行き = à destination de Paris."
+        },
+        {
+          "q": "Pourquoi le retard ?",
+          "choix": [
+            "Mauvais temps",
+            "Problème technique",
+            "Grève"
+          ],
+          "correct": 0,
+          "feedback": "悪天候のため = à cause du mauvais temps."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-entretien",
+      "titre": "Entretien d'embauche",
+      "emoji": "💼",
+      "audio_jp": "前職ではどのような業務を担当されていましたか？主に海外営業を担当し、新規顧客の開拓に力を入れておりました。",
+      "audio_romaji": "Zenshoku de wa dono yō na gyōmu wo tantō sarete imashita ka? Omo ni kaigai eigyō wo tantō shi, shinki kokyaku no kaitaku ni chikara wo irete orimashita.",
+      "audio_kana": "ぜんしょく で は どの よう な ぎょうむ を たんとう されて いました か？おも に かいがい えいぎょう を たんとう し、しんき こきゃく の かいたく に ちから を いれて おりました。",
+      "traduction": "Quelles missions assuriez-vous dans votre emploi précédent ? Je m'occupais principalement de la vente à l'international et je me consacrais au développement de nouveaux clients.",
+      "questions": [
+        {
+          "q": "Quel était le domaine de la personne ?",
+          "choix": [
+            "La vente à l'international",
+            "La comptabilité",
+            "L'informatique"
+          ],
+          "correct": 0,
+          "feedback": "海外営業 = vente à l'international."
+        },
+        {
+          "q": "Sur quoi se concentrait-elle ?",
+          "choix": [
+            "Nouveaux clients",
+            "Réduction des coûts",
+            "Formation"
+          ],
+          "correct": 0,
+          "feedback": "新規顧客の開拓 = développer de nouveaux clients."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-conference",
+      "titre": "Début de conférence",
+      "emoji": "🎤",
+      "audio_jp": "本日はお忙しい中、お越しいただきありがとうございます。これより、地球温暖化の現状と私たちにできることについてお話しさせていただきます。",
+      "audio_romaji": "Honjitsu wa oisogashii naka, okoshi itadaki arigatō gozaimasu. Kore yori, chikyū ondanka no genjō to watashitachi ni dekiru koto ni tsuite ohanashi sasete itadakimasu.",
+      "audio_kana": "ほんじつ は おいそがしい なか、おこし いただき ありがとうございます。これ より、ちきゅう おんだんか の げんじょう と わたしたち に できる こと に ついて おはなし させて いただきます。",
+      "traduction": "Merci d'être venus aujourd'hui malgré vos occupations. Je vais à présent vous parler de l'état actuel du réchauffement climatique et de ce que nous pouvons faire.",
+      "questions": [
+        {
+          "q": "Quel est le sujet de la conférence ?",
+          "choix": [
+            "Le réchauffement climatique",
+            "L'économie",
+            "La santé"
+          ],
+          "correct": 0,
+          "feedback": "地球温暖化 = réchauffement climatique."
+        },
+        {
+          "q": "Quel est le registre employé ?",
+          "choix": [
+            "Très poli",
+            "Familier",
+            "Neutre"
+          ],
+          "correct": 0,
+          "feedback": "させていただきます = keigo poli."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-hopital",
+      "titre": "Explication médicale",
+      "emoji": "🩺",
+      "audio_jp": "検査の結果、特に問題はありませんでした。ただ、少し疲れがたまっているようなので、しっかり休養を取ることをお勧めします。",
+      "audio_romaji": "Kensa no kekka, toku ni mondai wa arimasen deshita. Tada, sukoshi tsukare ga tamatte iru yō nanode, shikkari kyūyō wo toru koto wo osusume shimasu.",
+      "audio_kana": "けんさ の けっか、とく に もんだい は ありません でした。ただ、すこし つかれ が たまって いる よう なので、しっかり きゅうよう を とる こと を おすすめ します。",
+      "traduction": "Les résultats de l'examen ne montrent pas de problème particulier. Cependant, vous semblez accumuler un peu de fatigue, donc je vous recommande de bien vous reposer.",
+      "questions": [
+        {
+          "q": "Quel est le résultat de l'examen ?",
+          "choix": [
+            "Pas de problème particulier",
+            "Grave",
+            "Inquiétant"
+          ],
+          "correct": 0,
+          "feedback": "特に問題はありません = pas de problème particulier."
+        },
+        {
+          "q": "Que recommande le médecin ?",
+          "choix": [
+            "Bien se reposer",
+            "Des médicaments",
+            "Une opération"
+          ],
+          "correct": 0,
+          "feedback": "休養を取る = se reposer."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-news",
+      "titre": "Flash info",
+      "emoji": "📰",
+      "audio_jp": "今朝未明、東京で震度四の地震がありました。津波の心配はありません。鉄道各社は安全確認のため、一時運転を見合わせました。",
+      "audio_romaji": "Kesa mimei, Tōkyō de shindo yon no jishin ga arimashita. Tsunami no shinpai wa arimasen. Tetsudō kakusha wa anzen kakunin no tame, ichiji unten wo miawasemashita.",
+      "audio_kana": "けさ みめい、とうきょう で しんど よん の じしん が ありました。つなみ の しんぱい は ありません。てつどう かくしゃ は あんぜん かくにん の ため、いちじ うんてん を みあわせました。",
+      "traduction": "Tôt ce matin, un séisme d'intensité 4 a eu lieu à Tokyo. Pas de risque de tsunami. Les compagnies ferroviaires ont temporairement suspendu le trafic pour vérifier la sécurité.",
+      "questions": [
+        {
+          "q": "Que s'est-il passé ?",
+          "choix": [
+            "Un séisme",
+            "Un typhon",
+            "Un incendie"
+          ],
+          "correct": 0,
+          "feedback": "地震 = séisme."
+        },
+        {
+          "q": "Y a-t-il un risque de tsunami ?",
+          "choix": [
+            "Non",
+            "Oui",
+            "Inconnu"
+          ],
+          "correct": 0,
+          "feedback": "津波の心配はありません = pas de risque de tsunami."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-plainte",
+      "titre": "Gérer une réclamation",
+      "emoji": "😟",
+      "audio_jp": "先日購入した商品が届いたのですが、傷がついていました。大変申し訳ございません。すぐに新しいものと交換させていただきます。",
+      "audio_romaji": "Senjitsu kōnyū shita shōhin ga todoita no desu ga, kizu ga tsuite imashita. Taihen mōshiwake gozaimasen. Sugu ni atarashii mono to kōkan sasete itadakimasu.",
+      "audio_kana": "せんじつ こうにゅう した しょうひん が とどいた の です が、きず が ついて いました。たいへん もうしわけ ございません。すぐ に あたらしい もの と こうかん させて いただきます。",
+      "traduction": "Le produit que j'ai acheté l'autre jour est arrivé, mais il était abîmé. Nous sommes vraiment désolés. Nous allons l'échanger immédiatement contre un neuf.",
+      "questions": [
+        {
+          "q": "Quel est le problème ?",
+          "choix": [
+            "Produit abîmé",
+            "Produit non reçu",
+            "Mauvais produit"
+          ],
+          "correct": 0,
+          "feedback": "傷がついていました = il était abîmé."
+        },
+        {
+          "q": "Quelle solution propose le vendeur ?",
+          "choix": [
+            "Un échange",
+            "Un remboursement",
+            "Rien"
+          ],
+          "correct": 0,
+          "feedback": "交換させていただきます = nous échangeons."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-debat",
+      "titre": "Échange d'opinions",
+      "emoji": "💬",
+      "audio_jp": "私はリモートワークに賛成です。通勤時間が減り、効率が上がると思います。なるほど。でも、コミュニケーションが難しくなる面もありますよね。",
+      "audio_romaji": "Watashi wa rimōto wāku ni sansei desu. Tsūkin jikan ga heri, kōritsu ga agaru to omoimasu. Naruhodo. Demo, komyunikēshon ga muzukashiku naru men mo arimasu yo ne.",
+      "audio_kana": "わたし は りもーと わーく に さんせい です。つうきん じかん が へり、こうりつ が あがる と おもいます。なるほど。でも、こみゅにけーしょん が むずかしく なる めん も あります よ ね。",
+      "traduction": "Je suis pour le télétravail. Le temps de trajet diminue et je pense que l'efficacité augmente. Je vois. Mais il y a aussi l'aspect où la communication devient plus difficile, non ?",
+      "questions": [
+        {
+          "q": "Quelle est la position du premier locuteur ?",
+          "choix": [
+            "Pour le télétravail",
+            "Contre",
+            "Indécis"
+          ],
+          "correct": 0,
+          "feedback": "賛成です = je suis pour."
+        },
+        {
+          "q": "Quel inconvénient soulève le second ?",
+          "choix": [
+            "Communication plus difficile",
+            "Coût élevé",
+            "Moins de productivité"
+          ],
+          "correct": 0,
+          "feedback": "コミュニケーションが難しくなる = communication plus difficile."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-tradition2",
+      "titre": "Guide au temple",
+      "emoji": "⛩️",
+      "audio_jp": "こちらが本堂でございます。お参りの際は、まず手水で手と口を清めてから進んでください。写真撮影はこのエリアではご遠慮ください。",
+      "audio_romaji": "Kochira ga hondō de gozaimasu. Omairi no sai wa, mazu chōzu de te to kuchi wo kiyomete kara susunde kudasai. Shashin satsuei wa kono eria de wa go-enryo kudasai.",
+      "audio_kana": "こちら が ほんどう で ございます。おまいり の さい は、まず ちょうず で て と くち を きよめて から すすんで ください。しゃしん さつえい は この えりあ で は ごえんりょ ください。",
+      "traduction": "Voici le bâtiment principal. Pour prier, purifiez d'abord vos mains et votre bouche au pavillon d'ablutions avant d'avancer. Merci de vous abstenir de photographier dans cette zone.",
+      "questions": [
+        {
+          "q": "Que faire avant de prier ?",
+          "choix": [
+            "Se purifier mains et bouche",
+            "Enlever ses chaussures",
+            "Sonner une cloche"
+          ],
+          "correct": 0,
+          "feedback": "手水で手と口を清める = purifier mains et bouche."
+        },
+        {
+          "q": "Peut-on photographier ici ?",
+          "choix": [
+            "Non",
+            "Oui",
+            "Avec autorisation"
+          ],
+          "correct": 0,
+          "feedback": "ご遠慮ください = veuillez vous abstenir."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-projet",
+      "titre": "Réunion de projet",
+      "emoji": "📊",
+      "audio_jp": "今回のプロジェクトですが、納期が一週間早まりました。つきましては、来週までに各自の進捗を共有していただけますか。難しい場合は早めにご相談ください。",
+      "audio_romaji": "Konkai no purojekuto desu ga, nōki ga isshūkan hayamarimashita. Tsukimashite wa, raishū made ni kakuji no shinchoku wo kyōyū shite itadakemasu ka. Muzukashii baai wa hayame ni go-sōdan kudasai.",
+      "audio_kana": "こんかい の ぷろじぇくと です が、のうき が いっしゅうかん はやまりました。つきまして は、らいしゅう まで に かくじ の しんちょく を きょうゆう して いただけます か。むずかしい ばあい は はやめ に ごそうだん ください。",
+      "traduction": "Concernant ce projet, l'échéance a été avancée d'une semaine. Par conséquent, pourriez-vous partager l'avancement de chacun d'ici la semaine prochaine ? En cas de difficulté, consultez-nous au plus tôt.",
+      "questions": [
+        {
+          "q": "Qu'est-ce qui a changé ?",
+          "choix": [
+            "L'échéance avancée d'une semaine",
+            "Le budget",
+            "L'équipe"
+          ],
+          "correct": 0,
+          "feedback": "納期が一週間早まりました = échéance avancée d'une semaine."
+        },
+        {
+          "q": "Que faire en cas de difficulté ?",
+          "choix": [
+            "Consulter au plus tôt",
+            "Abandonner",
+            "Attendre"
+          ],
+          "correct": 0,
+          "feedback": "早めにご相談 = consulter rapidement."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-radio",
+      "titre": "Émission de radio",
+      "emoji": "📻",
+      "audio_jp": "さて、次のコーナーは皆様からのお便りを紹介します。今日のテーマは「人生で一番心に残る旅」です。たくさんのご応募ありがとうございました。",
+      "audio_romaji": "Sate, tsugi no kōnā wa minasama kara no otayori wo shōkai shimasu. Kyō no tēma wa 'jinsei de ichiban kokoro ni nokoru tabi' desu. Takusan no go-ōbo arigatō gozaimashita.",
+      "audio_kana": "さて、つぎ の こーなー は みなさま から の おたより を しょうかい します。きょう の てーま は「じんせい で いちばん こころ に のこる たび」です。たくさん の ごおうぼ ありがとうございました。",
+      "traduction": "Bien, dans la prochaine rubrique, nous présentons vos messages. Le thème du jour est « le voyage le plus marquant de votre vie ». Merci pour vos nombreuses participations.",
+      "questions": [
+        {
+          "q": "Que présente la rubrique ?",
+          "choix": [
+            "Les messages des auditeurs",
+            "Les nouvelles",
+            "La météo"
+          ],
+          "correct": 0,
+          "feedback": "お便りを紹介 = présenter les messages."
+        },
+        {
+          "q": "Quel est le thème du jour ?",
+          "choix": [
+            "Le voyage le plus marquant",
+            "La cuisine",
+            "Le travail"
+          ],
+          "correct": 0,
+          "feedback": "心に残る旅 = le voyage marquant."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-keigo2",
+      "titre": "Accueil client (keigo)",
+      "emoji": "🙇",
+      "audio_jp": "いらっしゃいませ。ただいま担当の者がまいりますので、あちらのソファーで少々お待ちいただけますでしょうか。お飲み物はいかがなさいますか。",
+      "audio_romaji": "Irasshaimase. Tadaima tantō no mono ga mairimasu node, achira no sofā de shōshō omachi itadakemasu deshō ka. Onomimono wa ikaga nasaimasu ka.",
+      "audio_kana": "いらっしゃいませ。ただいま たんとう の もの が まいります ので、あちら の そふぁー で しょうしょう おまち いただけます でしょう か。おのみもの は いかが なさいます か。",
+      "traduction": "Bienvenue. La personne responsable arrive, pourriez-vous patienter un instant sur le canapé là-bas ? Que désirez-vous boire ?",
+      "questions": [
+        {
+          "q": "Que demande-t-on au client ?",
+          "choix": [
+            "De patienter",
+            "De partir",
+            "De payer"
+          ],
+          "correct": 0,
+          "feedback": "少々お待ち = patienter un instant."
+        },
+        {
+          "q": "Que propose-t-on en plus ?",
+          "choix": [
+            "Une boisson",
+            "Un repas",
+            "Un cadeau"
+          ],
+          "correct": 0,
+          "feedback": "お飲み物 = une boisson."
+        }
+      ],
+      "niveau": "Avancé"
+    },
+    {
+      "id": "co-a-meteo-detail",
+      "titre": "Météo détaillée",
+      "emoji": "🌡️",
+      "audio_jp": "週明けは高気圧に覆われ、安定した晴天が続くでしょう。しかし、週の半ばからは前線の影響で大気が不安定になり、所により雷雨の可能性があります。",
+      "audio_romaji": "Shūake wa kōkiatsu ni ōware, antei shita seiten ga tsuzuku deshō. Shikashi, shū no nakaba kara wa zensen no eikyō de taiki ga fuantei ni nari, tokoro ni yori raiu no kanōsei ga arimasu.",
+      "audio_kana": "しゅうあけ は こうきあつ に おおわれ、あんてい した せいてん が つづく でしょう。しかし、しゅう の なかば から は ぜんせん の えいきょう で たいき が ふあんてい に なり、ところ に より らいう の かのうせい が あります。",
+      "traduction": "En début de semaine, un anticyclone couvrira la région et un temps stable et ensoleillé devrait persister. Mais à partir du milieu de semaine, sous l'influence d'un front, l'atmosphère deviendra instable et des orages sont possibles par endroits.",
+      "questions": [
+        {
+          "q": "Quel temps en début de semaine ?",
+          "choix": [
+            "Stable et ensoleillé",
+            "Pluvieux",
+            "Orageux"
+          ],
+          "correct": 0,
+          "feedback": "安定した晴天 = stable et ensoleillé."
+        },
+        {
+          "q": "Que se passe-t-il en milieu de semaine ?",
+          "choix": [
+            "Atmosphère instable, orages possibles",
+            "Neige",
+            "Canicule"
+          ],
+          "correct": 0,
+          "feedback": "大気が不安定, 雷雨の可能性 = instable, orages possibles."
+        }
+      ],
+      "niveau": "Avancé"
     }
   ],
   "defis_jour": [
