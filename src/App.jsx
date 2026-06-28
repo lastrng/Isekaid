@@ -664,17 +664,77 @@ function StreakSection({C,streak,isPremium}){
 
 // ─── Wiki engine ──────────────────────────────────────────────────────────────
 // Split text into segments, marking known wiki terms as tapable
+// Détecte si une chaîne contient des caractères japonais (kana/kanji)
+function hasJapanese(str){
+  return /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/.test(str);
+}
+
+// Test unique : le navigateur supporte-t-il le lookbehind regex ?
+let _lookbehindOK = null;
+function supportsLookbehind(){
+  if(_lookbehindOK !== null) return _lookbehindOK;
+  try { new RegExp("(?<!x)y"); _lookbehindOK = true; }
+  catch { _lookbehindOK = false; }
+  return _lookbehindOK;
+}
+
 function parseWikiText(text, wikiMap){
   if (!text || !wikiMap || Object.keys(wikiMap).length === 0)
     return [{type:"text", value:text}];
   const triggers = Object.keys(wikiMap).sort((a,b)=>b.length-a.length);
-  const escaped = triggers.map(w => w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
-  const pattern = new RegExp(`(${escaped.join("|")})`, "gi");
-  const parts = text.split(pattern);
-  return parts.filter(p => p !== "").map(part => {
-    const entry = wikiMap[part.toLowerCase()];
-    return entry ? {type:"wiki", value:part, term:entry} : {type:"text", value:part};
+
+  // Deux familles de termes, traitées différemment :
+  //  - LATINS : encadrés de frontières (évite "ma" dans "amants", "wa" dans "wagon")
+  //  - JAPONAIS : match direct (la notion de frontière de mot regex ne s'applique pas)
+  const L = "A-Za-zÀ-ÖØ-öø-ÿ";
+  const latinTerms = [], jpTerms = [];
+  triggers.forEach(w=>{
+    const esc = w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    if(hasJapanese(w)) jpTerms.push(esc); else latinTerms.push(esc);
   });
+
+  const groups = [];
+  if(supportsLookbehind()){
+    // Chemin moderne : frontières propres via lookarounds
+    if(latinTerms.length) groups.push(`(?<![${L}])(?:${latinTerms.join("|")})(?![${L}])`);
+    if(jpTerms.length)    groups.push(`(?:${jpTerms.join("|")})`);
+    if(!groups.length) return [{type:"text", value:text}];
+    const pattern = new RegExp(`(${groups.join("|")})`, "gi");
+    const parts = text.split(pattern);
+    return parts.filter(p => p !== "" && p !== undefined).map(part => {
+      const entry = wikiMap[part.toLowerCase()] || wikiMap[part];
+      return entry ? {type:"wiki", value:part, term:entry} : {type:"text", value:part};
+    });
+  }
+
+  // Fallback sans lookbehind (vieux Safari) : on scanne manuellement
+  // en vérifiant les frontières latines à la main.
+  const allTerms = [...latinTerms, ...jpTerms];
+  if(!allTerms.length) return [{type:"text", value:text}];
+  const pattern = new RegExp(`(${allTerms.join("|")})`, "gi");
+  const out = [];
+  let last = 0, m;
+  pattern.lastIndex = 0;
+  const isLetter = (ch)=> ch && new RegExp(`[${L}]`).test(ch);
+  while((m = pattern.exec(text)) !== null){
+    const matched = m[0];
+    const start = m.index, end = start + matched.length;
+    // Si terme latin, vérifier les frontières manuellement
+    if(!hasJapanese(matched)){
+      const before = text[start-1], after = text[end];
+      if(isLetter(before) || isLetter(after)){
+        if(pattern.lastIndex === m.index) pattern.lastIndex++;
+        continue; // frontière invalide → on ignore ce match
+      }
+    }
+    if(start > last) out.push({type:"text", value:text.slice(last,start)});
+    const entry = wikiMap[matched.toLowerCase()] || wikiMap[matched];
+    out.push(entry ? {type:"wiki", value:matched, term:entry} : {type:"text", value:matched});
+    last = end;
+    if(pattern.lastIndex === m.index) pattern.lastIndex++;
+  }
+  if(last < text.length) out.push({type:"text", value:text.slice(last)});
+  return out.length ? out : [{type:"text", value:text}];
 }
 
 function WikiText({C, text, style, wikiMap, onWikiTap}){
