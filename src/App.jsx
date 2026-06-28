@@ -901,8 +901,9 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
     return ()=> clearInterval(t);
   },[]);
 
-  // Marque "lire le contenu du jour" à l'arrivée sur l'accueil
-  useEffect(()=>{ if(onTask) onTask("daily"); },[]);
+  // Marque "lire le contenu du jour" à l'arrivée sur l'accueil.
+  // Se redéclenche si le jour de la mission change (ex. après chargement cloud).
+  useEffect(()=>{ if(onTask) onTask("daily"); },[mission?.day]);
 
   const {month,day,weekday,hour} = getJPDate();
   const g = greet(hour, user.name==="Voyageur"?"":user.name);
@@ -3375,6 +3376,72 @@ function ComprehensionListen({ C, db, script }){
   );
 }
 
+// ─── Révision espacée : revoir les kana échus (priorité aux plus fragiles) ─────
+function ReviewMode({ C, dueChars, onRecord, onExit }){
+  const [queue, setQueue] = useState(()=>dueChars.slice(0, 20)); // session de 20 max
+  const [idx, setIdx] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+  const [done, setDone] = useState(0);
+  const [correct, setCorrect] = useState(0);
+  const total = queue.length;
+  const cur = queue[idx];
+
+  if(!cur || idx >= queue.length){
+    // Bilan de fin de session
+    return(
+      <div style={{padding:"40px 24px",textAlign:"center"}}>
+        <div style={{fontSize:54,marginBottom:14,animation:"popBounce .6s cubic-bezier(.34,1.56,.64,1) both"}}>{correct===total?"🎉":"✓"}</div>
+        <div style={{fontSize:22,color:C.text,fontWeight:600,marginBottom:8}}>Révision terminée !</div>
+        <div style={{fontSize:15,color:C.t2,marginBottom:28}}>{correct} / {total} réussis</div>
+        <button onClick={onExit} className="pop-press" style={{padding:"13px 28px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
+      </div>
+    );
+  }
+
+  const answer = (known)=>{
+    onRecord(cur.k, known);
+    setDone(d=>d+1);
+    if(known) setCorrect(c=>c+1);
+    setRevealed(false);
+    setIdx(i=>i+1);
+  };
+
+  return(
+    <div style={{padding:"20px 24px 40px"}}>
+      {/* Barre de progression */}
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
+        <button onClick={onExit} style={{background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>✕ Quitter</button>
+        <span style={{fontSize:12,color:C.t3,fontWeight:600}}>{idx+1} / {total}</span>
+      </div>
+      <div style={{height:4,background:C.s3,borderRadius:2,overflow:"hidden",marginBottom:32}}>
+        <div style={{height:"100%",width:`${(idx/total)*100}%`,background:C.red,borderRadius:2,transition:"width .3s"}}/>
+      </div>
+
+      {/* Carte du kana */}
+      <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"48px 20px",textAlign:"center",marginBottom:20,boxShadow:"0 4px 20px rgba(0,0,0,0.05)"}}>
+        <div style={{fontSize:88,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:revealed?16:0,lineHeight:1}}>{cur.k}</div>
+        {revealed && <div style={{fontSize:26,color:C.red,fontWeight:600,animation:"fadeIn .25s ease"}}>{cur.r}</div>}
+        <button onClick={()=>speakJP(cur.k)} style={{marginTop:18,padding:"7px 16px",background:C.s2,border:"none",borderRadius:20,color:C.t2,fontSize:12,cursor:"pointer"}}>🔊 Écouter</button>
+      </div>
+
+      {!revealed ? (
+        <button onClick={()=>setRevealed(true)} className="pop-press" style={{width:"100%",padding:"15px",background:C.text,border:"none",borderRadius:13,color:C.bg,fontSize:14,fontWeight:600,cursor:"pointer"}}>
+          Afficher la réponse
+        </button>
+      ) : (
+        <div style={{display:"flex",gap:12,animation:"fadeUp .25s ease"}}>
+          <button onClick={()=>answer(false)} className="pop-press" style={{flex:1,padding:"15px",background:"transparent",border:`1.5px solid ${C.red}`,borderRadius:13,color:C.red,fontSize:14,fontWeight:600,cursor:"pointer"}}>
+            😕 À revoir
+          </button>
+          <button onClick={()=>answer(true)} className="pop-press" style={{flex:1,padding:"15px",background:C.green,border:"none",borderRadius:13,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+            😊 Je savais
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep}){
   const [deck,setDeck] = useState(null);   // selected deck object
   const [mode,setMode] = useState(null);   // "flash" | "quiz"
@@ -3388,6 +3455,9 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   const situations = db?.situations || [];
   const kp = kanaProgress || {};
   const completed = pathProgress?.completed || [];
+  // Kana à réviser aujourd'hui (répétition espacée)
+  const ALL_KANA = useMemo(()=>[...HIRAGANA, ...KATAKANA, ...HIRAGANA_DAKUTEN, ...KATAKANA_DAKUTEN], []);
+  const dueChars = useMemo(()=>getDueForReview(kanaProgress, ALL_KANA), [kanaProgress, ALL_KANA]);
 
   // ── Checkpoint actif ──
   if(checkpoint){
@@ -3544,11 +3614,28 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
       <div style={{padding:"20px 20px 110px"}}>
 
         {/* ── Écran de choix (aucun mode sélectionné) ── */}
+        {learnMode==="review" && <ReviewMode C={C} dueChars={dueChars} onRecord={onRecordKana} onExit={()=>setLearnMode(null)}/>}
+
         {!learnMode && (()=>{
           const doneCount = TOKYO_PATH.filter(s=>completed.includes(s.id)).length;
           const pct = Math.round((doneCount/TOKYO_PATH.length)*100);
           return(
             <div style={{display:"flex",flexDirection:"column",gap:14}}>
+
+              {/* Carte Révision du jour — si des kana sont échus */}
+              {dueChars.length > 0 && (
+                <div className="lift" onClick={()=>setLearnMode("review")} style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.gold}55`,background:`linear-gradient(150deg,${C.gold}1f,transparent 70%)`,position:"relative"}}>
+                  <div style={{padding:"18px 20px",display:"flex",alignItems:"center",gap:16}}>
+                    <div style={{fontSize:40,animation:"heartbeat 1.8s ease infinite"}}>🔁</div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:10,color:C.gold,letterSpacing:".15em",textTransform:"uppercase",marginBottom:4,fontWeight:600}}>Révision du jour</div>
+                      <div style={{fontSize:17,color:C.text,fontWeight:700,marginBottom:2}}>{dueChars.length} caractère{dueChars.length>1?"s":""} à revoir</div>
+                      <div style={{fontSize:12,color:C.t2}}>Renforce ta mémoire avant d'oublier 🧠</div>
+                    </div>
+                    <span style={{fontSize:20,color:C.gold}}>›</span>
+                  </div>
+                </div>
+              )}
 
               {/* Carte Parcours Tokyo — hero */}
               <div className="lift" onClick={()=>setLearnMode("path")} style={{cursor:"pointer",borderRadius:20,overflow:"hidden",border:`1px solid rgba(201,70,61,0.3)`,boxShadow:"0 4px 20px rgba(201,70,61,0.08)"}}>
@@ -4887,6 +4974,39 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,fa
             {nextTier ? <>Prochain titre : <b style={{color:C.t2}}>{nextTier.emoji} {nextTier.title}</b> à {nextTier.min} jours</> : "Titre maximal atteint ! 🎌"}
           </div>
         </div>
+        {/* Tableau de bord de progression global */}
+        {(()=>{
+          const srs = srsStats(kanaProgress);
+          const totalKana = (HIRAGANA.length + KATAKANA.length + HIRAGANA_DAKUTEN.length + KATAKANA_DAKUTEN.length);
+          const scenDone = (scenProgress?.done?.length) || 0;
+          const scenTotal = (db?.scenarios?.length) || 0;
+          const pathDone = (pathProgress?.completed?.length) || 0;
+          const pathTotal = 8; // TOKYO_PATH paliers
+          const Stat = ({emoji,label,value,sub,color})=>(
+            <div style={{flex:1,minWidth:0,padding:"14px 12px",background:C.s2,borderRadius:12,textAlign:"center"}}>
+              <div style={{fontSize:22,marginBottom:4}}>{emoji}</div>
+              <div style={{fontSize:20,fontWeight:700,color:color||C.text,lineHeight:1}}>{value}</div>
+              <div style={{fontSize:10,color:C.t3,marginTop:3,lineHeight:1.3}}>{label}</div>
+              {sub && <div style={{fontSize:9,color:C.t3,marginTop:1}}>{sub}</div>}
+            </div>
+          );
+          return(
+            <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
+              <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:12,textTransform:"uppercase"}}>📊 Ma progression</div>
+              <div style={{display:"flex",gap:8,marginBottom:8}}>
+                <Stat emoji="🔥" label="Streak" value={`${streak?.count||0}j`} sub={`record ${streak?.best||0}j`} color={C.red}/>
+                <Stat emoji="🎴" label="Kana maîtrisés" value={`${srs.mastered}`} sub={`/ ${totalKana}`} color={C.gold}/>
+                <Stat emoji="💬" label="Scénarios" value={`${scenDone}`} sub={`/ ${scenTotal}`} color={C.green}/>
+              </div>
+              <div style={{display:"flex",gap:8}}>
+                <Stat emoji="🔁" label="À réviser" value={`${srs.due}`} sub="aujourd'hui" color={srs.due>0?C.red:C.t2}/>
+                <Stat emoji="📈" label="En cours" value={`${srs.learning}`} sub="d'apprentissage"/>
+                <Stat emoji="🗼" label="Parcours" value={`${pathDone}`} sub={`/ ${pathTotal} paliers`} color={C.indigo}/>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Kana mastery */}
         {(()=>{
           const hira = HIRAGANA || []; const kata = KATAKANA || [];
@@ -5119,7 +5239,7 @@ function DailyWelcome({C, streak, dailyInfo, onClose, isPremium}){
           </div>
         )}
 
-        <div style={{fontSize:60,marginBottom:6,animation:milestone?"heartbeat 1.2s ease infinite":"flameFlicker 1.6s ease infinite",filter:milestone?"drop-shadow(0 0 14px rgba(201,70,61,0.6))":"drop-shadow(0 0 10px rgba(232,98,58,0.45))"}}>{milestone?milestone.emoji:"🔥"}</div>
+        <div style={{fontSize:60,marginBottom:6,display:"inline-block",animation:milestone?"heartbeat 1.2s ease infinite":"flameFlicker 1.6s ease infinite",filter:milestone?"drop-shadow(0 0 14px rgba(201,70,61,0.6))":"drop-shadow(0 0 10px rgba(232,98,58,0.45))"}}>{milestone?milestone.emoji:"🔥"}</div>
 
         {milestone ? (
           <>
@@ -5491,7 +5611,49 @@ function saveKanaProgress(p){ try { localStorage.setItem(KANA_KEY, JSON.stringif
 function recordKana(progress, char, known){
   const cur = progress[char] || {seen:0, known:0};
   const next = { seen:cur.seen+1, known:cur.known + (known?1:0) };
+  // ─── Répétition espacée (Leitner simplifié) ───
+  // box : niveau de maîtrise 0→5. Bonne réponse = monte d'un cran, mauvaise = redescend.
+  // due : timestamp de la prochaine révision recommandée.
+  const INTERVALS_DAYS = [0, 1, 3, 7, 14, 30]; // box 0..5
+  const prevBox = cur.box || 0;
+  const box = known ? Math.min(prevBox+1, 5) : Math.max(prevBox-1, 0);
+  const now = Date.now();
+  const due = now + INTERVALS_DAYS[box]*24*60*60*1000;
+  next.box = box;
+  next.due = due;
+  next.last = now;
   return { ...progress, [char]: next };
+}
+
+// Renvoie la liste des caractères "à réviser" (échus), triés par priorité (plus en retard d'abord)
+function getDueForReview(kanaProgress, allChars){
+  if(!kanaProgress) return [];
+  const now = Date.now();
+  const due = [];
+  for(const c of (allChars||[])){
+    const p = kanaProgress[c.k];
+    if(!p) continue;                       // jamais vu → pas en révision (c'est de l'apprentissage)
+    if((p.box||0) >= 5) continue;          // maîtrisé → plus besoin de réviser souvent
+    if(p.due && p.due <= now){             // échu
+      due.push({ ...c, _overdue: now - p.due, _box: p.box||0 });
+    }
+  }
+  // Plus en retard d'abord, puis box le plus bas (le plus fragile)
+  due.sort((a,b)=> (b._overdue - a._overdue) || (a._box - b._box));
+  return due;
+}
+
+// Statistiques globales de maîtrise SRS
+function srsStats(kanaProgress){
+  const kp = kanaProgress || {};
+  const vals = Object.values(kp);
+  const now = Date.now();
+  return {
+    studied: vals.length,
+    mastered: vals.filter(v=>(v.box||0)>=5).length,
+    learning: vals.filter(v=>(v.box||0)>0 && (v.box||0)<5).length,
+    due: vals.filter(v=>v.due && v.due<=now && (v.box||0)<5).length,
+  };
 }
 // A char is "mastered" if known at least 3 times and success rate >= 70%
 function isMastered(entry){
@@ -5831,7 +5993,9 @@ export default function IsekaidApp(){
       if(p.kana_progress && Object.keys(p.kana_progress).length){ setKanaProgress(p.kana_progress); saveKanaProgress(p.kana_progress); }
       if(p.profile && p.profile.name){ setUser(p.profile); saveProfile(p.profile); }
       if(p.path && Array.isArray(p.path.completed)){ setPathProgress(p.path); savePathProgress(p.path); }
-      if(p.mission && p.mission.day){ setMission(p.mission); saveMission(p.mission); }
+      // Mission : ne charger depuis le cloud que si elle concerne le jour actuel.
+      // Une mission cloud périmée (autre jour) ne doit pas écraser celle d'aujourd'hui.
+      if(p.mission && p.mission.day === dayKey()){ setMission(p.mission); saveMission(p.mission); }
       // Paramètres (thème, accent, script, parcours vu, premium)
       const s = p.settings;
       if(s){
