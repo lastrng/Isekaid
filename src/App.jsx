@@ -3815,9 +3815,11 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
                 </div>
                 {/* Carte du lieu */}
                 <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(l.id)} style={{flex:1,minWidth:0,background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden",cursor:"pointer",marginBottom:2}}>
-                  {img && <div style={{height:110,position:"relative",background:C.s2}}>
-                    <img src={img} alt={l.nom} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover"}} onError={(e)=>{e.target.style.display="none";}}/>
-                  </div>}
+                  <div style={{height:110,position:"relative",background:`linear-gradient(135deg,${C.red}22,${C.s2})`,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    {/* Emoji de fallback, toujours présent en arrière-plan */}
+                    <span style={{fontSize:44,opacity:0.5}}>{l.emoji}</span>
+                    {img && <img src={img} alt={l.nom} loading="lazy" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}} onError={(e)=>{e.target.style.display="none";}}/>}
+                  </div>
                   <div style={{padding:"11px 13px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:3}}>
                       <span style={{fontSize:14,color:C.text,fontWeight:600}}>{l.nom}</span>
