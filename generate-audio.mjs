@@ -64,16 +64,19 @@ function collectPhrases(db) {
   (db.traditions || []).forEach(t => add(t.nom_jp));
   (db.codes_sociaux || []).forEach(c => add(c.nom_jp));
   (db.vie_quotidienne || []).forEach(v => add(v.nom_jp));
+  // Compréhension orale et écrite (phrases complètes à vocaliser)
+  (db.comprehension_orale || []).forEach(e => add(e.audio_jp));
+  (db.comprehension_ecrite || []).forEach(e => add(e.texte_jp));
   return [...set];
 }
 
 // ── Appel à l'API Google TTS ─────────────────────────────────────────────────
-async function synthesize(text) {
+async function synthesize(text, rate = SPEAKING_RATE) {
   const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${API_KEY}`;
   const body = {
     input: { text },
     voice: VOICE,
-    audioConfig: { audioEncoding: "MP3", speakingRate: SPEAKING_RATE },
+    audioConfig: { audioEncoding: "MP3", speakingRate: rate },
   };
   const res = await fetch(url, {
     method: "POST",
@@ -107,7 +110,10 @@ async function main() {
     if (fs.existsSync(outPath)) { skipped++; done++; continue; } // déjà généré
 
     try {
-      const audio = await synthesize(text);
+      // Débit adaptatif : les longs textes (compréhension orale/écrite) sont
+      // lus un peu plus lentement pour faciliter l'apprentissage à l'écoute.
+      const rate = text.length > 25 ? 0.88 : SPEAKING_RATE;
+      const audio = await synthesize(text, rate);
       fs.writeFileSync(outPath, audio);
       done++;
       process.stdout.write(`\r✅ ${done}/${phrases.length}  (${text.slice(0, 12)})        `);
