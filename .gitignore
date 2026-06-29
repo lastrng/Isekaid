@@ -3,3 +3,19 @@ dist
 .env
 .env.local
 .DS_Store
+
+# Capacitor / Android build artifacts
+android/.gradle/
+android/app/build/
+android/build/
+android/captures/
+android/.idea/
+android/local.properties
+*.iml
+
+# Gros fichiers / données brutes
+*.tar.gz
+
+# iOS (pour plus tard)
+ios/App/Pods/
+ios/App/build/
