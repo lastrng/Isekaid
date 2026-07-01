@@ -5318,7 +5318,7 @@ function AuthScreen({C, onSkip}){
   };
   const google = async ()=>{
     setBusy(true);
-    try { await signInGoogle(); } catch(e){ setMsg({type:"err",text:"Connexion Google indisponible."}); setBusy(false); }
+    try { await signInGoogle(); } catch(e){ setMsg({type:"err",text:"Erreur: "+(e?.message||JSON.stringify(e))}); setBusy(false); }
   };
 
   return(
