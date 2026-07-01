@@ -6080,12 +6080,12 @@ export default function IsekaidApp(){
 
     if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
     setScreen(user ? "app" : "onboarding");
+  };
   useEffect(()=>{
     if(screen!=="loading" || !authChecked) return;
     if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
     setScreen(user ? "app" : "onboarding");
   },[authChecked, screen, session]);
-  };
 
   // Once a session arrives (e.g. Google redirect or email login), advance past auth
   useEffect(()=>{
