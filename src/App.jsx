@@ -6076,9 +6076,15 @@ export default function IsekaidApp(){
 
   // When splash finishes: decide auth → onboarding → app
   const afterSplash = ()=>{
-    if(!authChecked){ setScreen("loading"); return; }
+    if(supabaseEnabled && !authChecked){ setScreen("loading"); return; }
+
     if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
     setScreen(user ? "app" : "onboarding");
+  useEffect(()=>{
+    if(screen!=="loading" || !authChecked) return;
+    if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
+    setScreen(user ? "app" : "onboarding");
+  },[authChecked, screen, session]);
   };
 
   // Once a session arrives (e.g. Google redirect or email login), advance past auth
@@ -6163,6 +6169,7 @@ export default function IsekaidApp(){
     <div style={{width:"100%",height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:"#080604",fontFamily:"'Noto Sans JP','Helvetica Neue',sans-serif"}}>
       <style>{CSS}</style>
       <div style={{width:"min(100vw,390px)",height:"min(100dvh,844px)",position:"relative",overflow:"hidden",borderRadius:"clamp(0px,calc((100vw - 390px)*999),44px)",background:C.bg,boxShadow:"0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,0,0,.08)",transition:"background .3s"}}>
+        {screen==="loading"     && <div style={{position:"fixed",inset:0,background:"#0F0B08",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{fontSize:32,color:"#E8623A"}}>異</div></div>}
         {screen==="splash"     &&<Splash onDone={afterSplash}/>}
         {screen==="auth"       &&<AuthScreen C={C} onSkip={skipAuthAndContinue}/>}
         {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
