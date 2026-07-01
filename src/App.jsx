@@ -6076,6 +6076,7 @@ export default function IsekaidApp(){
 
   // When splash finishes: decide auth → onboarding → app
   const afterSplash = ()=>{
+    if(!authChecked){ setScreen("loading"); return; }
     if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
     setScreen(user ? "app" : "onboarding");
   };
