@@ -2,6 +2,7 @@ import DATA from "./japan-data.json";
 import AUDIO_MANIFEST from "./audio-manifest.json";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback } from "./supabase";
+import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 const LIGHT = {
@@ -84,11 +85,6 @@ const FALLBACK = {
     {nom_jp:"たこ焼き",romaji:"Takoyaki",traduction:"Boulettes de pieuvre",moment:"goûter",description:"Petites boules de pâte croustillante farcies de morceaux de pieuvre, gingembre mariné et ciboule. Servies brûlantes couvertes de sauce, mayo et katsuobushi.",fun_fact:"À Osaka, le takoyaki est une obsession culturelle — les Osakiens possèdent souvent leur propre moule à la maison.",emoji:"🐙"},
     {nom_jp:"焼き鳥",romaji:"Yakitori",traduction:"Brochettes de poulet grillé",moment:"dîner",description:"Morceaux de poulet grillés sur charbon de bois (binchōtan), nappés de tare ou simplement salés. Servis dans les izakaya avec une bière.",fun_fact:"Le binchōtan est un charbon blanc très pur qui crée une chaleur infrarouge douce qui cuit le yakitori de l'intérieur sans le brûler.",emoji:"🍢"},
   ],
-  songs:[
-    {titre:"Plastic Love",artiste:"Mariya Takeuchi",genre:"City Pop",annee:"1984",histoire:"Sortie discrètement en 1984, cette chanson a resurgi avec force en 2017 grâce à un algorithme YouTube mystérieux. Sa basse irrésistible et la voix soyeuse de Takeuchi incarnent l'essence du City Pop tokyoïte.",pourquoi_japon:"Plastic Love capture l'âme de Tokyo la nuit — lumineuse, solitaire, magnifiquement superficielle et profondément mélancolique.",youtube_query:"Mariya Takeuchi Plastic Love 1984",emoji:"🌃"},
-    {titre:"First Love",artiste:"Hikaru Utada",genre:"J-Pop",annee:"1999",histoire:"Album le plus vendu de l'histoire du Japon, First Love a fait d'Utada une icône à 16 ans. La chanson titre est une ballade pure sur les premières amours et la mélancolie du souvenir.",pourquoi_japon:"First Love capture la natsukashii — cette nostalgie douce-amère qui rend les souvenirs d'amour plus beaux dans la distance que dans leur vécu.",youtube_query:"Hikaru Utada First Love official",emoji:"💿"},
-    {titre:"Sukiyaki",artiste:"Kyu Sakamoto",genre:"Enka",annee:"1961",histoire:"Première chanson japonaise à atteindre le numéro 1 aux États-Unis. Son vrai titre signifie 'Je marche la tête levée pour que mes larmes ne coulent pas'.",pourquoi_japon:"Elle incarne le stoïcisme japonais : sourire au monde même quand le cœur pleure, continuer à avancer la tête haute.",youtube_query:"Kyu Sakamoto Sukiyaki 上を向いて歩こう",emoji:"🌟"},
-  ],
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -112,7 +108,7 @@ function pickDaily(arr, dateKey, salt){
 
 // Chaque centre d'intérêt → catégories de contenu privilégiées
 const INTEREST_MAP = {
-  anime:     {keys:["culture","songs"],            label:"Anime & Manga",  emoji:"⛩️"},
+  anime:     {keys:["culture"],            label:"Anime & Manga",  emoji:"⛩️"},
   voyage:    {keys:["regions","vie_quotidienne","traditions"], label:"Voyage", emoji:"✈️"},
   culture:   {keys:["culture","traditions"],        label:"Culture & Art",  emoji:"🎋"},
   langue:    {keys:["expressions","situations"],    label:"Langue",         emoji:"🈶"},
@@ -547,44 +543,6 @@ function RepasCard({C,data,fav,onFav,wikiMap,onWikiTap,script}){
       <div style={{padding:"11px 13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:8,display:"flex",gap:10,alignItems:"flex-start"}}>
         <span style={{fontSize:15,flexShrink:0}}>💡</span>
         <p style={{fontSize:12,color:C.t2,margin:0,lineHeight:1.6,fontStyle:"italic"}}>{wt(data.fun_fact)}</p>
-      </div>
-    </div>
-  );
-}
-
-function SongCard({C,data,fav,onFav,wikiMap,onWikiTap}){
-  if(!data) return null;
-  const ytUrl=`https://www.youtube.com/results?search_query=${encodeURIComponent(data.youtube_query||data.titre+" "+data.artiste)}`;
-  return(
-    <div style={{borderRadius:14,overflow:"hidden",border:`1px solid ${C.border}`,animation:"fadeUp .4s ease"}}>
-      <div style={{background:"linear-gradient(135deg,#221440 0%,#3D1628 55%,#142038 100%)",padding:"20px 18px 18px"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-          <div style={{fontSize:10,color:"rgba(240,230,211,0.5)",letterSpacing:".2em",textTransform:"uppercase"}}>🎵 Song of the day {data.emoji}</div>
-          {onFav&&<button onClick={onFav} aria-label="Sauvegarder" style={{background:fav?"rgba(201,70,61,0.25)":"rgba(255,255,255,0.08)",border:`1px solid ${fav?"rgba(201,70,61,0.5)":"rgba(255,255,255,0.15)"}`,borderRadius:20,width:30,height:30,cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,padding:0,color:fav?"#ff6b5e":"rgba(240,230,211,0.7)"}}>{fav?"♥":"♡"}</button>}
-        </div>
-        <div style={{display:"flex",gap:16,alignItems:"center",marginBottom:16}}>
-          <div style={{width:62,height:62,borderRadius:"50%",flexShrink:0,background:"radial-gradient(circle at 50%,#0a0a0a 18%,#252525 20%,#1a1a1a 48%,#252525 50%,#0d0d0d 100%)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 18px rgba(0,0,0,.55)",animation:"spin 5s linear infinite"}}>
-            <div style={{width:11,height:11,borderRadius:"50%",background:"#C9463D"}}/>
-          </div>
-          <div style={{flex:1,minWidth:0}}>
-            <div style={{fontSize:17,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:"#F0E6D3",marginBottom:4,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{data.titre}</div>
-            <div style={{fontSize:13,color:"rgba(240,230,211,0.6)",marginBottom:8}}>{data.artiste}</div>
-            <div style={{display:"flex",gap:6}}>
-              <span style={{fontSize:9,padding:"2px 9px",background:"rgba(240,230,211,0.1)",borderRadius:20,color:"rgba(240,230,211,0.7)"}}>{data.genre}</span>
-              <span style={{fontSize:9,padding:"2px 9px",background:"rgba(240,230,211,0.06)",borderRadius:20,color:"rgba(240,230,211,0.4)"}}>{data.annee}</span>
-            </div>
-          </div>
-        </div>
-        <a href={ytUrl} target="_blank" rel="noreferrer" style={{display:"block",padding:"11px",background:"rgba(201,70,61,0.82)",borderRadius:9,textAlign:"center",color:"#fff",fontSize:13,textDecoration:"none",letterSpacing:".05em"}}>
-          ▶ Écouter sur YouTube
-        </a>
-      </div>
-      <div style={{background:C.s1,padding:"16px 18px"}}>
-        <div style={{fontSize:9,color:"#8B6FB0",letterSpacing:".22em",marginBottom:9,textTransform:"uppercase"}}>Histoire de la chanson</div>
-        <p style={{fontSize:13,color:C.t2,lineHeight:1.82,marginBottom:11}}>{data.histoire}</p>
-        <div style={{padding:"10px 13px",background:C.s2,borderLeft:"3px solid #8B6FB0",borderRadius:"0 6px 6px 0"}}>
-          <p style={{fontSize:11,color:C.t3,margin:0,fontStyle:"italic",lineHeight:1.65}}>{data.pourquoi_japon}</p>
-        </div>
       </div>
     </div>
   );
@@ -1043,7 +1001,6 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
             regions:{label:"Région",emoji:item.emoji||"🗾",title:item.nom,sub:item.tagline,full:item.ambiance||item.tagline,extra:""},
             vie_quotidienne:{label:"Vie quotidienne",emoji:item.emoji||"🏙️",title:item.titre,sub:item.resume,full:item.description||item.resume,extra:""},
             expressions:{label:"Expression",emoji:"💬",title:item.expression,sub:item.traduction,full:item.contexte,extra:item.exemple_jp?`${item.exemple_jp} — ${item.exemple_fr||""}`:""},
-            songs:{label:"Musique",emoji:"🎵",title:item.titre,sub:item.artiste,full:item.contexte||"",extra:""},
             situations:{label:"Phrase utile",emoji:"🗣️",title:item.titre,sub:(item.phrases?.[0]?.fr)||"",full:"",extra:""},
           }[cat] || {label:"Pour toi",emoji:"✨",title:"",sub:"",full:"",extra:""};
           const jpText = cat==="repas"?item.nom_jp:(cat==="expressions"?item.expression:null);
@@ -4761,12 +4718,18 @@ const PREMIUM_PERKS = [
   { emoji:"📍", title:"Lieux personnalisés", desc:"Ajoute tes propres adresses à tes itinéraires." },
 ];
 
-function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRedeemCode}){
+function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRedeemCode, billingError, billingBusy, liveOfferings, onRestore}){
   const [sel, setSel] = useState("annual");
   const acc = SEASON_ACCENT[currentSeasonKey()];
   const [codeOpen,setCodeOpen] = useState(false);
   const [codeVal,setCodeVal] = useState("");
   const [codeError,setCodeError] = useState(false);
+  // Utilise les prix live RevenueCat si dispos, sinon les prix par défaut codés en dur
+  const prices = {
+    monthly: liveOfferings?.monthly?.priceLabel || "3,99 €",
+    annual:  liveOfferings?.annual?.priceLabel  || "29,99 €",
+  };
+  useEffect(()=>{ /* getProductDetails() remplacé par liveOfferings de RevenueCat */ },[]);
   const tryCode = ()=>{
     if(onRedeemCode && onRedeemCode(codeVal)){ setCodeError(false); }
     else { setCodeError(true); }
@@ -4833,7 +4796,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
                     <div style={{fontSize:11,color:C.t2}}>{pl.sub}</div>
                   </div>
                   <div style={{textAlign:"right"}}>
-                    <span style={{fontSize:22,color:C.text,fontWeight:700}}>{pl.price}</span>
+                    <span style={{fontSize:22,color:C.text,fontWeight:700}}>{prices[pl.id] || pl.price}</span>
                     <span style={{fontSize:11,color:C.t3}}> {pl.per}</span>
                   </div>
                 </div>
@@ -4843,11 +4806,30 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
         </div>
 
         {/* CTA */}
-        <button onClick={()=>onActivate(sel)} style={{width:"100%",padding:"16px",background:C.red,border:"none",borderRadius:14,color:"#fff",fontSize:15,fontWeight:700,cursor:"pointer",marginBottom:12,boxShadow:"0 4px 16px rgba(201,70,61,0.3)"}}>
-          Devenir Premium
+        <button onClick={()=>!billingBusy && onActivate(sel)} disabled={billingBusy} className="pop-press" style={{width:"100%",padding:"16px",background:C.red,border:"none",borderRadius:14,color:"#fff",fontSize:15,fontWeight:700,cursor:billingBusy?"wait":"pointer",marginBottom:10,boxShadow:"0 4px 16px rgba(201,70,61,0.3)",opacity:billingBusy?0.7:1}}>
+          {billingBusy ? "Traitement en cours…" : "Devenir Premium"}
         </button>
+        {/* Restaurer les achats (obligatoire sur iOS, pratique sur Android) */}
+        {onRestore && (
+          <button onClick={()=>!billingBusy && onRestore()} disabled={billingBusy} style={{width:"100%",padding:"11px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:billingBusy?"wait":"pointer",marginBottom:10}}>
+            Restaurer mes achats
+          </button>
+        )}
+        {billingError && (
+          <div style={{padding:"12px 14px",background:`${C.red}14`,border:`1px solid ${C.red}44`,borderRadius:12,marginBottom:10,fontSize:12,color:C.text,lineHeight:1.5}}>
+            {billingError==="unavailable"
+              ? "Le paiement est disponible uniquement dans l'application Android ou iOS. Sur le web, utilise un code d'invitation."
+              : billingError==="cannot_pay" || billingError==="no_offerings"
+              ? "Impossible de contacter le store. Vérifie ta connexion et que tu es bien connecté à ton compte."
+              : billingError==="restore_nothing"
+              ? "Aucun achat trouvé sur ce compte. Si tu as acheté sur un autre appareil, connecte-toi avec le même compte."
+              : billingError==="product_not_found"
+              ? "Produit introuvable. L'app n'est peut-être pas encore disponible dans ta région."
+              : "Une erreur est survenue. Réessaie ou utilise un code d'invitation."}
+          </div>
+        )}
         <div style={{fontSize:10,color:C.t3,textAlign:"center",lineHeight:1.6,marginBottom:8}}>
-          Paiement sécurisé via Google Play. Annulable à tout moment.<br/>
+          Paiement sécurisé via Google Play / App Store. Annulable à tout moment.<br/>
           L'abonnement se renouvelle automatiquement sauf résiliation.
         </div>
 
@@ -4873,7 +4855,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
   const setReminders = (fn)=>{
@@ -5125,7 +5107,6 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,fa
                 expr:{emoji:it.emoji||"🗣️", title:it.expression, sub:it.traduction, c:C.gold},
                 cult:{emoji:it.emoji||"🏮", title:it.titre, sub:it.tag, c:C.red},
                 repas:{emoji:it.emoji||"🍱", title:it.nom_jp, sub:it.traduction, c:C.green},
-                song:{emoji:it.emoji||"🎵", title:it.titre, sub:it.artiste, c:"#8B6FB0"},
                 tradition:{emoji:it.emoji||"⛩️", title:it.nom, sub:it.mois, c:C.red},
                 code:{emoji:it.emoji||"🎌", title:it.titre, sub:it.categorie, c:C.red},
                 region:{emoji:it.emoji||"🗾", title:it.nom, sub:it.position, c:C.green},
@@ -5173,6 +5154,14 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,streak,fa
           style={{marginTop:22,width:"100%",padding:"13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
           ✨ Revoir la présentation
         </button>
+
+        {/* Se déconnecter — seulement si connecté */}
+        {session?.user && (
+          <button onClick={async ()=>{ if(confirm("Te déconnecter ? Tes données restent sauvegardées dans le cloud.")) await onLogout&&onLogout(); }}
+            style={{marginTop:10,width:"100%",padding:"13px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
+            ⎋ Se déconnecter
+          </button>
+        )}
 
         {/* Réinitialiser le profil */}
         <button onClick={()=>{ if(confirm("Réinitialiser ton profil ? Tu repasseras par l'onboarding.")) onReset&&onReset(); }}
@@ -5317,8 +5306,16 @@ function AuthScreen({C, onSkip}){
     setBusy(false);
   };
   const google = async ()=>{
-    setBusy(true);
-    try { await signInGoogle(); } catch(e){ setMsg({type:"err",text:"Erreur: "+(e?.message||JSON.stringify(e))}); setBusy(false); }
+    setBusy(true); setMsg(null);
+    try {
+      await signInGoogle();
+      // En natif : le navigateur s'ouvre, on reste en "busy" jusqu'au retour deep link.
+      // En web : la session arrive via redirect, on ne fait rien de plus ici.
+      // Ne pas setBusy(false) en natif — l'app se relance via appUrlOpen.
+    } catch(e){
+      setMsg({type:"err", text:"Erreur Google: " + (e?.message || String(e))});
+      setBusy(false);
+    }
   };
 
   return(
@@ -5855,10 +5852,43 @@ export default function IsekaidApp(){
   const [premium,setPremium]=useState(()=>loadPremium());
   const isPremium = !!premium?.active;
   const [showPremiumPage,setShowPremiumPage]=useState(false);
-  const activatePremium = (plan)=>{
-    const p = { active:true, plan, since:new Date().toISOString() };
-    setPremium(p); savePremium(p);
-    setShowPremiumPage(false);
+  const [billingError,setBillingError]=useState(null);
+  const [billingBusy,setBillingBusy]=useState(false);
+  const [liveOfferings,setLiveOfferings]=useState(null);
+
+  // Initialise RevenueCat et vérifie le statut Premium (effet déclenché après login).
+  // L'initialisation réelle se fait dans un useEffect plus bas, après la déclaration de session.
+
+  // Lance l'achat RevenueCat.
+  const activatePremium = async (plan)=>{
+    setBillingError(null);
+    if(!isNativePlatform()){
+      setBillingError("unavailable"); return;
+    }
+    setBillingBusy(true);
+    const res = await purchasePlan(plan);
+    setBillingBusy(false);
+    if(res.ok){
+      const p={active:true, plan, since:new Date().toISOString()};
+      setPremium(p); savePremium(p); setShowPremiumPage(false);
+    } else if(res.reason==="cancelled"){
+      // L'utilisateur a fermé — pas d'erreur affichée.
+    } else {
+      setBillingError(res.reason||"error");
+    }
+  };
+
+  // Restaure les achats (bouton dans la page Premium / profil).
+  const restorePremium = async ()=>{
+    setBillingBusy(true);
+    const res = await restorePurchases();
+    setBillingBusy(false);
+    if(res.active){
+      const p={active:true, plan:res.plan, since:new Date().toISOString(), restored:true};
+      setPremium(p); savePremium(p); setShowPremiumPage(false);
+    } else {
+      setBillingError("restore_nothing");
+    }
   };
   // Active le Premium à vie via code d'accès. Retourne true si le code est valide.
   const redeemCode = (code)=>{
@@ -5870,9 +5900,7 @@ export default function IsekaidApp(){
     }
     return false;
   };
-  const cancelPremium = ()=>{
-    setPremium(null); savePremium(null);
-  };
+  const cancelPremium = ()=>{ setPremium(null); savePremium(null); };
   const [scenProgress,setScenProgress]=useState(()=>loadScenarioProgress());
   const [kanaProgress,setKanaProgress]=useState(()=>loadKanaProgress());
   const [pathProgress,setPathProgress]=useState(()=>loadPathProgress());
@@ -5983,11 +6011,29 @@ export default function IsekaidApp(){
             if(sess) setSession(sess);
           }
         });
-      } catch { }
+      } catch { /* hors natif — pas de Capacitor App */ }
     };
     setup();
     return ()=>{ listener?.remove?.(); };
   },[]);
+
+  // Initialise RevenueCat dès que la session Supabase est connue.
+  useEffect(()=>{
+    if(!isNativePlatform()) return;
+    initRevenueCat(session?.user?.id).then(ok=>{
+      if(!ok) return;
+      checkPremiumStatus().then(status=>{
+        if(status.active){
+          const p={active:true,plan:status.plan,since:new Date().toISOString(),expiry:status.expiry?.toISOString()||null};
+          setPremium(p); savePremium(p);
+        } else if(premium?.active && premium?.plan!=="code"){
+          setPremium(null); savePremium(null);
+        }
+      });
+      getOfferings().then(o=>{ if(o) setLiveOfferings(o); });
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[session?.user?.id]);
   const [authChecked,setAuthChecked]=useState(false);
   const [skipAuth,setSkipAuth]=useState(false);
 
@@ -6040,7 +6086,12 @@ export default function IsekaidApp(){
     return ()=> clearTimeout(syncRef.current);
   },[streak, unlocks, scenProgress, favs, kanaProgress, user, pathProgress, mission, dark, accent, script, premium, session?.user?.id]);
 
-  const logout = async ()=>{ await signOut(); setSession(null); };
+  const logout = async ()=>{
+    await signOut();
+    await logoutRevenueCat();
+    setSession(null);
+    setScreen("auth");
+  };
 
   const isFav = (type,item)=> favs.some(f=>f.id===favId(type,item));
   const toggleFav = (type,item)=>{
@@ -6075,17 +6126,23 @@ export default function IsekaidApp(){
   const toggleScript = ()=> setScript(s=> s==="kana" ? "kanji" : s==="kanji" ? "romaji" : "kana");
 
   // When splash finishes: decide auth → onboarding → app
+  // On attend que authChecked soit true (getSession() résolu) avant de décider.
   const afterSplash = ()=>{
-    if(supabaseEnabled && !authChecked){ setScreen("loading"); return; }
-
+    if(!authChecked){
+      // Session pas encore vérifiée → on attend via l'effet ci-dessous
+      setScreen("loading"); return;
+    }
     if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
     setScreen(user ? "app" : "onboarding");
   };
+
+  // Si on était en "loading" (auth pas encore prête), on route dès qu'authChecked arrive
   useEffect(()=>{
-    if(screen!=="loading" || !authChecked) return;
-    if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
-    setScreen(user ? "app" : "onboarding");
-  },[authChecked, screen, session]);
+    if(authChecked && screen==="loading"){
+      if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
+      setScreen(user ? "app" : "onboarding");
+    }
+  },[authChecked, screen]);
 
   // Once a session arrives (e.g. Google redirect or email login), advance past auth
   useEffect(()=>{
@@ -6169,8 +6226,8 @@ export default function IsekaidApp(){
     <div style={{width:"100%",height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:"#080604",fontFamily:"'Noto Sans JP','Helvetica Neue',sans-serif"}}>
       <style>{CSS}</style>
       <div style={{width:"min(100vw,390px)",height:"min(100dvh,844px)",position:"relative",overflow:"hidden",borderRadius:"clamp(0px,calc((100vw - 390px)*999),44px)",background:C.bg,boxShadow:"0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,0,0,.08)",transition:"background .3s"}}>
-        {screen==="loading"     && <div style={{position:"fixed",inset:0,background:"#0F0B08",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{fontSize:32,color:"#E8623A"}}>異</div></div>}
-        {screen==="splash"     &&<Splash onDone={afterSplash}/>}
+        {screen==="loading"     && <div style={{position:"fixed",inset:0,background:"#0F0B08",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{fontSize:32,animation:"flameFlicker 1s ease infinite"}}>異</div></div>}
+        {screen==="splash"      &&<Splash onDone={afterSplash}/>}
         {screen==="auth"       &&<AuthScreen C={C} onSkip={skipAuthAndContinue}/>}
         {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
         {screen==="app"&&user&&(
@@ -6181,7 +6238,7 @@ export default function IsekaidApp(){
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               </div>
             </div>
@@ -6200,7 +6257,7 @@ export default function IsekaidApp(){
             )}
             {/* Global search */}
             {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
-            {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)} onRedeemCode={redeemCode}/>}
+            {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)} onRedeemCode={redeemCode} billingError={billingError} billingBusy={billingBusy} liveOfferings={liveOfferings} onRestore={restorePremium}/>}
             {/* Achievement unlocked */}
             {newAchievement && <AchievementPopup C={C} achievement={newAchievement} onClose={()=>setNewAchievement(null)}/>}
           </>
