@@ -5286,7 +5286,7 @@ function DailyWelcome({C, streak, dailyInfo, onClose, isPremium}){
 }
 
 // ─── Écran de connexion ───────────────────────────────────────────────────────
-function AuthScreen({C, onSkip}){
+function AuthScreen({C}){
   const [mode,setMode] = useState("signin"); // signin | signup
   const [email,setEmail] = useState("");
   const [pw,setPw] = useState("");
@@ -5352,10 +5352,6 @@ function AuthScreen({C, onSkip}){
         <span onClick={()=>{setMode(mode==="signup"?"signin":"signup");setMsg(null);}} style={{color:C.red,cursor:"pointer",fontWeight:500}}>
           {mode==="signup" ? "Se connecter" : "S'inscrire"}
         </span>
-      </div>
-
-      <div style={{textAlign:"center"}}>
-        <span onClick={onSkip} style={{fontSize:12,color:C.t3,cursor:"pointer",borderBottom:`1px dotted ${C.t3}`}}>Continuer sans compte</span>
       </div>
     </div>
   );
@@ -6228,7 +6224,7 @@ export default function IsekaidApp(){
       <div style={{width:"min(100vw,390px)",height:"min(100dvh,844px)",position:"relative",overflow:"hidden",borderRadius:"clamp(0px,calc((100vw - 390px)*999),44px)",background:C.bg,boxShadow:"0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,0,0,.08)",transition:"background .3s"}}>
         {screen==="loading"     && <div style={{position:"fixed",inset:0,background:"#0F0B08",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{fontSize:32,animation:"flameFlicker 1s ease infinite"}}>異</div></div>}
         {screen==="splash"      &&<Splash onDone={afterSplash}/>}
-        {screen==="auth"       &&<AuthScreen C={C} onSkip={skipAuthAndContinue}/>}
+        {screen==="auth"       &&<AuthScreen C={C}/>}
         {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
         {screen==="app"&&user&&(
           <>
