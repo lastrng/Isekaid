@@ -1,7 +1,7 @@
 import DATA from "./japan-data.json";
 import AUDIO_MANIFEST from "./audio-manifest.json";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud } from "./supabase";
+import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback } from "./supabase";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 const LIGHT = {
@@ -5970,6 +5970,24 @@ export default function IsekaidApp(){
   const [wikiMap,setWikiMap]=useState({});
   const [script,setScript]=useState(()=>loadScript());
   const [session,setSession]=useState(null);
+
+  // Intercepte le deep link app.isekaid://login-callback après connexion Google (natif).
+  useEffect(()=>{
+    let listener = null;
+    const setup = async ()=>{
+      try {
+        const { App: CapApp } = await import("@capacitor/app");
+        listener = await CapApp.addListener("appUrlOpen", async ({ url })=>{
+          if(url && url.includes("login-callback")){
+            const sess = await handleOAuthCallback(url);
+            if(sess) setSession(sess);
+          }
+        });
+      } catch { }
+    };
+    setup();
+    return ()=>{ listener?.remove?.(); };
+  },[]);
   const [authChecked,setAuthChecked]=useState(false);
   const [skipAuth,setSkipAuth]=useState(false);
 
