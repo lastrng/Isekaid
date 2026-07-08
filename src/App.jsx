@@ -4857,6 +4857,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
 
 function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
+  const [showBadges,setShowBadges] = useState(false);
   const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
   const setReminders = (fn)=>{
     setRemindersState(prev=>{
@@ -4902,97 +4903,16 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
           <span style={{fontSize:18,color:C.t3}}>›</span>
         </div>
 
-        {/* Préférences (réponses onboarding) */}
-        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:12,textTransform:"uppercase"}}>🎌 Mon profil Japon</div>
-          <div style={{display:"flex",flexDirection:"column",gap:11}}>
-            {/* Niveau */}
-            {user.level && (
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:12,color:C.t2}}>Niveau</span>
-                <span style={{fontSize:12,color:C.text,fontWeight:500}}>{lvlL[user.level]||user.level}</span>
-              </div>
-            )}
-            {/* Objectif */}
-            {user.goal && (
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:12,color:C.t2}}>Objectif</span>
-                <span style={{fontSize:12,color:C.text,fontWeight:500}}>{goalL[user.goal]||user.goal}</span>
-              </div>
-            )}
-            {/* Centres d'intérêt */}
-            {user.why?.length>0 && (
-              <div>
-                <span style={{fontSize:12,color:C.t2,display:"block",marginBottom:8}}>Centres d'intérêt</span>
-                <div style={{display:"flex",flexWrap:"wrap",gap:7}}>
-                  {user.why.map((w,i)=>{
-                    const m = INTEREST_MAP[w];
-                    return(
-                      <span key={i} style={{fontSize:11,padding:"5px 11px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.22)",borderRadius:20,color:C.text}}>
-                        {m?.emoji} {m?.label||w}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+        {/* Mode sombre — juste sous Premium */}
+        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div>
+            <div style={{fontSize:13,color:C.text,marginBottom:2}}>{dark?"Mode sombre 🌙":"Mode clair ☀️"}</div>
+            <div style={{fontSize:11,color:C.t3}}>Basculer le thème de l'app</div>
           </div>
-          <div style={{marginTop:12,fontSize:11,color:C.t3,lineHeight:1.5}}>
-            Ces préférences personnalisent tes recommandations sur l'accueil ✨
+          <div onClick={()=>setDark(d=>!d)} style={{width:48,height:26,borderRadius:13,background:dark?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
+            <div style={{position:"absolute",top:3,left:dark?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
           </div>
         </div>
-
-        {/* XP / Title progress */}
-        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-            <div style={{display:"flex",alignItems:"center",gap:7}}>
-              <span style={{fontSize:16,display:"inline-block",animation:"floatY 3s ease-in-out infinite"}}>⭐</span>
-              <span style={{fontSize:13,color:C.text,fontWeight:600}}>{xp||0} jour{(xp||0)>1?"s":""} 🔥</span>
-            </div>
-            <div style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.18)",borderRadius:20}}>
-              <span style={{fontSize:12}}>🔥</span><span style={{fontSize:12,fontWeight:700,color:C.text}}>{streak?.count||0}j</span>
-            </div>
-          </div>
-          <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:7,position:"relative"}}>
-            <div style={{height:"100%",width:`${progress*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .8s cubic-bezier(.34,1.3,.64,1)"}}/>
-            <div style={{position:"absolute",inset:0,width:`${progress*100}%`,background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent)",backgroundSize:"200% 100%",animation:"shimmer 2.5s ease infinite",borderRadius:3,pointerEvents:"none"}}/>
-          </div>
-          <div style={{fontSize:11,color:C.t3}}>
-            {nextTier ? <>Prochain titre : <b style={{color:C.t2}}>{nextTier.emoji} {nextTier.title}</b> à {nextTier.min} jours</> : "Titre maximal atteint ! 🎌"}
-          </div>
-        </div>
-        {/* Tableau de bord de progression global */}
-        {(()=>{
-          const srs = srsStats(kanaProgress);
-          const totalKana = (HIRAGANA.length + KATAKANA.length + HIRAGANA_DAKUTEN.length + KATAKANA_DAKUTEN.length);
-          const scenDone = (scenProgress?.done?.length) || 0;
-          const scenTotal = (db?.scenarios?.length) || 0;
-          const pathDone = (pathProgress?.completed?.length) || 0;
-          const pathTotal = 8; // TOKYO_PATH paliers
-          const Stat = ({emoji,label,value,sub,color})=>(
-            <div style={{flex:1,minWidth:0,padding:"14px 12px",background:C.s2,borderRadius:12,textAlign:"center"}}>
-              <div style={{fontSize:22,marginBottom:4}}>{emoji}</div>
-              <div style={{fontSize:20,fontWeight:700,color:color||C.text,lineHeight:1}}>{value}</div>
-              <div style={{fontSize:10,color:C.t3,marginTop:3,lineHeight:1.3}}>{label}</div>
-              {sub && <div style={{fontSize:9,color:C.t3,marginTop:1}}>{sub}</div>}
-            </div>
-          );
-          return(
-            <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-              <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:12,textTransform:"uppercase"}}>📊 Ma progression</div>
-              <div style={{display:"flex",gap:8,marginBottom:8}}>
-                <Stat emoji="🔥" label="Streak" value={`${streak?.count||0}j`} sub={`record ${streak?.best||0}j`} color={C.red}/>
-                <Stat emoji="🎴" label="Kana maîtrisés" value={`${srs.mastered}`} sub={`/ ${totalKana}`} color={C.gold}/>
-                <Stat emoji="💬" label="Scénarios" value={`${scenDone}`} sub={`/ ${scenTotal}`} color={C.green}/>
-              </div>
-              <div style={{display:"flex",gap:8}}>
-                <Stat emoji="🔁" label="À réviser" value={`${srs.due}`} sub="aujourd'hui" color={srs.due>0?C.red:C.t2}/>
-                <Stat emoji="📈" label="En cours" value={`${srs.learning}`} sub="d'apprentissage"/>
-                <Stat emoji="🗼" label="Parcours" value={`${pathDone}`} sub={`/ ${pathTotal} paliers`} color={C.indigo}/>
-              </div>
-            </div>
-          );
-        })()}
 
         {/* Kana mastery */}
         {(()=>{
@@ -5022,16 +4942,6 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
             </div>
           );
         })()}
-        <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div>
-            <div style={{fontSize:13,color:C.text,marginBottom:2}}>{dark?"Mode sombre 🌙":"Mode clair ☀️"}</div>
-            <div style={{fontSize:11,color:C.t3}}>Basculer le thème de l'app</div>
-          </div>
-          <div onClick={()=>setDark(d=>!d)} style={{width:48,height:26,borderRadius:13,background:dark?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
-            <div style={{position:"absolute",top:3,left:dark?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
-          </div>
-        </div>
-
         {/* Rappels quotidiens */}
         <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div style={{flex:1,paddingRight:12}}>
@@ -5041,57 +4951,6 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
           <div onClick={()=>setReminders(r=>!r)} style={{width:48,height:26,borderRadius:13,background:reminders?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
             <div style={{position:"absolute",top:3,left:reminders?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
           </div>
-        </div>
-
-        {/* Sélecteur d'accent (déblocable par XP) */}
-        <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{marginBottom:12}}>
-            <div style={{fontSize:13,color:C.text,marginBottom:2}}>🎨 Couleur d'accent</div>
-            <div style={{fontSize:11,color:C.t3}}>Débloque de nouvelles teintes au fil de ton streak 🔥</div>
-          </div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:10}}>
-            {ACCENT_THEMES.map(a=>{
-              const unlocked = (xp||0) >= a.minXp;
-              const active = accent===a.id;
-              return(
-                <button key={a.id} onClick={()=>{ if(unlocked) chooseAccent(a.id); }} title={a.label}
-                  style={{position:"relative",width:46,height:46,borderRadius:"50%",border:`2px solid ${active?C.text:"transparent"}`,background:a.color,cursor:unlocked?"pointer":"not-allowed",opacity:unlocked?1:0.3,display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s"}}>
-                  {active && <span style={{color:"#fff",fontSize:18,textShadow:"0 1px 3px rgba(0,0,0,0.4)"}}>✓</span>}
-                  {!unlocked && <span style={{position:"absolute",fontSize:14}}>🔒</span>}
-                </button>
-              );
-            })}
-          </div>
-          {(()=>{
-            const next = ACCENT_THEMES.find(a=>(xp||0) < a.minXp);
-            if(!next) return <div style={{fontSize:10,color:C.gold,marginTop:10}}>✨ Toutes les couleurs débloquées — bravo !</div>;
-            return <div style={{fontSize:10,color:C.t3,marginTop:10}}>Prochaine : {next.emoji} {next.label} au jour {next.minXp} (encore {next.minXp-(xp||0)} jour{next.minXp-(xp||0)>1?"s":""})</div>;
-          })()}
-        </div>
-        {/* DB stats */}
-        {db && (
-          <div style={{marginBottom:16,padding:"14px 16px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,display:"flex",alignItems:"center",gap:12}}>
-            <span style={{fontSize:20}}>📚</span>
-            <div>
-              <div style={{fontSize:12,color:C.text,fontWeight:500}}>{total} contenus chargés</div>
-              <div style={{fontSize:10,color:C.t3}}>depuis japan-data.json — aucun appel API</div>
-            </div>
-            <span style={{marginLeft:"auto",fontSize:14}}>✅</span>
-          </div>
-        )}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18}}>
-          {[
-            {v:String(streak?.count||0),label:"Streak",emoji:"🔥"},
-            {v:total||"—",label:"Contenus",emoji:"📖"},
-            {v:lvlL[user.level]||"Débutant",label:"Niveau",emoji:"🎯"},
-            {v:goalL[user.goal]||"Immersion",label:"Objectif",emoji:"🗾"},
-          ].map((s,i)=>(
-            <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,padding:"15px 13px"}}>
-              <div style={{fontSize:18,marginBottom:4}}>{s.emoji}</div>
-              <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:1}}>{s.v}</div>
-              <div style={{fontSize:10,color:C.t3,letterSpacing:".07em"}}>{s.label}</div>
-            </div>
-          ))}
         </div>
 
         {/* Ma collection (favoris) */}
@@ -5137,19 +4996,24 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
           const earned = achievements.filter(a=>a.unlocked).length;
           return(
             <>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11}}>
+              <div onClick={()=>setShowBadges(v=>!v)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11,cursor:"pointer",userSelect:"none"}}>
                 <span style={{fontSize:10,color:C.t3,letterSpacing:".22em",textTransform:"uppercase"}}>Collection de badges</span>
-                <span style={{fontSize:11,color:C.t2,fontWeight:600}}>{earned}/{achievements.length}</span>
+                <span style={{display:"flex",alignItems:"center",gap:8}}>
+                  <span style={{fontSize:11,color:C.t2,fontWeight:600}}>{earned}/{achievements.length}</span>
+                  <span style={{fontSize:12,color:C.t3,transform:showBadges?"rotate(180deg)":"none",transition:"transform .2s"}}>▾</span>
+                </span>
               </div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9}}>
-                {achievements.map((b,i)=>(
-                  <div key={i} title={b.desc} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.32)":C.border}`,borderRadius:12,padding:"13px 8px",textAlign:"center",opacity:b.unlocked?1:.45,transition:"all .3s"}}>
-                    <div style={{fontSize:24,marginBottom:5,filter:b.unlocked?"none":"grayscale(1)"}}>{b.emoji}</div>
-                    <div style={{fontSize:10,color:b.unlocked?C.text:C.t3,lineHeight:1.25,marginBottom:3}}>{b.label}</div>
-                    <div style={{fontSize:8,color:C.t3,lineHeight:1.3}}>{b.unlocked?"✓":b.desc}</div>
-                  </div>
-                ))}
-              </div>
+              {showBadges && (
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9,animation:"fadeUp .25s ease"}}>
+                  {achievements.map((b,i)=>(
+                    <div key={i} title={b.desc} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.32)":C.border}`,borderRadius:12,padding:"13px 8px",textAlign:"center",opacity:b.unlocked?1:.45,transition:"all .3s"}}>
+                      <div style={{fontSize:24,marginBottom:5,filter:b.unlocked?"none":"grayscale(1)"}}>{b.emoji}</div>
+                      <div style={{fontSize:10,color:b.unlocked?C.text:C.t3,lineHeight:1.25,marginBottom:3}}>{b.label}</div>
+                      <div style={{fontSize:8,color:C.t3,lineHeight:1.3}}>{b.unlocked?"✓":b.desc}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </>
           );
         })()}
