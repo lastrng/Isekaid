@@ -5874,8 +5874,12 @@ export default function IsekaidApp(){
       const m = {...prev, done};
       if(done.length>=DAILY_TASKS.length && !prev.claimed){
         m.claimed = true;
-        /* mission accomplie : plus de récompense en clés (système retiré) */
         setMissionReward(true);
+        // Mission du jour accomplie → on valide le streak (vraie activité du jour)
+        const s = touchStreak();
+        setStreak(s);
+        setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
+        if(s.gainedKey || s.frozenUsed) setWelcomeQueued(true);
       }
       saveMission(m);
       return m;
@@ -6038,13 +6042,12 @@ export default function IsekaidApp(){
   // Load content data on startup
   useEffect(()=>{
     setDb(DATA);
-    const s = touchStreak();
+    // On CHARGE le streak sans le valider. Le streak ne se valide que lorsque
+    // l'utilisateur complète sa mission du jour (voir effet lié à missionDone).
+    const s = loadStreak() || { count:0, best:0, last:null, freezes:1, freezeBase:0 };
     setStreak(s);
     setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
     setWikiMap(buildWikiMap(DATA.wiki));
-    // Le DailyWelcome est mis en file d'attente ; il s'affichera quand aucun autre
-    // overlay prioritaire (tour guidé) n'est actif — voir l'effet de séquencement plus bas.
-    if(s.gainedKey) setWelcomeQueued(true);
   },[]);
 
   // Persist theme whenever it changes
