@@ -4878,11 +4878,16 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
       <div style={{padding:"50px 20px 110px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:16}}>人 · PROFIL</div>
         <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{width:50,height:50,borderRadius:"50%",background:"rgba(201,70,61,0.1)",border:"2px solid rgba(201,70,61,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontFamily:"'Noto Serif JP',serif",color:C.red,flexShrink:0}}>
-            {(user.name||"V")[0].toUpperCase()}
+          <div style={{width:50,height:50,borderRadius:"50%",background:"rgba(201,70,61,0.1)",border:"2px solid rgba(201,70,61,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:user.emojiAvatar?24:20,fontFamily:"'Noto Serif JP',serif",color:C.red,flexShrink:0,overflow:"hidden"}}>
+            {user.photo
+              ? <img src={user.photo} alt="" referrerPolicy="no-referrer" style={{width:"100%",height:"100%",objectFit:"cover"}} onError={(e)=>{e.target.style.display="none"; e.target.parentNode.textContent=user.emojiAvatar||(user.name||"V")[0].toUpperCase();}}/>
+              : user.emojiAvatar
+              ? user.emojiAvatar
+              : (user.name||"V")[0].toUpperCase()}
           </div>
           <div style={{flex:1}}>
             <div style={{fontSize:16,color:C.text,marginBottom:4}}>{user.name}</div>
+            {user.email && <div style={{fontSize:11,color:C.t3,marginBottom:2}}>{user.email}</div>}
             <div style={{fontSize:12,color:C.text,fontWeight:500}}>{tier.emoji} {tier.title} <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{tier.jp}</span></div>
           </div>
         </div>
@@ -5451,13 +5456,19 @@ function BottomNav({C,active,onChange}){
 }
 
 // ─── Onboarding ───────────────────────────────────────────────────────────────
-function Onboarding({onComplete}){
+const AVATAR_PLACEHOLDERS = ["🦊","🐼","🐯","🐰","🦉","🐣","🍡","🌸","⛩️","🗻","🍜","🎌"];
+
+function Onboarding({onComplete, googleInfo}){
   const C=LIGHT;
   const [step,setStep]=useState(0);
   const [why,setWhy]=useState([]);
   const [goal,setGoal]=useState("");
   const [level,setLevel]=useState("");
-  const [name,setName]=useState("");
+  // Pré-remplit le nom depuis Google si dispo
+  const [name,setName]=useState(googleInfo?.name || "");
+  // Photo : soit la photo Google, soit un emoji placeholder choisi
+  const [photo,setPhoto]=useState(googleInfo?.photo || null);
+  const [emojiAvatar,setEmojiAvatar]=useState(googleInfo?.photo ? null : "🦊");
   const ok=[why.length>0,!!goal,!!level][step];
   const toggle=id=>setWhy(w=>w.includes(id)?w.filter(x=>x!==id):[...w,id]);
   const chip=active=>({padding:"15px 12px",borderRadius:10,cursor:"pointer",background:active?"rgba(201,70,61,0.09)":"rgba(26,20,16,0.04)",border:`1px solid ${active?"rgba(201,70,61,0.3)":C.border}`,transition:"all .2s"});
@@ -5481,14 +5492,37 @@ function Onboarding({onComplete}){
           <div style={{display:"flex",flexDirection:"column",gap:12}}>
             {LEVELS.map(o=>(<div key={o.id} style={{...chip(level===o.id),display:"flex",alignItems:"center",gap:14,padding:"16px"}} onClick={()=>setLevel(o.id)}><span style={{fontSize:28}}>{o.emoji}</span><div style={{flex:1}}><div style={{fontSize:14,color:level===o.id?C.text:C.t2,marginBottom:2}}>{o.label}</div><div style={{fontSize:11,color:C.t3}}>{o.sub}</div></div>{level===o.id&&<span style={{color:C.red}}>✓</span>}</div>))}
             <div style={{marginTop:6}}>
-              <div style={{fontSize:11,color:C.t3,marginBottom:8,letterSpacing:".12em"}}>Ton prénom (optionnel)</div>
+              <div style={{fontSize:11,color:C.t3,marginBottom:8,letterSpacing:".12em"}}>Ta photo de profil</div>
+              {/* Aperçu photo actuelle */}
+              <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:12}}>
+                <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(201,70,61,0.09)",border:`2px solid rgba(201,70,61,0.25)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,overflow:"hidden",flexShrink:0}}>
+                  {photo
+                    ? <img src={photo} alt="" referrerPolicy="no-referrer" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                    : emojiAvatar}
+                </div>
+                <div style={{fontSize:12,color:C.t2,flex:1}}>
+                  {photo ? "Photo de ton compte Google" : "Choisis un avatar ci-dessous"}
+                  {photo && <div onClick={()=>{setPhoto(null);setEmojiAvatar("🦊");}} style={{fontSize:11,color:C.red,cursor:"pointer",marginTop:3}}>Utiliser un avatar à la place</div>}
+                </div>
+              </div>
+              {/* Grille d'emojis placeholder (si pas de photo Google) */}
+              {!photo && (
+                <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:8,marginBottom:16}}>
+                  {AVATAR_PLACEHOLDERS.map(em=>(
+                    <div key={em} onClick={()=>setEmojiAvatar(em)} style={{aspectRatio:"1",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,borderRadius:10,cursor:"pointer",background:emojiAvatar===em?"rgba(201,70,61,0.12)":"rgba(26,20,16,0.04)",border:`1px solid ${emojiAvatar===em?"rgba(201,70,61,0.35)":C.border}`}}>
+                      {em}
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{fontSize:11,color:C.t3,marginBottom:8,letterSpacing:".12em"}}>Ton prénom</div>
               <input value={name} onChange={e=>setName(e.target.value)} placeholder="Ex : Léa" style={{background:"rgba(26,20,16,0.04)",border:`1px solid ${C.border}`,color:C.text}}/>
             </div>
           </div>
         )}
       </div>
       <div style={{padding:"14px 26px 34px",flexShrink:0}}>
-        <button onClick={()=>step<2?setStep(s=>s+1):onComplete({why,goal,level,name:name||"Voyageur"})} disabled={!ok}
+        <button onClick={()=>step<2?setStep(s=>s+1):onComplete({why,goal,level,name:name||"Voyageur",photo:photo||null,emojiAvatar:photo?null:emojiAvatar})} disabled={!ok}
           style={{width:"100%",padding:"15px",background:ok?C.red:"rgba(26,20,16,0.08)",border:"none",borderRadius:12,color:ok?"#fff":C.t3,fontSize:15,cursor:ok?"pointer":"default",letterSpacing:".04em",transition:"all .2s"}}>
           {step<2?"Continuer →":"Commencer l'aventure 🌸"}
         </button>
@@ -5580,6 +5614,20 @@ function loadProfile(){
 function saveProfile(u){
   try { localStorage.setItem(STORE_KEY, JSON.stringify(u)); } catch {}
 }
+
+// Extrait les infos de profil depuis une session Supabase (connexion Google/email).
+// Google fournit : full_name, name, avatar_url, picture, email.
+function googleUserInfo(session){
+  const u = session?.user;
+  if(!u) return null;
+  const m = u.user_metadata || {};
+  return {
+    name: m.full_name || m.name || (u.email ? u.email.split("@")[0] : null),
+    photo: m.avatar_url || m.picture || null,
+    email: u.email || null,
+  };
+}
+
 function clearProfile(){
   try { localStorage.removeItem(STORE_KEY); } catch {}
 }
@@ -6041,6 +6089,25 @@ export default function IsekaidApp(){
     return ()=> sub.unsubscribe?.();
   },[]);
 
+  // Enrichit le profil avec les infos Google (nom, photo, email) à la connexion.
+  // Ne remplace pas un nom/photo déjà personnalisés par l'utilisateur.
+  useEffect(()=>{
+    const info = googleUserInfo(session);
+    if(!info) return;
+    setUser(prev=>{
+      const base = prev || {};
+      const next = {
+        ...base,
+        email: info.email || base.email,
+        // On garde le nom/photo existants si l'utilisateur les a déjà définis
+        name: (base.name && base.name!=="Voyageur") ? base.name : (info.name || base.name),
+        photo: base.photo || info.photo || null,
+      };
+      saveProfile(next);
+      return next;
+    });
+  },[session?.user?.id]);
+
   // When logged in: pull cloud progress (merge into local state)
   useEffect(()=>{
     if(!session?.user) return;
@@ -6225,7 +6292,7 @@ export default function IsekaidApp(){
         {screen==="loading"     && <div style={{position:"fixed",inset:0,background:"#0F0B08",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{fontSize:32,animation:"flameFlicker 1s ease infinite"}}>異</div></div>}
         {screen==="splash"      &&<Splash onDone={afterSplash}/>}
         {screen==="auth"       &&<AuthScreen C={C}/>}
-        {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
+        {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding} googleInfo={googleUserInfo(session)}/>}
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
