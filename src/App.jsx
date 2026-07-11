@@ -4100,6 +4100,15 @@ function VoyageCreate({C, villes, onCancel, onCreate}){
   const [dateDebut, setDateDebut] = useState("");
 
   const toggleVille = (id)=> setSelVilles(s=> s.includes(id)? s.filter(x=>x!==id) : [...s,id]);
+  // Réordonne une ville sélectionnée dans la liste (delta = -1 monte, +1 descend).
+  const moveVille = (id, delta)=> setSelVilles(s=>{
+    const i = s.indexOf(id);
+    const j = i + delta;
+    if(i<0 || j<0 || j>=s.length) return s;
+    const next = [...s];
+    [next[i], next[j]] = [next[j], next[i]];
+    return next;
+  });
   const canCreate = titre.trim() && selVilles.length>0;
 
   const submit = ()=>{
@@ -4130,12 +4139,33 @@ function VoyageCreate({C, villes, onCancel, onCreate}){
 
         {/* Villes */}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Villes ({selVilles.length})</div>
-        <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:20}}>
+        <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:selVilles.length?14:20}}>
           {villes.map(v=>{
             const on = selVilles.includes(v.id);
             return <button key={v.id} onClick={()=>toggleVille(v.id)} style={{padding:"8px 13px",borderRadius:18,fontSize:12,cursor:"pointer",border:`1px solid ${on?C.red:C.border}`,background:on?"rgba(201,70,61,0.12)":C.s1,color:on?C.text:C.t2}}>{v.emoji} {v.nom} {on?"✓":""}</button>;
           })}
         </div>
+
+        {/* Ordre du parcours — réordonnable, détermine l'ordre des jours */}
+        {selVilles.length>1 && (
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Ordre du parcours</div>
+            <div style={{display:"flex",flexDirection:"column",gap:6}}>
+              {selVilles.map((id,i)=>{
+                const v = villes.find(x=>x.id===id);
+                if(!v) return null;
+                return(
+                  <div key={id} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 12px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:11}}>
+                    <span style={{fontSize:11,color:C.t3,width:16,textAlign:"center",flexShrink:0}}>{i+1}</span>
+                    <span style={{flex:1,fontSize:13,color:C.text}}>{v.emoji} {v.nom}</span>
+                    <button onClick={()=>moveVille(id,-1)} disabled={i===0} aria-label="Monter" style={{width:28,height:28,borderRadius:8,border:`1px solid ${C.border}`,background:C.s2,color:i===0?C.t3:C.text,fontSize:13,cursor:i===0?"default":"pointer",opacity:i===0?0.4:1,flexShrink:0}}>↑</button>
+                    <button onClick={()=>moveVille(id,1)} disabled={i===selVilles.length-1} aria-label="Descendre" style={{width:28,height:28,borderRadius:8,border:`1px solid ${C.border}`,background:C.s2,color:i===selVilles.length-1?C.t3:C.text,fontSize:13,cursor:i===selVilles.length-1?"default":"pointer",opacity:i===selVilles.length-1?0.4:1,flexShrink:0}}>↓</button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Dates */}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Dates</div>
