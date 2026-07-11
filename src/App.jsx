@@ -717,7 +717,7 @@ const CAT_COLOR = {
   Gastronomie:"#C9A84C", Lieux:"#4E8060", Culture:"#8B6FB0",
   Concept:"#5B9BD5", Quotidien:"#C9463D", Fêtes:"#D98BA8",
 };
-function Slider({C, children}){
+function Slider({C, children, onIndexChange}){
   const items = Array.isArray(children) ? children.filter(Boolean) : [children];
   const [idx, setIdx] = useState(0);
   const ref = useRef(null);
@@ -726,7 +726,7 @@ function Slider({C, children}){
     const el = ref.current;
     if(!el) return;
     const i = Math.round(el.scrollLeft / el.clientWidth);
-    if(i !== idx) setIdx(i);
+    if(i !== idx){ setIdx(i); onIndexChange && onIndexChange(i, items.length); }
   };
 
   const goTo = (i)=>{
@@ -734,6 +734,7 @@ function Slider({C, children}){
     if(!el) return;
     el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
     setIdx(i);
+    onIndexChange && onIndexChange(i, items.length);
   };
 
   return(
@@ -861,7 +862,9 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 
   // Marque "lire le contenu du jour" à l'arrivée sur l'accueil.
   // Se redéclenche si le jour de la mission change (ex. après chargement cloud).
-  useEffect(()=>{ if(onTask) onTask("daily"); },[mission?.day]);
+  // La mission "Lire le contenu du jour" (trigger "daily") ne se valide plus au
+  // montage — elle se valide quand l'utilisateur atteint la dernière carte du
+  // carrousel "Daily Japan" (voir onIndexChange sur le Slider ci-dessous).
 
   const {month,day,weekday,hour} = getJPDate();
   const g = greet(hour, user.name==="Voyageur"?"":user.name);
@@ -933,25 +936,28 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 
         {/* Mission du jour */}
         {mission && (()=>{
+          const todays = dailyMissions(mission.day || today);
           const done = mission.done || [];
-          const allDone = done.length >= DAILY_TASKS.length;
-          const pct = Math.round((done.length/DAILY_TASKS.length)*100);
+          const allDone = done.length >= todays.length;
+          const pct = Math.round((done.length/todays.length)*100);
+          // Onglet cible selon le trigger de la mission
+          const targetFor = (tr)=>({daily:"home",kana:"learn",review:"learn",comp:"learn",path:"learn",fav:"explore",scenario:"scenarios",explore:"explore"}[tr]||"home");
           return(
             <div style={{marginBottom:24,padding:"16px 18px",background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`,borderRadius:16}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
                 <div style={{fontSize:11,color:allDone?C.green:C.gold,letterSpacing:".15em",textTransform:"uppercase",fontWeight:600}}>
                   {allDone ? "✓ Mission accomplie !" : "🎯 Mission du jour"}
                 </div>
-                <div style={{fontSize:11,color:C.t3}}>{done.length}/{DAILY_TASKS.length}</div>
+                <div style={{fontSize:11,color:C.t3}}>{done.length}/{todays.length}</div>
               </div>
               <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
                 <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
               </div>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                {DAILY_TASKS.map(t=>{
+                {todays.map(t=>{
                   const ok = done.includes(t.id);
                   return(
-                    <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(t.id==="daily"?"home":t.id); }} style={{display:"flex",alignItems:"center",gap:11,cursor:ok?"default":"pointer",opacity:ok?0.6:1}}>
+                    <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(targetFor(t.trigger)); }} style={{display:"flex",alignItems:"center",gap:11,cursor:ok?"default":"pointer",opacity:ok?0.6:1}}>
                       <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":t.emoji}</div>
                       <div style={{flex:1}}>
                         <div style={{fontSize:13,color:C.text,textDecoration:ok?"line-through":"none"}}>{t.label}</div>
@@ -1038,7 +1044,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
         <SH C={C} kanji="日" title="Daily Japan" sub="Ta sélection du jour" onRefresh={()=>refresh("daily",true)}/>
         <div style={{marginBottom:28}}>
           {db ? (
-            <Slider C={C}>
+            <Slider C={C} onIndexChange={(i,len)=>{ if(i>=len-1 && onTask) onTask("daily"); }}>
               <ExprCard  C={C} data={expr}  fav={expr&&isFav("expr",expr)}   onFav={expr&&(()=>toggleFav("expr",expr))}  wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>
               <CultCard  C={C} data={cult}  fav={cult&&isFav("cult",cult)}   onFav={cult&&(()=>toggleFav("cult",cult))}  wikiMap={wikiMap} onWikiTap={onWikiTap}/>
               <RepasCard C={C} data={repas} fav={repas&&isFav("repas",repas)} onFav={repas&&(()=>toggleFav("repas",repas))} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>
@@ -1089,12 +1095,36 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 }
 
 // ─── Other screens
+// Bandeau d'explication du déblocage progressif par streak — fermable, avec
+// option "ne plus afficher" persistée en localStorage (voir dismissUnlockHint).
+function UnlockHintBanner({C, onDismiss}){
+  const [dontShow, setDontShow] = useState(false);
+  return (
+    <div style={{position:"relative",padding:"14px 40px 14px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6,marginBottom:20}}>
+      <button onClick={()=>onDismiss(dontShow)} aria-label="Fermer" style={{position:"absolute",top:10,right:10,width:24,height:24,borderRadius:"50%",border:"none",background:"transparent",color:C.t3,fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+      <div style={{marginBottom:10}}>
+        🔓 Le contenu se débloque <b style={{color:C.t2}}>au fil de ton streak</b> : reviens chaque jour et les sections s'ouvrent progressivement. <b style={{color:C.t2}}>Premium</b> débloque tout immédiatement.
+      </div>
+      <label style={{display:"flex",alignItems:"center",gap:7,cursor:"pointer",fontSize:11,color:C.t3}}>
+        <input type="checkbox" checked={dontShow} onChange={e=>setDontShow(e.target.checked)} style={{width:14,height:14,cursor:"pointer",accentColor:C.red}}/>
+        Ne plus afficher ce message
+      </label>
+    </div>
+  );
+}
 function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,onOpenPremium}){
   const [view,setView] = useState(null);
   const [viewFilter,setViewFilter] = useState(null);
   const [confirmCat,setConfirmCat] = useState(null);
   const [toast,setToast] = useState(null);
   const [sectionFilter,setSectionFilter] = useState("all");
+  const [showUnlockHint,setShowUnlockHint] = useState(()=>{
+    try { return localStorage.getItem("isekaid_hide_unlock_hint_v1") !== "1"; } catch { return true; }
+  });
+  const dismissUnlockHint = (dontShowAgain)=>{
+    setShowUnlockHint(false);
+    if(dontShowAgain){ try { localStorage.setItem("isekaid_hide_unlock_hint_v1","1"); } catch {} }
+  };
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
 
@@ -1142,6 +1172,9 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
       </div>
 
       <div style={{padding:"18px 20px 110px"}}>
+        {/* Hint déblocage par streak — en haut, fermable */}
+        {showUnlockHint && <UnlockHintBanner C={C} onDismiss={dismissUnlockHint}/>}
+
         {/* 3 sections (filtrées) */}
         {EXPLORE_SECTIONS.filter(section=> sectionFilter==="all" || section.id===sectionFilter).map(section=>(
           <div key={section.id} style={{marginBottom:28}}>
@@ -1181,11 +1214,6 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
             </div>
           </div>
         ))}
-
-        {/* Hint déblocage par streak */}
-        <div style={{padding:"13px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6}}>
-          🔓 Le contenu se débloque <b style={{color:C.t2}}>au fil de ton streak</b> : reviens chaque jour et les sections s'ouvrent progressivement. <b style={{color:C.t2}}>Premium</b> débloque tout immédiatement.
-        </div>
       </div>
 
       {/* Toast */}
@@ -3399,13 +3427,19 @@ function ReviewMode({ C, dueChars, onRecord, onExit }){
   );
 }
 
-function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep}){
+function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep,onMissionTrigger}){
   const [deck,setDeck] = useState(null);   // selected deck object
   const [mode,setMode] = useState(null);   // "flash" | "quiz"
   const [situation,setSituation] = useState(null); // selected situation
   const [pathStep,setPathStep] = useState(null);   // active path step (detail)
   const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
   const [learnMode,setLearnMode] = useState(null);   // null = choix | "path" | "alphabets" | "situations" | "read" | "listen"
+  // Déclenche les missions du jour "review" et "comp" quand on entre dans ces modes.
+  useEffect(()=>{
+    if(!onMissionTrigger) return;
+    if(learnMode==="review") onMissionTrigger("review");
+    if(learnMode==="read" || learnMode==="listen") onMissionTrigger("comp");
+  },[learnMode]);
   const scrollRef = useRef(null);
   // Remet le scroll en haut quand on change de mode (sinon on atterrit sur les questions)
   useEffect(()=>{ if(scrollRef.current) scrollRef.current.scrollTop = 0; }, [learnMode]);
@@ -4066,6 +4100,15 @@ function VoyageCreate({C, villes, onCancel, onCreate}){
   const [dateDebut, setDateDebut] = useState("");
 
   const toggleVille = (id)=> setSelVilles(s=> s.includes(id)? s.filter(x=>x!==id) : [...s,id]);
+  // Réordonne une ville sélectionnée dans la liste (delta = -1 monte, +1 descend).
+  const moveVille = (id, delta)=> setSelVilles(s=>{
+    const i = s.indexOf(id);
+    const j = i + delta;
+    if(i<0 || j<0 || j>=s.length) return s;
+    const next = [...s];
+    [next[i], next[j]] = [next[j], next[i]];
+    return next;
+  });
   const canCreate = titre.trim() && selVilles.length>0;
 
   const submit = ()=>{
@@ -4096,12 +4139,33 @@ function VoyageCreate({C, villes, onCancel, onCreate}){
 
         {/* Villes */}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Villes ({selVilles.length})</div>
-        <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:20}}>
+        <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:selVilles.length?14:20}}>
           {villes.map(v=>{
             const on = selVilles.includes(v.id);
             return <button key={v.id} onClick={()=>toggleVille(v.id)} style={{padding:"8px 13px",borderRadius:18,fontSize:12,cursor:"pointer",border:`1px solid ${on?C.red:C.border}`,background:on?"rgba(201,70,61,0.12)":C.s1,color:on?C.text:C.t2}}>{v.emoji} {v.nom} {on?"✓":""}</button>;
           })}
         </div>
+
+        {/* Ordre du parcours — réordonnable, détermine l'ordre des jours */}
+        {selVilles.length>1 && (
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Ordre du parcours</div>
+            <div style={{display:"flex",flexDirection:"column",gap:6}}>
+              {selVilles.map((id,i)=>{
+                const v = villes.find(x=>x.id===id);
+                if(!v) return null;
+                return(
+                  <div key={id} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 12px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:11}}>
+                    <span style={{fontSize:11,color:C.t3,width:16,textAlign:"center",flexShrink:0}}>{i+1}</span>
+                    <span style={{flex:1,fontSize:13,color:C.text}}>{v.emoji} {v.nom}</span>
+                    <button onClick={()=>moveVille(id,-1)} disabled={i===0} aria-label="Monter" style={{width:28,height:28,borderRadius:8,border:`1px solid ${C.border}`,background:C.s2,color:i===0?C.t3:C.text,fontSize:13,cursor:i===0?"default":"pointer",opacity:i===0?0.4:1,flexShrink:0}}>↑</button>
+                    <button onClick={()=>moveVille(id,1)} disabled={i===selVilles.length-1} aria-label="Descendre" style={{width:28,height:28,borderRadius:8,border:`1px solid ${C.border}`,background:C.s2,color:i===selVilles.length-1?C.t3:C.text,fontSize:13,cursor:i===selVilles.length-1?"default":"pointer",opacity:i===selVilles.length-1?0.4:1,flexShrink:0}}>↓</button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Dates */}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:7,textTransform:"uppercase"}}>Dates</div>
@@ -4764,7 +4828,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
   return(
     <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Noto Sans JP',sans-serif"}}>
       {/* Hero */}
-      <div style={{padding:"54px 22px 28px",background:`linear-gradient(160deg,rgba(201,70,61,0.18),${acc.soft} 60%,transparent)`,position:"relative",textAlign:"center"}}>
+      <div style={{padding:"54px 22px 28px",background:`linear-gradient(160deg,rgba(201,70,61,0.18),${acc.soft} 60%,transparent)`,position:"relative",textAlign:"center",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
         <button onClick={onClose} style={{position:"absolute",top:48,left:18,background:"rgba(0,0,0,0.25)",border:"none",borderRadius:"50%",width:34,height:34,color:"#fff",fontSize:18,cursor:"pointer"}}>×</button>
         <div style={{fontSize:54,marginBottom:10}}>異</div>
         <div style={{fontSize:11,color:C.gold,letterSpacing:".25em",textTransform:"uppercase",marginBottom:8}}>Isekai'd Premium</div>
@@ -4772,7 +4836,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
         <div style={{fontSize:13,color:C.t2,lineHeight:1.6,maxWidth:300,margin:"0 auto"}}>Débloque tout le potentiel d'Isekai'd et soutiens le développement de l'app.</div>
       </div>
 
-      <div style={{padding:"6px 22px 40px"}}>
+      <div style={{padding:"6px 22px 40px",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
         {/* Avantages */}
         <div style={{margin:"18px 0 26px"}}>
           {PREMIUM_PERKS.map((p,i)=>(
@@ -4857,6 +4921,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
 
 function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
+  const [showBadges,setShowBadges] = useState(false);
   const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
   const setReminders = (fn)=>{
     setRemindersState(prev=>{
@@ -4878,11 +4943,16 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
       <div style={{padding:"50px 20px 110px"}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:16}}>人 · PROFIL</div>
         <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{width:50,height:50,borderRadius:"50%",background:"rgba(201,70,61,0.1)",border:"2px solid rgba(201,70,61,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontFamily:"'Noto Serif JP',serif",color:C.red,flexShrink:0}}>
-            {(user.name||"V")[0].toUpperCase()}
+          <div style={{width:50,height:50,borderRadius:"50%",background:"rgba(201,70,61,0.1)",border:"2px solid rgba(201,70,61,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:user.emojiAvatar?24:20,fontFamily:"'Noto Serif JP',serif",color:C.red,flexShrink:0,overflow:"hidden"}}>
+            {user.photo
+              ? <img src={user.photo} alt="" referrerPolicy="no-referrer" style={{width:"100%",height:"100%",objectFit:"cover"}} onError={(e)=>{e.target.style.display="none"; e.target.parentNode.textContent=user.emojiAvatar||(user.name||"V")[0].toUpperCase();}}/>
+              : user.emojiAvatar
+              ? user.emojiAvatar
+              : (user.name||"V")[0].toUpperCase()}
           </div>
           <div style={{flex:1}}>
             <div style={{fontSize:16,color:C.text,marginBottom:4}}>{user.name}</div>
+            {user.email && <div style={{fontSize:11,color:C.t3,marginBottom:2}}>{user.email}</div>}
             <div style={{fontSize:12,color:C.text,fontWeight:500}}>{tier.emoji} {tier.title} <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{tier.jp}</span></div>
           </div>
         </div>
@@ -4897,97 +4967,16 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
           <span style={{fontSize:18,color:C.t3}}>›</span>
         </div>
 
-        {/* Préférences (réponses onboarding) */}
-        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:12,textTransform:"uppercase"}}>🎌 Mon profil Japon</div>
-          <div style={{display:"flex",flexDirection:"column",gap:11}}>
-            {/* Niveau */}
-            {user.level && (
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:12,color:C.t2}}>Niveau</span>
-                <span style={{fontSize:12,color:C.text,fontWeight:500}}>{lvlL[user.level]||user.level}</span>
-              </div>
-            )}
-            {/* Objectif */}
-            {user.goal && (
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:12,color:C.t2}}>Objectif</span>
-                <span style={{fontSize:12,color:C.text,fontWeight:500}}>{goalL[user.goal]||user.goal}</span>
-              </div>
-            )}
-            {/* Centres d'intérêt */}
-            {user.why?.length>0 && (
-              <div>
-                <span style={{fontSize:12,color:C.t2,display:"block",marginBottom:8}}>Centres d'intérêt</span>
-                <div style={{display:"flex",flexWrap:"wrap",gap:7}}>
-                  {user.why.map((w,i)=>{
-                    const m = INTEREST_MAP[w];
-                    return(
-                      <span key={i} style={{fontSize:11,padding:"5px 11px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.22)",borderRadius:20,color:C.text}}>
-                        {m?.emoji} {m?.label||w}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+        {/* Mode sombre — juste sous Premium */}
+        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div>
+            <div style={{fontSize:13,color:C.text,marginBottom:2}}>{dark?"Mode sombre 🌙":"Mode clair ☀️"}</div>
+            <div style={{fontSize:11,color:C.t3}}>Basculer le thème de l'app</div>
           </div>
-          <div style={{marginTop:12,fontSize:11,color:C.t3,lineHeight:1.5}}>
-            Ces préférences personnalisent tes recommandations sur l'accueil ✨
+          <div onClick={()=>setDark(d=>!d)} style={{width:48,height:26,borderRadius:13,background:dark?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
+            <div style={{position:"absolute",top:3,left:dark?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
           </div>
         </div>
-
-        {/* XP / Title progress */}
-        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-            <div style={{display:"flex",alignItems:"center",gap:7}}>
-              <span style={{fontSize:16,display:"inline-block",animation:"floatY 3s ease-in-out infinite"}}>⭐</span>
-              <span style={{fontSize:13,color:C.text,fontWeight:600}}>{xp||0} jour{(xp||0)>1?"s":""} 🔥</span>
-            </div>
-            <div style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",background:"rgba(201,70,61,0.07)",border:"1px solid rgba(201,70,61,0.18)",borderRadius:20}}>
-              <span style={{fontSize:12}}>🔥</span><span style={{fontSize:12,fontWeight:700,color:C.text}}>{streak?.count||0}j</span>
-            </div>
-          </div>
-          <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:7,position:"relative"}}>
-            <div style={{height:"100%",width:`${progress*100}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .8s cubic-bezier(.34,1.3,.64,1)"}}/>
-            <div style={{position:"absolute",inset:0,width:`${progress*100}%`,background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent)",backgroundSize:"200% 100%",animation:"shimmer 2.5s ease infinite",borderRadius:3,pointerEvents:"none"}}/>
-          </div>
-          <div style={{fontSize:11,color:C.t3}}>
-            {nextTier ? <>Prochain titre : <b style={{color:C.t2}}>{nextTier.emoji} {nextTier.title}</b> à {nextTier.min} jours</> : "Titre maximal atteint ! 🎌"}
-          </div>
-        </div>
-        {/* Tableau de bord de progression global */}
-        {(()=>{
-          const srs = srsStats(kanaProgress);
-          const totalKana = (HIRAGANA.length + KATAKANA.length + HIRAGANA_DAKUTEN.length + KATAKANA_DAKUTEN.length);
-          const scenDone = (scenProgress?.done?.length) || 0;
-          const scenTotal = (db?.scenarios?.length) || 0;
-          const pathDone = (pathProgress?.completed?.length) || 0;
-          const pathTotal = 8; // TOKYO_PATH paliers
-          const Stat = ({emoji,label,value,sub,color})=>(
-            <div style={{flex:1,minWidth:0,padding:"14px 12px",background:C.s2,borderRadius:12,textAlign:"center"}}>
-              <div style={{fontSize:22,marginBottom:4}}>{emoji}</div>
-              <div style={{fontSize:20,fontWeight:700,color:color||C.text,lineHeight:1}}>{value}</div>
-              <div style={{fontSize:10,color:C.t3,marginTop:3,lineHeight:1.3}}>{label}</div>
-              {sub && <div style={{fontSize:9,color:C.t3,marginTop:1}}>{sub}</div>}
-            </div>
-          );
-          return(
-            <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-              <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:12,textTransform:"uppercase"}}>📊 Ma progression</div>
-              <div style={{display:"flex",gap:8,marginBottom:8}}>
-                <Stat emoji="🔥" label="Streak" value={`${streak?.count||0}j`} sub={`record ${streak?.best||0}j`} color={C.red}/>
-                <Stat emoji="🎴" label="Kana maîtrisés" value={`${srs.mastered}`} sub={`/ ${totalKana}`} color={C.gold}/>
-                <Stat emoji="💬" label="Scénarios" value={`${scenDone}`} sub={`/ ${scenTotal}`} color={C.green}/>
-              </div>
-              <div style={{display:"flex",gap:8}}>
-                <Stat emoji="🔁" label="À réviser" value={`${srs.due}`} sub="aujourd'hui" color={srs.due>0?C.red:C.t2}/>
-                <Stat emoji="📈" label="En cours" value={`${srs.learning}`} sub="d'apprentissage"/>
-                <Stat emoji="🗼" label="Parcours" value={`${pathDone}`} sub={`/ ${pathTotal} paliers`} color={C.indigo}/>
-              </div>
-            </div>
-          );
-        })()}
 
         {/* Kana mastery */}
         {(()=>{
@@ -5017,16 +5006,6 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
             </div>
           );
         })()}
-        <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div>
-            <div style={{fontSize:13,color:C.text,marginBottom:2}}>{dark?"Mode sombre 🌙":"Mode clair ☀️"}</div>
-            <div style={{fontSize:11,color:C.t3}}>Basculer le thème de l'app</div>
-          </div>
-          <div onClick={()=>setDark(d=>!d)} style={{width:48,height:26,borderRadius:13,background:dark?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
-            <div style={{position:"absolute",top:3,left:dark?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
-          </div>
-        </div>
-
         {/* Rappels quotidiens */}
         <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div style={{flex:1,paddingRight:12}}>
@@ -5036,57 +5015,6 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
           <div onClick={()=>setReminders(r=>!r)} style={{width:48,height:26,borderRadius:13,background:reminders?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
             <div style={{position:"absolute",top:3,left:reminders?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
           </div>
-        </div>
-
-        {/* Sélecteur d'accent (déblocable par XP) */}
-        <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{marginBottom:12}}>
-            <div style={{fontSize:13,color:C.text,marginBottom:2}}>🎨 Couleur d'accent</div>
-            <div style={{fontSize:11,color:C.t3}}>Débloque de nouvelles teintes au fil de ton streak 🔥</div>
-          </div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:10}}>
-            {ACCENT_THEMES.map(a=>{
-              const unlocked = (xp||0) >= a.minXp;
-              const active = accent===a.id;
-              return(
-                <button key={a.id} onClick={()=>{ if(unlocked) chooseAccent(a.id); }} title={a.label}
-                  style={{position:"relative",width:46,height:46,borderRadius:"50%",border:`2px solid ${active?C.text:"transparent"}`,background:a.color,cursor:unlocked?"pointer":"not-allowed",opacity:unlocked?1:0.3,display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s"}}>
-                  {active && <span style={{color:"#fff",fontSize:18,textShadow:"0 1px 3px rgba(0,0,0,0.4)"}}>✓</span>}
-                  {!unlocked && <span style={{position:"absolute",fontSize:14}}>🔒</span>}
-                </button>
-              );
-            })}
-          </div>
-          {(()=>{
-            const next = ACCENT_THEMES.find(a=>(xp||0) < a.minXp);
-            if(!next) return <div style={{fontSize:10,color:C.gold,marginTop:10}}>✨ Toutes les couleurs débloquées — bravo !</div>;
-            return <div style={{fontSize:10,color:C.t3,marginTop:10}}>Prochaine : {next.emoji} {next.label} au jour {next.minXp} (encore {next.minXp-(xp||0)} jour{next.minXp-(xp||0)>1?"s":""})</div>;
-          })()}
-        </div>
-        {/* DB stats */}
-        {db && (
-          <div style={{marginBottom:16,padding:"14px 16px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,display:"flex",alignItems:"center",gap:12}}>
-            <span style={{fontSize:20}}>📚</span>
-            <div>
-              <div style={{fontSize:12,color:C.text,fontWeight:500}}>{total} contenus chargés</div>
-              <div style={{fontSize:10,color:C.t3}}>depuis japan-data.json — aucun appel API</div>
-            </div>
-            <span style={{marginLeft:"auto",fontSize:14}}>✅</span>
-          </div>
-        )}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18}}>
-          {[
-            {v:String(streak?.count||0),label:"Streak",emoji:"🔥"},
-            {v:total||"—",label:"Contenus",emoji:"📖"},
-            {v:lvlL[user.level]||"Débutant",label:"Niveau",emoji:"🎯"},
-            {v:goalL[user.goal]||"Immersion",label:"Objectif",emoji:"🗾"},
-          ].map((s,i)=>(
-            <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,padding:"15px 13px"}}>
-              <div style={{fontSize:18,marginBottom:4}}>{s.emoji}</div>
-              <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:1}}>{s.v}</div>
-              <div style={{fontSize:10,color:C.t3,letterSpacing:".07em"}}>{s.label}</div>
-            </div>
-          ))}
         </div>
 
         {/* Ma collection (favoris) */}
@@ -5132,19 +5060,24 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
           const earned = achievements.filter(a=>a.unlocked).length;
           return(
             <>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11}}>
+              <div onClick={()=>setShowBadges(v=>!v)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11,cursor:"pointer",userSelect:"none"}}>
                 <span style={{fontSize:10,color:C.t3,letterSpacing:".22em",textTransform:"uppercase"}}>Collection de badges</span>
-                <span style={{fontSize:11,color:C.t2,fontWeight:600}}>{earned}/{achievements.length}</span>
+                <span style={{display:"flex",alignItems:"center",gap:8}}>
+                  <span style={{fontSize:11,color:C.t2,fontWeight:600}}>{earned}/{achievements.length}</span>
+                  <span style={{fontSize:12,color:C.t3,transform:showBadges?"rotate(180deg)":"none",transition:"transform .2s"}}>▾</span>
+                </span>
               </div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9}}>
-                {achievements.map((b,i)=>(
-                  <div key={i} title={b.desc} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.32)":C.border}`,borderRadius:12,padding:"13px 8px",textAlign:"center",opacity:b.unlocked?1:.45,transition:"all .3s"}}>
-                    <div style={{fontSize:24,marginBottom:5,filter:b.unlocked?"none":"grayscale(1)"}}>{b.emoji}</div>
-                    <div style={{fontSize:10,color:b.unlocked?C.text:C.t3,lineHeight:1.25,marginBottom:3}}>{b.label}</div>
-                    <div style={{fontSize:8,color:C.t3,lineHeight:1.3}}>{b.unlocked?"✓":b.desc}</div>
-                  </div>
-                ))}
-              </div>
+              {showBadges && (
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9,animation:"fadeUp .25s ease"}}>
+                  {achievements.map((b,i)=>(
+                    <div key={i} title={b.desc} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.32)":C.border}`,borderRadius:12,padding:"13px 8px",textAlign:"center",opacity:b.unlocked?1:.45,transition:"all .3s"}}>
+                      <div style={{fontSize:24,marginBottom:5,filter:b.unlocked?"none":"grayscale(1)"}}>{b.emoji}</div>
+                      <div style={{fontSize:10,color:b.unlocked?C.text:C.t3,lineHeight:1.25,marginBottom:3}}>{b.label}</div>
+                      <div style={{fontSize:8,color:C.t3,lineHeight:1.3}}>{b.unlocked?"✓":b.desc}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </>
           );
         })()}
@@ -5451,13 +5384,19 @@ function BottomNav({C,active,onChange}){
 }
 
 // ─── Onboarding ───────────────────────────────────────────────────────────────
-function Onboarding({onComplete}){
+const AVATAR_PLACEHOLDERS = ["🦊","🐼","🐯","🐰","🦉","🐣","🍡","🌸","⛩️","🗻","🍜","🎌"];
+
+function Onboarding({onComplete, googleInfo}){
   const C=LIGHT;
   const [step,setStep]=useState(0);
   const [why,setWhy]=useState([]);
   const [goal,setGoal]=useState("");
   const [level,setLevel]=useState("");
-  const [name,setName]=useState("");
+  // Pré-remplit le nom depuis Google si dispo
+  const [name,setName]=useState(googleInfo?.name || "");
+  // Photo : soit la photo Google, soit un emoji placeholder choisi
+  const [photo,setPhoto]=useState(googleInfo?.photo || null);
+  const [emojiAvatar,setEmojiAvatar]=useState(googleInfo?.photo ? null : "🦊");
   const ok=[why.length>0,!!goal,!!level][step];
   const toggle=id=>setWhy(w=>w.includes(id)?w.filter(x=>x!==id):[...w,id]);
   const chip=active=>({padding:"15px 12px",borderRadius:10,cursor:"pointer",background:active?"rgba(201,70,61,0.09)":"rgba(26,20,16,0.04)",border:`1px solid ${active?"rgba(201,70,61,0.3)":C.border}`,transition:"all .2s"});
@@ -5481,14 +5420,37 @@ function Onboarding({onComplete}){
           <div style={{display:"flex",flexDirection:"column",gap:12}}>
             {LEVELS.map(o=>(<div key={o.id} style={{...chip(level===o.id),display:"flex",alignItems:"center",gap:14,padding:"16px"}} onClick={()=>setLevel(o.id)}><span style={{fontSize:28}}>{o.emoji}</span><div style={{flex:1}}><div style={{fontSize:14,color:level===o.id?C.text:C.t2,marginBottom:2}}>{o.label}</div><div style={{fontSize:11,color:C.t3}}>{o.sub}</div></div>{level===o.id&&<span style={{color:C.red}}>✓</span>}</div>))}
             <div style={{marginTop:6}}>
-              <div style={{fontSize:11,color:C.t3,marginBottom:8,letterSpacing:".12em"}}>Ton prénom (optionnel)</div>
+              <div style={{fontSize:11,color:C.t3,marginBottom:8,letterSpacing:".12em"}}>Ta photo de profil</div>
+              {/* Aperçu photo actuelle */}
+              <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:12}}>
+                <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(201,70,61,0.09)",border:`2px solid rgba(201,70,61,0.25)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,overflow:"hidden",flexShrink:0}}>
+                  {photo
+                    ? <img src={photo} alt="" referrerPolicy="no-referrer" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                    : emojiAvatar}
+                </div>
+                <div style={{fontSize:12,color:C.t2,flex:1}}>
+                  {photo ? "Photo de ton compte Google" : "Choisis un avatar ci-dessous"}
+                  {photo && <div onClick={()=>{setPhoto(null);setEmojiAvatar("🦊");}} style={{fontSize:11,color:C.red,cursor:"pointer",marginTop:3}}>Utiliser un avatar à la place</div>}
+                </div>
+              </div>
+              {/* Grille d'emojis placeholder (si pas de photo Google) */}
+              {!photo && (
+                <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:8,marginBottom:16}}>
+                  {AVATAR_PLACEHOLDERS.map(em=>(
+                    <div key={em} onClick={()=>setEmojiAvatar(em)} style={{aspectRatio:"1",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,borderRadius:10,cursor:"pointer",background:emojiAvatar===em?"rgba(201,70,61,0.12)":"rgba(26,20,16,0.04)",border:`1px solid ${emojiAvatar===em?"rgba(201,70,61,0.35)":C.border}`}}>
+                      {em}
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{fontSize:11,color:C.t3,marginBottom:8,letterSpacing:".12em"}}>Ton prénom</div>
               <input value={name} onChange={e=>setName(e.target.value)} placeholder="Ex : Léa" style={{background:"rgba(26,20,16,0.04)",border:`1px solid ${C.border}`,color:C.text}}/>
             </div>
           </div>
         )}
       </div>
       <div style={{padding:"14px 26px 34px",flexShrink:0}}>
-        <button onClick={()=>step<2?setStep(s=>s+1):onComplete({why,goal,level,name:name||"Voyageur"})} disabled={!ok}
+        <button onClick={()=>step<2?setStep(s=>s+1):onComplete({why,goal,level,name:name||"Voyageur",photo:photo||null,emojiAvatar:photo?null:emojiAvatar})} disabled={!ok}
           style={{width:"100%",padding:"15px",background:ok?C.red:"rgba(26,20,16,0.08)",border:"none",borderRadius:12,color:ok?"#fff":C.t3,fontSize:15,cursor:ok?"pointer":"default",letterSpacing:".04em",transition:"all .2s"}}>
           {step<2?"Continuer →":"Commencer l'aventure 🌸"}
         </button>
@@ -5580,6 +5542,20 @@ function loadProfile(){
 function saveProfile(u){
   try { localStorage.setItem(STORE_KEY, JSON.stringify(u)); } catch {}
 }
+
+// Extrait les infos de profil depuis une session Supabase (connexion Google/email).
+// Google fournit : full_name, name, avatar_url, picture, email.
+function googleUserInfo(session){
+  const u = session?.user;
+  if(!u) return null;
+  const m = u.user_metadata || {};
+  return {
+    name: m.full_name || m.name || (u.email ? u.email.split("@")[0] : null),
+    photo: m.avatar_url || m.picture || null,
+    email: u.email || null,
+  };
+}
+
 function clearProfile(){
   try { localStorage.removeItem(STORE_KEY); } catch {}
 }
@@ -5675,11 +5651,35 @@ const STREAK_KEY = "isekaid_streak_v1";
 
 // ─── Mission quotidienne ──────────────────────────────────────────────────────
 const MISSION_KEY = "isekaid_mission_v1";
-const DAILY_TASKS = [
-  { id:"daily",    emoji:"📖", label:"Lire le contenu du jour",   hint:"Accueil" },
-  { id:"learn",    emoji:"🎴", label:"Réviser une leçon",          hint:"Apprendre" },
-  { id:"explore",  emoji:"⛩️", label:"Découvrir une tradition",    hint:"Explorer" },
+// Pool de missions quotidiennes — 3 sont tirées chaque jour (rotation déterministe).
+// Le champ `trigger` relie la mission à une vraie action dans l'app.
+const MISSION_POOL = [
+  { id:"read_home",   trigger:"daily",    emoji:"📖", label:"Lire le contenu du jour",     hint:"Accueil" },
+  { id:"learn_kana",  trigger:"kana",     emoji:"🎴", label:"Réviser quelques kana",        hint:"Apprendre" },
+  { id:"do_review",   trigger:"review",   emoji:"🔁", label:"Faire une révision",           hint:"Apprendre" },
+  { id:"like_card",   trigger:"fav",      emoji:"❤️", label:"Ajouter une carte en favori",  hint:"Explorer / Accueil" },
+  { id:"do_scenario", trigger:"scenario", emoji:"🎭", label:"Terminer un scénario",         hint:"Scénarios" },
+  { id:"explore_trad",trigger:"explore",  emoji:"⛩️", label:"Découvrir une tradition",      hint:"Explorer" },
+  { id:"read_comp",   trigger:"comp",     emoji:"📝", label:"Faire une compréhension",      hint:"Apprendre" },
+  { id:"path_step",   trigger:"path",     emoji:"🗼", label:"Avancer dans le parcours Tokyo",hint:"Apprendre" },
 ];
+
+// Tire 3 missions du jour de façon déterministe (même trio toute la journée,
+// change chaque jour). Graine FNV-1a + xorshift pour une bonne dispersion.
+function dailyMissions(dateKey = dayKey()){
+  let seed = 2166136261;
+  for(let i=0;i<dateKey.length;i++){ seed ^= dateKey.charCodeAt(i); seed = Math.imul(seed, 16777619) >>> 0; }
+  const pool = [...MISSION_POOL];
+  const picked = [];
+  for(let n=0; n<3 && pool.length; n++){
+    seed ^= seed << 13; seed >>>= 0;
+    seed ^= seed >> 17;
+    seed ^= seed << 5; seed >>>= 0;
+    const idx = seed % pool.length;
+    picked.push(pool.splice(idx,1)[0]);
+  }
+  return picked;
+}
 function loadMission(){
   try {
     const raw = localStorage.getItem(MISSION_KEY);
@@ -5902,7 +5902,7 @@ export default function IsekaidApp(){
   const [pathProgress,setPathProgress]=useState(()=>loadPathProgress());
 
   const completePathStep = (stepId)=>{
-    completeTask("learn");
+    completeTask("path");
     setPathProgress(prev=>{
       const completed = prev?.completed || [];
       if(completed.includes(stepId)) return prev;
@@ -5913,7 +5913,7 @@ export default function IsekaidApp(){
   };
 
   const recordKanaResult = (char, known)=>{
-    completeTask("learn");
+    completeTask("kana");
     setKanaProgress(prev=>{
       const next = recordKana(prev, char, known);
       saveKanaProgress(next);
@@ -5929,6 +5929,7 @@ export default function IsekaidApp(){
     if(scenProgress.done.includes(s.id)) return;
     const newProg = {done:[...scenProgress.done, s.id], xp:0};
     setScenProgress(newProg); saveScenarioProgress(newProg);
+    completeTask("scenario");
   };
 
   // Une catégorie est débloquée si : premium, OU pas verrouillable, OU le streak
@@ -5955,15 +5956,24 @@ export default function IsekaidApp(){
   const [mission,setMission]=useState(()=>loadMission());
   const [missionReward,setMissionReward]=useState(false);
   useEffect(()=>{ if(missionReward){ const t=setTimeout(()=>setMissionReward(false),3500); return ()=>clearTimeout(t); } },[missionReward]);
-  const completeTask = (taskId)=>{
+  // Complète une mission du jour à partir d'un TRIGGER d'action (ex: "fav", "kana", "scenario").
+  // On ne valide que si ce trigger correspond à l'une des 3 missions tirées aujourd'hui.
+  const completeTask = (trigger)=>{
     setMission(prev=>{
-      if(prev.done.includes(taskId)) return prev;
-      const done = [...prev.done, taskId];
+      const todays = dailyMissions(prev.day || dayKey());
+      const mission = todays.find(m=>m.trigger===trigger);
+      if(!mission) return prev;                       // ce trigger n'est pas une mission du jour
+      if(prev.done.includes(mission.id)) return prev; // déjà validée
+      const done = [...prev.done, mission.id];
       const m = {...prev, done};
-      if(done.length>=DAILY_TASKS.length && !prev.claimed){
+      if(done.length>=todays.length && !prev.claimed){
         m.claimed = true;
-        /* mission accomplie : plus de récompense en clés (système retiré) */
         setMissionReward(true);
+        // Mission du jour accomplie → on valide le streak (vraie activité du jour)
+        const s = touchStreak();
+        setStreak(s);
+        setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
+        if(s.gainedKey || s.frozenUsed) setWelcomeQueued(true);
       }
       saveMission(m);
       return m;
@@ -6041,6 +6051,25 @@ export default function IsekaidApp(){
     return ()=> sub.unsubscribe?.();
   },[]);
 
+  // Enrichit le profil avec les infos Google (nom, photo, email) à la connexion.
+  // Ne remplace pas un nom/photo déjà personnalisés par l'utilisateur.
+  useEffect(()=>{
+    const info = googleUserInfo(session);
+    if(!info) return;
+    setUser(prev=>{
+      const base = prev || {};
+      const next = {
+        ...base,
+        email: info.email || base.email,
+        // On garde le nom/photo existants si l'utilisateur les a déjà définis
+        name: (base.name && base.name!=="Voyageur") ? base.name : (info.name || base.name),
+        photo: base.photo || info.photo || null,
+      };
+      saveProfile(next);
+      return next;
+    });
+  },[session?.user?.id]);
+
   // When logged in: pull cloud progress (merge into local state)
   useEffect(()=>{
     if(!session?.user) return;
@@ -6097,6 +6126,8 @@ export default function IsekaidApp(){
       const next = exists ? prev.filter(f=>f.id!==id)
                           : [{id, type, item, savedAt:Date.now()}, ...prev];
       saveFavs(next);
+      // Mission « ajouter une carte en favori » : validée seulement à l'ajout (pas au retrait)
+      if(!exists) completeTask("fav");
       return next;
     });
   };
@@ -6107,13 +6138,12 @@ export default function IsekaidApp(){
   // Load content data on startup
   useEffect(()=>{
     setDb(DATA);
-    const s = touchStreak();
+    // On CHARGE le streak sans le valider. Le streak ne se valide que lorsque
+    // l'utilisateur complète sa mission du jour (voir effet lié à missionDone).
+    const s = loadStreak() || { count:0, best:0, last:null, freezes:1, freezeBase:0 };
     setStreak(s);
     setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
     setWikiMap(buildWikiMap(DATA.wiki));
-    // Le DailyWelcome est mis en file d'attente ; il s'affichera quand aucun autre
-    // overlay prioritaire (tour guidé) n'est actif — voir l'effet de séquencement plus bas.
-    if(s.gainedKey) setWelcomeQueued(true);
   },[]);
 
   // Persist theme whenever it changes
@@ -6225,7 +6255,7 @@ export default function IsekaidApp(){
         {screen==="loading"     && <div style={{position:"fixed",inset:0,background:"#0F0B08",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{fontSize:32,animation:"flameFlicker 1s ease infinite"}}>異</div></div>}
         {screen==="splash"      &&<Splash onDone={afterSplash}/>}
         {screen==="auth"       &&<AuthScreen C={C}/>}
-        {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding}/>}
+        {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding} googleInfo={googleUserInfo(session)}/>}
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
@@ -6233,7 +6263,7 @@ export default function IsekaidApp(){
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
-              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
+              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               </div>
