@@ -717,7 +717,7 @@ const CAT_COLOR = {
   Gastronomie:"#C9A84C", Lieux:"#4E8060", Culture:"#8B6FB0",
   Concept:"#5B9BD5", Quotidien:"#C9463D", Fêtes:"#D98BA8",
 };
-function Slider({C, children}){
+function Slider({C, children, onIndexChange}){
   const items = Array.isArray(children) ? children.filter(Boolean) : [children];
   const [idx, setIdx] = useState(0);
   const ref = useRef(null);
@@ -726,7 +726,7 @@ function Slider({C, children}){
     const el = ref.current;
     if(!el) return;
     const i = Math.round(el.scrollLeft / el.clientWidth);
-    if(i !== idx) setIdx(i);
+    if(i !== idx){ setIdx(i); onIndexChange && onIndexChange(i, items.length); }
   };
 
   const goTo = (i)=>{
@@ -734,6 +734,7 @@ function Slider({C, children}){
     if(!el) return;
     el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
     setIdx(i);
+    onIndexChange && onIndexChange(i, items.length);
   };
 
   return(
@@ -861,7 +862,9 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 
   // Marque "lire le contenu du jour" à l'arrivée sur l'accueil.
   // Se redéclenche si le jour de la mission change (ex. après chargement cloud).
-  useEffect(()=>{ if(onTask) onTask("daily"); },[mission?.day]);
+  // La mission "Lire le contenu du jour" (trigger "daily") ne se valide plus au
+  // montage — elle se valide quand l'utilisateur atteint la dernière carte du
+  // carrousel "Daily Japan" (voir onIndexChange sur le Slider ci-dessous).
 
   const {month,day,weekday,hour} = getJPDate();
   const g = greet(hour, user.name==="Voyageur"?"":user.name);
@@ -933,25 +936,28 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 
         {/* Mission du jour */}
         {mission && (()=>{
+          const todays = dailyMissions(mission.day || today);
           const done = mission.done || [];
-          const allDone = done.length >= DAILY_TASKS.length;
-          const pct = Math.round((done.length/DAILY_TASKS.length)*100);
+          const allDone = done.length >= todays.length;
+          const pct = Math.round((done.length/todays.length)*100);
+          // Onglet cible selon le trigger de la mission
+          const targetFor = (tr)=>({daily:"home",kana:"learn",review:"learn",comp:"learn",path:"learn",fav:"explore",scenario:"scenarios",explore:"explore"}[tr]||"home");
           return(
             <div style={{marginBottom:24,padding:"16px 18px",background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`,borderRadius:16}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
                 <div style={{fontSize:11,color:allDone?C.green:C.gold,letterSpacing:".15em",textTransform:"uppercase",fontWeight:600}}>
                   {allDone ? "✓ Mission accomplie !" : "🎯 Mission du jour"}
                 </div>
-                <div style={{fontSize:11,color:C.t3}}>{done.length}/{DAILY_TASKS.length}</div>
+                <div style={{fontSize:11,color:C.t3}}>{done.length}/{todays.length}</div>
               </div>
               <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
                 <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
               </div>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                {DAILY_TASKS.map(t=>{
+                {todays.map(t=>{
                   const ok = done.includes(t.id);
                   return(
-                    <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(t.id==="daily"?"home":t.id); }} style={{display:"flex",alignItems:"center",gap:11,cursor:ok?"default":"pointer",opacity:ok?0.6:1}}>
+                    <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(targetFor(t.trigger)); }} style={{display:"flex",alignItems:"center",gap:11,cursor:ok?"default":"pointer",opacity:ok?0.6:1}}>
                       <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":t.emoji}</div>
                       <div style={{flex:1}}>
                         <div style={{fontSize:13,color:C.text,textDecoration:ok?"line-through":"none"}}>{t.label}</div>
@@ -1038,7 +1044,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
         <SH C={C} kanji="日" title="Daily Japan" sub="Ta sélection du jour" onRefresh={()=>refresh("daily",true)}/>
         <div style={{marginBottom:28}}>
           {db ? (
-            <Slider C={C}>
+            <Slider C={C} onIndexChange={(i,len)=>{ if(i>=len-1 && onTask) onTask("daily"); }}>
               <ExprCard  C={C} data={expr}  fav={expr&&isFav("expr",expr)}   onFav={expr&&(()=>toggleFav("expr",expr))}  wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>
               <CultCard  C={C} data={cult}  fav={cult&&isFav("cult",cult)}   onFav={cult&&(()=>toggleFav("cult",cult))}  wikiMap={wikiMap} onWikiTap={onWikiTap}/>
               <RepasCard C={C} data={repas} fav={repas&&isFav("repas",repas)} onFav={repas&&(()=>toggleFav("repas",repas))} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>
@@ -3399,13 +3405,19 @@ function ReviewMode({ C, dueChars, onRecord, onExit }){
   );
 }
 
-function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep}){
+function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep,onMissionTrigger}){
   const [deck,setDeck] = useState(null);   // selected deck object
   const [mode,setMode] = useState(null);   // "flash" | "quiz"
   const [situation,setSituation] = useState(null); // selected situation
   const [pathStep,setPathStep] = useState(null);   // active path step (detail)
   const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
   const [learnMode,setLearnMode] = useState(null);   // null = choix | "path" | "alphabets" | "situations" | "read" | "listen"
+  // Déclenche les missions du jour "review" et "comp" quand on entre dans ces modes.
+  useEffect(()=>{
+    if(!onMissionTrigger) return;
+    if(learnMode==="review") onMissionTrigger("review");
+    if(learnMode==="read" || learnMode==="listen") onMissionTrigger("comp");
+  },[learnMode]);
   const scrollRef = useRef(null);
   // Remet le scroll en haut quand on change de mode (sinon on atterrit sur les questions)
   useEffect(()=>{ if(scrollRef.current) scrollRef.current.scrollTop = 0; }, [learnMode]);
@@ -5587,11 +5599,35 @@ const STREAK_KEY = "isekaid_streak_v1";
 
 // ─── Mission quotidienne ──────────────────────────────────────────────────────
 const MISSION_KEY = "isekaid_mission_v1";
-const DAILY_TASKS = [
-  { id:"daily",    emoji:"📖", label:"Lire le contenu du jour",   hint:"Accueil" },
-  { id:"learn",    emoji:"🎴", label:"Réviser une leçon",          hint:"Apprendre" },
-  { id:"explore",  emoji:"⛩️", label:"Découvrir une tradition",    hint:"Explorer" },
+// Pool de missions quotidiennes — 3 sont tirées chaque jour (rotation déterministe).
+// Le champ `trigger` relie la mission à une vraie action dans l'app.
+const MISSION_POOL = [
+  { id:"read_home",   trigger:"daily",    emoji:"📖", label:"Lire le contenu du jour",     hint:"Accueil" },
+  { id:"learn_kana",  trigger:"kana",     emoji:"🎴", label:"Réviser quelques kana",        hint:"Apprendre" },
+  { id:"do_review",   trigger:"review",   emoji:"🔁", label:"Faire une révision",           hint:"Apprendre" },
+  { id:"like_card",   trigger:"fav",      emoji:"❤️", label:"Ajouter une carte en favori",  hint:"Explorer / Accueil" },
+  { id:"do_scenario", trigger:"scenario", emoji:"🎭", label:"Terminer un scénario",         hint:"Scénarios" },
+  { id:"explore_trad",trigger:"explore",  emoji:"⛩️", label:"Découvrir une tradition",      hint:"Explorer" },
+  { id:"read_comp",   trigger:"comp",     emoji:"📝", label:"Faire une compréhension",      hint:"Apprendre" },
+  { id:"path_step",   trigger:"path",     emoji:"🗼", label:"Avancer dans le parcours Tokyo",hint:"Apprendre" },
 ];
+
+// Tire 3 missions du jour de façon déterministe (même trio toute la journée,
+// change chaque jour). Graine FNV-1a + xorshift pour une bonne dispersion.
+function dailyMissions(dateKey = dayKey()){
+  let seed = 2166136261;
+  for(let i=0;i<dateKey.length;i++){ seed ^= dateKey.charCodeAt(i); seed = Math.imul(seed, 16777619) >>> 0; }
+  const pool = [...MISSION_POOL];
+  const picked = [];
+  for(let n=0; n<3 && pool.length; n++){
+    seed ^= seed << 13; seed >>>= 0;
+    seed ^= seed >> 17;
+    seed ^= seed << 5; seed >>>= 0;
+    const idx = seed % pool.length;
+    picked.push(pool.splice(idx,1)[0]);
+  }
+  return picked;
+}
 function loadMission(){
   try {
     const raw = localStorage.getItem(MISSION_KEY);
@@ -5814,7 +5850,7 @@ export default function IsekaidApp(){
   const [pathProgress,setPathProgress]=useState(()=>loadPathProgress());
 
   const completePathStep = (stepId)=>{
-    completeTask("learn");
+    completeTask("path");
     setPathProgress(prev=>{
       const completed = prev?.completed || [];
       if(completed.includes(stepId)) return prev;
@@ -5825,7 +5861,7 @@ export default function IsekaidApp(){
   };
 
   const recordKanaResult = (char, known)=>{
-    completeTask("learn");
+    completeTask("kana");
     setKanaProgress(prev=>{
       const next = recordKana(prev, char, known);
       saveKanaProgress(next);
@@ -5841,6 +5877,7 @@ export default function IsekaidApp(){
     if(scenProgress.done.includes(s.id)) return;
     const newProg = {done:[...scenProgress.done, s.id], xp:0};
     setScenProgress(newProg); saveScenarioProgress(newProg);
+    completeTask("scenario");
   };
 
   // Une catégorie est débloquée si : premium, OU pas verrouillable, OU le streak
@@ -5867,12 +5904,17 @@ export default function IsekaidApp(){
   const [mission,setMission]=useState(()=>loadMission());
   const [missionReward,setMissionReward]=useState(false);
   useEffect(()=>{ if(missionReward){ const t=setTimeout(()=>setMissionReward(false),3500); return ()=>clearTimeout(t); } },[missionReward]);
-  const completeTask = (taskId)=>{
+  // Complète une mission du jour à partir d'un TRIGGER d'action (ex: "fav", "kana", "scenario").
+  // On ne valide que si ce trigger correspond à l'une des 3 missions tirées aujourd'hui.
+  const completeTask = (trigger)=>{
     setMission(prev=>{
-      if(prev.done.includes(taskId)) return prev;
-      const done = [...prev.done, taskId];
+      const todays = dailyMissions(prev.day || dayKey());
+      const mission = todays.find(m=>m.trigger===trigger);
+      if(!mission) return prev;                       // ce trigger n'est pas une mission du jour
+      if(prev.done.includes(mission.id)) return prev; // déjà validée
+      const done = [...prev.done, mission.id];
       const m = {...prev, done};
-      if(done.length>=DAILY_TASKS.length && !prev.claimed){
+      if(done.length>=todays.length && !prev.claimed){
         m.claimed = true;
         setMissionReward(true);
         // Mission du jour accomplie → on valide le streak (vraie activité du jour)
@@ -6032,6 +6074,8 @@ export default function IsekaidApp(){
       const next = exists ? prev.filter(f=>f.id!==id)
                           : [{id, type, item, savedAt:Date.now()}, ...prev];
       saveFavs(next);
+      // Mission « ajouter une carte en favori » : validée seulement à l'ajout (pas au retrait)
+      if(!exists) completeTask("fav");
       return next;
     });
   };
@@ -6167,7 +6211,7 @@ export default function IsekaidApp(){
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
-              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep}/>}
+              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               </div>
