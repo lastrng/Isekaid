@@ -1095,12 +1095,36 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 }
 
 // ─── Other screens
+// Bandeau d'explication du déblocage progressif par streak — fermable, avec
+// option "ne plus afficher" persistée en localStorage (voir dismissUnlockHint).
+function UnlockHintBanner({C, onDismiss}){
+  const [dontShow, setDontShow] = useState(false);
+  return (
+    <div style={{position:"relative",padding:"14px 40px 14px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6,marginBottom:20}}>
+      <button onClick={()=>onDismiss(dontShow)} aria-label="Fermer" style={{position:"absolute",top:10,right:10,width:24,height:24,borderRadius:"50%",border:"none",background:"transparent",color:C.t3,fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+      <div style={{marginBottom:10}}>
+        🔓 Le contenu se débloque <b style={{color:C.t2}}>au fil de ton streak</b> : reviens chaque jour et les sections s'ouvrent progressivement. <b style={{color:C.t2}}>Premium</b> débloque tout immédiatement.
+      </div>
+      <label style={{display:"flex",alignItems:"center",gap:7,cursor:"pointer",fontSize:11,color:C.t3}}>
+        <input type="checkbox" checked={dontShow} onChange={e=>setDontShow(e.target.checked)} style={{width:14,height:14,cursor:"pointer",accentColor:C.red}}/>
+        Ne plus afficher ce message
+      </label>
+    </div>
+  );
+}
 function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,onOpenPremium}){
   const [view,setView] = useState(null);
   const [viewFilter,setViewFilter] = useState(null);
   const [confirmCat,setConfirmCat] = useState(null);
   const [toast,setToast] = useState(null);
   const [sectionFilter,setSectionFilter] = useState("all");
+  const [showUnlockHint,setShowUnlockHint] = useState(()=>{
+    try { return localStorage.getItem("isekaid_hide_unlock_hint_v1") !== "1"; } catch { return true; }
+  });
+  const dismissUnlockHint = (dontShowAgain)=>{
+    setShowUnlockHint(false);
+    if(dontShowAgain){ try { localStorage.setItem("isekaid_hide_unlock_hint_v1","1"); } catch {} }
+  };
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
 
@@ -1148,6 +1172,9 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
       </div>
 
       <div style={{padding:"18px 20px 110px"}}>
+        {/* Hint déblocage par streak — en haut, fermable */}
+        {showUnlockHint && <UnlockHintBanner C={C} onDismiss={dismissUnlockHint}/>}
+
         {/* 3 sections (filtrées) */}
         {EXPLORE_SECTIONS.filter(section=> sectionFilter==="all" || section.id===sectionFilter).map(section=>(
           <div key={section.id} style={{marginBottom:28}}>
@@ -1187,11 +1214,6 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
             </div>
           </div>
         ))}
-
-        {/* Hint déblocage par streak */}
-        <div style={{padding:"13px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6}}>
-          🔓 Le contenu se débloque <b style={{color:C.t2}}>au fil de ton streak</b> : reviens chaque jour et les sections s'ouvrent progressivement. <b style={{color:C.t2}}>Premium</b> débloque tout immédiatement.
-        </div>
       </div>
 
       {/* Toast */}
