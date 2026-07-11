@@ -4828,7 +4828,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
   return(
     <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Noto Sans JP',sans-serif"}}>
       {/* Hero */}
-      <div style={{padding:"54px 22px 28px",background:`linear-gradient(160deg,rgba(201,70,61,0.18),${acc.soft} 60%,transparent)`,position:"relative",textAlign:"center"}}>
+      <div style={{padding:"54px 22px 28px",background:`linear-gradient(160deg,rgba(201,70,61,0.18),${acc.soft} 60%,transparent)`,position:"relative",textAlign:"center",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
         <button onClick={onClose} style={{position:"absolute",top:48,left:18,background:"rgba(0,0,0,0.25)",border:"none",borderRadius:"50%",width:34,height:34,color:"#fff",fontSize:18,cursor:"pointer"}}>×</button>
         <div style={{fontSize:54,marginBottom:10}}>異</div>
         <div style={{fontSize:11,color:C.gold,letterSpacing:".25em",textTransform:"uppercase",marginBottom:8}}>Isekai'd Premium</div>
@@ -4836,7 +4836,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
         <div style={{fontSize:13,color:C.t2,lineHeight:1.6,maxWidth:300,margin:"0 auto"}}>Débloque tout le potentiel d'Isekai'd et soutiens le développement de l'app.</div>
       </div>
 
-      <div style={{padding:"6px 22px 40px"}}>
+      <div style={{padding:"6px 22px 40px",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
         {/* Avantages */}
         <div style={{margin:"18px 0 26px"}}>
           {PREMIUM_PERKS.map((p,i)=>(
