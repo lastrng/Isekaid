@@ -8024,7 +8024,7 @@
       "a_proximite": [
         "akihabara"
       ],
-      "image": "/images/Lieux/senso-ji.jpg"
+      "image": "/images/lieux-photos/senso-ji.jpg"
     },
     {
       "id": "shibuya-crossing",
@@ -8053,7 +8053,7 @@
       "a_proximite": [
         "ichiran"
       ],
-      "image": "/images/Lieux/shibuya-crossing.jpg"
+      "image": "/images/lieux-photos/shibuya-crossing.jpg"
     },
     {
       "id": "teamlab",
@@ -8080,7 +8080,7 @@
       "prix_detail": "~3800¥ adulte",
       "site_web": "planets.teamlab.art",
       "a_proximite": [],
-      "image": "/images/Lieux/teamlab.jpg"
+      "image": "/images/lieux-photos/teamlab.jpg"
     },
     {
       "id": "ichiran",
@@ -8108,7 +8108,7 @@
       "a_proximite": [
         "shibuya-crossing"
       ],
-      "image": "/images/Lieux/ichiran.jpg"
+      "image": "/images/lieux-photos/ichiran.jpg"
     },
     {
       "id": "park-hyatt",
@@ -8134,7 +8134,7 @@
       "prix_detail": "Chambre dès ~60000¥/nuit",
       "site_web": "hyatt.com",
       "a_proximite": [],
-      "image": "/images/Lieux/park-hyatt.jpg"
+      "image": "/images/lieux-photos/park-hyatt.jpg"
     },
     {
       "id": "akihabara",
@@ -8163,7 +8163,7 @@
       "a_proximite": [
         "senso-ji"
       ],
-      "image": "/images/Lieux/akihabara.jpg"
+      "image": "/images/lieux-photos/akihabara.jpg"
     },
     {
       "id": "fushimi-inari",
@@ -8191,7 +8191,7 @@
       "a_proximite": [
         "nishiki"
       ],
-      "image": "/images/Lieux/fushimi-inari.jpg"
+      "image": "/images/lieux-photos/fushimi-inari.jpg"
     },
     {
       "id": "kinkaku-ji",
@@ -8219,7 +8219,7 @@
       "a_proximite": [
         "arashiyama"
       ],
-      "image": "/images/Lieux/kinkaku-ji.jpg"
+      "image": "/images/lieux-photos/kinkaku-ji.jpg"
     },
     {
       "id": "arashiyama",
@@ -8248,7 +8248,7 @@
       "a_proximite": [
         "kinkaku-ji"
       ],
-      "image": "/images/Lieux/arashiyama.jpg"
+      "image": "/images/lieux-photos/arashiyama.jpg"
     },
     {
       "id": "nishiki",
@@ -8276,7 +8276,7 @@
       "a_proximite": [
         "fushimi-inari"
       ],
-      "image": "/images/Lieux/nishiki.jpg"
+      "image": "/images/lieux-photos/nishiki.jpg"
     },
     {
       "id": "ryokan-kyoto",
@@ -8305,7 +8305,7 @@
       "a_proximite": [
         "nishiki"
       ],
-      "image": "/images/Lieux/ryokan-kyoto.jpg"
+      "image": "/images/lieux-photos/ryokan-kyoto.jpg"
     },
     {
       "id": "dotonbori",
@@ -8335,7 +8335,7 @@
         "takoyaki",
         "shinsaibashi"
       ],
-      "image": "/images/Lieux/dotonbori.jpg"
+      "image": "/images/lieux-photos/dotonbori.jpg"
     },
     {
       "id": "osaka-castle",
@@ -8361,7 +8361,7 @@
       "prix_detail": "600¥ (donjon), parc gratuit",
       "site_web": "osakacastle.net",
       "a_proximite": [],
-      "image": "/images/Lieux/osaka-castle.jpg"
+      "image": "/images/lieux-photos/osaka-castle.jpg"
     },
     {
       "id": "takoyaki",
@@ -8389,7 +8389,7 @@
       "a_proximite": [
         "dotonbori"
       ],
-      "image": "/images/Lieux/takoyaki.jpg"
+      "image": "/images/lieux-photos/takoyaki.jpg"
     },
     {
       "id": "kuromon",
@@ -8417,7 +8417,7 @@
       "a_proximite": [
         "dotonbori"
       ],
-      "image": "/images/Lieux/kuromon.jpg"
+      "image": "/images/lieux-photos/kuromon.jpg"
     },
     {
       "id": "shinsaibashi",
@@ -8445,7 +8445,7 @@
       "a_proximite": [
         "dotonbori"
       ],
-      "image": "/images/Lieux/shinsaibashi.jpg"
+      "image": "/images/lieux-photos/shinsaibashi.jpg"
     },
     {
       "id": "nara-park",
@@ -8475,7 +8475,7 @@
         "todai-ji",
         "kasuga"
       ],
-      "image": "/images/Lieux/nara-park.jpg"
+      "image": "/images/lieux-photos/nara-park.jpg"
     },
     {
       "id": "todai-ji",
@@ -8503,7 +8503,7 @@
       "a_proximite": [
         "nara-park"
       ],
-      "image": "/images/Lieux/todai-ji.jpg"
+      "image": "/images/lieux-photos/todai-ji.jpg"
     },
     {
       "id": "kasuga",
@@ -8532,7 +8532,7 @@
         "nara-park",
         "todai-ji"
       ],
-      "image": "/images/Lieux/kasuga.jpg"
+      "image": "/images/lieux-photos/kasuga.jpg"
     },
     {
       "id": "mochi-nara",
@@ -8588,7 +8588,7 @@
       "a_proximite": [
         "shukkeien"
       ],
-      "image": "/images/Lieux/peace-park.jpg"
+      "image": "/images/lieux-photos/peace-park.jpg"
     },
     {
       "id": "miyajima",
@@ -8615,7 +8615,7 @@
       "prix_detail": "Ferry ~180¥, torii gratuit",
       "site_web": "miyajima.or.jp",
       "a_proximite": [],
-      "image": "/images/Lieux/miyajima.jpg"
+      "image": "/images/lieux-photos/miyajima.jpg"
     },
     {
       "id": "okonomiyaki-hiro",
@@ -8643,7 +8643,7 @@
       "a_proximite": [
         "peace-park"
       ],
-      "image": "/images/Lieux/okonomiyaki-hiro.jpg"
+      "image": "/images/lieux-photos/okonomiyaki-hiro.jpg"
     },
     {
       "id": "shukkeien",
@@ -8672,7 +8672,7 @@
       "a_proximite": [
         "peace-park"
       ],
-      "image": "/images/Lieux/shukkeien.jpg"
+      "image": "/images/lieux-photos/shukkeien.jpg"
     },
     {
       "id": "onsen-hakone",
@@ -8700,7 +8700,7 @@
       "a_proximite": [
         "owakudani"
       ],
-      "image": "/images/Lieux/onsen-hakone.jpg"
+      "image": "/images/lieux-photos/onsen-hakone.jpg"
     },
     {
       "id": "owakudani",
@@ -8730,7 +8730,7 @@
         "onsen-hakone",
         "open-air-museum"
       ],
-      "image": "/images/Lieux/owakudani.jpg"
+      "image": "/images/lieux-photos/owakudani.jpg"
     },
     {
       "id": "open-air-museum",
@@ -8759,7 +8759,7 @@
       "a_proximite": [
         "owakudani"
       ],
-      "image": "/images/Lieux/open-air-museum.jpg"
+      "image": "/images/lieux-photos/open-air-museum.jpg"
     },
     {
       "id": "ryokan-hakone",
@@ -8788,7 +8788,7 @@
       "a_proximite": [
         "onsen-hakone"
       ],
-      "image": "/images/Lieux/ryokan-hakone.jpg"
+      "image": "/images/lieux-photos/ryokan-hakone.jpg"
     },
     {
       "id": "meiji-jingu",
@@ -8816,7 +8816,7 @@
       "a_proximite": [
         "shibuya-crossing"
       ],
-      "image": "/images/Lieux/meiji-jingu.jpg"
+      "image": "/images/lieux-photos/meiji-jingu.jpg"
     },
     {
       "id": "tokyo-tower",
@@ -8842,7 +8842,7 @@
       "prix_detail": "~1200¥ (pont principal)",
       "site_web": "tokyotower.co.jp",
       "a_proximite": [],
-      "image": "/images/Lieux/tokyo-tower.jpg"
+      "image": "/images/lieux-photos/tokyo-tower.jpg"
     },
     {
       "id": "tsukiji",
@@ -8868,7 +8868,7 @@
       "prix_detail": "Variable",
       "site_web": "tsukiji.or.jp",
       "a_proximite": [],
-      "image": "/images/Lieux/tsukiji.jpg"
+      "image": "/images/lieux-photos/tsukiji.jpg"
     },
     {
       "id": "ueno-park",
@@ -8897,7 +8897,7 @@
       "a_proximite": [
         "tsukiji"
       ],
-      "image": "/images/Lieux/ueno-park.jpg"
+      "image": "/images/lieux-photos/ueno-park.jpg"
     },
     {
       "id": "teamlab-borderless",
@@ -8955,7 +8955,7 @@
         "ginkaku-ji-kyoto",
         "nishiki"
       ],
-      "image": "/images/Lieux/kiyomizu-dera.jpg"
+      "image": "/images/lieux-photos/kiyomizu-dera.jpg"
     },
     {
       "id": "ginkaku-ji-kyoto",
@@ -9013,7 +9013,7 @@
         "kiyomizu-dera",
         "nishiki"
       ],
-      "image": "/images/Lieux/gion.jpg"
+      "image": "/images/lieux-photos/gion.jpg"
     },
     {
       "id": "nijo-castle",
@@ -9041,7 +9041,7 @@
       "a_proximite": [
         "nishiki"
       ],
-      "image": "/images/Lieux/nijo-castle.jpg"
+      "image": "/images/lieux-photos/nijo-castle.jpg"
     },
     {
       "id": "sumiyoshi",
@@ -9069,7 +9069,7 @@
       "a_proximite": [
         "shinsekai"
       ],
-      "image": "/images/Lieux/sumiyoshi.jpg"
+      "image": "/images/lieux-photos/sumiyoshi.jpg"
     },
     {
       "id": "shinsekai",
@@ -9098,7 +9098,7 @@
       "a_proximite": [
         "sumiyoshi"
       ],
-      "image": "/images/Lieux/shinsekai.jpg"
+      "image": "/images/lieux-photos/shinsekai.jpg"
     },
     {
       "id": "himeji-castle",
@@ -9124,7 +9124,7 @@
       "prix_detail": "1000¥ (+340¥ avec Koko-en)",
       "site_web": "himejicastle.jp",
       "a_proximite": [],
-      "image": "/images/Lieux/himeji-castle.jpg"
+      "image": "/images/lieux-photos/himeji-castle.jpg"
     },
     {
       "id": "kenroku-en",
@@ -9153,7 +9153,7 @@
       "a_proximite": [
         "higashi-chaya"
       ],
-      "image": "/images/Lieux/kenroku-en.jpg"
+      "image": "/images/lieux-photos/kenroku-en.jpg"
     },
     {
       "id": "higashi-chaya",
@@ -9181,7 +9181,7 @@
       "a_proximite": [
         "kenroku-en"
       ],
-      "image": "/images/Lieux/higashi-chaya.jpg"
+      "image": "/images/lieux-photos/higashi-chaya.jpg"
     },
     {
       "id": "shirakawa-go",
@@ -9210,7 +9210,7 @@
       "a_proximite": [
         "takayama-old-town"
       ],
-      "image": "/images/Lieux/shirakawa-go.jpg"
+      "image": "/images/lieux-photos/shirakawa-go.jpg"
     },
     {
       "id": "takayama-old-town",
@@ -9267,7 +9267,7 @@
       "a_proximite": [
         "uji-matcha"
       ],
-      "image": "/images/Lieux/byodo-in.jpg"
+      "image": "/images/lieux-photos/byodo-in.jpg"
     },
     {
       "id": "uji-matcha",
@@ -9296,7 +9296,7 @@
       "a_proximite": [
         "byodo-in"
       ],
-      "image": "/images/Lieux/uji-matcha.jpg"
+      "image": "/images/lieux-photos/uji-matcha.jpg"
     },
     {
       "id": "takeshita-dori",
@@ -9323,7 +9323,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/takeshita-dori.jpg"
+      "image": "/images/lieux-photos/takeshita-dori.jpg"
     },
     {
       "id": "meiji-jingu-gyoen",
@@ -9350,7 +9350,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/meiji-jingu-gyoen.jpg"
+      "image": "/images/lieux-photos/meiji-jingu-gyoen.jpg"
     },
     {
       "id": "shibuya-sky",
@@ -9376,7 +9376,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/shibuya-sky.jpg"
+      "image": "/images/lieux-photos/shibuya-sky.jpg"
     },
     {
       "id": "shinjuku-gyoen",
@@ -9403,7 +9403,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/shinjuku-gyoen.jpg"
+      "image": "/images/lieux-photos/shinjuku-gyoen.jpg"
     },
     {
       "id": "omoide-yokocho",
@@ -9430,7 +9430,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/omoide-yokocho.jpg"
+      "image": "/images/lieux-photos/omoide-yokocho.jpg"
     },
     {
       "id": "golden-gai",
@@ -9457,7 +9457,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/golden-gai.jpg"
+      "image": "/images/lieux-photos/golden-gai.jpg"
     },
     {
       "id": "ginza",
@@ -9483,7 +9483,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/ginza.jpg"
+      "image": "/images/lieux-photos/ginza.jpg"
     },
     {
       "id": "teamlab-planets",
@@ -9510,7 +9510,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/teamlab-planets.jpg"
+      "image": "/images/lieux-photos/teamlab-planets.jpg"
     },
     {
       "id": "yanaka-ginza",
@@ -9537,7 +9537,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/yanaka-ginza.jpg"
+      "image": "/images/lieux-photos/yanaka-ginza.jpg"
     },
     {
       "id": "nakamise",
@@ -9564,7 +9564,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/nakamise.jpg"
+      "image": "/images/lieux-photos/nakamise.jpg"
     },
     {
       "id": "odaiba",
@@ -9591,7 +9591,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/odaiba.jpg"
+      "image": "/images/lieux-photos/odaiba.jpg"
     },
     {
       "id": "kappabashi",
@@ -9618,7 +9618,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/kappabashi.jpg"
+      "image": "/images/lieux-photos/kappabashi.jpg"
     },
     {
       "id": "shimokitazawa",
@@ -9645,7 +9645,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/shimokitazawa.jpg"
+      "image": "/images/lieux-photos/shimokitazawa.jpg"
     },
     {
       "id": "sumida-river",
@@ -9672,7 +9672,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/sumida-river.jpg"
+      "image": "/images/lieux-photos/sumida-river.jpg"
     },
     {
       "id": "ameyoko",
@@ -9699,7 +9699,7 @@
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/ameyoko.jpg"
+      "image": "/images/lieux-photos/ameyoko.jpg"
     },
     {
       "id": "sanctuaire-asakusa",
@@ -9721,7 +9721,7 @@
       "lng": 139.7966553,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/sanctuaire-asakusa.jpg"
+      "image": "/images/lieux-photos/sanctuaire-asakusa.jpg"
     },
     {
       "id": "teamlab-planets-tokyo-dmm",
@@ -9743,7 +9743,7 @@
       "lng": 139.7897739,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/teamlab-planets-tokyo-dmm.jpg"
+      "image": "/images/lieux-photos/teamlab-planets-tokyo-dmm.jpg"
     },
     {
       "id": "shinjuku-gyoen-park",
@@ -9765,7 +9765,7 @@
       "lng": 139.7100517,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/shinjuku-gyoen-park.jpg"
+      "image": "/images/lieux-photos/shinjuku-gyoen-park.jpg"
     },
     {
       "id": "kaminarimon-gate",
@@ -9787,7 +9787,7 @@
       "lng": 139.7963656,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/kaminarimon-gate.jpg"
+      "image": "/images/lieux-photos/kaminarimon-gate.jpg"
     },
     {
       "id": "musee-national-de-tokyo",
@@ -9809,7 +9809,7 @@
       "lng": 139.7765215,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/musee-national-de-tokyo.jpg"
+      "image": "/images/lieux-photos/musee-national-de-tokyo.jpg"
     },
     {
       "id": "unicorn-gundam",
@@ -9831,7 +9831,7 @@
       "lng": 139.7754917,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/unicorn-gundam.jpg"
+      "image": "/images/lieux-photos/unicorn-gundam.jpg"
     },
     {
       "id": "musee-national-de-la-nature-et-des-scien",
@@ -9853,7 +9853,7 @@
       "lng": 139.7763336,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/musee-national-de-la-nature-et-des-scien.jpg"
+      "image": "/images/lieux-photos/musee-national-de-la-nature-et-des-scien.jpg"
     },
     {
       "id": "teamlab-borderless-mori-building-digital",
@@ -9875,7 +9875,7 @@
       "lng": 139.7432671,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/teamlab-borderless-mori-building-digital.jpg"
+      "image": "/images/lieux-photos/teamlab-borderless-mori-building-digital.jpg"
     },
     {
       "id": "shibuya-crossing-chijk9",
@@ -9897,7 +9897,7 @@
       "lng": 139.7005596,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/shibuya-crossing-chijk9.jpg"
+      "image": "/images/lieux-photos/shibuya-crossing-chijk9.jpg"
     },
     {
       "id": "samurai-ninja-museum-asakusa-tokyo",
@@ -9941,7 +9941,7 @@
       "lng": 139.5704317,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/musee-ghibli.jpg"
+      "image": "/images/lieux-photos/musee-ghibli.jpg"
     },
     {
       "id": "zojo-ji",
@@ -9963,7 +9963,7 @@
       "lng": 139.7482928,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/zojo-ji.jpg"
+      "image": "/images/lieux-photos/zojo-ji.jpg"
     },
     {
       "id": "musee-national-de-l-art-occidental",
@@ -9985,7 +9985,7 @@
       "lng": 139.77581379999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/musee-national-de-l-art-occidental.jpg"
+      "image": "/images/lieux-photos/musee-national-de-l-art-occidental.jpg"
     },
     {
       "id": "gotoku-ji",
@@ -10007,7 +10007,7 @@
       "lng": 139.647481,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/gotoku-ji.jpg"
+      "image": "/images/lieux-photos/gotoku-ji.jpg"
     },
     {
       "id": "north-observation-deck-tokyo-metropolita",
@@ -10051,7 +10051,7 @@
       "lng": 139.6916863,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/siege-du-gouvernement-metropolitain-de-t.jpg"
+      "image": "/images/lieux-photos/siege-du-gouvernement-metropolitain-de-t.jpg"
     },
     {
       "id": "musee-nezu",
@@ -10073,7 +10073,7 @@
       "lng": 139.7170937,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/musee-nezu.jpg"
+      "image": "/images/lieux-photos/musee-nezu.jpg"
     },
     {
       "id": "asakusa-jinja",
@@ -10095,7 +10095,7 @@
       "lng": 139.7974389,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/asakusa-jinja.jpg"
+      "image": "/images/lieux-photos/asakusa-jinja.jpg"
     },
     {
       "id": "marunouchi-tokyo-station-square",
@@ -10117,7 +10117,7 @@
       "lng": 139.7654768,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/marunouchi-tokyo-station-square.jpg"
+      "image": "/images/lieux-photos/marunouchi-tokyo-station-square.jpg"
     },
     {
       "id": "asakusa-culture-tourist-information-cent",
@@ -10139,7 +10139,7 @@
       "lng": 139.7965461,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/asakusa-culture-tourist-information-cent.jpg"
+      "image": "/images/lieux-photos/asakusa-culture-tourist-information-cent.jpg"
     },
     {
       "id": "samurai-museum-tokyo-shinjuku",
@@ -10161,7 +10161,7 @@
       "lng": 139.7052152,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/samurai-museum-tokyo-shinjuku.jpg"
+      "image": "/images/lieux-photos/samurai-museum-tokyo-shinjuku.jpg"
     },
     {
       "id": "mosquee-de-tokyo",
@@ -10183,7 +10183,7 @@
       "lng": 139.67655349999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/mosquee-de-tokyo.jpg"
+      "image": "/images/lieux-photos/mosquee-de-tokyo.jpg"
     },
     {
       "id": "artizon-museum",
@@ -10205,7 +10205,7 @@
       "lng": 139.77189189999999,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/artizon-museum.jpg"
+      "image": "/images/lieux-photos/artizon-museum.jpg"
     },
     {
       "id": "suga-shrine",
@@ -10227,7 +10227,7 @@
       "lng": 139.7224783,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/suga-shrine.jpg"
+      "image": "/images/lieux-photos/suga-shrine.jpg"
     },
     {
       "id": "hozomon",
@@ -10249,7 +10249,7 @@
       "lng": 139.7966333,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/hozomon.jpg"
+      "image": "/images/lieux-photos/hozomon.jpg"
     },
     {
       "id": "waho-an-nature-tokyo",
@@ -10293,7 +10293,7 @@
       "lng": 139.80302899999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/matsuchiyama-shoden.jpg"
+      "image": "/images/lieux-photos/matsuchiyama-shoden.jpg"
     },
     {
       "id": "ninja-experience-cafe-asakusa-in-tokyo",
@@ -10315,7 +10315,7 @@
       "lng": 139.7918297,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/ninja-experience-cafe-asakusa-in-tokyo.jpg"
+      "image": "/images/lieux-photos/ninja-experience-cafe-asakusa-in-tokyo.jpg"
     },
     {
       "id": "intermediatheque",
@@ -10337,7 +10337,7 @@
       "lng": 139.7646866,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/intermediatheque.jpg"
+      "image": "/images/lieux-photos/intermediatheque.jpg"
     },
     {
       "id": "tokiwaso-manga-museum",
@@ -10359,7 +10359,7 @@
       "lng": 139.6859984,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/tokiwaso-manga-museum.jpg"
+      "image": "/images/lieux-photos/tokiwaso-manga-museum.jpg"
     },
     {
       "id": "tokyo-station-marunouchi-building",
@@ -10403,7 +10403,7 @@
       "lng": 139.76852499999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/asakura-museum-of-sculpture.jpg"
+      "image": "/images/lieux-photos/asakura-museum-of-sculpture.jpg"
     },
     {
       "id": "the-seiko-museum-ginza",
@@ -10448,7 +10448,7 @@
       "lng": 139.7642658,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/moheji-shinmaru-build.jpg"
+      "image": "/images/lieux-photos/moheji-shinmaru-build.jpg"
     },
     {
       "id": "hibi-hare-bare-shinjuku",
@@ -10609,7 +10609,7 @@
       "lng": 139.7944332,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/yamaka-sakaba.jpg"
+      "image": "/images/lieux-photos/yamaka-sakaba.jpg"
     },
     {
       "id": "fukumimi-shinjuku",
@@ -10632,7 +10632,7 @@
       "lng": 139.7067186,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/fukumimi-shinjuku.jpg"
+      "image": "/images/lieux-photos/fukumimi-shinjuku.jpg"
     },
     {
       "id": "kinka-sushi-bar-izakaya",
@@ -10655,7 +10655,7 @@
       "lng": 139.6987412,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/kinka-sushi-bar-izakaya.jpg"
+      "image": "/images/lieux-photos/kinka-sushi-bar-izakaya.jpg"
     },
     {
       "id": "kushikatsu-tanaka-tsukiji",
@@ -10770,7 +10770,7 @@
       "lng": 139.79368879999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/izumo-asakusa-yokocho.jpg"
+      "image": "/images/lieux-photos/izumo-asakusa-yokocho.jpg"
     },
     {
       "id": "zekkocho-teppen",
@@ -10793,7 +10793,7 @@
       "lng": 139.69688829999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/zekkocho-teppen.jpg"
+      "image": "/images/lieux-photos/zekkocho-teppen.jpg"
     },
     {
       "id": "shintoku-tsukada-nojo-akihabara-manseiba",
@@ -10816,7 +10816,7 @@
       "lng": 139.7714216,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/shintoku-tsukada-nojo-akihabara-manseiba.jpg"
+      "image": "/images/lieux-photos/shintoku-tsukada-nojo-akihabara-manseiba.jpg"
     },
     {
       "id": "voyager-stand-shibuya-music-bar",
@@ -10862,7 +10862,7 @@
       "lng": 139.7749339,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/yakiton-daio-ueno.jpg"
+      "image": "/images/lieux-photos/yakiton-daio-ueno.jpg"
     },
     {
       "id": "izakaya-ikunara-orenchi-kuru",
@@ -10885,7 +10885,7 @@
       "lng": 139.7096065,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/izakaya-ikunara-orenchi-kuru.jpg"
+      "image": "/images/lieux-photos/izakaya-ikunara-orenchi-kuru.jpg"
     },
     {
       "id": "akihabara-electric-town",
@@ -10907,7 +10907,7 @@
       "lng": 139.7713799,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/akihabara-electric-town.jpg"
+      "image": "/images/lieux-photos/akihabara-electric-town.jpg"
     },
     {
       "id": "nintendo-tokyo-shibuya-japan",
@@ -10929,7 +10929,7 @@
       "lng": 139.6986385,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/nintendo-tokyo-shibuya-japan.jpg"
+      "image": "/images/lieux-photos/nintendo-tokyo-shibuya-japan.jpg"
     },
     {
       "id": "kindal-nakameguro-second-hand-store",
@@ -10951,7 +10951,7 @@
       "lng": 139.696449,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/kindal-nakameguro-second-hand-store.jpg"
+      "image": "/images/lieux-photos/kindal-nakameguro-second-hand-store.jpg"
     },
     {
       "id": "flour-water-nakameguro",
@@ -10995,7 +10995,7 @@
       "lng": 139.7038071,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/mixthinks-harajuku-store.jpg"
+      "image": "/images/lieux-photos/mixthinks-harajuku-store.jpg"
     },
     {
       "id": "mardi-mercredi-daikanyama",
@@ -11017,7 +11017,7 @@
       "lng": 139.7027647,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/mardi-mercredi-daikanyama.jpg"
+      "image": "/images/lieux-photos/mardi-mercredi-daikanyama.jpg"
     },
     {
       "id": "trefacstyle-shimokitazawa-east-exit",
@@ -11039,7 +11039,7 @@
       "lng": 139.66881740000002,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/trefacstyle-shimokitazawa-east-exit.jpg"
+      "image": "/images/lieux-photos/trefacstyle-shimokitazawa-east-exit.jpg"
     },
     {
       "id": "traveler-s-factory-nakameguro",
@@ -11061,7 +11061,7 @@
       "lng": 139.6972329,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/traveler-s-factory-nakameguro.jpg"
+      "image": "/images/lieux-photos/traveler-s-factory-nakameguro.jpg"
     },
     {
       "id": "treasure-factory-style-shimokitazawa",
@@ -11127,7 +11127,7 @@
       "lng": 139.77014,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/tsukiji-peppers-cafe.jpg"
+      "image": "/images/lieux-photos/tsukiji-peppers-cafe.jpg"
     },
     {
       "id": "yanakana-macha-stand",
@@ -11171,7 +11171,7 @@
       "lng": 139.704161,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/gyumon-halal-wagyu-ramen-shibuya.jpg"
+      "image": "/images/lieux-photos/gyumon-halal-wagyu-ramen-shibuya.jpg"
     },
     {
       "id": "age-3-ginza",
@@ -11193,7 +11193,7 @@
       "lng": 139.77129449999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/age-3-ginza.jpg"
+      "image": "/images/lieux-photos/age-3-ginza.jpg"
     },
     {
       "id": "gyopao-gyoza-roppongi",
@@ -11215,7 +11215,7 @@
       "lng": 139.7321399,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/gyopao-gyoza-roppongi.jpg"
+      "image": "/images/lieux-photos/gyopao-gyoza-roppongi.jpg"
     },
     {
       "id": "tsukishima-monja-kuuya-shibuya",
@@ -11237,7 +11237,7 @@
       "lng": 139.7014739,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/tsukishima-monja-kuuya-shibuya.jpg"
+      "image": "/images/lieux-photos/tsukishima-monja-kuuya-shibuya.jpg"
     },
     {
       "id": "maidreamin-heaven-s-gate-live-restaurant",
@@ -11259,7 +11259,7 @@
       "lng": 139.7724623,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/maidreamin-heaven-s-gate-live-restaurant.jpg"
+      "image": "/images/lieux-photos/maidreamin-heaven-s-gate-live-restaurant.jpg"
     },
     {
       "id": "gyukatsu-motomura-shibuya-branch",
@@ -11281,7 +11281,7 @@
       "lng": 139.7039981,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/gyukatsu-motomura-shibuya-branch.jpg"
+      "image": "/images/lieux-photos/gyukatsu-motomura-shibuya-branch.jpg"
     },
     {
       "id": "ramen-kamo-to-negi-ueno-okachimachi-main",
@@ -11303,7 +11303,7 @@
       "lng": 139.7752537,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/ramen-kamo-to-negi-ueno-okachimachi-main.jpg"
+      "image": "/images/lieux-photos/ramen-kamo-to-negi-ueno-okachimachi-main.jpg"
     },
     {
       "id": "mipig-cafe-harajuku",
@@ -11325,7 +11325,7 @@
       "lng": 139.7042806,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/mipig-cafe-harajuku.jpg"
+      "image": "/images/lieux-photos/mipig-cafe-harajuku.jpg"
     },
     {
       "id": "samoyed-cafe-moffu-harajuku-samoyed-loun",
@@ -11347,7 +11347,7 @@
       "lng": 139.7074793,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/samoyed-cafe-moffu-harajuku-samoyed-loun.jpg"
+      "image": "/images/lieux-photos/samoyed-cafe-moffu-harajuku-samoyed-loun.jpg"
     },
     {
       "id": "owl-cafe-tokyo",
@@ -11369,7 +11369,7 @@
       "lng": 139.7748397,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/owl-cafe-tokyo.jpg"
+      "image": "/images/lieux-photos/owl-cafe-tokyo.jpg"
     },
     {
       "id": "halal-wagyu-ramen-shinjuku-tei-tokyo-shi",
@@ -11413,7 +11413,7 @@
       "lng": 139.7049582,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/harajuku-kawaii-land-kyun-kyun-animal-pe.jpg"
+      "image": "/images/lieux-photos/harajuku-kawaii-land-kyun-kyun-animal-pe.jpg"
     },
     {
       "id": "wagyu-halal-steak-hamburger-ramen-japane",
@@ -11457,7 +11457,7 @@
       "lng": 139.79446339999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/age-3-asakusa.jpg"
+      "image": "/images/lieux-photos/age-3-asakusa.jpg"
     },
     {
       "id": "afuri-harajuku",
@@ -11479,7 +11479,7 @@
       "lng": 139.7038019,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/afuri-harajuku.jpg"
+      "image": "/images/lieux-photos/afuri-harajuku.jpg"
     },
     {
       "id": "tsujita-kanda-suehirocho",
@@ -11545,7 +11545,7 @@
       "lng": 139.70347529999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/owl-village-cafe-harajuku.jpg"
+      "image": "/images/lieux-photos/owl-village-cafe-harajuku.jpg"
     },
     {
       "id": "pignic-cafe-asakusa-mini-pig-cafe",
@@ -11567,7 +11567,7 @@
       "lng": 139.7948321,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/pignic-cafe-asakusa-mini-pig-cafe.jpg"
+      "image": "/images/lieux-photos/pignic-cafe-asakusa-mini-pig-cafe.jpg"
     },
     {
       "id": "matsue-shibuya-scramble-square-store",
@@ -11611,7 +11611,7 @@
       "lng": 139.7673806,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/tsujita-ginza.jpg"
+      "image": "/images/lieux-photos/tsujita-ginza.jpg"
     },
     {
       "id": "in-akihabara-there-is-no-problem-even-if",
@@ -11655,7 +11655,7 @@
       "lng": 139.7585554,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/halal-wagyu-ramen-shinjuku-tei-ginza-tok.jpg"
+      "image": "/images/lieux-photos/halal-wagyu-ramen-shinjuku-tei-ginza-tok.jpg"
     },
     {
       "id": "kobe-beef-daia-asakusa-don-kihoute-store",
@@ -11677,7 +11677,7 @@
       "lng": 139.79309899999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/kobe-beef-daia-asakusa-don-kihoute-store.jpg"
+      "image": "/images/lieux-photos/kobe-beef-daia-asakusa-don-kihoute-store.jpg"
     },
     {
       "id": "afuri-karakurenai-harajuku",
@@ -11699,7 +11699,7 @@
       "lng": 139.70656449999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/afuri-karakurenai-harajuku.jpg"
+      "image": "/images/lieux-photos/afuri-karakurenai-harajuku.jpg"
     }
   ],
   "voyages_preconcus": [
