@@ -4077,7 +4077,15 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
             {trips.map(t=>{
               const nbLieux = t.jours.reduce((a,j)=>a+j.etapes.length,0);
               return(
-                <div key={t.id} className="lift" onClick={()=>{setActiveTripId(t.id);setView("trip");}} style={{marginBottom:14,background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,overflow:"hidden",cursor:"pointer"}}>
+                <div key={t.id} className="lift" onClick={()=>{setActiveTripId(t.id);setView("trip");}} style={{marginBottom:14,background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,overflow:"hidden",cursor:"pointer",position:"relative"}}>
+                  <button
+                    onClick={(e)=>{
+                      e.stopPropagation();
+                      if(confirm(`Supprimer le voyage « ${t.titre} » ? Cette action est irréversible.`)) deleteTrip(t.id);
+                    }}
+                    aria-label="Supprimer ce voyage"
+                    style={{position:"absolute",top:10,right:10,zIndex:2,width:30,height:30,borderRadius:"50%",border:"none",background:"rgba(15,11,8,0.55)",color:"#fff",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}
+                  >🗑️</button>
                   <div style={{height:70,background:`linear-gradient(135deg,${acc.accent}33,${C.gold}18)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30}}>🗾</div>
                   <div style={{padding:"13px 15px"}}>
                     <div style={{fontSize:16,color:C.text,fontWeight:600,marginBottom:3}}>{t.titre}</div>
