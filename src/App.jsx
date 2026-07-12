@@ -1,5 +1,6 @@
 import DATA from "./japan-data.json";
 import AUDIO_MANIFEST from "./audio-manifest.json";
+import EXPLORE_IMAGES from "./explore-images.json";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback } from "./supabase";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
@@ -506,8 +507,11 @@ function ExprCard({C,data,fav,onFav,wikiMap,onWikiTap,script}){
 function CultCard({C,data,fav,onFav,wikiMap,onWikiTap}){
   if(!data) return null;
   const wt = (text,style) => <WikiText C={C} text={text} style={style} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
+  const photo = explorePhoto("culture", data, DATA.culture.indexOf(data));
   return(
-    <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
+    <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden",animation:"fadeUp .4s ease"}}>
+      {photo && <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}} style={{width:"100%",height:130,objectFit:"cover",display:"block"}}/>}
+      <div style={{padding:18}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:11}}>
         <div style={{fontSize:10,color:C.red,letterSpacing:".2em",textTransform:"uppercase"}}>文化 · Culture {data.emoji}</div>
         <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
@@ -520,6 +524,7 @@ function CultCard({C,data,fav,onFav,wikiMap,onWikiTap}){
       <div style={{padding:"11px 13px",background:C.s2,borderLeft:`3px solid ${C.red}`,borderRadius:"0 7px 7px 0"}}>
         <div style={{fontSize:9,color:C.red,letterSpacing:".18em",marginBottom:4}}>À RETENIR</div>
         <p style={{fontSize:12,color:C.t2,lineHeight:1.65,margin:0,fontStyle:"italic"}}>{wt(data.insight)}</p>
+      </div>
       </div>
     </div>
   );
@@ -1712,8 +1717,16 @@ const SEASONS = [
 
 function TraditionDetail({C,t,onBack,fav,onFav,wikiMap,onWikiTap,script}){
   const wt=(text,style)=><WikiText C={C} text={text} style={style} wikiMap={wikiMap||{}} onWikiTap={onWikiTap}/>;
+  const photo = explorePhoto("traditions", t, DATA.traditions.indexOf(t));
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
+      {/* Photo bannière, si disponible */}
+      {photo && (
+        <div style={{width:"100%",height:200,overflow:"hidden",position:"relative"}}>
+          <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.parentNode.style.display="none";}} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+          <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.1),rgba(15,11,8,0.55))"}}/>
+        </div>
+      )}
       {/* Hero */}
       <div style={{padding:"50px 20px 24px",background:`linear-gradient(160deg,rgba(201,70,61,0.1) 0%,transparent 90%)`,position:"relative"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
@@ -1913,12 +1926,17 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initial
 
       {/* Tradition cards */}
       <div className="stagger" style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
-        {filtered.map((t,i)=>(
+        {filtered.map((t,i)=>{
+          const photo = explorePhoto("traditions", t, DATA.traditions.indexOf(t));
+          return(
           <div key={i} className="lift" onClick={()=>setSelected(t)} style={{
             background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,padding:"16px 16px",
             display:"flex",alignItems:"center",gap:14,cursor:"pointer",boxShadow:"0 2px 10px rgba(0,0,0,0.03)"
           }}>
-            <span style={{fontSize:32,flexShrink:0}}>{t.emoji}</span>
+            {photo ? (
+              <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";e.target.nextSibling.style.display="flex";}} style={{width:56,height:56,borderRadius:14,objectFit:"cover",flexShrink:0}}/>
+            ) : null}
+            <span style={{fontSize:32,flexShrink:0,display:photo?"none":"flex",width:photo?0:"auto"}}>{t.emoji}</span>
             <div style={{flex:1,minWidth:0}}>
               <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
                 <span style={{fontSize:15,color:C.text,fontWeight:500}}>{t.nom}</span>
@@ -1929,7 +1947,8 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initial
             </div>
             <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>
           </div>
-        ))}
+          );
+        })}
         {filtered.length===0 && (
           <div style={{padding:"24px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>
         )}
@@ -5569,6 +5588,16 @@ function loadProfile(){
   try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
   catch { return null; }
 }
+// Récupère la photo Wikimedia associée à un item Explorer (traditions, culture,
+// codes_sociaux, vie_quotidienne, situations), si elle existe. La clé doit
+// reproduire EXACTEMENT la logique de fetch-explore-images.mjs :
+//   itemId = item.id || `${section}-${index}`
+function explorePhoto(section, item, index){
+  const itemId = item?.id || `${section}-${index}`;
+  const entry = EXPLORE_IMAGES[`${section}:${itemId}`];
+  return entry?.image || null;
+}
+
 function saveProfile(u){
   try { localStorage.setItem(STORE_KEY, JSON.stringify(u)); } catch {}
 }
