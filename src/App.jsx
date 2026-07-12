@@ -1,6 +1,7 @@
 import DATA from "./japan-data.json";
 import AUDIO_MANIFEST from "./audio-manifest.json";
 import EXPLORE_IMAGES from "./explore-images.json";
+import VIDEO_MAP from "./video-map.json";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback } from "./supabase";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
@@ -504,6 +505,56 @@ function ExprCard({C,data,fav,onFav,wikiMap,onWikiTap,script}){
   );
 }
 
+// ── "Découvre un lieu par jour" — vidéo (si dispo) ou photo, pioché
+// déterministe pour la journée. Placé sur l'accueil, juste après Daily Japan.
+function DailyPlaceSpotlight({C, db, today, isFav, toggleFav, onOpenLieu}){
+  const lieux = db?.lieux || [];
+  if(!lieux.length) return null;
+  const lieu = pickDaily(lieux, today, "lieu-spotlight");
+  if(!lieu) return null;
+
+  const video = VIDEO_MAP[lieu.id]?.video || null;
+  const photo = lieu.photo || lieu.image || null;
+  const fav = isFav && isFav("lieu", lieu);
+
+  return (
+    <div style={{marginBottom:28}}>
+      <SH C={C} kanji="景" title="Lieu du jour" sub="Un endroit à découvrir aujourd'hui"/>
+      <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(lieu)} style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.border}`,position:"relative",background:C.s1}}>
+        <div style={{position:"relative",width:"100%",height:220,background:C.s2}}>
+          {video ? (
+            <video src={video} autoPlay muted loop playsInline preload="metadata"
+              onError={(e)=>{ e.target.style.display="none"; e.target.nextSibling && (e.target.nextSibling.style.display="block"); }}
+              style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+          ) : null}
+          {/* Photo : sert de fallback si pas de vidéo, ou si la vidéo échoue au chargement */}
+          {photo && (
+            <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}}
+              style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:video?"none":"block"}}/>
+          )}
+          {!photo && !video && (
+            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{lieu.emoji}</div>
+          )}
+          <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.05) 40%,rgba(15,11,8,0.75) 100%)"}}/>
+          {video && (
+            <span style={{position:"absolute",top:12,right:12,fontSize:9,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",padding:"4px 9px",borderRadius:20,background:"rgba(0,0,0,0.5)",color:"#fff",backdropFilter:"blur(4px)"}}>▶ Vidéo</span>
+          )}
+          {toggleFav && (
+            <div style={{position:"absolute",top:10,left:10}} onClick={(e)=>{e.stopPropagation(); toggleFav("lieu",lieu);}}>
+              <FavButton C={C} active={fav} onClick={()=>{}}/>
+            </div>
+          )}
+          <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"14px 16px"}}>
+            <div style={{fontSize:10,color:"rgba(255,255,255,0.7)",letterSpacing:".15em",textTransform:"uppercase",marginBottom:3}}>{lieu.categorie || lieu.type}</div>
+            <div style={{fontSize:19,color:"#fff",fontWeight:600,marginBottom:2}}>{lieu.emoji} {lieu.nom}</div>
+            {lieu.quartier && <div style={{fontSize:12,color:"rgba(255,255,255,0.8)"}}>{lieu.quartier}</div>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CultCard({C,data,fav,onFav,wikiMap,onWikiTap}){
   if(!data) return null;
   const wt = (text,style) => <WikiText C={C} text={text} style={style} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
@@ -849,7 +900,7 @@ function SmartReminder({ C, reminder, onGo, onDismiss }){
   );
 }
 
-function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu}){
   const [expr,  setExpr]  = useState(null);
   const [cult,  setCult]  = useState(null);
   const [repas, setRepas] = useState(null);
@@ -998,6 +1049,9 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
             </div>
           );
         })()}
+
+        {/* Lieu du jour — vidéo (si dispo) ou photo */}
+        <DailyPlaceSpotlight C={C} db={db} today={today} isFav={isFav} toggleFav={toggleFav} onOpenLieu={onOpenLieu}/>
 
         {/* Recommandé pour toi (selon les intérêts d'onboarding) */}
         {db && user?.why?.length>0 && (()=>{
@@ -5360,8 +5414,8 @@ function buildSearchIndex(db){
   return items;
 }
 
-function SearchScreen({C, db, script, onClose, onWikiTap}){
-  const [q,setQ] = useState("");
+function SearchScreen({C, db, script, onClose, onWikiTap, initialQuery}){
+  const [q,setQ] = useState(initialQuery || "");
   const index = useMemo(()=>buildSearchIndex(db), [db]);
   const results = useMemo(()=>{
     const query = q.trim().toLowerCase();
@@ -6039,6 +6093,7 @@ export default function IsekaidApp(){
     });
   };
   const [showSearch,setShowSearch]=useState(false);
+  const [searchQuery,setSearchQuery]=useState("");
   const [tourStep,setTourStep]=useState(-1); // -1 = inactif, 0+ = étape en cours
   const [tourDontShow,setTourDontShow]=useState(false);
   const [newAchievement,setNewAchievement]=useState(null);
@@ -6319,7 +6374,7 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className="screen-in" style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>{setSearchQuery(l.nom);setShowSearch(true);}}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission}/>}
@@ -6341,7 +6396,7 @@ export default function IsekaidApp(){
               </div>
             )}
             {/* Global search */}
-            {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
+            {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>{setShowSearch(false);setSearchQuery("");}} onWikiTap={setWikiEntry} initialQuery={searchQuery}/>}
             {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)} onRedeemCode={redeemCode} billingError={billingError} billingBusy={billingBusy} liveOfferings={liveOfferings} onRestore={restorePremium}/>}
             {/* Achievement unlocked */}
             {newAchievement && <AchievementPopup C={C} achievement={newAchievement} onClose={()=>setNewAchievement(null)}/>}
