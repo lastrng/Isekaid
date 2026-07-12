@@ -1,0 +1,322 @@
+{
+  "osaka-castle": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/osaka-castle.mp4",
+    "duration": 5
+  },
+  "himeji-castle": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/himeji-castle.mp4",
+    "duration": 5
+  },
+  "nijo-castle": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/nijo-castle.mp4",
+    "duration": 5
+  },
+  "sumida-river": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/sumida-river.mp4",
+    "duration": 40
+  },
+  "teamlab-borderless": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/teamlab-borderless.mp4",
+    "duration": 11
+  },
+  "kenroku-en": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/kenroku-en.mp4",
+    "duration": 30
+  },
+  "shukkeien": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/shukkeien.mp4",
+    "duration": 30
+  },
+  "meiji-jingu-gyoen": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/meiji-jingu-gyoen.mp4",
+    "duration": 30
+  },
+  "shinjuku-gyoen": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/shinjuku-gyoen.mp4",
+    "duration": 53
+  },
+  "kuromon": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/kuromon.mp4",
+    "duration": 11
+  },
+  "nishiki": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/nishiki.mp4",
+    "duration": 6
+  },
+  "tsukiji": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/tsukiji.mp4",
+    "duration": 34
+  },
+  "ameyoko": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/ameyoko.mp4",
+    "duration": 20
+  },
+  "tokyo-tower": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/tokyo-tower.mp4",
+    "duration": 60
+  },
+  "teamlab": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/teamlab.mp4",
+    "duration": 10
+  },
+  "teamlab-planets": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/teamlab-planets.mp4",
+    "duration": 10
+  },
+  "arashiyama": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/arashiyama.mp4",
+    "duration": 18
+  },
+  "shibuya-sky": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/shibuya-sky.mp4",
+    "duration": 22
+  },
+  "nara-park": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/nara-park.mp4",
+    "duration": 14
+  },
+  "ueno-park": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/ueno-park.mp4",
+    "duration": 11
+  },
+  "shibuya-crossing": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/shibuya-crossing.mp4",
+    "duration": 7
+  },
+  "dotonbori": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/dotonbori.mp4",
+    "duration": 7
+  },
+  "shimokitazawa": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/shimokitazawa.mp4",
+    "duration": 23
+  },
+  "ginza": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/ginza.mp4",
+    "duration": 36
+  },
+  "higashi-chaya": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/higashi-chaya.mp4",
+    "duration": 7
+  },
+  "gion": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/gion.mp4",
+    "duration": 14
+  },
+  "takayama-old-town": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/takayama-old-town.mp4",
+    "duration": 14
+  },
+  "shinsekai": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/shinsekai.mp4",
+    "duration": 74
+  },
+  "yanaka-ginza": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/yanaka-ginza.mp4",
+    "duration": 36
+  },
+  "nakamise": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/nakamise.mp4",
+    "duration": 5
+  },
+  "takeshita-dori": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/takeshita-dori.mp4",
+    "duration": 6
+  },
+  "kappabashi": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/kappabashi.mp4",
+    "duration": 21
+  },
+  "omoide-yokocho": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/omoide-yokocho.mp4",
+    "duration": 6
+  },
+  "fushimi-inari": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/fushimi-inari.mp4",
+    "duration": 20
+  },
+  "kasuga": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/kasuga.mp4",
+    "duration": 10
+  },
+  "meiji-jingu": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/meiji-jingu.mp4",
+    "duration": 11
+  },
+  "sumiyoshi": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/sumiyoshi.mp4",
+    "duration": 10
+  },
+  "artizon-museum": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/artizon-museum.mp4",
+    "duration": 8
+  },
+  "asakura-museum-of-sculpture": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/asakura-museum-of-sculpture.mp4",
+    "duration": 6
+  },
+  "asakusa-culture-tourist-information-cent": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/asakusa-culture-tourist-information-cent.mp4",
+    "duration": 8
+  },
+  "asakusa-jinja": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/asakusa-jinja.mp4",
+    "duration": 20
+  },
+  "gotoku-ji": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/gotoku-ji.mp4",
+    "duration": 15
+  },
+  "hozomon": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/hozomon.mp4",
+    "duration": 20
+  },
+  "intermediatheque": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/intermediatheque.mp4",
+    "duration": 23
+  },
+  "kaminarimon-gate": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/kaminarimon-gate.mp4",
+    "duration": 5
+  },
+  "marunouchi-tokyo-station-square": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/marunouchi-tokyo-station-square.mp4",
+    "duration": 11
+  },
+  "matsuchiyama-shoden": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/matsuchiyama-shoden.mp4",
+    "duration": 11
+  },
+  "mosquee-de-tokyo": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/mosquee-de-tokyo.mp4",
+    "duration": 20
+  },
+  "musee-ghibli": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/musee-ghibli.mp4",
+    "duration": 11
+  },
+  "musee-nezu": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/musee-nezu.mp4",
+    "duration": 11
+  },
+  "musee-national-de-tokyo": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/musee-national-de-tokyo.mp4",
+    "duration": 20
+  },
+  "musee-national-de-l-art-occidental": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/musee-national-de-l-art-occidental.mp4",
+    "duration": 15
+  },
+  "musee-national-de-la-nature-et-des-scien": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/musee-national-de-la-nature-et-des-scien.mp4",
+    "duration": 7
+  },
+  "ninja-experience-cafe-asakusa-in-tokyo": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/ninja-experience-cafe-asakusa-in-tokyo.mp4",
+    "duration": 8
+  },
+  "north-observation-deck-tokyo-metropolita": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/north-observation-deck-tokyo-metropolita.mp4",
+    "duration": 4
+  },
+  "samurai-museum-tokyo-shinjuku": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/samurai-museum-tokyo-shinjuku.mp4",
+    "duration": 21
+  },
+  "samurai-ninja-museum-asakusa-tokyo": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/samurai-ninja-museum-asakusa-tokyo.mp4",
+    "duration": 8
+  },
+  "sanctuaire-asakusa": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/sanctuaire-asakusa.mp4",
+    "duration": 20
+  },
+  "shibuya-crossing-chijk9": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/shibuya-crossing-chijk9.mp4",
+    "duration": 7
+  },
+  "shinjuku-gyoen-park": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/shinjuku-gyoen-park.mp4",
+    "duration": 53
+  },
+  "siege-du-gouvernement-metropolitain-de-t": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/siege-du-gouvernement-metropolitain-de-t.mp4",
+    "duration": 10
+  },
+  "suga-shrine": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/suga-shrine.mp4",
+    "duration": 31
+  },
+  "the-seiko-museum-ginza": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/the-seiko-museum-ginza.mp4",
+    "duration": 36
+  },
+  "tokiwaso-manga-museum": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/tokiwaso-manga-museum.mp4",
+    "duration": 9
+  },
+  "tokyo-station-marunouchi-building": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/tokyo-station-marunouchi-building.mp4",
+    "duration": 11
+  },
+  "unicorn-gundam": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/unicorn-gundam.mp4",
+    "duration": 104
+  },
+  "waho-an-nature-tokyo": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/waho-an-nature-tokyo.mp4",
+    "duration": 7
+  },
+  "zojo-ji": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/zojo-ji.mp4",
+    "duration": 15
+  },
+  "teamlab-borderless-mori-building-digital": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/teamlab-borderless-mori-building-digital.mp4",
+    "duration": 8
+  },
+  "teamlab-planets-tokyo-dmm": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/teamlab-planets-tokyo-dmm.mp4",
+    "duration": 7
+  },
+  "byodo-in": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/byodo-in.mp4",
+    "duration": 7
+  },
+  "ginkaku-ji-kyoto": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/ginkaku-ji-kyoto.mp4",
+    "duration": 8
+  },
+  "kinkaku-ji": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/kinkaku-ji.mp4",
+    "duration": 7
+  },
+  "kiyomizu-dera": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/kiyomizu-dera.mp4",
+    "duration": 28
+  },
+  "senso-ji": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/senso-ji.mp4",
+    "duration": 8
+  },
+  "todai-ji": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/todai-ji.mp4",
+    "duration": 15
+  },
+  "shirakawa-go": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/shirakawa-go.mp4",
+    "duration": 10
+  },
+  "owakudani": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/owakudani.mp4",
+    "duration": 5
+  },
+  "odaiba": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/odaiba.mp4",
+    "duration": 19
+  },
+  "miyajima": {
+    "video": "https://pub-a6a6b70f40c3408ca668cee0ae325db8.r2.dev/lieux/miyajima.mp4",
+    "duration": 6
+  }
+}
