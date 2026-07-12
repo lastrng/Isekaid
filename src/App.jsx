@@ -3427,13 +3427,30 @@ function ReviewMode({ C, dueChars, onRecord, onExit }){
   );
 }
 
-function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep,onMissionTrigger}){
+// Petit badge "Mission du jour" affiché sur la carte correspondant à une
+// mission active non encore complétée — aide à savoir où aller sans ambiguïté.
+function MissionBadge({C}){
+  return (
+    <span style={{position:"absolute",top:12,right:12,fontSize:9,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",padding:"4px 8px",borderRadius:20,background:C.red,color:"#fff",boxShadow:"0 2px 6px rgba(201,70,61,0.4)"}}>
+      🎯 Mission
+    </span>
+  );
+}
+function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep,onMissionTrigger,mission}){
   const [deck,setDeck] = useState(null);   // selected deck object
   const [mode,setMode] = useState(null);   // "flash" | "quiz"
   const [situation,setSituation] = useState(null); // selected situation
   const [pathStep,setPathStep] = useState(null);   // active path step (detail)
   const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
   const [learnMode,setLearnMode] = useState(null);   // null = choix | "path" | "alphabets" | "situations" | "read" | "listen"
+  // Triggers des missions du jour PAS ENCORE faites — sert à afficher un badge
+  // "Mission du jour" sur la carte correspondante (kana / review / comp / path).
+  const pendingTriggers = useMemo(()=>{
+    if(!mission) return new Set();
+    const todays = dailyMissions(mission.day || dayKey());
+    const done = mission.done || [];
+    return new Set(todays.filter(m=>!done.includes(m.id)).map(m=>m.trigger));
+  },[mission]);
   // Déclenche les missions du jour "review" et "comp" quand on entre dans ces modes.
   useEffect(()=>{
     if(!onMissionTrigger) return;
@@ -3616,12 +3633,13 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
               {/* Carte Révision du jour — si des kana sont échus */}
               {dueChars.length > 0 && (
                 <div className="lift" onClick={()=>setLearnMode("review")} style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.gold}55`,background:`linear-gradient(150deg,${C.gold}1f,transparent 70%)`,position:"relative"}}>
+                  {pendingTriggers.has("review") && <MissionBadge C={C}/>}
                   <div style={{padding:"18px 20px",display:"flex",alignItems:"center",gap:16}}>
                     <div style={{fontSize:40,animation:"heartbeat 1.8s ease infinite"}}>🔁</div>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:10,color:C.gold,letterSpacing:".15em",textTransform:"uppercase",marginBottom:4,fontWeight:600}}>Révision du jour</div>
-                      <div style={{fontSize:17,color:C.text,fontWeight:700,marginBottom:2}}>{dueChars.length} caractère{dueChars.length>1?"s":""} à revoir</div>
-                      <div style={{fontSize:12,color:C.t2}}>Renforce ta mémoire avant d'oublier 🧠</div>
+                      <div style={{fontSize:10,color:C.gold,letterSpacing:".15em",textTransform:"uppercase",marginBottom:4,fontWeight:600}}>Révision espacée</div>
+                      <div style={{fontSize:17,color:C.text,fontWeight:700,marginBottom:2}}>{dueChars.length} kana à revoir</div>
+                      <div style={{fontSize:12,color:C.t2}}>Renforce ta mémoire des hiragana/katakana avant d'oublier 🧠</div>
                     </div>
                     <span style={{fontSize:20,color:C.gold}}>›</span>
                   </div>
@@ -3629,7 +3647,8 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
               )}
 
               {/* Carte Parcours Tokyo — hero */}
-              <div className="lift" onClick={()=>setLearnMode("path")} style={{cursor:"pointer",borderRadius:20,overflow:"hidden",border:`1px solid rgba(201,70,61,0.3)`,boxShadow:"0 4px 20px rgba(201,70,61,0.08)"}}>
+              <div className="lift" onClick={()=>setLearnMode("path")} style={{cursor:"pointer",borderRadius:20,overflow:"hidden",border:`1px solid rgba(201,70,61,0.3)`,boxShadow:"0 4px 20px rgba(201,70,61,0.08)",position:"relative"}}>
+                {pendingTriggers.has("path") && <MissionBadge C={C}/>}
                 <div style={{height:6,background:`linear-gradient(90deg,${C.red},${C.gold})`}}/>
                 <div style={{padding:"22px 20px 20px",background:`linear-gradient(150deg,rgba(201,70,61,0.12),rgba(158,122,26,0.05))`,position:"relative",overflow:"hidden"}}>
                   <div style={{fontSize:72,position:"absolute",top:-8,right:6,opacity:0.1,fontFamily:"'Noto Serif JP',serif"}}>🗼</div>
@@ -3648,6 +3667,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
 
               {/* Carte Apprendre les alphabets */}
               <div className="lift" onClick={()=>setLearnMode("alphabets")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+                {pendingTriggers.has("kana") && <MissionBadge C={C}/>}
                 <div style={{height:4,background:`linear-gradient(90deg,${acc.accent},transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
                 <div style={{fontSize:10,color:acc.accent,letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>仮名 · Syllabaires</div>
                 <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
@@ -3674,6 +3694,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
 
               {/* Carte Compréhension écrite */}
               <div className="lift" onClick={()=>setLearnMode("read")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+                {pendingTriggers.has("comp") && <MissionBadge C={C}/>}
                 <div style={{height:4,background:`linear-gradient(90deg,#5B9BD5,transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
                 <div style={{fontSize:10,color:"#5B9BD5",letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>読解 · Lecture</div>
                 <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
@@ -3687,6 +3708,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
 
               {/* Carte Compréhension orale */}
               <div className="lift" onClick={()=>setLearnMode("listen")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
+                {pendingTriggers.has("comp") && <MissionBadge C={C}/>}
                 <div style={{height:4,background:`linear-gradient(90deg,#7A4A6A,transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
                 <div style={{fontSize:10,color:"#9A6A8A",letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>聴解 · Écoute</div>
                 <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
@@ -5654,14 +5676,14 @@ const MISSION_KEY = "isekaid_mission_v1";
 // Pool de missions quotidiennes — 3 sont tirées chaque jour (rotation déterministe).
 // Le champ `trigger` relie la mission à une vraie action dans l'app.
 const MISSION_POOL = [
-  { id:"read_home",   trigger:"daily",    emoji:"📖", label:"Lire le contenu du jour",     hint:"Accueil" },
-  { id:"learn_kana",  trigger:"kana",     emoji:"🎴", label:"Réviser quelques kana",        hint:"Apprendre" },
-  { id:"do_review",   trigger:"review",   emoji:"🔁", label:"Faire une révision",           hint:"Apprendre" },
-  { id:"like_card",   trigger:"fav",      emoji:"❤️", label:"Ajouter une carte en favori",  hint:"Explorer / Accueil" },
-  { id:"do_scenario", trigger:"scenario", emoji:"🎭", label:"Terminer un scénario",         hint:"Scénarios" },
-  { id:"explore_trad",trigger:"explore",  emoji:"⛩️", label:"Découvrir une tradition",      hint:"Explorer" },
-  { id:"read_comp",   trigger:"comp",     emoji:"📝", label:"Faire une compréhension",      hint:"Apprendre" },
-  { id:"path_step",   trigger:"path",     emoji:"🗼", label:"Avancer dans le parcours Tokyo",hint:"Apprendre" },
+  { id:"read_home",   trigger:"daily",    emoji:"📖", label:"Lire le contenu du jour",      hint:"Accueil" },
+  { id:"learn_kana",  trigger:"kana",     emoji:"🎴", label:"Pratiquer les kana",            hint:"Apprendre · Alphabets" },
+  { id:"do_review",   trigger:"review",   emoji:"🔁", label:"Faire ta révision du jour",     hint:"Apprendre · Révision" },
+  { id:"like_card",   trigger:"fav",      emoji:"❤️", label:"Ajouter une carte en favori",   hint:"Explorer / Accueil" },
+  { id:"do_scenario", trigger:"scenario", emoji:"🎭", label:"Terminer un scénario",          hint:"Scénarios" },
+  { id:"explore_trad",trigger:"explore",  emoji:"⛩️", label:"Découvrir une tradition",       hint:"Explorer" },
+  { id:"read_comp",   trigger:"comp",     emoji:"📝", label:"Faire une compréhension",       hint:"Apprendre · Compréhension" },
+  { id:"path_step",   trigger:"path",     emoji:"🗼", label:"Avancer dans le parcours Tokyo",hint:"Apprendre · Parcours" },
 ];
 
 // Tire 3 missions du jour de façon déterministe (même trio toute la journée,
@@ -6263,7 +6285,7 @@ export default function IsekaidApp(){
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
-              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask}/>}
+              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               </div>
