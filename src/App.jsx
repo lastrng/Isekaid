@@ -507,10 +507,110 @@ function ExprCard({C,data,fav,onFav,wikiMap,onWikiTap,script}){
 
 // ── "Découvre un lieu par jour" — vidéo (si dispo) ou photo, pioché
 // déterministe pour la journée. Placé sur l'accueil, juste après Daily Japan.
+// ── Fiche détail plein écran pour "Lieu du jour" (accueil) ──
+// Affiche : vidéo en tête (si dispo), description, infos pratiques,
+// et la photo Wikimedia du lieu.
+function LieuSpotlightDetail({C, lieu, onClose, isFav, toggleFav}){
+  if(!lieu) return null;
+  const video = VIDEO_MAP[lieu.id]?.video || null;
+  const photo = lieu.photo || lieu.image || null;
+  const fav = isFav && isFav("lieu", lieu);
+
+  return (
+    <div style={{position:"fixed",inset:0,zIndex:200,background:C.bg,overflowY:"auto"}}>
+      {/* Média en tête : vidéo si dispo, sinon photo */}
+      <div style={{position:"relative",width:"100%",height:280,background:C.s2}}>
+        {video ? (
+          <video src={video} autoPlay muted loop playsInline controls
+            onError={(e)=>{ e.target.style.display="none"; e.target.nextSibling && (e.target.nextSibling.style.display="block"); }}
+            style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+        ) : null}
+        {photo && (
+          <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}}
+            style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:video?"none":"block"}}/>
+        )}
+        {!photo && !video && (
+          <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:64}}>{lieu.emoji}</div>
+        )}
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.15) 0%,transparent 30%,rgba(15,11,8,0.7) 100%)",pointerEvents:"none"}}/>
+        <button onClick={onClose} style={{position:"absolute",top:44,left:16,width:34,height:34,borderRadius:"50%",border:"none",background:"rgba(0,0,0,0.5)",color:"#fff",fontSize:16,cursor:"pointer",backdropFilter:"blur(4px)"}}>‹</button>
+        {toggleFav && (
+          <div style={{position:"absolute",top:44,right:16}} onClick={()=>toggleFav("lieu",lieu)}>
+            <FavButton C={C} active={fav} onClick={()=>{}}/>
+          </div>
+        )}
+        <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"16px 20px"}}>
+          <div style={{fontSize:10,color:"rgba(255,255,255,0.7)",letterSpacing:".15em",textTransform:"uppercase",marginBottom:4}}>{lieu.categorie || lieu.type} · {lieu.quartier}</div>
+          <div style={{fontSize:24,color:"#fff",fontWeight:600,marginBottom:2}}>{lieu.emoji} {lieu.nom}</div>
+          {lieu.nom_jp && <div style={{fontSize:14,color:"rgba(255,255,255,0.85)",fontFamily:"'Noto Serif JP',serif"}}>{lieu.nom_jp}</div>}
+        </div>
+      </div>
+
+      {/* Contenu */}
+      <div style={{padding:"20px 20px 110px"}}>
+        {/* Description */}
+        {lieu.description && (
+          <p style={{fontSize:14,color:C.text,lineHeight:1.75,marginBottom:16}}>{lieu.description}</p>
+        )}
+
+        {/* Conseil */}
+        {lieu.conseil && (
+          <div style={{padding:"13px 15px",background:C.s1,borderLeft:`3px solid ${C.gold}`,borderRadius:"0 10px 10px 0",marginBottom:20}}>
+            <div style={{fontSize:9,color:C.gold,letterSpacing:".15em",textTransform:"uppercase",marginBottom:4,fontWeight:600}}>💡 Conseil</div>
+            <p style={{fontSize:13,color:C.t2,lineHeight:1.6,margin:0}}>{lieu.conseil}</p>
+          </div>
+        )}
+
+        {/* Infos pratiques */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
+          {lieu.duree && (
+            <div style={{padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
+              <div style={{fontSize:9,color:C.t3,letterSpacing:".1em",textTransform:"uppercase",marginBottom:3}}>⏱ Durée</div>
+              <div style={{fontSize:13,color:C.text,fontWeight:500}}>{lieu.duree}</div>
+            </div>
+          )}
+          {lieu.budget && (
+            <div style={{padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
+              <div style={{fontSize:9,color:C.t3,letterSpacing:".1em",textTransform:"uppercase",marginBottom:3}}>💴 Budget</div>
+              <div style={{fontSize:13,color:C.text,fontWeight:500}}>{lieu.budget}</div>
+            </div>
+          )}
+          {lieu.horaires && (
+            <div style={{padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,gridColumn:"1 / -1"}}>
+              <div style={{fontSize:9,color:C.t3,letterSpacing:".1em",textTransform:"uppercase",marginBottom:3}}>🕐 Horaires</div>
+              <div style={{fontSize:13,color:C.text,fontWeight:500}}>{lieu.horaires}</div>
+            </div>
+          )}
+          {lieu.acces && (
+            <div style={{padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,gridColumn:"1 / -1"}}>
+              <div style={{fontSize:9,color:C.t3,letterSpacing:".1em",textTransform:"uppercase",marginBottom:3}}>🚉 Accès</div>
+              <div style={{fontSize:13,color:C.text,fontWeight:500}}>{lieu.acces}</div>
+            </div>
+          )}
+        </div>
+
+        {video && photo && (
+          <div style={{marginBottom:8}}>
+            <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>📷 Photo</div>
+            <img src={photo} alt="" loading="lazy" style={{width:"100%",borderRadius:14,objectFit:"cover",maxHeight:220}}/>
+            {(lieu.photo_author||lieu.photo_licence) && (
+              <div style={{fontSize:9,color:C.t3,marginTop:4,textAlign:"right"}}>{lieu.photo_author}{lieu.photo_author&&lieu.photo_licence&&" · "}{lieu.photo_licence} · Wikimedia</div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function DailyPlaceSpotlight({C, db, today, isFav, toggleFav, onOpenLieu}){
   const lieux = db?.lieux || [];
   if(!lieux.length) return null;
-  const lieu = pickDaily(lieux, today, "lieu-spotlight");
+  // Priorité aux lieux qui ont une vidéo (meilleure expérience) ; repli sur
+  // tous les lieux si aucun n'a de vidéo (ne devrait pas arriver en pratique).
+  const withVideo = lieux.filter(l => VIDEO_MAP[l.id]?.video);
+  const pool = withVideo.length ? withVideo : lieux;
+  const lieu = pickDaily(pool, today, "lieu-spotlight");
   if(!lieu) return null;
 
   const video = VIDEO_MAP[lieu.id]?.video || null;
@@ -6093,7 +6193,7 @@ export default function IsekaidApp(){
     });
   };
   const [showSearch,setShowSearch]=useState(false);
-  const [searchQuery,setSearchQuery]=useState("");
+  const [spotlightLieu,setSpotlightLieu]=useState(null);
   const [tourStep,setTourStep]=useState(-1); // -1 = inactif, 0+ = étape en cours
   const [tourDontShow,setTourDontShow]=useState(false);
   const [newAchievement,setNewAchievement]=useState(null);
@@ -6374,7 +6474,7 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className="screen-in" style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>{setSearchQuery(l.nom);setShowSearch(true);}}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission}/>}
@@ -6396,7 +6496,8 @@ export default function IsekaidApp(){
               </div>
             )}
             {/* Global search */}
-            {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>{setShowSearch(false);setSearchQuery("");}} onWikiTap={setWikiEntry} initialQuery={searchQuery}/>}
+            {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
+            {spotlightLieu && <LieuSpotlightDetail C={C} lieu={spotlightLieu} onClose={()=>setSpotlightLieu(null)} isFav={isFav} toggleFav={toggleFav}/>}
             {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)} onRedeemCode={redeemCode} billingError={billingError} billingBusy={billingBusy} liveOfferings={liveOfferings} onRestore={restorePremium}/>}
             {/* Achievement unlocked */}
             {newAchievement && <AchievementPopup C={C} achievement={newAchievement} onClose={()=>setNewAchievement(null)}/>}
