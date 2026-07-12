@@ -2,6 +2,7 @@ import DATA from "./japan-data.json";
 import AUDIO_MANIFEST from "./audio-manifest.json";
 import EXPLORE_IMAGES from "./explore-images.json";
 import VIDEO_MAP from "./video-map.json";
+import LIEU_EDITORIAL from "./lieu-editorial.json";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback } from "./supabase";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
@@ -519,7 +520,7 @@ function LieuSpotlightDetail({C, lieu, onClose, isFav, toggleFav}){
   return (
     <div style={{position:"fixed",inset:0,zIndex:200,background:C.bg,overflowY:"auto"}}>
       {/* Média en tête : vidéo si dispo, sinon photo */}
-      <div style={{position:"relative",width:"100%",height:280,background:C.s2}}>
+      <div style={{position:"relative",width:"100%",maxWidth:480,margin:"0 auto",height:280,background:C.s2}}>
         {video ? (
           <video src={video} autoPlay muted loop playsInline controls
             onError={(e)=>{ e.target.style.display="none"; e.target.nextSibling && (e.target.nextSibling.style.display="block"); }}
@@ -547,9 +548,15 @@ function LieuSpotlightDetail({C, lieu, onClose, isFav, toggleFav}){
       </div>
 
       {/* Contenu */}
-      <div style={{padding:"20px 20px 110px"}}>
-        {/* Description */}
-        {lieu.description && (
+      <div style={{padding:"20px 20px 110px",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
+        {/* Description enrichie si disponible, sinon description courte */}
+        {LIEU_EDITORIAL[lieu.id]?.editorial ? (
+          <div style={{marginBottom:20}}>
+            {LIEU_EDITORIAL[lieu.id].editorial.split("\n\n").map((para,i)=>(
+              <p key={i} style={{fontSize:14,color:C.text,lineHeight:1.8,marginBottom:14}}>{para}</p>
+            ))}
+          </div>
+        ) : lieu.description && (
           <p style={{fontSize:14,color:C.text,lineHeight:1.75,marginBottom:16}}>{lieu.description}</p>
         )}
 
