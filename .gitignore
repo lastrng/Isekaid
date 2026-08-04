@@ -24,3 +24,6 @@ ios/App/build/
 *.jks
 *.keystore
 android/app/release/
+src/App.jsx.backup
+src/.App.jsx.swp
+*.swp

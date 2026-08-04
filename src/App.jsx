@@ -5,6 +5,7 @@ import VIDEO_MAP from "./video-map.json";
 import LIEU_EDITORIAL from "./lieu-editorial.json";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback } from "./supabase";
+import { HomeDailyCard, DailyFeedScreen } from "./DailyFeed";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
@@ -1253,6 +1254,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 
         {/* Section 3 — Streak */}
         <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
+<HomeDailyCard C={C} onOpen={()=>onGoTab("daily")}/>
         <StreakSection C={C} streak={streak} isPremium={isPremium}/>
       </div>
       {shareProverb && <ProverbShareSheet C={C} prov={shareProverb} script={script} onClose={()=>setShareProverb(null)}/>}
@@ -6482,6 +6484,7 @@ export default function IsekaidApp(){
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className="screen-in" style={{height:"100%"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)}/>}
+{tab==="daily" && <DailyFeedScreen C={C} script={script}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission}/>}

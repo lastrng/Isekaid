@@ -95,3 +95,14 @@ export async function saveTripsCloud(userId, trips){
   const { error } = await supabase.from("progress").update({ trips, updated_at: new Date().toISOString() }).eq("user_id", userId);
   return !error;
 }
+
+export async function fetchDailyFeed({ limit = 50 } = {}){
+  if(!supabaseEnabled) return [];
+  const { data, error } = await supabase
+    .from("app_feed")
+    .select("id, created_at, theme, title, subtitle, body, kanji, romaji, image_url, published_at")
+    .order("published_at", { ascending: false })
+    .limit(limit);
+  if(error){ console.warn("[supabase] fetchDailyFeed:", error?.message); return []; }
+  return data || [];
+}
