@@ -3,6 +3,7 @@ import AUDIO_MANIFEST from "./audio-manifest.json";
 import EXPLORE_IMAGES from "./explore-images.json";
 import VIDEO_MAP from "./video-map.json";
 import LIEU_EDITORIAL from "./lieu-editorial.json";
+import * as sfx from "./sfx.js";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback } from "./supabase";
 import { HomeDailyCard, DailyFeedScreen } from "./DailyFeed";
@@ -2134,15 +2135,17 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
   const choose = (choix)=>{
     if(picked) return;
     setPicked(choix);
-    if(choix.correct) setScore(v=>v+1);
+    if(choix.correct){ setScore(v=>v+1); sfx.playCorrect(); } else sfx.playWrong();
   };
   const nextStep = ()=>{
     if(step < s.etapes.length-1){ setStep(step+1); setPicked(null); }
     else {
       setFinished(true);
       const perfect = score === s.etapes.length;
+      const passed = score/s.etapes.length >= 0.7;
+      if(passed) (perfect ? sfx.playLevelUp() : sfx.playComplete());
       // reward only first successful (>=70%) completion
-      if(!alreadyDone && score/s.etapes.length >= 0.7) onComplete(s);
+      if(!alreadyDone && passed) onComplete(s);
     }
   };
 
@@ -2676,9 +2679,14 @@ function QuizMode({C, deck, onExit}){
   const choose = (opt)=>{
     if(picked) return;
     setPicked(opt.r);
-    if(opt.r===card.r) setScore(s=>s+1);
+    if(opt.r===card.r){ setScore(s=>s+1); sfx.playCorrect(); } else sfx.playWrong();
     setTimeout(()=>{ setPicked(null); setIdx(i=>i+1); }, 850);
   };
+
+  useEffect(()=>{
+    if(done){ score/cards.length>=0.8 ? sfx.playLevelUp() : sfx.playComplete(); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[done]);
 
   if(done) return (
     <div style={{padding:"40px 24px",textAlign:"center",position:"relative",overflow:"hidden"}}>
@@ -5135,6 +5143,15 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const [showBadges,setShowBadges] = useState(false);
   const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
+  const [soundOn,setSoundOnState] = useState(()=>sfx.isSoundOn());
+  const toggleSound = ()=>{
+    setSoundOnState(prev=>{
+      const next = !prev;
+      sfx.setSoundOn(next);
+      if(next) sfx.playTap();
+      return next;
+    });
+  };
   const setReminders = (fn)=>{
     setRemindersState(prev=>{
       const next = typeof fn==="function" ? fn(prev) : fn;
@@ -5187,6 +5204,17 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
           </div>
           <div onClick={()=>setDark(d=>!d)} style={{width:48,height:26,borderRadius:13,background:dark?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
             <div style={{position:"absolute",top:3,left:dark?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
+          </div>
+        </div>
+
+        {/* Sons — jingles de feedback (bonnes réponses, streak, niveau) */}
+        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div>
+            <div style={{fontSize:13,color:C.text,marginBottom:2}}>{soundOn?"Sons activés 🔔":"Sons coupés 🔕"}</div>
+            <div style={{fontSize:11,color:C.t3}}>Jingles de réussite, streak, niveau</div>
+          </div>
+          <div onClick={toggleSound} style={{width:48,height:26,borderRadius:13,background:soundOn?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
+            <div style={{position:"absolute",top:3,left:soundOn?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
           </div>
         </div>
 
