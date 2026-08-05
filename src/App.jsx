@@ -6274,6 +6274,39 @@ export default function IsekaidApp(){
     return ()=>{ listener?.remove?.(); };
   },[]);
 
+  // Bouton/geste retour Android (le swipe-retour déclenche le même événement natif) :
+  // sans ce listener, Capacitor n'a pas d'historique de navigateur à dépiler (l'app
+  // change d'écran via du state React, pas via l'URL) et se contente de quitter l'app.
+  // On garde donc l'état courant dans une ref pour fermer les panneaux globaux, revenir
+  // à l'onglet "home", puis seulement quitter l'app si on y est déjà.
+  const backStateRef = useRef();
+  useEffect(()=>{
+    backStateRef.current = { wikiEntry, showSearch, spotlightLieu, showPremiumPage, newAchievement, showWelcome, tab };
+  });
+  useEffect(()=>{
+    let listener = null;
+    let capApp = null;
+    const setup = async ()=>{
+      try {
+        const { App: CapApp } = await import("@capacitor/app");
+        capApp = CapApp;
+        listener = await CapApp.addListener("backButton", ()=>{
+          const s = backStateRef.current;
+          if(s.wikiEntry){ setWikiEntry(null); return; }
+          if(s.showSearch){ setShowSearch(false); return; }
+          if(s.spotlightLieu){ setSpotlightLieu(null); return; }
+          if(s.showPremiumPage){ setShowPremiumPage(false); return; }
+          if(s.newAchievement){ setNewAchievement(null); return; }
+          if(s.showWelcome){ setShowWelcome(false); return; }
+          if(s.tab!=="home"){ setTab("home"); return; }
+          capApp.exitApp();
+        });
+      } catch { /* hors natif — pas de Capacitor App */ }
+    };
+    setup();
+    return ()=>{ listener?.remove?.(); };
+  },[]);
+
   // Initialise RevenueCat dès que la session Supabase est connue.
   useEffect(()=>{
     if(!isNativePlatform()) return;
@@ -6512,7 +6545,7 @@ export default function IsekaidApp(){
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className="screen-in" style={{height:"100%"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)}/>}
-{tab==="daily" && <DailyFeedScreen C={C} script={script}/>}
+{tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission}/>}

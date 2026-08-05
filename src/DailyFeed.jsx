@@ -113,14 +113,20 @@ export function HomeDailyCard({ C, onOpen }){
    Écran feed complet
    Usage : {tab==="daily" && <DailyFeedScreen C={C} />}
    ============================================================ */
-export function DailyFeedScreen({ C, script }){
+export function DailyFeedScreen({ C, script, onBack }){
   const { items, error } = useDailyFeed(50);
 
   const surface = C.s1 || C.navBg || "#161f38";
   const border = C.border || "rgba(255,255,255,.12)";
 
   return (
+    <div style={{ height: "100%", overflowY: "auto", background: C.bg }}>
     <div style={{ padding: "16px 14px 90px", maxWidth: 640, margin: "0 auto" }}>
+      {onBack && (
+        <button onClick={onBack} style={{ background: "transparent", border: "none", color: C.t2, fontSize: 13, cursor: "pointer", padding: 0, marginBottom: 14 }}>
+          ‹ Accueil
+        </button>
+      )}
       <div style={{ marginBottom: 18 }}>
         <div style={{ fontSize: 11, color: C.gold, letterSpacing: ".16em", marginBottom: 4 }}>🇯🇵 CHAQUE MATIN</div>
         <h1 style={{ fontSize: 26, fontWeight: 900, color: C.text, margin: 0 }}>Le Japon du jour</h1>
@@ -147,6 +153,7 @@ export function DailyFeedScreen({ C, script }){
       {items && items.map((item) => (
         <FeedCard key={item.id} C={C} item={item} surface={surface} border={border} />
       ))}
+    </div>
     </div>
   );
 }
