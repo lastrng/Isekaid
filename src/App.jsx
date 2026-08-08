@@ -483,31 +483,6 @@ function FavButton({C,active,onClick}){
   );
 }
 
-function ExprCard({C,data,fav,onFav,wikiMap,onWikiTap,script}){
-  if(!data) return null;
-  const wt = (text,style) => <WikiText C={C} text={text} style={style} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
-  return(
-    <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-        <div style={{fontSize:10,color:C.gold,letterSpacing:".2em",textTransform:"uppercase"}}>表現 · Expression du jour {data.emoji}</div>
-        {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
-      </div>
-      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
-        <div style={{fontSize:34,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2}}>{jpMain(data, script, "expression")}</div>
-        <SpeakButton C={C} text={data.expression} color={C.gold} size={34}/>
-      </div>
-      <div style={{fontSize:12,color:C.gold,fontStyle:"italic",marginBottom:3}}>{data.romaji}</div>
-      <div style={{fontSize:14,color:C.t2,fontWeight:500,marginBottom:13}}>{data.traduction}</div>
-      <div style={{fontSize:13,color:C.t2,lineHeight:1.78,marginBottom:13}}>{wt(data.contexte)}</div>
-      <div style={{padding:"11px 13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:8}}>
-        <div style={{fontSize:9,color:C.gold,letterSpacing:".18em",marginBottom:6,display:"flex",alignItems:"center",justifyContent:"space-between"}}>EXEMPLE <SpeakButton C={C} text={data.exemple_jp} color={C.gold} size={26}/></div>
-        <div style={{fontSize:13,color:C.text,marginBottom:3}}>{data.exemple_jp}</div>
-        <div style={{fontSize:11,color:C.t3,fontStyle:"italic"}}>{data.exemple_fr}</div>
-      </div>
-    </div>
-  );
-}
-
 // ── "Découvre un lieu par jour" — vidéo (si dispo) ou photo, pioché
 // déterministe pour la journée. Placé sur l'accueil, juste après Daily Japan.
 // ── Fiche détail plein écran pour "Lieu du jour" (accueil) ──
@@ -659,55 +634,6 @@ function DailyPlaceSpotlight({C, db, today, isFav, toggleFav, onOpenLieu}){
             {lieu.quartier && <div style={{fontSize:12,color:"rgba(255,255,255,0.8)"}}>{lieu.quartier}</div>}
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function CultCard({C,data,fav,onFav,wikiMap,onWikiTap}){
-  if(!data) return null;
-  const wt = (text,style) => <WikiText C={C} text={text} style={style} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
-  const photo = explorePhoto("culture", data, DATA.culture.indexOf(data));
-  return(
-    <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden",animation:"fadeUp .4s ease"}}>
-      {photo && <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}} style={{width:"100%",height:130,objectFit:"cover",display:"block"}}/>}
-      <div style={{padding:18}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:11}}>
-        <div style={{fontSize:10,color:C.red,letterSpacing:".2em",textTransform:"uppercase"}}>文化 · Culture {data.emoji}</div>
-        <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
-          <span style={{fontSize:9,padding:"3px 8px",background:`rgba(201,70,61,0.07)`,border:`1px solid rgba(201,70,61,0.2)`,borderRadius:20,color:C.red,whiteSpace:"nowrap"}}>{data.tag}</span>
-          {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
-        </div>
-      </div>
-      <div style={{fontSize:17,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:11,lineHeight:1.45}}>{data.titre}</div>
-      <p style={{fontSize:13,color:C.t2,lineHeight:1.82,marginBottom:13}}>{wt(data.contenu)}</p>
-      <div style={{padding:"11px 13px",background:C.s2,borderLeft:`3px solid ${C.red}`,borderRadius:"0 7px 7px 0"}}>
-        <div style={{fontSize:9,color:C.red,letterSpacing:".18em",marginBottom:4}}>À RETENIR</div>
-        <p style={{fontSize:12,color:C.t2,lineHeight:1.65,margin:0,fontStyle:"italic"}}>{wt(data.insight)}</p>
-      </div>
-      </div>
-    </div>
-  );
-}
-
-function RepasCard({C,data,fav,onFav,wikiMap,onWikiTap,script}){
-  if(!data) return null;
-  const wt=(text,style)=><WikiText C={C} text={text} style={style} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
-  return(
-    <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:11}}>
-        <div style={{fontSize:10,color:C.green,letterSpacing:".2em",textTransform:"uppercase"}}>🍱 Repas · {data.moment}</div>
-        {onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}
-      </div>
-      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
-        <div style={{fontSize:32,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.2}}>{jpMain(data, script, "nom_jp")} {data.emoji}</div>
-        <SpeakButton C={C} text={data.nom_jp} color={C.green} size={30}/>
-      </div>
-      <div style={{fontSize:12,color:C.green,fontStyle:"italic",marginBottom:11}}>{data.romaji} — {data.traduction}</div>
-      <p style={{fontSize:13,color:C.t2,lineHeight:1.8,marginBottom:12}}>{wt(data.description)}</p>
-      <div style={{padding:"11px 13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:8,display:"flex",gap:10,alignItems:"flex-start"}}>
-        <span style={{fontSize:15,flexShrink:0}}>💡</span>
-        <p style={{fontSize:12,color:C.t2,margin:0,lineHeight:1.6,fontStyle:"italic"}}>{wt(data.fun_fact)}</p>
       </div>
     </div>
   );
@@ -882,53 +808,6 @@ const CAT_COLOR = {
   Gastronomie:"#C9A84C", Lieux:"#4E8060", Culture:"#8B6FB0",
   Concept:"#5B9BD5", Quotidien:"#C9463D", Fêtes:"#D98BA8",
 };
-function Slider({C, children, onIndexChange}){
-  const items = Array.isArray(children) ? children.filter(Boolean) : [children];
-  const [idx, setIdx] = useState(0);
-  const ref = useRef(null);
-
-  const onScroll = ()=>{
-    const el = ref.current;
-    if(!el) return;
-    const i = Math.round(el.scrollLeft / el.clientWidth);
-    if(i !== idx){ setIdx(i); onIndexChange && onIndexChange(i, items.length); }
-  };
-
-  const goTo = (i)=>{
-    const el = ref.current;
-    if(!el) return;
-    el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
-    setIdx(i);
-    onIndexChange && onIndexChange(i, items.length);
-  };
-
-  return(
-    <div>
-      <div ref={ref} onScroll={onScroll} style={{
-        display:"flex", overflowX:"auto", scrollSnapType:"x mandatory",
-        gap:0, scrollbarWidth:"none", WebkitOverflowScrolling:"touch",
-        margin:"0 -2px"
-      }}>
-        {items.map((child,i)=>(
-          <div key={i} style={{flex:"0 0 100%", scrollSnapAlign:"center", padding:"0 2px", boxSizing:"border-box"}}>
-            {child}
-          </div>
-        ))}
-      </div>
-      {/* Dots */}
-      <div style={{display:"flex",justifyContent:"center",gap:7,marginTop:13}}>
-        {items.map((_,i)=>(
-          <button key={i} onClick={()=>goTo(i)} aria-label={`Carte ${i+1}`} style={{
-            width: i===idx ? 22 : 7, height:7, borderRadius:4, padding:0, cursor:"pointer",
-            border:"none", background: i===idx ? C.red : C.s3,
-            transition:"all .3s"
-          }}/>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ─── Home ─────────────────────────────────────────────────────────────────────
 // ─── Rappel intelligent in-app : combine streak en danger, défi non fait,
 //     et déblocage imminent. Choisit le message le plus pertinent du moment.
@@ -1010,14 +889,9 @@ function SmartReminder({ C, reminder, onGo, onDismiss }){
 }
 
 function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu}){
-  const [expr,  setExpr]  = useState(null);
-  const [cult,  setCult]  = useState(null);
-  const [repas, setRepas] = useState(null);
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   const [reminderDismissed, setReminderDismissed] = useState(false);
-  const [shareProverb, setShareProverb] = useState(null);
-  const loaded = useRef(false);
 
   // Auto-alternate streak badge every 3s
   useEffect(()=>{
@@ -1025,32 +899,14 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
     return ()=> clearInterval(t);
   },[]);
 
-  // Marque "lire le contenu du jour" à l'arrivée sur l'accueil.
-  // Se redéclenche si le jour de la mission change (ex. après chargement cloud).
-  // La mission "Lire le contenu du jour" (trigger "daily") ne se valide plus au
-  // montage — elle se valide quand l'utilisateur atteint la dernière carte du
-  // carrousel "Daily Japan" (voir onIndexChange sur le Slider ci-dessous).
+  // La mission "Lire le contenu du jour" (trigger "daily") se valide à
+  // l'ouverture du feed "Le Japon du jour" (voir HomeDailyCard ci-dessous).
 
   const {month,day,weekday,hour} = getJPDate();
   const g = greet(hour, user.name==="Voyageur"?"":user.name);
   const rankLabel = {beginner:"Curious Tourist",intermediate:"Konbini Explorer",advanced:"Tokyo Wanderer"};
 
   const today = dayKey();
-
-  // explore=false → fixed content for today (the daily rendez-vous)
-  // explore=true  → random pick (manual "discover more" via ↻)
-  const refresh = (which, explore=false) => {
-    if(!db) return;
-    if(!which || which==="daily") {
-      setExpr(  explore ? pick(db.expressions) : pickDaily(db.expressions, today, "expr"));
-      setCult(  explore ? pick(db.culture)     : pickDaily(db.culture,     today, "cult"));
-      setRepas( explore ? pick(db.repas)       : pickDaily(db.repas,       today, "repas"));
-    }
-  };
-
-  useEffect(() => {
-    if(!loaded.current && db) { loaded.current=true; refresh(); } // initial = today's fixed content
-  }, [db]);
 
   const seasonKey = currentSeasonKey();
   const seasonAccent = SEASON_ACCENT[seasonKey];
@@ -1137,28 +993,6 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           );
         })()}
 
-        {/* Proverbe du jour */}
-        {db?.proverbes && (()=>{
-          const prov = pickDaily(db.proverbes, today, "prov");
-          if(!prov) return null;
-          return(
-            <div className="lift" style={{marginBottom:26,padding:"20px 18px 16px",background:`linear-gradient(155deg,${seasonAccent.soft},transparent 70%)`,border:`1px solid ${C.border}`,borderRadius:18,position:"relative",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,0.03)"}}>
-              <div style={{fontSize:72,position:"absolute",top:-14,right:0,opacity:0.05,fontFamily:"'Noto Serif JP',serif"}}>諺</div>
-              <div style={{fontSize:9,color:C.gold,letterSpacing:".2em",marginBottom:9,textTransform:"uppercase"}}>諺 · Proverbe du jour</div>
-              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
-                <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text,lineHeight:1.4}}>{jpMain(prov, script)}</div>
-                <SpeakButton C={C} text={prov.jp} color={C.gold} size={26}/>
-              </div>
-              <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:8}}>{jpSub(prov, script)}</div>
-              <div style={{fontSize:13,color:C.text,fontWeight:500,marginBottom:4}}>« {prov.fr} »</div>
-              <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginBottom:12}}>{prov.sens}</div>
-              <button onClick={()=>setShareProverb(prov)} style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2,fontSize:11,cursor:"pointer"}}>
-                <span style={{fontSize:13}}>📤</span> Partager
-              </button>
-            </div>
-          );
-        })()}
-
         {/* Lieu du jour — vidéo (si dispo) ou photo */}
         <DailyPlaceSpotlight C={C} db={db} today={today} isFav={isFav} toggleFav={toggleFav} onOpenLieu={onOpenLieu}/>
 
@@ -1208,29 +1042,13 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           );
         })()}
 
-        {/* Section 1 — Daily Japan (slider) */}
-        <SH C={C} kanji="日" title="Daily Japan" sub="Ta sélection du jour" onRefresh={()=>refresh("daily",true)}/>
-        <div style={{marginBottom:28}}>
-          {db ? (
-            <Slider C={C} onIndexChange={(i,len)=>{ if(i>=len-1 && onTask) onTask("daily"); }}>
-              <ExprCard  C={C} data={expr}  fav={expr&&isFav("expr",expr)}   onFav={expr&&(()=>toggleFav("expr",expr))}  wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>
-              <CultCard  C={C} data={cult}  fav={cult&&isFav("cult",cult)}   onFav={cult&&(()=>toggleFav("cult",cult))}  wikiMap={wikiMap} onWikiTap={onWikiTap}/>
-              <RepasCard C={C} data={repas} fav={repas&&isFav("repas",repas)} onFav={repas&&(()=>toggleFav("repas",repas))} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>
-            </Slider>
-          ) : (
-            <div style={{padding:"24px",textAlign:"center",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-              <div style={{fontSize:20,marginBottom:8}}>⏳</div>
-              <div style={{fontSize:12,color:C.t3}}>Chargement du contenu…</div>
-            </div>
-          )}
-        </div>
-
-        {/* Section 3 — Streak */}
+        {/* Streak & Fidélisation */}
         <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
-<HomeDailyCard C={C} onOpen={()=>onGoTab("daily")}/>
         <StreakSection C={C} streak={streak} isPremium={isPremium}/>
+
+        {/* Découvrir — Le Japon du jour */}
+        <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
       </div>
-      {shareProverb && <ProverbShareSheet C={C} prov={shareProverb} script={script} onClose={()=>setShareProverb(null)}/>}
     </div>
   );
 }
@@ -2920,105 +2738,6 @@ function generateSituationImage(situation, { format="square", script="kana" } = 
 }
 
 // Partage natif avec repli téléchargement
-// ─── Template dédié : image partageable d'un PROVERBE ─────────────────────────
-// Composition centrée et poétique, distincte des fiches de situation.
-function generateProverbImage(prov, { format="square", script="kana" } = {}){
-  return new Promise((resolve)=>{
-    const W = 1080;
-    const H = format==="story" ? 1920 : 1080;
-    const canvas = document.createElement("canvas");
-    canvas.width = W; canvas.height = H;
-    const ctx = canvas.getContext("2d");
-
-    // Fond : dégradé encre profonde, ambiance "estampe nocturne"
-    const grad = ctx.createLinearGradient(0,0,W,H);
-    grad.addColorStop(0, "#17120E");
-    grad.addColorStop(1, "#241A12");
-    ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
-
-    const cx = W/2;
-    const gold = "#C9A84C", cream = "#F2EAD9", creamSoft = "rgba(242,234,217,0.6)";
-
-    // Grand kanji filigrane "諺" (proverbe) en fond
-    ctx.fillStyle = "rgba(201,168,76,0.06)";
-    ctx.font = "600 560px 'Noto Serif JP', serif";
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText("諺", cx, H/2);
-
-    ctx.textBaseline = "alphabetic";
-
-    // Eyebrow
-    let y = format==="story" ? 360 : 180;
-    ctx.fillStyle = gold;
-    ctx.font = "600 28px 'Noto Sans JP', sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("諺 · PROVERBE JAPONAIS", cx, y);
-    y += 28;
-    // petit trait
-    ctx.fillStyle = gold; ctx.fillRect(cx-30, y, 60, 3);
-    y += format==="story" ? 180 : 130;
-
-    // Le proverbe en JP (gros, serif, centré) — wrap si nécessaire
-    const jpText = script==="romaji" ? prov.romaji : (script==="kanji" ? prov.jp : (prov.kana||prov.jp));
-    ctx.fillStyle = cream;
-    ctx.font = "300 78px 'Noto Serif JP', serif";
-    wrapCentered(ctx, jpText, cx, y, W-200, 96);
-    y += measureWrapHeight(ctx, jpText, W-200, 96) + 40;
-
-    // Lecture (romaji) en italique
-    if(script!=="romaji"){
-      ctx.fillStyle = gold;
-      ctx.font = "italic 36px 'Noto Serif JP', serif";
-      ctx.fillText(prov.romaji, cx, y);
-      y += 80;
-    }
-
-    // Traduction française entre guillemets
-    ctx.fillStyle = cream;
-    ctx.font = "italic 44px 'Noto Serif JP', serif";
-    wrapCentered(ctx, `« ${prov.fr} »`, cx, y, W-220, 58);
-    y += measureWrapHeight(ctx, `« ${prov.fr} »`, W-220, 58) + 46;
-
-    // Le sens (explication) en plus petit, gris
-    if(prov.sens){
-      ctx.fillStyle = creamSoft;
-      ctx.font = "32px 'Noto Sans JP', sans-serif";
-      wrapCentered(ctx, prov.sens, cx, y, W-260, 46);
-    }
-
-    // Pied : marque Isekai'd
-    ctx.fillStyle = creamSoft;
-    ctx.font = "600 30px 'Noto Sans JP', sans-serif";
-    ctx.fillText("異世界 · Isekai'd", cx, H - (format==="story" ? 150 : 90));
-
-    ctx.textAlign = "left";
-    setTimeout(()=>{ canvas.toBlob((b)=>resolve(b), "image/png"); }, 50);
-  });
-}
-
-// Helpers de wrap centré pour le canvas
-function wrapCentered(ctx, text, cx, startY, maxW, lineH){
-  const words = String(text).split(" ");
-  let line = "", y = startY;
-  for(const w of words){
-    const test = line ? line+" "+w : w;
-    if(ctx.measureText(test).width > maxW && line){
-      ctx.fillText(line, cx, y); line = w; y += lineH;
-    } else line = test;
-  }
-  if(line) ctx.fillText(line, cx, y);
-}
-function measureWrapHeight(ctx, text, maxW, lineH){
-  const words = String(text).split(" ");
-  let line = "", lines = 1;
-  for(const w of words){
-    const test = line ? line+" "+w : w;
-    if(ctx.measureText(test).width > maxW && line){ lines++; line = w; }
-    else line = test;
-  }
-  return (lines-1)*lineH;
-}
-
 async function shareImageBlob(blob, filename="isekaid.png", shareText=""){
   const file = new File([blob], filename, { type:"image/png" });
   // Web Share API niveau 2 (fichiers)
@@ -3100,66 +2819,6 @@ function ShareSheet({ C, situation, script, onClose }){
         {status==="cancelled" && <div style={{textAlign:"center",fontSize:12,color:C.t3,marginTop:10}}>Partage annulé</div>}
         {status==="downloaded" && <div style={{textAlign:"center",fontSize:12,color:C.green,marginTop:10}}>Image enregistrée ✓</div>}
         <div style={{fontSize:11,color:C.t3,textAlign:"center",marginTop:12,lineHeight:1.5}}>L'image inclut ta marque Isekai'd. Parfait pour Instagram, TikTok ou tes amis 🌸</div>
-      </div>
-    </div>
-  );
-}
-
-// Modale de partage dédiée au proverbe du jour
-function ProverbShareSheet({ C, prov, script, onClose }){
-  const [format, setFormat] = useState("square");
-  const [busy, setBusy] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [status, setStatus] = useState(null);
-
-  useEffect(()=>{
-    let alive = true; let lastUrl = null;
-    setBusy(true);
-    generateProverbImage(prov, { format, script }).then(blob=>{
-      if(!alive || !blob) return;
-      lastUrl = URL.createObjectURL(blob);
-      setPreviewUrl(lastUrl); setBusy(false);
-    });
-    return ()=>{ alive=false; if(lastUrl) URL.revokeObjectURL(lastUrl); };
-  }, [format, prov, script]);
-
-  const doShare = async ()=>{
-    setBusy(true);
-    const blob = await generateProverbImage(prov, { format, script });
-    const res = await shareImageBlob(blob, `isekaid-proverbe.png`, `« ${prov.fr} » — proverbe japonais du jour sur Isekai'd 🎌`);
-    setStatus(res); setBusy(false);
-    if(res==="shared" || res==="downloaded") setTimeout(onClose, 900);
-  };
-
-  return(
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.65)",zIndex:400,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
-      <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:460,background:C.s1,borderRadius:"22px 22px 0 0",padding:"22px 20px 30px",animation:"fadeUp .3s ease",maxHeight:"92vh",overflowY:"auto"}}>
-        <div style={{textAlign:"center",marginBottom:16}}>
-          <div style={{width:38,height:4,background:C.border,borderRadius:2,margin:"0 auto 16px"}}/>
-          <div style={{fontSize:17,color:C.text,fontWeight:600}}>Partager ce proverbe</div>
-          <div style={{fontSize:12,color:C.t3,marginTop:3}}>Une image prête pour tes réseaux</div>
-        </div>
-        <div style={{display:"flex",gap:10,marginBottom:18}}>
-          {[{id:"square",label:"Carré",sub:"Post 1:1"},{id:"story",label:"Vertical",sub:"Story 9:16"}].map(f=>(
-            <button key={f.id} onClick={()=>setFormat(f.id)} style={{flex:1,padding:"12px",borderRadius:12,border:`1px solid ${format===f.id?C.gold:C.border}`,background:format===f.id?`${C.gold}18`:C.s2,cursor:"pointer"}}>
-              <div style={{fontSize:13,color:format===f.id?C.gold:C.text,fontWeight:600}}>{f.label}</div>
-              <div style={{fontSize:10,color:C.t3,marginTop:2}}>{f.sub}</div>
-            </button>
-          ))}
-        </div>
-        <div style={{display:"flex",justifyContent:"center",marginBottom:18,minHeight:180}}>
-          {previewUrl ? (
-            <img src={previewUrl} alt="Aperçu" style={{maxWidth:format==="story"?"56%":"82%",maxHeight:300,borderRadius:12,border:`1px solid ${C.border}`,boxShadow:"0 8px 28px rgba(0,0,0,0.2)",opacity:busy?0.5:1,transition:"opacity .2s"}}/>
-          ) : (
-            <div style={{display:"flex",alignItems:"center",color:C.t3,fontSize:13}}>Génération…</div>
-          )}
-        </div>
-        <button onClick={doShare} disabled={busy} className="pop-press" style={{width:"100%",padding:"15px",background:C.gold,border:"none",borderRadius:13,color:"#1A1410",fontSize:14,fontWeight:700,cursor:busy?"wait":"pointer",opacity:busy?0.7:1}}>
-          {busy ? "Préparation…" : "📤 Partager / Enregistrer"}
-        </button>
-        {status==="cancelled" && <div style={{textAlign:"center",fontSize:12,color:C.t3,marginTop:10}}>Partage annulé</div>}
-        {status==="downloaded" && <div style={{textAlign:"center",fontSize:12,color:C.green,marginTop:10}}>Image enregistrée ✓</div>}
-        <div style={{fontSize:11,color:C.t3,textAlign:"center",marginTop:12,lineHeight:1.5}}>L'image inclut ta marque Isekai'd 🌸</div>
       </div>
     </div>
   );
