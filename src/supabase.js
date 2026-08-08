@@ -41,9 +41,15 @@ export async function signOut(){
   return supabase.auth.signOut();
 }
 export async function getSession(){
-  if(!supabaseEnabled) return null;
-  const { data } = await supabase.auth.getSession();
-  return data.session;
+  if(!supabaseEnabled) return { session: null, error: null };
+  try {
+    const { data } = await supabase.auth.getSession();
+    return { session: data.session, error: null };
+  } catch (e) {
+    // Hors ligne (ou refresh du token impossible) : on ne bloque jamais l'appelant.
+    console.warn("[supabase] getSession a échoué (probablement hors ligne):", e?.message);
+    return { session: null, error: e };
+  }
 }
 export function onAuthChange(cb){
   if(!supabaseEnabled) return { unsubscribe(){} };

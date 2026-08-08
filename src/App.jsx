@@ -979,7 +979,7 @@ function computeReminder({ streak, mission, db, isPremium, today }){
       return {
         kind:"challenge",
         emoji: defi.emoji,
-        title:"Ton défi du jour t'attend",
+        title:"Ta mission du jour t'attend",
         text: defi.titre,
         cta: defi.cta || "Relever", target: defi.cible || "home",
         color:"#C97D3C", bg:"rgba(201,125,60,0.08)", border:"rgba(201,125,60,0.3)",
@@ -1224,34 +1224,6 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
             </div>
           )}
         </div>
-
-        {/* Section 2 — Défi du jour (varie chaque jour) */}
-        {db?.defis_jour?.length > 0 && (()=>{
-          const defi = pickDaily(db.defis_jour, today, "defi");
-          if(!defi) return null;
-          return(
-            <>
-              <SH C={C} kanji="挑" title="Défi du jour" sub="Ton objectif pour aujourd'hui" />
-              <div className="lift" onClick={()=>onGoTab && onGoTab(defi.cible)} style={{marginBottom:28,padding:"22px 20px",borderRadius:18,cursor:"pointer",position:"relative",overflow:"hidden",background:`linear-gradient(140deg,${seasonAccent.soft},transparent 75%)`,border:`1px solid ${seasonAccent.accent}33`,boxShadow:"0 2px 14px rgba(0,0,0,0.04)"}}>
-                <div style={{fontSize:80,position:"absolute",top:-18,right:-6,opacity:0.06}}>{defi.emoji}</div>
-                <div style={{position:"relative"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
-                    <span style={{fontSize:38,display:"inline-block",animation:"floatY 3s ease-in-out infinite"}}>{defi.emoji}</span>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:9,color:seasonAccent.accent,letterSpacing:".2em",textTransform:"uppercase",marginBottom:2}}>挑戦 · Challenge</div>
-                      <div style={{fontSize:17,color:C.text,fontWeight:600,lineHeight:1.25}}>{defi.titre}</div>
-                    </div>
-                  </div>
-                  <div style={{fontSize:13,color:C.t2,lineHeight:1.55,marginBottom:14}}>{defi.desc}</div>
-                  <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"9px 16px",background:seasonAccent.accent,borderRadius:22,boxShadow:`0 4px 12px ${seasonAccent.accent}44`}}>
-                    <span style={{fontSize:13,color:"#fff",fontWeight:600}}>{defi.cta}</span>
-                    <span style={{fontSize:13,color:"#fff"}}>→</span>
-                  </div>
-                </div>
-              </div>
-            </>
-          );
-        })()}
 
         {/* Section 3 — Streak */}
         <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
@@ -5250,7 +5222,7 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
         <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div style={{flex:1,paddingRight:12}}>
             <div style={{fontSize:13,color:C.text,marginBottom:2}}>🔔 Rappels quotidiens</div>
-            <div style={{fontSize:11,color:C.t3,lineHeight:1.4}}>Reçois un rappel pour protéger ton streak et faire ton défi du jour.</div>
+            <div style={{fontSize:11,color:C.t3,lineHeight:1.4}}>Reçois un rappel pour protéger ton streak et faire ta mission du jour.</div>
           </div>
           <div onClick={()=>setReminders(r=>!r)} style={{width:48,height:26,borderRadius:13,background:reminders?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
             <div style={{position:"absolute",top:3,left:reminders?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
@@ -6326,11 +6298,18 @@ export default function IsekaidApp(){
   },[session?.user?.id]);
   const [authChecked,setAuthChecked]=useState(false);
   const [skipAuth,setSkipAuth]=useState(false);
+  // true si la vérification de session a échoué (typiquement : pas de réseau).
+  // Sert à ne pas bloquer un utilisateur déjà connu (profil local présent) derrière l'écran de connexion.
+  const [sessionCheckFailed,setSessionCheckFailed]=useState(false);
 
   // Listen for auth changes
   useEffect(()=>{
     if(!supabaseEnabled){ setAuthChecked(true); return; }
-    getSession().then(s=>{ setSession(s); setAuthChecked(true); });
+    getSession().then(({session:s, error})=>{
+      setSession(s);
+      setSessionCheckFailed(!!error);
+      setAuthChecked(true);
+    });
     const sub = onAuthChange(s=> setSession(s));
     return ()=> sub.unsubscribe?.();
   },[]);
@@ -6442,14 +6421,22 @@ export default function IsekaidApp(){
       // Session pas encore vérifiée → on attend via l'effet ci-dessous
       setScreen("loading"); return;
     }
-    if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
+    if(supabaseEnabled && !session && !skipAuth){
+      // Vérification de session impossible (hors ligne) mais profil local déjà connu :
+      // on ne bloque pas derrière l'écran de connexion, on continue avec les données locales.
+      if(sessionCheckFailed && user){ setSkipAuth(true); setScreen("app"); return; }
+      setScreen("auth"); return;
+    }
     setScreen(user ? "app" : "onboarding");
   };
 
   // Si on était en "loading" (auth pas encore prête), on route dès qu'authChecked arrive
   useEffect(()=>{
     if(authChecked && screen==="loading"){
-      if(supabaseEnabled && !session && !skipAuth){ setScreen("auth"); return; }
+      if(supabaseEnabled && !session && !skipAuth){
+        if(sessionCheckFailed && user){ setSkipAuth(true); setScreen("app"); return; }
+        setScreen("auth"); return;
+      }
       setScreen(user ? "app" : "onboarding");
     }
   },[authChecked, screen]);
