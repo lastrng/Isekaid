@@ -9,6 +9,7 @@ import { HomeDailyCard, DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 import { speakJP, SpeakButton } from "./tts";
 import { TutorEntryCard, TutorScreen } from "./Tutor";
+import { DiscoveriesScreen } from "./ExploreDiscoveries";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -206,6 +207,9 @@ const EXPLORE_SECTIONS = [
     mods:[
       {emoji:"⛩️", title:"Traditions saisonnières", sub:"Hanami, Obon, Hatsumōde, matsuri…", route:"traditions", cat:"traditions", filter:"saison"},
       {emoji:"🏮", title:"Coutumes du quotidien",   sub:"Itadakimasu, konbini, ojigi, furin…", route:"traditions", cat:"traditions", filter:"quotidien"},
+      // Pas de `cat` : le module lui-même n'est jamais verrouillé, le
+      // déblocage se fait item par item à l'intérieur (voir DiscoveriesScreen).
+      {emoji:"🎴", title:"Découvertes du jour",      sub:"Ryokan, Godzilla, onsen, matsuri… une nouvelle chaque jour", route:"decouvertes"},
     ]
   },
   {
@@ -1244,7 +1248,7 @@ function UnlockHintBanner({C, onDismiss}){
     </div>
   );
 }
-function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,onOpenPremium}){
+function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,isPremium,onOpenPremium}){
   const [view,setView] = useState(null);
   const [viewFilter,setViewFilter] = useState(null);
   const [confirmCat,setConfirmCat] = useState(null);
@@ -1265,9 +1269,12 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
   if(view==="regions")    return <RegionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
   if(view==="vie")        return <VieScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
   if(view==="histoire")   return <HistoireScreen C={C} db={db} script={script} onBack={()=>setView(null)}/>;
+  if(view==="decouvertes") return <DiscoveriesScreen C={C} streak={streak} isPremium={isPremium} onBack={()=>setView(null)}/>;
 
   const tryOpen = (mod)=>{
-    if(!mod.cat) return;
+    // Pas de `cat` = module non verrouillable au niveau menu (ex: Découvertes,
+    // qui gère son propre déblocage item par item) : toujours ouvrable.
+    if(!mod.cat){ setViewFilter(mod.filter||null); setView(mod.route); return; }
     if(isUnlocked(mod.cat)){ setViewFilter(mod.filter||null); setView(mod.route); return; }
     setConfirmCat(mod.cat);
   };
@@ -1324,7 +1331,7 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
             {/* Modules de la section */}
             <div style={{display:"flex",flexDirection:"column",gap:10}} className="stagger">
               {section.mods.map((mod,i)=>{
-                const unlocked = mod.cat && isUnlocked(mod.cat);
+                const unlocked = !mod.cat || isUnlocked(mod.cat);
                 const lockDef = mod.cat && LOCKABLE[mod.cat];
                 return(
                   <div key={i} className="lift" onClick={()=>tryOpen(mod)}
@@ -6425,7 +6432,7 @@ export default function IsekaidApp(){
               <div key={tab} className="screen-in" style={{height:"100%"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
-              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} onOpenPremium={()=>setShowPremiumPage(true)}/>}
+              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}

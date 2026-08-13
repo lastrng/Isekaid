@@ -113,6 +113,21 @@ export async function fetchDailyFeed({ limit = 50 } = {}){
   return data || [];
 }
 
+// ─── Découvertes Japon (Explorer) ──────────────────────────────────────────
+// Ordre croissant (plus ancienne d'abord) : c'est aussi l'ordre de déblocage
+// par streak, la 1ère générée se débloque au jour 1, etc. (voir
+// ExploreDiscoveries.jsx / DISCOVERY_UNLOCK_DAYS).
+export async function fetchExploreDiscoveries({ limit = 200 } = {}){
+  if(!supabaseEnabled) return [];
+  const { data, error } = await supabase
+    .from("explore_discoveries")
+    .select("id, slug, category, title, subtitle, body, kanji, romaji, image_url, image_attribution, image_licence, image_source_url, published_at")
+    .order("published_at", { ascending: true })
+    .limit(limit);
+  if(error){ console.warn("[supabase] fetchExploreDiscoveries:", error?.message); return []; }
+  return data || [];
+}
+
 // ─── Tuteur conversationnel (Phase 3) ──────────────────────────────────────
 export async function fetchTutorConversations(userId){
   if(!supabaseEnabled) return [];
