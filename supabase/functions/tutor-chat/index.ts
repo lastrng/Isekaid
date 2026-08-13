@@ -231,13 +231,29 @@ Deno.serve(async (req: Request) => {
       conversationId = newConv.id;
     }
 
-    // ── Historique tronqué (les N derniers messages de CETTE conversation) ──
-    const { data: pastMessages } = await supabase
-      .from("tutor_messages")
-      .select("role, content_jp, content_fr, created_at")
-      .eq("conversation_id", conversationId)
-      .order("created_at", { ascending: false })
-      .limit(HISTORY_LIMIT);
+    // ── Historique + sauvegarde du message utilisateur, en parallèle ────────
+    // Indépendants une fois conversationId connu : gain d'un aller-retour DB.
+    // Le cutoff figé AVANT les deux requêtes garantit que l'historique ne
+    // peut jamais inclure le message qu'on est en train d'insérer, quel que
+    // soit l'ordre réel d'exécution côté serveur (sinon le message courant
+    // pourrait apparaître deux fois : une fois via l'historique, une fois
+    // via le push manuel juste après).
+    const beforeInsertAt = new Date().toISOString();
+    const [{ data: pastMessages }, { error: insertUserErr }] = await Promise.all([
+      supabase
+        .from("tutor_messages")
+        .select("role, content_jp, content_fr, created_at")
+        .eq("conversation_id", conversationId)
+        .lt("created_at", beforeInsertAt)
+        .order("created_at", { ascending: false })
+        .limit(HISTORY_LIMIT),
+      supabase
+        .from("tutor_messages")
+        .insert({ conversation_id: conversationId, user_id: userId, role: "user", content_jp: message }),
+    ]);
+    if (insertUserErr) {
+      return new Response(JSON.stringify({ error: "db_error" }), { status: 500, headers: jsonHeaders });
+    }
     const history = (pastMessages || []).slice().reverse();
     const truncated = (pastMessages || []).length >= HISTORY_LIMIT;
 
@@ -256,14 +272,6 @@ Deno.serve(async (req: Request) => {
         const text = [safeString(m.content_jp), m.content_fr ? `(${m.content_fr})` : ""].filter(Boolean).join(" ");
         anthropicMessages.push({ role: "assistant", content: text || "…" });
       }
-    }
-
-    // ── Sauvegarde le message utilisateur AVANT l'appel modèle ──────────────
-    const { error: insertUserErr } = await supabase
-      .from("tutor_messages")
-      .insert({ conversation_id: conversationId, user_id: userId, role: "user", content_jp: message });
-    if (insertUserErr) {
-      return new Response(JSON.stringify({ error: "db_error" }), { status: 500, headers: jsonHeaders });
     }
     anthropicMessages.push({ role: "user", content: message });
 
@@ -293,25 +301,35 @@ Deno.serve(async (req: Request) => {
     const correction = safeString(parsed.correction);
     const suggestions = safeSuggestions(parsed.suggestions);
 
-    const { error: insertAssistantErr } = await supabase.from("tutor_messages").insert({
-      conversation_id: conversationId,
-      user_id: userId,
-      role: "assistant",
-      content_jp: replyJp,
-      content_fr: replyFr,
-      romaji: romaji || null,
-      correction: correction || null,
-    });
-    if (insertAssistantErr) {
-      console.error("[tutor-chat] échec sauvegarde réponse:", insertAssistantErr);
-    }
+    // ── Persistance de la réponse : en tâche de fond ─────────────────────────
+    // Le client a déjà tout ce qu'il lui faut dans la réponse JSON ci-dessous
+    // (pas relu depuis la base) — inutile de le faire attendre ces écritures,
+    // qui ne servent qu'à la PROCHAINE lecture d'historique. EdgeRuntime.waitUntil
+    // garantit que la tâche se termine même après l'envoi de la réponse HTTP.
+    const persistAssistantTurn = (async () => {
+      const { error: insertAssistantErr } = await supabase.from("tutor_messages").insert({
+        conversation_id: conversationId,
+        user_id: userId,
+        role: "assistant",
+        content_jp: replyJp,
+        content_fr: replyFr,
+        romaji: romaji || null,
+        correction: correction || null,
+      });
+      if (insertAssistantErr) {
+        console.error("[tutor-chat] échec sauvegarde réponse:", insertAssistantErr);
+      }
 
-    // Titre auto de la conversation au tout premier échange
-    if (!truncated && history.length === 0) {
-      const scenario = TUTOR_SCENARIOS.find((s) => s.id === scenarioId);
-      const titre = scenario ? scenario.titre : replyFr.slice(0, 40);
-      await supabase.from("tutor_conversations").update({ titre }).eq("id", conversationId);
-    }
+      // Titre auto de la conversation au tout premier échange
+      if (!truncated && history.length === 0) {
+        const scenario = TUTOR_SCENARIOS.find((s) => s.id === scenarioId);
+        const titre = scenario ? scenario.titre : replyFr.slice(0, 40);
+        const { error: titleErr } = await supabase.from("tutor_conversations").update({ titre }).eq("id", conversationId);
+        if (titleErr) console.error("[tutor-chat] échec mise à jour du titre:", titleErr);
+      }
+    })().catch((e) => console.error("[tutor-chat] tâche de fond en échec:", e));
+    // @ts-ignore — global fourni par le runtime Supabase Edge Functions (Deno Deploy)
+    EdgeRuntime.waitUntil(persistAssistantTurn);
 
     return new Response(
       JSON.stringify({
