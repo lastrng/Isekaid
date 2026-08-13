@@ -6,7 +6,7 @@ import LIEU_EDITORIAL from "./lieu-editorial.json";
 import * as sfx from "./sfx.js";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback } from "./supabase";
-import { HomeDailyCard, DailyFeedScreen } from "./DailyFeed";
+import { HomeDailyCard, DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
@@ -285,13 +285,16 @@ function Petals() {
 }
 
 // ─── Reusable primitives ─────────────────────────────────────────────────────
-function SH({C,kanji,title,sub,onRefresh}){
+function SH({C,kanji,title,sub,onRefresh,badge}){
   return(
     <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",marginBottom:13,marginTop:8}}>
       <div style={{display:"flex",alignItems:"center",gap:10}}>
         <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:C.red,lineHeight:1}}>{kanji}</div>
         <div>
-          <div style={{fontSize:14,fontWeight:500,color:C.text,lineHeight:1.2}}>{title}</div>
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            <span style={{fontSize:14,fontWeight:500,color:C.text,lineHeight:1.2}}>{title}</span>
+            {badge && <span aria-label="Nouveau" style={{width:7,height:7,borderRadius:"50%",background:C.red,flexShrink:0}}/>}
+          </div>
           <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginTop:1}}>{sub}</div>
         </div>
       </div>
@@ -587,14 +590,20 @@ function LieuSpotlightDetail({C, lieu, onClose, isFav, toggleFav}){
   );
 }
 
-function DailyPlaceSpotlight({C, db, today, isFav, toggleFav, onOpenLieu}){
+// Lieu du jour — même sélection déterministe que DailyPlaceSpotlight, extraite
+// ici pour être réutilisable (ResumeCard, badge "Nouveau") sans dupliquer la logique.
+function getTodaysLieu(db, today){
   const lieux = db?.lieux || [];
   if(!lieux.length) return null;
   // Priorité aux lieux qui ont une vidéo (meilleure expérience) ; repli sur
   // tous les lieux si aucun n'a de vidéo (ne devrait pas arriver en pratique).
   const withVideo = lieux.filter(l => VIDEO_MAP[l.id]?.video);
   const pool = withVideo.length ? withVideo : lieux;
-  const lieu = pickDaily(pool, today, "lieu-spotlight");
+  return pickDaily(pool, today, "lieu-spotlight");
+}
+
+function DailyPlaceSpotlight({C, db, today, lieu: lieuProp, isNew, isFav, toggleFav, onOpenLieu}){
+  const lieu = lieuProp || getTodaysLieu(db, today);
   if(!lieu) return null;
 
   const video = VIDEO_MAP[lieu.id]?.video || null;
@@ -603,7 +612,7 @@ function DailyPlaceSpotlight({C, db, today, isFav, toggleFav, onOpenLieu}){
 
   return (
     <div style={{marginBottom:28}}>
-      <SH C={C} kanji="景" title="Lieu du jour" sub="Un endroit à découvrir aujourd'hui"/>
+      <SH C={C} kanji="景" title="Lieu du jour" sub="Un endroit à découvrir aujourd'hui" badge={isNew}/>
       <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(lieu)} style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.border}`,position:"relative",background:C.s1}}>
         <div style={{position:"relative",width:"100%",height:220,background:C.s2}}>
           {video ? (
@@ -678,6 +687,35 @@ function StreakSection({C,streak,isPremium}){
           <div style={{height:"100%",width:`${progress*100}%`,background:C.red,borderRadius:2,transition:"width .5s ease"}}/>
         </div>
       </div>}
+      {/* Paliers de streak (3/7/14/30/100 jours) — indépendants du déblocage de contenu */}
+      {(()=>{
+        const msNext = nextStreakMilestone(count);
+        const nodes = [];
+        STREAK_MILESTONES.forEach((m,i)=>{
+          const reached = count>=m.day;
+          nodes.push(
+            <div key={`m-${m.day}`} title={`${m.label} · ${m.day} jours`} style={{
+              width:30,height:30,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",
+              fontSize:14,background:reached?"rgba(201,70,61,0.14)":C.s2,
+              border:`1.5px solid ${reached?C.red:C.border}`,opacity:reached?1:0.55,
+              transition:"all .3s ease",
+            }}>{m.emoji}</div>
+          );
+          if(i<STREAK_MILESTONES.length-1){
+            const segDone = count>=STREAK_MILESTONES[i+1].day;
+            nodes.push(<div key={`c-${m.day}`} style={{flex:1,height:2,minWidth:6,background:segDone?C.red:C.border,borderRadius:1,transition:"background .3s ease"}}/>);
+          }
+        });
+        return (
+          <div style={{marginBottom:16}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+              <span style={{fontSize:10,color:C.t3,letterSpacing:".1em",textTransform:"uppercase"}}>🏅 Paliers de streak</span>
+              {msNext && <span style={{fontSize:11,color:C.t3}}>{msNext.emoji} {msNext.day}j</span>}
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:4}}>{nodes}</div>
+          </div>
+        );
+      })()}
       {/* Weekly view — fill the last `count` days up to today */}
       <div style={{display:"flex",gap:5,justifyContent:"space-between",marginBottom:18}}>
         {days.map((lbl,i)=>{
@@ -888,6 +926,75 @@ function SmartReminder({ C, reminder, onGo, onDismiss }){
   );
 }
 
+// ─── "Reprendre où j'en étais" ─────────────────────────────────────────────────
+// Priorité : mission du jour incomplète > Japon du jour non ouvert aujourd'hui
+// > voyage en préparation (checklist incomplète) > rien à reprendre (état "fait").
+function ResumeCard({C, mission, latestFeed, today, onGoTab, onTask}){
+  const todaysMissions = mission ? dailyMissions(mission.day || today) : [];
+  const doneIds = mission?.done || [];
+  const pending = todaysMissions.filter(t=>!doneIds.includes(t.id));
+
+  const feedUnseen = !!latestFeed && isFeedNew(latestFeed.id);
+
+  const activeTrip = loadTrips().find(t=>{
+    const cl = t.checklist || [];
+    return cl.length>0 && cl.some(c=>!c.fait);
+  });
+
+  let state = null;
+  if(pending.length){
+    const t = pending[0];
+    state = {
+      emoji: t.emoji,
+      title: "Reprends ta mission du jour",
+      text: t.label,
+      onGo: ()=> onGoTab && onGoTab(MISSION_TARGET_TAB[t.trigger] || "home"),
+    };
+  } else if(feedUnseen){
+    state = {
+      emoji: "🇯🇵",
+      title: "Le Japon du jour t'attend",
+      text: latestFeed.title || "Une nouvelle découverte du jour.",
+      onGo: ()=>{ onTask && onTask("daily"); onGoTab && onGoTab("daily"); },
+    };
+  } else if(activeTrip){
+    const cl = activeTrip.checklist || [];
+    const doneCount = cl.filter(c=>c.fait).length;
+    state = {
+      emoji: "🧳",
+      title: `Continue la préparation de « ${activeTrip.titre} »`,
+      text: `${doneCount}/${cl.length} préparatifs cochés`,
+      onGo: ()=> onGoTab && onGoTab("voyage"),
+    };
+  }
+
+  if(!state){
+    return (
+      <div style={{marginBottom:22,padding:18,borderRadius:16,background:"rgba(78,128,96,0.08)",border:"1px solid rgba(78,128,96,0.28)",animation:"fadeUp .4s ease"}}>
+        <div style={{display:"flex",alignItems:"center",gap:12}}>
+          <span style={{fontSize:26}}>✅</span>
+          <div>
+            <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:2}}>Tout est fait pour aujourd'hui</div>
+            <div style={{fontSize:12,color:C.t2,lineHeight:1.5}}>Reviens demain pour un nouveau lieu à découvrir et une nouvelle histoire du Japon 🌅</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div onClick={state.onGo} className="lift" style={{marginBottom:22,padding:"16px 18px",borderRadius:16,background:C.s1,border:`1px solid ${C.border}`,cursor:"pointer",display:"flex",alignItems:"center",gap:14,animation:"fadeUp .4s ease"}}>
+      <span style={{fontSize:30,flexShrink:0}}>{state.emoji}</span>
+      <div style={{flex:1,minWidth:0}}>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",textTransform:"uppercase",marginBottom:3}}>Reprendre où tu en étais</div>
+        <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:2}}>{state.title}</div>
+        <div style={{fontSize:12,color:C.t2,lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{state.text}</div>
+      </div>
+      <span style={{fontSize:14,color:C.t3,flexShrink:0}}>›</span>
+    </div>
+  );
+}
+
 function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu}){
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
@@ -907,6 +1014,15 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
   const rankLabel = {beginner:"Curious Tourist",intermediate:"Konbini Explorer",advanced:"Tokyo Wanderer"};
 
   const today = dayKey();
+
+  // Données du jour partagées par ResumeCard + section "Nouveau aujourd'hui"
+  // (un seul fetch du feed, une seule sélection du lieu du jour).
+  const todaysLieu = useMemo(()=>getTodaysLieu(db, today), [db, today]);
+  const { items: feedItems } = useDailyFeed(1);
+  const latestFeed = feedItems && feedItems[0];
+  const lieuIsNew = isLieuNew(today);
+  const feedIsNew = !!latestFeed && isFeedNew(latestFeed.id);
+  const handleOpenLieu = (l)=>{ markLieuSeen(today); onOpenLieu && onOpenLieu(l); };
 
   const seasonKey = currentSeasonKey();
   const seasonAccent = SEASON_ACCENT[seasonKey];
@@ -946,6 +1062,19 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           <span style={{fontSize:13,color:C.t3}}>Rechercher un mot, plat, tradition…</span>
         </div>
 
+        {/* 1. Reprendre où j'en étais */}
+        <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
+
+        {/* 2. Streak & paliers */}
+        <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
+        <StreakSection C={C} streak={streak} isPremium={isPremium}/>
+
+        {/* 3. Nouveau aujourd'hui — lieu du jour + Japon du jour, regroupés */}
+        <SH C={C} kanji="新" title="Nouveau aujourd'hui" sub="Fraîchement arrivé" badge={feedIsNew || lieuIsNew}/>
+        <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>
+        <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
+
+        {/* 4. Reste du contenu existant */}
         {/* Rappel intelligent (streak en danger / défi / déblocage imminent) */}
         {!reminderDismissed && (()=>{
           let remindersOn = true;
@@ -962,7 +1091,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           const allDone = done.length >= todays.length;
           const pct = Math.round((done.length/todays.length)*100);
           // Onglet cible selon le trigger de la mission
-          const targetFor = (tr)=>({daily:"home",kana:"learn",review:"learn",comp:"learn",path:"learn",fav:"explore",scenario:"scenarios",explore:"explore"}[tr]||"home");
+          const targetFor = (tr)=> MISSION_TARGET_TAB[tr] || "home";
           return(
             <div style={{marginBottom:24,padding:"16px 18px",background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`,borderRadius:16}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
@@ -992,9 +1121,6 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
             </div>
           );
         })()}
-
-        {/* Lieu du jour — vidéo (si dispo) ou photo */}
-        <DailyPlaceSpotlight C={C} db={db} today={today} isFav={isFav} toggleFav={toggleFav} onOpenLieu={onOpenLieu}/>
 
         {/* Recommandé pour toi (selon les intérêts d'onboarding) */}
         {db && user?.why?.length>0 && (()=>{
@@ -1041,13 +1167,6 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
             </div>
           );
         })()}
-
-        {/* Streak & Fidélisation */}
-        <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
-        <StreakSection C={C} streak={streak} isPremium={isPremium}/>
-
-        {/* Découvrir — Le Japon du jour */}
-        <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
       </div>
     </div>
   );
@@ -2203,7 +2322,7 @@ const KATAKANA_COMBO = [
 function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
 // ── Flashcard mode ──
-function FlashcardMode({C, deck, onExit}){
+function FlashcardMode({C, deck, onExit, onRecord}){
   const [cards] = useState(()=>shuffle(deck));
   const [idx,setIdx] = useState(0);
   const [flipped,setFlipped] = useState(false);
@@ -2216,6 +2335,7 @@ function FlashcardMode({C, deck, onExit}){
   const SWIPE_THRESHOLD = 90;
 
   const commit = (gotIt)=>{
+    if(onRecord && card) onRecord(card.k, gotIt);
     // fly the card off-screen then advance
     setDrag({x: gotIt?500:-500, active:false});
     if(gotIt) setKnown(k=>k+1);
@@ -2452,7 +2572,7 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
 }
 
 // ── Quiz mode ──
-function QuizMode({C, deck, onExit}){
+function QuizMode({C, deck, onExit, onRecord}){
   const [cards] = useState(()=>shuffle(deck));
   const [idx,setIdx] = useState(0);
   const [score,setScore] = useState(0);
@@ -2469,7 +2589,9 @@ function QuizMode({C, deck, onExit}){
   const choose = (opt)=>{
     if(picked) return;
     setPicked(opt.r);
-    if(opt.r===card.r){ setScore(s=>s+1); sfx.playCorrect(); } else sfx.playWrong();
+    const correct = opt.r===card.r;
+    if(onRecord && card) onRecord(card.k, correct);
+    if(correct){ setScore(s=>s+1); sfx.playCorrect(); } else sfx.playWrong();
     setTimeout(()=>{ setPicked(null); setIdx(i=>i+1); }, 850);
   };
 
@@ -4266,7 +4388,12 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
         .checklist { margin-top: 24px; page-break-inside: avoid; }
         .footer { margin-top: 30px; padding-top: 12px; border-top: 1px solid #eee; color: #999; font-size: 11px; text-align: center; }
         .kanji { color:#C9463D; font-size: 20px; }
+        .back-bar { position: sticky; top: 0; display: flex; justify-content: flex-end; padding: 10px 0 16px; background: #fff; }
+        .back-btn { border: 1px solid #ddd; background: #fff; color: #1C1410; font-family: inherit; font-size: 13px; padding: 8px 16px; border-radius: 20px; cursor: pointer; }
+        .back-btn:hover { background: #f5f5f5; }
+        @media print { .back-bar { display: none; } }
       </style></head><body>
+      <div class="back-bar no-print"><button class="back-btn" onclick="window.close()">✕ Fermer et revenir à l'app</button></div>
       <div class="header"><h1><span class="kanji">異</span> ${trip.titre}</h1>
       <div class="sub">${trip.jours.length} jour${trip.jours.length>1?"s":""} · ${villesNoms}</div></div>
       ${joursHTML}${clHTML}
@@ -5544,6 +5671,8 @@ const MISSION_POOL = [
   { id:"read_comp",   trigger:"comp",     emoji:"📝", label:"Faire une compréhension",       hint:"Apprendre · Compréhension" },
   { id:"path_step",   trigger:"path",     emoji:"🗼", label:"Avancer dans le parcours Tokyo",hint:"Apprendre · Parcours" },
 ];
+// Onglet cible selon le trigger d'une mission (mission du jour + ResumeCard)
+const MISSION_TARGET_TAB = {daily:"home",kana:"learn",review:"learn",comp:"learn",path:"learn",fav:"explore",scenario:"scenarios",explore:"explore"};
 
 // Tire 3 missions du jour de façon déterministe (même trio toute la journée,
 // change chaque jour). Graine FNV-1a + xorshift pour une bonne dispersion.
@@ -5582,11 +5711,26 @@ function loadStreak(){
   try { const raw=localStorage.getItem(STREAK_KEY); return raw?JSON.parse(raw):null; }
   catch { return null; }
 }
+// ─── Paliers de streak (micro-récompense visuelle, indépendante des
+// déblocages de contenu de UNLOCK_SCHEDULE) — réutilise la modale
+// DailyWelcome existante (champ `milestone`) pour la célébration.
+const STREAK_MILESTONES = [
+  { day:3,   label:"3 jours d'affilée",     emoji:"🔥" },
+  { day:7,   label:"1 semaine complète",    emoji:"⭐" },
+  { day:14,  label:"2 semaines de suite",   emoji:"🎖️" },
+  { day:30,  label:"1 mois de régularité",  emoji:"🏅" },
+  { day:100, label:"100 jours, légendaire", emoji:"🏆" },
+];
+function nextStreakMilestone(count){
+  return STREAK_MILESTONES.find(m=>m.day>count) || null;
+}
+
 // Returns { count, best, last, freezes, lastFreezeRecharge } updated for "today"
 // Streak consécutif avec 1 joker rechargeable (1 tous les 7 jours actifs).
 function touchStreak(){
   const today = dayKey();
   let s = loadStreak();
+  const prevCount = s?.count || 0;
   if(!s || !s.last){
     s = { count:1, best:1, last:today, freezes:1, freezeBase:0 };
   } else if(s.last === today){
@@ -5614,12 +5758,29 @@ function touchStreak(){
     s.freezeBase = s.count;
   }
   if(s.freezes === undefined) s.freezes = 1;
+  // Palier franchi aujourd'hui (compteur qui vient de changer + tombe pile sur un palier)
+  s.milestone = (s.count !== prevCount && STREAK_MILESTONES.find(m=>m.day===s.count)) || null;
   try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
   return {...s};
 }
 function saveStreak(s){
   try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
 }
+
+// ─── Contenu "Nouveau aujourd'hui" — pastille qui disparaît une fois consulté ──
+// Persistance locale (localStorage, comme le reste de l'app) de la dernière
+// consultation : dernier item app_feed ouvert, dernier jour où le lieu du
+// jour a été consulté.
+const SEEN_KEY = "isekaid_seen_v1";
+function loadSeen(){
+  try { const raw=localStorage.getItem(SEEN_KEY); return raw?JSON.parse(raw):{}; }
+  catch { return {}; }
+}
+function saveSeen(s){ try { localStorage.setItem(SEEN_KEY, JSON.stringify(s)); } catch {} }
+function isFeedNew(latestId){ return !!latestId && loadSeen().feedId !== latestId; }
+function markFeedSeen(latestId){ if(!latestId) return; saveSeen({...loadSeen(), feedId: latestId}); }
+function isLieuNew(today){ return loadSeen().lieuDate !== today; }
+function markLieuSeen(today){ saveSeen({...loadSeen(), lieuDate: today}); }
 
 // ─── Progression : déblocages & XP ────────────────────────────────────────────
 const UNLOCK_KEY = "isekaid_unlocks_v1";
@@ -5854,7 +6015,7 @@ export default function IsekaidApp(){
         const s = touchStreak();
         setStreak(s);
         setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
-        if(s.gainedKey || s.frozenUsed) setWelcomeQueued(true);
+        if(s.gainedKey || s.frozenUsed || s.milestone) setWelcomeQueued(true);
       }
       saveMission(m);
       return m;

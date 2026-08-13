@@ -30,8 +30,22 @@ function relativeDay(iso){
   return formatDate(iso);
 }
 
-/* Petit hook de chargement partagé */
-function useDailyFeed(limit){
+/* Pastille "Nouveau" — dernier item app_feed consulté, persisté en local
+   (même clé "isekaid_seen_v1" que le reste de l'app, voir App.jsx pour le
+   pendant "lieu du jour" utilisé par ResumeCard). */
+const SEEN_KEY = "isekaid_seen_v1";
+function loadSeen(){
+  try { const raw = localStorage.getItem(SEEN_KEY); return raw ? JSON.parse(raw) : {}; }
+  catch { return {}; }
+}
+function markFeedSeen(id){
+  if(!id) return;
+  try { localStorage.setItem(SEEN_KEY, JSON.stringify({ ...loadSeen(), feedId: id })); } catch {}
+}
+
+/* Petit hook de chargement partagé (exporté : réutilisé par HomeScreen
+   pour le bloc "Reprendre où j'en étais" et le badge "Nouveau") */
+export function useDailyFeed(limit){
   const [items, setItems] = useState(null);   // null = en cours, [] = vide
   const [error, setError] = useState(false);
   useEffect(() => {
@@ -56,13 +70,14 @@ function useDailyFeed(limit){
 export function HomeDailyCard({ C, onOpen }){
   const { items } = useDailyFeed(1);
   const latest = items && items[0];
+  const isNew = !!latest && loadSeen().feedId !== latest.id;
 
   const surface = C.s1 || C.navBg || "#161f38";
   const border = C.border || "rgba(255,255,255,.12)";
 
   return (
     <div
-      onClick={onOpen}
+      onClick={() => { if(latest) markFeedSeen(latest.id); onOpen && onOpen(); }}
       style={{
         cursor: "pointer",
         borderRadius: 18,
@@ -95,8 +110,11 @@ export function HomeDailyCard({ C, onOpen }){
         <div style={{ fontSize: 10, color: C.gold, letterSpacing: ".14em", marginBottom: 6, textTransform: "uppercase" }}>
           {latest ? relativeDay(latest.published_at || latest.created_at) : "Nouveau chaque matin"}
         </div>
-        <div style={{ fontSize: 16, fontWeight: 800, color: C.text, lineHeight: 1.25 }}>
-          {latest ? latest.title : "Une découverte japonaise chaque jour"}
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ fontSize: 16, fontWeight: 800, color: C.text, lineHeight: 1.25 }}>
+            {latest ? latest.title : "Une découverte japonaise chaque jour"}
+          </div>
+          {isNew && <span aria-label="Nouveau" style={{ width: 7, height: 7, borderRadius: "50%", background: C.red, flexShrink: 0 }}/>}
         </div>
         {latest?.subtitle && (
           <div style={{ fontSize: 13, color: C.t2 || C.t3, marginTop: 4 }}>{latest.subtitle}</div>
