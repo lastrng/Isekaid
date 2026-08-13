@@ -17,7 +17,7 @@ import { SpeakButton } from "./tts";
 
 export const DISCOVERY_UNLOCK_DAYS = [1,2,3,5,7,10,12,15,18,20,22,25,27,30];
 
-function requiredDay(index){
+export function requiredDay(index){
   return index < DISCOVERY_UNLOCK_DAYS.length ? DISCOVERY_UNLOCK_DAYS[index] : 30;
 }
 
@@ -29,6 +29,69 @@ export function useExploreDiscoveries(){
     return ()=>{ alive = false; };
   },[]);
   return items;
+}
+
+// La dernière découverte débloquée par le streak actuel — c'est celle-là
+// qu'on tease dans "Nouveau aujourd'hui" sur l'accueil (App.jsx), pas
+// forcément la plus récemment générée : le déblocage est personnel (streak),
+// pas calendaire, contrairement au reste de la section.
+export function useLatestUnlockedDiscovery(streak, isPremium){
+  const items = useExploreDiscoveries();
+  if(!items || items.length === 0) return null;
+  const bestStreak = Math.max(streak?.count||0, streak?.best||0);
+  let unlockedCount = 0;
+  for(let i=0;i<items.length;i++){
+    if(isPremium || bestStreak >= requiredDay(i)) unlockedCount = i+1;
+    else break;
+  }
+  return unlockedCount > 0 ? items[unlockedCount-1] : null;
+}
+
+// Pastille "Nouveau" — même convention que le reste de l'app (App.jsx :
+// isFeedNew/isLieuNew, DailyFeed.jsx : isFeedNew), clé localStorage partagée
+// "isekaid_seen_v1", réimplémentée localement comme dans DailyFeed.jsx plutôt
+// que de coupler les fichiers pour un simple accès localStorage.
+const SEEN_KEY = "isekaid_seen_v1";
+function loadSeen(){
+  try { const raw = localStorage.getItem(SEEN_KEY); return raw ? JSON.parse(raw) : {}; }
+  catch { return {}; }
+}
+function saveSeen(s){ try { localStorage.setItem(SEEN_KEY, JSON.stringify(s)); } catch {} }
+export function isDiscoveryNew(slug){ return !!slug && loadSeen().discoverySlug !== slug; }
+export function markDiscoverySeen(slug){ if(!slug) return; saveSeen({...loadSeen(), discoverySlug: slug}); }
+
+// ─── Carte teaser pour l'accueil — habillage repris de HomeDailyCard ───────
+// Usage : <DiscoveryTeaserCard C={C} discovery={d} isNew={isNew} onOpen={()=>onGoTab("explore")}/>
+export function DiscoveryTeaserCard({C, discovery, isNew, onOpen}){
+  if(!discovery) return null;
+  const surface = C.s1 || "#161f38";
+  const border = C.border || "rgba(255,255,255,.12)";
+  return (
+    <div
+      onClick={()=>{ markDiscoverySeen(discovery.slug); onOpen && onOpen(); }}
+      style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${border}`,background:surface,marginBottom:18,position:"relative"}}
+    >
+      {discovery.image_url && (
+        <div style={{position:"relative",width:"100%",aspectRatio:"16 / 9",background:C.bg}}>
+          <img src={discovery.image_url} alt={discovery.title||"Découverte du jour"} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+          <div style={{position:"absolute",top:10,left:10,background:"rgba(0,0,0,.55)",backdropFilter:"blur(4px)",color:"#fff",fontSize:10,fontWeight:700,letterSpacing:".12em",padding:"5px 10px",borderRadius:999}}>
+            🎴 DÉCOUVERTE DU JOUR
+          </div>
+        </div>
+      )}
+      <div style={{padding:"14px 16px"}}>
+        {!discovery.image_url && (
+          <div style={{fontSize:10,color:C.gold,letterSpacing:".14em",marginBottom:6,textTransform:"uppercase"}}>🎴 DÉCOUVERTE DU JOUR</div>
+        )}
+        <div style={{display:"flex",alignItems:"center",gap:6}}>
+          <div style={{fontSize:16,fontWeight:800,color:C.text,lineHeight:1.25}}>{discovery.title}</div>
+          {isNew && <span aria-label="Nouveau" style={{width:7,height:7,borderRadius:"50%",background:C.gold,flexShrink:0}}/>}
+        </div>
+        {discovery.subtitle && <div style={{fontSize:13,color:C.t2||C.t3,marginTop:4}}>{discovery.subtitle}</div>}
+        <div style={{fontSize:12,color:C.gold,fontWeight:600,marginTop:10}}>Découvrir →</div>
+      </div>
+    </div>
+  );
 }
 
 export function DiscoveriesScreen({C, streak, isPremium, onBack}){

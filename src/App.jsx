@@ -9,7 +9,7 @@ import { HomeDailyCard, DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 import { speakJP, SpeakButton } from "./tts";
 import { TutorEntryCard, TutorScreen } from "./Tutor";
-import { DiscoveriesScreen } from "./ExploreDiscoveries";
+import { DiscoveriesScreen, useLatestUnlockedDiscovery, DiscoveryTeaserCard, isDiscoveryNew } from "./ExploreDiscoveries";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -1057,6 +1057,11 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
   const lieuIsNew = isLieuNew(today);
   const feedIsNew = !!latestFeed && isFeedNew(latestFeed.id);
   const handleOpenLieu = (l)=>{ markLieuSeen(today); onOpenLieu && onOpenLieu(l); };
+  // Découverte Explorer débloquée par le streak (pas calendaire comme le
+  // reste de la section, mais "fraîchement arrivée" du point de vue de
+  // l'utilisateur — voir ExploreDiscoveries.jsx).
+  const latestDiscovery = useLatestUnlockedDiscovery(streak, isPremium);
+  const discoveryIsNew = !!latestDiscovery && isDiscoveryNew(latestDiscovery.slug);
 
   const seasonKey = currentSeasonKey();
   const seasonAccent = SEASON_ACCENT[seasonKey];
@@ -1151,11 +1156,12 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
         {/* 4. Défi de la semaine */}
         <WeeklyChallengeCard C={C}/>
 
-        {/* 5. Nouveau aujourd'hui — lieu du jour + Japon du jour, regroupés */}
+        {/* 5. Nouveau aujourd'hui — lieu du jour + Japon du jour + découverte débloquée */}
         <SeasonBanner C={C} acc={seasonAccent}/>
-        <SH C={C} kanji="新" title="Nouveau aujourd'hui" sub="Fraîchement arrivé" badge={feedIsNew || lieuIsNew}/>
+        <SH C={C} kanji="新" title="Nouveau aujourd'hui" sub="Fraîchement arrivé" badge={feedIsNew || lieuIsNew || discoveryIsNew}/>
         <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>
         <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
+        {latestDiscovery && <DiscoveryTeaserCard C={C} discovery={latestDiscovery} isNew={discoveryIsNew} onOpen={()=>onGoTab("explore")}/>}
 
         {/* 6. Streak — bloc informatif (pas d'alerte ici, voir 1.) */}
         <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
