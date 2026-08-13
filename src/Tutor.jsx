@@ -13,15 +13,24 @@ import { SpeakButton } from "./tts";
 // Niveau estimé à partir de ce que l'utilisateur a déjà accompli ailleurs
 // dans l'app (maîtrise SRS des kana, scénarios de dialogue réussis, meilleur
 // streak) — transmis à l'Edge Function à chaque appel pour adapter le ton
-// (proportion FR/JP, romaji, longueur des phrases). Pas de mesure directe du
-// niveau réel, juste un signal d'engagement raisonnable.
-export function estimateNiveau(kanaProgress, scenProgress, streak){
+// (proportion FR/JP, romaji, longueur des phrases).
+const NIVEAU_ORDER = ["débutant", "faux-débutant", "intermédiaire"];
+// Niveau déclaré à l'onboarding (LEVELS: beginner/intermediate/advanced,
+// App.jsx) → plancher du niveau du tuteur. Sans ce plancher, quelqu'un qui
+// se dit "Avancé" au premier lancement est traité comme grand débutant tant
+// que le comportement réel (SRS/scénarios/streak) n'a pas eu le temps de le
+// confirmer — parfois plusieurs semaines.
+const SELF_REPORT_FLOOR = { beginner: "débutant", intermediate: "faux-débutant", advanced: "intermédiaire" };
+export function estimateNiveau(kanaProgress, scenProgress, streak, selfReportedLevel){
   const mastered = Object.values(kanaProgress || {}).filter(v=>(v.box||0)>=5).length;
   const scenDone = (scenProgress?.done || []).length;
   const best = streak?.best || 0;
-  if(mastered >= 60 || scenDone >= 5) return "intermédiaire";
-  if(mastered >= 20 || scenDone >= 2 || best >= 14) return "faux-débutant";
-  return "débutant";
+  let behavioral = "débutant";
+  if(mastered >= 60 || scenDone >= 5) behavioral = "intermédiaire";
+  else if(mastered >= 20 || scenDone >= 2 || best >= 14) behavioral = "faux-débutant";
+  const floor = SELF_REPORT_FLOOR[selfReportedLevel];
+  if(!floor) return behavioral;
+  return NIVEAU_ORDER[Math.max(NIVEAU_ORDER.indexOf(behavioral), NIVEAU_ORDER.indexOf(floor))];
 }
 const NIVEAU_LABEL = { "débutant":"Débutant", "faux-débutant":"Faux-débutant", "intermédiaire":"Intermédiaire" };
 
@@ -45,11 +54,11 @@ export function TutorEntryCard({C, onOpen}){
 }
 
 // ─── Écran principal : sélection de scénario / historique / chat ──────────
-export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isPremium, onOpenPremium, onBack}){
+export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isPremium, onOpenPremium, selfReportedLevel, onBack}){
   const [view, setView] = useState("picker"); // "picker" | "history" | "chat"
   const [activeScenarioId, setActiveScenarioId] = useState(null);
   const [activeConversationId, setActiveConversationId] = useState(null);
-  const niveau = estimateNiveau(kanaProgress, scenProgress, streak);
+  const niveau = estimateNiveau(kanaProgress, scenProgress, streak, selfReportedLevel);
 
   const openScenario = (scenarioId)=>{
     setActiveScenarioId(scenarioId);

@@ -136,14 +136,29 @@ const INTEREST_MAP = {
   lifestyle: {keys:["vie_quotidienne","culture"],   label:"Lifestyle",      emoji:"🍵"},
   gastro:    {keys:["repas"],                       label:"Gastronomie",    emoji:"🍣"},
 };
-// Construit une recommandation personnalisée (1 item) selon les intérêts de l'user
-function recommendForUser(db, why, today){
-  if(!db || !why || why.length===0) return null;
-  // Rassemble les catégories pertinentes
-  const cats = [...new Set(why.flatMap(w => INTEREST_MAP[w]?.keys || []))].filter(k => db[k]?.length);
-  if(cats.length===0) return null;
+// Objectif déclaré à l'onboarding (voir GOALS) → catégories pertinentes.
+// Même liste de clés que INTEREST_MAP (les 7 catégories supportées par le
+// bloc "Recommandé pour toi" de HomeScreen).
+const GOAL_MAP = {
+  travel: {keys:["regions","vie_quotidienne","situations"]},
+  live:   {keys:["vie_quotidienne","situations","culture"]},
+  learn:  {keys:["expressions","situations"]},
+  imm:    {keys:["traditions","culture"]},
+};
+// Construit une recommandation personnalisée (1 item) selon les centres
+// d'intérêt ET l'objectif déclarés à l'onboarding. Une catégorie qui recoupe
+// les deux signaux a deux fois plus de chances d'être choisie un jour donné —
+// les réponses se renforcent plutôt que de simplement s'empiler (pas de
+// dédoublonnage volontaire : plus une catégorie est confirmée par plusieurs
+// réponses, plus son poids est élevé dans le tirage du jour).
+function recommendForUser(db, why, goal, today){
+  if(!db) return null;
+  const whyCats = (why||[]).flatMap(w => INTEREST_MAP[w]?.keys || []);
+  const goalCats = GOAL_MAP[goal]?.keys || [];
+  const pool = [...whyCats, ...goalCats].filter(k => db[k]?.length);
+  if(pool.length===0) return null;
   // Choisit une catégorie du jour (déterministe), puis un item du jour dedans
-  const cat = cats[hashStr(today+":reco-cat") % cats.length];
+  const cat = pool[hashStr(today+":reco-cat") % pool.length];
   const item = pickDaily(db[cat], today, "reco-item");
   if(!item) return null;
   return { cat, item };
@@ -1169,7 +1184,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 
         {/* 7. Recommandé pour toi (selon les intérêts d'onboarding) */}
         {db && user?.why?.length>0 && (()=>{
-          const reco = recommendForUser(db, user.why, today);
+          const reco = recommendForUser(db, user.why, user.goal, today);
           if(!reco) return null;
           const {cat, item} = reco;
           // Titre + sous-titre + contenu complet selon la catégorie
@@ -4824,6 +4839,7 @@ const PREMIUM_PERKS = [
   { emoji:"🚫", title:"Sans publicité", desc:"Profite de l'app sans aucune interruption." },
   { emoji:"🗺️", title:"Voyages illimités", desc:"Planifie autant de voyages que tu veux, plus de limite." },
   { emoji:"🔓", title:"Tout le contenu débloqué", desc:"Accède immédiatement à toutes les sections, sans attendre les paliers de streak." },
+  { emoji:"🧑‍🏫", title:"Tuteur illimité", desc:"Discute sans limite avec ton tuteur de japonais, au lieu des 8 messages gratuits par jour." },
   { emoji:"📍", title:"Lieux personnalisés", desc:"Ajoute tes propres adresses à tes itinéraires." },
 ];
 
@@ -6206,6 +6222,13 @@ export default function IsekaidApp(){
   // true si la vérification de session a échoué (typiquement : pas de réseau).
   // Sert à ne pas bloquer un utilisateur déjà connu (profil local présent) derrière l'écran de connexion.
   const [sessionCheckFailed,setSessionCheckFailed]=useState(false);
+  // true une fois qu'on a tenté de récupérer le profil cloud pour la session
+  // courante (succès ou échec). Sert à ne jamais router vers "onboarding"
+  // avant d'avoir vérifié si un profil existe déjà côté cloud — sinon un
+  // compte existant sans profil local (nouvel appareil, réinstallation) se
+  // fait renvoyer au questionnaire à chaque connexion (voir les effets de
+  // routage plus bas).
+  const [cloudProfileChecked,setCloudProfileChecked]=useState(false);
 
   // Listen for auth changes
   useEffect(()=>{
@@ -6238,31 +6261,46 @@ export default function IsekaidApp(){
     });
   },[session?.user?.id]);
 
-  // When logged in: pull cloud progress (merge into local state)
+  // When logged in: pull cloud progress (merge into local state), PUIS route
+  // vers app/onboarding — c'est le seul endroit qui décide, une fois qu'on
+  // sait avec certitude si un profil cloud existe. Les effets de routage
+  // plus bas attendent cloudProfileChecked avant de trancher eux-mêmes.
   useEffect(()=>{
     if(!session?.user) return;
-    fetchProgress(session.user.id).then(p=>{
-      if(!p) return;
-      if(p.streak && Object.keys(p.streak).length){ setStreak(p.streak); saveStreak(p.streak); }
-      if(p.unlocks && Object.keys(p.unlocks).length){ setUnlocks(p.unlocks); saveUnlocks(p.unlocks); }
-      if(p.scenarios && Object.keys(p.scenarios).length){ setScenProgress(p.scenarios); saveScenarioProgress(p.scenarios); }
-      if(Array.isArray(p.favorites) && p.favorites.length){ setFavs(p.favorites); saveFavs(p.favorites); }
-      if(p.kana_progress && Object.keys(p.kana_progress).length){ setKanaProgress(p.kana_progress); saveKanaProgress(p.kana_progress); }
-      if(p.profile && p.profile.name){ setUser(p.profile); saveProfile(p.profile); }
-      if(p.path && Array.isArray(p.path.completed)){ setPathProgress(p.path); savePathProgress(p.path); }
-      // Mission : ne charger depuis le cloud que si elle concerne le jour actuel.
-      // Une mission cloud périmée (autre jour) ne doit pas écraser celle d'aujourd'hui.
-      if(p.mission && p.mission.day === dayKey()){ setMission(p.mission); saveMission(p.mission); }
-      // Paramètres (thème, accent, script, parcours vu, premium)
-      const s = p.settings;
-      if(s){
-        if(typeof s.dark==="boolean"){ setDark(s.dark); saveTheme(s.dark); }
-        if(s.accent){ setAccent(s.accent); saveAccent(s.accent); }
-        if(s.script){ setScript(s.script); saveScript(s.script); }
-        if(s.tourSeen){ setTourDisabled(true); }
-        if(s.premium && s.premium.active){ setPremium(s.premium); savePremium(s.premium); }
-      }
-    });
+    let cancelled = false;
+    setCloudProfileChecked(false);
+    (async ()=>{
+      let resolvedUser = user;
+      try {
+        const p = await fetchProgress(session.user.id);
+        if(cancelled) return;
+        if(p){
+          if(p.streak && Object.keys(p.streak).length){ setStreak(p.streak); saveStreak(p.streak); }
+          if(p.unlocks && Object.keys(p.unlocks).length){ setUnlocks(p.unlocks); saveUnlocks(p.unlocks); }
+          if(p.scenarios && Object.keys(p.scenarios).length){ setScenProgress(p.scenarios); saveScenarioProgress(p.scenarios); }
+          if(Array.isArray(p.favorites) && p.favorites.length){ setFavs(p.favorites); saveFavs(p.favorites); }
+          if(p.kana_progress && Object.keys(p.kana_progress).length){ setKanaProgress(p.kana_progress); saveKanaProgress(p.kana_progress); }
+          if(p.profile && p.profile.name){ setUser(p.profile); saveProfile(p.profile); resolvedUser = p.profile; }
+          if(p.path && Array.isArray(p.path.completed)){ setPathProgress(p.path); savePathProgress(p.path); }
+          // Mission : ne charger depuis le cloud que si elle concerne le jour actuel.
+          // Une mission cloud périmée (autre jour) ne doit pas écraser celle d'aujourd'hui.
+          if(p.mission && p.mission.day === dayKey()){ setMission(p.mission); saveMission(p.mission); }
+          // Paramètres (thème, accent, script, parcours vu, premium)
+          const s = p.settings;
+          if(s){
+            if(typeof s.dark==="boolean"){ setDark(s.dark); saveTheme(s.dark); }
+            if(s.accent){ setAccent(s.accent); saveAccent(s.accent); }
+            if(s.script){ setScript(s.script); saveScript(s.script); }
+            if(s.tourSeen){ setTourDisabled(true); }
+            if(s.premium && s.premium.active){ setPremium(s.premium); savePremium(s.premium); }
+          }
+        }
+      } catch { /* hors-ligne/erreur réseau : on route avec ce qu'on a localement */ }
+      if(cancelled) return;
+      setCloudProfileChecked(true);
+      setScreen(s => (s==="auth" || s==="loading") ? (resolvedUser ? "app" : "onboarding") : s);
+    })();
+    return ()=>{ cancelled = true; };
   },[session?.user?.id]);
 
   // Push progress to cloud (debounced) whenever it changes and user is logged in
@@ -6283,6 +6321,7 @@ export default function IsekaidApp(){
     await signOut();
     await logoutRevenueCat();
     setSession(null);
+    setCloudProfileChecked(false);
     setScreen("auth");
   };
 
@@ -6332,26 +6371,36 @@ export default function IsekaidApp(){
       if(sessionCheckFailed && user){ setSkipAuth(true); setScreen("app"); return; }
       setScreen("auth"); return;
     }
+    if(session?.user && !user && !cloudProfileChecked){
+      // Session valide mais pas de profil local connu : on attend le fetch
+      // cloud avant de trancher, sinon un compte existant sans profil local
+      // (nouvel appareil, réinstallation) se fait renvoyer à l'onboarding
+      // par erreur — l'effet de chargement du profil cloud prendra le relais.
+      setScreen("loading"); return;
+    }
     setScreen(user ? "app" : "onboarding");
   };
 
-  // Si on était en "loading" (auth pas encore prête), on route dès qu'authChecked arrive
+  // Si on était en "loading" (auth pas encore prête, ou profil cloud pas
+  // encore vérifié), on route dès que c'est prêt.
   useEffect(()=>{
     if(authChecked && screen==="loading"){
       if(supabaseEnabled && !session && !skipAuth){
         if(sessionCheckFailed && user){ setSkipAuth(true); setScreen("app"); return; }
         setScreen("auth"); return;
       }
+      if(session?.user && !user && !cloudProfileChecked) return; // attend le fetch cloud
       setScreen(user ? "app" : "onboarding");
     }
-  },[authChecked, screen]);
+  },[authChecked, screen, session, user, cloudProfileChecked]);
 
   // Once a session arrives (e.g. Google redirect or email login), advance past auth
   useEffect(()=>{
     if(session?.user && screen==="auth"){
+      if(!user && !cloudProfileChecked){ setScreen("loading"); return; } // attend le fetch cloud
       setScreen(user ? "app" : "onboarding");
     }
-  },[session?.user, screen]);
+  },[session?.user, screen, user, cloudProfileChecked]);
 
   const skipAuthAndContinue = ()=>{
     setSkipAuth(true);
@@ -6443,7 +6492,7 @@ export default function IsekaidApp(){
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
-              {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onBack={()=>setTab("home")}/>}
+              {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} onBack={()=>setTab("home")}/>}
               </div>
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
