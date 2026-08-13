@@ -10,15 +10,19 @@ import { HomeDailyCard, DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
+// t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
+// La marge est très étroite sur le fond crème clair : t3 se rapproche
+// nécessairement de t2, la hiérarchie visuelle repose alors sur la taille/
+// graisse/majuscules (déjà le cas dans la plupart des usages de t3).
 const LIGHT = {
   bg:"#FAF7F2", s1:"#FFFFFF", s2:"#F3EDE3", s3:"#EAE2D6",
-  text:"#1C1410", t2:"#7A6858", t3:"#A89880",
+  text:"#1C1410", t2:"#7A6858", t3:"#816D5E",
   red:"#C9463D", gold:"#9E7A1A", green:"#3A6645", indigo:"#2E4374",
   border:"rgba(26,20,16,0.09)", navBg:"rgba(250,247,242,0.97)",
 };
 const DARK = {
   bg:"#0F0B08", s1:"#1A1410", s2:"#241C15", s3:"#2E231B",
-  text:"#F0E6D3", t2:"#9C8A74", t3:"#5E4E3C",
+  text:"#F0E6D3", t2:"#9C8A74", t3:"#8B7A66",
   red:"#C9463D", gold:"#C9A84C", green:"#4E8060", indigo:"#6B82C4",
   border:"rgba(240,230,211,0.07)", navBg:"rgba(15,11,8,0.97)",
 };
@@ -293,7 +297,7 @@ function SH({C,kanji,title,sub,onRefresh,badge}){
         <div>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
             <span style={{fontSize:14,fontWeight:500,color:C.text,lineHeight:1.2}}>{title}</span>
-            {badge && <span aria-label="Nouveau" style={{width:7,height:7,borderRadius:"50%",background:C.red,flexShrink:0}}/>}
+            {badge && <span aria-label="Nouveau" style={{width:7,height:7,borderRadius:"50%",background:C.gold,flexShrink:0}}/>}
           </div>
           <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginTop:1}}>{sub}</div>
         </div>
@@ -648,6 +652,11 @@ function DailyPlaceSpotlight({C, db, today, lieu: lieuProp, isNew, isFav, toggle
   );
 }
 
+// Phase 1 : bloc streak fusionné — purement informatif (le rouge d'alerte
+// reste réservé à HomeAlert). L'ancienne barre de progression "déblocage de
+// contenu" a été retirée : c'était un doublon visuel de la jauge de paliers
+// ci-dessous, l'info textuelle "Bientôt : X" suffit. Meilleur/joker relégués
+// en ligne secondaire discrète.
 function StreakSection({C,streak,isPremium}){
   const count = streak?.count || 0;
   const best  = streak?.best  || 0;
@@ -655,11 +664,9 @@ function StreakSection({C,streak,isPremium}){
   const dow=new Date().getDay(), todayIdx=dow===0?6:dow-1;
   const days=["L","M","M","J","V","S","D"];
 
-  // Prochain DÉBLOCAGE de contenu (bien plus motivant qu'un jalon abstrait)
+  // "Bientôt : X" reste purement textuel (sous le compteur) — la jauge visuelle
+  // de progression est désormais uniquement celle des paliers de streak.
   const nextUnlock = UNLOCK_SCHEDULE.find(u=>u.day>count);
-  const nextGoal = nextUnlock ? nextUnlock.day : (count || 1);
-  const prevUnlockDay = [...UNLOCK_SCHEDULE].reverse().find(u=>u.day<=count)?.day || 0;
-  const progress = nextUnlock ? Math.min((count-prevUnlockDay)/(nextGoal-prevUnlockDay),1) : 1;
 
   return(
     <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
@@ -674,20 +681,11 @@ function StreakSection({C,streak,isPremium}){
             {isPremium ? "✨ Premium — tout débloqué" : nextUnlock ? `Bientôt : ${nextUnlock.emoji} ${nextUnlock.label}` : "Tout débloqué ! 🎉"}
           </div>
         </div>
-        <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(201,70,61,0.08)",border:"1.5px solid rgba(201,70,61,0.22)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",animation:count>0?"glow 2.5s ease infinite":"none"}}>
+        <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(201,168,76,0.1)",border:"1.5px solid rgba(201,168,76,0.28)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",animation:count>0?"glow 2.5s ease infinite":"none"}}>
           <span style={{fontSize:22}}>🔥</span>
         </div>
       </div>
-      {!isPremium && nextUnlock && <div style={{marginBottom:16}}>
-        <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-          <span style={{fontSize:10,color:C.t3}}>{nextUnlock.emoji} {nextUnlock.label} au jour {nextGoal}</span>
-          <span style={{fontSize:11,color:C.red,fontWeight:500}}>{count} / {nextGoal}</span>
-        </div>
-        <div style={{height:4,background:C.s3,borderRadius:2,overflow:"hidden"}}>
-          <div style={{height:"100%",width:`${progress*100}%`,background:C.red,borderRadius:2,transition:"width .5s ease"}}/>
-        </div>
-      </div>}
-      {/* Paliers de streak (3/7/14/30/100 jours) — indépendants du déblocage de contenu */}
+      {/* Paliers de streak (3/7/14/30/100 jours) — jauge de progression mise en avant */}
       {(()=>{
         const msNext = nextStreakMilestone(count);
         const nodes = [];
@@ -696,14 +694,14 @@ function StreakSection({C,streak,isPremium}){
           nodes.push(
             <div key={`m-${m.day}`} title={`${m.label} · ${m.day} jours`} style={{
               width:30,height:30,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",
-              fontSize:14,background:reached?"rgba(201,70,61,0.14)":C.s2,
-              border:`1.5px solid ${reached?C.red:C.border}`,opacity:reached?1:0.55,
+              fontSize:14,background:reached?"rgba(201,168,76,0.16)":C.s2,
+              border:`1.5px solid ${reached?C.gold:C.border}`,opacity:reached?1:0.55,
               transition:"all .3s ease",
             }}>{m.emoji}</div>
           );
           if(i<STREAK_MILESTONES.length-1){
             const segDone = count>=STREAK_MILESTONES[i+1].day;
-            nodes.push(<div key={`c-${m.day}`} style={{flex:1,height:2,minWidth:6,background:segDone?C.red:C.border,borderRadius:1,transition:"background .3s ease"}}/>);
+            nodes.push(<div key={`c-${m.day}`} style={{flex:1,height:2,minWidth:6,background:segDone?C.gold:C.border,borderRadius:1,transition:"background .3s ease"}}/>);
           }
         });
         return (
@@ -717,7 +715,7 @@ function StreakSection({C,streak,isPremium}){
         );
       })()}
       {/* Weekly view — fill the last `count` days up to today */}
-      <div style={{display:"flex",gap:5,justifyContent:"space-between",marginBottom:18}}>
+      <div style={{display:"flex",gap:5,justifyContent:"space-between",marginBottom:16}}>
         {days.map((lbl,i)=>{
           const isToday=i===todayIdx;
           // a past day this week is "done" if it's within the current streak window
@@ -726,24 +724,18 @@ function StreakSection({C,streak,isPremium}){
           return(
             <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
               <div style={{fontSize:9,color:C.t3}}>{lbl}</div>
-              <div style={{width:"100%",maxWidth:34,aspectRatio:"1",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:isToday?C.red:done?"rgba(201,70,61,0.1)":C.s2,border:`1px solid ${isToday?"transparent":done?"rgba(201,70,61,0.22)":C.border}`,fontSize:11}}>
-                {done&&<span style={{color:C.red}}>✓</span>}
+              <div style={{width:"100%",maxWidth:34,aspectRatio:"1",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:isToday?C.gold:done?"rgba(201,168,76,0.12)":C.s2,border:`1px solid ${isToday?"transparent":done?"rgba(201,168,76,0.28)":C.border}`,fontSize:11}}>
+                {done&&<span style={{color:C.gold}}>✓</span>}
                 {isToday&&<span style={{color:"#fff",fontSize:14}}>🔥</span>}
               </div>
             </div>
           );
         })}
       </div>
-      {/* Best streak record + jokers */}
-      <div style={{paddingTop:14,borderTop:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <span style={{fontSize:16}}>🏆</span>
-          <span style={{fontSize:12,color:C.t2}}>Meilleur : <b style={{color:C.text}}>{best}j</b></span>
-        </div>
-        <div style={{display:"flex",alignItems:"center",gap:6,padding:"5px 11px",background:"rgba(90,184,232,0.08)",border:"1px solid rgba(90,184,232,0.25)",borderRadius:16}} title="Un joker protège ton streak si tu rates un jour">
-          <span style={{fontSize:14}}>🧊</span>
-          <span style={{fontSize:12,color:C.text,fontWeight:600}}>{freezes} joker{freezes>1?"s":""}</span>
-        </div>
+      {/* Meilleur score + jokers — ligne secondaire discrète */}
+      <div style={{paddingTop:12,borderTop:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:11,color:C.t3}}>
+        <span>🏆 Meilleur : {best}j</span>
+        <span title="Un joker protège ton streak si tu rates un jour">🧊 {freezes} joker{freezes>1?"s":""}</span>
       </div>
     </div>
   );
@@ -849,76 +841,41 @@ const CAT_COLOR = {
 // ─── Home ─────────────────────────────────────────────────────────────────────
 // ─── Rappel intelligent in-app : combine streak en danger, défi non fait,
 //     et déblocage imminent. Choisit le message le plus pertinent du moment.
-function computeReminder({ streak, mission, db, isPremium, today }){
+// ─── Alerte streak — résolveur unique ──────────────────────────────────────────
+// Phase 1 : ne couvre plus que le cas "danger" (mission du jour non complétée
+// + streak en cours à protéger). Les anciens cas "déblocage imminent" (déjà
+// affiché dans StreakSection, doublon) et "défi non terminé" (inatteignable :
+// touchStreak() n'est appelé qu'à la complétion de la mission, donc une mission
+// incomplète implique toujours streak.last !== today) ont été retirés — voir
+// diagnostic Phase 1. Rendu à un seul endroit fixe dans HomeScreen.
+function getHomeAlert({ streak, mission }){
   const count = streak?.count || 0;
-  const last = streak?.last || null;
   const freezes = streak?.freezes || 0;
-  const activeToday = last === today;
   const missionDone = (mission?.done?.length || 0) >= 3;
-
-  // 1. Streak en danger : pas encore actif aujourd'hui ET un streak en cours à protéger
-  if(!activeToday && count >= 1){
-    const willUseFreeze = freezes > 0;
-    return {
-      kind:"danger",
-      emoji:"🔥",
-      title:`Protège ton streak de ${count} jour${count>1?"s":""} !`,
-      text: willUseFreeze
-        ? `Fais une activité aujourd'hui. Sinon, un joker 🧊 sera utilisé pour te sauver.`
-        : `Tu n'as plus de joker — fais une activité aujourd'hui pour ne pas repartir de zéro.`,
-      cta:"Faire une activité", target:"learn",
-      color:"#C9463D", bg:"rgba(201,70,61,0.08)", border:"rgba(201,70,61,0.3)",
-    };
-  }
-
-  // 2. Déblocage imminent (demain ou après-demain) — la carotte
-  if(!isPremium){
-    const nextUnlock = UNLOCK_SCHEDULE.find(u=>u.day>count);
-    if(nextUnlock){
-      const remaining = nextUnlock.day - count;
-      if(remaining <= 2 && remaining >= 1){
-        return {
-          kind:"unlock",
-          emoji: nextUnlock.emoji,
-          title:`${nextUnlock.label} dans ${remaining} jour${remaining>1?"s":""} !`,
-          text:`Continue ton streak : « ${nextUnlock.label} » se débloque très bientôt 🔓`,
-          cta:"Voir ma progression", target:"home",
-          color:"#4E8060", bg:"rgba(78,128,96,0.08)", border:"rgba(78,128,96,0.3)",
-        };
-      }
-    }
-  }
-
-  // 3. Défi du jour non terminé (actif aujourd'hui mais mission incomplète)
-  if(activeToday && !missionDone){
-    const defi = db?.defis_jour?.length ? pickDaily(db.defis_jour, today, "defi") : null;
-    if(defi){
-      return {
-        kind:"challenge",
-        emoji: defi.emoji,
-        title:"Ta mission du jour t'attend",
-        text: defi.titre,
-        cta: defi.cta || "Relever", target: defi.cible || "home",
-        color:"#C97D3C", bg:"rgba(201,125,60,0.08)", border:"rgba(201,125,60,0.3)",
-      };
-    }
-  }
-
-  return null; // rien de pertinent à rappeler
+  if(missionDone || count < 1) return null;
+  const willUseFreeze = freezes > 0;
+  return {
+    emoji:"🔥",
+    title:`Protège ton streak de ${count} jour${count>1?"s":""} !`,
+    text: willUseFreeze
+      ? `Fais une activité aujourd'hui. Sinon, un joker 🧊 sera utilisé pour te sauver.`
+      : `Tu n'as plus de joker — fais une activité aujourd'hui pour ne pas repartir de zéro.`,
+    cta:"Faire une activité", target:"learn",
+  };
 }
 
-function SmartReminder({ C, reminder, onGo, onDismiss }){
-  if(!reminder) return null;
+function HomeAlert({ C, alert, onGo, onDismiss }){
+  if(!alert) return null;
   return(
-    <div style={{marginBottom:22,padding:"15px 16px",borderRadius:15,background:reminder.bg,border:`1px solid ${reminder.border}`,position:"relative",animation:"bubbleIn .45s cubic-bezier(.34,1.56,.64,1) both"}}>
+    <div style={{marginBottom:22,padding:"15px 16px",borderRadius:15,background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.3)",position:"relative",animation:"bubbleIn .45s cubic-bezier(.34,1.56,.64,1) both"}}>
       <div onClick={onDismiss} style={{position:"absolute",top:10,right:12,fontSize:15,color:C.t3,cursor:"pointer",lineHeight:1,padding:2}}>×</div>
       <div style={{display:"flex",alignItems:"flex-start",gap:13}}>
-        <span style={{fontSize:30,flexShrink:0,animation:reminder.kind==="danger"?"heartbeat 1.4s ease infinite":"floatY 3s ease-in-out infinite"}}>{reminder.emoji}</span>
+        <span style={{fontSize:30,flexShrink:0,animation:"heartbeat 1.4s ease infinite"}}>{alert.emoji}</span>
         <div style={{flex:1,minWidth:0}}>
-          <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:3,paddingRight:14}}>{reminder.title}</div>
-          <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginBottom:11}}>{reminder.text}</div>
-          <button onClick={()=>onGo(reminder.target)} className="pop-press" style={{display:"inline-flex",alignItems:"center",gap:6,padding:"8px 15px",background:reminder.color,border:"none",borderRadius:20,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer"}}>
-            {reminder.cta} <span>→</span>
+          <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:3,paddingRight:14}}>{alert.title}</div>
+          <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginBottom:11}}>{alert.text}</div>
+          <button onClick={()=>onGo(alert.target)} className="pop-press" style={{display:"inline-flex",alignItems:"center",gap:6,padding:"8px 15px",background:C.red,border:"none",borderRadius:20,color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer"}}>
+            {alert.cta} <span>→</span>
           </button>
         </div>
       </div>
@@ -927,12 +884,15 @@ function SmartReminder({ C, reminder, onGo, onDismiss }){
 }
 
 // ─── "Reprendre où j'en étais" ─────────────────────────────────────────────────
-// Priorité : mission du jour incomplète > Japon du jour non ouvert aujourd'hui
-// > voyage en préparation (checklist incomplète) > rien à reprendre (état "fait").
+// Phase 1 : le cas "mission incomplète" a été retiré — il est déjà couvert par
+// l'alerte streak (getHomeAlert) et la carte Mission du jour juste en dessous ;
+// le répéter ici créait le doublon diagnostiqué en Phase 1. Priorité restante :
+// Japon du jour non ouvert aujourd'hui > voyage en préparation (checklist
+// incomplète) > "tout est fait" (seulement si la mission l'est aussi) > masqué.
 function ResumeCard({C, mission, latestFeed, today, onGoTab, onTask}){
   const todaysMissions = mission ? dailyMissions(mission.day || today) : [];
   const doneIds = mission?.done || [];
-  const pending = todaysMissions.filter(t=>!doneIds.includes(t.id));
+  const missionPending = todaysMissions.some(t=>!doneIds.includes(t.id));
 
   const feedUnseen = !!latestFeed && isFeedNew(latestFeed.id);
 
@@ -942,15 +902,7 @@ function ResumeCard({C, mission, latestFeed, today, onGoTab, onTask}){
   });
 
   let state = null;
-  if(pending.length){
-    const t = pending[0];
-    state = {
-      emoji: t.emoji,
-      title: "Reprends ta mission du jour",
-      text: t.label,
-      onGo: ()=> onGoTab && onGoTab(MISSION_TARGET_TAB[t.trigger] || "home"),
-    };
-  } else if(feedUnseen){
+  if(feedUnseen){
     state = {
       emoji: "🇯🇵",
       title: "Le Japon du jour t'attend",
@@ -967,6 +919,10 @@ function ResumeCard({C, mission, latestFeed, today, onGoTab, onTask}){
       onGo: ()=> onGoTab && onGoTab("voyage"),
     };
   }
+
+  // Rien à reprendre côté feed/voyage, mais la mission n'est pas finie : la
+  // carte mission + l'alerte s'en chargent déjà, on n'affiche rien ici.
+  if(!state && missionPending) return null;
 
   if(!state){
     return (
@@ -1062,29 +1018,21 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           <span style={{fontSize:13,color:C.t3}}>Rechercher un mot, plat, tradition…</span>
         </div>
 
-        {/* 1. Reprendre où j'en étais */}
-        <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
-
-        {/* 2. Streak & paliers */}
-        <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
-        <StreakSection C={C} streak={streak} isPremium={isPremium}/>
-
-        {/* 3. Nouveau aujourd'hui — lieu du jour + Japon du jour, regroupés */}
-        <SH C={C} kanji="新" title="Nouveau aujourd'hui" sub="Fraîchement arrivé" badge={feedIsNew || lieuIsNew}/>
-        <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>
-        <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
-
-        {/* 4. Reste du contenu existant */}
-        {/* Rappel intelligent (streak en danger / défi / déblocage imminent) */}
+        {/* 1. Alerte streak en danger — unique point d'affichage, uniquement si
+            la mission du jour n'est pas complétée (voir getHomeAlert) */}
         {!reminderDismissed && (()=>{
           let remindersOn = true;
           try { remindersOn = localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch {}
           if(!remindersOn) return null;
-          const reminder = computeReminder({ streak, mission, db, isPremium, today });
-          return <SmartReminder C={C} reminder={reminder} onGo={(t)=>onGoTab && onGoTab(t)} onDismiss={()=>setReminderDismissed(true)}/>;
+          const alert = getHomeAlert({ streak, mission });
+          return <HomeAlert C={C} alert={alert} onGo={(t)=>onGoTab && onGoTab(t)} onDismiss={()=>setReminderDismissed(true)}/>;
         })()}
 
-        {/* Mission du jour */}
+        {/* 2. Reprendre où j'en étais — seulement si différent de la mission du
+            jour (déjà couverte par l'alerte + la carte mission ci-dessous) */}
+        <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
+
+        {/* 3. Mission du jour */}
         {mission && (()=>{
           const todays = dailyMissions(mission.day || today);
           const done = mission.done || [];
@@ -1101,7 +1049,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
                 <div style={{fontSize:11,color:C.t3}}>{done.length}/{todays.length}</div>
               </div>
               <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
-                <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:3,transition:"width .5s"}}/>
+                <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:C.gold,borderRadius:3,transition:"width .5s"}}/>
               </div>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {todays.map(t=>{
@@ -1122,7 +1070,16 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           );
         })()}
 
-        {/* Recommandé pour toi (selon les intérêts d'onboarding) */}
+        {/* 4. Nouveau aujourd'hui — lieu du jour + Japon du jour, regroupés */}
+        <SH C={C} kanji="新" title="Nouveau aujourd'hui" sub="Fraîchement arrivé" badge={feedIsNew || lieuIsNew}/>
+        <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>
+        <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
+
+        {/* 5. Streak — bloc informatif (pas d'alerte ici, voir 1.) */}
+        <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
+        <StreakSection C={C} streak={streak} isPremium={isPremium}/>
+
+        {/* 6. Recommandé pour toi (selon les intérêts d'onboarding) */}
         {db && user?.why?.length>0 && (()=>{
           const reco = recommendForUser(db, user.why, today);
           if(!reco) return null;

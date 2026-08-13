@@ -114,7 +114,7 @@ export function HomeDailyCard({ C, onOpen }){
           <div style={{ fontSize: 16, fontWeight: 800, color: C.text, lineHeight: 1.25 }}>
             {latest ? latest.title : "Une découverte japonaise chaque jour"}
           </div>
-          {isNew && <span aria-label="Nouveau" style={{ width: 7, height: 7, borderRadius: "50%", background: C.red, flexShrink: 0 }}/>}
+          {isNew && <span aria-label="Nouveau" style={{ width: 7, height: 7, borderRadius: "50%", background: C.gold, flexShrink: 0 }}/>}
         </div>
         {latest?.subtitle && (
           <div style={{ fontSize: 13, color: C.t2 || C.t3, marginTop: 4 }}>{latest.subtitle}</div>
