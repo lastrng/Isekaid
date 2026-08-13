@@ -54,10 +54,20 @@ function jpSub(entry, script, jpField="jp"){
   return entry.romaji || "";                        // sous le kanji → le romaji
 }
 const SEASON_ACCENT = {
-  printemps:{accent:"#E08BA8", soft:"rgba(224,139,168,0.10)", emoji:"🌸", particle:"🌸", label:"Printemps"},
-  "été":    {accent:"#3C9DC4", soft:"rgba(60,157,196,0.10)",  emoji:"🎐", particle:"💧", label:"Été"},
-  automne:  {accent:"#C97D3C", soft:"rgba(201,125,60,0.10)",  emoji:"🍁", particle:"🍁", label:"Automne"},
-  hiver:    {accent:"#7B9BB5", soft:"rgba(123,155,181,0.12)", emoji:"❄️", particle:"❄️", label:"Hiver"},
+  printemps:{accent:"#E08BA8", soft:"rgba(224,139,168,0.10)", emoji:"🌸", particle:"🌸", label:"Printemps", tagline:"Saison du hanami — les cerisiers en fleurs"},
+  "été":    {accent:"#3C9DC4", soft:"rgba(60,157,196,0.10)",  emoji:"🎐", particle:"💧", label:"Été",       tagline:"Saison des matsuri et des feux d'artifice"},
+  automne:  {accent:"#C97D3C", soft:"rgba(201,125,60,0.10)",  emoji:"🍁", particle:"🍁", label:"Automne",   tagline:"Saison du momiji — les érables flamboient"},
+  hiver:    {accent:"#7B9BB5", soft:"rgba(123,155,181,0.12)", emoji:"❄️", particle:"❄️", label:"Hiver",     tagline:"Saison des illuminations et de l'onsen"},
+};
+
+// ─── Feature flags — centralise ce qui est fonctionnel vs en placeholder ───────
+// Un élément derrière un flag à `false` doit toujours afficher un état "Bientôt
+// disponible" visuellement fini, jamais un bouton mort silencieux.
+const FEATURE_FLAGS = {
+  weeklyChallenge: true,   // Défi de la semaine — contenu réel, client-side
+  seasonalBanner: true,    // Bandeau saisonnier — contenu réel, client-side
+  dailyReminder: false,    // Rappel quotidien (notification push) — UI placeholder uniquement
+  tutor: false,            // Tuteur conversationnel — placeholder tant que la Phase 3 n'est pas livrée
 };
 
 // ─── Static data ──────────────────────────────────────────────────────────────
@@ -951,6 +961,150 @@ function ResumeCard({C, mission, latestFeed, today, onGoTab, onTask}){
   );
 }
 
+// ─── Bandeau saisonnier ─────────────────────────────────────────────────────
+// Purement décoratif/contextuel, dérivé de la date côté client (currentSeasonKey
+// + SEASON_ACCENT, déjà utilisés ailleurs dans l'app). Pas de backend, pas d'asset.
+function SeasonBanner({C, acc}){
+  if(!FEATURE_FLAGS.seasonalBanner || !acc) return null;
+  return(
+    <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",borderRadius:12,background:acc.soft,border:`1px solid ${acc.accent}33`,marginBottom:14}}>
+      <span style={{fontSize:18,flexShrink:0}}>{acc.emoji}</span>
+      <div style={{minWidth:0}}>
+        <span style={{fontSize:12,fontWeight:600,color:C.text}}>{acc.label}</span>
+        <span style={{fontSize:12,color:C.t2}}> · {acc.tagline}</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── Défi de la semaine ─────────────────────────────────────────────────────
+// Rotation déterministe hebdomadaire — même principe que dailyMissions (FNV-1a +
+// xorshift), seedé sur le numéro de semaine ISO au lieu de la date du jour.
+// Contenu 100% client-side (pas de backend). Progression : case à cocher
+// manuelle par item (même logique que la checklist de voyage existante,
+// trip.checklist[].fait) puisque ces actions ne sont pas toutes détectables
+// automatiquement par l'app, contrairement aux missions du jour.
+function isoWeekKey(date=new Date()){
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = (d.getUTCDay() + 6) % 7; // lundi = 0
+  d.setUTCDate(d.getUTCDate() - dayNum + 3); // jeudi de cette semaine ISO
+  const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+  const week = 1 + Math.round(((d - firstThursday) / 86400000 - 3 + ((firstThursday.getUTCDay()+6)%7)) / 7);
+  return `${d.getUTCFullYear()}-W${String(week).padStart(2,"0")}`;
+}
+
+const WEEKLY_CHALLENGE_POOL = [
+  { id:"transports", emoji:"🚃", title:"Semaine transports", items:[
+    "Apprends à dire « Où est la gare ? » (駅はどこですか)",
+    "Découvre une région du Japon dans Explorer",
+    "Retiens 3 mots de la gare : 駅・切符・乗り換え",
+    "Complète un scénario « Prendre le train »",
+    "Ajoute une étape transport à un voyage",
+  ]},
+  { id:"restauration", emoji:"🍜", title:"Semaine restauration", items:[
+    "Apprends « Itadakimasu » et « Gochisōsama » et leur sens",
+    "Découvre un plat japonais dans Explorer (Gastronomie)",
+    "Complète un scénario « Au restaurant »",
+    "Retiens comment commander : « ～をください »",
+    "Ajoute un plat à tes favoris",
+  ]},
+  { id:"konbini", emoji:"🏪", title:"Semaine konbini & shopping", items:[
+    "Découvre pourquoi le konbini est un « temple de la vie quotidienne »",
+    "Apprends à demander le prix : « いくらですか »",
+    "Complète un scénario « Au konbini »",
+    "Retiens « 袋はいりません » (je n'ai pas besoin de sac)",
+    "Pratique une série de katakana",
+  ]},
+  { id:"politesses", emoji:"🙇", title:"Semaine politesses", items:[
+    "Découvre un code social japonais dans Explorer",
+    "Complète un scénario « Se présenter »",
+    "Retiens « Yoroshiku onegaishimasu »",
+    "Découvre la différence honne / tatemae",
+    "Pratique une ligne de hiragana",
+  ]},
+  { id:"hebergement", emoji:"🏯", title:"Semaine hébergement", items:[
+    "Découvre un lieu d'hébergement typique (ryokan, etc.) dans Explorer",
+    "Apprends « 予約しています » (j'ai une réservation)",
+    "Complète un scénario « Se débrouiller »",
+    "Ajoute un hébergement à un voyage",
+    "Retiens un mot lié au confort japonais (温泉, 布団…)",
+  ]},
+  { id:"sorties", emoji:"🎏", title:"Semaine sorties & loisirs", items:[
+    "Découvre une tradition ou un festival japonais",
+    "Complète un scénario « Rencontre sociale »",
+    "Retiens une expression intraduisible (komorebi, ichigo ichie…)",
+    "Explore une ville ou un quartier japonais",
+    "Ajoute un lieu à tes favoris",
+  ]},
+];
+
+function weeklyChallengeForWeek(weekKey){
+  let seed = 2166136261;
+  for(let i=0;i<weekKey.length;i++){ seed ^= weekKey.charCodeAt(i); seed = Math.imul(seed, 16777619) >>> 0; }
+  seed ^= seed << 13; seed >>>= 0;
+  seed ^= seed >> 17;
+  seed ^= seed << 5; seed >>>= 0;
+  return WEEKLY_CHALLENGE_POOL[seed % WEEKLY_CHALLENGE_POOL.length];
+}
+
+const WEEKLY_KEY = "isekaid_weekly_v1";
+function loadWeeklyProgress(){
+  const week = isoWeekKey();
+  try {
+    const raw = localStorage.getItem(WEEKLY_KEY);
+    const w = raw ? JSON.parse(raw) : null;
+    if(!w || w.week !== week) return { week, done: [] };
+    return w;
+  } catch { return { week, done: [] }; }
+}
+function saveWeeklyProgress(w){ try { localStorage.setItem(WEEKLY_KEY, JSON.stringify(w)); } catch {} }
+
+function WeeklyChallengeCard({C}){
+  const [progress, setProgress] = useState(()=>loadWeeklyProgress());
+  if(!FEATURE_FLAGS.weeklyChallenge) return null;
+  const theme = weeklyChallengeForWeek(progress.week);
+  const done = progress.done || [];
+  const total = theme.items.length;
+  const pct = Math.round((done.length/total)*100);
+  const allDone = done.length>=total;
+
+  const toggleItem = (idx)=>{
+    setProgress(prev=>{
+      const has = prev.done.includes(idx);
+      const nextDone = has ? prev.done.filter(i=>i!==idx) : [...prev.done, idx];
+      const next = { ...prev, done: nextDone };
+      saveWeeklyProgress(next);
+      return next;
+    });
+  };
+
+  return (
+    <div style={{marginBottom:24,padding:"16px 18px",background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`,borderRadius:16}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+        <div style={{fontSize:11,color:allDone?C.green:C.indigo,letterSpacing:".15em",textTransform:"uppercase",fontWeight:600}}>
+          {allDone ? "✓ Défi de la semaine accompli !" : `${theme.emoji} ${theme.title}`}
+        </div>
+        <div style={{fontSize:11,color:C.t3}}>{done.length}/{total}</div>
+      </div>
+      <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
+        <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:C.indigo,borderRadius:3,transition:"width .5s"}}/>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+        {theme.items.map((text,idx)=>{
+          const ok = done.includes(idx);
+          return(
+            <div key={idx} onClick={()=>toggleItem(idx)} style={{display:"flex",alignItems:"center",gap:11,cursor:"pointer"}}>
+              <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":""}</div>
+              <div style={{flex:1,fontSize:13,color:C.text,textDecoration:ok?"line-through":"none",opacity:ok?0.6:1}}>{text}</div>
+            </div>
+          );
+        })}
+      </div>
+      {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>🎉 Défi de la semaine accompli !</div>}
+    </div>
+  );
+}
+
 function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu}){
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
@@ -1070,16 +1224,20 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           );
         })()}
 
-        {/* 4. Nouveau aujourd'hui — lieu du jour + Japon du jour, regroupés */}
+        {/* 4. Défi de la semaine */}
+        <WeeklyChallengeCard C={C}/>
+
+        {/* 5. Nouveau aujourd'hui — lieu du jour + Japon du jour, regroupés */}
+        <SeasonBanner C={C} acc={seasonAccent}/>
         <SH C={C} kanji="新" title="Nouveau aujourd'hui" sub="Fraîchement arrivé" badge={feedIsNew || lieuIsNew}/>
         <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>
         <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
 
-        {/* 5. Streak — bloc informatif (pas d'alerte ici, voir 1.) */}
+        {/* 6. Streak — bloc informatif (pas d'alerte ici, voir 1.) */}
         <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
         <StreakSection C={C} streak={streak} isPremium={isPremium}/>
 
-        {/* 6. Recommandé pour toi (selon les intérêts d'onboarding) */}
+        {/* 7. Recommandé pour toi (selon les intérêts d'onboarding) */}
         {db && user?.why?.length>0 && (()=>{
           const reco = recommendForUser(db, user.why, today);
           if(!reco) return null;
@@ -1124,6 +1282,23 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
             </div>
           );
         })()}
+
+        {/* Entrée Tuteur — placeholder tant que la Phase 3 n'est pas livrée */}
+        {!FEATURE_FLAGS.tutor && (
+          <div style={{marginBottom:26}}>
+            <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:11}}>
+              <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>🧑‍🏫 Ton tuteur</span>
+            </div>
+            <div style={{padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",gap:14,opacity:0.85}}>
+              <span style={{fontSize:32,flexShrink:0}}>🧑‍🏫</span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Parler avec ton tuteur</div>
+                <div style={{fontSize:12,color:C.t2,lineHeight:1.4}}>Conversations guidées en japonais, corrections et scénarios personnalisés.</div>
+              </div>
+              <span style={{fontSize:10,fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",padding:"4px 10px",borderRadius:20,background:C.s2,color:C.t3,flexShrink:0}}>Bientôt</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -4961,16 +5136,34 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
             </div>
           );
         })()}
-        {/* Rappels quotidiens */}
-        <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        {/* Alerte streak in-app — renommé (Phase 2) pour ne plus être confondu
+            avec le rappel par notification push, encore en placeholder ci-dessous */}
+        <div style={{marginBottom:12,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div style={{flex:1,paddingRight:12}}>
-            <div style={{fontSize:13,color:C.text,marginBottom:2}}>🔔 Rappels quotidiens</div>
-            <div style={{fontSize:11,color:C.t3,lineHeight:1.4}}>Reçois un rappel pour protéger ton streak et faire ta mission du jour.</div>
+            <div style={{fontSize:13,color:C.text,marginBottom:2}}>🔔 Alerte streak dans l'app</div>
+            <div style={{fontSize:11,color:C.t3,lineHeight:1.4}}>Affiche un bandeau sur l'accueil pour protéger ton streak si la mission du jour n'est pas faite.</div>
           </div>
           <div onClick={()=>setReminders(r=>!r)} style={{width:48,height:26,borderRadius:13,background:reminders?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
             <div style={{position:"absolute",top:3,left:reminders?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
           </div>
         </div>
+
+        {/* Rappel quotidien (notification push) — placeholder, Phase 2.
+            Aucun plugin push installé : le toggle est visuellement fini mais inerte. */}
+        {!FEATURE_FLAGS.dailyReminder && (
+          <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between",opacity:0.75}}>
+            <div style={{flex:1,paddingRight:12}}>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
+                <span style={{fontSize:13,color:C.text}}>📲 Rappel quotidien</span>
+                <span style={{fontSize:9,fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",padding:"3px 8px",borderRadius:20,background:C.s2,color:C.t3}}>Bientôt</span>
+              </div>
+              <div style={{fontSize:11,color:C.t3,lineHeight:1.4}}>Notification sur ton téléphone à l'heure de ton choix.</div>
+            </div>
+            <div aria-disabled="true" style={{width:48,height:26,borderRadius:13,background:"rgba(26,20,16,0.14)",cursor:"not-allowed",position:"relative",flexShrink:0}}>
+              <div style={{position:"absolute",top:3,left:3,width:20,height:20,borderRadius:"50%",background:"#fff",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
+            </div>
+          </div>
+        )}
 
         {/* Ma collection (favoris) */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11}}>
