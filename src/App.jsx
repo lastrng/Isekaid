@@ -1,5 +1,4 @@
 import DATA from "./japan-data.json";
-import AUDIO_MANIFEST from "./audio-manifest.json";
 import EXPLORE_IMAGES from "./explore-images.json";
 import VIDEO_MAP from "./video-map.json";
 import LIEU_EDITORIAL from "./lieu-editorial.json";
@@ -8,6 +7,8 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback } from "./supabase";
 import { HomeDailyCard, DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
+import { speakJP, SpeakButton } from "./tts";
+import { TutorEntryCard, TutorScreen } from "./Tutor";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -67,7 +68,7 @@ const FEATURE_FLAGS = {
   weeklyChallenge: true,   // Défi de la semaine — contenu réel, client-side
   seasonalBanner: true,    // Bandeau saisonnier — contenu réel, client-side
   dailyReminder: false,    // Rappel quotidien (notification push) — UI placeholder uniquement
-  tutor: false,            // Tuteur conversationnel — placeholder tant que la Phase 3 n'est pas livrée
+  tutor: true,             // Tuteur conversationnel — Edge Function + écrans livrés en Phase 3
 };
 
 // ─── Static data ──────────────────────────────────────────────────────────────
@@ -393,8 +394,7 @@ function WikiPanel({C, entry, onClose, script}) {
 }
 
 // WikiText: renders text with wiki terms highlighted and tapable
-// ─── Audio (synthèse vocale japonaise) ────────────────────────────────────────
-let _currentAudio = null;
+// ─── Audio (synthèse vocale japonaise) — voir tts.js pour speakJP/SpeakButton ─
 // Partage via l'API native (mobile) avec repli sur copie presse-papier
 async function shareContent(text){
   try {
@@ -404,86 +404,6 @@ async function shareContent(text){
     await navigator.clipboard.writeText(text);
     alert("Copié dans le presse-papier ! Tu peux le coller où tu veux.");
   } catch(e){}
-}
-function speakJP(text){
-  if(!text) return;
-  // 1) Prefer the pre-generated high-quality MP3 if available
-  const file = AUDIO_MANIFEST[text.trim()];
-  if(file){
-    try {
-      if(_currentAudio){ _currentAudio.pause(); _currentAudio = null; }
-      _currentAudio = new Audio("/" + file);
-      _currentAudio.play().catch(()=> browserSpeak(text)); // fallback if play fails
-      return;
-    } catch(e){ /* fall through */ }
-  }
-  // 2) Fallback: browser speech synthesis (dev / missing file)
-  browserSpeak(text);
-}
-function browserSpeak(text){
-  try {
-    if(!window.speechSynthesis || !text) return;
-    const speak = ()=>{
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = "ja-JP";
-      u.rate = 0.85;
-      u.pitch = 1.0;
-      const voices = window.speechSynthesis.getVoices();
-      const jp = voices.find(v=>v.lang==="ja-JP") || voices.find(v=>v.lang?.toLowerCase().startsWith("ja"));
-      if(jp) u.voice = jp;
-      window.speechSynthesis.speak(u);
-    };
-    const voices = window.speechSynthesis.getVoices();
-    if(voices && voices.length){
-      speak();
-    } else {
-      // Les voix se chargent de façon asynchrone sur certains navigateurs (iOS, Chrome)
-      window.speechSynthesis.onvoiceschanged = ()=>{ speak(); window.speechSynthesis.onvoiceschanged = null; };
-      // Filet de sécurité : tente quand même après un court délai
-      setTimeout(speak, 250);
-    }
-  } catch(e){}
-}
-
-function SpeakButton({C, text, size=30, color}){
-  const [playing,setPlaying] = useState(false);
-  if(!text) return null;
-  const col = color || C.red;
-  const onClick = (e)=>{
-    e.stopPropagation();
-    speakJP(text);
-    setPlaying(true);
-    setTimeout(()=>setPlaying(false), 900);
-  };
-  const s = size; // total button size
-  const r = s/2;  // circle radius
-  return(
-    <button onClick={onClick} aria-label="Écouter la prononciation" style={{
-      width:s, height:s, borderRadius:"50%", flexShrink:0, cursor:"pointer",
-      background: playing ? `rgba(201,70,61,0.18)` : `rgba(201,70,61,0.08)`,
-      border:`1px solid ${playing ? "rgba(201,70,61,0.5)" : "rgba(201,70,61,0.22)"}`,
-      display:"inline-flex", alignItems:"center", justifyContent:"center",
-      padding:0, transition:"all .2s", transform: playing ? "scale(1.12)" : "scale(1)",
-    }}>
-      <svg width={s*0.58} height={s*0.58} viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Speaker body */}
-        <rect x="2" y="7.5" width="5" height="7" rx="1.2" fill={col} opacity={playing?1:0.85}/>
-        {/* Speaker cone */}
-        <path d="M7 7L13 3V19L7 15" fill={col} opacity={playing?1:0.85}/>
-        {/* Wave 1 */}
-        <path d="M15.5 8.5 Q18.5 11 15.5 13.5" stroke={col} strokeWidth="1.7" strokeLinecap="round"
-          opacity={playing ? 1 : 0.7}
-          style={{transition:"opacity .2s"}}
-        />
-        {/* Wave 2 */}
-        <path d="M17.5 6 Q22.5 11 17.5 16" stroke={col} strokeWidth="1.5" strokeLinecap="round"
-          opacity={playing ? 0.75 : 0.4}
-          style={{transition:"opacity .2s"}}
-        />
-      </svg>
-    </button>
-  );
 }
 
 function FavButton({C,active,onClick}){
@@ -1283,8 +1203,10 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           );
         })()}
 
-        {/* Entrée Tuteur — placeholder tant que la Phase 3 n'est pas livrée */}
-        {!FEATURE_FLAGS.tutor && (
+        {/* Entrée Tuteur */}
+        {FEATURE_FLAGS.tutor ? (
+          <TutorEntryCard C={C} onOpen={()=>onGoTab("tutor")}/>
+        ) : (
           <div style={{marginBottom:26}}>
             <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:11}}>
               <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>🧑‍🏫 Ton tuteur</span>
@@ -6508,6 +6430,7 @@ export default function IsekaidApp(){
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
+              {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} onBack={()=>setTab("home")}/>}
               </div>
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}

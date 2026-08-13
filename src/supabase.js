@@ -112,3 +112,39 @@ export async function fetchDailyFeed({ limit = 50 } = {}){
   if(error){ console.warn("[supabase] fetchDailyFeed:", error?.message); return []; }
   return data || [];
 }
+
+// ─── Tuteur conversationnel (Phase 3) ──────────────────────────────────────
+export async function fetchTutorConversations(userId){
+  if(!supabaseEnabled) return [];
+  const { data, error } = await supabase
+    .from("tutor_conversations")
+    .select("id, scenario, titre, created_at, updated_at")
+    .eq("user_id", userId)
+    .order("updated_at", { ascending: false });
+  if(error){ console.warn("[supabase] fetchTutorConversations:", error?.message); return []; }
+  return data || [];
+}
+export async function fetchTutorMessages(conversationId){
+  if(!supabaseEnabled) return [];
+  const { data, error } = await supabase
+    .from("tutor_messages")
+    .select("id, role, content_jp, content_fr, romaji, correction, created_at")
+    .eq("conversation_id", conversationId)
+    .order("created_at", { ascending: true });
+  if(error){ console.warn("[supabase] fetchTutorMessages:", error?.message); return []; }
+  return data || [];
+}
+// Invoque l'Edge Function tutor-chat. Le JWT de la session courante est
+// ajouté automatiquement par le client Supabase authentifié.
+export async function sendTutorMessage({ message, scenarioId, niveau, conversationId }){
+  const { data, error } = await supabase.functions.invoke("tutor-chat", {
+    body: { message, scenarioId, niveau, conversationId },
+  });
+  if(error){
+    let payload = null;
+    try { payload = await error.context?.json?.(); } catch { /* réponse non-JSON ou déjà consommée */ }
+    if(payload?.error === "limit_reached") return { limitReached: true, limit: payload.limit };
+    throw error;
+  }
+  return data;
+}
