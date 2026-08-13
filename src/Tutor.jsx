@@ -45,7 +45,7 @@ export function TutorEntryCard({C, onOpen}){
 }
 
 // ─── Écran principal : sélection de scénario / historique / chat ──────────
-export function TutorScreen({C, session, kanaProgress, scenProgress, streak, onBack}){
+export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isPremium, onOpenPremium, onBack}){
   const [view, setView] = useState("picker"); // "picker" | "history" | "chat"
   const [activeScenarioId, setActiveScenarioId] = useState(null);
   const [activeConversationId, setActiveConversationId] = useState(null);
@@ -66,6 +66,7 @@ export function TutorScreen({C, session, kanaProgress, scenProgress, streak, onB
     return (
       <ChatView C={C} niveau={niveau} scenarioId={activeScenarioId || "libre"}
         conversationId={activeConversationId}
+        isPremium={isPremium} onOpenPremium={onOpenPremium}
         onConversationCreated={setActiveConversationId}
         onBack={()=>setView(activeConversationId ? "history" : "picker")}
       />
@@ -92,6 +93,10 @@ export function TutorScreen({C, session, kanaProgress, scenProgress, streak, onB
           <span style={{fontSize:10,fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",padding:"5px 10px",borderRadius:20,background:C.s2,color:C.t3,flexShrink:0,whiteSpace:"nowrap"}}>
             {NIVEAU_LABEL[niveau]}
           </span>
+        </div>
+
+        <div style={{fontSize:11.5,color:C.t3,marginBottom:18}}>
+          {isPremium ? "✨ Tuteur illimité (Premium)" : "Tuteur gratuit : 8 messages par jour · Premium débloque l'illimité"}
         </div>
 
         <button onClick={()=>setView("history")} style={{width:"100%",boxSizing:"border-box",display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",marginBottom:20}}>
@@ -168,8 +173,21 @@ function relativeDate(iso){
   return d.toLocaleDateString("fr-FR", { day:"numeric", month:"short" });
 }
 
+// Résumé compact d'une erreur JS/réseau/Supabase, affiché à l'écran pour le
+// diagnostic — sans ça, "Failed to fetch" (offline), une erreur CORS et un
+// 500 serveur produisent tous le même message générique et rien pour trancher.
+function describeError(e){
+  const status = e?.context?.status;
+  // FunctionsFetchError (pas de réponse HTTP du tout) porte l'erreur fetch
+  // brute dans .context — c'est là qu'est le vrai détail (AbortError = notre
+  // timeout de 25s, TypeError = échec réseau réel).
+  const cause = !status && e?.context ? (e.context.name || e.context.message) : null;
+  const parts = [e?.name || "Error", status ? `HTTP ${status}` : null, cause, e?.message].filter(Boolean);
+  return parts.join(" · ") || String(e);
+}
+
 // ─── Chat ───────────────────────────────────────────────────────────────────
-function ChatView({C, niveau, scenarioId, conversationId, onConversationCreated, onBack}){
+function ChatView({C, niveau, scenarioId, conversationId, isPremium, onOpenPremium, onConversationCreated, onBack}){
   const scenario = getTutorScenario(scenarioId);
   const [convId, setConvId] = useState(conversationId);
   const [messages, setMessages] = useState([]); // {role, content_jp, content_fr, romaji, correction}
@@ -177,7 +195,9 @@ function ChatView({C, niveau, scenarioId, conversationId, onConversationCreated,
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  const [error, setError] = useState(null); // "network" | "limit" | null
+  const [error, setError] = useState(null); // "network" | "limit" | "premium" | null
+  const [errorDetail, setErrorDetail] = useState(null); // message technique brut, pour diagnostic
+  const [freeLimit, setFreeLimit] = useState(8);
   const scrollRef = useRef(null);
 
   useEffect(()=>{
@@ -201,30 +221,41 @@ function ChatView({C, niveau, scenarioId, conversationId, onConversationCreated,
     setInput("");
     setSuggestions([]);
     setError(null);
+    setErrorDetail(null);
     setMessages(prev=>[...prev, { role:"user", content_jp: trimmed }]);
     setSending(true);
     try {
       const res = await sendTutorMessage({ message: trimmed, scenarioId, niveau, conversationId: convId });
-      if(res?.limitReached){
-        setError("limit");
+      if(res?.limitReached || res?.premiumRequired){
+        setError(res.premiumRequired ? "premium" : "limit");
+        if(res.premiumRequired && res.limit) setFreeLimit(res.limit);
         // Le serveur rejette avant d'enregistrer quoi que ce soit : la bulle
         // optimiste ne correspond à rien de persisté, on la retire.
         setMessages(prev=>prev.slice(0, -1));
         setInput(trimmed);
         return;
       }
+      // Réponse serveur inattendue (mauvais Content-Type, corps vide…) : on ne
+      // fait jamais confiance aveuglément à sa forme avant de l'afficher.
+      if(!res || typeof res !== "object" || typeof res.reply_jp !== "string"){
+        throw Object.assign(new Error("Réponse du serveur illisible"), { name: "MalformedResponseError" });
+      }
       if(!convId && res.conversationId){
         setConvId(res.conversationId);
         onConversationCreated?.(res.conversationId);
       }
       setMessages(prev=>[...prev, {
-        role:"assistant", content_jp: res.reply_jp, content_fr: res.reply_fr,
-        romaji: res.romaji, correction: res.correction,
+        role:"assistant", content_jp: res.reply_jp, content_fr: res.reply_fr || "",
+        romaji: res.romaji || "", correction: res.correction || "",
       }]);
-      setSuggestions(res.suggestions || []);
+      setSuggestions(Array.isArray(res.suggestions) ? res.suggestions : []);
     } catch(e){
       console.error("[tutor] échec envoi message:", e);
-      setError("network");
+      // Un JWT expiré/absent (session hors-ligne, cf. mode skipAuth de l'app)
+      // mérite un message distinct de "vérifie ta connexion" — se reconnecter
+      // est le vrai geste à faire, pas réessayer.
+      setError(e?.context?.status === 401 ? "auth" : "network");
+      setErrorDetail(describeError(e));
       // On retire le message optimiste raté pour ne pas laisser un état incohérent
       setMessages(prev=>prev.slice(0, -1));
       setInput(trimmed);
@@ -263,14 +294,34 @@ function ChatView({C, niveau, scenarioId, conversationId, onConversationCreated,
             Le tuteur réfléchit…
           </div>
         )}
-        {error === "network" && (
+        {(error === "network" || error === "auth") && (
           <div style={{padding:"10px 14px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.3)",borderRadius:12,color:C.red,fontSize:12,marginTop:6}}>
-            Connexion impossible. Vérifie ta connexion et réessaie.
+            {error === "auth"
+              ? "Session expirée ou hors ligne au moment de la connexion. Reconnecte-toi (Profil) puis réessaie."
+              : "Connexion impossible. Vérifie ta connexion et réessaie."}
+            {errorDetail && (
+              <div style={{marginTop:5,fontFamily:"monospace",fontSize:10.5,color:C.t3,opacity:0.85,wordBreak:"break-word"}}>
+                {errorDetail}
+              </div>
+            )}
           </div>
         )}
         {error === "limit" && (
           <div style={{padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:12,marginTop:6,textAlign:"center"}}>
             Tu as atteint ta limite de messages pour aujourd'hui. Reviens demain pour continuer cette conversation 🎌
+          </div>
+        )}
+        {error === "premium" && (
+          <div style={{padding:"18px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,marginTop:6}}>
+            <div style={{fontSize:14,fontWeight:700,color:C.text,marginBottom:6}}>
+              Tu as utilisé tes {freeLimit} messages gratuits du jour 🎌
+            </div>
+            <div style={{fontSize:12.5,color:C.t2,lineHeight:1.6,marginBottom:14}}>
+              Premium débloque le tuteur illimité, tous les scénarios et l'historique complet de tes conversations.
+            </div>
+            <button onClick={onOpenPremium} style={{width:"100%",boxSizing:"border-box",padding:"12px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:13.5,fontWeight:700,cursor:"pointer"}}>
+              Passer Premium
+            </button>
           </div>
         )}
         {!sending && suggestions.length > 0 && (
@@ -284,7 +335,7 @@ function ChatView({C, niveau, scenarioId, conversationId, onConversationCreated,
         )}
       </div>
 
-      {error !== "limit" && (
+      {error !== "limit" && error !== "premium" && (
         <div style={{display:"flex",gap:8,padding:"10px 14px",borderTop:`1px solid ${C.border}`,flexShrink:0,paddingBottom:"calc(10px + env(safe-area-inset-bottom))"}}>
           <input
             value={input}

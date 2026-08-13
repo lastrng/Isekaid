@@ -1,12 +1,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// tutor-chat — Edge Function du tuteur conversationnel japonais (Phase 3)
+// tutor-chat — Edge Function du tuteur conversationnel japonais (Phases 3-4)
 //
-// Reçoit un message utilisateur, vérifie le JWT Supabase, applique une limite
-// quotidienne douce, appelle l'API Anthropic (Haiku par défaut) avec une
-// sortie forcée par tool-use (JSON strict, jamais de markdown ni de parsing
-// fragile), sauvegarde l'échange en base, renvoie le résultat.
+// Reçoit un message utilisateur, vérifie le JWT Supabase, applique le gating
+// freemium (limite gratuite, puis vérification premium RevenueCat, puis
+// plafond anti-abus même pour les payants), appelle l'API Anthropic (Haiku
+// par défaut) avec une sortie forcée par tool-use (JSON strict, jamais de
+// markdown ni de parsing fragile), sauvegarde l'échange en base, renvoie le
+// résultat.
 //
-// ANTHROPIC_API_KEY ne quitte jamais cette fonction : jamais exposée au client.
+// ANTHROPIC_API_KEY et REVENUECAT_SECRET_KEY ne quittent jamais cette
+// fonction : jamais exposées au client.
 // ─────────────────────────────────────────────────────────────────────────────
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -18,9 +21,44 @@ const corsHeaders = {
 };
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
+const REVENUECAT_SECRET_KEY = Deno.env.get("REVENUECAT_SECRET_KEY") ?? "";
+const REVENUECAT_ENTITLEMENT_ID = Deno.env.get("REVENUECAT_ENTITLEMENT_ID") || "premium";
 const TUTOR_MODEL = Deno.env.get("TUTOR_MODEL") || "claude-haiku-4-5-20251001";
+// Plafond anti-abus (même les premium l'atteignent un jour) — inchangé depuis la Phase 3.
 const DAILY_LIMIT = parseInt(Deno.env.get("TUTOR_DAILY_LIMIT") || "30", 10);
+// Palier gratuit (Phase 4) : au-delà, il faut être premium pour continuer.
+const FREE_DAILY_LIMIT = parseInt(Deno.env.get("TUTOR_FREE_DAILY_LIMIT") || "8", 10);
 const HISTORY_LIMIT = parseInt(Deno.env.get("TUTOR_HISTORY_LIMIT") || "20", 10);
+
+// Vérifie l'entitlement premium directement auprès de RevenueCat (jamais via
+// un booléen envoyé par le client, spoofable). app_user_id = l'id Supabase,
+// car le client fait déjà Purchases.logIn({appUserID: supabaseUserId})
+// (voir src/purchases.js identifyUser) — les deux identifiants sont alignés.
+// Panne/timeout RevenueCat → traité comme non-premium (fail-closed : plus
+// sûr qu'un accès gratuit illimité en cas d'incident).
+async function isPremiumUser(userId: string): Promise<boolean> {
+  if (!REVENUECAT_SECRET_KEY) {
+    console.error("[tutor-chat] REVENUECAT_SECRET_KEY absente — impossible de vérifier le premium, on refuse.");
+    return false;
+  }
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+    const res = await fetch(`https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(userId)}`, {
+      headers: { Authorization: `Bearer ${REVENUECAT_SECRET_KEY}` },
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    if (!res.ok) return false;
+    const data = await res.json();
+    const entitlement = data?.subscriber?.entitlements?.[REVENUECAT_ENTITLEMENT_ID];
+    if (!entitlement?.expires_date) return true; // pas de date d'expiration = abonnement à vie
+    return new Date(entitlement.expires_date).getTime() > Date.now();
+  } catch (e) {
+    console.error("[tutor-chat] vérification RevenueCat échouée:", e);
+    return false;
+  }
+}
 
 const NIVEAU_INSTRUCTIONS: Record<string, string> = {
   "débutant":
@@ -140,7 +178,9 @@ Deno.serve(async (req: Request) => {
       return new Response(JSON.stringify({ error: "empty_message" }), { status: 400, headers: jsonHeaders });
     }
 
-    // ── Garde-fou serveur : limite quotidienne, indépendante du client ──────
+    // ── Garde-fou serveur : gating freemium, indépendant du client ──────────
+    // Chemin rapide pour l'immense majorité des messages (bien sous le palier
+    // gratuit) : pas d'appel RevenueCat, juste le comptage du jour.
     const startOfDay = new Date();
     startOfDay.setUTCHours(0, 0, 0, 0);
     const { count: usedToday, error: countErr } = await supabase
@@ -152,11 +192,21 @@ Deno.serve(async (req: Request) => {
     if (countErr) {
       return new Response(JSON.stringify({ error: "db_error" }), { status: 500, headers: jsonHeaders });
     }
-    if ((usedToday ?? 0) >= DAILY_LIMIT) {
-      return new Response(
-        JSON.stringify({ error: "limit_reached", limit: DAILY_LIMIT, remainingToday: 0 }),
-        { status: 429, headers: jsonHeaders },
-      );
+    const used = usedToday ?? 0;
+    if (used >= FREE_DAILY_LIMIT) {
+      const premium = await isPremiumUser(userId);
+      if (!premium) {
+        return new Response(
+          JSON.stringify({ error: "premium_required", limit: FREE_DAILY_LIMIT }),
+          { status: 402, headers: jsonHeaders },
+        );
+      }
+      if (used >= DAILY_LIMIT) {
+        return new Response(
+          JSON.stringify({ error: "limit_reached", limit: DAILY_LIMIT, remainingToday: 0 }),
+          { status: 429, headers: jsonHeaders },
+        );
+      }
     }
 
     // ── Conversation : réutilise ou crée ─────────────────────────────────────

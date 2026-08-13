@@ -136,14 +136,19 @@ export async function fetchTutorMessages(conversationId){
 }
 // Invoque l'Edge Function tutor-chat. Le JWT de la session courante est
 // ajouté automatiquement par le client Supabase authentifié.
+// timeout : un accroc côté DB/PostgREST peut laisser la fonction pendre
+// ~1min avant qu'un 500 générique n'arrive — on coupe avant, avec un
+// message clair plutôt que de laisser l'UI muette sur "réfléchit…".
 export async function sendTutorMessage({ message, scenarioId, niveau, conversationId }){
   const { data, error } = await supabase.functions.invoke("tutor-chat", {
     body: { message, scenarioId, niveau, conversationId },
+    timeout: 25000,
   });
   if(error){
     let payload = null;
     try { payload = await error.context?.json?.(); } catch { /* réponse non-JSON ou déjà consommée */ }
     if(payload?.error === "limit_reached") return { limitReached: true, limit: payload.limit };
+    if(payload?.error === "premium_required") return { premiumRequired: true, limit: payload.limit };
     throw error;
   }
   return data;
