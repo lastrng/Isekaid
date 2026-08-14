@@ -54,7 +54,7 @@ export function TutorEntryCard({C, onOpen}){
 }
 
 // ─── Écran principal : sélection de scénario / historique / chat ──────────
-export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isPremium, onOpenPremium, selfReportedLevel, initialBridge, onBridgeConsumed, onBack}){
+export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isPremium, onOpenPremium, selfReportedLevel, initialBridge, onBridgeConsumed, onMissionTrigger, onBack}){
   // Pont Scénarios scriptés → Tuteur : si un contexte de pont est en attente
   // (App.jsx), on saute le picker et on ouvre directement le chat dessus, une
   // seule fois — consommé immédiatement pour ne pas rouvrir en boucle.
@@ -88,6 +88,7 @@ export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isP
         conversationId={activeConversationId} bridgeContext={bridgeContext}
         isPremium={isPremium} onOpenPremium={onOpenPremium}
         onConversationCreated={setActiveConversationId}
+        onMissionTrigger={onMissionTrigger}
         onBack={()=>setView(activeConversationId ? "history" : "picker")}
       />
     );
@@ -207,7 +208,7 @@ function describeError(e){
 }
 
 // ─── Chat ───────────────────────────────────────────────────────────────────
-function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremium, onOpenPremium, onConversationCreated, onBack}){
+function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremium, onOpenPremium, onConversationCreated, onMissionTrigger, onBack}){
   const scenario = getTutorScenario(scenarioId);
   const [convId, setConvId] = useState(conversationId);
   const [messages, setMessages] = useState([]); // {role, content_jp, content_fr, romaji, correction}
@@ -272,6 +273,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremi
         romaji: res.romaji || "", correction: res.correction || "",
       }]);
       setSuggestions(Array.isArray(res.suggestions) ? res.suggestions : []);
+      onMissionTrigger?.("tutor");
     } catch(e){
       console.error("[tutor] échec envoi message:", e);
       // Un JWT expiré/absent (session hors-ligne, cf. mode skipAuth de l'app)

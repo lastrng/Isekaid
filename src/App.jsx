@@ -3,7 +3,7 @@ import EXPLORE_IMAGES from "./explore-images.json";
 import VIDEO_MAP from "./video-map.json";
 import LIEU_EDITORIAL from "./lieu-editorial.json";
 import * as sfx from "./sfx.js";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations } from "./supabase";
 import { HomeDailyCard, DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
@@ -172,6 +172,26 @@ function recommendForUser(db, why, goal, today){
   const item = pickDaily(db[cat], today, "reco-item");
   if(!item) return null;
   return { cat, item };
+}
+
+// Accueil adaptatif : l'ORDRE des sections change selon le `goal` déclaré à
+// l'onboarding, mêmes briques (aucune nouvelle carte). "Voyage" et "vie
+// quotidienne/situations/codes sociaux" n'ont pas de carte dédiée sur
+// l'accueil aujourd'hui : travel se rabat sur bandeau saisonnier + lieu du
+// jour (le plus proche existant), live sur "Recommandé pour toi" — déjà
+// pondéré par GOAL_MAP.live vers vie_quotidienne/situations/culture, donc
+// littéralement le bon contenu sans rien inventer. Les éléments transverses
+// (alerte streak, Reprendre où j'en étais, Mission du jour, recherche) et
+// l'entrée Tuteur restent à leur place canonique, hors de cette config.
+const HOME_LAYOUTS = {
+  default: ["review","weeklyChallenge","seasonBanner","lieuDuJour","japonDuJour","decouvertes","streak","recommande"],
+  travel:  ["seasonBanner","lieuDuJour","weeklyChallenge","review","japonDuJour","decouvertes","streak","recommande"],
+  learn:   ["review","weeklyChallenge","streak","seasonBanner","lieuDuJour","japonDuJour","decouvertes","recommande"],
+  imm:     ["japonDuJour","decouvertes","weeklyChallenge","seasonBanner","review","lieuDuJour","streak","recommande"],
+  live:    ["recommande","seasonBanner","lieuDuJour","weeklyChallenge","review","japonDuJour","decouvertes","streak"],
+};
+function homeLayoutFor(goal){
+  return HOME_LAYOUTS[goal] || HOME_LAYOUTS.default;
 }
 
 const JP_MONTHS = ["睦月","如月","弥生","卯月","皐月","水無月","文月","葉月","長月","神無月","霜月","師走"];
@@ -849,7 +869,7 @@ function HomeAlert({ C, alert, onGo, onDismiss }){
 // Japon du jour non ouvert aujourd'hui > voyage en préparation (checklist
 // incomplète) > "tout est fait" (seulement si la mission l'est aussi) > masqué.
 function ResumeCard({C, mission, latestFeed, today, onGoTab, onTask}){
-  const todaysMissions = mission ? dailyMissions(mission.day || today) : [];
+  const todaysMissions = mission ? missionsForDay(mission) : [];
   const doneIds = mission?.done || [];
   const missionPending = todaysMissions.some(t=>!doneIds.includes(t.id));
 
@@ -1134,13 +1154,12 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 
   const today = dayKey();
 
-  // Données du jour partagées par ResumeCard + section "Nouveau aujourd'hui"
+  // Données du jour partagées par ResumeCard + carte "Japon du jour"
   // (un seul fetch du feed, une seule sélection du lieu du jour).
   const todaysLieu = useMemo(()=>getTodaysLieu(db, today), [db, today]);
   const { items: feedItems } = useDailyFeed(1);
   const latestFeed = feedItems && feedItems[0];
   const lieuIsNew = isLieuNew(today);
-  const feedIsNew = !!latestFeed && isFeedNew(latestFeed.id);
   const handleOpenLieu = (l)=>{ markLieuSeen(today); onOpenLieu && onOpenLieu(l); };
   // Découverte Explorer débloquée par le streak (pas calendaire comme le
   // reste de la section, mais "fraîchement arrivée" du point de vue de
@@ -1201,19 +1220,20 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
             jour (déjà couverte par l'alerte + la carte mission ci-dessous) */}
         <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
 
-        {/* 3. Mission du jour */}
+        {/* 3. Mission du jour (jeu fixe des 4 piliers si mission.firstDay) */}
         {mission && (()=>{
-          const todays = dailyMissions(mission.day || today);
+          const todays = missionsForDay(mission);
           const done = mission.done || [];
           const allDone = done.length >= todays.length;
           const pct = Math.round((done.length/todays.length)*100);
           // Onglet cible selon le trigger de la mission
           const targetFor = (tr)=> MISSION_TARGET_TAB[tr] || "home";
+          const isFirstDay = !!mission.firstDay;
           return(
             <div style={{marginBottom:24,padding:"16px 18px",background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`,borderRadius:16}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
                 <div style={{fontSize:11,color:allDone?C.green:C.gold,letterSpacing:".15em",textTransform:"uppercase",fontWeight:600}}>
-                  {allDone ? "✓ Mission accomplie !" : "🎯 Mission du jour"}
+                  {allDone ? (isFirstDay?"✓ Bravo, 4 piliers testés !":"✓ Mission accomplie !") : (isFirstDay?"🎌 Ta première journée":"🎯 Mission du jour")}
                 </div>
                 <div style={{fontSize:11,color:C.t3}}>{done.length}/{todays.length}</div>
               </div>
@@ -1234,72 +1254,77 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
                   );
                 })}
               </div>
-              {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>🎉 Mission du jour accomplie !</div>}
+              {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>{isFirstDay ? "🎉 Tu as fait le tour des 4 piliers d'Isekai'd !" : "🎉 Mission du jour accomplie !"}</div>}
             </div>
           );
         })()}
 
-        {/* 3b. Révisions du jour (SRS actif) */}
-        <ReviewTeaserCard C={C} dueCount={dueReviewCount} hasStarted={hasKanaProgress} onStart={onStartReview}/>
-
-        {/* 4. Défi de la semaine */}
-        <WeeklyChallengeCard C={C}/>
-
-        {/* 5. Nouveau aujourd'hui — lieu du jour + Japon du jour + découverte débloquée */}
-        <SeasonBanner C={C} acc={seasonAccent} lieux={seasonLieux} onOpenLieu={onOpenLieu}/>
-        <SH C={C} kanji="新" title="Nouveau aujourd'hui" sub="Fraîchement arrivé" badge={feedIsNew || lieuIsNew || discoveryIsNew}/>
-        <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>
-        <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
-        {latestDiscovery && <DiscoveryTeaserCard C={C} discovery={latestDiscovery} isNew={discoveryIsNew} onOpen={()=>onGoTab("explore")}/>}
-
-        {/* 6. Streak — bloc informatif (pas d'alerte ici, voir 1.) */}
-        <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
-        <StreakSection C={C} streak={streak} isPremium={isPremium}/>
-
-        {/* 7. Recommandé pour toi (selon les intérêts d'onboarding) */}
-        {db && user?.why?.length>0 && (()=>{
-          const reco = recommendForUser(db, user.why, user.goal, today);
-          if(!reco) return null;
-          const {cat, item} = reco;
-          // Titre + sous-titre + contenu complet selon la catégorie
-          const META = {
-            culture:{label:"Culture",emoji:"🎴",title:item.titre,sub:item.contenu,full:item.contenu,extra:item.insight},
-            traditions:{label:"Tradition",emoji:item.emoji||"⛩️",title:item.nom,sub:item.tagline,full:item.histoire||item.tagline,extra:item.comment_vivre},
-            repas:{label:"Gastronomie",emoji:item.emoji||"🍱",title:item.nom_jp,sub:item.description||item.romaji,full:item.description,extra:item.romaji?`Lecture : ${item.romaji}`:""},
-            regions:{label:"Région",emoji:item.emoji||"🗾",title:item.nom,sub:item.tagline,full:item.ambiance||item.tagline,extra:""},
-            vie_quotidienne:{label:"Vie quotidienne",emoji:item.emoji||"🏙️",title:item.titre,sub:item.resume,full:item.description||item.resume,extra:""},
-            expressions:{label:"Expression",emoji:"💬",title:item.expression,sub:item.traduction,full:item.contexte,extra:item.exemple_jp?`${item.exemple_jp} — ${item.exemple_fr||""}`:""},
-            situations:{label:"Phrase utile",emoji:"🗣️",title:item.titre,sub:(item.phrases?.[0]?.fr)||"",full:"",extra:""},
-          }[cat] || {label:"Pour toi",emoji:"✨",title:"",sub:"",full:"",extra:""};
-          const jpText = cat==="repas"?item.nom_jp:(cat==="expressions"?item.expression:null);
-          return(
-            <div style={{marginBottom:26}}>
-              <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:11}}>
-                <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>✨ Recommandé pour toi</span>
-              </div>
-              <div onClick={()=>setRecoOpen(o=>!o)} style={{padding:"16px",background:`linear-gradient(160deg,rgba(201,70,61,0.08),transparent)`,border:`1px solid rgba(201,70,61,0.2)`,borderRadius:14,cursor:"pointer",transition:"all .2s"}}>
-                <div style={{display:"flex",alignItems:"center",gap:14}}>
-                  <span style={{fontSize:32,flexShrink:0}}>{META.emoji}</span>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:9,color:C.red,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{META.label} · selon tes goûts</div>
-                    <div style={{display:"flex",alignItems:"center",gap:7}}>
-                      <span style={{fontSize:15,color:C.text,fontWeight:500,overflow:recoOpen?"visible":"hidden",textOverflow:"ellipsis",whiteSpace:recoOpen?"normal":"nowrap"}}>{META.title}</span>
-                      {jpText && recoOpen && <SpeakButton C={C} text={jpText} color={C.red} size={24}/>}
+        {/* 3b-7. Sections réordonnables selon le goal d'onboarding — voir
+            HOME_LAYOUTS. Même briques qu'avant, juste un ordre qui change. */}
+        {(()=>{
+          const sectionRenderers = {
+            review: ()=> <ReviewTeaserCard C={C} dueCount={dueReviewCount} hasStarted={hasKanaProgress} onStart={onStartReview}/>,
+            weeklyChallenge: ()=> <WeeklyChallengeCard C={C}/>,
+            seasonBanner: ()=> <SeasonBanner C={C} acc={seasonAccent} lieux={seasonLieux} onOpenLieu={onOpenLieu}/>,
+            // DailyPlaceSpotlight a déjà son propre en-tête ("Lieu du jour") et
+            // son propre badge "Nouveau" — pas besoin du header partagé qu'on
+            // vient de retirer.
+            lieuDuJour: ()=> <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>,
+            // HomeDailyCard a déjà son propre badge "LE JAPON DU JOUR" + pastille "Nouveau" intégrés.
+            japonDuJour: ()=> <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>,
+            // DiscoveryTeaserCard a déjà son propre badge "DÉCOUVERTE DU JOUR" intégré.
+            decouvertes: ()=> latestDiscovery ? <DiscoveryTeaserCard C={C} discovery={latestDiscovery} isNew={discoveryIsNew} onOpen={()=>onGoTab("explore")}/> : null,
+            streak: ()=> (<>
+              <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
+              <StreakSection C={C} streak={streak} isPremium={isPremium}/>
+            </>),
+            recommande: ()=>{
+              if(!db || !(user?.why?.length>0)) return null;
+              const reco = recommendForUser(db, user.why, user.goal, today);
+              if(!reco) return null;
+              const {cat, item} = reco;
+              // Titre + sous-titre + contenu complet selon la catégorie
+              const META = {
+                culture:{label:"Culture",emoji:"🎴",title:item.titre,sub:item.contenu,full:item.contenu,extra:item.insight},
+                traditions:{label:"Tradition",emoji:item.emoji||"⛩️",title:item.nom,sub:item.tagline,full:item.histoire||item.tagline,extra:item.comment_vivre},
+                repas:{label:"Gastronomie",emoji:item.emoji||"🍱",title:item.nom_jp,sub:item.description||item.romaji,full:item.description,extra:item.romaji?`Lecture : ${item.romaji}`:""},
+                regions:{label:"Région",emoji:item.emoji||"🗾",title:item.nom,sub:item.tagline,full:item.ambiance||item.tagline,extra:""},
+                vie_quotidienne:{label:"Vie quotidienne",emoji:item.emoji||"🏙️",title:item.titre,sub:item.resume,full:item.description||item.resume,extra:""},
+                expressions:{label:"Expression",emoji:"💬",title:item.expression,sub:item.traduction,full:item.contexte,extra:item.exemple_jp?`${item.exemple_jp} — ${item.exemple_fr||""}`:""},
+                situations:{label:"Phrase utile",emoji:"🗣️",title:item.titre,sub:(item.phrases?.[0]?.fr)||"",full:"",extra:""},
+              }[cat] || {label:"Pour toi",emoji:"✨",title:"",sub:"",full:"",extra:""};
+              const jpText = cat==="repas"?item.nom_jp:(cat==="expressions"?item.expression:null);
+              return(
+                <div style={{marginBottom:26}}>
+                  <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:11}}>
+                    <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>✨ Recommandé pour toi</span>
+                  </div>
+                  <div onClick={()=>setRecoOpen(o=>!o)} style={{padding:"16px",background:`linear-gradient(160deg,rgba(201,70,61,0.08),transparent)`,border:`1px solid rgba(201,70,61,0.2)`,borderRadius:14,cursor:"pointer",transition:"all .2s"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:14}}>
+                      <span style={{fontSize:32,flexShrink:0}}>{META.emoji}</span>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontSize:9,color:C.red,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{META.label} · selon tes goûts</div>
+                        <div style={{display:"flex",alignItems:"center",gap:7}}>
+                          <span style={{fontSize:15,color:C.text,fontWeight:500,overflow:recoOpen?"visible":"hidden",textOverflow:"ellipsis",whiteSpace:recoOpen?"normal":"nowrap"}}>{META.title}</span>
+                          {jpText && recoOpen && <SpeakButton C={C} text={jpText} color={C.red} size={24}/>}
+                        </div>
+                        {!recoOpen && <div style={{fontSize:12,color:C.t2,lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:1,WebkitBoxOrient:"vertical",marginTop:2}}>{META.sub}</div>}
+                      </div>
+                      <span style={{fontSize:13,color:C.t3,flexShrink:0,transform:recoOpen?"rotate(180deg)":"none",transition:"transform .2s"}}>▾</span>
                     </div>
-                    {!recoOpen && <div style={{fontSize:12,color:C.t2,lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:1,WebkitBoxOrient:"vertical",marginTop:2}}>{META.sub}</div>}
+                    {recoOpen && (
+                      <div style={{marginTop:14,paddingTop:14,borderTop:`1px solid ${C.border}`,animation:"fadeUp .3s ease"}}>
+                        {META.full && <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:META.extra?10:0}}>{META.full}</div>}
+                        {META.extra && <div style={{fontSize:12,color:C.t3,lineHeight:1.5,fontStyle:"italic"}}>{META.extra}</div>}
+                        {!META.full && !META.extra && <div style={{fontSize:13,color:C.t2}}>{META.sub}</div>}
+                      </div>
+                    )}
                   </div>
-                  <span style={{fontSize:13,color:C.t3,flexShrink:0,transform:recoOpen?"rotate(180deg)":"none",transition:"transform .2s"}}>▾</span>
                 </div>
-                {recoOpen && (
-                  <div style={{marginTop:14,paddingTop:14,borderTop:`1px solid ${C.border}`,animation:"fadeUp .3s ease"}}>
-                    {META.full && <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:META.extra?10:0}}>{META.full}</div>}
-                    {META.extra && <div style={{fontSize:12,color:C.t3,lineHeight:1.5,fontStyle:"italic"}}>{META.extra}</div>}
-                    {!META.full && !META.extra && <div style={{fontSize:13,color:C.t2}}>{META.sub}</div>}
-                  </div>
-                )}
-              </div>
-            </div>
-          );
+              );
+            },
+          };
+          return homeLayoutFor(user?.goal).map(id => <Fragment key={id}>{sectionRenderers[id]()}</Fragment>);
         })()}
 
         {/* Entrée Tuteur */}
@@ -3562,7 +3587,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   // "Mission du jour" sur la carte correspondante (kana / review / comp / path).
   const pendingTriggers = useMemo(()=>{
     if(!mission) return new Set();
-    const todays = dailyMissions(mission.day || dayKey());
+    const todays = missionsForDay(mission);
     const done = mission.done || [];
     return new Set(todays.filter(m=>!done.includes(m.id)).map(m=>m.trigger));
   },[mission]);
@@ -5991,7 +6016,16 @@ const MISSION_POOL = [
   { id:"path_step",   trigger:"path",     emoji:"🗼", label:"Avancer dans le parcours Tokyo",hint:"Apprendre · Parcours" },
 ];
 // Onglet cible selon le trigger d'une mission (mission du jour + ResumeCard)
-const MISSION_TARGET_TAB = {daily:"home",kana:"learn",review:"learn",comp:"learn",path:"learn",fav:"explore",scenario:"scenarios",explore:"explore"};
+const MISSION_TARGET_TAB = {daily:"home",kana:"learn",review:"learn",comp:"learn",path:"learn",fav:"explore",scenario:"scenarios",explore:"explore",tutor:"tutor"};
+
+// Jour 1 : jeu fixe (pas le tirage aléatoire habituel) qui garantit une
+// expérience complète des 4 piliers de l'app — voir loadMission()/missionsForDay().
+const FIRST_DAY_MISSIONS = [
+  { id:"first_kana",     trigger:"kana",     emoji:"🎴", label:"Fais ta première leçon de kana",  hint:"Apprendre" },
+  { id:"first_scenario", trigger:"scenario", emoji:"🎭", label:"Termine ton premier scénario",     hint:"Scénarios" },
+  { id:"first_tutor",    trigger:"tutor",    emoji:"🧑‍🏫", label:"Dis bonjour à ton tuteur",         hint:"Tuteur" },
+  { id:"first_daily",    trigger:"daily",    emoji:"📖", label:"Découvre le Japon du jour",        hint:"Accueil" },
+];
 
 // Tire 3 missions du jour de façon déterministe (même trio toute la journée,
 // change chaque jour). Graine FNV-1a + xorshift pour une bonne dispersion.
@@ -6009,12 +6043,28 @@ function dailyMissions(dateKey = dayKey()){
   }
   return picked;
 }
+// Missions du jour effectives pour un objet mission donné : le jeu fixe du
+// jour 1 (mission.firstDay), sinon le tirage aléatoire habituel. Point
+// d'entrée unique — préférer à dailyMissions() partout où "todays" est lu.
+function missionsForDay(mission){
+  if(!mission) return [];
+  if(mission.firstDay) return FIRST_DAY_MISSIONS;
+  return dailyMissions(mission.day || dayKey());
+}
 function loadMission(){
   try {
     const raw = localStorage.getItem(MISSION_KEY);
     const m = raw ? JSON.parse(raw) : null;
-    if(!m || m.day !== dayKey()) return { day: dayKey(), done: [], claimed:false };
-    return m;
+    if(m && m.day === dayKey()) return m;
+    if(!raw){
+      // Aucune mission jamais enregistrée pour ce profil → jour 1. Garde-fou
+      // streak.best<=1 : évite qu'un compte existant dont le cache aurait
+      // été vidé (nouvel appareil, réinstallation) ne repasse pour un
+      // premier jour.
+      const firstDay = (loadStreak()?.best||0) <= 1;
+      return { day: dayKey(), done: [], claimed:false, firstDay };
+    }
+    return { day: dayKey(), done: [], claimed:false };
   } catch { return { day: dayKey(), done: [], claimed:false }; }
 }
 function saveMission(m){ try { localStorage.setItem(MISSION_KEY, JSON.stringify(m)); } catch {} }
@@ -6340,10 +6390,11 @@ export default function IsekaidApp(){
   const [missionReward,setMissionReward]=useState(false);
   useEffect(()=>{ if(missionReward){ const t=setTimeout(()=>setMissionReward(false),3500); return ()=>clearTimeout(t); } },[missionReward]);
   // Complète une mission du jour à partir d'un TRIGGER d'action (ex: "fav", "kana", "scenario").
-  // On ne valide que si ce trigger correspond à l'une des 3 missions tirées aujourd'hui.
+  // On ne valide que si ce trigger correspond à l'une des missions du jour
+  // (3 tirées aléatoirement, ou les 4 fixes du jour 1 — voir missionsForDay).
   const completeTask = (trigger)=>{
     setMission(prev=>{
-      const todays = dailyMissions(prev.day || dayKey());
+      const todays = missionsForDay(prev);
       const mission = todays.find(m=>m.trigger===trigger);
       if(!mission) return prev;                       // ce trigger n'est pas une mission du jour
       if(prev.done.includes(mission.id)) return prev; // déjà validée
@@ -6721,6 +6772,13 @@ export default function IsekaidApp(){
     saveProfile(u);
     setUser(u);
     setScreen("app");
+    // Compte le jour 1 tout de suite (pas seulement après les 3 missions du
+    // jour) : sans ça, le contenu au palier "jour 1" (Traditions, 1ère
+    // Découverte) reste verrouillé pendant toute la première session.
+    // Idempotent — touchStreak() ne fait rien si déjà compté aujourd'hui,
+    // donc aucun risque de double-comptage avec le déclenchement normal en
+    // fin de mission (voir completeTask).
+    setStreak(touchStreak());
     // Lance le parcours guidé sauf s'il a été désactivé
     if(!tourDisabled()){ setTab("home"); setTourStep(0); }
   };
@@ -6801,7 +6859,7 @@ export default function IsekaidApp(){
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
-              {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onBack={()=>setTab("home")}/>}
+              {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
