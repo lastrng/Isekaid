@@ -13,6 +13,7 @@ import { DiscoveriesScreen, useLatestUnlockedDiscovery, DiscoveryTeaserCard, isD
 import { scenarioTutorTarget, buildBridgeContext } from "./scenarioTutorBridge";
 import { MOTION_CSS_VARS, withViewTransition, supportsViewTransitions } from "./motion";
 import { flushSync } from "react-dom";
+import { FeatureIntroScreen } from "./FeatureIntro";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -170,6 +171,9 @@ const GOAL_MAP = {
   learn:  {keys:["expressions","situations"]},
   imm:    {keys:["traditions","culture"]},
 };
+// Pilier à mettre en avant à l'arrivée sur l'accueil selon le goal choisi à
+// l'onboarding (fin de la présentation 1er lancement, voir finishIntro).
+const GOAL_TAB = { travel:"voyage", learn:"learn", live:"explore", imm:"explore" };
 // Construit une recommandation personnalisée (1 item) selon les centres
 // d'intérêt ET l'objectif déclarés à l'onboarding. Une catégorie qui recoupe
 // les deux signaux a deux fois plus de chances d'être choisie un jour donné —
@@ -6086,13 +6090,14 @@ function SearchScreen({C, db, script, onClose, onWikiTap, initialQuery}){
   );
 }
 
-function BottomNav({C,active,onChange}){
+function BottomNav({C,active,onChange,pulseTab,onPulseEnd}){
   return(
     <div style={{position:"absolute",bottom:0,left:0,right:0,height:72,display:"flex",background:C.navBg,backdropFilter:"blur(18px)",borderTop:`1px solid ${C.border}`,zIndex:100}}>
       {TABS.map(t=>{
         const on=t.id===active;
+        const pulsing = t.id===pulseTab;
         return(
-          <button key={t.id} onClick={()=>onChange(t.id)} style={{flex:1,border:"none",background:"transparent",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:3,color:on?C.red:C.t3,transition:"color .2s",position:"relative"}}>
+          <button key={t.id} onClick={()=>onChange(t.id)} onAnimationEnd={pulsing?onPulseEnd:undefined} style={{flex:1,border:"none",background:"transparent",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:3,color:on?C.red:C.t3,transition:"color .2s",position:"relative",borderRadius:16,animation:pulsing?"ring 1s ease-out 2":"none"}}>
             <span style={{fontFamily:"'Noto Serif JP',serif",fontSize:on?20:18,transition:"font-size .2s"}}>{t.kanji}</span>
             <span style={{fontSize:9,letterSpacing:".04em"}}>{t.label}</span>
             {on&&<div style={{position:"absolute",bottom:8,width:4,height:4,borderRadius:"50%",background:C.red}}/>}
@@ -6179,60 +6184,6 @@ function Onboarding({onComplete, googleInfo}){
   );
 }
 
-// ─── Parcours de présentation (tour des fonctionnalités) ──────────────────────
-// Parcours guidé contextuel : chaque étape pointe une section (onglet) réelle
-const TOUR_STEPS = [
-  {tab:"home",      emoji:"🏠", title:"L'accueil",        text:"Ton rendez-vous quotidien : proverbe du jour, recommandations selon tes goûts, et ta sélection « Daily Japan ». Reviens chaque jour pour du nouveau contenu et garder ta série 🔥."},
-  {tab:"explore",   emoji:"🗺️", title:"Explorer",          text:"Découvre traditions, vie quotidienne, codes sociaux et régions. Les catégories se débloquent au fil de ton streak quotidien 🔥."},
-  {tab:"scenarios", emoji:"🎭", title:"Scénarios",        text:"Des dialogues interactifs pour t'entraîner à de vraies conversations. Valide-les pour suivre ta progression."},
-  {tab:"learn",     emoji:"🎴", title:"Apprendre",         text:"Le cœur de l'app : le parcours « Survivre à Tokyo » étape par étape, ou l'entraînement libre (flashcards de kana, situations). Avec prononciation audio 🔊."},
-  {tab:"profile",   emoji:"🏆", title:"Ton profil",        text:"Suis ta progression : titre, streak, maîtrise des syllabaires, badges débloqués et tes favoris. Tout est synchronisé sur ton compte."},
-];
-
-function GuidedTour({C, step, onNext, onPrev, onSkip, onFinish, dontShowAgain, setDontShowAgain}){
-  const s = TOUR_STEPS[step];
-  const last = step === TOUR_STEPS.length-1;
-  const first = step === 0;
-  return(
-    <>
-      {/* Voile sombre — laisse voir la section derrière */}
-      <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:300,backdropFilter:"blur(1px)"}}/>
-      {/* Conteneur de positionnement (centrage horizontal) — ne porte AUCUNE animation */}
-      <div style={{position:"fixed",left:"50%",bottom:90,transform:"translateX(-50%)",width:"min(90vw,360px)",zIndex:301}}>
-        {/* Carte animée (l'animation ne touche que cet enfant, pas le centrage) */}
-        <div key={step} style={{background:C.s1,borderRadius:18,padding:"22px 22px 18px",boxShadow:"0 20px 60px rgba(0,0,0,0.45)",border:`1px solid ${C.border}`,animation:"bubbleIn .42s cubic-bezier(.34,1.56,.64,1) both"}}>
-        {/* Skip en haut à droite */}
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-          <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>Découverte · {step+1}/{TOUR_STEPS.length}</span>
-          {!last && <span onClick={onSkip} className="pop-press" style={{fontSize:12,color:C.t3,cursor:"pointer"}}>Passer</span>}
-        </div>
-        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
-          <span style={{fontSize:34,display:"inline-block",animation:"zoomBadge .5s cubic-bezier(.34,1.56,.64,1) .1s both"}}>{s.emoji}</span>
-          <div style={{fontSize:19,fontWeight:600,color:C.text,animation:"slideInRight .4s ease .12s both"}}>{s.title}</div>
-        </div>
-        <div style={{fontSize:14,color:C.t2,lineHeight:1.6,marginBottom:18,animation:"fadeIn .5s ease .2s both"}}>{s.text}</div>
-
-        {/* Sur la dernière étape : option de désactivation */}
-        {last && (
-          <div onClick={()=>setDontShowAgain(v=>!v)} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 13px",background:C.s2,borderRadius:10,marginBottom:16,cursor:"pointer",border:`1px solid ${dontShowAgain?C.red:C.border}`}}>
-            <div style={{width:20,height:20,borderRadius:5,flexShrink:0,border:`1px solid ${dontShowAgain?C.red:C.t3}`,background:dontShowAgain?C.red:"transparent",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:13}}>{dontShowAgain?"✓":""}</div>
-            <span style={{fontSize:13,color:C.text}}>Ne plus afficher ce parcours à l'ouverture</span>
-          </div>
-        )}
-
-        {/* Navigation */}
-        <div style={{display:"flex",gap:10}}>
-          {!first && <button onClick={onPrev} className="pop-press" style={{flex:"0 0 auto",padding:"13px 18px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:14,cursor:"pointer"}}>‹</button>}
-          <button onClick={last ? onFinish : onNext} className="pop-press" style={{flex:1,padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
-            {last ? "Terminer 🌸" : "Suivant →"}
-          </button>
-        </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
 function Splash({onDone}){
   useEffect(()=>{const t=setTimeout(onDone,2500);return()=>clearTimeout(t);},[]);
   return(
@@ -6251,9 +6202,9 @@ function Splash({onDone}){
 // ─── Root ─────────────────────────────────────────────────────────────────────
 // Persistence helpers (localStorage) — safe wrappers
 const STORE_KEY = "isekaid_profile_v1";
-const TOUR_KEY = "isekaid_tour_off_v1"; // "1" => parcours désactivé (ne plus afficher)
-function tourDisabled(){ try { return localStorage.getItem(TOUR_KEY)==="1"; } catch { return false; } }
-function setTourDisabled(off){ try { localStorage.setItem(TOUR_KEY, off?"1":"0"); } catch {} }
+const INTRO_KEY = "isekaid_intro_seen_v1"; // "1" => présentation 1er lancement déjà vue
+function introSeen(){ try { return localStorage.getItem(INTRO_KEY)==="1"; } catch { return false; } }
+function markIntroSeen(){ try { localStorage.setItem(INTRO_KEY, "1"); } catch {} }
 const THEME_KEY = "isekaid_theme_v1";
 function loadProfile(){
   try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
@@ -6828,8 +6779,7 @@ export default function IsekaidApp(){
   };
   const [showSearch,setShowSearch]=useState(false);
   const [spotlightLieu,setSpotlightLieu]=useState(null);
-  const [tourStep,setTourStep]=useState(-1); // -1 = inactif, 0+ = étape en cours
-  const [tourDontShow,setTourDontShow]=useState(false);
+  const [pulseTab,setPulseTab]=useState(null); // pilier à mettre brièvement en avant (goal) à l'arrivée sur l'accueil
   const [newAchievement,setNewAchievement]=useState(null);
 
   // Detect newly unlocked achievements and celebrate
@@ -7064,7 +7014,7 @@ export default function IsekaidApp(){
             if(typeof s.dark==="boolean"){ setDark(s.dark); saveTheme(s.dark); }
             if(s.accent){ setAccent(s.accent); saveAccent(s.accent); }
             if(s.script){ setScript(s.script); saveScript(s.script); }
-            if(s.tourSeen){ setTourDisabled(true); }
+            if(s.introSeen){ markIntroSeen(); }
             if(s.premium && s.premium.active){ setPremium(s.premium); savePremium(s.premium); }
           }
         }
@@ -7084,7 +7034,7 @@ export default function IsekaidApp(){
     syncRef.current = setTimeout(()=>{
       saveProgress(session.user.id, {
         streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user, path:pathProgress, mission,
-        settings: { dark, accent, script, tourSeen: tourDisabled(), premium }
+        settings: { dark, accent, script, introSeen: introSeen(), premium }
       });
     }, 800);
     return ()=> clearTimeout(syncRef.current);
@@ -7183,7 +7133,6 @@ export default function IsekaidApp(){
   const completeOnboarding = (u)=>{
     saveProfile(u);
     setUser(u);
-    setScreen("app");
     // Compte le jour 1 tout de suite (pas seulement après les 3 missions du
     // jour) : sans ça, le contenu au palier "jour 1" (Traditions, 1ère
     // Découverte) reste verrouillé pendant toute la première session.
@@ -7191,40 +7140,30 @@ export default function IsekaidApp(){
     // donc aucun risque de double-comptage avec le déclenchement normal en
     // fin de mission (voir completeTask).
     setStreak(touchStreak());
-    // Lance le parcours guidé sauf s'il a été désactivé
-    if(!tourDisabled()){ setTab("home"); setTourStep(0); }
+    // Présentation cinématique des 5 piliers avant l'accueil, une seule fois
+    // (voir finishIntro/markIntroSeen) ; sinon direct sur l'app.
+    setScreen(introSeen() ? "app" : "intro");
   };
 
-  // Lance le parcours guidé à chaque ouverture (si non désactivé) — une fois l'app affichée
-  useEffect(()=>{
-    if(screen==="app" && user && !tourDisabled() && tourStep===-1){
-      // léger délai pour laisser l'app s'afficher
-      const t = setTimeout(()=>{ setTab("home"); setTourStep(0); }, 400);
-      return ()=>clearTimeout(t);
-    }
-  },[screen, user]);
+  // Fin de la présentation (skip ou dernier chapitre) : marque comme vue,
+  // bascule sur l'app, et met brièvement en avant (pulseTab, voir BottomNav)
+  // le pilier qui correspond au goal choisi à l'onboarding.
+  const finishIntro = ()=>{
+    markIntroSeen();
+    setScreen("app");
+    const t = GOAL_TAB[user?.goal];
+    if(t) setPulseTab(t);
+  };
+  // Revoir la présentation depuis le Profil, à tout moment
+  const replayIntro = ()=> setScreen("intro");
 
   // ── Séquencement des pop-ups : un seul overlay à la fois ──
-  // Priorité : parcours guidé (tourStep>=0) > DailyWelcome (streak).
-  // Le DailyWelcome en file attend que le tour soit terminé et que l'app soit visible.
   useEffect(()=>{
-    if(welcomeQueued && screen==="app" && tourStep===-1 && !showWelcome){
+    if(welcomeQueued && screen==="app" && !showWelcome){
       const t = setTimeout(()=>{ setShowWelcome(true); setWelcomeQueued(false); }, 350);
       return ()=>clearTimeout(t);
     }
-  },[welcomeQueued, screen, tourStep, showWelcome]);
-
-  const tourNext = ()=>{
-    const next = tourStep+1;
-    if(next < TOUR_STEPS.length){ setTab(TOUR_STEPS[next].tab); setTourStep(next); }
-  };
-  const tourPrev = ()=>{
-    const prev = tourStep-1;
-    if(prev>=0){ setTab(TOUR_STEPS[prev].tab); setTourStep(prev); }
-  };
-  const tourSkip = ()=>{ setTourStep(-1); setTab("home"); };
-  const tourFinish = ()=>{ if(tourDontShow) setTourDisabled(true); setTourStep(-1); setTab("home"); };
-  const startTour = ()=>{ setTourDontShow(false); setTab("home"); setTourStep(0); };
+  },[welcomeQueued, screen, showWelcome]);
 
   // Reset profile (called from Profile screen)
   const resetProfile = ()=>{
@@ -7246,7 +7185,7 @@ export default function IsekaidApp(){
     }
     // Vider tout le localStorage
     const keys = ["isekaid_profile_v1","isekaid_streak_v1","isekaid_favs_v1","isekaid_unlocks_v1",
-      "isekaid_scenarios_v1","isekaid_kana_v1","isekaid_ach_v1","isekaid_tour_off_v1",
+      "isekaid_scenarios_v1","isekaid_kana_v1","isekaid_ach_v1","isekaid_intro_seen_v1",
       "isekaid_path_v1","isekaid_trips_v1","isekaid_theme_v1","isekaid_script_v1"];
     keys.forEach(k=>{ try { localStorage.removeItem(k); } catch {} });
     setUser(null); setSession(null); setScreen("auth"); setTab("home");
@@ -7260,6 +7199,7 @@ export default function IsekaidApp(){
         {screen==="splash"      &&<Splash onDone={afterSplash}/>}
         {screen==="auth"       &&<AuthScreen C={C}/>}
         {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding} googleInfo={googleUserInfo(session)}/>}
+        {screen==="intro"      &&<FeatureIntroScreen onDone={finishIntro}/>}
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
@@ -7269,19 +7209,16 @@ export default function IsekaidApp(){
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)}/>}
               {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
-            <BottomNav C={C} active={tab} onChange={setTab}/>
-            {/* Parcours guidé contextuel */}
-            {tourStep>=0 && <GuidedTour C={C} step={tourStep} onNext={tourNext} onPrev={tourPrev} onSkip={tourSkip} onFinish={tourFinish} dontShowAgain={tourDontShow} setDontShowAgain={setTourDontShow}/>}
+            <BottomNav C={C} active={tab} onChange={setTab} pulseTab={pulseTab} onPulseEnd={()=>setPulseTab(null)}/>
             {/* Global wiki panel — available everywhere */}
             {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
-            {/* Daily welcome popup — jamais pendant le parcours guidé */}
-            {showWelcome && tourStep===-1 && <DailyWelcome C={C} streak={streak} dailyInfo={dailyInfo} isPremium={isPremium} onClose={()=>setShowWelcome(false)}/>}
+            {showWelcome && <DailyWelcome C={C} streak={streak} dailyInfo={dailyInfo} isPremium={isPremium} onClose={()=>setShowWelcome(false)}/>}
             {missionReward && (
               <div onClick={()=>setMissionReward(false)} style={{position:"fixed",bottom:96,left:"50%",transform:"translateX(-50%)",zIndex:320,background:C.green,color:"#fff",padding:"13px 22px",borderRadius:24,fontSize:13,fontWeight:600,boxShadow:"0 6px 24px rgba(58,102,69,0.4)",animation:"fadeUp .35s ease",display:"flex",alignItems:"center",gap:9,whiteSpace:"nowrap"}}>
                 🎯 Mission accomplie ! <span style={{opacity:0.9}}>Bravo 🎌</span>
