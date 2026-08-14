@@ -11,6 +11,7 @@ import { speakJP, SpeakButton } from "./tts";
 import { TutorEntryCard, TutorScreen, estimateNiveau } from "./Tutor";
 import { DiscoveriesScreen, useLatestUnlockedDiscovery, DiscoveryTeaserCard, isDiscoveryNew, useExploreDiscoveries, requiredDay } from "./ExploreDiscoveries";
 import { scenarioTutorTarget, buildBridgeContext } from "./scenarioTutorBridge";
+import { MOTION_CSS_VARS } from "./motion";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -294,6 +295,20 @@ const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400;500&display=swap');
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 ::-webkit-scrollbar{width:0;height:0;}
+:root{${MOTION_CSS_VARS}}
+/* Accessibilité (WCAG) : neutralise TOUTE animation/transition CSS de l'app
+   (keyframes existants inclus, pas seulement le nouveau socle) pour qui
+   demande moins de mouvement — un seul endroit à maintenir. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important;}
+}
+/* View Transitions API (System 3, câblée en Phase 1) : fondu + léger
+   glissement avec la courbe/durée signature — cohérent avec .screen-in. */
+::view-transition-old(root),::view-transition-new(root){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-smooth);}
+::view-transition-old(root){animation-name:vt-out;}
+::view-transition-new(root){animation-name:vt-in;}
+@keyframes vt-out{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
+@keyframes vt-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 input{font-family:inherit;padding:12px 16px;width:100%;outline:none;border-radius:10px;font-size:14px;}
 button{font-family:inherit;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
