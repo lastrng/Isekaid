@@ -35,13 +35,20 @@ export function estimateNiveau(kanaProgress, scenProgress, streak, selfReportedL
 const NIVEAU_LABEL = { "débutant":"Débutant", "faux-débutant":"Faux-débutant", "intermédiaire":"Intermédiaire" };
 
 // ─── Entrée sur l'accueil ───────────────────────────────────────────────────
+// En-tête réplique le style de SH (App.jsx) — pas d'import cross-fichier
+// pour garder Tutor.jsx autonome, même convention que DailyFeed.jsx /
+// ExploreDiscoveries.jsx.
 export function TutorEntryCard({C, onOpen}){
   return (
-    <div style={{marginBottom:26}}>
-      <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:11}}>
-        <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>🧑‍🏫 Ton tuteur</span>
+    <div>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:13}}>
+        <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:C.red,lineHeight:1}}>師</div>
+        <div>
+          <div style={{fontSize:14,fontWeight:500,color:C.text,lineHeight:1.2}}>Ton tuteur</div>
+          <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginTop:1}}>Pratique guidée en japonais</div>
+        </div>
       </div>
-      <div onClick={onOpen} className="lift" style={{cursor:"pointer",padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",gap:14}}>
+      <div onClick={onOpen} className="lift" style={{cursor:"pointer",padding:"16px 18px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow||"none",display:"flex",alignItems:"center",gap:14}}>
         <span style={{fontSize:32,flexShrink:0}}>🧑‍🏫</span>
         <div style={{flex:1,minWidth:0}}>
           <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Parler avec ton tuteur</div>

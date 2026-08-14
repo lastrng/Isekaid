@@ -22,13 +22,23 @@ const LIGHT = {
   text:"#1C1410", t2:"#7A6858", t3:"#816D5E",
   red:"#C9463D", gold:"#9E7A1A", green:"#3A6645", indigo:"#2E4374",
   border:"rgba(26,20,16,0.09)", navBg:"rgba(250,247,242,0.97)",
+  // Élévation couche 1 (cartes) : ombre très subtile en clair, où le fond
+  // crème et la carte blanche sont trop proches en luminosité pour se
+  // distinguer sans un léger relief.
+  shadow:"0 1px 3px rgba(28,20,16,0.05), 0 1px 2px rgba(28,20,16,0.04)",
 };
 const DARK = {
   bg:"#0F0B08", s1:"#1A1410", s2:"#241C15", s3:"#2E231B",
   text:"#F0E6D3", t2:"#9C8A74", t3:"#8B7A66",
   red:"#C9463D", gold:"#C9A84C", green:"#4E8060", indigo:"#6B82C4",
   border:"rgba(240,230,211,0.07)", navBg:"rgba(15,11,8,0.97)",
+  // En sombre, l'élévation se lit déjà par le contraste de luminosité
+  // s1 (#1A1410) vs bg (#0F0B08) — une ombre par-dessus n'ajouterait rien.
+  shadow:"none",
 };
+// Rythme vertical unique entre les cartes de l'accueil (remplace les
+// marges ad-hoc 14–28px dispersées dans les blocs individuels).
+const HOME_GAP = 18;
 
 // Accent saisonnier dynamique (selon le mois réel)
 function currentSeasonKey(date=new Date()){
@@ -349,9 +359,27 @@ function Petals() {
 }
 
 // ─── Reusable primitives ─────────────────────────────────────────────────────
+// Système de surface (couche 1) — un seul endroit pour rayon/ombre/padding.
+// variant "hero" = carte d'action prioritaire (Mission du jour, alerte streak) ;
+// "compact" = widget secondaire léger (ex. teaser révisions) ; par défaut =
+// carte de section standard. `style` fusionné en dernier pour les surcharges
+// contextuelles (ex. teinte de statut sur l'alerte streak).
+function SectionCard({C, variant="default", onClick, className, style, children}){
+  const radius = variant==="hero" ? 20 : variant==="compact" ? 14 : 18;
+  const padding = variant==="hero" ? "20px" : variant==="compact" ? "12px 16px" : "16px 18px";
+  return(
+    <div onClick={onClick} className={className || (onClick ? "lift" : undefined)} style={{
+      background:C.s1, border:`1px solid ${C.border}`, borderRadius:radius, padding,
+      boxShadow:C.shadow||"none", cursor:onClick?"pointer":"default",
+      ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
 function SH({C,kanji,title,sub,onRefresh,badge}){
   return(
-    <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",marginBottom:13,marginTop:8}}>
+    <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",marginBottom:13}}>
       <div style={{display:"flex",alignItems:"center",gap:10}}>
         <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:C.red,lineHeight:1}}>{kanji}</div>
         <div>
@@ -594,9 +622,9 @@ function DailyPlaceSpotlight({C, db, today, lieu: lieuProp, isNew, isFav, toggle
   const fav = isFav && isFav("lieu", lieu);
 
   return (
-    <div style={{marginBottom:28}}>
+    <div>
       <SH C={C} kanji="景" title="Lieu du jour" sub="Un endroit à découvrir aujourd'hui" badge={isNew}/>
-      <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(lieu)} style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.border}`,position:"relative",background:C.s1}}>
+      <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(lieu)} style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.border}`,boxShadow:C.shadow||"none",position:"relative",background:C.s1}}>
         <div style={{position:"relative",width:"100%",height:220,background:C.s2}}>
           {video ? (
             <video src={video} autoPlay muted loop playsInline preload="metadata"
@@ -648,7 +676,7 @@ function StreakSection({C,streak,isPremium}){
   const nextUnlock = UNLOCK_SCHEDULE.find(u=>u.day>count);
 
   return(
-    <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:18,animation:"fadeUp .4s ease"}}>
+    <div style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow||"none",padding:18,animation:"fadeUp .4s ease"}}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
         <div>
           <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:5,textTransform:"uppercase"}}>Streak actuel</div>
@@ -846,7 +874,7 @@ function getHomeAlert({ streak, mission }){
 function HomeAlert({ C, alert, onGo, onDismiss }){
   if(!alert) return null;
   return(
-    <div style={{marginBottom:22,padding:"15px 16px",borderRadius:15,background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.3)",position:"relative",animation:"bubbleIn .45s cubic-bezier(.34,1.56,.64,1) both"}}>
+    <div style={{padding:"18px 20px",borderRadius:20,background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.3)",boxShadow:C.shadow||"none",position:"relative",animation:"bubbleIn .45s cubic-bezier(.34,1.56,.64,1) both"}}>
       <div onClick={onDismiss} style={{position:"absolute",top:10,right:12,fontSize:15,color:C.t3,cursor:"pointer",lineHeight:1,padding:2}}>×</div>
       <div style={{display:"flex",alignItems:"flex-start",gap:13}}>
         <span style={{fontSize:30,flexShrink:0,animation:"heartbeat 1.4s ease infinite"}}>{alert.emoji}</span>
@@ -905,7 +933,7 @@ function ResumeCard({C, mission, latestFeed, today, onGoTab, onTask}){
 
   if(!state){
     return (
-      <div style={{marginBottom:22,padding:18,borderRadius:16,background:"rgba(78,128,96,0.08)",border:"1px solid rgba(78,128,96,0.28)",animation:"fadeUp .4s ease"}}>
+      <div style={{padding:18,borderRadius:18,background:"rgba(78,128,96,0.08)",border:"1px solid rgba(78,128,96,0.28)",boxShadow:C.shadow||"none",animation:"fadeUp .4s ease"}}>
         <div style={{display:"flex",alignItems:"center",gap:12}}>
           <span style={{fontSize:26}}>✅</span>
           <div>
@@ -918,7 +946,7 @@ function ResumeCard({C, mission, latestFeed, today, onGoTab, onTask}){
   }
 
   return (
-    <div onClick={state.onGo} className="lift" style={{marginBottom:22,padding:"16px 18px",borderRadius:16,background:C.s1,border:`1px solid ${C.border}`,cursor:"pointer",display:"flex",alignItems:"center",gap:14,animation:"fadeUp .4s ease"}}>
+    <div onClick={state.onGo} className="lift" style={{padding:"16px 18px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,boxShadow:C.shadow||"none",cursor:"pointer",display:"flex",alignItems:"center",gap:14,animation:"fadeUp .4s ease"}}>
       <span style={{fontSize:30,flexShrink:0}}>{state.emoji}</span>
       <div style={{flex:1,minWidth:0}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",textTransform:"uppercase",marginBottom:3}}>Reprendre où tu en étais</div>
@@ -943,7 +971,7 @@ function SeasonBanner({C, acc, lieux, onOpenLieu}){
   const items = lieux || [];
   const hasLieux = items.length > 0;
   return(
-    <div style={{borderRadius:12,background:acc.soft,border:`1px solid ${acc.accent}33`,marginBottom:14,overflow:"hidden"}}>
+    <div style={{borderRadius:18,background:acc.soft,border:`1px solid ${acc.accent}33`,boxShadow:C.shadow||"none",overflow:"hidden"}}>
       <div
         onClick={hasLieux ? ()=>setOpen(o=>!o) : undefined}
         style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",cursor:hasLieux?"pointer":"default"}}
@@ -1080,28 +1108,28 @@ function WeeklyChallengeCard({C}){
   };
 
   return (
-    <div style={{marginBottom:24,padding:"16px 18px",background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`,borderRadius:16}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-        <div style={{fontSize:11,color:allDone?C.green:C.indigo,letterSpacing:".15em",textTransform:"uppercase",fontWeight:600}}>
-          {allDone ? "✓ Défi de la semaine accompli !" : `${theme.emoji} ${theme.title}`}
+    <div>
+      <SH C={C} kanji="週" title="Défi de la semaine" sub={allDone?"Accompli !":`${theme.emoji} ${theme.title}`}/>
+      <SectionCard C={C} style={{background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`}}>
+        <div style={{display:"flex",justifyContent:"flex-end",marginBottom:12}}>
+          <div style={{fontSize:11,color:C.t3}}>{done.length}/{total}</div>
         </div>
-        <div style={{fontSize:11,color:C.t3}}>{done.length}/{total}</div>
-      </div>
-      <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
-        <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:C.indigo,borderRadius:3,transition:"width .5s"}}/>
-      </div>
-      <div style={{display:"flex",flexDirection:"column",gap:8}}>
-        {theme.items.map((text,idx)=>{
-          const ok = done.includes(idx);
-          return(
-            <div key={idx} onClick={()=>toggleItem(idx)} style={{display:"flex",alignItems:"center",gap:11,cursor:"pointer"}}>
-              <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":""}</div>
-              <div style={{flex:1,fontSize:13,color:C.text,textDecoration:ok?"line-through":"none",opacity:ok?0.6:1}}>{text}</div>
-            </div>
-          );
-        })}
-      </div>
-      {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>🎉 Défi de la semaine accompli !</div>}
+        <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
+          <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:C.indigo,borderRadius:3,transition:"width .5s"}}/>
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {theme.items.map((text,idx)=>{
+            const ok = done.includes(idx);
+            return(
+              <div key={idx} onClick={()=>toggleItem(idx)} style={{display:"flex",alignItems:"center",gap:11,cursor:"pointer"}}>
+                <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":""}</div>
+                <div style={{flex:1,fontSize:13,color:C.text,textDecoration:ok?"line-through":"none",opacity:ok?0.6:1}}>{text}</div>
+              </div>
+            );
+          })}
+        </div>
+        {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>🎉 Défi de la semaine accompli !</div>}
+      </SectionCard>
     </div>
   );
 }
@@ -1115,13 +1143,13 @@ function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
   if(!hasStarted) return null;
   if(dueCount <= 0){
     return (
-      <div style={{marginBottom:24,padding:"12px 16px",borderRadius:14,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:10,color:C.t3,fontSize:12.5}}>
+      <div style={{padding:"12px 16px",borderRadius:14,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:10,color:C.t3,fontSize:12.5}}>
         <span style={{fontSize:15}}>✓</span> Révisions à jour — reviens demain
       </div>
     );
   }
   return (
-    <div onClick={onStart} className="lift" style={{cursor:"pointer",marginBottom:24,borderRadius:18,overflow:"hidden",border:`1px solid ${C.gold}55`,background:`linear-gradient(150deg,${C.gold}1f,transparent 70%)`}}>
+    <div onClick={onStart} className="lift" style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.gold}55`,background:`linear-gradient(150deg,${C.gold}1f,transparent 70%)`,boxShadow:C.shadow||"none"}}>
       <div style={{padding:"16px 18px",display:"flex",alignItems:"center",gap:14}}>
         <div style={{fontSize:34,animation:"heartbeat 1.8s ease infinite"}}>🔁</div>
         <div style={{flex:1,minWidth:0}}>
@@ -1199,9 +1227,9 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
         <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{g.jp}</div>
       </div>
 
-      <div style={{padding:"18px 20px 110px",position:"relative",zIndex:1}}>
+      <div style={{padding:"18px 20px 110px",position:"relative",zIndex:1,display:"flex",flexDirection:"column",gap:HOME_GAP}}>
         {/* Search tap target */}
-        <div onClick={onSearch} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 15px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,cursor:"pointer",marginBottom:24}}>
+        <div onClick={onSearch} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 15px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,boxShadow:C.shadow||"none",cursor:"pointer"}}>
           <span style={{fontSize:15,color:C.t3}}>🔍</span>
           <span style={{fontSize:13,color:C.t3}}>Rechercher un mot, plat, tradition…</span>
         </div>
@@ -1230,31 +1258,29 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           const targetFor = (tr)=> MISSION_TARGET_TAB[tr] || "home";
           const isFirstDay = !!mission.firstDay;
           return(
-            <div style={{marginBottom:24,padding:"16px 18px",background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`,borderRadius:16}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-                <div style={{fontSize:11,color:allDone?C.green:C.gold,letterSpacing:".15em",textTransform:"uppercase",fontWeight:600}}>
-                  {allDone ? (isFirstDay?"✓ Bravo, 4 piliers testés !":"✓ Mission accomplie !") : (isFirstDay?"🎌 Ta première journée":"🎯 Mission du jour")}
+            <div>
+              <SH C={C} kanji="目" title={isFirstDay?"Ta première journée":"Mission du jour"}
+                sub={allDone ? (isFirstDay?"Bravo, 4 piliers testés !":"Mission accomplie !") : `${done.length}/${todays.length} complétée${done.length>1?"s":""}${isFirstDay?" — les 4 piliers d'Isekai'd":""}`}/>
+              <SectionCard C={C} variant="hero" style={{background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`}}>
+                <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
+                  <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:C.gold,borderRadius:3,transition:"width .5s"}}/>
                 </div>
-                <div style={{fontSize:11,color:C.t3}}>{done.length}/{todays.length}</div>
-              </div>
-              <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
-                <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:C.gold,borderRadius:3,transition:"width .5s"}}/>
-              </div>
-              <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                {todays.map(t=>{
-                  const ok = done.includes(t.id);
-                  return(
-                    <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(targetFor(t.trigger)); }} style={{display:"flex",alignItems:"center",gap:11,cursor:ok?"default":"pointer",opacity:ok?0.6:1}}>
-                      <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":t.emoji}</div>
-                      <div style={{flex:1}}>
-                        <div style={{fontSize:13,color:C.text,textDecoration:ok?"line-through":"none"}}>{t.label}</div>
+                <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                  {todays.map(t=>{
+                    const ok = done.includes(t.id);
+                    return(
+                      <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(targetFor(t.trigger)); }} style={{display:"flex",alignItems:"center",gap:11,cursor:ok?"default":"pointer",opacity:ok?0.6:1}}>
+                        <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":t.emoji}</div>
+                        <div style={{flex:1}}>
+                          <div style={{fontSize:13,color:C.text,textDecoration:ok?"line-through":"none"}}>{t.label}</div>
+                        </div>
+                        {!ok && <span style={{fontSize:10,color:C.t3}}>{t.hint} ›</span>}
                       </div>
-                      {!ok && <span style={{fontSize:10,color:C.t3}}>{t.hint} ›</span>}
-                    </div>
-                  );
-                })}
-              </div>
-              {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>{isFirstDay ? "🎉 Tu as fait le tour des 4 piliers d'Isekai'd !" : "🎉 Mission du jour accomplie !"}</div>}
+                    );
+                  })}
+                </div>
+                {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>{isFirstDay ? "🎉 Tu as fait le tour des 4 piliers d'Isekai'd !" : "🎉 Mission du jour accomplie !"}</div>}
+              </SectionCard>
             </div>
           );
         })()}
@@ -1274,10 +1300,12 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
             japonDuJour: ()=> <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>,
             // DiscoveryTeaserCard a déjà son propre badge "DÉCOUVERTE DU JOUR" intégré.
             decouvertes: ()=> latestDiscovery ? <DiscoveryTeaserCard C={C} discovery={latestDiscovery} isNew={discoveryIsNew} onOpen={()=>onGoTab("explore")}/> : null,
-            streak: ()=> (<>
-              <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
-              <StreakSection C={C} streak={streak} isPremium={isPremium}/>
-            </>),
+            streak: ()=> (
+              <div>
+                <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
+                <StreakSection C={C} streak={streak} isPremium={isPremium}/>
+              </div>
+            ),
             recommande: ()=>{
               if(!db || !(user?.why?.length>0)) return null;
               const reco = recommendForUser(db, user.why, user.goal, today);
@@ -1295,15 +1323,13 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
               }[cat] || {label:"Pour toi",emoji:"✨",title:"",sub:"",full:"",extra:""};
               const jpText = cat==="repas"?item.nom_jp:(cat==="expressions"?item.expression:null);
               return(
-                <div style={{marginBottom:26}}>
-                  <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:11}}>
-                    <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>✨ Recommandé pour toi</span>
-                  </div>
-                  <div onClick={()=>setRecoOpen(o=>!o)} style={{padding:"16px",background:`linear-gradient(160deg,rgba(201,70,61,0.08),transparent)`,border:`1px solid rgba(201,70,61,0.2)`,borderRadius:14,cursor:"pointer",transition:"all .2s"}}>
+                <div>
+                  <SH C={C} kanji="好" title="Recommandé pour toi" sub="Selon tes centres d'intérêt"/>
+                  <SectionCard C={C} onClick={()=>setRecoOpen(o=>!o)} style={{transition:"all .2s"}}>
                     <div style={{display:"flex",alignItems:"center",gap:14}}>
                       <span style={{fontSize:32,flexShrink:0}}>{META.emoji}</span>
                       <div style={{flex:1,minWidth:0}}>
-                        <div style={{fontSize:9,color:C.red,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{META.label} · selon tes goûts</div>
+                        <div style={{fontSize:9,color:C.red,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{META.label}</div>
                         <div style={{display:"flex",alignItems:"center",gap:7}}>
                           <span style={{fontSize:15,color:C.text,fontWeight:500,overflow:recoOpen?"visible":"hidden",textOverflow:"ellipsis",whiteSpace:recoOpen?"normal":"nowrap"}}>{META.title}</span>
                           {jpText && recoOpen && <SpeakButton C={C} text={jpText} color={C.red} size={24}/>}
@@ -1319,7 +1345,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
                         {!META.full && !META.extra && <div style={{fontSize:13,color:C.t2}}>{META.sub}</div>}
                       </div>
                     )}
-                  </div>
+                  </SectionCard>
                 </div>
               );
             },
@@ -1331,18 +1357,18 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
         {FEATURE_FLAGS.tutor ? (
           <TutorEntryCard C={C} onOpen={()=>onGoTab("tutor")}/>
         ) : (
-          <div style={{marginBottom:26}}>
-            <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:11}}>
-              <span style={{fontSize:11,color:C.red,letterSpacing:".15em",textTransform:"uppercase"}}>🧑‍🏫 Ton tuteur</span>
-            </div>
-            <div style={{padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",gap:14,opacity:0.85}}>
+          <div>
+            <SH C={C} kanji="師" title="Ton tuteur" sub="Pratique guidée en japonais"/>
+            <SectionCard C={C} style={{opacity:0.85}}>
+              <div style={{display:"flex",alignItems:"center",gap:14}}>
               <span style={{fontSize:32,flexShrink:0}}>🧑‍🏫</span>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Parler avec ton tuteur</div>
                 <div style={{fontSize:12,color:C.t2,lineHeight:1.4}}>Conversations guidées en japonais, corrections et scénarios personnalisés.</div>
               </div>
               <span style={{fontSize:10,fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",padding:"4px 10px",borderRadius:20,background:C.s2,color:C.t3,flexShrink:0}}>Bientôt</span>
-            </div>
+              </div>
+            </SectionCard>
           </div>
         )}
       </div>
@@ -4088,7 +4114,7 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
   );
 }
 
-function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
+function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, isFav, toggleFav, favs, onOpenLieu}){
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   const villes = db?.villes || [];
@@ -4144,6 +4170,14 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
   const createTrip = (trip)=>{ persist([...trips, trip]); setActiveTripId(trip.id); setView("trip"); };
   const updateTrip = (updated)=>{ persist(trips.map(t=>t.id===updated.id?updated:t)); };
   const deleteTrip = (id)=>{ persist(trips.filter(t=>t.id!==id)); setActiveTripId(null); setView("home"); };
+  const keptLieux = (favs||[]).filter(f=>f.type==="lieu").map(f=>f.item);
+  const addKeptLieuToTrip = (lieu, tripId, dayIndex)=>{
+    persist(trips.map(t=>{
+      if(t.id!==tripId) return t;
+      const jours = t.jours.map((j,i)=> i!==dayIndex ? j : ({...j, etapes:[...j.etapes, {id:makeStepId(), lieuId:lieu.id, note:""}]}));
+      return {...t, jours};
+    }));
+  };
 
   // ─── Vue : création ───
   if(view==="create"){
@@ -4185,9 +4219,16 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
       </div>
     );
   }
+  // ─── Vue : lieux gardés (favoris de type lieu) ───
+  if(view==="kept"){
+    return <KeptPlacesScreen C={C} keptLieux={keptLieux} villeById={villeById} trips={trips} toggleFav={toggleFav}
+              onOpenLieu={onOpenLieu} onAddToTrip={addKeptLieuToTrip} onCreateTrip={tryCreate}
+              onBack={()=>setView("home")}/>;
+  }
   // ─── Vue : un voyage ───
   if(view==="trip" && activeTrip){
     return <VoyageTrip C={C} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
+              isFav={isFav} toggleFav={toggleFav}
               onBack={()=>setView("home")} onUpdate={updateTrip} onDelete={deleteTrip}/>;
   }
 
@@ -4208,7 +4249,10 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
               <div style={{fontSize:18,color:C.text,fontWeight:600,marginBottom:8}}>Planifie ton séjour</div>
               <div style={{fontSize:13,color:C.t2,lineHeight:1.6,maxWidth:300,margin:"0 auto 22px"}}>Crée ton itinéraire jour par jour, ou inspire-toi d'un voyage préconçu.</div>
               <button onClick={tryCreate} style={{width:"100%",maxWidth:320,padding:"14px",background:C.red,border:"none",borderRadius:13,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:10}}>+ Créer mon voyage</button>
-              <button onClick={()=>setView("browse")} style={{width:"100%",maxWidth:320,padding:"14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:13,color:C.text,fontSize:14,fontWeight:600,cursor:"pointer"}}>✨ Explorer des itinéraires</button>
+              <button onClick={()=>setView("browse")} style={{width:"100%",maxWidth:320,padding:"14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:13,color:C.text,fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:keptLieux.length?10:0}}>✨ Explorer des itinéraires</button>
+              {keptLieux.length>0 && (
+                <button onClick={()=>setView("kept")} style={{width:"100%",maxWidth:320,padding:"14px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:13,color:C.red,fontSize:14,fontWeight:600,cursor:"pointer"}}>❤️ {keptLieux.length} lieu{keptLieux.length>1?"x":""} gardé{keptLieux.length>1?"s":""}</button>
+              )}
             </div>
           </>
         ) : (
@@ -4239,6 +4283,9 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
               + Nouveau voyage {!isPremium && "🔒"}
             </button>
             <button onClick={()=>setView("browse")} style={{width:"100%",padding:"13px",background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer",marginTop:6}}>✨ Voir les itinéraires préconçus</button>
+            {keptLieux.length>0 && (
+              <button onClick={()=>setView("kept")} style={{width:"100%",padding:"13px",background:"transparent",border:"none",color:C.red,fontSize:12,fontWeight:600,cursor:"pointer"}}>❤️ {keptLieux.length} lieu{keptLieux.length>1?"x":""} gardé{keptLieux.length>1?"s":""}</button>
+            )}
           </>
         )}
       </div>
@@ -4254,6 +4301,126 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium}){
               <button onClick={()=>{ setShowPremium(false); onOpenPremium&&onOpenPremium(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:8}}>Découvrir Premium</button>
               <button onClick={()=>setShowPremium(false)} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Plus tard</button>
             </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Lieux gardés (favoris de type "lieu") — vue Voyage ───────────────────────
+// Groupe les lieux favorisés par ville, permet de les ouvrir (fiche plein
+// écran réutilisée) et de les ajouter manuellement à un jour d'un voyage
+// existant. Les lieux personnalisés (custom_..., créés dans un voyage précis)
+// peuvent être vus/retirés ici mais pas ré-ajoutés à un AUTRE voyage : ils
+// n'existent que dans le `customLieux` du voyage où ils ont été créés.
+function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu, onAddToTrip, onCreateTrip, onBack}){
+  const [addTarget, setAddTarget] = useState(null); // lieu en cours d'ajout
+  const [addTripId, setAddTripId] = useState(null); // voyage choisi (étape 2 si plusieurs voyages)
+  const [justAdded, setJustAdded] = useState(null); // "lieuId:jourNum" — confirmation brève
+
+  const groups = useMemo(()=>{
+    const byVille = {};
+    keptLieux.forEach(l=>{
+      const key = l.villeId || "_autre";
+      (byVille[key] = byVille[key] || []).push(l);
+    });
+    return Object.entries(byVille)
+      .map(([villeId, items])=>({ villeId, ville: villeById[villeId], items }))
+      .sort((a,b)=> (a.ville?.nom||"").localeCompare(b.ville?.nom||""));
+  }, [keptLieux, villeById]);
+
+  const startAdd = (lieu)=>{
+    setAddTarget(lieu);
+    setAddTripId(trips.length===1 ? trips[0].id : null);
+  };
+  const closeAdd = ()=>{ setAddTarget(null); setAddTripId(null); };
+  const confirmAdd = (tripId, dayIndex, dayNum)=>{
+    onAddToTrip(addTarget, tripId, dayIndex);
+    setJustAdded(`${addTarget.id}:${dayNum}`);
+    setTimeout(()=>{ closeAdd(); setJustAdded(null); }, 900);
+  };
+
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Retour</button>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>❤️ GARDÉS</div>
+        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Lieux gardés</div>
+      </div>
+
+      <div style={{padding:"18px 20px 110px"}}>
+        {groups.length===0 && (
+          <div style={{textAlign:"center",color:C.t3,fontSize:12,padding:"30px 0"}}>Aucun lieu gardé pour l'instant.</div>
+        )}
+        {groups.map(g=>(
+          <div key={g.villeId} style={{marginBottom:22}}>
+            <div style={{fontSize:11,color:C.t2,fontWeight:600,marginBottom:9}}>{g.ville?.emoji||"📍"} {g.ville?.nom||"Autre"}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:9}} className="stagger">
+              {g.items.map(l=>(
+                <div key={l.id} className="lift" style={{display:"flex",alignItems:"center",gap:11,background:C.s1,border:`1px solid ${C.border}`,borderRadius:13,padding:"12px 14px"}}>
+                  <div onClick={()=>onOpenLieu&&onOpenLieu(l)} style={{display:"flex",alignItems:"center",gap:11,flex:1,minWidth:0,cursor:onOpenLieu?"pointer":"default"}}>
+                    <span style={{fontSize:22,flexShrink:0}}>{l.emoji||"📍"}</span>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l.nom}</div>
+                      <div style={{fontSize:10,color:C.t3}}>{l.categorie}{l.quartier?` · ${l.quartier}`:""}</div>
+                    </div>
+                  </div>
+                  {!l.custom && (
+                    <button onClick={()=>startAdd(l)} style={{flexShrink:0,padding:"7px 11px",background:"transparent",border:`1px solid ${C.red}`,borderRadius:14,color:C.red,fontSize:11,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}>+ Voyage</button>
+                  )}
+                  <button onClick={()=>toggleFav("lieu",l)} aria-label="Retirer" style={{background:"transparent",border:"none",cursor:"pointer",color:C.red,fontSize:15,flexShrink:0,padding:4}}>♥</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Feuille d'ajout à un voyage */}
+      {addTarget && (
+        <div onClick={closeAdd} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+          <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:440,maxHeight:"70vh",overflowY:"auto",background:C.s1,borderRadius:"22px 22px 0 0",padding:"22px 22px 32px",animation:"fadeUp .3s ease"}}>
+            <div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:4}}>Ajouter « {addTarget.nom} »</div>
+
+            {trips.length===0 ? (
+              <>
+                <div style={{fontSize:13,color:C.t2,lineHeight:1.6,margin:"10px 0 18px"}}>Tu n'as pas encore de voyage. Crée-en un pour y ajouter ce lieu.</div>
+                <button onClick={()=>{ closeAdd(); onCreateTrip&&onCreateTrip(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>+ Créer mon voyage</button>
+              </>
+            ) : !addTripId ? (
+              <>
+                <div style={{fontSize:12,color:C.t3,margin:"6px 0 12px"}}>Choisis un voyage</div>
+                <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                  {trips.map(t=>(
+                    <button key={t.id} onClick={()=>setAddTripId(t.id)} style={{textAlign:"left",padding:"12px 14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:13,fontWeight:500,cursor:"pointer"}}>{t.titre}</button>
+                  ))}
+                </div>
+              </>
+            ) : (()=>{
+              const trip = trips.find(t=>t.id===addTripId);
+              const days = trip.jours.map((j,i)=>({...j, idx:i})).filter(j=>j.villeId===addTarget.villeId);
+              return(
+                <>
+                  <div style={{fontSize:12,color:C.t3,margin:"6px 0 12px"}}>
+                    {days.length>0 ? `Quel jour à ${villeById[addTarget.villeId]?.nom||""} ?` : `Ce voyage n'a pas de jour à ${villeById[addTarget.villeId]?.nom||"cette ville"}.`}
+                  </div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+                    {days.map(j=>{
+                      const already = j.etapes.some(e=>e.lieuId===addTarget.id);
+                      const added = justAdded===`${addTarget.id}:${j.num}`;
+                      return(
+                        <button key={j.id||j.idx} disabled={already||added} onClick={()=>confirmAdd(trip.id, j.idx, j.num)}
+                          style={{padding:"10px 16px",borderRadius:12,border:`1px solid ${already||added?C.green:C.border}`,background:already||added?"rgba(78,128,96,0.1)":C.s2,color:already||added?C.green:C.text,fontSize:13,fontWeight:600,cursor:already||added?"default":"pointer"}}>
+                          {added ? "✓ Ajouté" : already ? `✓ Jour ${j.num}` : `Jour ${j.num}`}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {trips.length>1 && <button onClick={()=>setAddTripId(null)} style={{marginTop:16,background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer",padding:0}}>‹ Changer de voyage</button>}
+                </>
+              );
+            })()}
           </div>
         </div>
       )}
@@ -4437,7 +4604,7 @@ function DayMap({ C, points }){
   );
 }
 
-function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPremium, onBack, onUpdate, onDelete}){
+function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPremium, isFav, toggleFav, onBack, onUpdate, onDelete}){
   const customLieux = trip.customLieux || [];
   const lieuById = useMemo(()=>{
     const base = Object.fromEntries((db?.lieux||[]).map(l=>[l.id,l]));
@@ -4616,6 +4783,11 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
           <img src={l.photo || l.image} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
           {!l.photo && <span style={{fontSize:58,position:"relative",textShadow:"0 2px 12px rgba(0,0,0,0.4)"}}>{l.emoji}</span>}
           <button onClick={()=>setSub("catalogue")} style={{position:"absolute",top:44,left:16,fontSize:12,color:"#fff",background:"rgba(0,0,0,0.45)",border:"none",padding:"6px 13px",borderRadius:16,cursor:"pointer"}}>‹ Retour</button>
+          {isFav && toggleFav && (
+            <div style={{position:"absolute",top:44,right:16}} onClick={()=>toggleFav("lieu",l)}>
+              <FavButton C={C} active={isFav("lieu",l)} onClick={()=>{}}/>
+            </div>
+          )}
           {l.photo && (l.photo_author||l.photo_licence) && (
             <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"3px 8px",background:"rgba(0,0,0,0.4)",fontSize:8,color:"rgba(255,255,255,0.85)",textAlign:"right"}}>
               {l.photo_author && `${l.photo_author}`}{l.photo_author && l.photo_licence && " · "}{l.photo_licence} · Wikimedia
@@ -4702,6 +4874,11 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
                   </div>
                   <div style={{fontSize:10,color:C.t3}}>{l.categorie} · {l.quartier} · {l.budget}</div>
                 </div>
+                {isFav && toggleFav && (
+                  <div onClick={(e)=>{e.stopPropagation(); toggleFav("lieu",l);}}>
+                    <FavButton C={C} active={isFav("lieu",l)} onClick={()=>{}}/>
+                  </div>
+                )}
                 <button onClick={(e)=>{e.stopPropagation(); if(!inDay) addLieu(l.id);}} style={{flexShrink:0,width:30,height:30,borderRadius:"50%",border:"none",background:inDay?"transparent":C.red,color:inDay?C.green:"#fff",fontSize:inDay?16:20,cursor:inDay?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>{inDay?"✓":"＋"}</button>
               </div>
             );
@@ -6858,7 +7035,7 @@ export default function IsekaidApp(){
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
-              {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
+              {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)}/>}
               {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
             </div>

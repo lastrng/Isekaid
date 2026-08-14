@@ -84,7 +84,7 @@ export function HomeDailyCard({ C, onOpen }){
         overflow: "hidden",
         border: `1px solid ${border}`,
         background: surface,
-        marginBottom: 18,
+        boxShadow: C.shadow || "none",
         position: "relative",
       }}
     >

@@ -69,7 +69,7 @@ export function DiscoveryTeaserCard({C, discovery, isNew, onOpen}){
   return (
     <div
       onClick={()=>{ markDiscoverySeen(discovery.slug); onOpen && onOpen(); }}
-      style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${border}`,background:surface,marginBottom:18,position:"relative"}}
+      style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${border}`,background:surface,boxShadow:C.shadow||"none",position:"relative"}}
     >
       {discovery.image_url && (
         <div style={{position:"relative",width:"100%",aspectRatio:"16 / 9",background:C.bg}}>
