@@ -1487,21 +1487,72 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
 }
 
 // ─── Other screens
-// Bandeau d'explication du déblocage progressif par streak — fermable, avec
-// option "ne plus afficher" persistée en localStorage (voir dismissUnlockHint).
-function UnlockHintBanner({C, onDismiss}){
-  const [dontShow, setDontShow] = useState(false);
-  return (
-    <div style={{position:"relative",padding:"14px 40px 14px 16px",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,fontSize:12,color:C.t3,lineHeight:1.6,marginBottom:20}}>
-      <button onClick={()=>onDismiss(dontShow)} aria-label="Fermer" style={{position:"absolute",top:10,right:10,width:24,height:24,borderRadius:"50%",border:"none",background:"transparent",color:C.t3,fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
-      <div style={{marginBottom:10}}>
-        🔓 Le contenu se débloque <b style={{color:C.t2}}>au fil de ton streak</b> : reviens chaque jour et les sections s'ouvrent progressivement. <b style={{color:C.t2}}>Premium</b> débloque tout immédiatement.
+// ─── Deep-dive contextuel (Système 2) : overlay léger à la 1re visite d'une
+// section (Explorer/Scénarios/Apprendre/Voyage), jamais rejoué ensuite (voir
+// sectionIntroSeen/markSectionIntroSeen). Reprend le langage visuel déjà
+// établi par l'ancien parcours guidé (voile + carte, bubbleIn/zoomBadge/
+// slideInRight/fadeIn) plutôt que d'en inventer un nouveau — CSS pur, pas de
+// Framer Motion : ce n'est pas un moment cinématique (cf. motion.js), juste
+// 1 à 3 temps courts, skippables dès le premier.
+const SECTION_INTRO_STEPS = {
+  explore: [
+    { emoji:"🔓", title:"Le contenu se débloque avec ton streak",
+      text:"Reviens chaque jour : traditions, société et découvertes s'ouvrent progressivement. Premium débloque tout immédiatement." },
+  ],
+  scenarios: [
+    { emoji:"🎭", title:"Entraîne-toi sur des situations réelles",
+      text:"Choisis une situation — au konbini, au restaurant, en voyage — et laisse-toi guider par le dialogue." },
+    { emoji:"✓", title:"Choisis, on te corrige",
+      text:"Chaque réponse est corrigée immédiatement, avec la prononciation audio. Valide un scénario pour suivre ta progression." },
+  ],
+  learn: [
+    { emoji:"🗼", title:"Le parcours guidé",
+      text:"« Survivre à Tokyo » : 8 paliers étape par étape, de la lecture des kana aux vraies conversations." },
+    { emoji:"🎴", title:"L'entraînement libre",
+      text:"Syllabaires, expressions, lecture et écoute — progresse à ton rythme, dans l'ordre que tu veux." },
+    { emoji:"🔁", title:"La révision espacée",
+      text:"Les kana que tu commences à oublier reviennent au bon moment, pour ancrer ta mémoire." },
+  ],
+  voyage: [
+    { emoji:"❤️", title:"Garde des lieux partout dans l'app",
+      text:"Sur chaque fiche lieu, ajoute-le à tes favoris — ils t'attendront ici." },
+    { emoji:"🗺️", title:"Crée ton itinéraire",
+      text:"Jour par jour, avec la carte, les horaires et tes notes — ou pars d'un itinéraire préconçu." },
+    { emoji:"✨", title:"Trois portes pour commencer",
+      text:"Créer ton voyage, explorer des itinéraires prêts à l'emploi, ou retrouver les lieux que tu as gardés." },
+  ],
+};
+function SectionIntro({C, color, steps, onDone}){
+  const [i, setI] = useState(0);
+  const s = steps[i];
+  const last = i === steps.length-1;
+  const next = ()=> last ? onDone() : setI(v=>v+1);
+  const prev = ()=> setI(v=>Math.max(0, v-1));
+  return(
+    <>
+      <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:300,backdropFilter:"blur(1px)"}}/>
+      <div style={{position:"fixed",left:"50%",bottom:90,transform:"translateX(-50%)",width:"min(90vw,360px)",zIndex:301}}>
+        <div key={i} style={{background:C.s1,borderRadius:18,padding:"22px 22px 18px",boxShadow:"0 20px 60px rgba(0,0,0,0.45)",border:`1px solid ${C.border}`,animation:"bubbleIn .42s cubic-bezier(.34,1.56,.64,1) both"}}>
+          {steps.length>1 && (
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+              <span style={{fontSize:11,color,letterSpacing:".15em",textTransform:"uppercase"}}>{i+1}/{steps.length}</span>
+              {!last && <span onClick={onDone} className="pop-press" style={{fontSize:12,color:C.t3,cursor:"pointer"}}>Passer</span>}
+            </div>
+          )}
+          <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+            <span style={{fontSize:34,display:"inline-block",animation:"zoomBadge .5s cubic-bezier(.34,1.56,.64,1) .1s both"}}>{s.emoji}</span>
+            <div style={{fontSize:17,fontWeight:600,color:C.text,animation:"slideInRight .4s ease .12s both"}}>{s.title}</div>
+          </div>
+          <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:18,animation:"fadeIn .5s ease .2s both"}}>{s.text}</div>
+          <div style={{display:"flex",gap:10}}>
+            {i>0 && <button onClick={prev} className="pop-press" style={{flex:"0 0 auto",padding:"13px 18px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:14,cursor:"pointer"}}>‹</button>}
+            <button onClick={next} className="pop-press" style={{flex:1,padding:"14px",background:color,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+              {last ? "Compris 🌸" : "Suivant →"}
+            </button>
+          </div>
+        </div>
       </div>
-      <label style={{display:"flex",alignItems:"center",gap:7,cursor:"pointer",fontSize:11,color:C.t3}}>
-        <input type="checkbox" checked={dontShow} onChange={e=>setDontShow(e.target.checked)} style={{width:14,height:14,cursor:"pointer",accentColor:C.red}}/>
-        Ne plus afficher ce message
-      </label>
-    </div>
+    </>
   );
 }
 function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,isPremium,onOpenPremium}){
@@ -1510,13 +1561,8 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
   const [confirmCat,setConfirmCat] = useState(null);
   const [toast,setToast] = useState(null);
   const [sectionFilter,setSectionFilter] = useState("all");
-  const [showUnlockHint,setShowUnlockHint] = useState(()=>{
-    try { return localStorage.getItem("isekaid_hide_unlock_hint_v1") !== "1"; } catch { return true; }
-  });
-  const dismissUnlockHint = (dontShowAgain)=>{
-    setShowUnlockHint(false);
-    if(dontShowAgain){ try { localStorage.setItem("isekaid_hide_unlock_hint_v1","1"); } catch {} }
-  };
+  const [showIntro,setShowIntro] = useState(()=>!sectionIntroSeen("explore"));
+  const dismissIntro = ()=>{ markSectionIntroSeen("explore"); setShowIntro(false); };
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
 
@@ -1567,9 +1613,6 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
       </div>
 
       <div style={{padding:"18px 20px 110px"}}>
-        {/* Hint déblocage par streak — en haut, fermable */}
-        {showUnlockHint && <UnlockHintBanner C={C} onDismiss={dismissUnlockHint}/>}
-
         {/* 3 sections (filtrées) */}
         {EXPLORE_SECTIONS.filter(section=> sectionFilter==="all" || section.id===sectionFilter).map(section=>(
           <div key={section.id} style={{marginBottom:28}}>
@@ -1613,6 +1656,9 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
 
       {/* Toast */}
       {toast && <div style={{position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",background:C.text,color:C.bg,padding:"11px 22px",borderRadius:20,fontSize:13,fontWeight:600,zIndex:200,animation:"toastUp .5s cubic-bezier(.34,1.56,.64,1)",boxShadow:"0 8px 24px rgba(0,0,0,0.25)",whiteSpace:"nowrap"}}>{toast}</div>}
+
+      {/* Deep-dive contextuel — 1re visite seulement */}
+      {showIntro && <SectionIntro C={C} color={acc.accent} steps={SECTION_INTRO_STEPS.explore} onDone={dismissIntro}/>}
 
       {/* Modale info déblocage */}
       {confirmCat && (()=>{
@@ -2486,6 +2532,8 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
 function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutorBridge}){
   const [active,setActive] = useState(null);
   const [levelFilter,setLevelFilter] = useState("Tous");
+  const [showIntro,setShowIntro] = useState(()=>!sectionIntroSeen("scenarios"));
+  const dismissIntro = ()=>{ markSectionIntroSeen("scenarios"); setShowIntro(false); };
   const LEVEL_ORDER = { "Débutant":0, "Intermédiaire":1, "Avancé":2 };
   const allScenarios = [...(db?.scenarios || [])].sort((a,b)=>
     (LEVEL_ORDER[a.niveau]??1) - (LEVEL_ORDER[b.niveau]??1)
@@ -2526,12 +2574,6 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutor
       </div>
 
       <div style={{padding:"18px 20px 110px"}}>
-        {/* Intro */}
-        <div style={{padding:"14px 16px",background:acc.soft,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:20,display:"flex",alignItems:"center",gap:12}}>
-          <span style={{fontSize:24}}>🎭</span>
-          <div style={{fontSize:12,color:C.t2,lineHeight:1.5}}>Entraîne-toi dans de vraies situations japonaises et valide chaque scénario pour progresser.</div>
-        </div>
-
         {/* Liste des scénarios, groupés par niveau */}
         <div style={{display:"flex",flexDirection:"column",gap:12}} className="stagger">
           {scenarios.map((s,i)=>{
@@ -2576,6 +2618,9 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutor
           {scenarios.length===0 && <div style={{padding:"24px",textAlign:"center",color:C.t3,fontSize:12}}>Chargement…</div>}
         </div>
       </div>
+
+      {/* Deep-dive contextuel — 1re visite seulement */}
+      {showIntro && <SectionIntro C={C} color={acc.accent} steps={SECTION_INTRO_STEPS.scenarios} onDone={dismissIntro}/>}
     </div>
   );
 }
@@ -3738,6 +3783,8 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
     if(initialMode) onInitialModeConsumed?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
+  const [showIntro,setShowIntro] = useState(()=>!sectionIntroSeen("learn"));
+  const dismissIntro = ()=>{ markSectionIntroSeen("learn"); setShowIntro(false); };
   // Triggers des missions du jour PAS ENCORE faites — sert à afficher un badge
   // "Mission du jour" sur la carte correspondante (kana / review / comp / path).
   const pendingTriggers = useMemo(()=>{
@@ -4138,6 +4185,9 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
         </div>
         </>)}
       </div>
+
+      {/* Deep-dive contextuel — 1re visite seulement, sur le menu principal */}
+      {!learnMode && showIntro && <SectionIntro C={C} color={acc.accent} steps={SECTION_INTRO_STEPS.learn} onDone={dismissIntro}/>}
     </div>
   );
 }
@@ -4257,6 +4307,8 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
   const [activeTripId, setActiveTripId] = useState(null);
   const [previewPreco, setPreviewPreco] = useState(null); // voyage préconçu en aperçu visuel
   const [showPremium, setShowPremium] = useState(false);
+  const [showIntro, setShowIntro] = useState(()=>!sectionIntroSeen("voyage"));
+  const dismissIntro = ()=>{ markSectionIntroSeen("voyage"); setShowIntro(false); };
   const pushTimer = useRef(null);
   // Index lieux pour les fiches visuelles
   const lieuByIdGlobal = useMemo(()=>Object.fromEntries((db?.lieux||[]).map(l=>[l.id,l])), [db]);
@@ -4435,6 +4487,9 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
           </div>
         </div>
       )}
+
+      {/* Deep-dive contextuel — 1re visite seulement, sur l'accueil Voyage */}
+      {showIntro && <SectionIntro C={C} color={acc.accent} steps={SECTION_INTRO_STEPS.voyage} onDone={dismissIntro}/>}
     </div>
   );
 }
@@ -6205,6 +6260,10 @@ const STORE_KEY = "isekaid_profile_v1";
 const INTRO_KEY = "isekaid_intro_seen_v1"; // "1" => présentation 1er lancement déjà vue
 function introSeen(){ try { return localStorage.getItem(INTRO_KEY)==="1"; } catch { return false; } }
 function markIntroSeen(){ try { localStorage.setItem(INTRO_KEY, "1"); } catch {} }
+// Deep-dive contextuel par section (Système 2) : indépendant par pilier, vu
+// une seule fois chacun — voir SectionIntro plus bas.
+function sectionIntroSeen(id){ try { return localStorage.getItem(`isekaid_section_intro_${id}_v1`)==="1"; } catch { return false; } }
+function markSectionIntroSeen(id){ try { localStorage.setItem(`isekaid_section_intro_${id}_v1`, "1"); } catch {} }
 const THEME_KEY = "isekaid_theme_v1";
 function loadProfile(){
   try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
