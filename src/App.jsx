@@ -1211,7 +1211,7 @@ function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
   );
 }
 
-function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,dueReviewCount,hasKanaProgress,onStartReview}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,dueReviewCount,hasKanaProgress,onStartReview}){
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   const [reminderDismissed, setReminderDismissed] = useState(false);
@@ -1257,11 +1257,11 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,scr
             <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:2}}>{month} {day}日（{weekday}）</div>
             <div style={{fontSize:11,color:C.t2}}>{g.fr}</div>
           </div>
-          {/* Script toggle + profil alignés */}
+          {/* Tuteur + profil alignés */}
           <div style={{display:"flex",gap:8,alignItems:"center"}}>
-            {/* Script toggle */}
-            <button onClick={toggleScript} style={{width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",background:C.s2,border:`1px solid ${C.border}`,borderRadius:"50%",cursor:"pointer",fontFamily:"'Noto Serif JP',serif",fontSize:13,color:C.t2,lineHeight:1}}>
-              {script==="kana" ? "あ" : script==="kanji" ? "漢" : "A"}
+            {/* Entrée Tuteur — accès rapide depuis l'en-tête */}
+            <button onClick={()=>onGoTab("tutor")} style={{height:34,padding:"0 14px",display:"flex",alignItems:"center",gap:6,background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,cursor:"pointer",color:C.t2,fontSize:12,fontWeight:600,whiteSpace:"nowrap"}}>
+              🧑‍🏫 Tuteur
             </button>
             {/* Profil */}
             <button onClick={onProfile} aria-label="Profil" style={{width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",background:C.s2,border:`1px solid ${C.border}`,borderRadius:"50%",cursor:"pointer",padding:0}}>
@@ -5457,7 +5457,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent,script,setScript}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
   const [showBadges,setShowBadges] = useState(false);
   const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
@@ -5522,6 +5522,24 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
           </div>
           <div onClick={()=>setDark(d=>!d)} style={{width:48,height:26,borderRadius:13,background:dark?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
             <div style={{position:"absolute",top:3,left:dark?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
+          </div>
+        </div>
+
+        {/* Affichage du japonais — kana / kanji / romaji. Seul point de
+            réglage de l'app depuis le retrait du bouton bascule de l'en-tête
+            de l'accueil (remplacé par l'accès rapide au Tuteur). */}
+        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
+          <div style={{fontSize:13,color:C.text,marginBottom:2}}>Affichage du japonais</div>
+          <div style={{fontSize:11,color:C.t3,marginBottom:12}}>Comment le japonais s'affiche dans l'app</div>
+          <div style={{display:"flex",gap:8}}>
+            {[{id:"kana",label:"あ Kana"},{id:"kanji",label:"漢 Kanji"},{id:"romaji",label:"A Romaji"}].map(opt=>{
+              const on = script===opt.id;
+              return (
+                <button key={opt.id} onClick={()=>setScript(opt.id)} style={{flex:1,padding:"9px 0",borderRadius:10,border:`1px solid ${on?C.red:C.border}`,background:on?"rgba(201,70,61,0.12)":C.s2,color:on?C.text:C.t2,fontSize:12,fontWeight:on?600:500,cursor:"pointer"}}>
+                  {opt.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -7078,7 +7096,6 @@ export default function IsekaidApp(){
   // Persist theme whenever it changes
   useEffect(()=>{ saveTheme(dark); },[dark]);
   useEffect(()=>{ saveScript(script); },[script]);
-  const toggleScript = ()=> setScript(s=> s==="kana" ? "kanji" : s==="kanji" ? "romaji" : "kana");
 
   // When splash finishes: decide auth → onboarding → app
   // On attend que authChecked soit true (getSession() résolu) avant de décider.
@@ -7214,12 +7231,12 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className="screen-in" style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)}/>}
               {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
