@@ -4,7 +4,7 @@ import VIDEO_MAP from "./video-map.json";
 import LIEU_EDITORIAL from "./lieu-editorial.json";
 import * as sfx from "./sfx.js";
 import { useState, useEffect, useRef, useMemo, Fragment } from "react";
-import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations } from "./supabase";
+import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations, sendItineraryGenerate } from "./supabase";
 import { HomeDailyCard, DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 import { speakJP, SpeakButton } from "./tts";
@@ -36,9 +36,12 @@ const DARK = {
   // s1 (#1A1410) vs bg (#0F0B08) — une ombre par-dessus n'ajouterait rien.
   shadow:"none",
 };
-// Rythme vertical unique entre les cartes de l'accueil (remplace les
-// marges ad-hoc 14–28px dispersées dans les blocs individuels).
-const HOME_GAP = 18;
+// Rythme vertical hiérarchisé de l'accueil : un écart plus large ENTRE les
+// zones d'intention (à faire / nouveau / pour toi / progression) qu'ENTRE les
+// cartes d'une même zone — c'est ce qui fait sentir le regroupement, sans
+// trait ni couleur supplémentaire.
+const ZONE_GAP = 32;
+const ITEM_GAP = 14;
 
 // Accent saisonnier dynamique (selon le mois réel)
 function currentSeasonKey(date=new Date()){
@@ -184,24 +187,25 @@ function recommendForUser(db, why, goal, today){
   return { cat, item };
 }
 
-// Accueil adaptatif : l'ORDRE des sections change selon le `goal` déclaré à
-// l'onboarding, mêmes briques (aucune nouvelle carte). "Voyage" et "vie
-// quotidienne/situations/codes sociaux" n'ont pas de carte dédiée sur
+// Accueil regroupé par ZONE D'INTENTION plutôt que par une liste plate de
+// blocs : Zone 1 "à faire aujourd'hui" et Zone 4 "ta progression" sont des
+// séquences de priorité fixes (pas de raison de varier par profil). Seules
+// les Zones 2 "nouveau aujourd'hui" et 3 "pour toi / explorer" varient selon
+// le `goal` déclaré à l'onboarding — mêmes briques, ordre différent. "Voyage"
+// et "vie quotidienne/situations/codes sociaux" n'ont pas de carte dédiée sur
 // l'accueil aujourd'hui : travel se rabat sur bandeau saisonnier + lieu du
 // jour (le plus proche existant), live sur "Recommandé pour toi" — déjà
 // pondéré par GOAL_MAP.live vers vie_quotidienne/situations/culture, donc
-// littéralement le bon contenu sans rien inventer. Les éléments transverses
-// (alerte streak, Reprendre où j'en étais, Mission du jour, recherche) et
-// l'entrée Tuteur restent à leur place canonique, hors de cette config.
-const HOME_LAYOUTS = {
-  default: ["review","weeklyChallenge","seasonBanner","lieuDuJour","japonDuJour","decouvertes","streak","recommande"],
-  travel:  ["seasonBanner","lieuDuJour","weeklyChallenge","review","japonDuJour","decouvertes","streak","recommande"],
-  learn:   ["review","weeklyChallenge","streak","seasonBanner","lieuDuJour","japonDuJour","decouvertes","recommande"],
-  imm:     ["japonDuJour","decouvertes","weeklyChallenge","seasonBanner","review","lieuDuJour","streak","recommande"],
-  live:    ["recommande","seasonBanner","lieuDuJour","weeklyChallenge","review","japonDuJour","decouvertes","streak"],
+// littéralement le bon contenu sans rien inventer.
+const HOME_ZONES = {
+  default: { fresh:["lieuDuJour","japonDuJour","decouvertes"], explore:["seasonBanner","recommande"] },
+  travel:  { fresh:["lieuDuJour","japonDuJour","decouvertes"], explore:["seasonBanner","recommande"] },
+  learn:   { fresh:["lieuDuJour","japonDuJour","decouvertes"], explore:["seasonBanner","recommande"] },
+  imm:     { fresh:["japonDuJour","decouvertes","lieuDuJour"], explore:["seasonBanner","recommande"] },
+  live:    { fresh:["lieuDuJour","japonDuJour","decouvertes"], explore:["recommande","seasonBanner"] },
 };
-function homeLayoutFor(goal){
-  return HOME_LAYOUTS[goal] || HOME_LAYOUTS.default;
+function homeZonesFor(goal){
+  return HOME_ZONES[goal] || HOME_ZONES.default;
 }
 
 const JP_MONTHS = ["睦月","如月","弥生","卯月","皐月","水無月","文月","葉月","長月","神無月","霜月","師走"];
@@ -622,37 +626,41 @@ function DailyPlaceSpotlight({C, db, today, lieu: lieuProp, isNew, isFav, toggle
   const fav = isFav && isFav("lieu", lieu);
 
   return (
-    <div>
-      <SH C={C} kanji="景" title="Lieu du jour" sub="Un endroit à découvrir aujourd'hui" badge={isNew}/>
-      <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(lieu)} style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.border}`,boxShadow:C.shadow||"none",position:"relative",background:C.s1}}>
-        <div style={{position:"relative",width:"100%",height:220,background:C.s2}}>
-          {video ? (
-            <video src={video} autoPlay muted loop playsInline preload="metadata"
-              onError={(e)=>{ e.target.style.display="none"; e.target.nextSibling && (e.target.nextSibling.style.display="block"); }}
-              style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
-          ) : null}
-          {/* Photo : sert de fallback si pas de vidéo, ou si la vidéo échoue au chargement */}
-          {photo && (
-            <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}}
-              style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:video?"none":"block"}}/>
-          )}
-          {!photo && !video && (
-            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{lieu.emoji}</div>
-          )}
-          <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.05) 40%,rgba(15,11,8,0.75) 100%)"}}/>
-          {video && (
-            <span style={{position:"absolute",top:12,right:12,fontSize:9,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",padding:"4px 9px",borderRadius:20,background:"rgba(0,0,0,0.5)",color:"#fff",backdropFilter:"blur(4px)"}}>▶ Vidéo</span>
-          )}
-          {toggleFav && (
-            <div style={{position:"absolute",top:10,left:10}} onClick={(e)=>{e.stopPropagation(); toggleFav("lieu",lieu);}}>
-              <FavButton C={C} active={fav} onClick={()=>{}}/>
-            </div>
-          )}
-          <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"14px 16px"}}>
-            <div style={{fontSize:10,color:"rgba(255,255,255,0.7)",letterSpacing:".15em",textTransform:"uppercase",marginBottom:3}}>{lieu.categorie || lieu.type}</div>
-            <div style={{fontSize:19,color:"#fff",fontWeight:600,marginBottom:2}}>{lieu.emoji} {lieu.nom}</div>
-            {lieu.quartier && <div style={{fontSize:12,color:"rgba(255,255,255,0.8)"}}>{lieu.quartier}</div>}
+    <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(lieu)} style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.border}`,boxShadow:C.shadow||"none",position:"relative",background:C.s1}}>
+      <div style={{position:"relative",width:"100%",height:220,background:C.s2}}>
+        {video ? (
+          <video src={video} autoPlay muted loop playsInline preload="metadata"
+            onError={(e)=>{ e.target.style.display="none"; e.target.nextSibling && (e.target.nextSibling.style.display="block"); }}
+            style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+        ) : null}
+        {/* Photo : sert de fallback si pas de vidéo, ou si la vidéo échoue au chargement */}
+        {photo && (
+          <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}}
+            style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:video?"none":"block"}}/>
+        )}
+        {!photo && !video && (
+          <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{lieu.emoji}</div>
+        )}
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.05) 40%,rgba(15,11,8,0.75) 100%)"}}/>
+        {/* Pastille de type — même gabarit que les cartes voisines de la
+            zone "Nouveau aujourd'hui" (Japon du jour, Découverte), pour un
+            traitement homogène des 3 cartes sous leur en-tête de zone commun. */}
+        <div style={{position:"absolute",top:10,left:10,display:"flex",alignItems:"center",gap:6,background:"rgba(0,0,0,.55)",backdropFilter:"blur(4px)",color:"#fff",fontSize:10,fontWeight:700,letterSpacing:".12em",padding:"5px 10px",borderRadius:999}}>
+          📍 LIEU DU JOUR
+          {isNew && <span aria-label="Nouveau" style={{width:6,height:6,borderRadius:"50%",background:C.gold,flexShrink:0}}/>}
+        </div>
+        {video && (
+          <span style={{position:"absolute",top:toggleFav?54:12,right:12,fontSize:9,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",padding:"4px 9px",borderRadius:20,background:"rgba(0,0,0,0.5)",color:"#fff",backdropFilter:"blur(4px)"}}>▶ Vidéo</span>
+        )}
+        {toggleFav && (
+          <div style={{position:"absolute",top:10,right:10}} onClick={(e)=>{e.stopPropagation(); toggleFav("lieu",lieu);}}>
+            <FavButton C={C} active={fav} onClick={()=>{}}/>
           </div>
+        )}
+        <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"14px 16px"}}>
+          <div style={{fontSize:10,color:"rgba(255,255,255,0.7)",letterSpacing:".15em",textTransform:"uppercase",marginBottom:3}}>{lieu.categorie || lieu.type}</div>
+          <div style={{fontSize:19,color:"#fff",fontWeight:600,marginBottom:2}}>{lieu.emoji} {lieu.nom}</div>
+          {lieu.quartier && <div style={{fontSize:12,color:"rgba(255,255,255,0.8)"}}>{lieu.quartier}</div>}
         </div>
       </div>
     </div>
@@ -1134,6 +1142,47 @@ function WeeklyChallengeCard({C}){
   );
 }
 
+// ─── Carte Voyage sur l'accueil (Phase 4.3) ────────────────────────────────
+// Réservée au profil goal="travel" — rejoint la Zone 1 "à faire aujourd'hui"
+// (voir HomeScreen) plutôt que la Zone 2/3, car reprendre son itinéraire ou
+// le démarrer à partir des lieux gardés est une action, pas du contenu à
+// lire. Lit `trips` directement via loadTrips() (même pattern que ResumeCard
+// juste au-dessus, qui fait déjà loadTrips().find(...) sans état dédié).
+function VoyageHomeCard({C, favs, onGoTab}){
+  const trips = loadTrips();
+  const trip = trips[0];
+  const keptCount = (favs||[]).filter(f=>f.type==="lieu").length;
+  const nbLieux = trip ? trip.jours.reduce((a,j)=>a+j.etapes.length,0) : 0;
+
+  const content = trip ? {
+    emoji: "🗾",
+    title: trip.titre,
+    sub: `${trip.jours.length} jour${trip.jours.length>1?"s":""} · ${nbLieux} lieu${nbLieux>1?"x":""}`,
+  } : keptCount>0 ? {
+    emoji: "❤️",
+    title: `Tu as gardé ${keptCount} lieu${keptCount>1?"x":""}`,
+    sub: "Crée ton itinéraire à partir de tes favoris",
+  } : {
+    emoji: "🗺️",
+    title: "Planifie ton séjour",
+    sub: "Crée ton itinéraire jour par jour",
+  };
+
+  return (
+    <div>
+      <SH C={C} kanji="旅" title="Ton voyage" sub={trip ? "Reprendre ton itinéraire" : "Prépare ton séjour au Japon"}/>
+      <SectionCard C={C} onClick={()=>onGoTab && onGoTab("voyage")} style={{display:"flex",alignItems:"center",gap:14}}>
+        <span style={{fontSize:30,flexShrink:0}}>{content.emoji}</span>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{content.title}</div>
+          <div style={{fontSize:12,color:C.t2}}>{content.sub}</div>
+        </div>
+        <span style={{fontSize:14,color:C.t3,flexShrink:0}}>›</span>
+      </SectionCard>
+    </div>
+  );
+}
+
 // Carte d'accueil pour le SRS actif (kana dus aujourd'hui) — le calcul et la
 // session de révision elle-même vivent déjà dans LearnScreen/ReviewMode, ici
 // on ne fait que rendre le signal visible et lancer un accès direct depuis
@@ -1162,7 +1211,7 @@ function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
   );
 }
 
-function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,dueReviewCount,hasKanaProgress,onStartReview}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,dueReviewCount,hasKanaProgress,onStartReview}){
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   const [reminderDismissed, setReminderDismissed] = useState(false);
@@ -1227,150 +1276,185 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
         <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{g.jp}</div>
       </div>
 
-      <div style={{padding:"18px 20px 110px",position:"relative",zIndex:1,display:"flex",flexDirection:"column",gap:HOME_GAP}}>
+      <div style={{padding:"18px 20px 110px",position:"relative",zIndex:1,display:"flex",flexDirection:"column",gap:ZONE_GAP}}>
         {/* Search tap target */}
         <div onClick={onSearch} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 15px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,boxShadow:C.shadow||"none",cursor:"pointer"}}>
           <span style={{fontSize:15,color:C.t3}}>🔍</span>
           <span style={{fontSize:13,color:C.t3}}>Rechercher un mot, plat, tradition…</span>
         </div>
 
-        {/* 1. Alerte streak en danger — unique point d'affichage, uniquement si
-            la mission du jour n'est pas complétée (voir getHomeAlert) */}
-        {!reminderDismissed && (()=>{
-          let remindersOn = true;
-          try { remindersOn = localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch {}
-          if(!remindersOn) return null;
-          const alert = getHomeAlert({ streak, mission });
-          return <HomeAlert C={C} alert={alert} onGo={(t)=>onGoTab && onGoTab(t)} onDismiss={()=>setReminderDismissed(true)}/>;
-        })()}
+        {/* ─── ZONE 1 — À FAIRE AUJOURD'HUI ───────────────────────────────
+            Ordre de priorité fixe (pas d'adaptation au goal ici : c'est une
+            séquence d'urgence, pas une préférence de profil). Espacement
+            resserré (ITEM_GAP) entre ces 5 blocs pour qu'ils se lisent comme
+            un seul ensemble ; pas de gros en-tête de zone ajouté par-dessus
+            les kanji déjà portés par Mission (目) et Défi (週), pour éviter
+            un troisième en-tête concurrent. */}
+        <div style={{display:"flex",flexDirection:"column",gap:ITEM_GAP}}>
+          {/* 1. Alerte streak en danger — uniquement si la mission du jour
+              n'est pas complétée (voir getHomeAlert) */}
+          {!reminderDismissed && (()=>{
+            let remindersOn = true;
+            try { remindersOn = localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch {}
+            if(!remindersOn) return null;
+            const alert = getHomeAlert({ streak, mission });
+            return <HomeAlert C={C} alert={alert} onGo={(t)=>onGoTab && onGoTab(t)} onDismiss={()=>setReminderDismissed(true)}/>;
+          })()}
 
-        {/* 2. Reprendre où j'en étais — seulement si différent de la mission du
-            jour (déjà couverte par l'alerte + la carte mission ci-dessous) */}
-        <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
+          {/* 2. Reprendre où j'en étais — seulement si différent de la mission
+              du jour (déjà couverte par l'alerte + la carte mission ci-dessous) */}
+          <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
 
-        {/* 3. Mission du jour (jeu fixe des 4 piliers si mission.firstDay) */}
-        {mission && (()=>{
-          const todays = missionsForDay(mission);
-          const done = mission.done || [];
-          const allDone = done.length >= todays.length;
-          const pct = Math.round((done.length/todays.length)*100);
-          // Onglet cible selon le trigger de la mission
-          const targetFor = (tr)=> MISSION_TARGET_TAB[tr] || "home";
-          const isFirstDay = !!mission.firstDay;
-          return(
-            <div>
-              <SH C={C} kanji="目" title={isFirstDay?"Ta première journée":"Mission du jour"}
-                sub={allDone ? (isFirstDay?"Bravo, 4 piliers testés !":"Mission accomplie !") : `${done.length}/${todays.length} complétée${done.length>1?"s":""}${isFirstDay?" — les 4 piliers d'Isekai'd":""}`}/>
-              <SectionCard C={C} variant="hero" style={{background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`}}>
-                <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
-                  <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:C.gold,borderRadius:3,transition:"width .5s"}}/>
-                </div>
-                <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                  {todays.map(t=>{
-                    const ok = done.includes(t.id);
-                    return(
-                      <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(targetFor(t.trigger)); }} style={{display:"flex",alignItems:"center",gap:11,cursor:ok?"default":"pointer",opacity:ok?0.6:1}}>
-                        <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":t.emoji}</div>
-                        <div style={{flex:1}}>
-                          <div style={{fontSize:13,color:C.text,textDecoration:ok?"line-through":"none"}}>{t.label}</div>
+          {/* 3. Mission du jour (jeu fixe des 4 piliers si mission.firstDay) */}
+          {mission && (()=>{
+            const todays = missionsForDay(mission);
+            const done = mission.done || [];
+            const allDone = done.length >= todays.length;
+            const pct = Math.round((done.length/todays.length)*100);
+            // Onglet cible selon le trigger de la mission
+            const targetFor = (tr)=> MISSION_TARGET_TAB[tr] || "home";
+            const isFirstDay = !!mission.firstDay;
+            return(
+              <div>
+                <SH C={C} kanji="目" title={isFirstDay?"Ta première journée":"Mission du jour"}
+                  sub={allDone ? (isFirstDay?"Bravo, 4 piliers testés !":"Mission accomplie !") : `${done.length}/${todays.length} complétée${done.length>1?"s":""}${isFirstDay?" — les 4 piliers d'Isekai'd":""}`}/>
+                <SectionCard C={C} variant="hero" style={{background:allDone?"rgba(78,128,96,0.08)":C.s1,border:`1px solid ${allDone?"rgba(78,128,96,0.3)":C.border}`}}>
+                  <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
+                    <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:C.gold,borderRadius:3,transition:"width .5s"}}/>
+                  </div>
+                  <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                    {todays.map(t=>{
+                      const ok = done.includes(t.id);
+                      return(
+                        <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(targetFor(t.trigger)); }} style={{display:"flex",alignItems:"center",gap:11,cursor:ok?"default":"pointer",opacity:ok?0.6:1}}>
+                          <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":t.emoji}</div>
+                          <div style={{flex:1}}>
+                            <div style={{fontSize:13,color:C.text,textDecoration:ok?"line-through":"none"}}>{t.label}</div>
+                          </div>
+                          {!ok && <span style={{fontSize:10,color:C.t3}}>{t.hint} ›</span>}
                         </div>
-                        {!ok && <span style={{fontSize:10,color:C.t3}}>{t.hint} ›</span>}
+                      );
+                    })}
+                  </div>
+                  {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>{isFirstDay ? "🎉 Tu as fait le tour des 4 piliers d'Isekai'd !" : "🎉 Mission du jour accomplie !"}</div>}
+                </SectionCard>
+              </div>
+            );
+          })()}
+
+          {/* 3b. Ton voyage — uniquement pour le profil "travel" (voir
+              VoyageHomeCard) : reprendre son itinéraire ou le démarrer à
+              partir des lieux gardés est une action, au même titre que la
+              mission du jour. */}
+          {user?.goal==="travel" && <VoyageHomeCard C={C} favs={favs} onGoTab={onGoTab}/>}
+
+          {/* 4. À réviser aujourd'hui (si N>0) */}
+          <ReviewTeaserCard C={C} dueCount={dueReviewCount} hasStarted={hasKanaProgress} onStart={onStartReview}/>
+
+          {/* 5. Défi de la semaine */}
+          <WeeklyChallengeCard C={C}/>
+        </div>
+
+        {/* ─── ZONE 2 — NOUVEAU AUJOURD'HUI ───────────────────────────────
+            Un seul en-tête de zone coiffe les 3 cartes (au lieu de 3
+            en-têtes concurrents dispersés) ; ordre adaptatif au goal via
+            HOME_ZONES[goal].fresh. */}
+        <div style={{display:"flex",flexDirection:"column",gap:ITEM_GAP}}>
+          <SH C={C} kanji="新" title="Nouveau aujourd'hui" sub="Ton lieu, ta découverte et le Japon du jour"/>
+          {(()=>{
+            const freshRenderers = {
+              lieuDuJour: ()=> <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>,
+              // HomeDailyCard a déjà son propre badge "LE JAPON DU JOUR" + pastille "Nouveau" intégrés.
+              japonDuJour: ()=> <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>,
+              // DiscoveryTeaserCard a déjà son propre badge "DÉCOUVERTE DU JOUR" intégré.
+              decouvertes: ()=> latestDiscovery ? <DiscoveryTeaserCard C={C} discovery={latestDiscovery} isNew={discoveryIsNew} onOpen={()=>onGoTab("explore")}/> : null,
+            };
+            return homeZonesFor(user?.goal).fresh.map(id => <Fragment key={id}>{freshRenderers[id]()}</Fragment>);
+          })()}
+        </div>
+
+        {/* ─── ZONE 3 — POUR TOI / EXPLORER ───────────────────────────────
+            Approfondissement : bandeau saisonnier + recommandation
+            personnalisée (ordre adaptatif), puis l'entrée Tuteur. */}
+        <div style={{display:"flex",flexDirection:"column",gap:ITEM_GAP}}>
+          {(()=>{
+            const exploreRenderers = {
+              seasonBanner: ()=> <SeasonBanner C={C} acc={seasonAccent} lieux={seasonLieux} onOpenLieu={onOpenLieu}/>,
+              recommande: ()=>{
+                if(!db || !(user?.why?.length>0)) return null;
+                const reco = recommendForUser(db, user.why, user.goal, today);
+                if(!reco) return null;
+                const {cat, item} = reco;
+                // Titre + sous-titre + contenu complet selon la catégorie
+                const META = {
+                  culture:{label:"Culture",emoji:"🎴",title:item.titre,sub:item.contenu,full:item.contenu,extra:item.insight},
+                  traditions:{label:"Tradition",emoji:item.emoji||"⛩️",title:item.nom,sub:item.tagline,full:item.histoire||item.tagline,extra:item.comment_vivre},
+                  repas:{label:"Gastronomie",emoji:item.emoji||"🍱",title:item.nom_jp,sub:item.description||item.romaji,full:item.description,extra:item.romaji?`Lecture : ${item.romaji}`:""},
+                  regions:{label:"Région",emoji:item.emoji||"🗾",title:item.nom,sub:item.tagline,full:item.ambiance||item.tagline,extra:""},
+                  vie_quotidienne:{label:"Vie quotidienne",emoji:item.emoji||"🏙️",title:item.titre,sub:item.resume,full:item.description||item.resume,extra:""},
+                  expressions:{label:"Expression",emoji:"💬",title:item.expression,sub:item.traduction,full:item.contexte,extra:item.exemple_jp?`${item.exemple_jp} — ${item.exemple_fr||""}`:""},
+                  situations:{label:"Phrase utile",emoji:"🗣️",title:item.titre,sub:(item.phrases?.[0]?.fr)||"",full:"",extra:""},
+                }[cat] || {label:"Pour toi",emoji:"✨",title:"",sub:"",full:"",extra:""};
+                const jpText = cat==="repas"?item.nom_jp:(cat==="expressions"?item.expression:null);
+                return(
+                  <div>
+                    <SH C={C} kanji="好" title="Recommandé pour toi" sub="Selon tes centres d'intérêt"/>
+                    <SectionCard C={C} onClick={()=>setRecoOpen(o=>!o)} style={{transition:"all .2s"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:14}}>
+                        <span style={{fontSize:32,flexShrink:0}}>{META.emoji}</span>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:9,color:C.red,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{META.label}</div>
+                          <div style={{display:"flex",alignItems:"center",gap:7}}>
+                            <span style={{fontSize:15,color:C.text,fontWeight:500,overflow:recoOpen?"visible":"hidden",textOverflow:"ellipsis",whiteSpace:recoOpen?"normal":"nowrap"}}>{META.title}</span>
+                            {jpText && recoOpen && <SpeakButton C={C} text={jpText} color={C.red} size={24}/>}
+                          </div>
+                          {!recoOpen && <div style={{fontSize:12,color:C.t2,lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:1,WebkitBoxOrient:"vertical",marginTop:2}}>{META.sub}</div>}
+                        </div>
+                        <span style={{fontSize:13,color:C.t3,flexShrink:0,transform:recoOpen?"rotate(180deg)":"none",transition:"transform .2s"}}>▾</span>
                       </div>
-                    );
-                  })}
+                      {recoOpen && (
+                        <div style={{marginTop:14,paddingTop:14,borderTop:`1px solid ${C.border}`,animation:"fadeUp .3s ease"}}>
+                          {META.full && <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:META.extra?10:0}}>{META.full}</div>}
+                          {META.extra && <div style={{fontSize:12,color:C.t3,lineHeight:1.5,fontStyle:"italic"}}>{META.extra}</div>}
+                          {!META.full && !META.extra && <div style={{fontSize:13,color:C.t2}}>{META.sub}</div>}
+                        </div>
+                      )}
+                    </SectionCard>
+                  </div>
+                );
+              },
+            };
+            return homeZonesFor(user?.goal).explore.map(id => <Fragment key={id}>{exploreRenderers[id]()}</Fragment>);
+          })()}
+
+          {/* Entrée Tuteur */}
+          {FEATURE_FLAGS.tutor ? (
+            <TutorEntryCard C={C} onOpen={()=>onGoTab("tutor")}/>
+          ) : (
+            <div>
+              <SH C={C} kanji="師" title="Ton tuteur" sub="Pratique guidée en japonais"/>
+              <SectionCard C={C} style={{opacity:0.85}}>
+                <div style={{display:"flex",alignItems:"center",gap:14}}>
+                <span style={{fontSize:32,flexShrink:0}}>🧑‍🏫</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Parler avec ton tuteur</div>
+                  <div style={{fontSize:12,color:C.t2,lineHeight:1.4}}>Conversations guidées en japonais, corrections et scénarios personnalisés.</div>
                 </div>
-                {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>{isFirstDay ? "🎉 Tu as fait le tour des 4 piliers d'Isekai'd !" : "🎉 Mission du jour accomplie !"}</div>}
+                <span style={{fontSize:10,fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",padding:"4px 10px",borderRadius:20,background:C.s2,color:C.t3,flexShrink:0}}>Bientôt</span>
+                </div>
               </SectionCard>
             </div>
-          );
-        })()}
+          )}
+        </div>
 
-        {/* 3b-7. Sections réordonnables selon le goal d'onboarding — voir
-            HOME_LAYOUTS. Même briques qu'avant, juste un ordre qui change. */}
-        {(()=>{
-          const sectionRenderers = {
-            review: ()=> <ReviewTeaserCard C={C} dueCount={dueReviewCount} hasStarted={hasKanaProgress} onStart={onStartReview}/>,
-            weeklyChallenge: ()=> <WeeklyChallengeCard C={C}/>,
-            seasonBanner: ()=> <SeasonBanner C={C} acc={seasonAccent} lieux={seasonLieux} onOpenLieu={onOpenLieu}/>,
-            // DailyPlaceSpotlight a déjà son propre en-tête ("Lieu du jour") et
-            // son propre badge "Nouveau" — pas besoin du header partagé qu'on
-            // vient de retirer.
-            lieuDuJour: ()=> <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>,
-            // HomeDailyCard a déjà son propre badge "LE JAPON DU JOUR" + pastille "Nouveau" intégrés.
-            japonDuJour: ()=> <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>,
-            // DiscoveryTeaserCard a déjà son propre badge "DÉCOUVERTE DU JOUR" intégré.
-            decouvertes: ()=> latestDiscovery ? <DiscoveryTeaserCard C={C} discovery={latestDiscovery} isNew={discoveryIsNew} onOpen={()=>onGoTab("explore")}/> : null,
-            streak: ()=> (
-              <div>
-                <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
-                <StreakSection C={C} streak={streak} isPremium={isPremium}/>
-              </div>
-            ),
-            recommande: ()=>{
-              if(!db || !(user?.why?.length>0)) return null;
-              const reco = recommendForUser(db, user.why, user.goal, today);
-              if(!reco) return null;
-              const {cat, item} = reco;
-              // Titre + sous-titre + contenu complet selon la catégorie
-              const META = {
-                culture:{label:"Culture",emoji:"🎴",title:item.titre,sub:item.contenu,full:item.contenu,extra:item.insight},
-                traditions:{label:"Tradition",emoji:item.emoji||"⛩️",title:item.nom,sub:item.tagline,full:item.histoire||item.tagline,extra:item.comment_vivre},
-                repas:{label:"Gastronomie",emoji:item.emoji||"🍱",title:item.nom_jp,sub:item.description||item.romaji,full:item.description,extra:item.romaji?`Lecture : ${item.romaji}`:""},
-                regions:{label:"Région",emoji:item.emoji||"🗾",title:item.nom,sub:item.tagline,full:item.ambiance||item.tagline,extra:""},
-                vie_quotidienne:{label:"Vie quotidienne",emoji:item.emoji||"🏙️",title:item.titre,sub:item.resume,full:item.description||item.resume,extra:""},
-                expressions:{label:"Expression",emoji:"💬",title:item.expression,sub:item.traduction,full:item.contexte,extra:item.exemple_jp?`${item.exemple_jp} — ${item.exemple_fr||""}`:""},
-                situations:{label:"Phrase utile",emoji:"🗣️",title:item.titre,sub:(item.phrases?.[0]?.fr)||"",full:"",extra:""},
-              }[cat] || {label:"Pour toi",emoji:"✨",title:"",sub:"",full:"",extra:""};
-              const jpText = cat==="repas"?item.nom_jp:(cat==="expressions"?item.expression:null);
-              return(
-                <div>
-                  <SH C={C} kanji="好" title="Recommandé pour toi" sub="Selon tes centres d'intérêt"/>
-                  <SectionCard C={C} onClick={()=>setRecoOpen(o=>!o)} style={{transition:"all .2s"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:14}}>
-                      <span style={{fontSize:32,flexShrink:0}}>{META.emoji}</span>
-                      <div style={{flex:1,minWidth:0}}>
-                        <div style={{fontSize:9,color:C.red,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{META.label}</div>
-                        <div style={{display:"flex",alignItems:"center",gap:7}}>
-                          <span style={{fontSize:15,color:C.text,fontWeight:500,overflow:recoOpen?"visible":"hidden",textOverflow:"ellipsis",whiteSpace:recoOpen?"normal":"nowrap"}}>{META.title}</span>
-                          {jpText && recoOpen && <SpeakButton C={C} text={jpText} color={C.red} size={24}/>}
-                        </div>
-                        {!recoOpen && <div style={{fontSize:12,color:C.t2,lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:1,WebkitBoxOrient:"vertical",marginTop:2}}>{META.sub}</div>}
-                      </div>
-                      <span style={{fontSize:13,color:C.t3,flexShrink:0,transform:recoOpen?"rotate(180deg)":"none",transition:"transform .2s"}}>▾</span>
-                    </div>
-                    {recoOpen && (
-                      <div style={{marginTop:14,paddingTop:14,borderTop:`1px solid ${C.border}`,animation:"fadeUp .3s ease"}}>
-                        {META.full && <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:META.extra?10:0}}>{META.full}</div>}
-                        {META.extra && <div style={{fontSize:12,color:C.t3,lineHeight:1.5,fontStyle:"italic"}}>{META.extra}</div>}
-                        {!META.full && !META.extra && <div style={{fontSize:13,color:C.t2}}>{META.sub}</div>}
-                      </div>
-                    )}
-                  </SectionCard>
-                </div>
-              );
-            },
-          };
-          return homeLayoutFor(user?.goal).map(id => <Fragment key={id}>{sectionRenderers[id]()}</Fragment>);
-        })()}
-
-        {/* Entrée Tuteur */}
-        {FEATURE_FLAGS.tutor ? (
-          <TutorEntryCard C={C} onOpen={()=>onGoTab("tutor")}/>
-        ) : (
-          <div>
-            <SH C={C} kanji="師" title="Ton tuteur" sub="Pratique guidée en japonais"/>
-            <SectionCard C={C} style={{opacity:0.85}}>
-              <div style={{display:"flex",alignItems:"center",gap:14}}>
-              <span style={{fontSize:32,flexShrink:0}}>🧑‍🏫</span>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Parler avec ton tuteur</div>
-                <div style={{fontSize:12,color:C.t2,lineHeight:1.4}}>Conversations guidées en japonais, corrections et scénarios personnalisés.</div>
-              </div>
-              <span style={{fontSize:10,fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",padding:"4px 10px",borderRadius:20,background:C.s2,color:C.t3,flexShrink:0}}>Bientôt</span>
-              </div>
-            </SectionCard>
-          </div>
-        )}
+        {/* ─── ZONE 4 — TA PROGRESSION ────────────────────────────────────
+            Statut consultable, pas une action ni du contenu frais : elle ne
+            doit plus couper le flux éditorial, donc en bas de page. Fixe
+            (pas d'adaptation au goal — il n'y a qu'un seul bloc statut). */}
+        <div style={{display:"flex",flexDirection:"column",gap:ITEM_GAP}}>
+          <SH C={C} kanji="火" title="Streak & Fidélisation" sub="Ta progression quotidienne"/>
+          <StreakSection C={C} streak={streak} isPremium={isPremium}/>
+        </div>
       </div>
     </div>
   );
@@ -2975,6 +3059,25 @@ function tripFromPreconcu(p){
   };
 }
 
+// Construit un voyage perso à partir de la réponse de l'Edge Function
+// itinerary-generate (Phase 4.4) : { villes, jours:[{villeId,titre,lieuIds}] }.
+// Les ids (trip/étapes) restent générés côté client comme partout ailleurs —
+// l'IA ne fait qu'ordonnancer/regrouper, jamais de logique d'identifiants.
+function tripFromGenerated(generated, titre){
+  return {
+    id: makeTripId(),
+    titre,
+    mode_dates: "jours",
+    dateDebut: "",
+    villes: [...(generated.villes||[])],
+    jours: (generated.jours||[]).map((j,i)=>({
+      num: i+1, date:"", villeId: j.villeId, titre: j.titre||"",
+      etapes: (j.lieuIds||[]).map(lieuId=>({ id: makeStepId(), lieuId, note:"" })),
+    })),
+    checklist: DEFAULT_CHECKLIST.map((t,i)=>({ id:"c"+i, texte:t, fait:false })),
+  };
+}
+
 // ─── Générateur d'image partageable (Canvas natif) ───────────────────────────
 // Dessine une fiche de situation en image PNG (carré 1:1 ou vertical 9:16),
 // façon carrousel éditorial, avec la marque Isekai'd. Pensé pour le japonais.
@@ -4223,6 +4326,8 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
   if(view==="kept"){
     return <KeptPlacesScreen C={C} keptLieux={keptLieux} villeById={villeById} trips={trips} toggleFav={toggleFav}
               onOpenLieu={onOpenLieu} onAddToTrip={addKeptLieuToTrip} onCreateTrip={tryCreate}
+              isPremium={isPremium} onOpenPremium={onOpenPremium}
+              onGenerate={(generated, titre)=> createTrip(tripFromGenerated(generated, titre))}
               onBack={()=>setView("home")}/>;
   }
   // ─── Vue : un voyage ───
@@ -4314,10 +4419,16 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
 // existant. Les lieux personnalisés (custom_..., créés dans un voyage précis)
 // peuvent être vus/retirés ici mais pas ré-ajoutés à un AUTRE voyage : ils
 // n'existent que dans le `customLieux` du voyage où ils ont été créés.
-function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu, onAddToTrip, onCreateTrip, onBack}){
+function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu, onAddToTrip, onCreateTrip, isPremium, onOpenPremium, onGenerate, onBack}){
   const [addTarget, setAddTarget] = useState(null); // lieu en cours d'ajout
   const [addTripId, setAddTripId] = useState(null); // voyage choisi (étape 2 si plusieurs voyages)
   const [justAdded, setJustAdded] = useState(null); // "lieuId:jourNum" — confirmation brève
+  // Auto-génération d'itinéraire (Premium, Phase 4.4) : "days" = ouvre le
+  // sélecteur de durée, "teaser" = aperçu gratuit non-premium.
+  const [genView, setGenView] = useState(null);
+  const [genDays, setGenDays] = useState(3);
+  const [genBusy, setGenBusy] = useState(false);
+  const [genError, setGenError] = useState(null);
 
   const groups = useMemo(()=>{
     const byVille = {};
@@ -4341,6 +4452,26 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
     setTimeout(()=>{ closeAdd(); setJustAdded(null); }, 900);
   };
 
+  const openGenerate = ()=>{
+    if(!isPremium){ setGenView("teaser"); return; }
+    setGenError(null);
+    setGenView("days");
+  };
+  const runGenerate = async ()=>{
+    setGenBusy(true); setGenError(null);
+    try {
+      const res = await sendItineraryGenerate({ lieux: keptLieux, days: genDays });
+      if(res?.premiumRequired){ setGenBusy(false); setGenView("teaser"); return; }
+      if(!res?.jours?.length){ setGenBusy(false); setGenError("Réponse invalide, réessaie."); return; }
+      onGenerate(res, `Voyage automatique · ${genDays} jour${genDays>1?"s":""}`);
+      setGenView(null);
+    } catch(e){
+      console.error("[itinerary-generate]", e);
+      setGenBusy(false);
+      setGenError("La génération a échoué. Réessaie dans un instant.");
+    }
+  };
+
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
@@ -4352,6 +4483,11 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
       <div style={{padding:"18px 20px 110px"}}>
         {groups.length===0 && (
           <div style={{textAlign:"center",color:C.t3,fontSize:12,padding:"30px 0"}}>Aucun lieu gardé pour l'instant.</div>
+        )}
+        {keptLieux.length>0 && (
+          <button onClick={openGenerate} style={{width:"100%",marginBottom:22,padding:"14px",background:`linear-gradient(135deg,${C.red},${C.gold})`,border:"none",borderRadius:14,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+            ✨ Crée-moi un itinéraire {!isPremium && "🔒"}
+          </button>
         )}
         {groups.map(g=>(
           <div key={g.villeId} style={{marginBottom:22}}>
@@ -4421,6 +4557,54 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
                 </>
               );
             })()}
+          </div>
+        </div>
+      )}
+
+      {/* Sélecteur de durée — auto-génération (Premium) */}
+      {genView==="days" && (
+        <div onClick={()=>!genBusy && setGenView(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+          <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:440,background:C.s1,borderRadius:"22px 22px 0 0",padding:"22px 22px 32px",animation:"fadeUp .3s ease"}}>
+            <div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:4}}>✨ Itinéraire automatique</div>
+            <div style={{fontSize:13,color:C.t2,lineHeight:1.6,margin:"6px 0 20px"}}>L'app regroupe tes {keptLieux.length} lieu{keptLieux.length>1?"x":""} gardé{keptLieux.length>1?"s":""} par ville et te propose un déroulé jour par jour.</div>
+            <div style={{fontSize:11,color:C.t3,letterSpacing:".1em",textTransform:"uppercase",marginBottom:10}}>Sur combien de jours ?</div>
+            <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:22}}>
+              <button onClick={()=>setGenDays(n=>Math.max(1,n-1))} disabled={genBusy} style={{width:40,height:40,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s2,color:C.text,fontSize:20,cursor:genBusy?"default":"pointer"}}>−</button>
+              <div style={{fontSize:18,color:C.text,fontWeight:600,minWidth:90,textAlign:"center"}}>{genDays} jour{genDays>1?"s":""}</div>
+              <button onClick={()=>setGenDays(n=>Math.min(30,n+1))} disabled={genBusy} style={{width:40,height:40,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s2,color:C.text,fontSize:20,cursor:genBusy?"default":"pointer"}}>+</button>
+            </div>
+            {genError && <div style={{fontSize:12,color:C.red,marginBottom:14}}>{genError}</div>}
+            <button onClick={runGenerate} disabled={genBusy} style={{width:"100%",padding:"14px",background:genBusy?C.s3:C.red,border:"none",borderRadius:12,color:genBusy?C.t3:"#fff",fontSize:14,fontWeight:600,cursor:genBusy?"default":"pointer"}}>
+              {genBusy ? "Génération en cours…" : "Générer l'itinéraire →"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Aperçu teaser non-premium — aucun appel réseau, juste le regroupement
+          par ville déjà calculé pour l'affichage de la liste ci-dessus. */}
+      {genView==="teaser" && (
+        <div onClick={()=>setGenView(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+          <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:440,maxHeight:"75vh",overflowY:"auto",background:C.s1,borderRadius:"22px 22px 0 0",padding:"26px 22px 32px",animation:"fadeUp .3s ease"}}>
+            <div style={{textAlign:"center",marginBottom:18}}>
+              <div style={{fontSize:36,marginBottom:8}}>✨</div>
+              <div style={{fontSize:18,color:C.text,fontWeight:700,marginBottom:6}}>Aperçu de ton itinéraire</div>
+              <div style={{fontSize:13,color:C.t2,lineHeight:1.6}}>Voici comment tes lieux gardés se regrouperaient :</div>
+            </div>
+            <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:18}}>
+              {groups.map(g=>(
+                <div key={g.villeId} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12}}>
+                  <span style={{fontSize:16,flexShrink:0}}>{g.ville?.emoji||"📍"}</span>
+                  <div style={{flex:1,fontSize:13,color:C.text,fontWeight:500}}>{g.ville?.nom||"Autre"}</div>
+                  <div style={{fontSize:12,color:C.t3}}>{g.items.length} lieu{g.items.length>1?"x":""}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{padding:"12px 14px",background:"rgba(201,168,76,0.08)",border:"1px solid rgba(201,168,76,0.25)",borderRadius:12,marginBottom:16,textAlign:"center"}}>
+              <div style={{fontSize:12,color:C.t2}}>✨ <b style={{color:C.text}}>Premium</b> ordonne ces villes intelligemment, répartit les lieux sur tes jours et rédige une intro pour chacun.</div>
+            </div>
+            <button onClick={()=>{ setGenView(null); onOpenPremium&&onOpenPremium(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:8}}>Débloquer l'auto-génération</button>
+            <button onClick={()=>setGenView(null)} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Plus tard, j'ajouterai à la main</button>
           </div>
         </div>
       )}
@@ -5130,6 +5314,7 @@ const PREMIUM_PLANS = [
 const PREMIUM_PERKS = [
   { emoji:"🚫", title:"Sans publicité", desc:"Profite de l'app sans aucune interruption." },
   { emoji:"🗺️", title:"Voyages illimités", desc:"Planifie autant de voyages que tu veux, plus de limite." },
+  { emoji:"✨", title:"Itinéraire automatique", desc:"Laisse l'app organiser tes lieux gardés en itinéraire jour par jour." },
   { emoji:"🔓", title:"Tout le contenu débloqué", desc:"Accède immédiatement à toutes les sections, sans attendre les paliers de streak." },
   { emoji:"🧑‍🏫", title:"Tuteur illimité", desc:"Discute sans limite avec ton tuteur de japonais, au lieu des 8 messages gratuits par jour." },
   { emoji:"📍", title:"Lieux personnalisés", desc:"Ajoute tes propres adresses à tes itinéraires." },
@@ -7029,7 +7214,7 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className="screen-in" style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge}/>}

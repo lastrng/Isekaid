@@ -168,3 +168,20 @@ export async function sendTutorMessage({ message, scenarioId, niveau, conversati
   }
   return data;
 }
+// Invoque l'Edge Function itinerary-generate (Phase 4.4) : auto-génération
+// d'itinéraire premium à partir des lieux gardés. `lieux` = objets complets
+// (catalogue statique client, japan-data.json) — le serveur ne fait
+// qu'ordonnancer/regrouper, jamais de lookup ni d'invention de lieu.
+export async function sendItineraryGenerate({ lieux, days }){
+  const { data, error } = await supabase.functions.invoke("itinerary-generate", {
+    body: { lieux, days },
+    timeout: 30000,
+  });
+  if(error){
+    let payload = null;
+    try { payload = await error.context?.json?.(); } catch { /* réponse non-JSON ou déjà consommée */ }
+    if(payload?.error === "premium_required") return { premiumRequired: true };
+    throw error;
+  }
+  return data;
+}
