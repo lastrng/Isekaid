@@ -1242,6 +1242,23 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   const [reminderDismissed, setReminderDismissed] = useState(false);
+  // Système 4.b : la salutation ne joue son entrée animée qu'au tout premier
+  // atterrissage Home de la journée — jamais un écran de chargement, jamais
+  // bloquant (pas d'overlay : le reste de l'accueil s'affiche normalement en
+  // dessous). L'initialiseur marque la date immédiatement pour ne pas
+  // rejouer si HomeScreen remonte plus tard dans la même journée.
+  const [greetAnimate] = useState(()=>{
+    const isNew = isNewGreetingDay();
+    if(isNew) markGreetingSeenToday();
+    return isNew;
+  });
+  // Système 4.a : atterrissage 1er lancement sur Home — bienvenue puis
+  // spotlight des 3 zones (Mission/Nouveau/Progression), une seule fois,
+  // que ce soit juste après la présentation des 5 piliers (Système 1) ou
+  // en arrivée directe sur Home pour un compte qui ne l'aurait pas eue.
+  // stages : null (rien) | "welcome" | "spotlight"
+  const [homeIntroStage, setHomeIntroStage] = useState(()=> homeIntroSeen() ? null : "welcome");
+  const finishHomeIntro = ()=>{ markHomeIntroSeen(); setHomeIntroStage(null); };
 
   // Auto-alternate streak badge every 3s
   useEffect(()=>{
@@ -1280,7 +1297,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         {/* Row 1 — date + badges alignés */}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-          <div>
+          <div style={greetAnimate?{animation:"fadeUp var(--dur-cinematic,.45s) var(--ease-smooth,ease) both"}:undefined}>
             <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:2}}>{month} {day}日（{weekday}）</div>
             <div style={{fontSize:11,color:C.t2}}>{g.fr}</div>
           </div>
@@ -1300,7 +1317,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
           </div>
         </div>
         {/* Row 2 — salutation japonaise */}
-        <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{g.jp}</div>
+        <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,...(greetAnimate?{animation:"fadeUp var(--dur-cinematic,.45s) var(--ease-smooth,ease) .3s both"}:{})}}>{g.jp}</div>
       </div>
 
       <div style={{padding:"18px 20px 110px",position:"relative",zIndex:1,display:"flex",flexDirection:"column",gap:ZONE_GAP}}>
@@ -1483,6 +1500,10 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
           <StreakSection C={C} streak={streak} isPremium={isPremium}/>
         </div>
       </div>
+
+      {/* Système 4.a — atterrissage 1er lancement, une seule fois */}
+      {homeIntroStage==="welcome" && <HomeWelcomeBeat text={g.jp} onDone={()=>setHomeIntroStage("spotlight")}/>}
+      {homeIntroStage==="spotlight" && <SectionIntro C={C} color={seasonAccent.accent} steps={SECTION_INTRO_STEPS.home} onDone={finishHomeIntro}/>}
     </div>
   );
 }
@@ -1522,7 +1543,41 @@ const SECTION_INTRO_STEPS = {
     { emoji:"✨", title:"Trois portes pour commencer",
       text:"Créer ton voyage, explorer des itinéraires prêts à l'emploi, ou retrouver les lieux que tu as gardés." },
   ],
+  // Système 4.a — spotlight de l'accueil (Mission / Nouveau / Progression),
+  // pas une section de la barre du bas mais réutilise le même mécanisme.
+  home: [
+    { emoji:"🎯", title:"Ta mission du jour",
+      text:"Voici ce qu'on te propose aujourd'hui — quelques minutes suffisent." },
+    { emoji:"🎴", title:"Nouveau chaque jour",
+      text:"Un lieu, une découverte, le Japon du jour : du contenu frais t'attend ici." },
+    { emoji:"🔥", title:"Ta progression",
+      text:"Reviens chaque jour pour débloquer plus de contenu et garder ta flamme." },
+  ],
 };
+// Bref instant de calme avant que l'accueil se révèle (Système 4.a) — pas de
+// Framer Motion ici (contrairement à la présentation des 5 piliers, Système
+// 1) : un seul mot qui se compose, puis fondu de sortie manuel (cohérent
+// avec les autres sorties non-Framer-Motion de l'app, ex. FlashcardMode).
+function HomeWelcomeBeat({text, onDone}){
+  const [leaving, setLeaving] = useState(false);
+  const dismiss = ()=>{
+    if(leaving) return;
+    setLeaving(true);
+    setTimeout(onDone, 220);
+  };
+  useEffect(()=>{
+    const t = setTimeout(dismiss, 1300);
+    return ()=>clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+  return (
+    <div onClick={dismiss} style={{position:"fixed",inset:0,zIndex:305,background:"#0a0a0a",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"opacity var(--dur-slow,.24s) var(--ease-smooth,ease)",opacity:leaving?0:1}}>
+      <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:200,fontSize:28,color:"#F0E6D3",textAlign:"center",padding:"0 32px",animation:"fadeUp var(--dur-cinematic,.45s) var(--ease-smooth,ease) .15s both"}}>
+        {text}
+      </div>
+    </div>
+  );
+}
 function SectionIntro({C, color, steps, onDone}){
   const [i, setI] = useState(0);
   const s = steps[i];
@@ -6272,6 +6327,11 @@ function markIntroSeen(){ try { localStorage.setItem(INTRO_KEY, "1"); } catch {}
 // une seule fois chacun — voir SectionIntro plus bas.
 function sectionIntroSeen(id){ try { return localStorage.getItem(`isekaid_section_intro_${id}_v1`)==="1"; } catch { return false; } }
 function markSectionIntroSeen(id){ try { localStorage.setItem(`isekaid_section_intro_${id}_v1`, "1"); } catch {} }
+// Atterrissage 1er lancement sur Home (Système 4.a) : bienvenue + spotlight
+// des zones, indépendant de la présentation des 5 piliers (Système 1) pour
+// couvrir aussi les comptes qui n'auraient pas eu la présentation.
+function homeIntroSeen(){ try { return localStorage.getItem("isekaid_home_intro_seen_v1")==="1"; } catch { return false; } }
+function markHomeIntroSeen(){ try { localStorage.setItem("isekaid_home_intro_seen_v1", "1"); } catch {} }
 const THEME_KEY = "isekaid_theme_v1";
 function loadProfile(){
   try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
@@ -6498,6 +6558,15 @@ function dayKey(d=new Date()){
 function daysBetween(aKey,bKey){
   const a=new Date(aKey+"T00:00:00"), b=new Date(bKey+"T00:00:00");
   return Math.round((b-a)/86400000);
+}
+// Salutation quotidienne (Système 4.b) : joue une seule fois par jour, au
+// tout premier atterrissage sur Home — voir HomeScreen.
+const GREETING_KEY = "isekaid_last_greeting_date";
+function isNewGreetingDay(){
+  try { return localStorage.getItem(GREETING_KEY) !== dayKey(); } catch { return false; }
+}
+function markGreetingSeenToday(){
+  try { localStorage.setItem(GREETING_KEY, dayKey()); } catch {}
 }
 function loadStreak(){
   try { const raw=localStorage.getItem(STREAK_KEY); return raw?JSON.parse(raw):null; }
