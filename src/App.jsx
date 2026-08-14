@@ -4,12 +4,13 @@ import VIDEO_MAP from "./video-map.json";
 import LIEU_EDITORIAL from "./lieu-editorial.json";
 import * as sfx from "./sfx.js";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback } from "./supabase";
+import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations } from "./supabase";
 import { HomeDailyCard, DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 import { speakJP, SpeakButton } from "./tts";
-import { TutorEntryCard, TutorScreen } from "./Tutor";
-import { DiscoveriesScreen, useLatestUnlockedDiscovery, DiscoveryTeaserCard, isDiscoveryNew } from "./ExploreDiscoveries";
+import { TutorEntryCard, TutorScreen, estimateNiveau } from "./Tutor";
+import { DiscoveriesScreen, useLatestUnlockedDiscovery, DiscoveryTeaserCard, isDiscoveryNew, useExploreDiscoveries, requiredDay } from "./ExploreDiscoveries";
+import { scenarioTutorTarget, buildBridgeContext } from "./scenarioTutorBridge";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -56,11 +57,20 @@ function jpSub(entry, script, jpField="jp"){
   return entry.romaji || "";                        // sous le kanji → le romaji
 }
 const SEASON_ACCENT = {
-  printemps:{accent:"#E08BA8", soft:"rgba(224,139,168,0.10)", emoji:"🌸", particle:"🌸", label:"Printemps", tagline:"Saison du hanami — les cerisiers en fleurs"},
-  "été":    {accent:"#3C9DC4", soft:"rgba(60,157,196,0.10)",  emoji:"🎐", particle:"💧", label:"Été",       tagline:"Saison des matsuri et des feux d'artifice"},
-  automne:  {accent:"#C97D3C", soft:"rgba(201,125,60,0.10)",  emoji:"🍁", particle:"🍁", label:"Automne",   tagline:"Saison du momiji — les érables flamboient"},
-  hiver:    {accent:"#7B9BB5", soft:"rgba(123,155,181,0.12)", emoji:"❄️", particle:"❄️", label:"Hiver",     tagline:"Saison des illuminations et de l'onsen"},
+  printemps:{accent:"#E08BA8", soft:"rgba(224,139,168,0.10)", emoji:"🌸", particle:"🌸", label:"Printemps", tagline:"Saison du hanami — les cerisiers en fleurs", saisonFr:"ce printemps"},
+  "été":    {accent:"#3C9DC4", soft:"rgba(60,157,196,0.10)",  emoji:"🎐", particle:"💧", label:"Été",       tagline:"Saison des matsuri et des feux d'artifice", saisonFr:"cet été"},
+  automne:  {accent:"#C97D3C", soft:"rgba(201,125,60,0.10)",  emoji:"🍁", particle:"🍁", label:"Automne",   tagline:"Saison du momiji — les érables flamboient", saisonFr:"cet automne"},
+  hiver:    {accent:"#7B9BB5", soft:"rgba(123,155,181,0.12)", emoji:"❄️", particle:"❄️", label:"Hiver",     tagline:"Saison des illuminations et de l'onsen", saisonFr:"cet hiver"},
 };
+// Sous-ensemble emblématique de lieux (sur les 151 du catalogue) taggués par
+// saison idéale — mapping minimal viable, pas un ré-étiquetage exhaustif.
+// Le champ `saison_ideale` existait déjà dans japan-data.json mais n'était
+// utilisé nulle part : 10 lieux déjà taggués (hiver/printemps/automne), 3
+// ajoutés pour l'été (sumida-river, gion, owakudani — tous liés aux matsuri
+// et feux d'artifice de la saison).
+function seasonalLieux(db, seasonKey){
+  return (db?.lieux || []).filter(l => l.saison_ideale === seasonKey);
+}
 
 // ─── Feature flags — centralise ce qui est fonctionnel vs en placeholder ───────
 // Un élément derrière un flag à `false` doit toujours afficher un état "Bientôt
@@ -903,15 +913,47 @@ function ResumeCard({C, mission, latestFeed, today, onGoTab, onTask}){
 // ─── Bandeau saisonnier ─────────────────────────────────────────────────────
 // Purement décoratif/contextuel, dérivé de la date côté client (currentSeasonKey
 // + SEASON_ACCENT, déjà utilisés ailleurs dans l'app). Pas de backend, pas d'asset.
-function SeasonBanner({C, acc}){
+// Bandeau saisonnier — point d'entrée contextuel vers des lieux Voyage
+// pertinents pour la saison en cours (voir seasonalLieux() ci-dessus),
+// plutôt qu'un simple décor. `lieux` vide → fallback neutre (comportement
+// d'origine, aucun lien mort).
+function SeasonBanner({C, acc, lieux, onOpenLieu}){
+  const [open,setOpen] = useState(false);
   if(!FEATURE_FLAGS.seasonalBanner || !acc) return null;
+  const items = lieux || [];
+  const hasLieux = items.length > 0;
   return(
-    <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",borderRadius:12,background:acc.soft,border:`1px solid ${acc.accent}33`,marginBottom:14}}>
-      <span style={{fontSize:18,flexShrink:0}}>{acc.emoji}</span>
-      <div style={{minWidth:0}}>
-        <span style={{fontSize:12,fontWeight:600,color:C.text}}>{acc.label}</span>
-        <span style={{fontSize:12,color:C.t2}}> · {acc.tagline}</span>
+    <div style={{borderRadius:12,background:acc.soft,border:`1px solid ${acc.accent}33`,marginBottom:14,overflow:"hidden"}}>
+      <div
+        onClick={hasLieux ? ()=>setOpen(o=>!o) : undefined}
+        style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",cursor:hasLieux?"pointer":"default"}}
+      >
+        <span style={{fontSize:18,flexShrink:0}}>{acc.emoji}</span>
+        <div style={{minWidth:0,flex:1}}>
+          <span style={{fontSize:12,fontWeight:600,color:C.text}}>{acc.label}</span>
+          <span style={{fontSize:12,color:C.t2}}>
+            {" · "}
+            {hasLieux
+              ? `${acc.tagline} — ${items.length} lieu${items.length>1?"x":""} à voir ${acc.saisonFr}`
+              : acc.tagline}
+          </span>
+        </div>
+        {hasLieux && <span style={{fontSize:12,color:acc.accent,flexShrink:0,transform:open?"rotate(180deg)":"none",transition:"transform .2s"}}>▾</span>}
       </div>
+      {hasLieux && open && (
+        <div style={{padding:"0 10px 10px",display:"flex",flexDirection:"column",gap:6,animation:"fadeUp .25s ease"}}>
+          {items.map(l=>(
+            <div key={l.id} onClick={()=>onOpenLieu && onOpenLieu(l)} className="lift" style={{cursor:"pointer",display:"flex",alignItems:"center",gap:10,padding:"9px 10px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:10}}>
+              <span style={{fontSize:18,flexShrink:0}}>{l.emoji||"📍"}</span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l.nom}</div>
+                <div style={{fontSize:11,color:C.t3}}>{l.categorie}{l.quartier?` · ${l.quartier}`:""}</div>
+              </div>
+              <span style={{fontSize:14,color:C.t3,flexShrink:0}}>›</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -1044,7 +1086,35 @@ function WeeklyChallengeCard({C}){
   );
 }
 
-function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu}){
+// Carte d'accueil pour le SRS actif (kana dus aujourd'hui) — le calcul et la
+// session de révision elle-même vivent déjà dans LearnScreen/ReviewMode, ici
+// on ne fait que rendre le signal visible et lancer un accès direct depuis
+// l'accueil. Masquée pour qui n'a jamais pratiqué de kana (pas de pub pour
+// une fonctionnalité pas encore pertinente).
+function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
+  if(!hasStarted) return null;
+  if(dueCount <= 0){
+    return (
+      <div style={{marginBottom:24,padding:"12px 16px",borderRadius:14,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:10,color:C.t3,fontSize:12.5}}>
+        <span style={{fontSize:15}}>✓</span> Révisions à jour — reviens demain
+      </div>
+    );
+  }
+  return (
+    <div onClick={onStart} className="lift" style={{cursor:"pointer",marginBottom:24,borderRadius:18,overflow:"hidden",border:`1px solid ${C.gold}55`,background:`linear-gradient(150deg,${C.gold}1f,transparent 70%)`}}>
+      <div style={{padding:"16px 18px",display:"flex",alignItems:"center",gap:14}}>
+        <div style={{fontSize:34,animation:"heartbeat 1.8s ease infinite"}}>🔁</div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:10,color:C.gold,letterSpacing:".15em",textTransform:"uppercase",marginBottom:3,fontWeight:600}}>À réviser aujourd'hui</div>
+          <div style={{fontSize:16,color:C.text,fontWeight:700}}>{dueCount} kana</div>
+        </div>
+        <span style={{fontSize:18,color:C.gold}}>›</span>
+      </div>
+    </div>
+  );
+}
+
+function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,toggleScript,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,dueReviewCount,hasKanaProgress,onStartReview}){
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   const [reminderDismissed, setReminderDismissed] = useState(false);
@@ -1080,6 +1150,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
 
   const seasonKey = currentSeasonKey();
   const seasonAccent = SEASON_ACCENT[seasonKey];
+  const seasonLieux = useMemo(()=>seasonalLieux(db, seasonKey), [db, seasonKey]);
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif",position:"relative"}}>
       {/* Sticky header */}
@@ -1168,11 +1239,14 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,wikiMap,onWikiTap,script,t
           );
         })()}
 
+        {/* 3b. Révisions du jour (SRS actif) */}
+        <ReviewTeaserCard C={C} dueCount={dueReviewCount} hasStarted={hasKanaProgress} onStart={onStartReview}/>
+
         {/* 4. Défi de la semaine */}
         <WeeklyChallengeCard C={C}/>
 
         {/* 5. Nouveau aujourd'hui — lieu du jour + Japon du jour + découverte débloquée */}
-        <SeasonBanner C={C} acc={seasonAccent}/>
+        <SeasonBanner C={C} acc={seasonAccent} lieux={seasonLieux} onOpenLieu={onOpenLieu}/>
         <SH C={C} kanji="新" title="Nouveau aujourd'hui" sub="Fraîchement arrivé" badge={feedIsNew || lieuIsNew || discoveryIsNew}/>
         <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>
         <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
@@ -2113,7 +2187,7 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initial
 }
 
 // ─── Scénarios interactifs ────────────────────────────────────────────────────
-function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
+function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTutorBridge}){
   const [step,setStep] = useState(0);
   const [picked,setPicked] = useState(null);
   const [score,setScore] = useState(0);
@@ -2167,6 +2241,11 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
         ) : !passed ? (
           <div style={{margin:"18px 0",fontSize:12,color:C.t3}}>Atteins 70% pour valider ce scénario</div>
         ) : null}
+        {passed && onOpenTutorBridge && (
+          <button onClick={()=>onOpenTutorBridge(s)} className="pop-press" style={{width:"100%",marginTop:14,padding:"14px",background:"transparent",border:`1px solid ${C.gold}66`,borderRadius:12,color:C.gold,fontSize:13,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,animation:"fadeUp .4s ease .25s both"}}>
+            🧑‍🏫 Rejoue cette scène avec ton tuteur
+          </button>
+        )}
         <div style={{display:"flex",gap:11,marginTop:8}}>
           <button onClick={()=>{setStep(0);setPicked(null);setScore(0);setFinished(false);}} className="pop-press" style={{flex:1,padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Recommencer</button>
           <button onClick={onExit} className="pop-press" style={{flex:1,padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Terminer</button>
@@ -2218,7 +2297,11 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
                   <div style={{flex:1,minWidth:0}}>
                     {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(c, script)}</div>}
                     {c.jp && showRomaji && jpSub(c, script) && <div style={{fontSize:11,color:C.t3,fontStyle:"italic",marginBottom:3}}>{jpSub(c, script)}</div>}
-                    <div style={{fontSize:13,color:C.t2}}>{c.fr}</div>
+                    {/* Traduction FR masquée tant que non répondu — sinon il suffit de
+                        reconnaître la bonne phrase française pour la situation, sans
+                        avoir besoin de comprendre le japonais. Révélée pour les 4 choix
+                        une fois la réponse donnée, à titre de correction/révision. */}
+                    {picked && <div style={{fontSize:13,color:C.t2,marginTop:2}}>{c.fr}</div>}
                   </div>
                   {picked && c.jp && <SpeakButton C={C} text={c.jp} color={s.couleur}/>}
                 </div>
@@ -2239,7 +2322,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone}){
   );
 }
 
-function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
+function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutorBridge}){
   const [active,setActive] = useState(null);
   const [levelFilter,setLevelFilter] = useState("Tous");
   const LEVEL_ORDER = { "Débutant":0, "Intermédiaire":1, "Avancé":2 };
@@ -2252,7 +2335,7 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario}){
   const done = (s)=> scenariosDone?.includes(s.id);
   const totalDone = scenarios.filter(done).length;
 
-  if(active) return <ScenarioPlay C={C} s={active} script={script} onExit={()=>setActive(null)} onComplete={completeScenario} alreadyDone={done(active)}/>;
+  if(active) return <ScenarioPlay C={C} s={active} script={script} onExit={()=>setActive(null)} onComplete={completeScenario} alreadyDone={done(active)} onOpenTutorBridge={onOpenTutorBridge}/>;
 
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
@@ -3461,13 +3544,20 @@ function MissionBadge({C}){
     </span>
   );
 }
-function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep,onMissionTrigger,mission}){
+function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompleteStep,onMissionTrigger,mission,initialMode,onInitialModeConsumed}){
   const [deck,setDeck] = useState(null);   // selected deck object
   const [mode,setMode] = useState(null);   // "flash" | "quiz"
   const [situation,setSituation] = useState(null); // selected situation
   const [pathStep,setPathStep] = useState(null);   // active path step (detail)
   const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
-  const [learnMode,setLearnMode] = useState(null);   // null = choix | "path" | "alphabets" | "situations" | "read" | "listen"
+  // null = choix | "path" | "alphabets" | "situations" | "read" | "listen" | "review"
+  // initialMode : deep-link depuis la carte d'accueil "Révisions du jour" —
+  // consommé une seule fois pour ne pas rouvrir en boucle au retour arrière.
+  const [learnMode,setLearnMode] = useState(initialMode || null);
+  useEffect(()=>{
+    if(initialMode) onInitialModeConsumed?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
   // Triggers des missions du jour PAS ENCORE faites — sert à afficher un badge
   // "Mission du jour" sur la carte correspondante (kana / review / comp / path).
   const pendingTriggers = useMemo(()=>{
@@ -5231,6 +5321,107 @@ function AchievementPopup({C, achievement, onClose}){
   );
 }
 
+// ─── Bilan hebdomadaire ─────────────────────────────────────────────────────
+// Affiché une fois par semaine (voir l'effet de détection dans IsekaidApp).
+// `recap` : { weekKey, daysActive, masteredDelta, scenariosDelta,
+// discoveriesDelta, tutorConvCount } — tutorConvCount peut être null tant que
+// le fetch Supabase (best-effort) n'a pas répondu.
+function WeeklyRecapPopup({C, recap, onClose}){
+  const [sharing,setSharing] = useState(false);
+  const [shareImageUrl,setShareImageUrl] = useState(null);
+  useEffect(()=>()=>{ if(shareImageUrl) URL.revokeObjectURL(shareImageUrl); },[shareImageUrl]);
+  if(!recap) return null;
+
+  const rows = [
+    { emoji:"🔥", label:"Jours actifs cette semaine", value:`${recap.daysActive}/7` },
+    { emoji:"🈁", label:"Kana maîtrisés en plus", value: recap.masteredDelta>0?`+${recap.masteredDelta}`:"0" },
+    { emoji:"🎭", label:"Scénarios réussis", value: recap.scenariosDelta>0?`+${recap.scenariosDelta}`:"0" },
+    { emoji:"🧑‍🏫", label:"Conversations avec ton tuteur", value: recap.tutorConvCount==null ? "…" : String(recap.tutorConvCount) },
+    { emoji:"🎴", label:"Découvertes débloquées", value: recap.discoveriesDelta>0?`+${recap.discoveriesDelta}`:"0" },
+  ];
+
+  const drawShareImage = ()=>{
+    const canvas = document.createElement("canvas");
+    canvas.width = 1080; canvas.height = 1350;
+    const ctx = canvas.getContext("2d");
+    const grad = ctx.createLinearGradient(0,0,0,canvas.height);
+    grad.addColorStop(0, C.bg); grad.addColorStop(1, C.s1);
+    ctx.fillStyle = grad; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = C.red; ctx.font = "700 32px sans-serif";
+    ctx.fillText("ISEKAI'D · BILAN DE LA SEMAINE", 70, 120);
+    ctx.fillStyle = C.text; ctx.font = "300 70px serif";
+    ctx.fillText("今週の記録", 70, 215);
+    let y = 360;
+    rows.forEach(r=>{
+      ctx.font = "600 54px sans-serif"; ctx.fillStyle = C.text;
+      ctx.fillText(`${r.emoji}  ${r.value}`, 70, y);
+      ctx.font = "26px sans-serif"; ctx.fillStyle = C.t3;
+      ctx.fillText(r.label, 70, y+40);
+      y += 140;
+    });
+    ctx.font = "22px sans-serif"; ctx.fillStyle = C.t3;
+    ctx.fillText("isekaid.app", 70, canvas.height-50);
+    return canvas;
+  };
+
+  const share = async ()=>{
+    setSharing(true);
+    try {
+      const canvas = drawShareImage();
+      const blob = await new Promise(res=>canvas.toBlob(res,"image/png"));
+      if(!blob) return;
+      const file = new File([blob], "isekaid-bilan-semaine.png", {type:"image/png"});
+      if(navigator.canShare && navigator.share && navigator.canShare({files:[file]})){
+        await navigator.share({ files:[file], title:"Mon bilan de la semaine sur Isekai'd" });
+      } else {
+        setShareImageUrl(URL.createObjectURL(blob));
+      }
+    } catch(e){
+      if(e?.name !== "AbortError") console.warn("[weekly-recap] partage impossible:", e);
+    } finally {
+      setSharing(false);
+    }
+  };
+
+  if(shareImageUrl){
+    return (
+      <>
+        <div onClick={()=>setShareImageUrl(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:320,backdropFilter:"blur(3px)"}}/>
+        <div style={{position:"fixed",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"min(88vw,340px)",zIndex:321,textAlign:"center"}}>
+          <img src={shareImageUrl} alt="Bilan de la semaine" style={{width:"100%",borderRadius:16,boxShadow:"0 24px 80px rgba(0,0,0,0.5)"}}/>
+          <div style={{marginTop:14,fontSize:12,color:"#F5EFE6"}}>Appuie longuement sur l'image pour l'enregistrer</div>
+          <button onClick={()=>setShareImageUrl(null)} style={{marginTop:14,padding:"10px 20px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2,fontSize:13,cursor:"pointer"}}>Fermer</button>
+        </div>
+      </>
+    );
+  }
+
+  return(
+    <>
+      <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:310,backdropFilter:"blur(3px)"}}/>
+      <div style={{position:"fixed",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"min(88vw,360px)",zIndex:311,background:C.s1,borderRadius:22,padding:"28px 24px 24px",animation:"popIn .4s cubic-bezier(.2,.9,.3,1.3)",boxShadow:"0 24px 80px rgba(0,0,0,0.4)",border:`1px solid rgba(158,122,26,0.35)`}}>
+        <div style={{textAlign:"center",marginBottom:20}}>
+          <div style={{fontSize:11,color:C.gold,letterSpacing:".25em",textTransform:"uppercase",marginBottom:8}}>Bilan de la semaine</div>
+          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",color:C.text}}>今週もお疲れ様！</div>
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:22}}>
+          {rows.map((r,i)=>(
+            <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 12px",background:C.s2,borderRadius:12}}>
+              <span style={{fontSize:22,flexShrink:0}}>{r.emoji}</span>
+              <span style={{flex:1,fontSize:13,color:C.t2}}>{r.label}</span>
+              <span style={{fontSize:15,fontWeight:700,color:C.text,flexShrink:0}}>{r.value}</span>
+            </div>
+          ))}
+        </div>
+        <button onClick={share} disabled={sharing} className="pop-press" style={{width:"100%",padding:"13px",background:"transparent",border:`1px solid ${C.gold}66`,borderRadius:12,color:C.gold,fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:10,opacity:sharing?0.6:1}}>
+          {sharing ? "…" : "📤 Partager"}
+        </button>
+        <button onClick={onClose} style={{width:"100%",padding:"13px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Continuer 🎌</button>
+      </div>
+    </>
+  );
+}
+
 // ─── Daily welcome popup (streak + clé) ───────────────────────────────────────
 function DailyWelcome({C, streak, dailyInfo, onClose, isPremium}){
   const count = streak?.count || 0;
@@ -5733,6 +5924,33 @@ function srsStats(kanaProgress){
     due: vals.filter(v=>v.due && v.due<=now && (v.box||0)<5).length,
   };
 }
+
+// ─── Bilan hebdomadaire ─────────────────────────────────────────────────────
+// Journal léger, 100% local : capture un instantané au début de chaque
+// semaine ISO (mêmes bornes que le Défi de la semaine, isoWeekKey() ci-dessus)
+// pour pouvoir calculer un delta à la semaine suivante. Clé distincte de
+// isekaid_weekly_v1 (déjà prise par le Défi de la semaine).
+const WEEKLY_RECAP_KEY = "isekaid_weekly_recap_v1";
+function loadWeeklyRecapJournal(){
+  try { const raw = localStorage.getItem(WEEKLY_RECAP_KEY); return raw ? JSON.parse(raw) : null; }
+  catch { return null; }
+}
+function saveWeeklyRecapJournal(j){ try { localStorage.setItem(WEEKLY_RECAP_KEY, JSON.stringify(j)); } catch {} }
+
+// Bornes {start, end} (UTC, end exclusif) d'une semaine ISO "YYYY-Www" —
+// inverse de isoWeekKey(). Même précision que isoWeekKey (UTC, pas le fuseau
+// Europe/Paris exact à la minute près) — cohérent avec le reste de l'app.
+function isoWeekBounds(weekKey){
+  const [yStr, wStr] = (weekKey||"").split("-W");
+  const year = parseInt(yStr,10), week = parseInt(wStr,10);
+  const jan4 = new Date(Date.UTC(year,0,4));
+  const jan4Day = (jan4.getUTCDay()+6)%7; // lundi = 0
+  const week1Monday = new Date(jan4); week1Monday.setUTCDate(jan4.getUTCDate()-jan4Day);
+  const start = new Date(week1Monday); start.setUTCDate(week1Monday.getUTCDate() + (week-1)*7);
+  const end = new Date(start); end.setUTCDate(start.getUTCDate()+7);
+  return { start, end };
+}
+
 // A char is "mastered" if known at least 3 times and success rate >= 70%
 function isMastered(entry){
   if(!entry || entry.seen < 3) return false;
@@ -5991,6 +6209,18 @@ export default function IsekaidApp(){
   const [premium,setPremium]=useState(()=>loadPremium());
   const isPremium = !!premium?.active;
   const [showPremiumPage,setShowPremiumPage]=useState(false);
+  // Pont Scénarios scriptés → Tuteur IA : contexte en attente, consommé une
+  // seule fois par TutorScreen à l'ouverture (évite de rouvrir le même pont
+  // si l'utilisateur revient sur l'onglet tuteur après coup).
+  const [tutorBridge,setTutorBridge]=useState(null);
+  const openTutorBridge = (scriptedScenario)=>{
+    const niveau = estimateNiveau(kanaProgress, scenProgress, streak, user?.level);
+    setTutorBridge({
+      tutorScenarioId: scenarioTutorTarget(scriptedScenario),
+      bridgeContext: buildBridgeContext(scriptedScenario, niveau),
+    });
+    setTab("tutor");
+  };
   const [billingError,setBillingError]=useState(null);
   const [billingBusy,setBillingBusy]=useState(false);
   const [liveOfferings,setLiveOfferings]=useState(null);
@@ -6043,6 +6273,16 @@ export default function IsekaidApp(){
   const [scenProgress,setScenProgress]=useState(()=>loadScenarioProgress());
   const [kanaProgress,setKanaProgress]=useState(()=>loadKanaProgress());
   const [pathProgress,setPathProgress]=useState(()=>loadPathProgress());
+  // Révisions du jour (SRS) : calculé une seule fois ici pour être partagé
+  // entre la carte d'accueil et LearnScreen/ReviewMode, sans réinventer le
+  // SRS — juste getDueForReview(), déjà existant.
+  const hasKanaProgress = Object.keys(kanaProgress).length > 0;
+  const dueReviewCount = useMemo(()=>{
+    const allKana = [...HIRAGANA, ...KATAKANA, ...HIRAGANA_DAKUTEN, ...KATAKANA_DAKUTEN];
+    return getDueForReview(kanaProgress, allKana).length;
+  },[kanaProgress]);
+  const [pendingLearnMode,setPendingLearnMode]=useState(null);
+  const startReviewFromHome = ()=>{ setPendingLearnMode("review"); setTab("learn"); };
 
   const completePathStep = (stepId)=>{
     completeTask("path");
@@ -6149,6 +6389,74 @@ export default function IsekaidApp(){
   const [script,setScript]=useState(()=>loadScript());
   const [session,setSession]=useState(null);
 
+  // ── Bilan hebdomadaire ──────────────────────────────────────────────────
+  // Détecte le passage à une nouvelle semaine ISO (mêmes bornes que le Défi
+  // de la semaine) et, si un instantané de la semaine précédente existe déjà
+  // (donc pas au tout premier lancement), calcule les deltas et prépare le
+  // popup — affiché une seule fois, voir WeeklyRecapPopup plus haut.
+  const [weeklyRecap,setWeeklyRecap]=useState(null);
+  const discoveriesForRecap = useExploreDiscoveries();
+  useEffect(()=>{
+    if(!db || discoveriesForRecap===null) return; // attend que l'app et les découvertes soient chargées
+    const currentWeek = isoWeekKey();
+    const mastered = Object.values(kanaProgress||{}).filter(v=>(v.box||0)>=5).length;
+    const scenariosDone = (scenProgress?.done||[]).length;
+    const streakCount = streak?.count || 0;
+    const streakBest = streak?.best || 0;
+    const j = loadWeeklyRecapJournal();
+    if(!j){
+      saveWeeklyRecapJournal({ weekKey: currentWeek, baseline:{mastered, scenariosDone, streakCount, streakBest} });
+      return;
+    }
+    if(j.weekKey === currentWeek) return; // toujours la même semaine, rien à faire
+
+    const b = j.baseline || {};
+    const endedWeek = j.weekKey;
+    const daysActive = Math.max(0, Math.min(7, streakCount >= (b.streakCount||0) ? streakCount - (b.streakCount||0) : streakCount));
+    const masteredDelta = Math.max(0, mastered - (b.mastered||0));
+    const scenariosDelta = Math.max(0, scenariosDone - (b.scenariosDone||0));
+    let discoveriesDelta = 0;
+    if(discoveriesForRecap.length){
+      if(isPremium){
+        const { start, end } = isoWeekBounds(endedWeek);
+        discoveriesDelta = discoveriesForRecap.filter(d=>{
+          const t = d.published_at ? new Date(d.published_at).getTime() : NaN;
+          return t>=start.getTime() && t<end.getTime();
+        }).length;
+      } else {
+        const bestBefore = Math.max(b.streakCount||0, b.streakBest||0);
+        const bestAfter = Math.max(streakCount, streakBest);
+        discoveriesDelta = discoveriesForRecap.filter((d,i)=>{
+          const req = requiredDay(i);
+          return req > bestBefore && req <= bestAfter;
+        }).length;
+      }
+    }
+
+    // Nouveau baseline pour la semaine qui commence — posé tout de suite,
+    // le fetch async des conversations tuteur ci-dessous ne doit pas le retarder.
+    saveWeeklyRecapJournal({ weekKey: currentWeek, baseline:{mastered, scenariosDone, streakCount, streakBest} });
+    setWeeklyRecap({ weekKey: endedWeek, daysActive, masteredDelta, scenariosDelta, discoveriesDelta, tutorConvCount: null });
+
+    // Conversations tuteur de la semaine écoulée — best-effort, hors ligne ou
+    // erreur réseau ⇒ affichage sans cette ligne plutôt qu'un blocage.
+    const userId = session?.user?.id;
+    if(userId && supabaseEnabled){
+      fetchTutorConversations(userId).then(rows=>{
+        const { start, end } = isoWeekBounds(endedWeek);
+        const count = (rows||[]).filter(r=>{
+          const t = r.created_at ? new Date(r.created_at).getTime() : NaN;
+          return t>=start.getTime() && t<end.getTime();
+        }).length;
+        setWeeklyRecap(prev => (prev && prev.weekKey===endedWeek) ? { ...prev, tutorConvCount: count } : prev);
+      }).catch(()=>{
+        setWeeklyRecap(prev => (prev && prev.weekKey===endedWeek) ? { ...prev, tutorConvCount: 0 } : prev);
+      });
+    } else {
+      setWeeklyRecap(prev => (prev && prev.weekKey===endedWeek) ? { ...prev, tutorConvCount: 0 } : prev);
+    }
+  },[db, kanaProgress, scenProgress, streak, discoveriesForRecap, isPremium, session?.user?.id]);
+
   // Intercepte le deep link app.isekaid://login-callback après connexion Google (natif).
   useEffect(()=>{
     let listener = null;
@@ -6174,7 +6482,7 @@ export default function IsekaidApp(){
   // à l'onglet "home", puis seulement quitter l'app si on y est déjà.
   const backStateRef = useRef();
   useEffect(()=>{
-    backStateRef.current = { wikiEntry, showSearch, spotlightLieu, showPremiumPage, newAchievement, showWelcome, tab };
+    backStateRef.current = { wikiEntry, showSearch, spotlightLieu, showPremiumPage, newAchievement, weeklyRecap, showWelcome, tab };
   });
   useEffect(()=>{
     let listener = null;
@@ -6190,6 +6498,7 @@ export default function IsekaidApp(){
           if(s.spotlightLieu){ setSpotlightLieu(null); return; }
           if(s.showPremiumPage){ setShowPremiumPage(false); return; }
           if(s.newAchievement){ setNewAchievement(null); return; }
+          if(s.weeklyRecap){ setWeeklyRecap(null); return; }
           if(s.showWelcome){ setShowWelcome(false); return; }
           if(s.tab!=="home"){ setTab("home"); return; }
           capApp.exitApp();
@@ -6485,14 +6794,14 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className="screen-in" style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} toggleScript={toggleScript} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
-              {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario}/>}
-              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission}/>}
+              {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge}/>}
+              {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={startTour} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
-              {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} onBack={()=>setTab("home")}/>}
+              {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onBack={()=>setTab("home")}/>}
               </div>
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
@@ -6514,6 +6823,8 @@ export default function IsekaidApp(){
             {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)} onRedeemCode={redeemCode} billingError={billingError} billingBusy={billingBusy} liveOfferings={liveOfferings} onRestore={restorePremium}/>}
             {/* Achievement unlocked */}
             {newAchievement && <AchievementPopup C={C} achievement={newAchievement} onClose={()=>setNewAchievement(null)}/>}
+            {/* Bilan hebdomadaire */}
+            {weeklyRecap && <WeeklyRecapPopup C={C} recap={weeklyRecap} onClose={()=>setWeeklyRecap(null)}/>}
           </>
         )}
       </div>

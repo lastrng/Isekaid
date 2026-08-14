@@ -89,7 +89,7 @@ const RESPONSE_TOOL = {
   },
 };
 
-function buildSystemPrompt(niveau: string, scenarioId: string): string {
+function buildSystemPrompt(niveau: string, scenarioId: string, bridgeContext: string | null): string {
   const scenario = TUTOR_SCENARIOS.find((s) => s.id === scenarioId) ?? TUTOR_SCENARIOS.find((s) => s.id === "libre")!;
   const niveauInstr = NIVEAU_INSTRUCTIONS[niveau] || NIVEAU_INSTRUCTIONS["débutant"];
   return [
@@ -97,9 +97,10 @@ function buildSystemPrompt(niveau: string, scenarioId: string): string {
     "Tu réponds TOUJOURS en appelant l'outil emit_response — jamais de texte libre en dehors de l'outil.",
     niveauInstr,
     scenario.systemContext,
+    bridgeContext,
     "Si le dernier message de l'utilisateur contient une erreur (grammaire, particule, politesse, kana/kanji), explique-la brièvement et avec bienveillance dans 'correction', sans casser le fil de la conversation. Si aucune erreur, laisse 'correction' vide.",
     "Reste concis : 1 à 3 phrases courtes par réponse, adaptées à une conversation, pas un cours magistral.",
-  ].join("\n\n");
+  ].filter(Boolean).join("\n\n");
 }
 
 function safeString(v: unknown): string {
@@ -173,6 +174,13 @@ Deno.serve(async (req: Request) => {
     const scenarioId = safeString(body?.scenarioId) || "libre";
     const niveau = safeString(body?.niveau) || "débutant";
     let conversationId = safeString(body?.conversationId) || null;
+    // Pont Scénarios scriptés → Tuteur : contexte optionnel, uniquement
+    // consommé à la création de la conversation (voir plus bas), persisté
+    // dessus pour rester actif sur tous les messages suivants sans que le
+    // client ait besoin de le renvoyer. Capé par sécurité (source : le client
+    // app, pas une saisie libre, mais on ne fait jamais confiance à la taille
+    // d'un payload entrant).
+    const bridgeContext = safeString(body?.bridgeContext).trim().slice(0, 800) || null;
 
     if (!message) {
       return new Response(JSON.stringify({ error: "empty_message" }), { status: 400, headers: jsonHeaders });
@@ -210,25 +218,28 @@ Deno.serve(async (req: Request) => {
     }
 
     // ── Conversation : réutilise ou crée ─────────────────────────────────────
+    let activeBridgeContext: string | null = null;
     if (conversationId) {
       const { data: conv, error: convErr } = await supabase
         .from("tutor_conversations")
-        .select("id")
+        .select("id, bridge_context")
         .eq("id", conversationId)
         .eq("user_id", userId)
         .maybeSingle();
       if (convErr || !conv) conversationId = null; // RLS/appartenance invalide → on en recrée une
+      else activeBridgeContext = conv.bridge_context ?? null;
     }
     if (!conversationId) {
       const { data: newConv, error: createErr } = await supabase
         .from("tutor_conversations")
-        .insert({ user_id: userId, scenario: scenarioId })
+        .insert({ user_id: userId, scenario: scenarioId, bridge_context: bridgeContext })
         .select("id")
         .single();
       if (createErr || !newConv) {
         return new Response(JSON.stringify({ error: "db_error" }), { status: 500, headers: jsonHeaders });
       }
       conversationId = newConv.id;
+      activeBridgeContext = bridgeContext;
     }
 
     // ── Historique + sauvegarde du message utilisateur, en parallèle ────────
@@ -275,7 +286,7 @@ Deno.serve(async (req: Request) => {
     }
     anthropicMessages.push({ role: "user", content: message });
 
-    const system = buildSystemPrompt(niveau, scenarioId);
+    const system = buildSystemPrompt(niveau, scenarioId, activeBridgeContext);
 
     // ── Appel Anthropic, avec un retry léger si le JSON/tool-use est absent ──
     let parsed: any = null;

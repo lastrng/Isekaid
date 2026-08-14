@@ -54,27 +54,38 @@ export function TutorEntryCard({C, onOpen}){
 }
 
 // ─── Écran principal : sélection de scénario / historique / chat ──────────
-export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isPremium, onOpenPremium, selfReportedLevel, onBack}){
-  const [view, setView] = useState("picker"); // "picker" | "history" | "chat"
-  const [activeScenarioId, setActiveScenarioId] = useState(null);
+export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isPremium, onOpenPremium, selfReportedLevel, initialBridge, onBridgeConsumed, onBack}){
+  // Pont Scénarios scriptés → Tuteur : si un contexte de pont est en attente
+  // (App.jsx), on saute le picker et on ouvre directement le chat dessus, une
+  // seule fois — consommé immédiatement pour ne pas rouvrir en boucle.
+  const [view, setView] = useState(initialBridge ? "chat" : "picker"); // "picker" | "history" | "chat"
+  const [activeScenarioId, setActiveScenarioId] = useState(initialBridge?.tutorScenarioId || null);
   const [activeConversationId, setActiveConversationId] = useState(null);
+  const [bridgeContext, setBridgeContext] = useState(initialBridge?.bridgeContext || null);
   const niveau = estimateNiveau(kanaProgress, scenProgress, streak, selfReportedLevel);
+
+  useEffect(()=>{
+    if(initialBridge) onBridgeConsumed?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
 
   const openScenario = (scenarioId)=>{
     setActiveScenarioId(scenarioId);
     setActiveConversationId(null);
+    setBridgeContext(null);
     setView("chat");
   };
   const openConversation = (conv)=>{
     setActiveScenarioId(conv.scenario);
     setActiveConversationId(conv.id);
+    setBridgeContext(null);
     setView("chat");
   };
 
   if(view === "chat"){
     return (
       <ChatView C={C} niveau={niveau} scenarioId={activeScenarioId || "libre"}
-        conversationId={activeConversationId}
+        conversationId={activeConversationId} bridgeContext={bridgeContext}
         isPremium={isPremium} onOpenPremium={onOpenPremium}
         onConversationCreated={setActiveConversationId}
         onBack={()=>setView(activeConversationId ? "history" : "picker")}
@@ -196,7 +207,7 @@ function describeError(e){
 }
 
 // ─── Chat ───────────────────────────────────────────────────────────────────
-function ChatView({C, niveau, scenarioId, conversationId, isPremium, onOpenPremium, onConversationCreated, onBack}){
+function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremium, onOpenPremium, onConversationCreated, onBack}){
   const scenario = getTutorScenario(scenarioId);
   const [convId, setConvId] = useState(conversationId);
   const [messages, setMessages] = useState([]); // {role, content_jp, content_fr, romaji, correction}
@@ -234,7 +245,10 @@ function ChatView({C, niveau, scenarioId, conversationId, isPremium, onOpenPremi
     setMessages(prev=>[...prev, { role:"user", content_jp: trimmed }]);
     setSending(true);
     try {
-      const res = await sendTutorMessage({ message: trimmed, scenarioId, niveau, conversationId: convId });
+      // Le contexte de pont (scénario scripté → tuteur) n'est envoyé qu'à la
+      // toute première requête d'une conversation encore sans id — le serveur
+      // le persiste sur la conversation, pas besoin de le renvoyer ensuite.
+      const res = await sendTutorMessage({ message: trimmed, scenarioId, niveau, conversationId: convId, bridgeContext: !convId ? bridgeContext : undefined });
       if(res?.limitReached || res?.premiumRequired){
         setError(res.premiumRequired ? "premium" : "limit");
         if(res.premiumRequired && res.limit) setFreeLimit(res.limit);
@@ -290,7 +304,10 @@ function ChatView({C, niveau, scenarioId, conversationId, isPremium, onOpenPremi
         )}
         {!loadingHistory && messages.length === 0 && (
           <div style={{textAlign:"center",padding:"30px 20px",color:C.t3,fontSize:13,border:`1px dashed ${C.border}`,borderRadius:16}}>
-            {scenario.description}<br/>Écris un premier message pour commencer.
+            {bridgeContext
+              ? "Ton tuteur reprend la scène que tu viens de réussir, en version libre 🎌"
+              : scenario.description}
+            <br/>Écris un premier message pour commencer.
           </div>
         )}
         {messages.map((m, i)=> m.role === "user"

@@ -154,9 +154,9 @@ export async function fetchTutorMessages(conversationId){
 // timeout : un accroc côté DB/PostgREST peut laisser la fonction pendre
 // ~1min avant qu'un 500 générique n'arrive — on coupe avant, avec un
 // message clair plutôt que de laisser l'UI muette sur "réfléchit…".
-export async function sendTutorMessage({ message, scenarioId, niveau, conversationId }){
+export async function sendTutorMessage({ message, scenarioId, niveau, conversationId, bridgeContext }){
   const { data, error } = await supabase.functions.invoke("tutor-chat", {
-    body: { message, scenarioId, niveau, conversationId },
+    body: { message, scenarioId, niveau, conversationId, bridgeContext },
     timeout: 25000,
   });
   if(error){
