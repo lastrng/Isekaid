@@ -11,7 +11,8 @@ import { speakJP, SpeakButton } from "./tts";
 import { TutorEntryCard, TutorScreen, estimateNiveau } from "./Tutor";
 import { DiscoveriesScreen, useLatestUnlockedDiscovery, DiscoveryTeaserCard, isDiscoveryNew, useExploreDiscoveries, requiredDay } from "./ExploreDiscoveries";
 import { scenarioTutorTarget, buildBridgeContext } from "./scenarioTutorBridge";
-import { MOTION_CSS_VARS } from "./motion";
+import { MOTION_CSS_VARS, withViewTransition, supportsViewTransitions } from "./motion";
+import { flushSync } from "react-dom";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -340,16 +341,22 @@ button{font-family:inherit;}
 @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes countUp{0%{transform:translateY(8px) scale(.8);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
 @keyframes toastUp{0%{transform:translateX(-50%) translateY(40px) scale(.8);opacity:0}55%{transform:translateX(-50%) translateY(-4px) scale(1.04);opacity:1}100%{transform:translateX(-50%) translateY(0) scale(1)}}
-.lift{transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease;}
+/* Tap feedback + cascade d'accueil : puisent dans le contrat de mouvement
+   unique (motion.js) plutôt que dans des durées/courbes codées en dur, pour
+   une signature homogène avec le reste de l'app (System 3, Phase 1). */
+.lift{transition:transform var(--dur-fast,.12s) var(--ease-signature,ease), box-shadow var(--dur-fast,.12s) ease;}
 .lift:active{transform:scale(.96);}
 @media(hover:hover){.lift:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,0.12);}}
 /* Classes ludiques réutilisables */
-.pop-press{transition:transform .15s cubic-bezier(.34,1.56,.64,1);}
+.pop-press{transition:transform var(--dur-fast,.12s) var(--ease-signature,ease);}
 .pop-press:active{transform:scale(.9);}
-.screen-in{animation:slideInUp .35s cubic-bezier(.22,1,.36,1) both;}
+/* Repli de .screen-in quand la View Transitions API n'est pas supportée par
+   le WebView (voir withViewTransition) — sinon la vraie transition prend le
+   relais et .screen-in n'est pas appliquée, pour ne pas cumuler les deux. */
+.screen-in{animation:slideInUp var(--dur-slow,.24s) var(--ease-smooth,ease) both;}
 .float-y{animation:floatY 3s ease-in-out infinite;}
-.stagger>*{animation:fadeUp .5s ease both;}
-.stagger>*:nth-child(1){animation-delay:.04s}.stagger>*:nth-child(2){animation-delay:.10s}.stagger>*:nth-child(3){animation-delay:.16s}.stagger>*:nth-child(4){animation-delay:.22s}.stagger>*:nth-child(5){animation-delay:.28s}.stagger>*:nth-child(6){animation-delay:.34s}.stagger>*:nth-child(7){animation-delay:.40s}.stagger>*:nth-child(8){animation-delay:.46s}
+.stagger>*{animation:fadeUp var(--dur-slow,.24s) var(--ease-smooth,ease) both;}
+.stagger>*:nth-child(1){animation-delay:.04s}.stagger>*:nth-child(2){animation-delay:.08s}.stagger>*:nth-child(3){animation-delay:.12s}.stagger>*:nth-child(4){animation-delay:.16s}.stagger>*:nth-child(5){animation-delay:.20s}.stagger>*:nth-child(6){animation-delay:.24s}.stagger>*:nth-child(7){animation-delay:.28s}.stagger>*:nth-child(8){animation-delay:.32s}
 `;
 
 // Particules saisonnières flottantes (pétales, flocons, gouttes, feuilles)
@@ -2442,7 +2449,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
               else if(c===picked){ bg="rgba(201,70,61,0.08)"; bd="rgba(201,70,61,0.4)"; anim="shake .4s ease"; }
             }
             return(
-              <div key={i} onClick={()=>!picked&&choose(c)} className={picked?"":"lift"} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`1px solid ${bd}`,borderRadius:12,cursor:picked?"default":"pointer",transition:"all .25s",animation:anim}}>
+              <div key={i} onClick={()=>!picked&&choose(c)} className={picked?"":"lift"} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`1px solid ${bd}`,borderRadius:12,cursor:picked?"default":"pointer",transition:"background var(--dur-slow) var(--ease-smooth), border-color var(--dur-slow) var(--ease-smooth)",animation:anim}}>
                 <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
                   <div style={{flex:1,minWidth:0}}>
                     {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(c, script)}</div>}
@@ -2688,7 +2695,7 @@ function FlashcardMode({C, deck, onExit, onRecord}){
       {/* Progress */}
       <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:18}}>
         <div style={{flex:1,height:5,background:C.s3,borderRadius:3,overflow:"hidden"}}>
-          <div style={{height:"100%",width:`${(idx/cards.length)*100}%`,background:C.red,borderRadius:3,transition:"width .3s"}}/>
+          <div style={{height:"100%",width:`${(idx/cards.length)*100}%`,background:C.red,borderRadius:3,transition:"width var(--dur-slow) var(--ease-smooth)"}}/>
         </div>
         <span style={{fontSize:11,color:C.t3}}>{idx+1}/{cards.length}</span>
       </div>
@@ -2712,7 +2719,7 @@ function FlashcardMode({C, deck, onExit, onRecord}){
         style={{
           height:280, borderRadius:20, cursor:"grab", marginBottom:20, userSelect:"none",
           transform:`translateX(${drag.x}px) rotate(${rot}deg)`,
-          transition: drag.active ? "none" : "transform .25s ease",
+          transition: drag.active ? "none" : "transform var(--dur-slow) var(--ease-smooth)",
           background:flipped?"linear-gradient(160deg,rgba(201,70,61,0.12),transparent)":C.s1,
           border:`1px solid ${flipped?"rgba(201,70,61,0.3)":C.border}`,
           display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
@@ -2822,7 +2829,7 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
         {/* Progression */}
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:18}}>
           <div style={{flex:1,height:5,background:C.s3,borderRadius:3,overflow:"hidden"}}>
-            <div style={{height:"100%",width:`${((idx)/total)*100}%`,background:C.red,borderRadius:3,transition:"width .3s"}}/>
+            <div style={{height:"100%",width:`${((idx)/total)*100}%`,background:C.red,borderRadius:3,transition:"width var(--dur-slow) var(--ease-smooth)"}}/>
           </div>
           <span style={{fontSize:11,color:C.t3,fontWeight:600}}>{idx+1}/{total}</span>
         </div>
@@ -2935,7 +2942,7 @@ function QuizMode({C, deck, onExit, onRecord}){
     <div style={{padding:"10px 24px 30px"}}>
       <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:30}}>
         <div style={{flex:1,height:5,background:C.s3,borderRadius:3,overflow:"hidden"}}>
-          <div style={{height:"100%",width:`${(idx/cards.length)*100}%`,background:C.red,borderRadius:3,transition:"width .3s"}}/>
+          <div style={{height:"100%",width:`${(idx/cards.length)*100}%`,background:C.red,borderRadius:3,transition:"width var(--dur-slow) var(--ease-smooth)"}}/>
         </div>
         <span style={{fontSize:11,color:C.t3}}>{idx+1}/{cards.length}</span>
       </div>
@@ -2953,7 +2960,7 @@ function QuizMode({C, deck, onExit, onRecord}){
             else if(opt.r===picked){ bg="rgba(201,70,61,0.12)"; bd="rgba(201,70,61,0.4)"; col=C.red; anim="shake .4s ease"; }
           }
           return(
-            <button key={i} onClick={()=>choose(opt)} className={picked?"":"pop-press"} style={{padding:"18px",background:bg,border:`1px solid ${bd}`,borderRadius:14,color:col,fontSize:20,fontWeight:600,cursor:picked?"default":"pointer",transition:"all .2s",animation:anim}}>
+            <button key={i} onClick={()=>choose(opt)} className={picked?"":"pop-press"} style={{padding:"18px",background:bg,border:`1px solid ${bd}`,borderRadius:14,color:col,fontSize:20,fontWeight:600,cursor:picked?"default":"pointer",transition:"background var(--dur-slow) var(--ease-smooth), border-color var(--dur-slow) var(--ease-smooth)",animation:anim}}>
               {opt.r}
             </button>
           );
@@ -3413,7 +3420,7 @@ function CheckpointQuiz({C, pool, distractorPool, onPass, onExit, passRatio=0.7,
             else if(opt===picked){ bg="rgba(201,70,61,0.12)"; bd=C.red; col=C.red; }
           }
           return(
-            <button key={i} onClick={()=>choose(opt)} style={{padding:"15px",background:bg,border:`1px solid ${bd}`,borderRadius:12,color:col,fontSize:14,cursor:picked?"default":"pointer",textAlign:"left",transition:"all .2s"}}>
+            <button key={i} onClick={()=>choose(opt)} style={{padding:"15px",background:bg,border:`1px solid ${bd}`,borderRadius:12,color:col,fontSize:14,cursor:picked?"default":"pointer",textAlign:"left",transition:"background var(--dur-slow) var(--ease-smooth), border-color var(--dur-slow) var(--ease-smooth)"}}>
               {opt}
             </button>
           );
@@ -3511,7 +3518,7 @@ function ComprehensionRead({ C, db, script, onRecord }){
                   else if(isPicked){ bg="rgba(201,70,61,0.1)"; bd=C.red; col=C.red; }
                 }
                 return(
-                  <button key={ci} onClick={()=>pick(qi,ci)} disabled={answered} style={{textAlign:"left",padding:"12px 14px",background:bg,border:`1px solid ${bd}`,borderRadius:11,color:col,fontSize:13,cursor:answered?"default":"pointer",transition:"all .2s"}}>
+                  <button key={ci} onClick={()=>pick(qi,ci)} disabled={answered} style={{textAlign:"left",padding:"12px 14px",background:bg,border:`1px solid ${bd}`,borderRadius:11,color:col,fontSize:13,cursor:answered?"default":"pointer",transition:"background var(--dur-slow) var(--ease-smooth), border-color var(--dur-slow) var(--ease-smooth)"}}>
                     {ch} {answered && isCorrect && "✓"}
                   </button>
                 );
@@ -3615,7 +3622,7 @@ function ComprehensionListen({ C, db, script }){
                   else if(isPicked){ bg="rgba(201,70,61,0.1)"; bd=C.red; col=C.red; }
                 }
                 return(
-                  <button key={ci} onClick={()=>pick(qi,ci)} disabled={answered} style={{textAlign:"left",padding:"12px 14px",background:bg,border:`1px solid ${bd}`,borderRadius:11,color:col,fontSize:13,cursor:answered?"default":"pointer",transition:"all .2s"}}>
+                  <button key={ci} onClick={()=>pick(qi,ci)} disabled={answered} style={{textAlign:"left",padding:"12px 14px",background:bg,border:`1px solid ${bd}`,borderRadius:11,color:col,fontSize:13,cursor:answered?"default":"pointer",transition:"background var(--dur-slow) var(--ease-smooth), border-color var(--dur-slow) var(--ease-smooth)"}}>
                     {ch} {answered && isCorrect && "✓"}
                   </button>
                 );
@@ -4836,7 +4843,10 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
     if(ni<0||ni>=arr.length) return;
     [arr[idx],arr[ni]]=[arr[ni],arr[idx]];
     const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:arr}));
-    onUpdate({...trip, jours});
+    // Chaque ligne porte un view-transition-name stable (voir le render) :
+    // le navigateur anime nativement le déplacement (FLIP) sans layout lib
+    // dédiée ; repli = saut sec si l'API n'est pas supportée.
+    withViewTransition(()=> flushSync(()=> onUpdate({...trip, jours})));
   };
   const setNote = (etapeId, note)=>{
     const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:j.etapes.map(e=>e.id===etapeId?{...e,note}:e)}));
@@ -5160,7 +5170,7 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
                 {day.etapes.map((e,i)=>{
                   const l = lieuById[e.lieuId];
                   return(
-                    <div key={e.id} style={{display:"flex",gap:9,alignItems:"flex-start"}}>
+                    <div key={e.id} style={{display:"flex",gap:9,alignItems:"flex-start",viewTransitionName:`etape-${e.id}`}}>
                       {/* Flèches réordonner */}
                       <div style={{display:"flex",flexDirection:"column",gap:2,marginTop:6}}>
                         <button onClick={()=>moveEtape(i,-1)} disabled={i===0} style={{width:22,height:20,border:`1px solid ${C.border}`,borderRadius:6,background:C.s1,color:i===0?C.t3:C.t2,fontSize:10,cursor:i===0?"default":"pointer"}}>▲</button>
@@ -6642,7 +6652,15 @@ function favId(type, item){
 export default function IsekaidApp(){
   const [screen,setScreen]=useState("splash");
   const [tab,setTabRaw]=useState("home");
-  const setTab = (t)=>{ if(t==="explore") completeTask("explore"); setTabRaw(t); };
+  // Transition d'onglet (System 3, Phase 1) : View Transitions API quand
+  // disponible (crossfade + léger glissement, cf. vt-in/vt-out dans le CSS),
+  // flushSync pour que React commette avant que l'API capture le nouvel
+  // état ; repli synchrone (aucune régression) si l'API/l'appareil ne suit
+  // pas — .screen-in prend alors le relais visuellement.
+  const setTab = (t)=>{
+    if(t==="explore") completeTask("explore");
+    withViewTransition(()=> flushSync(()=> setTabRaw(t)));
+  };
   const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
   const [dark,setDark]=useState(()=>loadTheme());
   const [accent,setAccent]=useState(()=>loadAccent());
@@ -7245,7 +7263,7 @@ export default function IsekaidApp(){
         {screen==="app"&&user&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
-              <div key={tab} className="screen-in" style={{height:"100%"}}>
+              <div key={tab} className={supportsViewTransitions()?"":"screen-in"} style={{height:"100%"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)}/>}
