@@ -14,6 +14,7 @@ import { scenarioTutorTarget, buildBridgeContext } from "./scenarioTutorBridge";
 import { MOTION_CSS_VARS, withViewTransition, supportsViewTransitions } from "./motion";
 import { flushSync } from "react-dom";
 import { FeatureIntroScreen } from "./FeatureIntro";
+import { CelebrationOverlay } from "./Celebration";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -4309,6 +4310,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
   const [showPremium, setShowPremium] = useState(false);
   const [showIntro, setShowIntro] = useState(()=>!sectionIntroSeen("voyage"));
   const dismissIntro = ()=>{ markSectionIntroSeen("voyage"); setShowIntro(false); };
+  const [tripCelebration, setTripCelebration] = useState(false); // voyage tout juste créé/adopté
   const pushTimer = useRef(null);
   // Index lieux pour les fiches visuelles
   const lieuByIdGlobal = useMemo(()=>Object.fromEntries((db?.lieux||[]).map(l=>[l.id,l])), [db]);
@@ -4346,9 +4348,10 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
   const tryAdopt = (p)=>{
     if(trips.length >= FREE_TRIP_LIMIT && !isPremium){ setShowPremium(true); return; }
     const t = tripFromPreconcu(p);
-    persist([...trips, t]); setActiveTripId(t.id); setView("trip");
+    persist([...trips, t]); setActiveTripId(t.id); setView("trip"); setTripCelebration(true); sfx.playComplete();
   };
-  const createTrip = (trip)=>{ persist([...trips, trip]); setActiveTripId(trip.id); setView("trip"); };
+  // Point de passage commun création manuelle + auto-génération (KeptPlacesScreen.onGenerate)
+  const createTrip = (trip)=>{ persist([...trips, trip]); setActiveTripId(trip.id); setView("trip"); setTripCelebration(true); sfx.playComplete(); };
   const updateTrip = (updated)=>{ persist(trips.map(t=>t.id===updated.id?updated:t)); };
   const deleteTrip = (id)=>{ persist(trips.filter(t=>t.id!==id)); setActiveTripId(null); setView("home"); };
   const keptLieux = (favs||[]).filter(f=>f.type==="lieu").map(f=>f.item);
@@ -4410,9 +4413,14 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
   }
   // ─── Vue : un voyage ───
   if(view==="trip" && activeTrip){
-    return <VoyageTrip C={C} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
-              isFav={isFav} toggleFav={toggleFav}
-              onBack={()=>setView("home")} onUpdate={updateTrip} onDelete={deleteTrip}/>;
+    return (
+      <>
+        <VoyageTrip C={C} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
+          isFav={isFav} toggleFav={toggleFav}
+          onBack={()=>setView("home")} onUpdate={updateTrip} onDelete={deleteTrip}/>
+        {tripCelebration && <CelebrationOverlay emoji="🗾" title="Voyage créé !" subtitle={activeTrip.titre} color={acc.accent} onDone={()=>setTripCelebration(false)}/>}
+      </>
+    );
   }
 
   // ─── Vue : accueil ───
@@ -6811,7 +6819,6 @@ export default function IsekaidApp(){
   const [dailyInfo,setDailyInfo]=useState(null);
   const [mission,setMission]=useState(()=>loadMission());
   const [missionReward,setMissionReward]=useState(false);
-  useEffect(()=>{ if(missionReward){ const t=setTimeout(()=>setMissionReward(false),3500); return ()=>clearTimeout(t); } },[missionReward]);
   // Complète une mission du jour à partir d'un TRIGGER d'action (ex: "fav", "kana", "scenario").
   // On ne valide que si ce trigger correspond à l'une des missions du jour
   // (3 tirées aléatoirement, ou les 4 fixes du jour 1 — voir missionsForDay).
@@ -6826,6 +6833,7 @@ export default function IsekaidApp(){
       if(done.length>=todays.length && !prev.claimed){
         m.claimed = true;
         setMissionReward(true);
+        sfx.playCoin();
         // Mission du jour accomplie → on valide le streak (vraie activité du jour)
         const s = touchStreak();
         setStreak(s);
@@ -7279,9 +7287,7 @@ export default function IsekaidApp(){
             {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
             {showWelcome && <DailyWelcome C={C} streak={streak} dailyInfo={dailyInfo} isPremium={isPremium} onClose={()=>setShowWelcome(false)}/>}
             {missionReward && (
-              <div onClick={()=>setMissionReward(false)} style={{position:"fixed",bottom:96,left:"50%",transform:"translateX(-50%)",zIndex:320,background:C.green,color:"#fff",padding:"13px 22px",borderRadius:24,fontSize:13,fontWeight:600,boxShadow:"0 6px 24px rgba(58,102,69,0.4)",animation:"fadeUp .35s ease",display:"flex",alignItems:"center",gap:9,whiteSpace:"nowrap"}}>
-                🎯 Mission accomplie ! <span style={{opacity:0.9}}>Bravo 🎌</span>
-              </div>
+              <CelebrationOverlay emoji="🎯" title="Mission accomplie !" subtitle="Bravo 🎌" color={C.green} onDone={()=>setMissionReward(false)}/>
             )}
             {/* Global search */}
             {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
