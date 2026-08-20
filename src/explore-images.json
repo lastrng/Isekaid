@@ -11,12 +11,6 @@
     "licence": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:%E3%81%8A%E9%9B%9B%E6%A7%98-hinamatsuri-dolls-lamp.jpg"
   },
-  "traditions:golden-week": {
-    "image": "/images/explore/traditions-golden-week.jpg",
-    "attribution": "street viewer2",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Keiko_Bando_36_-_AKIBA_ICHI_Golden_Week_Special_Live_2010_(2010-05-05_15.36.46_).jpg"
-  },
   "traditions:tanabata": {
     "image": "/images/explore/traditions-tanabata.jpg",
     "attribution": "Utagawa Hiroshige",
@@ -100,12 +94,6 @@
     "attribution": "てんどん",
     "licence": "CC BY 2.1 jp",
     "source": "https://commons.wikimedia.org/wiki/File:2012%E5%B9%B4%E9%9A%85%E7%94%B0%E5%B7%9D%E8%8A%B1%E7%81%AB%E5%A4%A7%E4%BC%9A.jpg"
-  },
-  "traditions:umi": {
-    "image": "/images/explore/traditions-umi.jpg",
-    "attribution": "U.S. Marine Corps photo by Lance Cpl. Jeremy J. Harper",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:US_Navy_061117-M-9827H-045_Marines_and_People%27s_Liberation_Army_(Navy)_(PLA(N))_1st_Marine_Brigade_Marines_shake_hands_at_the_start_of_%22Marine_Day%22_1st_Marine_Brigade%27s_obstacle_course.jpg"
   },
   "traditions:shubun": {
     "image": "/images/explore/traditions-shubun.jpg",
@@ -209,41 +197,17 @@
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:%E3%83%BB%E7%AC%AC%EF%BC%96%EF%BC%94%E5%9B%9E%E3%81%95%E3%81%A3%E3%81%BD%E3%82%8D%E9%9B%AA%E3%81%BE%E3%81%A4%E3%82%8A%E5%8D%94%E5%8A%9B_%E5%A4%9C%E9%96%93%E4%BD%9C%E6%A5%AD_R_%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%83%BB%E8%A1%8C%E4%BA%8B%E3%83%BB%E5%BA%83%E5%A0%B1%E6%B4%BB%E5%8B%95%E7%AD%89_50.jpg"
   },
-  "traditions:itadakimasu": {
-    "image": "/images/explore/traditions-itadakimasu.jpg",
-    "attribution": "User:Kentin",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Studio_alta.jpg"
-  },
   "traditions:oshibori": {
     "image": "/images/explore/traditions-oshibori.jpg",
     "attribution": "Lemon-s",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Oshibori.jpg"
   },
-  "traditions:konbini-greeting": {
-    "image": "/images/explore/traditions-konbini-greeting.jpg",
-    "attribution": "wonderstory",
-    "licence": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E3%81%84%E3%82%89%E3%81%A3%E3%81%97%E3%82%83%E3%81%84%E3%81%BE%E3%81%9B_%E3%83%91%E3%83%8A%E3%82%BD%E3%83%8B%E3%83%83%E3%82%AF%E4%B9%BE%E9%9B%BB%E6%B1%A0%E8%87%AA%E5%8B%95%E8%B2%A9%E5%A3%B2%E6%A9%9F_(9492237886).jpg"
-  },
-  "traditions:slurp": {
-    "image": "/images/explore/traditions-slurp.jpg",
-    "attribution": "Gabriel Loppé",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Lightning_striking_the_Eiffel_Tower_-_NOAA.jpg"
-  },
   "traditions:vending": {
     "image": "/images/explore/traditions-vending.jpg",
     "attribution": "Junya Ogura",
     "licence": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:%E8%87%AA%E5%8B%95%E8%B2%A9%E5%A3%B2%E6%A9%9F_(5131228573).jpg"
-  },
-  "traditions:phone-bow": {
-    "image": "/images/explore/traditions-phone-bow.jpg",
-    "attribution": "Florian Fuchs",
-    "licence": "CC BY 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Bow_Lake_beim_Icefields_Parkway.jpg"
   },
   "traditions:plastic-food": {
     "image": "/images/explore/traditions-plastic-food.jpg",
@@ -298,12 +262,6 @@
     "attribution": "Auteur inconnu",
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Macha_kakigori_snow_cone.jpg"
-  },
-  "traditions:semi": {
-    "image": "/images/explore/traditions-semi.jpg",
-    "attribution": "KKPCW",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89%E3%81%AE%E5%8F%A5%E7%A2%91%EF%BC%88%E9%B5%9C%E6%B2%BC%E5%AE%BF%EF%BC%89.jpg"
   },
   "traditions:uchimizu": {
     "image": "/images/explore/traditions-uchimizu.jpg",
@@ -377,59 +335,17 @@
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Daruma_doll_sai2011.jpg"
   },
-  "traditions:queue": {
-    "image": "/images/explore/traditions-queue.jpg",
-    "attribution": "Silveiraneto at Portuguese Wikipedia",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Matriz_organizacao.png"
-  },
   "traditions:escalator": {
     "image": "/images/explore/traditions-escalator.jpg",
     "attribution": "Stig Nygaard from Copenhagen, Denmark",
     "licence": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Copenhagen_Metro_escalators.jpg"
   },
-  "traditions:masks": {
-    "image": "/images/explore/traditions-masks.jpg",
-    "attribution": "Nikodem Nijaki",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Gas_mask_MUA_IMGP0157.jpg"
-  },
   "traditions:point-call": {
     "image": "/images/explore/traditions-point-call.jpg",
     "attribution": "Cassiopeia_sweet",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Pointing_and_calling,_Kanagawa_Chuo_Kotsu_20040808.jpg"
-  },
-  "traditions:train-silence": {
-    "image": "/images/explore/traditions-train-silence.jpg",
-    "attribution": "Adville",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Anny_Romand_in_Sweden.jpg"
-  },
-  "traditions:tray-payment": {
-    "image": "/images/explore/traditions-tray-payment.jpg",
-    "attribution": "Kurt Stüber [1]",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Cynara_cardunculus0.jpg"
-  },
-  "traditions:wet-umbrella": {
-    "image": "/images/explore/traditions-wet-umbrella.jpg",
-    "attribution": "Toriyama Sekien (鳥山石燕)",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:SekienHonekarakasa.jpg"
-  },
-  "traditions:oshibori-bow": {
-    "image": "/images/explore/traditions-oshibori-bow.jpg",
-    "attribution": "Cramer, Louis (18..-18..). Compositeur",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Les_lutins_de_Bretagne_-_quadrille_%C3%A0_deux_et_%C3%A0_quatre_mains._N%C2%B01,_%C3%A0_2_mains_(Ed._%C3%A0_2_mains)_-_L._Cramer_;_(ill._par)_Stop_-_bpt6k397760x_(1_of_8).jpg"
-  },
-  "traditions:bowing-staff": {
-    "image": "/images/explore/traditions-bowing-staff.jpg",
-    "attribution": "Ootahara",
-    "licence": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Say_good-by_to_Ogasawara_Maru_3rd_JAPAN_at_Chichijima_20160918.jpg"
   },
   "traditions:tatami": {
     "image": "/images/explore/traditions-tatami.jpg",
@@ -461,24 +377,6 @@
     "licence": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Chinese_calendar_Years_of_Bad_Luck_chart.jpg"
   },
-  "traditions:kadomatsu": {
-    "image": "/images/explore/traditions-kadomatsu.jpg",
-    "attribution": "No machine-readable author provided. Fg2 assumed (based on copyright claims).",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Kadomatsu_M1181.jpg"
-  },
-  "traditions:doyo-unagi": {
-    "image": "/images/explore/traditions-doyo-unagi.jpg",
-    "attribution": "Tomomarusan",
-    "licence": "CC BY 2.5",
-    "source": "https://commons.wikimedia.org/wiki/File:Shimogamo_Jinja_Mitarasi_sha.JPG"
-  },
-  "traditions:dondo-yaki": {
-    "image": "/images/explore/traditions-dondo-yaki.jpg",
-    "attribution": "Jnn",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Donto19.JPG"
-  },
   "traditions:ohigan": {
     "image": "/images/explore/traditions-ohigan.jpg",
     "attribution": "Maja Dumat",
@@ -503,12 +401,6 @@
     "licence": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:%E5%A4%8F%E8%B6%8A%E7%A5%93.jpg"
   },
-  "traditions:otoshidama": {
-    "image": "/images/explore/traditions-otoshidama.jpg",
-    "attribution": "Japan Post",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Japanese_New_year_post_card_in_1949.JPG"
-  },
   "traditions:keiro-no-hi": {
     "image": "/images/explore/traditions-keiro-no-hi.jpg",
     "attribution": "Joi Ito from Inbamura, Japan",
@@ -520,12 +412,6 @@
     "attribution": "Auteur inconnu",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:A_japanese_Wedding-J._M._W._Silver.jpg"
-  },
-  "traditions:taue-matsuri": {
-    "image": "/images/explore/traditions-taue-matsuri.jpg",
-    "attribution": "柳田国男、三木茂",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:%E7%94%B0%E6%A4%8D%E5%A7%BF_%E5%8D%97%E7%A7%8B%E7%94%B0%E3%83%BB%E9%87%91%E8%B6%B3.jpg"
   },
   "traditions:niiname-sai": {
     "image": "/images/explore/traditions-niiname-sai.jpg",
@@ -557,12 +443,6 @@
     "licence": "CC BY-SA 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Yosakoi_performers.jpg"
   },
-  "traditions:koden": {
-    "image": "/images/explore/traditions-koden.jpg",
-    "attribution": "Σ64",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Mt._Ogawa_from_Mt._Kinpu_03.jpg"
-  },
   "traditions:chichi-no-hi": {
     "image": "/images/explore/traditions-chichi-no-hi.jpg",
     "attribution": "熊坂六郎兵衛撮影、小川イイ所蔵",
@@ -593,41 +473,11 @@
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Brooklyn_Museum_-_Cherry_Blossom_Viewing_at_Gotenyama_Hill_-_Eishi_Chobunsai.jpg"
   },
-  "culture:culture-3": {
-    "image": "/images/explore/culture-culture-3.jpg",
-    "attribution": "Frank Vincentz",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Neuenrade_-_H%C3%B6nne_(Oststra%C3%9Fe)_01_ies.jpg"
-  },
-  "culture:culture-5": {
-    "image": "/images/explore/culture-culture-5.jpg",
-    "attribution": "Photo Claude TRUONG-NGOC",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Mus%C3%A9e_alsacien_kelsch_Strasbourg_avril_2015-29.jpg"
-  },
-  "culture:culture-6": {
-    "image": "/images/explore/culture-culture-6.jpg",
-    "attribution": "Etiennebernard45",
-    "licence": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Paris_comique_sous_le_second_Empire.png"
-  },
   "culture:culture-7": {
     "image": "/images/explore/culture-culture-7.jpg",
     "attribution": "Auteur inconnu",
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Setsubun.jpg"
-  },
-  "culture:culture-8": {
-    "image": "/images/explore/culture-culture-8.jpg",
-    "attribution": "Briho",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Hama-gradual_grey_filter.jpg"
-  },
-  "culture:culture-9": {
-    "image": "/images/explore/culture-culture-9.jpg",
-    "attribution": "Laika ac from USA",
-    "licence": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Laika_ac_Shitamachi_Tanabata_Matsuri_(7560645332).jpg"
   },
   "culture:culture-11": {
     "image": "/images/explore/culture-culture-11.jpg",
@@ -653,23 +503,11 @@
     "licence": "CC0",
     "source": "https://commons.wikimedia.org/wiki/File:%E8%97%A4%E5%8E%9F%E9%8E%8C%E8%B6%B3%E5%83%8F-Fujiwara_no_Kamatari_as_a_Shinto_Deity_MET_DT8032.jpg"
   },
-  "culture:culture-17": {
-    "image": "/images/explore/culture-culture-17.jpg",
-    "attribution": "Sachiko Haraguchi",
-    "licence": "CC BY-SA 3.0 igo",
-    "source": "https://commons.wikimedia.org/wiki/File:Historic_Centre_of_the_Town_of_Olinda-109016.jpg"
-  },
   "culture:culture-18": {
     "image": "/images/explore/culture-culture-18.jpg",
     "attribution": "日本政府",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Official_document_(S39).jpg"
-  },
-  "culture:culture-19": {
-    "image": "/images/explore/culture-culture-19.jpg",
-    "attribution": "tab2_dawa",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E3%81%8A%E9%9B%9B%E6%A7%98-hinamatsuri-dolls-lamp.jpg"
   },
   "culture:culture-20": {
     "image": "/images/explore/culture-culture-20.jpg",
@@ -683,35 +521,11 @@
     "licence": "Attribution",
     "source": "https://commons.wikimedia.org/wiki/File:Utensiles_pour_la_c%C3%A9r%C3%A9monie_du_th%C3%A9.jpg"
   },
-  "culture:culture-22": {
-    "image": "/images/explore/culture-culture-22.jpg",
-    "attribution": "キネマ旬報",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:FukamizuFujiko.jpg"
-  },
   "culture:culture-24": {
     "image": "/images/explore/culture-culture-24.jpg",
     "attribution": "en:User:Nimbosa derived from works by Dennis Bodor (SVG) and Emmy van Deurzen (J",
     "licence": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Ikigai-EN-optimized-PNG.png"
-  },
-  "culture:culture-25": {
-    "image": "/images/explore/culture-culture-25.jpg",
-    "attribution": "Iker Arbildi",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Noomi_Rapace_2007.jpg"
-  },
-  "culture:culture-26": {
-    "image": "/images/explore/culture-culture-26.jpg",
-    "attribution": "Jean-François Millet",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Millet_Gleaners.jpg"
-  },
-  "culture:culture-28": {
-    "image": "/images/explore/culture-culture-28.jpg",
-    "attribution": "Image taken by Daniel Schwen",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Golden_Gate_Bridge_by_night.jpg"
   },
   "culture:culture-29": {
     "image": "/images/explore/culture-culture-29.jpg",
@@ -731,24 +545,6 @@
     "licence": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Plier_et_d%C3%A9couper_selon_pointill%C3%A9s.jpg"
   },
-  "culture:culture-34": {
-    "image": "/images/explore/culture-culture-34.jpg",
-    "attribution": "M from Somerville, USA",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Salaryman_asleep_on_the_Tokyo_Subway.jpg"
-  },
-  "codes_sociaux:honne-tatemae": {
-    "image": "/images/explore/codes_sociaux-honne-tatemae.jpg",
-    "attribution": "Frank Vincentz",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Neuenrade_-_H%C3%B6nne_(Wasserburgstra%C3%9Fe)_01_ies.jpg"
-  },
-  "codes_sociaux:refus-indirect": {
-    "image": "/images/explore/codes_sociaux-refus-indirect.jpg",
-    "attribution": "Lagarde, A., imprimeur",
-    "licence": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:ORDONNANCE_CONCERNANT_la_Perception_des_Contributions_DIRECTES_ET_INDIRECTES_NOUS,_GOUVERNEUR_GENERAL,_SIEGEANT_A_RE,_AFF3558.jpg"
-  },
   "codes_sociaux:hierarchie": {
     "image": "/images/explore/codes_sociaux-hierarchie.jpg",
     "attribution": "Aka Hige from from Denton, TX, USA",
@@ -761,23 +557,11 @@
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Ingmar_Bergman_and_Ingrid_Thulin_-Tystnaden.jpg"
   },
-  "codes_sociaux:cadeaux": {
-    "image": "/images/explore/codes_sociaux-cadeaux.jpg",
-    "attribution": "Wpktsfs",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Souvenirs.jpg"
-  },
   "codes_sociaux:meishi": {
     "image": "/images/explore/codes_sociaux-meishi.jpg",
     "attribution": "Gobierno Aguascalientes",
     "licence": "CC BY-SA 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:D%C3%ADa_1_Gira_Jap%C3%B3n_2015_(21881531054).jpg"
-  },
-  "codes_sociaux:chaussures": {
-    "image": "/images/explore/codes_sociaux-chaussures.jpg",
-    "attribution": "Mukai (talk)",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Kangien1.jpg"
   },
   "codes_sociaux:transports": {
     "image": "/images/explore/codes_sociaux-transports.jpg",
@@ -797,18 +581,6 @@
     "licence": "CC BY 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:%E5%92%8C-bw.png"
   },
-  "codes_sociaux:ponctualite": {
-    "image": "/images/explore/codes_sociaux-ponctualite.jpg",
-    "attribution": "Clem Albers",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Arcadia,_California._Cafeteria_style_assures_promptness_in_serving_meals_at_Santa_Anita_assembly_ce_._._._-_NARA_-_537027.tif"
-  },
-  "codes_sociaux:argent": {
-    "image": "/images/explore/codes_sociaux-argent.jpg",
-    "attribution": "Etiennebernard45",
-    "licence": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Paris_comique_sous_le_second_Empire.png"
-  },
   "codes_sociaux:aizuchi": {
     "image": "/images/explore/codes_sociaux-aizuchi.jpg",
     "attribution": "Ogata Gekkō",
@@ -821,41 +593,11 @@
     "licence": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Keigo_Oyamada,_crop.jpg"
   },
-  "codes_sociaux:yoroshiku": {
-    "image": "/images/explore/codes_sociaux-yoroshiku.jpg",
-    "attribution": "Kazuhisa OTSUBO from Tokyo, Japan",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:ALM-Busy_Circuits_ALM001_Pamela%27s_Workout_(programmable_clock_source)_appears_from_package.jpg"
-  },
-  "codes_sociaux:uchi-soto": {
-    "image": "/images/explore/codes_sociaux-uchi-soto.jpg",
-    "attribution": "Fernando de Gorocica",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Conjunci%C3%B3n_J%C3%BApiter_-_Marte._20.03.2020.jpg"
-  },
-  "codes_sociaux:giri": {
-    "image": "/images/explore/codes_sociaux-giri.jpg",
-    "attribution": "Rembrandt",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Rembrandt_-_Samson_threatened_his_father-in-law_-_Google_Art_Project.jpg"
-  },
   "codes_sociaux:kuuki": {
     "image": "/images/explore/codes_sociaux-kuuki.jpg",
     "attribution": "Unknown authorUnknown author",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Olympic%27s_Reading_%26_Writing_Room.jpg"
-  },
-  "codes_sociaux:file-attente": {
-    "image": "/images/explore/codes_sociaux-file-attente.jpg",
-    "attribution": "Silveiraneto at Portuguese Wikipedia",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Matriz_organizacao.png"
-  },
-  "codes_sociaux:masque": {
-    "image": "/images/explore/codes_sociaux-masque.jpg",
-    "attribution": "Nikodem Nijaki",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Gas_mask_MUA_IMGP0157.jpg"
   },
   "codes_sociaux:tri-dechets": {
     "image": "/images/explore/codes_sociaux-tri-dechets.jpg",
@@ -869,53 +611,11 @@
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Nobel_banquet_1958.jpg"
   },
-  "codes_sociaux:hourensou": {
-    "image": "/images/explore/codes_sociaux-hourensou.jpg",
-    "attribution": "創作者：蔡明志/ 葉永韶。貢獻者：宜蘭縣政府文化局",
-    "licence": "CC BY 3.0 tw",
-    "source": "https://commons.wikimedia.org/wiki/File:%E5%AE%9C%E8%98%AD%E6%98%AD%E6%87%89%E5%AE%AE%E5%89%8D%E6%AE%BF%E5%BE%8C%E6%AD%A5%E5%8F%A3%E7%B0%B7%E6%9F%B1-109-her-pa-2463-re-202011141339595faf66a9552b80.jpg"
-  },
-  "codes_sociaux:jisha": {
-    "image": "/images/explore/codes_sociaux-jisha.jpg",
-    "attribution": "John from Jersey City, United States",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Modest_Mouse_UPT.jpg"
-  },
   "codes_sociaux:sempai-kohai": {
     "image": "/images/explore/codes_sociaux-sempai-kohai.jpg",
     "attribution": "Aka Hige from from Denton, TX, USA",
     "licence": "CC BY-SA 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Playing_janken_-_school_in_Japan.jpg"
-  },
-  "codes_sociaux:omotenashi": {
-    "image": "/images/explore/codes_sociaux-omotenashi.jpg",
-    "attribution": "Muji tv",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Omotenashi_bushotai.JPG"
-  },
-  "codes_sociaux:inkan": {
-    "image": "/images/explore/codes_sociaux-inkan.jpg",
-    "attribution": "Hans Hillewaert",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Arctocephalus_pusillus_2.jpg"
-  },
-  "codes_sociaux:suffixes-honorifiques": {
-    "image": "/images/explore/codes_sociaux-suffixes-honorifiques.jpg",
-    "attribution": "John William Waterhouse",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:John_William_Waterhouse_-_I_am_half-sick_of_shadows,_said_the_lady_of_shalott.JPG"
-  },
-  "codes_sociaux:wari-kan": {
-    "image": "/images/explore/codes_sociaux-wari-kan.jpg",
-    "attribution": "Quistnix",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Snow_in_Holland.jpg"
-  },
-  "codes_sociaux:gaman": {
-    "image": "/images/explore/codes_sociaux-gaman.jpg",
-    "attribution": "Heather Moreton from Louisville, KY, USA",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Akhal_teke_stallion_-_gaman_(2848983425).jpg"
   },
   "codes_sociaux:sontaku": {
     "image": "/images/explore/codes_sociaux-sontaku.jpg",
@@ -935,12 +635,6 @@
     "licence": "CC BY 2.1 jp",
     "source": "https://commons.wikimedia.org/wiki/File:Tejime_01.jpg"
   },
-  "codes_sociaux:shazai": {
-    "image": "/images/explore/codes_sociaux-shazai.jpg",
-    "attribution": "Eduardo Ruiz Mondragón",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Bolet%C3%ADn_prensa_expo_Jos%C3%A9_Luis_Cuevas.jpg"
-  },
   "codes_sociaux:jikoshoukai": {
     "image": "/images/explore/codes_sociaux-jikoshoukai.jpg",
     "attribution": "SANSPOPSREPORT",
@@ -958,12 +652,6 @@
     "attribution": "Unknown authorUnknown author",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:%E4%B9%97%E6%9D%BE%E9%9B%85%E4%BC%91%E3%80%81%E3%83%96%E3%83%A9%E3%83%B3%E3%83%89%E5%A4%AB%E5%A6%BB%E3%80%81%E4%B9%97%E6%9D%BE%E7%94%B1%E4%BF%A1%E3%80%811912%E5%B9%B4%E3%81%AE%E6%9C%9D%E9%AE%AE%E6%B0%B4%E5%8E%9F.jpg"
-  },
-  "codes_sociaux:tsukiai": {
-    "image": "/images/explore/codes_sociaux-tsukiai.jpg",
-    "attribution": "Junelee",
-    "licence": "CC BY-SA 1.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Mooncake1.jpg"
   },
   "codes_sociaux:entretien-embauche": {
     "image": "/images/explore/codes_sociaux-entretien-embauche.jpg",
@@ -983,71 +671,17 @@
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Monument_of_glider_Japan.JPG"
   },
-  "codes_sociaux:verser-boisson": {
-    "image": "/images/explore/codes_sociaux-verser-boisson.jpg",
-    "attribution": "Arnie Papp",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E6%89%8B%E3%81%AF%E7%99%BD%E3%81%8F%E5%A1%97%E3%81%A3%E3%81%A6%E3%81%AA%E3%81%84_2016_(29949968415).jpg"
-  },
   "codes_sociaux:preseance-table": {
     "image": "/images/explore/codes_sociaux-preseance-table.jpg",
     "attribution": "ignis",
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Takagike_Kashihara_JPN_001.jpg"
   },
-  "codes_sociaux:diner-maison": {
-    "image": "/images/explore/codes_sociaux-diner-maison.jpg",
-    "attribution": "torne (where's my lens cap?)",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Welcome_to_night_tea_party_1_-_Flickr_-_torne_(where%27s_my_lens_cap%5E).jpg"
-  },
-  "codes_sociaux:shugi-bukuro": {
-    "image": "/images/explore/codes_sociaux-shugi-bukuro.jpg",
-    "attribution": "Σ64",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Mt._Ogawa_from_Mt._Kinpu_03.jpg"
-  },
-  "codes_sociaux:koden": {
-    "image": "/images/explore/codes_sociaux-koden.jpg",
-    "attribution": "Σ64",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Mt._Ogawa_from_Mt._Kinpu_03.jpg"
-  },
-  "codes_sociaux:omiyage-obligatoire": {
-    "image": "/images/explore/codes_sociaux-omiyage-obligatoire.jpg",
-    "attribution": "Wpktsfs",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Souvenirs.jpg"
-  },
-  "codes_sociaux:nengajo": {
-    "image": "/images/explore/codes_sociaux-nengajo.jpg",
-    "attribution": "Viriditas",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Mele_Kalikimaka_Lahaina.jpg"
-  },
-  "codes_sociaux:shochu-mimai": {
-    "image": "/images/explore/codes_sociaux-shochu-mimai.jpg",
-    "attribution": "Luca Mascaro from Lugano, Switzerland",
-    "licence": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E6%9A%91%E4%B8%AD%E3%81%8A%E8%A6%8B%E8%88%9E%E3%81%84_(29016638405).jpg"
-  },
-  "codes_sociaux:mariage-invite": {
-    "image": "/images/explore/codes_sociaux-mariage-invite.jpg",
-    "attribution": "Kalamuh 045",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Un_b%C5%93uf_terrass%C3%A9_pour_%C3%AAtre_tuer_03.jpg"
-  },
   "codes_sociaux:san-san-kudo": {
     "image": "/images/explore/codes_sociaux-san-san-kudo.jpg",
     "attribution": "Auteur inconnu",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:A_japanese_Wedding-J._M._W._Silver.jpg"
-  },
-  "codes_sociaux:omiai": {
-    "image": "/images/explore/codes_sociaux-omiai.jpg",
-    "attribution": "Yaguchi",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:TokyoMetro-8000-interior.jpg"
   },
   "codes_sociaux:funerailles-tenue": {
     "image": "/images/explore/codes_sociaux-funerailles-tenue.jpg",
@@ -1067,47 +701,11 @@
     "licence": "CC BY 2.1 jp",
     "source": "https://commons.wikimedia.org/wiki/File:WCJ2009_Sandbox_by_Takash_Ota.jpg"
   },
-  "codes_sociaux:cinema-silence": {
-    "image": "/images/explore/codes_sociaux-cinema-silence.jpg",
-    "attribution": "Pikawil from Laval, Canada",
-    "licence": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Otakuthon_2014-_No_More_Movie_Thief_(15036932152).jpg"
-  },
-  "codes_sociaux:volume-voix": {
-    "image": "/images/explore/codes_sociaux-volume-voix.jpg",
-    "attribution": "Takashi Hososhima from Tokyo, Japan",
-    "licence": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:I_feel_someone_behind_the_wall!_(5359570493).jpg"
-  },
-  "codes_sociaux:ky-comportement": {
-    "image": "/images/explore/codes_sociaux-ky-comportement.jpg",
-    "attribution": "Georges Biard",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Jean_Dujardin_Cannes_2011.jpg"
-  },
-  "codes_sociaux:objet-perdu": {
-    "image": "/images/explore/codes_sociaux-objet-perdu.jpg",
-    "attribution": "Andy Mabbett",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Snow_Hill_Station_-_02-_Lost_Property_Sun.JPG"
-  },
   "codes_sociaux:sieges-prioritaires": {
     "image": "/images/explore/codes_sociaux-sieges-prioritaires.jpg",
     "attribution": "Asacyan",
     "licence": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:BTS_priority_seat_01.jpg"
-  },
-  "codes_sociaux:amae": {
-    "image": "/images/explore/codes_sociaux-amae.jpg",
-    "attribution": "Takashi Hososhima from Tokyo, Japan",
-    "licence": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Love_to_stay_here_(8014231904).jpg"
-  },
-  "codes_sociaux:refuser-invitation": {
-    "image": "/images/explore/codes_sociaux-refuser-invitation.jpg",
-    "attribution": "Dubois (1780-18.. ; régisseur de l'Opéra). Auteur de lettres",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:3_lettres_de_Dubois,_chef_du_mat%C3%A9riel_et_r%C3%A9gisseur_de_l%27Op%C3%A9ra,_%C3%A0_Caroline_Branchu_(manuscrit_autographe)_-_btv1b53048515r_(1_of_9).jpg"
   },
   "codes_sociaux:temple-sanctuaire-priere": {
     "image": "/images/explore/codes_sociaux-temple-sanctuaire-priere.jpg",
@@ -1121,53 +719,17 @@
     "licence": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Les_transporteurs_de_bagages.jpg"
   },
-  "codes_sociaux:parapluie-etiquette": {
-    "image": "/images/explore/codes_sociaux-parapluie-etiquette.jpg",
-    "attribution": "Marville, Charles (Charles-François Bossu, dit) (17–07–1813 - 01–06–1879), photo",
-    "licence": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Rue_d%27Arcole,_vue_prise_du_Parvis_de_Notre-Dame,_4%C3%A8me_arrondissement,_Paris,_PH910.jpg"
-  },
-  "codes_sociaux:photo-politesse": {
-    "image": "/images/explore/codes_sociaux-photo-politesse.jpg",
-    "attribution": "ふぉぐ at Japanese Wikipedia",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Acupuncture_ja.jpg"
-  },
   "codes_sociaux:fumeur-espaces": {
     "image": "/images/explore/codes_sociaux-fumeur-espaces.jpg",
     "attribution": "Farhan from Karachi, Pakistan",
     "licence": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Designated_Smoking_Area_in_Islamabad_Airport.jpg"
   },
-  "codes_sociaux:animal-domestique-etiquette": {
-    "image": "/images/explore/codes_sociaux-animal-domestique-etiquette.jpg",
-    "attribution": "Etiennebernard45",
-    "licence": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Paris_comique_sous_le_second_Empire.png"
-  },
-  "codes_sociaux:cravate-costume-couleur": {
-    "image": "/images/explore/codes_sociaux-cravate-costume-couleur.jpg",
-    "attribution": "Sergei Prokudin-Gorskii",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Russian_peasant_girls_in_front_of_a_traditional_wooden_house_in_Kirillov.jpg"
-  },
   "codes_sociaux:sourire-malaise": {
     "image": "/images/explore/codes_sociaux-sourire-malaise.jpg",
     "attribution": "KAKERUTV",
     "licence": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:YamamotoHiroshi3F4A0223.jpg"
-  },
-  "codes_sociaux:respect-silence-priere": {
-    "image": "/images/explore/codes_sociaux-respect-silence-priere.jpg",
-    "attribution": "Patrick Sweeney",
-    "licence": "CC BY 2.5",
-    "source": "https://commons.wikimedia.org/wiki/File:Wtc-moment-of-silence-3-2006.jpg"
-  },
-  "codes_sociaux:otearai-culture": {
-    "image": "/images/explore/codes_sociaux-otearai-culture.jpg",
-    "attribution": "Atget, Eugène (1857-1927). Photographe",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Coin_de_St_S%C3%A9verin_-_Rue_St_Jacques_-_va_dispara%C3%AEtre_-_Hiver_1899-1900_-_juillet_1899_-_btv1b10518936f_(1_of_2).jpg"
   },
   "codes_sociaux:keitai-manner-mode": {
     "image": "/images/explore/codes_sociaux-keitai-manner-mode.jpg",
@@ -1181,12 +743,6 @@
     "licence": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Convenience_Store_Shelf,_Tokyo_2014.jpg"
   },
-  "vie_quotidienne:supermarche": {
-    "image": "/images/explore/vie_quotidienne-supermarche.jpg",
-    "attribution": "Benh LIEU SONG",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Bangkok_Night_Wikimedia_Commons.jpg"
-  },
   "vie_quotidienne:depachika": {
     "image": "/images/explore/vie_quotidienne-depachika.jpg",
     "attribution": "spinachdip from Kobe",
@@ -1198,18 +754,6 @@
     "attribution": "Urahara Toshiho/浦原利穂",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Nishi-Akashi_Station_in_1946.jpg"
-  },
-  "vie_quotidienne:taxi": {
-    "image": "/images/explore/vie_quotidienne-taxi.jpg",
-    "attribution": "Wilfredor",
-    "licence": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Public_transport_share_taxi_in_Maracaibo_city,_Zulia,_Venezuela.jpg"
-  },
-  "vie_quotidienne:velo": {
-    "image": "/images/explore/vie_quotidienne-velo.jpg",
-    "attribution": "Bios",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Fietspad_naar_campus_Diepenbeek.JPG"
   },
   "vie_quotidienne:poste": {
     "image": "/images/explore/vie_quotidienne-poste.jpg",
@@ -1223,29 +767,11 @@
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:ATM_Machine_RAS_Syndrome_sign.jpg"
   },
-  "vie_quotidienne:appartement": {
-    "image": "/images/explore/vie_quotidienne-appartement.jpg",
-    "attribution": "Jean-Pierre Dalbéra from Paris, France",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Le_Grand_Pari(s),_une_sc%C3%A9nographie_rat%C3%A9e_!_(cit%C3%A9_de_larchitecture_et_du_patrimoine)_(3636581768).jpg"
-  },
   "vie_quotidienne:sento-quotidien": {
     "image": "/images/explore/vie_quotidienne-sento-quotidien.jpg",
     "attribution": "Torii Kiyonaga, 1752–1815\nderivative work: Torsodog (talk)",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Kiyonaga_bathhouse_women-2.jpg"
-  },
-  "vie_quotidienne:bureau": {
-    "image": "/images/explore/vie_quotidienne-bureau.jpg",
-    "attribution": "Shōchiku",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Kaishain_seikatsu,_1929.jpg"
-  },
-  "vie_quotidienne:ecole": {
-    "image": "/images/explore/vie_quotidienne-ecole.jpg",
-    "attribution": "Huangdan2060",
-    "licence": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Shuangfeng_county_First_Senior_High_School_03.JPG"
   },
   "vie_quotidienne:hopital-clinique": {
     "image": "/images/explore/vie_quotidienne-hopital-clinique.jpg",
@@ -1277,12 +803,6 @@
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:%E6%97%A5%E6%9C%AC%E9%A3%9F%E5%A0%82%E9%A3%9F%E5%A0%82%E8%BB%8A%E5%92%8C%E5%AE%9A%E9%A3%9F%E9%A3%9F%E5%99%A8.jpg"
   },
-  "vie_quotidienne:share-house": {
-    "image": "/images/explore/vie_quotidienne-share-house.jpg",
-    "attribution": "Tinelot Wittermans",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Mont_Blanc_and_Dome_du_Gouter.jpg"
-  },
   "vie_quotidienne:yakusho": {
     "image": "/images/explore/vie_quotidienne-yakusho.jpg",
     "attribution": "Diego Delso",
@@ -1301,12 +821,6 @@
     "licence": "CC BY-SA 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Arbeit-auschwitz03.jpg"
   },
-  "vie_quotidienne:coiffeur-1000yen": {
-    "image": "/images/explore/vie_quotidienne-coiffeur-1000yen.jpg",
-    "attribution": "BB Support Holdings Co., Ltd.",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Family_Cut_1000_logo.png"
-  },
   "vie_quotidienne:institut-beaute": {
     "image": "/images/explore/vie_quotidienne-institut-beaute.jpg",
     "attribution": "Chongkian",
@@ -1319,23 +833,11 @@
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Lautrec_the_brothel_laundryman_1894.jpg"
   },
-  "vie_quotidienne:friperie-recycle-shop": {
-    "image": "/images/explore/vie_quotidienne-friperie-recycle-shop.jpg",
-    "attribution": "夢の散歩",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E5%9C%9F%E7%A0%82%E6%8E%A1%E7%9F%B3%E5%A0%B4%E8%B7%A1%E3%81%AE%E3%83%AA%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB%E3%82%B7%E3%83%A7%E3%83%83%E3%83%97.jpg"
-  },
   "vie_quotidienne:electromenager-yodobashi": {
     "image": "/images/explore/vie_quotidienne-electromenager-yodobashi.jpg",
     "attribution": "oneVillage Initiative",
     "licence": "CC BY-SA 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Computer_and_Consumer_Electronics_store_in_Ghana.jpg"
-  },
-  "vie_quotidienne:magasin-meubles-nitori": {
-    "image": "/images/explore/vie_quotidienne-magasin-meubles-nitori.jpg",
-    "attribution": "zzy002yzz@163.com",
-    "licence": "CC BY 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:XXXLutz,_Auenweg,_Villach,_K%C3%A4rnten,_%C3%96sterreich.jpg"
   },
   "vie_quotidienne:home-center-quincaillerie": {
     "image": "/images/explore/vie_quotidienne-home-center-quincaillerie.jpg",
@@ -1343,35 +845,11 @@
     "licence": "CC BY 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:011_Screws_and_bolts_in_OBI_hardware_store_home_improvement_retail_store_in_Poland.jpg"
   },
-  "vie_quotidienne:magasin-velo-reparation": {
-    "image": "/images/explore/vie_quotidienne-magasin-velo-reparation.jpg",
-    "attribution": "Auteur inconnu",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Welsh_bicycle_shop_in_Caernarfon.jpg"
-  },
   "vie_quotidienne:marche-poisson-local": {
     "image": "/images/explore/vie_quotidienne-marche-poisson-local.jpg",
     "attribution": "Tomascastelazo",
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Ensenada_fish_market_2.jpg"
-  },
-  "vie_quotidienne:animalerie": {
-    "image": "/images/explore/vie_quotidienne-animalerie.jpg",
-    "attribution": "Jørgen Hans Maltesen",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Pet_Shop_Boys_live_i_Tivoli.JPG"
-  },
-  "vie_quotidienne:karaoke-box": {
-    "image": "/images/explore/vie_quotidienne-karaoke-box.jpg",
-    "attribution": "Auteur inconnu",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Karaoke-Box.jpg"
-  },
-  "vie_quotidienne:achat-en-ligne-rakuten-amazon": {
-    "image": "/images/explore/vie_quotidienne-achat-en-ligne-rakuten-amazon.jpg",
-    "attribution": "NoeliaSuarezR",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Nutritienda.jpg"
   },
   "vie_quotidienne:carte-fidelite": {
     "image": "/images/explore/vie_quotidienne-carte-fidelite.jpg",
@@ -1385,23 +863,11 @@
     "licence": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:McDelivery_Your_Way.jpg"
   },
-  "vie_quotidienne:salon-coiffure-standard": {
-    "image": "/images/explore/vie_quotidienne-salon-coiffure-standard.jpg",
-    "attribution": "Inosanborl",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E3%83%9C%E3%83%BC%E3%83%AB%EF%BC%88%E7%BE%8E%E5%AE%B9%E5%AE%A4%EF%BC%89.jpg"
-  },
   "vie_quotidienne:photomaton-photo-identite": {
     "image": "/images/explore/vie_quotidienne-photomaton-photo-identite.jpg",
     "attribution": "Tiia Monto",
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Photo_booth_in_Tbilisi.jpg"
-  },
-  "vie_quotidienne:permis-conduire-autoecole": {
-    "image": "/images/explore/vie_quotidienne-permis-conduire-autoecole.jpg",
-    "attribution": "教習所勤務員",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E8%87%AA%E5%8B%95%E8%BB%8A%E6%95%99%E7%BF%92%E6%89%80%EF%BC%88%E8%87%AA%E8%A1%9B%E9%9A%8A%EF%BC%89%E8%BB%8A%E4%B8%A1.jpg"
   },
   "vie_quotidienne:shaken-controle-technique": {
     "image": "/images/explore/vie_quotidienne-shaken-controle-technique.jpg",
@@ -1439,18 +905,6 @@
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:%E9%80%9A%E5%AD%A6%E5%AE%9A%E6%9C%9F%E5%88%B8.jpg"
   },
-  "vie_quotidienne:ligne-locale-campagne": {
-    "image": "/images/explore/vie_quotidienne-ligne-locale-campagne.jpg",
-    "attribution": "じぶろ",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E6%B4%A5%E5%B3%B6%E7%B7%9A_%E8%97%A4%E6%B5%AA%E9%A7%85.jpg"
-  },
-  "vie_quotidienne:app-vtc-japonaise": {
-    "image": "/images/explore/vie_quotidienne-app-vtc-japonaise.jpg",
-    "attribution": "Nimra",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:A902_MOV_Van_Kinsbergen.jpg"
-  },
   "vie_quotidienne:distributeur-billets-train": {
     "image": "/images/explore/vie_quotidienne-distributeur-billets-train.jpg",
     "attribution": "Oka21000",
@@ -1469,12 +923,6 @@
     "licence": "CC BY-SA 2.5",
     "source": "https://commons.wikimedia.org/wiki/File:Rad_im_gruenen_02.jpg"
   },
-  "vie_quotidienne:assurance-velo-obligatoire": {
-    "image": "/images/explore/vie_quotidienne-assurance-velo-obligatoire.jpg",
-    "attribution": "Coolcaesar at en.wikipedia",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Farmers_Insurance_vehicle.jpg"
-  },
   "vie_quotidienne:jr-pass-etranger": {
     "image": "/images/explore/vie_quotidienne-jr-pass-etranger.jpg",
     "attribution": "Jennifer Feuchter",
@@ -1487,35 +935,11 @@
     "licence": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Namba-owasuremono-center.jpg"
   },
-  "vie_quotidienne:bureau-change": {
-    "image": "/images/explore/vie_quotidienne-bureau-change.jpg",
-    "attribution": "As6022014",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Currency_change-Kansai_International_Airport.jpg"
-  },
-  "vie_quotidienne:virement-bancaire-international": {
-    "image": "/images/explore/vie_quotidienne-virement-bancaire-international.jpg",
-    "attribution": "内閣官房内閣広報室",
-    "licence": "CC BY 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:20040609_G8_summit_1.jpg"
-  },
-  "vie_quotidienne:assurance-sante-nationale": {
-    "image": "/images/explore/vie_quotidienne-assurance-sante-nationale.jpg",
-    "attribution": "Miyuki Meinaka",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Shima_Municipal_Hospital,_May_2016.jpg"
-  },
   "vie_quotidienne:assurance-habitation": {
     "image": "/images/explore/vie_quotidienne-assurance-habitation.jpg",
     "attribution": "タンジェント",
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Jidousha_baisho_sekinin_hoken_shomeisho.JPG"
-  },
-  "vie_quotidienne:retraite-nenkin": {
-    "image": "/images/explore/vie_quotidienne-retraite-nenkin.jpg",
-    "attribution": "Picasdre",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:DNB_visitor_centre_-_ritirement_pension.jpg"
   },
   "vie_quotidienne:declaration-impots-kakutei-shinkoku": {
     "image": "/images/explore/vie_quotidienne-declaration-impots-kakutei-shinkoku.jpg",
@@ -1535,12 +959,6 @@
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Aqua_Wing_Arena.JPG"
   },
-  "vie_quotidienne:salle-sport-fitness": {
-    "image": "/images/explore/vie_quotidienne-salle-sport-fitness.jpg",
-    "attribution": "Dietmar Rabich",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_ehemalige_Standortverwaltung_der_Bundeswehr_--_2019_--_3310.jpg"
-  },
   "vie_quotidienne:veterinaire-animal": {
     "image": "/images/explore/vie_quotidienne-veterinaire-animal.jpg",
     "attribution": "運転太郎",
@@ -1552,12 +970,6 @@
     "attribution": "Aufbau von Hotspot-Systemen. Bildlizenz von XCONY.",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Hotspot_schema.gif"
-  },
-  "vie_quotidienne:visa-renouvellement-immigration": {
-    "image": "/images/explore/vie_quotidienne-visa-renouvellement-immigration.jpg",
-    "attribution": "Archives nationales DJI",
-    "licence": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Signature_d%27Alice_Guy.jpg"
   },
   "vie_quotidienne:don-du-sang": {
     "image": "/images/explore/vie_quotidienne-don-du-sang.jpg",
@@ -1577,29 +989,11 @@
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:%E3%83%88%E3%83%A9%E3%83%B3%E3%82%AF%E3%83%AB%E3%83%BC%E3%83%A0%E3%81%AE%E5%86%85%E9%83%A8_(%E3%83%88%E3%83%A9%E3%83%B3%E3%82%AF%E3%83%AB%E3%83%BC%E3%83%A0%E3%83%BB%E3%82%AD%E3%83%A5%E3%83%A9%E3%83%BC%E3%82%BA_%E9%AB%98%E4%BA%95%E6%88%B8%E5%BA%97).jpg"
   },
-  "vie_quotidienne:mariage-declaration-mairie": {
-    "image": "/images/explore/vie_quotidienne-mariage-declaration-mairie.jpg",
-    "attribution": "Lv2LrnStff",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Soong_Mei-ling_-_St._Bart%27s_Marriage_Registration_Book,_Page_50.jpg"
-  },
   "vie_quotidienne:agence-immobiliere-fudousan": {
     "image": "/images/explore/vie_quotidienne-agence-immobiliere-fudousan.jpg",
     "attribution": "Syced",
     "licence": "CC0",
     "source": "https://commons.wikimedia.org/wiki/File:%E4%B8%8D%E5%8B%95%E7%94%A3%E5%B1%8B-_%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%83%BC%E7%9B%B8%E8%AB%87.jpg"
-  },
-  "vie_quotidienne:demenagement-hikkoshi": {
-    "image": "/images/explore/vie_quotidienne-demenagement-hikkoshi.jpg",
-    "attribution": "Montrealais",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Moving_sidewalk.jpg"
-  },
-  "vie_quotidienne:objets-encombrants-sodai-gomi": {
-    "image": "/images/explore/vie_quotidienne-objets-encombrants-sodai-gomi.jpg",
-    "attribution": "Yamaguchi Yoshiaki from Japan",
-    "licence": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:The_old_train_@_Sado_(3652224114).jpg"
   },
   "vie_quotidienne:capsule-hotel-hebergement-secours": {
     "image": "/images/explore/vie_quotidienne-capsule-hotel-hebergement-secours.jpg",
@@ -1613,35 +1007,11 @@
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Manboo_(Internet_cafe)_japan_No1.jpg"
   },
-  "vie_quotidienne:gardiennage-immeuble-kanrinin": {
-    "image": "/images/explore/vie_quotidienne-gardiennage-immeuble-kanrinin.jpg",
-    "attribution": "National Park Service",
-    "licence": "Public domain",
-    "source": "https://commons.wikimedia.org/wiki/File:Cedar_Breaks_NM_Caretaker_Cabin_NPS.jpg"
-  },
-  "vie_quotidienne:renouvellement-bail": {
-    "image": "/images/explore/vie_quotidienne-renouvellement-bail.jpg",
-    "attribution": "Auteur inconnu",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Osaka_Sub-Sta.jpg"
-  },
-  "vie_quotidienne:garant-service-hoshou-gaisha": {
-    "image": "/images/explore/vie_quotidienne-garant-service-hoshou-gaisha.jpg",
-    "attribution": "Thomas Ledl",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Wiedner_Hauptstra%C3%9Fe_Nr_16.jpg"
-  },
   "vie_quotidienne:chonaikai-association-quartier": {
     "image": "/images/explore/vie_quotidienne-chonaikai-association-quartier.jpg",
     "attribution": "Kaztima109",
     "licence": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:%E6%9D%BE%E5%8E%9F%E7%A5%9E%E7%A4%BE%E5%AE%AE%E7%A5%9E%E8%BC%BF%E3%81%AE%E7%94%BA%E5%86%85%E6%B8%A1%E3%81%97.JPG"
-  },
-  "vie_quotidienne:adresse-boite-lettres-nom": {
-    "image": "/images/explore/vie_quotidienne-adresse-boite-lettres-nom.jpg",
-    "attribution": "Tony Hisgett from Birmingham, UK",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Hinderton_Hall_5900_nameplate_Didcot.jpg"
   },
   "vie_quotidienne:shukatsu-recherche-emploi": {
     "image": "/images/explore/vie_quotidienne-shukatsu-recherche-emploi.jpg",
@@ -1655,35 +1025,11 @@
     "licence": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Job_interview_0001.jpg"
   },
-  "vie_quotidienne:contrat-travail-seishain": {
-    "image": "/images/explore/vie_quotidienne-contrat-travail-seishain.jpg",
-    "attribution": "Siegele Roland",
-    "licence": "CC BY-SA 3.0 at",
-    "source": "https://commons.wikimedia.org/wiki/File:2010-10-09_Arlbergtunnel.jpg"
-  },
-  "vie_quotidienne:syndicat-comite-entreprise": {
-    "image": "/images/explore/vie_quotidienne-syndicat-comite-entreprise.jpg",
-    "attribution": "2009.5日本国内で塾生 (talk)が撮影。",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E5%8A%B4%E5%83%8D%E7%B5%84%E5%90%88%E6%9C%AC%E9%83%A8%E6%85%B6%E6%87%89%E4%B8%89%E7%94%B0.jpg"
-  },
   "vie_quotidienne:cantine-entreprise-shokudo": {
     "image": "/images/explore/vie_quotidienne-cantine-entreprise-shokudo.jpg",
     "attribution": "Auteur inconnu",
     "licence": "CC BY 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Plan_of_a_canteen_for_the_staff,_Bournville_Wellcome_M0003422.jpg"
-  },
-  "vie_quotidienne:juku-cours-du-soir": {
-    "image": "/images/explore/vie_quotidienne-juku-cours-du-soir.jpg",
-    "attribution": "MJ-bird",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:KAMEYAMA-juku_Monument.jpeg"
-  },
-  "vie_quotidienne:ecole-maternelle-yochien": {
-    "image": "/images/explore/vie_quotidienne-ecole-maternelle-yochien.jpg",
-    "attribution": "Dietmar Rabich",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Hausd%C3%BClmen,_St.-Mauritius-Kindergarten_--_2013_--_00147_(bw).jpg"
   },
   "vie_quotidienne:club-after-school-gakudou": {
     "image": "/images/explore/vie_quotidienne-club-after-school-gakudou.jpg",
@@ -1691,23 +1037,11 @@
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:US_Army_51719_New_after-school_program_teaches_kids_grown-up_skills.jpg"
   },
-  "vie_quotidienne:cercle-loisirs-sakuru": {
-    "image": "/images/explore/vie_quotidienne-cercle-loisirs-sakuru.jpg",
-    "attribution": "David Wyatt",
-    "licence": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Stone_Circle_at_Lochbuie_-_geograph.org.uk_-_394251.jpg"
-  },
   "vie_quotidienne:teleworking-remote-japon": {
     "image": "/images/explore/vie_quotidienne-teleworking-remote-japon.jpg",
     "attribution": "U.S. Government Accountability Office from Washington, DC, United States",
     "licence": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Figure_1-_Increases_in_Number_of_Employees_That_Were_Eligible_for_Telework,_Had_Telework_Agreements,_and_Were_Teleworking_(29227814392).jpg"
-  },
-  "vie_quotidienne:heures-supplementaires-zangyo": {
-    "image": "/images/explore/vie_quotidienne-heures-supplementaires-zangyo.jpg",
-    "attribution": "Senate Democrats",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Overtime_Wage_Rule_(30535483824).jpg"
   },
   "vie_quotidienne:carte-de-visite-impression": {
     "image": "/images/explore/vie_quotidienne-carte-de-visite-impression.jpg",
@@ -1727,12 +1061,6 @@
     "licence": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Convenience_Store_Shelf,_Tokyo_2014.jpg"
   },
-  "situations:train": {
-    "image": "/images/explore/situations-train.jpg",
-    "attribution": "Magadan",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Mk_Berlin_Tram_6.jpg"
-  },
   "situations:shopping": {
     "image": "/images/explore/situations-shopping.jpg",
     "attribution": "Tom Harpel from Seattle, Washington, United States",
@@ -1745,40 +1073,10 @@
     "licence": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Tadoussac_-_Hotel_(1).jpg"
   },
-  "situations:urgence": {
-    "image": "/images/explore/situations-urgence.jpg",
-    "attribution": "Enrique López-Tamayo Biosca",
-    "licence": "CC BY 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Our_Lady_of_Perpetual_Help.jpg"
-  },
-  "situations:politesse": {
-    "image": "/images/explore/situations-politesse.jpg",
-    "attribution": "Episode148",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B1%E0%B8%81%E0%B8%97%E0%B8%B2%E0%B8%A2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B9%80%E0%B8%9C%E0%B9%88%E0%B8%B2%E0%B8%89%E0%B8%A5%E0%B8%B2%E0%B8%A1%E0%B8%A7%E0%B9%89%E0%B8%B2%E0%B8%A7.png"
-  },
-  "situations:aeroport": {
-    "image": "/images/explore/situations-aeroport.jpg",
-    "attribution": "Andrew Choy from Santa Clara, California",
-    "licence": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:San_Francisco_International_Airport_at_night.jpg"
-  },
-  "situations:taxi": {
-    "image": "/images/explore/situations-taxi.jpg",
-    "attribution": "Wilfredor",
-    "licence": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Public_transport_share_taxi_in_Maracaibo_city,_Zulia,_Venezuela.jpg"
-  },
   "situations:pharmacie": {
     "image": "/images/explore/situations-pharmacie.jpg",
     "attribution": "User:Ciell",
     "licence": "CC BY-SA 2.5",
     "source": "https://commons.wikimedia.org/wiki/File:Pharmacy-nl.JPG"
-  },
-  "situations:tourisme": {
-    "image": "/images/explore/situations-tourisme.jpg",
-    "attribution": "Andreas Tille",
-    "licence": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:VaticanMuseumStaircase.jpg"
   }
 }
