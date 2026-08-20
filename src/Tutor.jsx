@@ -41,14 +41,8 @@ const NIVEAU_LABEL = { "débutant":"Débutant", "faux-débutant":"Faux-débutant
 export function TutorEntryCard({C, onOpen}){
   return (
     <div>
-      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:13}}>
-        <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:C.red,lineHeight:1}}>師</div>
-        <div>
-          <div style={{fontSize:14,fontWeight:500,color:C.text,lineHeight:1.2}}>Ton tuteur</div>
-          <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginTop:1}}>Pratique guidée en japonais</div>
-        </div>
-      </div>
-      <div onClick={onOpen} className="lift" style={{cursor:"pointer",padding:"16px 18px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow||"none",display:"flex",alignItems:"center",gap:14}}>
+      <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:15,color:C.text,marginBottom:12}}>Ton tuteur</div>
+      <div onClick={onOpen} className="lift" style={{cursor:"pointer",padding:"16px 18px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,boxShadow:C.shadow||"none",display:"flex",alignItems:"center",gap:14}}>
         <span style={{fontSize:32,flexShrink:0}}>🧑‍🏫</span>
         <div style={{flex:1,minWidth:0}}>
           <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Parler avec ton tuteur</div>
@@ -104,43 +98,62 @@ export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isP
     return <HistoryView C={C} session={session} onOpen={openConversation} onBack={()=>setView("picker")}/>;
   }
 
+  const card = { background:C.s1, border:`1px solid ${C.border}`, borderRadius:16, boxShadow:C.shadow||"none" };
   return (
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-      <div style={{padding:"16px 14px 90px",maxWidth:640,margin:"0 auto"}}>
+      {/* En-tête — Header.tsx (bolt) */}
+      <div style={{padding:"50px 20px 14px",background:`${C.bg}e6`,backdropFilter:"blur(10px)",borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10,display:"flex",alignItems:"center",gap:10}}>
         {onBack && (
-          <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:14}}>
-            ‹ Accueil
-          </button>
+          <button onClick={onBack} aria-label="Retour" style={{width:34,height:34,borderRadius:"50%",border:"none",background:"transparent",color:C.t2,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>‹</button>
         )}
-        <div style={{marginBottom:18,display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}}>
-          <div>
-            <div style={{fontSize:11,color:C.gold,letterSpacing:".16em",marginBottom:4}}>🧑‍🏫 TUTEUR</div>
-            <h1 style={{fontSize:26,fontWeight:900,color:C.text,margin:0}}>先生</h1>
-            <p style={{fontSize:13,color:C.t3,marginTop:6}}>Choisis une situation, ou lance une conversation libre.</p>
+        <div>
+          <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:18,color:C.text}}>Tuteur IA</div>
+          <div style={{fontSize:12,color:C.t3,marginTop:1}}>Pratique le japonais en conversation</div>
+        </div>
+      </div>
+
+      <div style={{padding:"18px 20px 110px",maxWidth:640,margin:"0 auto",display:"flex",flexDirection:"column",gap:22}}>
+        {/* Niveau estimé */}
+        <div style={{...card,background:C.s2,border:"none",padding:16,display:"flex",alignItems:"center",gap:14}}>
+          <div style={{width:48,height:48,borderRadius:12,background:C.s1,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>🤖</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:14,fontWeight:500,color:C.text}}>Niveau estimé : {NIVEAU_LABEL[niveau]}</div>
+            <div style={{fontSize:11,color:C.t3}}>Basé sur ta progression</div>
           </div>
-          <span style={{fontSize:10,fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",padding:"5px 10px",borderRadius:20,background:C.s2,color:C.t3,flexShrink:0,whiteSpace:"nowrap"}}>
-            {NIVEAU_LABEL[niveau]}
-          </span>
         </div>
 
-        <div style={{fontSize:11.5,color:C.t3,marginBottom:18}}>
-          {isPremium ? "✨ Tuteur illimité (Premium)" : "Tuteur gratuit : 8 messages par jour · Premium débloque l'illimité"}
+        {/* Limite quotidienne */}
+        {!isPremium && (
+          <div style={{...card,background:`linear-gradient(135deg,${C.indigo}14,transparent)`,border:`1px solid ${C.indigo}33`,padding:16}}>
+            <div style={{fontSize:13,fontWeight:500,color:C.text,marginBottom:3}}>Tuteur gratuit</div>
+            <div style={{fontSize:12,color:C.t2,marginBottom:10}}>8 messages par jour · Premium débloque l'illimité</div>
+            <button onClick={onOpenPremium} style={{background:"none",border:"none",color:C.indigo,fontSize:13,fontWeight:600,cursor:"pointer",padding:0}}>Passer Premium →</button>
+          </div>
+        )}
+
+        {/* Conversations récentes */}
+        <div>
+          <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:16,color:C.text,marginBottom:12}}>Conversations récentes</div>
+          <button onClick={()=>setView("history")} style={{width:"100%",boxSizing:"border-box",display:"flex",alignItems:"center",gap:10,padding:"13px 16px",...card,color:C.t2,fontSize:13,cursor:"pointer"}}>
+            <span style={{fontSize:16}}>🕓</span> Voir mes conversations précédentes
+          </button>
         </div>
 
-        <button onClick={()=>setView("history")} style={{width:"100%",boxSizing:"border-box",display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",marginBottom:20}}>
-          <span style={{fontSize:16}}>🕓</span> Voir mes conversations précédentes
-        </button>
-
-        {TUTOR_SCENARIOS.map(s=>(
-          <div key={s.id} onClick={()=>openScenario(s.id)} className="lift" style={{cursor:"pointer",display:"flex",alignItems:"center",gap:14,padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:12}}>
-            <span style={{fontSize:28,flexShrink:0}}>{s.emoji}</span>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:2}}>{s.titre}</div>
-              <div style={{fontSize:12,color:C.t3,lineHeight:1.4}}>{s.description}</div>
-            </div>
-            <span style={{fontSize:16,color:s.couleur,flexShrink:0,opacity:0.7}}>{s.kanji}</span>
+        {/* Scénarios guidés */}
+        <div>
+          <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:16,color:C.text,marginBottom:12}}>Scénarios guidés</div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {TUTOR_SCENARIOS.map(s=>(
+              <div key={s.id} onClick={()=>openScenario(s.id)} className="lift" style={{...card,cursor:"pointer",display:"flex",alignItems:"center",gap:14,padding:16}}>
+                <div style={{width:44,height:44,borderRadius:12,background:C.s2,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{s.emoji}</div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:14,fontWeight:500,color:C.text,marginBottom:2}}>{s.titre}</div>
+                  <div style={{fontSize:12,color:C.t3,lineHeight:1.4}}>{s.description}</div>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );

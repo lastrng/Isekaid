@@ -125,14 +125,14 @@ export function DiscoveriesScreen({C, streak, isPremium, onBack}){
           const unlocked = isPremium || bestStreak >= day;
           return (
             <div key={d.id} className={unlocked?"lift":undefined} onClick={()=>unlocked && setSelected(d)} style={{
-              background:C.s1,border:`1px solid ${unlocked?C.border:C.border}`,borderRadius:18,padding:"16px 16px",
+              background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"16px 16px",
               display:"flex",alignItems:"center",gap:14,cursor:unlocked?"pointer":"default",
-              boxShadow:unlocked?"0 2px 10px rgba(0,0,0,0.03)":"none",opacity:unlocked?1:0.7,
+              boxShadow:unlocked?"0 2px 10px rgba(0,0,0,0.03)":"none",opacity:unlocked?1:0.75,
             }}>
               {unlocked && d.image_url ? (
-                <img src={d.image_url} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}} style={{width:56,height:56,borderRadius:14,objectFit:"cover",flexShrink:0}}/>
+                <img src={d.image_url} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}} style={{width:56,height:56,borderRadius:16,objectFit:"cover",flexShrink:0}}/>
               ) : (
-                <span style={{fontSize:28,flexShrink:0,width:56,height:56,borderRadius:14,background:C.s2,display:"flex",alignItems:"center",justifyContent:"center"}}>{unlocked?"🎴":"🔒"}</span>
+                <span style={{fontSize:unlocked?28:20,flexShrink:0,width:56,height:56,borderRadius:"50%",background:unlocked?C.s2:`${C.gold}1a`,display:"flex",alignItems:"center",justifyContent:"center"}}>{unlocked?"🎴":"🔒"}</span>
               )}
               <div style={{flex:1,minWidth:0}}>
                 {unlocked ? (
@@ -144,12 +144,10 @@ export function DiscoveriesScreen({C, streak, isPremium, onBack}){
                     <div style={{fontSize:12,color:C.t2,lineHeight:1.45}}>{d.subtitle}</div>
                   </>
                 ) : (
-                  <div style={{fontSize:13,color:C.t3}}>Découverte verrouillée</div>
+                  <div style={{fontSize:13,color:C.t3}}>Accessible après {day} jour{day>1?"s":""} de streak</div>
                 )}
               </div>
-              {unlocked
-                ? <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>
-                : <span style={{fontSize:11,padding:"5px 11px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:16,color:C.t2,whiteSpace:"nowrap",flexShrink:0}}>🔒 Jour {day}</span>}
+              {unlocked && <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>}
             </div>
           );
         })}

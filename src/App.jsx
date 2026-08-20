@@ -16,29 +16,38 @@ import { MOTION_CSS_VARS, withViewTransition, supportsViewTransitions } from "./
 import { flushSync } from "react-dom";
 import { FeatureIntroScreen } from "./FeatureIntro";
 import { CelebrationOverlay } from "./Celebration";
+import {
+  Home as HomeIcon, Compass, Drama, BookOpen, Plane,
+  Flame, Search, Sparkles, Crown, Star, ChevronRight, ChevronLeft, MessageSquare,
+  CheckCircle2, Circle, TrendingUp, Lock, Heart, Trophy, RotateCcw,
+  Layers, Headphones, BookText, PenTool, Check, X, Plus, MapPin, MapPinned,
+  Calendar, Clock, Share2, Printer, Trash2, Send, Volume2, AlertCircle,
+  Award, Settings, LogOut, Bell, Type, Mail, Eye, EyeOff, ArrowRight, ArrowLeft,
+  Flower2, Users, Landmark, Coffee, UtensilsCrossed,
+} from "lucide-react";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
 // La marge est très étroite sur le fond crème clair : t3 se rapproche
 // nécessairement de t2, la hiérarchie visuelle repose alors sur la taille/
 // graisse/majuscules (déjà le cas dans la plupart des usages de t3).
+// Tokens alignés exactement sur la palette Tailwind du prototype bolt.new
+// (cream/ink/vermillion/gold/matcha/sky) — voir tailwind.config.cjs du repo
+// "Bolt". DARK n'a pas d'équivalent dans le prototype (light-only) : dérivé
+// en réutilisant l'échelle "ink" en sens inverse (ink-900→700 comme surfaces,
+// cream comme texte), mêmes teintes d'accent que LIGHT.
 const LIGHT = {
-  bg:"#FAF7F2", s1:"#FFFFFF", s2:"#F3EDE3", s3:"#EAE2D6",
-  text:"#1C1410", t2:"#7A6858", t3:"#816D5E",
-  red:"#C9463D", gold:"#9E7A1A", green:"#3A6645", indigo:"#2E4374",
-  border:"rgba(26,20,16,0.09)", navBg:"rgba(250,247,242,0.97)",
-  // Élévation couche 1 (cartes) : ombre très subtile en clair, où le fond
-  // crème et la carte blanche sont trop proches en luminosité pour se
-  // distinguer sans un léger relief.
-  shadow:"0 1px 3px rgba(28,20,16,0.05), 0 1px 2px rgba(28,20,16,0.04)",
+  bg:"#FDFBF7", s1:"#FFFFFF", s2:"#FBF7F0", s3:"#F5EDE0",
+  text:"#12121F", t2:"#4A4A60", t3:"#787890",
+  red:"#B83838", gold:"#C9A961", green:"#5E9659", indigo:"#4276A0",
+  border:"rgba(18,18,31,0.08)", navBg:"rgba(253,251,247,0.95)",
+  shadow:"0 1px 2px rgba(18,18,31,0.05)",
 };
 const DARK = {
-  bg:"#0F0B08", s1:"#1A1410", s2:"#241C15", s3:"#2E231B",
-  text:"#F0E6D3", t2:"#9C8A74", t3:"#8B7A66",
-  red:"#C9463D", gold:"#C9A84C", green:"#4E8060", indigo:"#6B82C4",
-  border:"rgba(240,230,211,0.07)", navBg:"rgba(15,11,8,0.97)",
-  // En sombre, l'élévation se lit déjà par le contraste de luminosité
-  // s1 (#1A1410) vs bg (#0F0B08) — une ombre par-dessus n'ajouterait rien.
+  bg:"#06060A", s1:"#12121F", s2:"#0B0B14", s3:"#1A1A2E",
+  text:"#FDFBF7", t2:"#A8A8B8", t3:"#787890",
+  red:"#B83838", gold:"#C9A961", green:"#5E9659", indigo:"#4276A0",
+  border:"rgba(253,251,247,0.08)", navBg:"rgba(6,6,10,0.95)",
   shadow:"none",
 };
 // Rythme vertical hiérarchisé de l'accueil : un écart plus large ENTRE les
@@ -233,8 +242,8 @@ function greet(hour,name) {
 }
 
 // ─── Onboarding data ──────────────────────────────────────────────────────────
-const WHY    = [{id:"anime",label:"Anime & Manga",emoji:"⛩️"},{id:"voyage",label:"Voyager au Japon",emoji:"✈️"},{id:"culture",label:"Culture & Art",emoji:"🎋"},{id:"langue",label:"Apprendre le japonais",emoji:"🈶"},{id:"lifestyle",label:"Lifestyle japonais",emoji:"🍵"},{id:"gastro",label:"Gastronomie",emoji:"🍣"}];
-const GOALS  = [{id:"travel",label:"Préparer un voyage",emoji:"🗾"},{id:"live",label:"Vivre au Japon",emoji:"🏯"},{id:"learn",label:"Apprendre la langue",emoji:"📚"},{id:"imm",label:"Immersion culturelle",emoji:"🌸"}];
+const WHY    = [{id:"anime",label:"Anime & Manga",emoji:"⛩️",Icon:Sparkles},{id:"voyage",label:"Voyager au Japon",emoji:"✈️",Icon:Plane},{id:"culture",label:"Culture & Art",emoji:"🎋",Icon:Landmark},{id:"langue",label:"Apprendre le japonais",emoji:"🈶",Icon:BookOpen},{id:"lifestyle",label:"Lifestyle japonais",emoji:"🍵",Icon:Coffee},{id:"gastro",label:"Gastronomie",emoji:"🍣",Icon:UtensilsCrossed}];
+const GOALS  = [{id:"travel",label:"Préparer un voyage",emoji:"🗾",Icon:Plane},{id:"live",label:"Vivre au Japon",emoji:"🏯",Icon:HomeIcon},{id:"learn",label:"Apprendre la langue",emoji:"📚",Icon:BookOpen},{id:"imm",label:"Immersion culturelle",emoji:"🌸",Icon:Flower2}];
 const LEVELS = [{id:"beginner",label:"Débutant",sub:"Je découvre le Japon",emoji:"🌱"},{id:"intermediate",label:"Intermédiaire",sub:"Je connais les bases",emoji:"🌿"},{id:"advanced",label:"Avancé",sub:"Je maîtrise l'essentiel",emoji:"🎍"}];
 // Achievements réels — chaque badge a une condition basée sur l'activité de l'user
 // check(ctx) reçoit { streak, xp, unlocks, scenProgress, kanaProgress, favs }
@@ -374,7 +383,7 @@ button{font-family:inherit;}
 .leaflet-control-zoom a{width:36px!important;height:36px!important;line-height:36px!important;border-radius:50%!important;margin-bottom:8px!important;background:var(--map-surface,#fff)!important;color:var(--map-text,#1C1410)!important;border:1px solid var(--map-border,rgba(0,0,0,.1))!important;box-shadow:0 2px 8px rgba(0,0,0,.18)!important;font-size:18px!important;}
 .leaflet-popup-content-wrapper{border-radius:14px!important;background:var(--map-surface,#fff)!important;color:var(--map-text,#1C1410)!important;box-shadow:0 6px 20px rgba(0,0,0,.22)!important;}
 .leaflet-popup-tip{background:var(--map-surface,#fff)!important;}
-.leaflet-popup-content{margin:10px 12px!important;font-family:'Noto Sans JP',sans-serif;}
+.leaflet-popup-content{margin:10px 12px!important;font-family:'Inter','Noto Sans JP',sans-serif;}
 .leaflet-control-attribution{background:rgba(255,255,255,.75)!important;font-size:9px!important;border-radius:6px 0 0 0!important;}
 /* Tour guidé (SectionIntro) — surligne la vraie carte décrite par l'étape
    courante par-dessus le voile sombre plutôt que de la laisser assombrie ;
@@ -415,7 +424,7 @@ function Petals() {
 // carte de section standard. `style` fusionné en dernier pour les surcharges
 // contextuelles (ex. teinte de statut sur l'alerte streak).
 function SectionCard({C, variant="default", onClick, className, style, children, domRef}){
-  const radius = variant==="hero" ? 20 : variant==="compact" ? 14 : 18;
+  const radius = variant==="hero" ? 20 : variant==="compact" ? 14 : 16;
   const padding = variant==="hero" ? "20px" : variant==="compact" ? "12px 16px" : "16px 18px";
   return(
     <div ref={domRef} onClick={onClick} className={className || (onClick ? "lift" : undefined)} style={{
@@ -427,25 +436,23 @@ function SectionCard({C, variant="default", onClick, className, style, children,
     </div>
   );
 }
-// Carte à l'échelle d'une section entière (Zone 1/2/3/4 de HomeScreen) :
-// fond légèrement teinté (s2) qui distingue la zone du fond de page (bg) et
-// fait ressortir les cartes d'item blanches (s1) posées dessus — même
-// vocabulaire de tokens que SectionCard, un cran de profondeur en plus.
+// Regroupement de zone de HomeScreen — simple empileur (pas de fond teinté :
+// bolt.new pose ses cartes directement sur le fond crème de la page). Garde
+// juste le `domRef` pour les cibles du spotlight guidé (Système 4.a).
 function ZoneCard({C, style, children, domRef}){
   return(
-    <div ref={domRef} style={{background:C.s2,border:`1px solid ${C.border}`,borderRadius:22,padding:"18px 16px",boxShadow:C.shadow||"none",display:"flex",flexDirection:"column",gap:ITEM_GAP,...style}}>
+    <div ref={domRef} style={{display:"flex",flexDirection:"column",gap:ITEM_GAP,...style}}>
       {children}
     </div>
   );
 }
-// Regroupement à l'échelle d'un sous-thème à l'intérieur d'une Zone (ex. Zone 1
-// "à faire aujourd'hui" scindée en "Continuer mon activité" / "Progressons en
-// japonais") : un seul en-tête (SH) pour plusieurs blocs, posés sur une carte
-// s1 qui ressort du fond teinté s2 de la ZoneCard parente.
-function GroupCard({C, kanji, title, sub, children, domRef}){
+// Regroupement à l'échelle d'un sous-thème (ex. "Continuer mon activité" /
+// "Progressons en japonais") : titre bolt (SectionTitle, sans glyphe) posé
+// au-dessus d'une carte blanche standard.
+function GroupCard({C, title, children, domRef}){
   return(
     <div>
-      <SH C={C} kanji={kanji} title={title} sub={sub}/>
+      <SectionTitle C={C} title={title}/>
       <SectionCard C={C} domRef={domRef} variant="hero" style={{display:"flex",flexDirection:"column",gap:14}}>
         {children}
       </SectionCard>
@@ -466,6 +473,52 @@ function SubHead({C, emoji, title, sub}){
     </div>
   );
 }
+// ─── Recettes de composants — calquées exactement sur src/index.css du repo
+// bolt.new de référence (.card/.btn-primary/.chip/.input/.section-title…).
+// isekaid n'a pas Tailwind : ces fonctions retournent les mêmes valeurs en
+// objets de style, pour que chaque écran restylé reste identique au pixel
+// près plutôt que de dériver écran par écran.
+// Enregistre, pour l'écran actuellement monté, une fonction "reculer d'un
+// cran ?" appelée par le retour matériel/geste Android (voir inScreenBackRef
+// dans IsekaidApp) — sans ça, un retour depuis un écran imbriqué (ex. une
+// fiche Tradition ouverte depuis Explorer) saute directement à l'onglet Home
+// au lieu de reculer d'un niveau. `pop` doit renvoyer true s'il a consommé le
+// retour (état interne dépilé), false pour laisser le root gérer son propre repli.
+function useInScreenBack(ref, pop){
+  useEffect(()=>{
+    if(!ref) return;
+    ref.current = pop;
+    return ()=>{ if(ref.current===pop) ref.current = null; };
+  });
+}
+function cardSoftStyle(C, extra){ return { background:C.s2, borderRadius:16, border:`1px solid ${C.border}`, ...extra }; }
+function btnPrimaryStyle(C, disabled, extra){ return { background:disabled?C.s3:C.red, color:disabled?C.t3:"#fff", border:"none", borderRadius:999, padding:"12px 20px", fontWeight:500, fontSize:14, cursor:disabled?"default":"pointer", textAlign:"center", ...extra }; }
+function btnSecondaryStyle(C, extra){ return { background:C.s1, color:C.t2, border:`1px solid ${C.s3}`, borderRadius:999, padding:"12px 20px", fontWeight:500, fontSize:14, cursor:"pointer", textAlign:"center", ...extra }; }
+function btnGhostStyle(C, extra){ return { background:"transparent", color:C.t2, border:"none", borderRadius:999, padding:"8px 16px", fontWeight:500, fontSize:14, cursor:"pointer", ...extra }; }
+function inputStyle(C, extra){ return { width:"100%", background:C.s2, border:`1px solid ${C.s3}`, borderRadius:12, padding:"12px 16px", color:C.text, fontSize:14, boxSizing:"border-box", ...extra }; }
+function chipStyle(C, active, extra){ return { display:"inline-flex", alignItems:"center", gap:6, padding:"7px 14px", borderRadius:999, fontSize:13, fontWeight:500, cursor:"pointer", background:active?C.red:C.s2, color:active?"#fff":C.t2, border:`1px solid ${active?C.red:C.s3}`, whiteSpace:"nowrap", ...extra }; }
+function iconTileStyle(color, size=40, radius=12){ return { width:size, height:size, borderRadius:radius, background:`${color}14`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }; }
+// section-title bolt : titre seul (pas de glyphe), utilisé pour les écrans
+// restylés — distinct de SH (kanji + sous-titre) gardé ailleurs.
+function SectionTitle({C, title, action}){
+  return(
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
+      <h2 style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:17,color:C.text,margin:0}}>{title}</h2>
+      {action}
+    </div>
+  );
+}
+// Voile de verrouillage — calqué sur LockedOverlay (components/Header.tsx) du
+// repo bolt : voile encre semi-transparent + flou, cadenas, légende palier.
+function LockVeil({C, days}){
+  return(
+    <div style={{position:"absolute",inset:0,background:`${C.text}66`,backdropFilter:"blur(2px)",borderRadius:"inherit",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",color:"#fff",padding:20,textAlign:"center"}}>
+      <div style={{fontSize:26,marginBottom:6}}>🔒</div>
+      <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:14,marginBottom:2}}>Contenu verrouillé</div>
+      <div style={{fontSize:12,color:"rgba(255,255,255,0.85)"}}>Accessible après {days} jour{days>1?"s":""} de streak</div>
+    </div>
+  );
+}
 function SH({C,kanji,title,sub,onRefresh,badge}){
   return(
     <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",marginBottom:13}}>
@@ -473,7 +526,7 @@ function SH({C,kanji,title,sub,onRefresh,badge}){
         <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:C.red,lineHeight:1}}>{kanji}</div>
         <div>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
-            <span style={{fontSize:14,fontWeight:500,color:C.text,lineHeight:1.2}}>{title}</span>
+            <span style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",fontWeight:500,color:C.text,lineHeight:1.2}}>{title}</span>
             {badge && <span aria-label="Nouveau" style={{width:7,height:7,borderRadius:"50%",background:C.gold,flexShrink:0}}/>}
           </div>
           <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginTop:1}}>{sub}</div>
@@ -1100,48 +1153,54 @@ function isoWeekKey(date=new Date()){
   return `${d.getUTCFullYear()}-W${String(week).padStart(2,"0")}`;
 }
 
+// Chaque item est soit purement déclaratif (texte libre, coché à la main —
+// nécessaire pour un vocabulaire/une notion qu'on ne peut pas vérifier), soit
+// lié à une vraie action détectable (`scenario`: id de scénario réel dans
+// japan-data.json, `favType`: type de favori "repas"/"lieu") — ces items-là
+// se cochent automatiquement via completeWeeklyItem (voir IsekaidApp), jamais
+// à la main, pour rester fidèles à l'action réellement accomplie.
 const WEEKLY_CHALLENGE_POOL = [
   { id:"transports", emoji:"🚃", title:"Semaine transports", items:[
-    "Apprends à dire « Où est la gare ? » (駅はどこですか)",
-    "Découvre une région du Japon dans Explorer",
-    "Retiens 3 mots de la gare : 駅・切符・乗り換え",
-    "Complète un scénario « Prendre le train »",
-    "Ajoute une étape transport à un voyage",
+    { text:"Apprends à dire « Où est la gare ? » (駅はどこですか)" },
+    { text:"Découvre une région du Japon dans Explorer" },
+    { text:"Retiens 3 mots de la gare : 駅・切符・乗り換え" },
+    { text:"Complète un scénario « Prendre le train »", scenario:"train" },
+    { text:"Ajoute une étape transport à un voyage" },
   ]},
   { id:"restauration", emoji:"🍜", title:"Semaine restauration", items:[
-    "Apprends « Itadakimasu » et « Gochisōsama » et leur sens",
-    "Découvre un plat japonais dans Explorer (Gastronomie)",
-    "Complète un scénario « Au restaurant »",
-    "Retiens comment commander : « ～をください »",
-    "Ajoute un plat à tes favoris",
+    { text:"Apprends « Itadakimasu » et « Gochisōsama » et leur sens" },
+    { text:"Découvre un plat japonais dans Explorer (Gastronomie)" },
+    { text:"Complète un scénario « Au restaurant »", scenario:"restaurant" },
+    { text:"Retiens comment commander : « ～をください »" },
+    { text:"Ajoute un plat à tes favoris" },
   ]},
   { id:"konbini", emoji:"🏪", title:"Semaine konbini & shopping", items:[
-    "Découvre pourquoi le konbini est un « temple de la vie quotidienne »",
-    "Apprends à demander le prix : « いくらですか »",
-    "Complète un scénario « Au konbini »",
-    "Retiens « 袋はいりません » (je n'ai pas besoin de sac)",
-    "Pratique une série de katakana",
+    { text:"Découvre pourquoi le konbini est un « temple de la vie quotidienne »" },
+    { text:"Apprends à demander le prix : « いくらですか »" },
+    { text:"Complète un scénario « Au konbini »", scenario:"konbini-scenario" },
+    { text:"Retiens « 袋はいりません » (je n'ai pas besoin de sac)" },
+    { text:"Pratique une série de katakana" },
   ]},
   { id:"politesses", emoji:"🙇", title:"Semaine politesses", items:[
-    "Découvre un code social japonais dans Explorer",
-    "Complète un scénario « Se présenter »",
-    "Retiens « Yoroshiku onegaishimasu »",
-    "Découvre la différence honne / tatemae",
-    "Pratique une ligne de hiragana",
+    { text:"Découvre un code social japonais dans Explorer" },
+    { text:"Complète un scénario « Se présenter »", scenario:"presentation" },
+    { text:"Retiens « Yoroshiku onegaishimasu »" },
+    { text:"Découvre la différence honne / tatemae" },
+    { text:"Pratique une ligne de hiragana" },
   ]},
   { id:"hebergement", emoji:"🏯", title:"Semaine hébergement", items:[
-    "Découvre un lieu d'hébergement typique (ryokan, etc.) dans Explorer",
-    "Apprends « 予約しています » (j'ai une réservation)",
-    "Complète un scénario « Se débrouiller »",
-    "Ajoute un hébergement à un voyage",
-    "Retiens un mot lié au confort japonais (温泉, 布団…)",
+    { text:"Découvre un lieu d'hébergement typique (ryokan, etc.) dans Explorer" },
+    { text:"Apprends « 予約しています » (j'ai une réservation)" },
+    { text:"Complète un scénario « Se débrouiller »" },
+    { text:"Ajoute un hébergement à un voyage" },
+    { text:"Retiens un mot lié au confort japonais (温泉, 布団…)" },
   ]},
   { id:"sorties", emoji:"🎏", title:"Semaine sorties & loisirs", items:[
-    "Découvre une tradition ou un festival japonais",
-    "Complète un scénario « Rencontre sociale »",
-    "Retiens une expression intraduisible (komorebi, ichigo ichie…)",
-    "Explore une ville ou un quartier japonais",
-    "Ajoute un lieu à tes favoris",
+    { text:"Découvre une tradition ou un festival japonais" },
+    { text:"Complète un scénario « Rencontre sociale »" },
+    { text:"Retiens une expression intraduisible (komorebi, ichigo ichie…)" },
+    { text:"Explore une ville ou un quartier japonais" },
+    { text:"Ajoute un lieu à tes favoris", favType:"lieu" },
   ]},
 ];
 
@@ -1166,8 +1225,11 @@ function loadWeeklyProgress(){
 }
 function saveWeeklyProgress(w){ try { localStorage.setItem(WEEKLY_KEY, JSON.stringify(w)); } catch {} }
 
-function WeeklyChallengeCard({C}){
-  const [progress, setProgress] = useState(()=>loadWeeklyProgress());
+// `progress` ({week, done:[indices]}) et `onToggleItem` sont maintenant
+// détenus par IsekaidApp (voir completeWeeklyItem) : les items liés à une
+// vraie action (scenario/favType) s'y cochent automatiquement au moment de
+// l'action réelle, jamais à la main — voir le commentaire sur WEEKLY_CHALLENGE_POOL.
+function WeeklyChallengeCard({C, progress, onToggleItem}){
   if(!FEATURE_FLAGS.weeklyChallenge) return null;
   const theme = weeklyChallengeForWeek(progress.week);
   const done = progress.done || [];
@@ -1175,35 +1237,33 @@ function WeeklyChallengeCard({C}){
   const pct = Math.round((done.length/total)*100);
   const allDone = done.length>=total;
 
-  const toggleItem = (idx)=>{
-    setProgress(prev=>{
-      const has = prev.done.includes(idx);
-      const nextDone = has ? prev.done.filter(i=>i!==idx) : [...prev.done, idx];
-      const next = { ...prev, done: nextDone };
-      saveWeeklyProgress(next);
-      return next;
-    });
-  };
-
   return (
-    <div style={{paddingTop:14,borderTop:`1px solid ${C.border}`}}>
-      <SubHead C={C} emoji={theme.emoji} title={`Défi de la semaine — ${theme.title}`} sub={allDone?"Accompli !":`${done.length}/${total}`}/>
+    <SectionCard C={C}>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+        <span style={{fontSize:22,flexShrink:0}}>{theme.emoji}</span>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:14,color:C.text}}>{theme.title}</div>
+        </div>
+        <span style={{fontSize:11,color:C.t3,fontWeight:600,flexShrink:0}}>{allDone?"Accompli !":`${done.length}/${total}`}</span>
+      </div>
       <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
         <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:C.indigo,borderRadius:3,transition:"width .5s"}}/>
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:8}}>
-        {theme.items.map((text,idx)=>{
+        {theme.items.map((item,idx)=>{
           const ok = done.includes(idx);
+          const auto = !!(item.scenario || item.favType);
           return(
-            <div key={idx} onClick={()=>toggleItem(idx)} style={{display:"flex",alignItems:"center",gap:11,cursor:"pointer"}}>
+            <div key={idx} onClick={()=>{ if(!auto) onToggleItem(idx); }} style={{display:"flex",alignItems:"center",gap:11,cursor:auto?"default":"pointer"}}>
               <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":""}</div>
-              <div style={{flex:1,fontSize:13,color:C.text,textDecoration:ok?"line-through":"none",opacity:ok?0.6:1}}>{text}</div>
+              <div style={{flex:1,fontSize:13,color:C.text,textDecoration:ok?"line-through":"none",opacity:ok?0.6:1}}>{item.text}</div>
+              {auto && <span style={{fontSize:9,color:C.t3,flexShrink:0}} title="Se coche automatiquement">auto</span>}
             </div>
           );
         })}
       </div>
       {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>🎉 Défi de la semaine accompli !</div>}
-    </div>
+    </SectionCard>
   );
 }
 
@@ -1274,7 +1334,7 @@ function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
   );
 }
 
-function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,xp,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem}){
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   // Cibles du spotlight (Système 4.a, voir SECTION_INTRO_STEPS.home) : une
@@ -1338,205 +1398,139 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   const seasonAccent = SEASON_ACCENT[seasonKey];
   const seasonLieux = useMemo(()=>seasonalLieux(db, seasonKey), [db, seasonKey]);
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif",position:"relative"}}>
-      {/* Sticky header */}
-      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-        {/* Row 1 — date + badges alignés */}
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-          <div style={greetAnimate?{animation:"fadeUp var(--dur-cinematic,.45s) var(--ease-smooth,ease) both"}:undefined}>
-            <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",marginBottom:2}}>{month} {day}日（{weekday}）</div>
-            <div style={{fontSize:11,color:C.t2}}>{g.fr}</div>
-          </div>
-          {/* Tuteur + profil alignés */}
-          <div style={{display:"flex",gap:8,alignItems:"center"}}>
-            {/* Entrée Tuteur — accès rapide depuis l'en-tête */}
-            <button onClick={()=>onGoTab("tutor")} style={{height:34,padding:"0 14px",display:"flex",alignItems:"center",gap:6,background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,cursor:"pointer",color:C.t2,fontSize:12,fontWeight:600,whiteSpace:"nowrap"}}>
-              🧑‍🏫 Tuteur
-            </button>
-            {/* Streak — repère rapide du nombre de jours, juste à côté du profil */}
-            <div aria-label={`${streak?.count||0} jours de streak`} style={{height:34,padding:"0 11px",display:"flex",alignItems:"center",gap:4,background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.text,fontSize:13,fontWeight:700,whiteSpace:"nowrap"}}>
-              <span style={{fontSize:15}}>🔥</span>{streak?.count||0}
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif",position:"relative"}}>
+      {/* En-tête dégradé — calqué sur HomeScreen.tsx (bolt) */}
+      <div style={{background:`linear-gradient(180deg, ${C.red} 0%, #8A2A2A 100%)`,padding:"32px 20px 40px",borderRadius:"0 0 28px 28px"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+          <div style={{display:"flex",alignItems:"center",gap:12,...(greetAnimate?{animation:"fadeUp var(--dur-cinematic,.45s) var(--ease-smooth,ease) both"}:{})}}>
+            <div style={{width:44,height:44,borderRadius:"50%",background:"rgba(253,251,247,0.2)",backdropFilter:"blur(6px)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,overflow:"hidden",flexShrink:0}}>
+              {user?.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer" style={{width:"100%",height:"100%",objectFit:"cover"}}/> : (user?.emojiAvatar||"🦊")}
             </div>
-            {/* Profil */}
-            <button onClick={onProfile} aria-label="Profil" style={{width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",background:C.s2,border:`1px solid ${C.border}`,borderRadius:"50%",cursor:"pointer",padding:0}}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={C.t2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="8" r="4"/>
-                <path d="M4 21v-1a7 7 0 0 1 14 0v1"/>
-              </svg>
+            <div>
+              <div style={{fontSize:11,color:"rgba(253,251,247,0.75)"}}>{g.fr} · {month} {day}日（{weekday}）</div>
+              <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",fontWeight:600,color:"#FDFBF7"}}>{user?.name==="Voyageur"?"Bienvenue":user?.name}</div>
+            </div>
+          </div>
+          <div style={{display:"flex",gap:8,alignItems:"center"}}>
+            <button onClick={onSearch} aria-label="Rechercher" style={{width:38,height:38,borderRadius:"50%",background:"rgba(253,251,247,0.2)",backdropFilter:"blur(6px)",border:"none",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
+              <Search size={18} color="#FDFBF7"/>
+            </button>
+            <button onClick={onProfile} aria-label="Profil" style={{width:38,height:38,borderRadius:"50%",background:"rgba(253,251,247,0.2)",backdropFilter:"blur(6px)",border:"none",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
+              {isPremium ? <Crown size={17} color="#C9A961"/> : <Compass size={18} color="#FDFBF7"/>}
             </button>
           </div>
         </div>
-        {/* Row 2 — salutation japonaise */}
-        <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,...(greetAnimate?{animation:"fadeUp var(--dur-cinematic,.45s) var(--ease-smooth,ease) .3s both"}:{})}}>{g.jp}</div>
+
+        <div style={{display:"flex",alignItems:"center",gap:12,background:"rgba(253,251,247,0.14)",backdropFilter:"blur(6px)",borderRadius:18,padding:12}}>
+          <div style={iconTileStyle("#FDFBF7", 40, 12)}>
+            <Flame size={20} color="#C9A961"/>
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:700,color:"#FDFBF7",lineHeight:1.1}}>{streak?.count||0} jour{(streak?.count||0)>1?"s":""}</div>
+            <div style={{fontSize:11,color:"rgba(253,251,247,0.75)"}}>de suite — continue !</div>
+          </div>
+          <div style={{textAlign:"right"}}>
+            <div style={{fontSize:14,fontWeight:600,color:"#FDFBF7"}}>{rank?.emoji} {rank?.title}</div>
+            <div style={{fontSize:11,color:"rgba(253,251,247,0.75)"}}>{xp||0} pts</div>
+          </div>
+        </div>
       </div>
 
-      <div style={{padding:"18px 20px 110px",position:"relative",zIndex:1,display:"flex",flexDirection:"column",gap:ZONE_GAP}}>
-        {/* Search tap target */}
-        <div onClick={onSearch} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 15px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,boxShadow:C.shadow||"none",cursor:"pointer"}}>
-          <span style={{fontSize:15,color:C.t3}}>🔍</span>
-          <span style={{fontSize:13,color:C.t3}}>Rechercher un mot, plat, tradition…</span>
-        </div>
-
-        {/* ─── ZONE 1 — À FAIRE AUJOURD'HUI ───────────────────────────────
-            Scindée en deux grandes cartes thématiques plutôt qu'une liste
-            plate : "Continuer mon activité" (reprendre le fil, pas de
-            notion de progression à cocher) et "Progressons en japonais"
-            (les deux objectifs à cocher — mission du jour + défi de la
-            semaine). L'ancienne alerte "Protège ton streak" a été retirée
-            d'ici (voir getHomeAlert) : elle deviendra une notification
-            push plutôt qu'une carte in-app. */}
-        <ZoneCard C={C}>
-          <GroupCard C={C} domRef={continuerRef} kanji="続" title="Continuer mon activité" sub="Reprends là où tu en étais">
-            <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
-            {/* Ton voyage — uniquement pour le profil "travel" */}
-            {user?.goal==="travel" && <VoyageHomeCard C={C} favs={favs} onGoTab={onGoTab}/>}
-            {/* Révision de kana due aujourd'hui (si N>0) */}
-            <ReviewTeaserCard C={C} dueCount={dueReviewCount} hasStarted={hasKanaProgress} onStart={onStartReview}/>
-          </GroupCard>
-
-          <GroupCard C={C} domRef={progressonsRef} kanji="学" title="Progressons en japonais">
-            {/* Mission du jour (jeu fixe des 4 piliers si mission.firstDay) */}
-            {mission && (()=>{
-              const todays = missionsForDay(mission);
-              const done = mission.done || [];
-              const allDone = done.length >= todays.length;
-              const pct = Math.round((done.length/todays.length)*100);
-              const targetFor = (tr)=> MISSION_TARGET_TAB[tr] || "home";
-              const isFirstDay = !!mission.firstDay;
-              return(
-                <div>
-                  <SubHead C={C} emoji="🎯" title={isFirstDay?"Ta première journée":"Mission du jour"}
-                    sub={allDone ? (isFirstDay?"Bravo, 4 piliers testés !":"Mission accomplie !") : `${done.length}/${todays.length}`}/>
-                  <div style={{height:5,background:C.s3,borderRadius:3,overflow:"hidden",marginBottom:14}}>
-                    <div style={{height:"100%",width:`${pct}%`,background:allDone?C.green:C.gold,borderRadius:3,transition:"width .5s"}}/>
-                  </div>
-                  <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                    {todays.map(t=>{
-                      const ok = done.includes(t.id);
-                      return(
-                        <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(targetFor(t.trigger)); }} style={{display:"flex",alignItems:"center",gap:11,cursor:ok?"default":"pointer",opacity:ok?0.6:1}}>
-                          <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":t.emoji}</div>
-                          <div style={{flex:1}}>
-                            <div style={{fontSize:13,color:C.text,textDecoration:ok?"line-through":"none"}}>{t.label}</div>
-                          </div>
-                          {!ok && <span style={{fontSize:10,color:C.t3}}>{t.hint} ›</span>}
-                        </div>
-                      );
-                    })}
-                  </div>
-                  {allDone && <div style={{marginTop:12,fontSize:11,color:C.green,textAlign:"center"}}>{isFirstDay ? "🎉 Tu as fait le tour des 4 piliers d'Isekai'd !" : "🎉 Mission du jour accomplie !"}</div>}
-                </div>
-              );
-            })()}
-
-            {/* Défi de la semaine */}
-            <WeeklyChallengeCard C={C}/>
-          </GroupCard>
-        </ZoneCard>
-
-        {/* ─── ZONE 2 — LE JAPON DU JOUR ───────────────────────────────────
-            Un seul en-tête de zone coiffe les 4 cartes (au lieu de 4
-            en-têtes concurrents dispersés) ; ordre adaptatif au goal via
-            HOME_ZONES[goal].fresh. */}
-        <ZoneCard C={C} domRef={japonDuJourRef}>
-          <SH C={C} kanji="日" title="Le Japon du jour" sub="Ton lieu, ta découverte, l'actu et le Japon du jour"/>
-          {(()=>{
-            const freshRenderers = {
-              lieuDuJour: ()=> <DailyPlaceSpotlight C={C} lieu={todaysLieu} isNew={lieuIsNew} isFav={isFav} toggleFav={toggleFav} onOpenLieu={handleOpenLieu}/>,
-              // HomeDailyCard a déjà son propre badge "LE JAPON DU JOUR" + pastille "Nouveau" intégrés.
-              japonDuJour: ()=> <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>,
-              // DiscoveryTeaserCard a déjà son propre badge "DÉCOUVERTE DU JOUR" intégré.
-              decouvertes: ()=> latestDiscovery ? <DiscoveryTeaserCard C={C} discovery={latestDiscovery} isNew={discoveryIsNew} onOpen={()=>onGoTab("explore")}/> : null,
-              // JapanNewsCard a déjà son propre badge "ACTU JAPON" intégré ; source
-              // NHK World (endpoint JSON public, sans clé) — voir JapanNews.jsx.
-              actuJapon: ()=> <JapanNewsCard C={C}/>,
-            };
-            return homeZonesFor(user?.goal).fresh.map(id => <Fragment key={id}>{freshRenderers[id]()}</Fragment>);
-          })()}
-        </ZoneCard>
-
-        {/* ─── ZONE 3 — POUR TOI / EXPLORER ───────────────────────────────
-            Approfondissement : bandeau saisonnier + recommandation
-            personnalisée (ordre adaptatif), puis l'entrée Tuteur. */}
-        <ZoneCard C={C}>
-          {(()=>{
-            const exploreRenderers = {
-              seasonBanner: ()=> <SeasonBanner C={C} acc={seasonAccent} lieux={seasonLieux} onOpenLieu={onOpenLieu}/>,
-              recommande: ()=>{
-                if(!db || !(user?.why?.length>0)) return null;
-                const reco = recommendForUser(db, user.why, user.goal, today);
-                if(!reco) return null;
-                const {cat, item} = reco;
-                // Titre + sous-titre + contenu complet selon la catégorie
-                const META = {
-                  culture:{label:"Culture",emoji:"🎴",title:item.titre,sub:item.contenu,full:item.contenu,extra:item.insight},
-                  traditions:{label:"Tradition",emoji:item.emoji||"⛩️",title:item.nom,sub:item.tagline,full:item.histoire||item.tagline,extra:item.comment_vivre},
-                  repas:{label:"Gastronomie",emoji:item.emoji||"🍱",title:item.nom_jp,sub:item.description||item.romaji,full:item.description,extra:item.romaji?`Lecture : ${item.romaji}`:""},
-                  regions:{label:"Région",emoji:item.emoji||"🗾",title:item.nom,sub:item.tagline,full:item.ambiance||item.tagline,extra:""},
-                  vie_quotidienne:{label:"Vie quotidienne",emoji:item.emoji||"🏙️",title:item.titre,sub:item.resume,full:item.description||item.resume,extra:""},
-                  expressions:{label:"Expression",emoji:"💬",title:item.expression,sub:item.traduction,full:item.contexte,extra:item.exemple_jp?`${item.exemple_jp} — ${item.exemple_fr||""}`:""},
-                  situations:{label:"Phrase utile",emoji:"🗣️",title:item.titre,sub:(item.phrases?.[0]?.fr)||"",full:"",extra:""},
-                }[cat] || {label:"Pour toi",emoji:"✨",title:"",sub:"",full:"",extra:""};
-                const jpText = cat==="repas"?item.nom_jp:(cat==="expressions"?item.expression:null);
-                return(
-                  <div>
-                    <SH C={C} kanji="好" title="Recommandé pour toi" sub="Selon tes centres d'intérêt"/>
-                    <SectionCard C={C} onClick={()=>setRecoOpen(o=>!o)} style={{transition:"all .2s"}}>
-                      <div style={{display:"flex",alignItems:"center",gap:14}}>
-                        <span style={{fontSize:32,flexShrink:0}}>{META.emoji}</span>
-                        <div style={{flex:1,minWidth:0}}>
-                          <div style={{fontSize:9,color:C.red,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{META.label}</div>
-                          <div style={{display:"flex",alignItems:"center",gap:7}}>
-                            <span style={{fontSize:15,color:C.text,fontWeight:500,overflow:recoOpen?"visible":"hidden",textOverflow:"ellipsis",whiteSpace:recoOpen?"normal":"nowrap"}}>{META.title}</span>
-                            {jpText && recoOpen && <SpeakButton C={C} text={jpText} color={C.red} size={24}/>}
-                          </div>
-                          {!recoOpen && <div style={{fontSize:12,color:C.t2,lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:1,WebkitBoxOrient:"vertical",marginTop:2}}>{META.sub}</div>}
-                        </div>
-                        <span style={{fontSize:13,color:C.t3,flexShrink:0,transform:recoOpen?"rotate(180deg)":"none",transition:"transform .2s"}}>▾</span>
-                      </div>
-                      {recoOpen && (
-                        <div style={{marginTop:14,paddingTop:14,borderTop:`1px solid ${C.border}`,animation:"fadeUp .3s ease"}}>
-                          {META.full && <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:META.extra?10:0}}>{META.full}</div>}
-                          {META.extra && <div style={{fontSize:12,color:C.t3,lineHeight:1.5,fontStyle:"italic"}}>{META.extra}</div>}
-                          {!META.full && !META.extra && <div style={{fontSize:13,color:C.t2}}>{META.sub}</div>}
-                        </div>
-                      )}
-                    </SectionCard>
-                  </div>
-                );
-              },
-            };
-            return homeZonesFor(user?.goal).explore.map(id => <Fragment key={id}>{exploreRenderers[id]()}</Fragment>);
-          })()}
-
-          {/* Entrée Tuteur */}
-          {FEATURE_FLAGS.tutor ? (
-            <TutorEntryCard C={C} onOpen={()=>onGoTab("tutor")}/>
-          ) : (
+      {/* Actions rapides — chevauche l'en-tête (comme HomeScreen.tsx) */}
+      <div style={{padding:"0 20px",marginTop:-24,marginBottom:4,position:"relative",zIndex:2}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+          <button onClick={()=>onGoTab("tutor")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
+            <div style={iconTileStyle(C.indigo, 38, 12)}><MessageSquare size={18} color={C.indigo}/></div>
             <div>
-              <SH C={C} kanji="師" title="Ton tuteur" sub="Pratique guidée en japonais"/>
-              <SectionCard C={C} style={{opacity:0.85}}>
-                <div style={{display:"flex",alignItems:"center",gap:14}}>
-                <span style={{fontSize:32,flexShrink:0}}>🧑‍🏫</span>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:15,color:C.text,fontWeight:500,marginBottom:2}}>Parler avec ton tuteur</div>
-                  <div style={{fontSize:12,color:C.t2,lineHeight:1.4}}>Conversations guidées en japonais, corrections et scénarios personnalisés.</div>
-                </div>
-                <span style={{fontSize:10,fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",padding:"4px 10px",borderRadius:20,background:C.s2,color:C.t3,flexShrink:0}}>Bientôt</span>
-                </div>
+              <div style={{fontSize:13,fontWeight:500,color:C.text}}>Tuteur IA</div>
+              <div style={{fontSize:11,color:C.t3}}>Parler japonais</div>
+            </div>
+          </button>
+          <button onClick={()=>onGoTab("explore")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
+            <div style={iconTileStyle(C.green, 38, 12)}><Compass size={18} color={C.green}/></div>
+            <div>
+              <div style={{fontSize:13,fontWeight:500,color:C.text}}>Explorer</div>
+              <div style={{fontSize:11,color:C.t3}}>Culture & lieux</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div style={{padding:"18px 20px 110px",position:"relative",zIndex:1,display:"flex",flexDirection:"column",gap:24}}>
+
+        {/* Missions du jour — carte unique à cocher, comme HomeScreen.tsx (bolt) */}
+        {mission && (()=>{
+          const todays = missionsForDay(mission);
+          const done = mission.done || [];
+          const allDone = done.length >= todays.length;
+          const targetFor = (tr)=> MISSION_TARGET_TAB[tr] || "home";
+          return(
+            <div ref={continuerRef}>
+              <SectionTitle C={C} title="Missions du jour" action={<span style={{fontSize:12,color:C.t3}}>{done.length}/{todays.length}</span>}/>
+              <SectionCard C={C} style={{padding:8}}>
+                {todays.map((t,i)=>{
+                  const ok = done.includes(t.id);
+                  return(
+                    <div key={t.id} onClick={()=>{ if(!ok && onGoTab) onGoTab(targetFor(t.trigger)); }} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 8px",borderTop:i>0?`1px solid ${C.border}`:"none",cursor:ok?"default":"pointer"}}>
+                      {ok ? <CheckCircle2 size={22} color={C.green} style={{flexShrink:0}}/> : <Circle size={22} color={C.s3} style={{flexShrink:0}}/>}
+                      <span style={{flex:1,fontSize:14,color:ok?C.t3:C.text,textDecoration:ok?"line-through":"none"}}>{t.label}</span>
+                      {!ok && <span style={{fontSize:11,color:C.t3}}>{t.hint}</span>}
+                    </div>
+                  );
+                })}
               </SectionCard>
             </div>
-          )}
-        </ZoneCard>
+          );
+        })()}
 
-        {/* ─── ZONE 4 — TA PROGRESSION ────────────────────────────────────
-            Statut consultable, pas une action ni du contenu frais : elle ne
-            doit plus couper le flux éditorial, donc en bas de page. Fixe
-            (pas d'adaptation au goal — il n'y a qu'un seul bloc statut). */}
-        <ZoneCard C={C} domRef={lanceeRef}>
-          <SH C={C} kanji="火" title="Continue sur ta lancée" sub="Ta progression quotidienne"/>
-          <StreakSection C={C} streak={streak} isPremium={isPremium}/>
-        </ZoneCard>
+        {/* Continue ton activité — carte unique, comme HomeScreen.tsx (bolt) */}
+        <div ref={progressonsRef}>
+          <SectionTitle C={C} title="Continue ton activité"/>
+          <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
+        </div>
+
+        {/* Le Japon du jour — un seul article + « Tout voir », comme HomeScreen.tsx (bolt) */}
+        <div ref={japonDuJourRef}>
+          <SectionTitle C={C} title="Le Japon du jour" action={
+            <button onClick={()=>{ onTask && onTask("daily"); onGoTab("daily"); }} style={{background:"none",border:"none",color:C.red,fontSize:12,fontWeight:600,cursor:"pointer",padding:0}}>Tout voir</button>
+          }/>
+          <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
+        </div>
+
+        {/* Pour toi — grille 2 col, comme HomeScreen.tsx (bolt) */}
+        <div ref={lanceeRef}>
+          <SectionTitle C={C} title="Pour toi"/>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+            <button onClick={()=>onGoTab("learn")} className="lift" style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),padding:16,textAlign:"left",cursor:"pointer"}}>
+              <div style={iconTileStyle(C.gold, 38, 12)}><TrendingUp size={18} color={C.gold}/></div>
+              <div style={{fontSize:13,fontWeight:500,color:C.text,marginTop:10}}>Progression kana</div>
+              <div style={{fontSize:11,color:C.t3,marginTop:2}}>Reprends où tu en étais</div>
+            </button>
+            <button onClick={()=>onGoTab("voyage")} className="lift" style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),padding:16,textAlign:"left",cursor:"pointer"}}>
+              <div style={iconTileStyle("#D96B86", 38, 12)}><Plane size={18} color="#D96B86"/></div>
+              <div style={{fontSize:13,fontWeight:500,color:C.text,marginTop:10}}>Préparer un voyage</div>
+              <div style={{fontSize:11,color:C.t3,marginTop:2}}>Crée ton itinéraire</div>
+            </button>
+          </div>
+        </div>
+
+        {/* Bannière Premium — calquée sur HomeScreen.tsx (bolt) */}
+        {!isPremium && (
+          <button onClick={onOpenPremium} className="lift" style={{background:`linear-gradient(90deg, ${C.gold}22, ${C.gold}0d)`,border:`1px solid ${C.gold}44`,borderRadius:20,padding:16,display:"flex",alignItems:"center",gap:12,textAlign:"left",cursor:"pointer"}}>
+            <Crown size={24} color={C.gold} style={{flexShrink:0}}/>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:15,color:C.gold}}>Passe à Premium</div>
+              <div style={{fontSize:11,color:C.t2}}>Tuteur illimité, tout le contenu</div>
+            </div>
+            <ChevronRight size={20} color={C.gold}/>
+          </button>
+        )}
+
+        {/* Défi de la semaine — carte autonome, comme HomeScreen.tsx (bolt) */}
+        <div>
+          <SectionTitle C={C} title="Défi de la semaine"/>
+          <WeeklyChallengeCard C={C} progress={weeklyProgress} onToggleItem={onToggleWeeklyItem}/>
+        </div>
       </div>
 
       {/* Système 4.a — atterrissage 1er lancement, une seule fois */}
@@ -1586,14 +1580,14 @@ const SECTION_INTRO_STEPS = {
   // mécanisme. Tenu à jour avec les zones réelles de la page (voir
   // HomeScreen) — sinon le tour présente des cartes qui n'existent plus.
   home: [
-    { emoji:"🔄", title:"Continuer mon activité",
-      text:"Reprends le fil : le Japon du jour à lire, ton voyage à préparer, tes kana à réviser." },
-    { emoji:"🎯", title:"Progressons en japonais",
-      text:"Ta mission du jour et le défi de la semaine, à cocher au fil de la journée." },
+    { emoji:"🎯", title:"Missions du jour",
+      text:"Trois petites tâches à cocher, tirées au sort chaque jour." },
+    { emoji:"🔄", title:"Continue ton activité",
+      text:"Reprends le fil là où tu t'étais arrêté." },
     { emoji:"🇯🇵", title:"Le Japon du jour",
-      text:"Un lieu, une découverte et l'actu du Japon en français — du contenu frais chaque jour." },
-    { emoji:"🔥", title:"Continue sur ta lancée",
-      text:"Reviens chaque jour pour débloquer plus de contenu et garder ta flamme." },
+      text:"Un article frais chaque jour, avec accès à tout le feed." },
+    { emoji:"✨", title:"Pour toi",
+      text:"Deux raccourcis vers ta progression et la préparation de ton voyage." },
   ],
 };
 // Bref instant de calme avant que l'accueil se révèle (Système 4.a) — pas de
@@ -1676,7 +1670,7 @@ function SectionIntro({C, color, steps, onDone, targetRefs}){
           <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:18,animation:"fadeIn .5s ease .2s both"}}>{s.text}</div>
           <div style={{display:"flex",gap:10}}>
             {i>0 && <button onClick={prev} className="pop-press" style={{flex:"0 0 auto",padding:"13px 18px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:14,cursor:"pointer"}}>‹</button>}
-            <button onClick={next} className="pop-press" style={{flex:1,padding:"14px",background:color,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+            <button onClick={next} className="pop-press" style={{flex:1,padding:"14px",background:color,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
               {last ? "Compris 🌸" : "Suivant →"}
             </button>
           </div>
@@ -1685,7 +1679,7 @@ function SectionIntro({C, color, steps, onDone, targetRefs}){
     </>
   );
 }
-function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,isPremium,onOpenPremium,onIntroDone}){
+function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,isPremium,onOpenPremium,onIntroDone,onSearch,onExplore,backRef}){
   const [view,setView] = useState(null);
   const [viewFilter,setViewFilter] = useState(null);
   const [confirmCat,setConfirmCat] = useState(null);
@@ -1697,11 +1691,19 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
   const exploreTourTargets = useMemo(()=>[modulesRef], []); // identité stable, voir HomeScreen
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
+  // Retour matériel/geste : ferme d'abord la modale de déblocage, sinon
+  // ressort du sous-écran (traditions/codes/vie/régions/histoire/découvertes)
+  // vers le menu Explorer — un cran à la fois plutôt qu'un saut vers Home.
+  useInScreenBack(backRef, ()=>{
+    if(confirmCat){ setConfirmCat(null); return true; }
+    if(view){ setView(null); setViewFilter(null); return true; }
+    return false;
+  });
 
-  if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script} initialSeason={viewFilter} onBack={()=>{setView(null);setViewFilter(null);}}/>;
-  if(view==="codes")      return <CodesScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
-  if(view==="regions")    return <RegionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
-  if(view==="vie")        return <VieScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
+  if(view==="traditions") return <TraditionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script} initialSeason={viewFilter} onBack={()=>{setView(null);setViewFilter(null);}} onExplore={onExplore}/>;
+  if(view==="codes")      return <CodesScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script} onBack={()=>setView(null)}/>;
+  if(view==="regions")    return <RegionsScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script} onBack={()=>setView(null)}/>;
+  if(view==="vie")        return <VieScreen C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script} onBack={()=>setView(null)}/>;
   if(view==="histoire")   return <HistoireScreen C={C} db={db} script={script} onBack={()=>setView(null)}/>;
   if(view==="decouvertes") return <DiscoveriesScreen C={C} streak={streak} isPremium={isPremium} onBack={()=>setView(null)}/>;
 
@@ -1717,27 +1719,48 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
     setConfirmCat(null);
   };
 
+  // Catégories — calquées sur exploreCategories (data.ts, bolt), un bouton par
+  // catégorie plutôt que 3 sections groupées : Torii n'existe pas dans Lucide,
+  // bolt retombe sur Sparkles (même fallback que exploreCategories.icon), donc
+  // Traditions & Découvertes partagent la même icône, comme dans le repo de référence.
+  const BOLT_CATS = [
+    {id:"traditions",       label:"Traditions & coutumes", Icon:Sparkles, color:C.red},
+    {id:"codes_sociaux",    label:"Codes sociaux",         Icon:Users,    color:C.indigo},
+    {id:"vie_quotidienne",  label:"Vie quotidienne",       Icon:HomeIcon, color:C.green},
+    {id:"regions",          label:"Régions du Japon",      Icon:MapPin,   color:C.gold},
+    {id:"histoire",         label:"Histoire",              Icon:Landmark, color:C.text},
+    {id:"decouvertes",      label:"Découvertes du jour",   Icon:Sparkles, color:"#D96B86"},
+  ];
+  const allMods = useMemo(()=> EXPLORE_SECTIONS.flatMap(s=>s.mods.map(m=>({...m, catId:m.cat||"decouvertes"}))), []);
+  const filteredMods = sectionFilter==="all" ? allMods : allMods.filter(m=>m.catId===sectionFilter);
+  const activeCatLabel = BOLT_CATS.find(c=>c.id===sectionFilter)?.label || "Tout le contenu";
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
-      {/* En-tête sticky */}
-      <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
-          <div>
-            <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>探 · EXPLORER</div>
-            <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Bunka wo sagasu":script==="kana"?"ぶんかをさがす":"文化を探す"}</div>
-          </div>
-          <div style={{display:"flex",alignItems:"center",gap:5,padding:"7px 12px",background:`${acc.soft}`,border:`1px solid ${acc.accent}44`,borderRadius:20}}>
-            <span style={{fontSize:14}}>🔥</span>
-            <span style={{fontSize:14,fontWeight:700,color:C.text}}>{streak?.count||0}j</span>
-          </div>
-        </div>
-        {/* Filtre par section */}
-        <div style={{display:"flex",gap:8,overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:2}}>
-          {[{id:"all",label:"Tout",emoji:"✨"}, ...EXPLORE_SECTIONS.map(s=>({id:s.id,label:s.label,emoji:s.emoji}))].map(f=>{
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
+      {/* En-tête — Header.tsx (bolt) : titre + sous-titre, pas de retour */}
+      <div style={{padding:"50px 20px 14px",background:`${C.bg}e6`,backdropFilter:"blur(10px)",borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:18,color:C.text}}>Explorer</div>
+        <div style={{fontSize:12,color:C.t3,marginTop:1}}>Culture, traditions et régions</div>
+      </div>
+
+      <div style={{padding:"16px 20px 0"}}>
+        {/* Barre de recherche — calquée sur ExploreScreen.tsx (bolt) */}
+        <button onClick={onSearch} style={{width:"100%",display:"flex",alignItems:"center",gap:10,...inputStyle(C,{padding:"12px 16px",cursor:"pointer",textAlign:"left"})}}>
+          <Search size={17} color={C.t3}/>
+          <span style={{fontSize:13,color:C.t3}}>Rechercher une tradition, un mot, un lieu…</span>
+        </button>
+      </div>
+
+      {/* Grille de catégories — 6 boutons, calqués sur exploreCategories (bolt) */}
+      <div style={{padding:"16px 20px 0"}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
+          {BOLT_CATS.map(f=>{
             const on = sectionFilter===f.id;
             return(
-              <button key={f.id} onClick={()=>setSectionFilter(f.id)} className="pop-press" style={{flexShrink:0,padding:"7px 13px",borderRadius:18,border:`1px solid ${on?acc.accent:C.border}`,background:on?acc.accent:C.s1,color:on?"#fff":C.t2,fontSize:12,fontWeight:on?600:500,cursor:"pointer",whiteSpace:"nowrap"}}>
-                {f.emoji} {f.label}
+              <button key={f.id} onClick={()=>setSectionFilter(on?"all":f.id)} className="pop-press" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:7,padding:"12px 6px",borderRadius:16,border:`2px solid ${on?f.color:C.s3}`,background:on?`${f.color}14`:C.s1,cursor:"pointer"}}>
+                <div style={iconTileStyle(on?f.color:C.t2, 38, 12)}>
+                  <f.Icon size={18} color={on?f.color:C.t2}/>
+                </div>
+                <span style={{fontSize:11,fontWeight:500,color:on?f.color:C.t2,textAlign:"center",lineHeight:1.2}}>{f.label}</span>
               </button>
             );
           })}
@@ -1745,45 +1768,26 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
       </div>
 
       <div ref={modulesRef} style={{padding:"18px 20px 110px"}}>
-        {/* 3 sections (filtrées) */}
-        {EXPLORE_SECTIONS.filter(section=> sectionFilter==="all" || section.id===sectionFilter).map(section=>(
-          <div key={section.id} style={{marginBottom:28}}>
-            {/* Titre de section */}
-            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
-              <div style={{flex:1,height:1,background:C.border}}/>
-              <div style={{display:"flex",alignItems:"center",gap:6,padding:"4px 13px",background:C.s2,borderRadius:20,flexShrink:0}}>
-                <span style={{fontSize:14}}>{section.emoji}</span>
-                <span style={{fontSize:11,color:C.t2,fontWeight:500}}>{section.label}</span>
-                <span style={{fontSize:11,fontFamily:"'Noto Serif JP',serif",color:C.t3}}>{section.jp}</span>
+        <SectionTitle C={C} title={activeCatLabel} action={<span style={{fontSize:11,color:C.t3}}>{filteredMods.length} fiche{filteredMods.length>1?"s":""}</span>}/>
+        <div style={{display:"flex",flexDirection:"column",gap:10}} className="stagger">
+          {filteredMods.map((mod,i)=>{
+            const unlocked = !mod.cat || isUnlocked(mod.cat);
+            const lockDef = mod.cat && LOCKABLE[mod.cat];
+            return(
+              <div key={i} className="lift" onClick={()=>tryOpen(mod)}
+                style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),padding:"16px 18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",opacity:unlocked?1:.75}}>
+                <div style={iconTileStyle(unlocked?C.red:C.gold, 46, "50%")}>
+                  <span style={{fontSize:unlocked?22:18}}>{unlocked ? mod.emoji : "🔒"}</span>
+                </div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:14,color:C.text,fontWeight:500,marginBottom:2}}>{mod.title}</div>
+                  <div style={{fontSize:11,color:C.t2}}>{unlocked?mod.sub:`Accessible après ${lockDef?.day} jour${lockDef?.day>1?"s":""} de streak`}</div>
+                </div>
+                {unlocked && <ChevronRight size={19} color={C.t3}/>}
               </div>
-              <div style={{flex:1,height:1,background:C.border}}/>
-            </div>
-
-            {/* Modules de la section */}
-            <div style={{display:"flex",flexDirection:"column",gap:10}} className="stagger">
-              {section.mods.map((mod,i)=>{
-                const unlocked = !mod.cat || isUnlocked(mod.cat);
-                const lockDef = mod.cat && LOCKABLE[mod.cat];
-                return(
-                  <div key={i} className="lift" onClick={()=>tryOpen(mod)}
-                    style={{position:"relative",background:C.s1,border:`1px solid ${unlocked?`${acc.accent}44`:C.border}`,borderRadius:16,padding:"16px 18px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",overflow:"hidden",boxShadow:unlocked?"0 2px 12px rgba(0,0,0,0.05)":"none"}}>
-                    {unlocked && <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${acc.accent},transparent)`}}/>}
-                    <div style={{width:46,height:46,borderRadius:12,background:unlocked?`${acc.soft}`:`${C.s2}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>
-                      {mod.emoji}
-                    </div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:14,color:C.text,fontWeight:500,marginBottom:2}}>{mod.title}</div>
-                      <div style={{fontSize:11,color:C.t2}}>{mod.sub}</div>
-                    </div>
-                    {unlocked
-                      ? <span style={{fontSize:18,color:acc.accent}}>›</span>
-                      : <span style={{fontSize:11,padding:"5px 11px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:16,color:C.t2,whiteSpace:"nowrap",flexShrink:0}}>🔒 Jour {lockDef?.day}</span>}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+            );
+          })}
+        </div>
       </div>
 
       {/* Toast */}
@@ -1815,7 +1819,7 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
               </div>
               <div style={{display:"flex",gap:10}}>
                 <button onClick={()=>setConfirmCat(null)} style={{flex:1,padding:"13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:14,cursor:"pointer"}}>Compris</button>
-                <button onClick={()=>{setConfirmCat(null); onOpenPremium&&onOpenPremium();}} style={{flex:1,padding:"13px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Voir Premium</button>
+                <button onClick={()=>{setConfirmCat(null); onOpenPremium&&onOpenPremium();}} style={{flex:1,padding:"13px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Voir Premium</button>
               </div>
             </div>
           </div>
@@ -1900,7 +1904,7 @@ function VieDetail({C,v,onBack,fav,onFav,wikiMap,onWikiTap,script}){
   );
 }
 
-function VieScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
+function VieScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,onBack}){
   const [cat,setCat] = useState("all");
   const [selected,setSelected] = useState(null);
   const items = db?.vie_quotidienne || [];
@@ -1912,6 +1916,7 @@ function VieScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 12px"}}>
+        {onBack && <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>暮 · VIE QUOTIDIENNE</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nichijō seikatsu":script==="kana"?"にちじょうせいかつ":"日常生活"}</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Vivre le Japon au jour le jour</div>
@@ -1974,7 +1979,7 @@ function matchRegion(lat,lng){
 
 function RegionHero({C,r,height=200,children}){
   return(
-    <div style={{position:"relative",height,borderRadius:16,overflow:"hidden",background:`linear-gradient(145deg, ${r.couleur} 0%, ${r.couleur}99 45%, #1a1410 130%)`}}>
+    <div style={{position:"relative",height,borderRadius:22,overflow:"hidden",background:`linear-gradient(145deg, ${C.red} 0%, ${C.red}cc 55%, ${C.text} 140%)`}}>
       {/* Big kanji watermark */}
       <div style={{position:"absolute",right:-18,bottom:-40,fontSize:170,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:"rgba(255,255,255,0.13)",lineHeight:1,userSelect:"none"}}>{r.nom_jp}</div>
       {/* Soft light */}
@@ -1990,7 +1995,7 @@ function RegionDetail({C,r,onBack,fav,onFav,wikiMap,onWikiTap,script}){
   const wt=(text,style)=><WikiText C={C} text={text} style={style} wikiMap={wikiMap||{}} onWikiTap={onWikiTap}/>;
   const Row = ({icon,title,items}) => (
     <div>
-      <div style={{fontSize:10,color:r.couleur,letterSpacing:".18em",marginBottom:11,textTransform:"uppercase"}}>{icon} {title}</div>
+      <div style={{fontSize:10,color:C.red,letterSpacing:".18em",marginBottom:11,textTransform:"uppercase"}}>{icon} {title}</div>
       <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
         {items.map((x,i)=>(
           <span key={i} style={{fontSize:12,padding:"7px 12px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>{wt(x)}</span>
@@ -2017,7 +2022,7 @@ function RegionDetail({C,r,onBack,fav,onFav,wikiMap,onWikiTap,script}){
 
       <div style={{padding:"20px 20px 110px",display:"flex",flexDirection:"column",gap:20}}>
         <div>
-          <div style={{fontSize:10,color:r.couleur,letterSpacing:".2em",marginBottom:10,textTransform:"uppercase"}}>🌏 Ambiance</div>
+          <div style={{fontSize:10,color:C.red,letterSpacing:".2em",marginBottom:10,textTransform:"uppercase"}}>🌏 Ambiance</div>
           <p style={{fontSize:14,color:C.t2,lineHeight:1.85,margin:0}}>{wt(r.ambiance)}</p>
         </div>
 
@@ -2025,29 +2030,29 @@ function RegionDetail({C,r,onBack,fav,onFav,wikiMap,onWikiTap,script}){
         <Row icon="🍜" title="Spécialités" items={r.specialites}/>
 
         <div>
-          <div style={{fontSize:10,color:r.couleur,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>⭐ Incontournables</div>
+          <div style={{fontSize:10,color:C.red,letterSpacing:".2em",marginBottom:12,textTransform:"uppercase"}}>⭐ Incontournables</div>
           <div style={{display:"flex",flexDirection:"column",gap:9}}>
             {r.incontournables.map((x,i)=>(
               <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:10}}>
-                <span style={{minWidth:22,height:22,borderRadius:"50%",background:`${r.couleur}22`,color:r.couleur,fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{i+1}</span>
+                <span style={{minWidth:22,height:22,borderRadius:"50%",background:`${C.red}22`,color:C.red,fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{i+1}</span>
                 <span style={{fontSize:13,color:C.t2,lineHeight:1.55}}>{wt(x)}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div style={{padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderLeft:`3px solid ${r.couleur}`,borderRadius:"0 10px 10px 0",display:"flex",gap:12,alignItems:"flex-start"}}>
+        <div style={{padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderLeft:`3px solid ${C.red}`,borderRadius:"0 10px 10px 0",display:"flex",gap:12,alignItems:"flex-start"}}>
           <span style={{fontSize:20,flexShrink:0}}>🗣️</span>
           <div>
-            <div style={{fontSize:10,color:r.couleur,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Dialecte local</div>
+            <div style={{fontSize:10,color:C.red,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Dialecte local</div>
             <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.55}}>{r.dialecte}</p>
           </div>
         </div>
 
-        <div style={{padding:"14px 16px",background:`${r.couleur}0f`,border:`1px solid ${r.couleur}33`,borderRadius:12,display:"flex",gap:12,alignItems:"flex-start"}}>
+        <div style={{padding:"14px 16px",background:`${C.red}0f`,border:`1px solid ${C.red}33`,borderRadius:12,display:"flex",gap:12,alignItems:"flex-start"}}>
           <span style={{fontSize:20,flexShrink:0}}>💡</span>
           <div>
-            <div style={{fontSize:10,color:r.couleur,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Bon à savoir</div>
+            <div style={{fontSize:10,color:C.red,letterSpacing:".15em",marginBottom:5,textTransform:"uppercase"}}>Bon à savoir</div>
             <p style={{fontSize:13,color:C.t2,margin:0,lineHeight:1.6}}>{r.a_savoir}</p>
           </div>
         </div>
@@ -2056,7 +2061,7 @@ function RegionDetail({C,r,onBack,fav,onFav,wikiMap,onWikiTap,script}){
   );
 }
 
-function RegionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
+function RegionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,onBack}){
   const [selected,setSelected] = useState(null);
   const [geo,setGeo] = useState({status:"idle"}); // idle | loading | japan | abroad | denied | error
   const regions = db?.regions || [];
@@ -2083,6 +2088,7 @@ function RegionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 16px"}}>
+        {onBack && <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>地 · RÉGIONS</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihon no chihō":script==="kana"?"にほんのちほう":"日本の地方"}</div>
         <div style={{fontSize:13,color:C.t2}}>Les 8 grandes régions du Japon</div>
@@ -2101,11 +2107,11 @@ function RegionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
           </div>
         )}
         {detectedRegion && (
-          <div onClick={()=>setSelected(detectedRegion)} style={{cursor:"pointer",borderRadius:14,overflow:"hidden",border:`1px solid ${detectedRegion.couleur}55`,animation:"fadeUp .4s ease"}}>
-            <div style={{background:`linear-gradient(120deg,${detectedRegion.couleur}33 0%,${detectedRegion.couleur}11 100%)`,padding:"14px 16px",display:"flex",alignItems:"center",gap:13}}>
+          <div onClick={()=>setSelected(detectedRegion)} style={{cursor:"pointer",borderRadius:14,overflow:"hidden",border:`1px solid ${C.red}55`,animation:"fadeUp .4s ease"}}>
+            <div style={{background:`linear-gradient(120deg,${C.red}33 0%,${C.red}11 100%)`,padding:"14px 16px",display:"flex",alignItems:"center",gap:13}}>
               <span style={{fontSize:30}}>📍</span>
               <div style={{flex:1}}>
-                <div style={{fontSize:10,color:detectedRegion.couleur,letterSpacing:".15em",textTransform:"uppercase",marginBottom:3}}>Vous vous situez dans</div>
+                <div style={{fontSize:10,color:C.red,letterSpacing:".15em",textTransform:"uppercase",marginBottom:3}}>Vous vous situez dans</div>
                 <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",color:C.text}}>{detectedRegion.nom} <span style={{fontSize:13,color:C.t3}}>{detectedRegion.nom_jp}</span></div>
               </div>
               <span style={{fontSize:18,color:C.t3}}>›</span>
@@ -2223,7 +2229,7 @@ function CodeDetail({C,c,onBack,fav,onFav,wikiMap,onWikiTap,script}){
   );
 }
 
-function CodesScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
+function CodesScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,onBack}){
   const [cat,setCat] = useState("all");
   const [selected,setSelected] = useState(null);
   const codes = db?.codes_sociaux || [];
@@ -2235,6 +2241,7 @@ function CodesScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script}){
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 12px"}}>
+        {onBack && <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>礼 · CODES SOCIAUX</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Anmoku no rūru":script==="kana"?"あんもくのルール":"暗黙のルール"}</div>
         <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Les règles invisibles à connaître</div>
@@ -2375,7 +2382,7 @@ function HistoireScreen({C, db, script, onBack}){
   if(selected){
     const h = selected;
     return(
-      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
         <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
           <button onClick={()=>setSelected(null)} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Histoire</button>
           <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{h.titre}</div>
@@ -2404,7 +2411,7 @@ function HistoireScreen({C, db, script, onBack}){
   }
 
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>📜 · HISTOIRE</div>
@@ -2441,7 +2448,7 @@ function HistoireScreen({C, db, script, onBack}){
   );
 }
 
-function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initialSeason,onBack}){
+function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initialSeason,onBack,onExplore}){
   // initialSeason peut valoir "saison" (route générique) ou un id non valide :
   // dans ce cas on retombe sur la saison courante pour éviter un écran noir.
   const validId = SEASONS.some(s=>s.id===initialSeason) ? initialSeason
@@ -2497,7 +2504,7 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initial
         {filtered.map((t,i)=>{
           const photo = explorePhoto("traditions", t, DATA.traditions.indexOf(t));
           return(
-          <div key={i} className="lift" onClick={()=>setSelected(t)} style={{
+          <div key={i} className="lift" onClick={()=>{ setSelected(t); onExplore && onExplore(); }} style={{
             background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,padding:"16px 16px",
             display:"flex",alignItems:"center",gap:14,cursor:"pointer",boxShadow:"0 2px 10px rgba(0,0,0,0.03)"
           }}>
@@ -2526,11 +2533,94 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initial
 }
 
 // ─── Scénarios interactifs ────────────────────────────────────────────────────
-function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTutorBridge}){
+// Liens entre chaque scénario (jeu de rôle) et des fiches Explorer — affichés
+// sur la page "Approfondir" en fin de scénario, pour prolonger l'apprentissage
+// vers le contenu culturel qui éclaire la situation qu'on vient de jouer.
+const SCENARIO_EXPLORE_LINKS = {
+  "presentation":     [{type:"codes_sociaux",id:"suffixes-honorifiques"},{type:"codes_sociaux",id:"aisatsu"},{type:"codes_sociaux",id:"meishi"}],
+  "remercier":        [{type:"codes_sociaux",id:"keigo"},{type:"codes_sociaux",id:"giri"},{type:"codes_sociaux",id:"wa"}],
+  "sexcuser":         [{type:"codes_sociaux",id:"shazai"},{type:"codes_sociaux",id:"gaman"}],
+  "konbini-scenario": [{type:"vie_quotidienne",id:"konbini"},{type:"traditions",id:"konbini-life"},{type:"traditions",id:"konbini-greeting"},{type:"codes_sociaux",id:"file-attente"}],
+  "restaurant":       [{type:"traditions",id:"itadakimasu"},{type:"traditions",id:"slurp"},{type:"vie_quotidienne",id:"shokudo-teishoku"},{type:"codes_sociaux",id:"baguettes"},{type:"codes_sociaux",id:"hashi-watashi"}],
+  "train":            [{type:"traditions",id:"train-silence"},{type:"traditions",id:"point-call"},{type:"vie_quotidienne",id:"trains"},{type:"codes_sociaux",id:"transports"}],
+  "hotel":            [{type:"traditions",id:"oshibori"},{type:"traditions",id:"tatami"},{type:"traditions",id:"onsen-yuki"},{type:"codes_sociaux",id:"chaussons-interieur"}],
+  "shopping":         [{type:"vie_quotidienne",id:"hyaku-en-shop"},{type:"codes_sociaux",id:"argent"},{type:"codes_sociaux",id:"cadeaux"}],
+  "direction":        [{type:"traditions",id:"hatsumode"},{type:"codes_sociaux",id:"aisatsu"},{type:"codes_sociaux",id:"meiwaku"}],
+  "urgence":          [{type:"vie_quotidienne",id:"pharmacie-drugstore"},{type:"vie_quotidienne",id:"hopital-clinique"},{type:"vie_quotidienne",id:"pharmacie-de-nuit"}],
+  "cafe":             [{type:"codes_sociaux",id:"silence"},{type:"codes_sociaux",id:"volume-voix"}],
+  "konbini2":         [{type:"vie_quotidienne",id:"konbini"},{type:"vie_quotidienne",id:"cashless-ic"},{type:"codes_sociaux",id:"plateau-paiement"}],
+  "izakaya":          [{type:"codes_sociaux",id:"nomikai"},{type:"codes_sociaux",id:"verser-boisson"},{type:"codes_sociaux",id:"wari-kan"}],
+  "taxi":             [{type:"vie_quotidienne",id:"taxi"},{type:"vie_quotidienne",id:"cashless-ic"},{type:"codes_sociaux",id:"argent"}],
+  "musee":            [{type:"codes_sociaux",id:"silence"},{type:"codes_sociaux",id:"file-attente"}],
+  "presentation2":    [{type:"codes_sociaux",id:"suffixes-honorifiques"},{type:"codes_sociaux",id:"keigo"},{type:"codes_sociaux",id:"jikoshoukai"}],
+  "adv-medecin":      [{type:"vie_quotidienne",id:"hopital-clinique"},{type:"vie_quotidienne",id:"pharmacie-drugstore"}],
+  "adv-coiffeur":     [{type:"vie_quotidienne",id:"coiffeur-1000yen"},{type:"vie_quotidienne",id:"salon-coiffure-standard"}],
+  "adv-voisin":       [{type:"codes_sociaux",id:"voisinage-emmenagement"},{type:"codes_sociaux",id:"aisatsu"},{type:"vie_quotidienne",id:"chonaikai-association-quartier"}],
+  "adv-poste":        [{type:"vie_quotidienne",id:"poste"},{type:"codes_sociaux",id:"file-attente"},{type:"codes_sociaux",id:"ponctualite"}],
+};
+const EXPLORE_TYPE_META = {
+  traditions:      (C)=>({label:"Tradition",       color:C.red,    fav:"tradition"}),
+  codes_sociaux:   (C)=>({label:"Code social",      color:C.indigo, fav:"code"}),
+  vie_quotidienne: (C)=>({label:"Vie quotidienne",  color:C.green,  fav:"vie"}),
+};
+
+// Page "Approfondir" : liste les fiches Explorer liées au scénario qu'on vient
+// de jouer (ex. scénario konbini → fiches konbini, achats, file d'attente…).
+function ScenarioApprofondir({C, s, links, onBack, onOpenItem}){
+  return(
+    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
+      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Résultat</button>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>探 · APPROFONDIR</div>
+        <div style={{fontSize:19,fontFamily:"'Noto Serif JP',serif",fontWeight:500,color:C.text}}>{s.emoji} {s.titre}</div>
+        <div style={{fontSize:12,color:C.t2,marginTop:4}}>Pour aller plus loin sur cette situation</div>
+      </div>
+      <div className="stagger" style={{padding:"18px 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
+        {links.map(({type,item},i)=>{
+          const meta = EXPLORE_TYPE_META[type](C);
+          const photo = explorePhoto(type, item, 0);
+          const title = item.nom || item.titre;
+          const jp = item.nom_jp;
+          const tagline = item.tagline || item.resume;
+          return(
+            <div key={i} className="lift" onClick={()=>onOpenItem(type,item)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,padding:"16px 16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",boxShadow:"0 2px 10px rgba(0,0,0,0.03)"}}>
+              {photo ? (
+                <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";e.target.nextSibling.style.display="flex";}} style={{width:52,height:52,borderRadius:14,objectFit:"cover",flexShrink:0}}/>
+              ) : null}
+              <span style={{fontSize:28,flexShrink:0,display:photo?"none":"flex",width:photo?0:"auto"}}>{item.emoji}</span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:9,color:meta.color,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{meta.label}</div>
+                <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
+                  <span style={{fontSize:14,color:C.text,fontWeight:500}}>{title}</span>
+                  {jp && <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{jp}</span>}
+                </div>
+                <div style={{fontSize:12,color:C.t2,lineHeight:1.4}}>{tagline}</div>
+              </div>
+              <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>
+            </div>
+          );
+        })}
+        {links.length===0 && (
+          <div style={{padding:"24px",textAlign:"center",color:C.t3,fontSize:12}}>Pas encore de contenu associé à ce scénario.</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTutorBridge, db, isFav, toggleFav, wikiMap, onWikiTap}){
   const [step,setStep] = useState(0);
   const [picked,setPicked] = useState(null);
   const [score,setScore] = useState(0);
   const [finished,setFinished] = useState(false);
+  const [approfondir,setApprofondir] = useState(false);
+  const [detailItem,setDetailItem] = useState(null); // {type,item}
+  const exploreLinks = useMemo(()=>{
+    const links = SCENARIO_EXPLORE_LINKS[s.id] || [];
+    return links
+      .map(l=>{ const item=(db?.[l.type]||[]).find(x=>x.id===l.id); return item ? {type:l.type,item} : null; })
+      .filter(Boolean);
+  }, [s.id, db]);
   // Romaji masqué par défaut dès le niveau Intermédiaire (mais affichable)
   const hideRomajiByLevel = s.niveau==="Intermédiaire" || s.niveau==="Avancé";
   const [showRomaji,setShowRomaji] = useState(!hideRomajiByLevel);
@@ -2553,6 +2643,18 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
     }
   };
 
+  if(detailItem){
+    const closeDetail = ()=>setDetailItem(null);
+    const {type,item} = detailItem;
+    if(type==="traditions") return <TraditionDetail C={C} t={item} onBack={closeDetail} fav={isFav&&isFav("tradition",item)} onFav={toggleFav&&(()=>toggleFav("tradition",item))} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
+    if(type==="codes_sociaux") return <CodeDetail C={C} c={item} onBack={closeDetail} fav={isFav&&isFav("code",item)} onFav={toggleFav&&(()=>toggleFav("code",item))} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
+    if(type==="vie_quotidienne") return <VieDetail C={C} v={item} onBack={closeDetail} fav={isFav&&isFav("vie",item)} onFav={toggleFav&&(()=>toggleFav("vie",item))} wikiMap={wikiMap} onWikiTap={onWikiTap} script={script}/>;
+  }
+
+  if(approfondir){
+    return <ScenarioApprofondir C={C} s={s} links={exploreLinks} onBack={()=>setApprofondir(false)} onOpenItem={(type,item)=>setDetailItem({type,item})}/>;
+  }
+
   if(finished){
     const pct = Math.round((score/s.etapes.length)*100);
     const passed = score/s.etapes.length >= 0.7;
@@ -2567,9 +2669,11 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
             ))}
           </div>
         )}
-        <div style={{fontSize:60,marginBottom:14,display:"inline-block",animation:passed?"bounceIn .6s cubic-bezier(.34,1.56,.64,1)":"fadeUp .4s ease"}}>{pct===100?"🏆":passed?"🎉":"📚"}</div>
-        <div style={{fontSize:22,color:C.text,fontWeight:500,marginBottom:6,animation:"fadeUp .4s ease .1s both"}}>{pct===100?"Parfait !":passed?"Bien joué !":"Continue à pratiquer"}</div>
-        <div style={{fontSize:15,color:C.t2,marginBottom:8,animation:"fadeUp .4s ease .18s both"}}>Score : <b style={{color:s.couleur}}>{score}</b> / {s.etapes.length} ({pct}%)</div>
+        <div style={{width:88,height:88,margin:"0 auto 16px",borderRadius:"50%",background:`linear-gradient(135deg,${C.gold}33,${C.gold}14)`,display:"flex",alignItems:"center",justifyContent:"center",animation:passed?"bounceIn .6s cubic-bezier(.34,1.56,.64,1)":"fadeUp .4s ease"}}>
+          <Trophy size={40} color={C.gold}/>
+        </div>
+        <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:700,fontSize:32,color:C.text,marginBottom:4,animation:"fadeUp .4s ease .1s both"}}>{pct}%</div>
+        <div style={{fontSize:14,color:C.t3,marginBottom:16,animation:"fadeUp .4s ease .18s both"}}>{s.titre}</div>
         {earned ? (
           <div style={{margin:"18px 0",padding:"16px",background:"rgba(78,128,96,0.1)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:14,animation:"popBounce .6s cubic-bezier(.34,1.56,.64,1) .3s both"}}>
             <div style={{fontSize:13,color:C.green,fontWeight:600,marginBottom:4}}>Scénario validé ! ✓</div>
@@ -2585,9 +2689,16 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
             🧑‍🏫 Rejoue cette scène avec ton tuteur
           </button>
         )}
+        {exploreLinks.length>0 && (
+          <button onClick={()=>setApprofondir(true)} className="pop-press" style={{width:"100%",marginTop:10,padding:"14px",background:"transparent",border:`1px solid ${C.indigo}66`,borderRadius:12,color:C.indigo,fontSize:13,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,animation:"fadeUp .4s ease .3s both"}}>
+            🔍 Approfondir le sujet
+          </button>
+        )}
         <div style={{display:"flex",gap:11,marginTop:8}}>
-          <button onClick={()=>{setStep(0);setPicked(null);setScore(0);setFinished(false);}} className="pop-press" style={{flex:1,padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Recommencer</button>
-          <button onClick={onExit} className="pop-press" style={{flex:1,padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Terminer</button>
+          <button onClick={()=>{setStep(0);setPicked(null);setScore(0);setFinished(false);}} className="pop-press" style={{...btnSecondaryStyle(C),display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+            <RotateCcw size={16}/> Refaire
+          </button>
+          <button onClick={onExit} className="pop-press" style={{...btnPrimaryStyle(C),flex:1}}>Autres scénarios</button>
         </div>
       </div>
     );
@@ -2600,7 +2711,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
         {/* Progress */}
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
           <div style={{flex:1,height:5,background:C.s3,borderRadius:3,overflow:"hidden"}}>
-            <div style={{height:"100%",width:`${(step/s.etapes.length)*100}%`,background:s.couleur,borderRadius:3,transition:"width .3s"}}/>
+            <div style={{height:"100%",width:`${(step/s.etapes.length)*100}%`,background:C.red,borderRadius:3,transition:"width .3s"}}/>
           </div>
           <span style={{fontSize:11,color:C.t3}}>{step+1}/{s.etapes.length}</span>
         </div>
@@ -2608,15 +2719,15 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
 
       <div style={{padding:"10px 20px 110px"}}>
         {/* Situation */}
-        <div style={{padding:"18px",background:`${s.couleur}11`,border:`1px solid ${s.couleur}33`,borderRadius:14,marginBottom:18}}>
-          <div style={{fontSize:10,color:s.couleur,letterSpacing:".2em",marginBottom:8,textTransform:"uppercase"}}>{s.emoji} Situation</div>
+        <div style={{padding:"18px",background:`${C.red}11`,border:`1px solid ${C.red}33`,borderRadius:14,marginBottom:18}}>
+          <div style={{fontSize:10,color:C.red,letterSpacing:".2em",marginBottom:8,textTransform:"uppercase"}}>{s.emoji} Situation</div>
           <div style={{fontSize:15,color:C.text,lineHeight:1.55}}>{script==="romaji" && etape.situation_romaji ? etape.situation_romaji : etape.situation}</div>
         </div>
 
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,gap:10}}>
           <div style={{fontSize:13,color:C.t2,fontWeight:500,flex:1}}>{etape.question}</div>
           {hideRomajiByLevel && (
-            <button onClick={()=>setShowRomaji(v=>!v)} className="pop-press" style={{flexShrink:0,fontSize:11,padding:"5px 11px",background:showRomaji?C.s2:"transparent",border:`1px solid ${showRomaji?s.couleur+"55":C.border}`,borderRadius:16,color:showRomaji?s.couleur:C.t3,cursor:"pointer",whiteSpace:"nowrap"}}>
+            <button onClick={()=>setShowRomaji(v=>!v)} className="pop-press" style={{flexShrink:0,fontSize:11,padding:"5px 11px",background:showRomaji?C.s2:"transparent",border:`1px solid ${showRomaji?C.red+"55":C.border}`,borderRadius:16,color:showRomaji?C.red:C.t3,cursor:"pointer",whiteSpace:"nowrap"}}>
               {showRomaji ? "あ Masquer rōmaji" : "A Afficher rōmaji"}
             </button>
           )}
@@ -2631,7 +2742,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
               else if(c===picked){ bg="rgba(201,70,61,0.08)"; bd="rgba(201,70,61,0.4)"; anim="shake .4s ease"; }
             }
             return(
-              <div key={i} onClick={()=>!picked&&choose(c)} className={picked?"":"lift"} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`1px solid ${bd}`,borderRadius:12,cursor:picked?"default":"pointer",transition:"background var(--dur-slow) var(--ease-smooth), border-color var(--dur-slow) var(--ease-smooth)",animation:anim}}>
+              <div key={i} onClick={()=>!picked&&choose(c)} className={picked?"":"lift"} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`2px solid ${bd}`,borderRadius:16,cursor:picked?"default":"pointer",transition:"background var(--dur-slow) var(--ease-smooth), border-color var(--dur-slow) var(--ease-smooth)",animation:anim}}>
                 <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
                   <div style={{flex:1,minWidth:0}}>
                     {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(c, script)}</div>}
@@ -2642,7 +2753,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
                         une fois la réponse donnée, à titre de correction/révision. */}
                     {picked && <div style={{fontSize:13,color:C.t2,marginTop:2}}>{c.fr}</div>}
                   </div>
-                  {picked && c.jp && <SpeakButton C={C} text={c.jp} color={s.couleur}/>}
+                  {picked && c.jp && <SpeakButton C={C} text={c.jp} color={C.red}/>}
                 </div>
                 {picked===c && <div style={{marginTop:4,fontSize:12,color:c.correct?C.green:C.red,animation:"fadeIn .4s ease .15s both"}}>{c.correct?"✓ ":"✕ "}{c.feedback}</div>}
                 {picked && c.correct && picked!==c && <div style={{marginTop:4,fontSize:12,color:C.green,animation:"fadeIn .4s ease .15s both"}}>✓ {c.feedback}</div>}
@@ -2652,7 +2763,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
         </div>
 
         {picked && (
-          <button onClick={nextStep} style={{marginTop:18,width:"100%",padding:"15px",background:s.couleur,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+          <button onClick={nextStep} style={{marginTop:18,width:"100%",padding:"15px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
             {step < s.etapes.length-1 ? "Continuer →" : "Voir le résultat"}
           </button>
         )}
@@ -2661,7 +2772,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
   );
 }
 
-function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutorBridge,onIntroDone}){
+function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutorBridge,onIntroDone,isFav,toggleFav,wikiMap,onWikiTap}){
   const [active,setActive] = useState(null);
   const [levelFilter,setLevelFilter] = useState("Tous");
   const [showIntro,setShowIntro] = useState(()=>!sectionIntroSeen("scenarios"));
@@ -2678,32 +2789,24 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutor
   const done = (s)=> scenariosDone?.includes(s.id);
   const totalDone = scenarios.filter(done).length;
 
-  if(active) return <ScenarioPlay C={C} s={active} script={script} onExit={()=>setActive(null)} onComplete={completeScenario} alreadyDone={done(active)} onOpenTutorBridge={onOpenTutorBridge}/>;
+  if(active) return <ScenarioPlay C={C} s={active} script={script} onExit={()=>setActive(null)} onComplete={completeScenario} alreadyDone={done(active)} onOpenTutorBridge={onOpenTutorBridge} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={onWikiTap}/>;
 
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
-      {/* Header sticky */}
-      <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>場 · SCÉNARIOS</div>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:12}}>
-          <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Shinario":script==="kana"?"シナリオ":"シナリオ"}</div>
-          {totalDone>0 && <div style={{fontSize:12,color:acc.accent,fontWeight:500}}>{totalDone}/{allScenarios.length} complétés</div>}
-        </div>
-        {/* Filtre par difficulté */}
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
+      {/* Header — Header.tsx (bolt) */}
+      <div style={{padding:"50px 20px 14px",background:`${C.bg}e6`,backdropFilter:"blur(10px)",borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:18,color:C.text}}>Scénarios</div>
+        <div style={{fontSize:12,color:C.t3,marginTop:1}}>Mets-toi en situation{totalDone>0?` · ${totalDone}/${allScenarios.length} complétés`:""}</div>
+      </div>
+
+      <div style={{padding:"16px 20px 0"}}>
+        {/* Filtre par difficulté — chips horizontaux (bolt) */}
         <div style={{display:"flex",gap:8,overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:2}}>
-          {[
-            {id:"Tous",label:"Tous",emoji:"📋"},
-            {id:"Débutant",label:"Débutant",emoji:"🟢"},
-            {id:"Intermédiaire",label:"Intermédiaire",emoji:"🟡"},
-            {id:"Avancé",label:"Avancé",emoji:"🔴"},
-          ].map(f=>{
-            const on = levelFilter===f.id;
-            return(
-              <button key={f.id} onClick={()=>setLevelFilter(f.id)} className="pop-press" style={{flexShrink:0,padding:"7px 13px",borderRadius:18,border:`1px solid ${on?acc.accent:C.border}`,background:on?acc.accent:C.s1,color:on?"#fff":C.t2,fontSize:12,fontWeight:on?600:500,cursor:"pointer",whiteSpace:"nowrap"}}>
-                {f.emoji} {f.label}
-              </button>
-            );
-          })}
+          {["Tous","Débutant","Intermédiaire","Avancé"].map(f=>(
+            <button key={f} onClick={()=>setLevelFilter(f)} className="pop-press" style={chipStyle(C, levelFilter===f, {flexShrink:0})}>
+              {f}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -2712,39 +2815,23 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutor
         <div style={{display:"flex",flexDirection:"column",gap:12}} className="stagger">
           {scenarios.map((s,i)=>{
             const isDone = done(s);
-            const prevLevel = i>0 ? scenarios[i-1].niveau : null;
-            const showSeparator = levelFilter==="Tous" && s.niveau !== prevLevel;
-            const levelEmoji = {"Débutant":"🟢","Intermédiaire":"🟡","Avancé":"🔴"}[s.niveau] || "";
+            const tint = isDone ? C.green : C.red;
             return(
               <div key={i}>
-                {showSeparator && (
-                  <div style={{display:"flex",alignItems:"center",gap:8,margin:i===0?"0 0 12px":"16px 0 12px"}}>
-                    <div style={{flex:1,height:1,background:C.border}}/>
-                    <span style={{fontSize:10,color:C.t3,letterSpacing:".15em",textTransform:"uppercase",flexShrink:0}}>{levelEmoji} {s.niveau}</span>
-                    <div style={{flex:1,height:1,background:C.border}}/>
-                  </div>
-                )}
-                <div className="lift" onClick={()=>setActive(s)} style={{position:"relative",borderRadius:18,overflow:"hidden",cursor:"pointer",border:`1px solid ${isDone?"rgba(78,128,96,0.3)":s.couleur+"44"}`,boxShadow:isDone?"0 2px 12px rgba(58,102,69,0.08)":"none"}}>
-                  {/* Barre couleur en haut */}
-                  <div style={{height:3,background:`linear-gradient(90deg,${s.couleur},${s.couleur}44)`}}/>
-                  <div style={{background:`linear-gradient(135deg,${s.couleur}18 0%,transparent 100%)`,padding:"16px 18px"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:14}}>
-                      <div style={{width:52,height:52,borderRadius:14,background:`${s.couleur}22`,border:`1px solid ${s.couleur}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0}}>{s.emoji}</div>
-                      <div style={{flex:1,minWidth:0}}>
-                        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
-                          <span style={{fontSize:15,color:C.text,fontWeight:600}}>{s.titre}</span>
-                          <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{s.nom_jp}</span>
-                        </div>
-                        <div style={{fontSize:12,color:C.t2,lineHeight:1.4,marginBottom:8}}>{s.contexte}</div>
-                        <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
-                          <span style={{fontSize:10,padding:"3px 9px",border:`1px solid ${s.couleur}55`,borderRadius:20,color:s.couleur,fontWeight:500}}>{s.niveau}</span>
-                          <span style={{fontSize:10,padding:"3px 9px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>{s.etapes.length} étapes</span>
-                          {isDone && <span style={{fontSize:10,padding:"3px 9px",background:"rgba(78,128,96,0.12)",border:"1px solid rgba(78,128,96,0.3)",borderRadius:20,color:C.green}}>✓ Complété</span>}
-                        </div>
-                      </div>
-                      <span style={{fontSize:20,color:isDone?C.green:acc.accent,flexShrink:0}}>{isDone?"✓":"›"}</span>
+                <div className="lift" onClick={()=>setActive(s)} style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),padding:16,cursor:"pointer",display:"flex",alignItems:"center",gap:14}}>
+                  <div style={iconTileStyle(tint, 48, 14)}><span style={{fontSize:24}}>{s.emoji}</span></div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
+                      <span style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",fontWeight:600,color:C.text}}>{s.titre}</span>
+                      {isDone && <CheckCircle2 size={15} color={C.green}/>}
+                    </div>
+                    <div style={{fontSize:12,color:C.t3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",marginBottom:6}}>{s.contexte}</div>
+                    <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
+                      <span style={{fontSize:10,padding:"3px 9px",background:C.s2,borderRadius:999,color:C.t2}}>{s.niveau}</span>
+                      <span style={{fontSize:10,padding:"3px 9px",background:C.s2,borderRadius:999,color:C.t2}}>{s.etapes.length} étapes</span>
                     </div>
                   </div>
+                  <ChevronRight size={20} color={C.t3}/>
                 </div>
               </div>
             );
@@ -2865,7 +2952,7 @@ function FlashcardMode({C, deck, onExit, onRecord}){
       <div style={{fontSize:54,marginBottom:14}}>🎉</div>
       <div style={{fontSize:20,color:C.text,fontWeight:500,marginBottom:8}}>Série terminée !</div>
       <div style={{fontSize:14,color:C.t2,marginBottom:26}}>Tu as reconnu <b style={{color:C.green}}>{known}</b> / {cards.length} caractères</div>
-      <button onClick={onExit} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
+      <button onClick={onExit} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
     </div>
   );
 
@@ -3007,7 +3094,7 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
   if(!card) return null;
 
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       <div style={{padding:"6px 20px 110px",maxWidth:480,margin:"0 auto"}}>
         {/* Progression */}
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:18}}>
@@ -3046,7 +3133,7 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
         {!revealed ? (
           <div style={{display:"flex",gap:10,maxWidth:300,margin:"0 auto"}}>
             <button onClick={clearCanvas} style={{flex:1,padding:"13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,fontWeight:500,cursor:"pointer"}}>Effacer</button>
-            <button onClick={reveal} style={{flex:2,padding:"13px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Vérifier le tracé</button>
+            <button onClick={reveal} style={{flex:2,padding:"13px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Vérifier le tracé</button>
           </div>
         ) : (
           <div style={{maxWidth:300,margin:"0 auto"}}>
@@ -3060,7 +3147,7 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
             <div style={{fontSize:11,color:C.t3,textAlign:"center",marginBottom:10}}>Comment était ton tracé ?</div>
             <div style={{display:"flex",gap:10}}>
               <button onClick={()=>next(false)} style={{flex:1,padding:"13px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,fontWeight:500,cursor:"pointer"}}>À revoir</button>
-              <button onClick={()=>next(true)} style={{flex:1,padding:"13px",background:C.green,border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Réussi ✓</button>
+              <button onClick={()=>next(true)} style={{flex:1,padding:"13px",background:C.green,border:"none",borderRadius:999,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Réussi ✓</button>
             </div>
           </div>
         )}
@@ -3117,7 +3204,7 @@ function QuizMode({C, deck, onExit, onRecord}){
       <div style={{fontSize:54,marginBottom:14,display:"inline-block",animation:"bounceIn .6s cubic-bezier(.34,1.56,.64,1)"}}>{score/cards.length>=0.8?"🏆":score/cards.length>=0.5?"👍":"📚"}</div>
       <div style={{fontSize:20,color:C.text,fontWeight:500,marginBottom:8,animation:"fadeUp .4s ease .1s both"}}>Quiz terminé !</div>
       <div style={{fontSize:14,color:C.t2,marginBottom:26,animation:"fadeUp .4s ease .18s both"}}>Score : <b style={{color:C.red}}>{score}</b> / {cards.length}</div>
-      <button onClick={onExit} className="pop-press" style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
+      <button onClick={onExit} className="pop-press" style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
     </div>
   );
 
@@ -3459,7 +3546,7 @@ function ShareSheet({ C, situation, script, onClose }){
         </div>
 
         {/* Action */}
-        <button onClick={doShare} disabled={busy} className="pop-press" style={{width:"100%",padding:"15px",background:C.red,border:"none",borderRadius:13,color:"#fff",fontSize:14,fontWeight:700,cursor:busy?"wait":"pointer",opacity:busy?0.7:1}}>
+        <button onClick={doShare} disabled={busy} className="pop-press" style={{width:"100%",padding:"15px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:700,cursor:busy?"wait":"pointer",opacity:busy?0.7:1}}>
           {busy ? "Préparation…" : "📤 Partager / Enregistrer"}
         </button>
         {status==="cancelled" && <div style={{textAlign:"center",fontSize:12,color:C.t3,marginTop:10}}>Partage annulé</div>}
@@ -3482,7 +3569,7 @@ function SituationDetail({C, s, onBack, script}){
   const hair  = dark ? "rgba(237,230,216,0.14)" : "rgba(35,32,27,0.12)";
 
   return(
-    <div style={{height:"100%",overflowY:"auto",background:paper,animation:"fadeIn .3s ease",fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{height:"100%",overflowY:"auto",background:paper,animation:"fadeIn .3s ease",fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       <div style={{padding:"50px 22px 0",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
         <button onClick={onBack} style={{background:"transparent",border:`1px solid ${hair}`,borderRadius:20,padding:"7px 14px",color:inkSoft,fontSize:12,cursor:"pointer"}}>‹ Situations</button>
         <button onClick={()=>setShowShare(true)} className="pop-press" style={{display:"inline-flex",alignItems:"center",gap:6,background:accent,border:"none",borderRadius:20,padding:"8px 15px",color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer"}}>
@@ -3562,8 +3649,8 @@ function CheckpointQuiz({C, pool, distractorPool, onPass, onExit, passRatio=0.7,
           {passed ? "Tu peux passer au palier suivant." : `Il te faut ${Math.ceil(passRatio*questions.length)}/${questions.length} pour valider. Réessaie !`}
         </div>
         {passed
-          ? <button onClick={onPass} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Continuer →</button>
-          : <button onClick={()=>{setIdx(0);setScore(0);setPicked(null);setDone(false);}} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Réessayer</button>}
+          ? <button onClick={onPass} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Continuer →</button>
+          : <button onClick={()=>{setIdx(0);setScore(0);setPicked(null);setDone(false);}} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Réessayer</button>}
         <button onClick={onExit} style={{width:"100%",padding:"12px",marginTop:10,background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer"}}>Quitter</button>
       </div>
     );
@@ -3614,7 +3701,7 @@ function CheckpointQuiz({C, pool, distractorPool, onPass, onExit, passRatio=0.7,
 }
 
 // ── Compréhension écrite : lire un texte JP + répondre ──
-function ComprehensionRead({ C, db, script, onRecord }){
+function ComprehensionRead({ C, db, script, onRecord, onComplete }){
   const allExos = db?.comprehension_ecrite || [];
   const LEVELS = ["Débutant","Intermédiaire","Avancé"];
   const [level, setLevel] = useState("Débutant");
@@ -3653,6 +3740,9 @@ function ComprehensionRead({ C, db, script, onRecord }){
   };
   const allAnswered = exo.questions.every((_,qi)=>answers[qi]!==undefined);
   const score = exo.questions.filter((q,qi)=>answers[qi]===q.correct).length;
+  // Mission "comp" validée quand l'utilisateur a vraiment répondu à toutes
+  // les questions d'un exercice — pas à la simple ouverture de l'écran.
+  useEffect(()=>{ if(allAnswered) onComplete && onComplete(); }, [allAnswered]);
 
   const next = ()=>{
     setAnswers({}); setShowTrad(false);
@@ -3718,7 +3808,7 @@ function ComprehensionRead({ C, db, script, onRecord }){
       {allAnswered && (
         <div style={{marginTop:22,textAlign:"center"}}>
           <div style={{fontSize:14,color:C.text,marginBottom:12}}>Score : <b style={{color:score===exo.questions.length?C.green:C.red}}>{score}/{exo.questions.length}</b></div>
-          <button onClick={next} style={{padding:"13px 28px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Exercice suivant ›</button>
+          <button onClick={next} style={{padding:"13px 28px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Exercice suivant ›</button>
         </div>
       )}
     </div>
@@ -3726,7 +3816,7 @@ function ComprehensionRead({ C, db, script, onRecord }){
 }
 
 // ── Compréhension orale : écouter (texte caché) + répondre ──
-function ComprehensionListen({ C, db, script }){
+function ComprehensionListen({ C, db, script, onComplete }){
   const allExos = db?.comprehension_orale || [];
   const LEVELS = ["Débutant","Intermédiaire","Avancé"];
   const [level, setLevel] = useState("Débutant");
@@ -3762,6 +3852,8 @@ function ComprehensionListen({ C, db, script }){
   };
   const allAnswered = exo.questions.every((_,qi)=>answers[qi]!==undefined);
   const score = exo.questions.filter((q,qi)=>answers[qi]===q.correct).length;
+  // Mission "comp" validée à la vraie complétion d'un exercice d'écoute.
+  useEffect(()=>{ if(allAnswered) onComplete && onComplete(); }, [allAnswered]);
   const next = ()=>{ setAnswers({}); setRevealed(false); if(idx+1<exos.length) setIdx(idx+1); else setIdx(0); };
 
   return(
@@ -3821,7 +3913,7 @@ function ComprehensionListen({ C, db, script }){
       {allAnswered && (
         <div style={{marginTop:22,textAlign:"center"}}>
           <div style={{fontSize:14,color:C.text,marginBottom:12}}>Score : <b style={{color:score===exo.questions.length?C.green:C.red}}>{score}/{exo.questions.length}</b></div>
-          <button onClick={next} style={{padding:"13px 28px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Exercice suivant ›</button>
+          <button onClick={next} style={{padding:"13px 28px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Exercice suivant ›</button>
         </div>
       )}
     </div>
@@ -3829,7 +3921,7 @@ function ComprehensionListen({ C, db, script }){
 }
 
 // ─── Révision espacée : revoir les kana échus (priorité aux plus fragiles) ─────
-function ReviewMode({ C, dueChars, onRecord, onExit }){
+function ReviewMode({ C, dueChars, onRecord, onExit, onSessionComplete }){
   const [queue, setQueue] = useState(()=>dueChars.slice(0, 20)); // session de 20 max
   const [idx, setIdx] = useState(0);
   const [revealed, setRevealed] = useState(false);
@@ -3837,15 +3929,19 @@ function ReviewMode({ C, dueChars, onRecord, onExit }){
   const [correct, setCorrect] = useState(0);
   const total = queue.length;
   const cur = queue[idx];
+  const finished = !cur || idx >= queue.length;
+  // Mission "review" validée à la vraie fin de session (au moins une carte
+  // traitée), pas à la simple ouverture de l'écran — voir LearnScreen.
+  useEffect(()=>{ if(finished && total>0 && done>0) onSessionComplete && onSessionComplete(); }, [finished]);
 
-  if(!cur || idx >= queue.length){
+  if(finished){
     // Bilan de fin de session
     return(
       <div style={{padding:"40px 24px",textAlign:"center"}}>
         <div style={{fontSize:54,marginBottom:14,animation:"popBounce .6s cubic-bezier(.34,1.56,.64,1) both"}}>{correct===total?"🎉":"✓"}</div>
         <div style={{fontSize:22,color:C.text,fontWeight:600,marginBottom:8}}>Révision terminée !</div>
         <div style={{fontSize:15,color:C.t2,marginBottom:28}}>{correct} / {total} réussis</div>
-        <button onClick={onExit} className="pop-press" style={{padding:"13px 28px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
+        <button onClick={onExit} className="pop-press" style={{padding:"13px 28px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Retour</button>
       </div>
     );
   }
@@ -3885,7 +3981,7 @@ function ReviewMode({ C, dueChars, onRecord, onExit }){
           <button onClick={()=>answer(false)} className="pop-press" style={{flex:1,padding:"15px",background:"transparent",border:`1.5px solid ${C.red}`,borderRadius:13,color:C.red,fontSize:14,fontWeight:600,cursor:"pointer"}}>
             😕 À revoir
           </button>
-          <button onClick={()=>answer(true)} className="pop-press" style={{flex:1,padding:"15px",background:C.green,border:"none",borderRadius:13,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+          <button onClick={()=>answer(true)} className="pop-press" style={{flex:1,padding:"15px",background:C.green,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
             😊 Je savais
           </button>
         </div>
@@ -3933,12 +4029,9 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
     const done = mission.done || [];
     return new Set(todays.filter(m=>!done.includes(m.id)).map(m=>m.trigger));
   },[mission]);
-  // Déclenche les missions du jour "review" et "comp" quand on entre dans ces modes.
-  useEffect(()=>{
-    if(!onMissionTrigger) return;
-    if(learnMode==="review") onMissionTrigger("review");
-    if(learnMode==="read" || learnMode==="listen") onMissionTrigger("comp");
-  },[learnMode]);
+  // Les missions "review" et "comp" se valident à la complétion réelle d'une
+  // session (voir ReviewMode.onSessionComplete / ComprehensionRead|Listen.onComplete),
+  // pas à la simple ouverture du mode — sinon la mission se coche sans rien faire.
   const scrollRef = useRef(null);
   // Remet le scroll en haut quand on change de mode (sinon on atterrit sur les questions)
   useEffect(()=>{ if(scrollRef.current) scrollRef.current.scrollTop = 0; }, [learnMode]);
@@ -4029,7 +4122,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
             </div>
           )}
 
-          <button onClick={()=>setCheckpoint(step)} style={{marginTop:8,width:"100%",padding:"15px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
+          <button onClick={()=>setCheckpoint(step)} style={{marginTop:8,width:"100%",padding:"15px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>
             {completed.includes(step.id) ? "Refaire le checkpoint ✓" : "Passer le checkpoint →"}
           </button>
         </div>
@@ -4092,7 +4185,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   return(
-    <div ref={scrollRef} style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div ref={scrollRef} style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       {/* En-tête sticky */}
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
@@ -4104,7 +4197,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
       <div style={{padding:"20px 20px 110px"}}>
 
         {/* ── Écran de choix (aucun mode sélectionné) ── */}
-        {learnMode==="review" && <ReviewMode C={C} dueChars={dueChars} onRecord={onRecordKana} onExit={()=>setLearnMode(null)}/>}
+        {learnMode==="review" && <ReviewMode C={C} dueChars={dueChars} onRecord={onRecordKana} onExit={()=>setLearnMode(null)} onSessionComplete={()=>onMissionTrigger&&onMissionTrigger("review")}/>}
 
         {!learnMode && (()=>{
           const doneCount = TOKYO_PATH.filter(s=>completed.includes(s.id)).length;
@@ -4112,92 +4205,79 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
           return(
             <div style={{display:"flex",flexDirection:"column",gap:14}}>
 
-              {/* Carte Révision du jour — si des kana sont échus */}
+              {/* Révision espacée */}
               {dueChars.length > 0 && (
-                <div ref={reviewCardRef} className="lift" onClick={()=>setLearnMode("review")} style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.gold}55`,background:`linear-gradient(150deg,${C.gold}1f,transparent 70%)`,position:"relative"}}>
-                  {pendingTriggers.has("review") && <MissionBadge C={C}/>}
-                  <div style={{padding:"18px 20px",display:"flex",alignItems:"center",gap:16}}>
-                    <div style={{fontSize:40,animation:"heartbeat 1.8s ease infinite"}}>🔁</div>
+                <div>
+                  <SectionTitle C={C} title="Révision espacée"/>
+                  <div ref={reviewCardRef} className="lift" onClick={()=>setLearnMode("review")} style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),padding:16,cursor:"pointer",display:"flex",alignItems:"center",gap:14,position:"relative"}}>
+                    {pendingTriggers.has("review") && <MissionBadge C={C}/>}
+                    <div style={iconTileStyle(C.gold, 48, 14)}><Layers size={22} color={C.gold}/></div>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:10,color:C.gold,letterSpacing:".15em",textTransform:"uppercase",marginBottom:4,fontWeight:600}}>Révision espacée</div>
-                      <div style={{fontSize:17,color:C.text,fontWeight:700,marginBottom:2}}>{dueChars.length} kana à revoir</div>
-                      <div style={{fontSize:12,color:C.t2}}>Renforce ta mémoire des hiragana/katakana avant d'oublier 🧠</div>
+                      <div style={{fontSize:15,fontWeight:500,color:C.text}}>{dueChars.length} kana à revoir</div>
+                      <div style={{fontSize:11,color:C.t3}}>Prêtes pour aujourd'hui</div>
                     </div>
-                    <span style={{fontSize:20,color:C.gold}}>›</span>
+                    <ChevronRight size={20} color={C.t3}/>
                   </div>
                 </div>
               )}
 
-              {/* Carte Parcours Tokyo — hero */}
-              <div ref={pathCardRef} className="lift" onClick={()=>setLearnMode("path")} style={{cursor:"pointer",borderRadius:20,overflow:"hidden",border:`1px solid rgba(201,70,61,0.3)`,boxShadow:"0 4px 20px rgba(201,70,61,0.08)",position:"relative"}}>
-                {pendingTriggers.has("path") && <MissionBadge C={C}/>}
-                <div style={{height:6,background:`linear-gradient(90deg,${C.red},${C.gold})`}}/>
-                <div style={{padding:"22px 20px 20px",background:`linear-gradient(150deg,rgba(201,70,61,0.12),rgba(158,122,26,0.05))`,position:"relative",overflow:"hidden"}}>
-                  <div style={{fontSize:72,position:"absolute",top:-8,right:6,opacity:0.1,fontFamily:"'Noto Serif JP',serif"}}>🗼</div>
-                  <div style={{fontSize:10,color:C.red,letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>Parcours guidé · 8 paliers</div>
-                  <div style={{fontSize:20,color:C.text,fontWeight:700,marginBottom:6}}>Survivre à Tokyo</div>
-                  <div style={{fontSize:13,color:C.t2,lineHeight:1.55,marginBottom:16,maxWidth:280}}>Un programme étape par étape pour te débrouiller une semaine sur place : lire, saluer, commander, te déplacer.</div>
-                  {/* Barre progression */}
-                  <div style={{display:"flex",alignItems:"center",gap:10}}>
-                    <div style={{flex:1,height:7,background:C.s3,borderRadius:4,overflow:"hidden"}}>
-                      <div style={{height:"100%",width:`${pct}%`,background:`linear-gradient(90deg,${C.gold},${C.red})`,borderRadius:4,transition:"width .6s ease"}}/>
-                    </div>
-                    <span style={{fontSize:12,color:C.t2,fontWeight:600,whiteSpace:"nowrap"}}>{doneCount}/{TOKYO_PATH.length} {pct>0&&`· ${pct}%`}</span>
+              {/* Parcours Tokyo — hero dégradé sky, comme LearnScreen.tsx (bolt) */}
+              <div>
+                <SectionTitle C={C} title={'Parcours « Suivre à Tokyo »'}/>
+                <div ref={pathCardRef} className="lift" onClick={()=>setLearnMode("path")} style={{cursor:"pointer",borderRadius:16,overflow:"hidden",border:`1px solid ${C.border}`,boxShadow:C.shadow,position:"relative"}}>
+                  {pendingTriggers.has("path") && <MissionBadge C={C}/>}
+                  <div style={{height:100,background:`linear-gradient(120deg,${C.indigo}22,${C.indigo}0d)`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
+                    <span style={{fontSize:42}}>🗼</span>
+                    <div style={{position:"absolute",bottom:8,right:12,background:`${C.s1}cc`,padding:"3px 10px",borderRadius:999,fontSize:11,color:C.t2}}>{doneCount}/{TOKYO_PATH.length} étapes</div>
+                  </div>
+                  <div style={{padding:16,background:C.s1}}>
+                    <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:15,color:C.text}}>Tokyo, étape par étape</div>
+                    <div style={{fontSize:12,color:C.t3,marginTop:2}}>De l'aéroport à ta première conversation</div>
                   </div>
                 </div>
               </div>
 
-              {/* Carte Apprendre les alphabets */}
-              <div ref={alphabetsCardRef} className="lift" onClick={()=>setLearnMode("alphabets")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
-                {pendingTriggers.has("kana") && <MissionBadge C={C}/>}
-                <div style={{height:4,background:`linear-gradient(90deg,${acc.accent},transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
-                <div style={{fontSize:10,color:acc.accent,letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>仮名 · Syllabaires</div>
-                <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
-                  <div style={{width:48,height:48,borderRadius:13,background:acc.soft,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>🎴</div>
-                  <div>
-                    <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:5}}>Apprendre les alphabets</div>
-                    <div style={{fontSize:12,color:C.t2,lineHeight:1.55}}>Hiragana, katakana et sons avancés : flashcards, quiz et dessin des kana.</div>
+              {/* Alphabets */}
+              <div>
+                <SectionTitle C={C} title="Alphabets"/>
+                <div ref={alphabetsCardRef} className="lift" onClick={()=>setLearnMode("alphabets")} style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),padding:16,cursor:"pointer",display:"flex",alignItems:"center",gap:14,position:"relative"}}>
+                  {pendingTriggers.has("kana") && <MissionBadge C={C}/>}
+                  <div style={iconTileStyle(C.red, 48, 14)}><span style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",color:C.red}}>あ</span></div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:15,fontWeight:500,color:C.text}}>Hiragana &amp; Katakana</div>
+                    <div style={{fontSize:11,color:C.t3}}>Flashcards, quiz et dessin des kana</div>
                   </div>
+                  <ChevronRight size={20} color={C.t3}/>
                 </div>
               </div>
 
-              {/* Carte Situations courantes */}
-              <div className="lift" onClick={()=>setLearnMode("situations")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
-                <div style={{height:4,background:`linear-gradient(90deg,#C97D3C,transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
-                <div style={{fontSize:10,color:"#C97D3C",letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>会話 · Expressions</div>
-                <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
-                  <div style={{width:48,height:48,borderRadius:13,background:"rgba(201,125,60,0.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>💬</div>
-                  <div>
-                    <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:5}}>Situations courantes</div>
-                    <div style={{fontSize:12,color:C.t2,lineHeight:1.55}}>Les phrases et expressions utiles au quotidien, classées par situation.</div>
+              {/* Situations & compréhension — grille 2 col, comme LearnScreen.tsx (bolt) */}
+              <div>
+                <SectionTitle C={C} title="Situations courantes"/>
+                <div className="lift" onClick={()=>setLearnMode("situations")} style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),padding:16,cursor:"pointer",display:"flex",alignItems:"center",gap:14}}>
+                  <div style={iconTileStyle(C.gold, 40, 12)}><MessageSquare size={19} color={C.gold}/></div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:14,fontWeight:500,color:C.text}}>Phrases utiles par thème</div>
+                    <div style={{fontSize:11,color:C.t3}}>Restaurant, transports, achats…</div>
                   </div>
+                  <ChevronRight size={20} color={C.t3}/>
                 </div>
               </div>
 
-              {/* Carte Compréhension écrite */}
-              <div className="lift" onClick={()=>setLearnMode("read")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
-                {pendingTriggers.has("comp") && <MissionBadge C={C}/>}
-                <div style={{height:4,background:`linear-gradient(90deg,#5B9BD5,transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
-                <div style={{fontSize:10,color:"#5B9BD5",letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>読解 · Lecture</div>
-                <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
-                  <div style={{width:48,height:48,borderRadius:13,background:"rgba(91,155,213,0.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>📖</div>
-                  <div>
-                    <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:5}}>Compréhension écrite</div>
-                    <div style={{fontSize:12,color:C.t2,lineHeight:1.55}}>Lis de courts textes en japonais et réponds à des questions de compréhension.</div>
+              <div>
+                <SectionTitle C={C} title="Compréhension"/>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+                  <div className="lift" onClick={()=>setLearnMode("read")} style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),padding:16,cursor:"pointer",position:"relative"}}>
+                    {pendingTriggers.has("comp") && <MissionBadge C={C}/>}
+                    <BookText size={22} color={C.green} style={{marginBottom:8}}/>
+                    <div style={{fontSize:13,fontWeight:500,color:C.text}}>Écrite</div>
+                    <div style={{fontSize:11,color:C.t3}}>Lecture &amp; questions</div>
                   </div>
-                </div>
-              </div>
-
-              {/* Carte Compréhension orale */}
-              <div className="lift" onClick={()=>setLearnMode("listen")} style={{cursor:"pointer",padding:"20px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,position:"relative",overflow:"hidden"}}>
-                {pendingTriggers.has("comp") && <MissionBadge C={C}/>}
-                <div style={{height:4,background:`linear-gradient(90deg,#7A4A6A,transparent)`,position:"absolute",top:0,left:0,right:0,borderRadius:"18px 18px 0 0"}}/>
-                <div style={{fontSize:10,color:"#9A6A8A",letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>聴解 · Écoute</div>
-                <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
-                  <div style={{width:48,height:48,borderRadius:13,background:"rgba(122,74,106,0.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>🎧</div>
-                  <div>
-                    <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:5}}>Compréhension orale</div>
-                    <div style={{fontSize:12,color:C.t2,lineHeight:1.55}}>Écoute des phrases en japonais (texte masqué) et teste ta compréhension.</div>
+                  <div className="lift" onClick={()=>setLearnMode("listen")} style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),padding:16,cursor:"pointer",position:"relative"}}>
+                    {pendingTriggers.has("comp") && <MissionBadge C={C}/>}
+                    <Headphones size={22} color={C.indigo} style={{marginBottom:8}}/>
+                    <div style={{fontSize:13,fontWeight:500,color:C.text}}>Orale</div>
+                    <div style={{fontSize:11,color:C.t3}}>Écoute &amp; questions</div>
                   </div>
                 </div>
               </div>
@@ -4253,8 +4333,8 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
         </>)}
 
         {/* ── Mode Entraînement libre (flashcards + situations) ── */}
-        {learnMode==="read" && <ComprehensionRead C={C} db={db} script={script} onRecord={onRecordKana}/>}
-        {learnMode==="listen" && <ComprehensionListen C={C} db={db} script={script}/>}
+        {learnMode==="read" && <ComprehensionRead C={C} db={db} script={script} onRecord={onRecordKana} onComplete={()=>onMissionTrigger&&onMissionTrigger("comp")}/>}
+        {learnMode==="listen" && <ComprehensionListen C={C} db={db} script={script} onComplete={()=>onMissionTrigger&&onMissionTrigger("comp")}/>}
 
         {learnMode==="alphabets" && (<>
         {/* Syllabaires */}
@@ -4344,7 +4424,7 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
   const transportIcon = (i)=> i===0 ? null : "🚶";
 
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       {/* En-tête éditorial */}
       <div style={{padding:"50px 20px 0",background:C.bg}}>
         <button onClick={onClose} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"6px 13px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:16}}>‹ Retour</button>
@@ -4425,7 +4505,7 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
 
       {/* CTA : adopter l'itinéraire */}
       <div style={{padding:"4px 20px 110px"}}>
-        <button onClick={onAdopt} className="pop-press" style={{width:"100%",padding:"15px",background:C.red,border:"none",borderRadius:14,color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",boxShadow:`0 4px 16px ${C.red}44`}}>
+        <button onClick={onAdopt} className="pop-press" style={{width:"100%",padding:"15px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",boxShadow:`0 4px 16px ${C.red}44`}}>
           Utiliser cet itinéraire →
         </button>
       </div>
@@ -4433,7 +4513,7 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
   );
 }
 
-function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, isFav, toggleFav, favs, onOpenLieu, onIntroDone}){
+function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, isFav, toggleFav, favs, onOpenLieu, onIntroDone, backRef}){
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   const villes = db?.villes || [];
@@ -4450,6 +4530,14 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
   const [showIntro, setShowIntro] = useState(()=>!sectionIntroSeen("voyage"));
   const dismissIntro = ()=>{ markSectionIntroSeen("voyage"); setShowIntro(false); onIntroDone && onIntroDone(); };
   const landingRef = useRef(null); // cible du spotlight (voir SECTION_INTRO_STEPS.voyage)
+  // Retour matériel/geste : ferme d'abord la modale Premium/l'aperçu
+  // d'itinéraire, sinon revient à l'accueil Voyage plutôt qu'à Home directement.
+  useInScreenBack(backRef, ()=>{
+    if(showPremium){ setShowPremium(false); return true; }
+    if(previewPreco){ setPreviewPreco(null); return true; }
+    if(view!=="home"){ setView("home"); setActiveTripId(null); return true; }
+    return false;
+  });
   const voyageTourTargets = useMemo(()=>[landingRef,landingRef,landingRef], []); // identité stable, voir HomeScreen
   const [tripCelebration, setTripCelebration] = useState(false); // voyage tout juste créé/adopté
   const pushTimer = useRef(null);
@@ -4519,7 +4607,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
 
   if(view==="browse"){
     return(
-      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
         <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
           <button onClick={()=>setView("home")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"6px 13px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:10}}>‹ Retour</button>
           <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>✨ INSPIRATION</div>
@@ -4536,7 +4624,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
                 <div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:3}}>{p.titre}</div>
                 <div style={{fontSize:11,color:C.t3,marginBottom:6}}>{p.duree} jours · {p.villes.map(id=>villeById[id]?.nom||id).join(", ")}</div>
                 <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginBottom:12}}>{p.description}</div>
-                <button onClick={(e)=>{e.stopPropagation(); tryAdopt(p);}} style={{width:"100%",padding:"11px",background:C.red,border:"none",borderRadius:10,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Utiliser cet itinéraire</button>
+                <button onClick={(e)=>{e.stopPropagation(); tryAdopt(p);}} style={{width:"100%",padding:"11px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Utiliser cet itinéraire</button>
               </div>
             </div>
           ))}
@@ -4559,66 +4647,108 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
         <VoyageTrip C={C} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
           isFav={isFav} toggleFav={toggleFav}
           onBack={()=>setView("home")} onUpdate={updateTrip} onDelete={deleteTrip}/>
-        {tripCelebration && <CelebrationOverlay emoji="🗾" title="Voyage créé !" subtitle={activeTrip.titre} color={acc.accent} onDone={()=>setTripCelebration(false)}/>}
+        {tripCelebration && <CelebrationOverlay C={C} emoji="🗾" title="Voyage créé !" subtitle={activeTrip.titre} color={acc.accent} onDone={()=>setTripCelebration(false)}/>}
       </>
     );
   }
 
   // ─── Vue : accueil ───
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
-      <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>旅 · VOYAGE</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Mon voyage</div>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
+      <div style={{padding:"50px 20px 14px",background:`${C.bg}e6`,backdropFilter:"blur(10px)",borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+        <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:18,color:C.text}}>Voyage</div>
+        <div style={{fontSize:12,color:C.t3,marginTop:1}}>Prépare ton voyage au Japon</div>
       </div>
 
       <div ref={landingRef} style={{padding:"18px 20px 110px"}}>
         {trips.length===0 ? (
-          <>
-            {/* État vide */}
-            <div style={{textAlign:"center",padding:"24px 4px 28px"}}>
-              <div style={{width:88,height:88,borderRadius:"50%",background:acc.soft,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:42,margin:"0 auto 20px"}}>🗺️</div>
-              <div style={{fontSize:18,color:C.text,fontWeight:600,marginBottom:8}}>Planifie ton séjour</div>
-              <div style={{fontSize:13,color:C.t2,lineHeight:1.6,maxWidth:300,margin:"0 auto 22px"}}>Crée ton itinéraire jour par jour, ou inspire-toi d'un voyage préconçu.</div>
-              <button onClick={tryCreate} style={{width:"100%",maxWidth:320,padding:"14px",background:C.red,border:"none",borderRadius:13,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:10}}>+ Créer mon voyage</button>
-              <button onClick={()=>setView("browse")} style={{width:"100%",maxWidth:320,padding:"14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:13,color:C.text,fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:keptLieux.length?10:0}}>✨ Explorer des itinéraires</button>
-              {keptLieux.length>0 && (
-                <button onClick={()=>setView("kept")} style={{width:"100%",maxWidth:320,padding:"14px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:13,color:C.red,fontSize:14,fontWeight:600,cursor:"pointer"}}>❤️ {keptLieux.length} lieu{keptLieux.length>1?"x":""} gardé{keptLieux.length>1?"s":""}</button>
-              )}
+          <div style={{textAlign:"center",padding:"48px 20px"}}>
+            <div style={{width:64,height:64,borderRadius:"50%",background:C.s2,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px"}}>
+              <Plane size={28} color={C.t3}/>
             </div>
-          </>
+            <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:17,color:C.text,marginBottom:6}}>Aucun voyage</div>
+            <div style={{fontSize:13,color:C.t3,maxWidth:260,margin:"0 auto 20px",lineHeight:1.5}}>Crée ton premier itinéraire ou pars d'un modèle préconçu.</div>
+            <button onClick={tryCreate} style={{...btnPrimaryStyle(C),display:"inline-flex",alignItems:"center",gap:8}}><Plus size={18}/> Créer un voyage</button>
+            {keptLieux.length>0 && (
+              <div style={{marginTop:12}}>
+                <button onClick={()=>setView("kept")} style={btnGhostStyle(C,{color:C.red,fontWeight:600})}>❤️ {keptLieux.length} lieu{keptLieux.length>1?"x":""} gardé{keptLieux.length>1?"s":""}</button>
+              </div>
+            )}
+          </div>
         ) : (
           <>
-            {/* Voyage existant */}
+            <SectionTitle C={C} title="Mes voyages" action={
+              <button onClick={tryCreate} style={{...btnGhostStyle(C,{color:C.red,fontWeight:600,padding:"4px 0",display:"flex",alignItems:"center",gap:4}) }}><Plus size={16}/> Nouveau</button>
+            }/>
             {trips.map(t=>{
               const nbLieux = t.jours.reduce((a,j)=>a+j.etapes.length,0);
+              const checklistDone = (t.checklist||[]).filter(c=>c.done).length;
+              const checklistTotal = (t.checklist||[]).length;
               return(
-                <div key={t.id} className="lift" onClick={()=>{setActiveTripId(t.id);setView("trip");}} style={{marginBottom:14,background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,overflow:"hidden",cursor:"pointer",position:"relative"}}>
+                <div key={t.id} className="lift" onClick={()=>{setActiveTripId(t.id);setView("trip");}} style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),marginBottom:12,padding:16,cursor:"pointer",position:"relative"}}>
                   <button
                     onClick={(e)=>{
                       e.stopPropagation();
                       if(confirm(`Supprimer le voyage « ${t.titre} » ? Cette action est irréversible.`)) deleteTrip(t.id);
                     }}
                     aria-label="Supprimer ce voyage"
-                    style={{position:"absolute",top:10,right:10,zIndex:2,width:30,height:30,borderRadius:"50%",border:"none",background:"rgba(15,11,8,0.55)",color:"#fff",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}
-                  >🗑️</button>
-                  <div style={{height:70,background:`linear-gradient(135deg,${acc.accent}33,${C.gold}18)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30}}>🗾</div>
-                  <div style={{padding:"13px 15px"}}>
-                    <div style={{fontSize:16,color:C.text,fontWeight:600,marginBottom:3}}>{t.titre}</div>
-                    <div style={{fontSize:11,color:C.t3}}>{t.jours.length} jour{t.jours.length>1?"s":""} · {nbLieux} lieu{nbLieux>1?"x":""} · {t.villes.map(id=>villeById[id]?.nom||id).join(", ")}</div>
+                    style={{position:"absolute",top:12,right:12,zIndex:2,width:28,height:28,borderRadius:"50%",border:"none",background:C.s2,color:C.t3,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}
+                  ><Trash2 size={14}/></button>
+                  <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:15,color:C.text,paddingRight:30}}>{t.titre}</div>
+                  <div style={{display:"flex",alignItems:"center",gap:12,marginTop:6,fontSize:11,color:C.t3}}>
+                    <span style={{display:"flex",alignItems:"center",gap:4}}><Calendar size={12}/> {t.jours.length} jour{t.jours.length>1?"s":""}</span>
+                    <span style={{display:"flex",alignItems:"center",gap:4}}><MapPin size={12}/> {nbLieux} lieu{nbLieux>1?"x":""}</span>
                   </div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:8}}>
+                    {t.villes.map(id=>(
+                      <span key={id} style={{fontSize:11,background:C.s2,color:C.t2,padding:"3px 10px",borderRadius:999}}>{villeById[id]?.nom||id}</span>
+                    ))}
+                  </div>
+                  {checklistTotal>0 && (
+                    <div style={{display:"flex",alignItems:"center",gap:8,marginTop:12}}>
+                      <div style={{flex:1,height:6,background:C.s3,borderRadius:3,overflow:"hidden"}}>
+                        <div style={{height:"100%",width:`${(checklistDone/checklistTotal)*100}%`,background:C.green,borderRadius:3}}/>
+                      </div>
+                      <span style={{fontSize:11,color:C.t3}}>{checklistDone}/{checklistTotal}</span>
+                    </div>
+                  )}
                 </div>
               );
             })}
-            {/* Ajouter un 2e voyage → premium */}
-            <button onClick={tryCreate} style={{width:"100%",padding:"13px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:13,color:C.t2,fontSize:13,cursor:"pointer",marginTop:4}}>
-              + Nouveau voyage {!isPremium && "🔒"}
-            </button>
-            <button onClick={()=>setView("browse")} style={{width:"100%",padding:"13px",background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer",marginTop:6}}>✨ Voir les itinéraires préconçus</button>
-            {keptLieux.length>0 && (
-              <button onClick={()=>setView("kept")} style={{width:"100%",padding:"13px",background:"transparent",border:"none",color:C.red,fontSize:12,fontWeight:600,cursor:"pointer"}}>❤️ {keptLieux.length} lieu{keptLieux.length>1?"x":""} gardé{keptLieux.length>1?"s":""}</button>
+            {!isPremium && (
+              <div style={{fontSize:12,color:C.t3,textAlign:"center",marginTop:4}}>🔒 Voyages illimités avec Premium</div>
             )}
           </>
+        )}
+
+        {/* Itinéraires préconçus */}
+        <div style={{marginTop:trips.length?28:8}}>
+          <SectionTitle C={C} title="Itinéraires préconçus" action={<button onClick={()=>setView("browse")} style={btnGhostStyle(C,{color:C.red,fontWeight:600,padding:0})}>Tout voir</button>}/>
+          <div style={{display:"flex",gap:12,overflowX:"auto",WebkitOverflowScrolling:"touch",marginLeft:-20,marginRight:-20,paddingLeft:20,paddingRight:20}}>
+            {preconcus.slice(0,4).map(p=>(
+              <div key={p.id} onClick={()=>setPreviewPreco(p)} className="lift" style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),flexShrink:0,width:220,overflow:"hidden",cursor:"pointer",padding:0}}>
+                <div style={{height:96,background:`linear-gradient(135deg,${C.red}22,${C.gold}18)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:34}}>{p.emoji}</div>
+                <div style={{padding:12}}>
+                  <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:13,color:C.text}}>{p.titre}</div>
+                  <div style={{fontSize:11,color:C.t3,marginTop:4,display:"flex",alignItems:"center",gap:4}}><Clock size={11}/> {p.duree}j <span>·</span> <MapPin size={11}/> {p.villes.length} villes</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {trips.length>0 && keptLieux.length>0 && (
+          <div style={{marginTop:24}}>
+            <SectionTitle C={C} title="Lieux sauvegardés"/>
+            <button onClick={()=>setView("kept")} style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),width:"100%",padding:16,display:"flex",alignItems:"center",gap:12,cursor:"pointer",textAlign:"left"}}>
+              <div style={iconTileStyle("#D96B86", 40, 12)}><Heart size={19} color="#D96B86"/></div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:14,fontWeight:500,color:C.text}}>Mes favoris</div>
+                <div style={{fontSize:11,color:C.t3}}>{keptLieux.length} lieu{keptLieux.length>1?"x":""} enregistré{keptLieux.length>1?"s":""}</div>
+              </div>
+              <ChevronRight size={20} color={C.t3}/>
+            </button>
+          </div>
         )}
       </div>
 
@@ -4630,7 +4760,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
               <div style={{fontSize:40,marginBottom:12}}>🌸</div>
               <div style={{fontSize:19,color:C.text,fontWeight:700,marginBottom:8}}>Voyages illimités avec Premium</div>
               <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:20}}>La version gratuite te permet de planifier un voyage. Passe à Premium pour créer autant d'itinéraires que tu veux, ajouter tes propres lieux, et débloquer tout le contenu.</div>
-              <button onClick={()=>{ setShowPremium(false); onOpenPremium&&onOpenPremium(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:8}}>Découvrir Premium</button>
+              <button onClick={()=>{ setShowPremium(false); onOpenPremium&&onOpenPremium(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:8}}>Découvrir Premium</button>
               <button onClick={()=>setShowPremium(false)} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Plus tard</button>
             </div>
           </div>
@@ -4703,7 +4833,7 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
   };
 
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Retour</button>
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>❤️ GARDÉS</div>
@@ -4715,7 +4845,7 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
           <div style={{textAlign:"center",color:C.t3,fontSize:12,padding:"30px 0"}}>Aucun lieu gardé pour l'instant.</div>
         )}
         {keptLieux.length>0 && (
-          <button onClick={openGenerate} style={{width:"100%",marginBottom:22,padding:"14px",background:`linear-gradient(135deg,${C.red},${C.gold})`,border:"none",borderRadius:14,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+          <button onClick={openGenerate} style={{width:"100%",marginBottom:22,padding:"14px",background:`linear-gradient(135deg,${C.red},${C.gold})`,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
             ✨ Crée-moi un itinéraire {!isPremium && "🔒"}
           </button>
         )}
@@ -4752,7 +4882,7 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
             {trips.length===0 ? (
               <>
                 <div style={{fontSize:13,color:C.t2,lineHeight:1.6,margin:"10px 0 18px"}}>Tu n'as pas encore de voyage. Crée-en un pour y ajouter ce lieu.</div>
-                <button onClick={()=>{ closeAdd(); onCreateTrip&&onCreateTrip(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>+ Créer mon voyage</button>
+                <button onClick={()=>{ closeAdd(); onCreateTrip&&onCreateTrip(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>+ Créer mon voyage</button>
               </>
             ) : !addTripId ? (
               <>
@@ -4804,7 +4934,7 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
               <button onClick={()=>setGenDays(n=>Math.min(30,n+1))} disabled={genBusy} style={{width:40,height:40,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s2,color:C.text,fontSize:20,cursor:genBusy?"default":"pointer"}}>+</button>
             </div>
             {genError && <div style={{fontSize:12,color:C.red,marginBottom:14}}>{genError}</div>}
-            <button onClick={runGenerate} disabled={genBusy} style={{width:"100%",padding:"14px",background:genBusy?C.s3:C.red,border:"none",borderRadius:12,color:genBusy?C.t3:"#fff",fontSize:14,fontWeight:600,cursor:genBusy?"default":"pointer"}}>
+            <button onClick={runGenerate} disabled={genBusy} style={{width:"100%",padding:"14px",background:genBusy?C.s3:C.red,border:"none",borderRadius:999,color:genBusy?C.t3:"#fff",fontSize:14,fontWeight:600,cursor:genBusy?"default":"pointer"}}>
               {genBusy ? "Génération en cours…" : "Générer l'itinéraire →"}
             </button>
           </div>
@@ -4833,7 +4963,7 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
             <div style={{padding:"12px 14px",background:"rgba(201,168,76,0.08)",border:"1px solid rgba(201,168,76,0.25)",borderRadius:12,marginBottom:16,textAlign:"center"}}>
               <div style={{fontSize:12,color:C.t2}}>✨ <b style={{color:C.text}}>Premium</b> ordonne ces villes intelligemment, répartit les lieux sur tes jours et rédige une intro pour chacun.</div>
             </div>
-            <button onClick={()=>{ setGenView(null); onOpenPremium&&onOpenPremium(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:8}}>Débloquer l'auto-génération</button>
+            <button onClick={()=>{ setGenView(null); onOpenPremium&&onOpenPremium(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:8}}>Débloquer l'auto-génération</button>
             <button onClick={()=>setGenView(null)} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Plus tard, j'ajouterai à la main</button>
           </div>
         </div>
@@ -4877,7 +5007,7 @@ function VoyageCreate({C, villes, onCancel, onCreate}){
   };
 
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <button onClick={onCancel} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Annuler</button>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Nouveau voyage</div>
@@ -4942,7 +5072,7 @@ function VoyageCreate({C, villes, onCancel, onCreate}){
           </div>
         )}
 
-        <button onClick={submit} disabled={!canCreate} style={{width:"100%",padding:"15px",background:canCreate?C.red:C.s3,border:"none",borderRadius:13,color:canCreate?"#fff":C.t3,fontSize:14,fontWeight:600,cursor:canCreate?"pointer":"default"}}>Créer le voyage →</button>
+        <button onClick={submit} disabled={!canCreate} style={{width:"100%",padding:"15px",background:canCreate?C.red:C.s3,border:"none",borderRadius:999,color:canCreate?"#fff":C.t3,fontSize:14,fontWeight:600,cursor:canCreate?"pointer":"default"}}>Créer le voyage →</button>
       </div>
     </div>
   );
@@ -5230,7 +5360,7 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
     const proches = (l.a_proximite||[]).map(id=>lieuById[id]).filter(Boolean);
     const inDay = idsInDay.has(l.id);
     return(
-      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
         {/* Bannière image / emoji */}
         <div style={{height:150,background:`linear-gradient(135deg,${C.red}44,${C.s2})`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
           <img src={l.photo || l.image} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
@@ -5281,7 +5411,7 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
           )}
           {/* Ajouter */}
           <button onClick={()=>{ if(!inDay) addLieu(l.id); setSub("day"); }} disabled={inDay}
-            style={{width:"100%",padding:"14px",background:inDay?C.s3:C.red,border:"none",borderRadius:13,color:inDay?C.t2:"#fff",fontSize:14,fontWeight:600,cursor:inDay?"default":"pointer"}}>
+            style={{width:"100%",padding:"14px",background:inDay?C.s3:C.red,border:"none",borderRadius:999,color:inDay?C.t2:"#fff",fontSize:14,fontWeight:600,cursor:inDay?"default":"pointer"}}>
             {inDay ? "✓ Déjà dans ce jour" : `+ Ajouter au jour ${day.num}`}
           </button>
         </div>
@@ -5299,7 +5429,7 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
       .sort((a,b)=> b._score - a._score);
     const hasReco = why.length>0 && list.some(l=>l._score>0);
     return(
-      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
         <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
           <button onClick={()=>setSub("day")} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Retour au jour {day.num}</button>
           <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:10}}>Explorer · {ville?.emoji} {ville?.nom}</div>
@@ -5356,7 +5486,7 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
     const cl = trip.checklist||[];
     const done = cl.filter(c=>c.fait).length;
     return(
-      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
         <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
           <button onClick={()=>setSub("day")} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Retour</button>
           <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Préparatifs ✅</div>
@@ -5378,7 +5508,7 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
 
   // ─── Vue principale : le jour ───
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
           <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0}}>‹ Mes voyages</button>
@@ -5470,7 +5600,7 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
             <div style={{fontSize:17,color:C.text,fontWeight:600,marginBottom:4,textAlign:"center"}}>Partager mon voyage</div>
             <div style={{fontSize:12,color:C.t2,marginBottom:20,textAlign:"center"}}>{trip.titre} · {trip.jours.length} jour{trip.jours.length>1?"s":""}</div>
 
-            <button onClick={shareNative} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+            <button onClick={shareNative} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
               ↗ Partager l'itinéraire
             </button>
 
@@ -5506,7 +5636,7 @@ function ChecklistAdd({C, onAdd}){
   return(
     <div style={{display:"flex",gap:8,marginTop:16}}>
       <input value={val} onChange={e=>setVal(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&val.trim()){onAdd(val.trim());setVal("");}}} placeholder="Ajouter un élément..." style={{flex:1,padding:"11px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:10,color:C.text,fontSize:12,fontFamily:"inherit"}}/>
-      <button onClick={()=>{if(val.trim()){onAdd(val.trim());setVal("");}}} style={{padding:"0 16px",background:C.red,border:"none",borderRadius:10,color:"#fff",fontSize:18,cursor:"pointer"}}>+</button>
+      <button onClick={()=>{if(val.trim()){onAdd(val.trim());setVal("");}}} style={{padding:"0 16px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:18,cursor:"pointer"}}>+</button>
     </div>
   );
 }
@@ -5524,7 +5654,7 @@ function CustomLieuForm({C, ville, onCancel, onSave}){
   const canSave = nom.trim().length>0;
 
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       <div style={{padding:"50px 20px 14px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         <button onClick={onCancel} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Annuler</button>
         <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Mon lieu · {ville?.nom}</div>
@@ -5567,7 +5697,7 @@ function CustomLieuForm({C, ville, onCancel, onSave}){
         <textarea value={description} onChange={e=>setDescription(e.target.value)} placeholder="Pourquoi ce lieu, horaires, infos…" rows={3} style={{width:"100%",boxSizing:"border-box",padding:"13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:11,color:C.text,fontSize:14,marginBottom:24,fontFamily:"inherit",resize:"vertical"}}/>
 
         <button onClick={()=>{ if(canSave) onSave({nom:nom.trim(),type,emoji,quartier:quartier.trim(),budget,description:description.trim()}); }} disabled={!canSave}
-          style={{width:"100%",padding:"15px",background:canSave?C.red:C.s3,border:"none",borderRadius:13,color:canSave?"#fff":C.t3,fontSize:14,fontWeight:600,cursor:canSave?"pointer":"default"}}>
+          style={{width:"100%",padding:"15px",background:canSave?C.red:C.s3,border:"none",borderRadius:999,color:canSave?"#fff":C.t3,fontSize:14,fontWeight:600,cursor:canSave?"pointer":"default"}}>
           Ajouter à ce jour →
         </button>
       </div>
@@ -5608,7 +5738,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
 
   if(isPremium){
     return(
-      <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
         <div style={{padding:"50px 22px 40px",textAlign:"center"}}>
           <button onClick={onClose} style={{position:"absolute",top:48,left:18,background:C.s1,border:`1px solid ${C.border}`,borderRadius:"50%",width:34,height:34,color:C.t2,fontSize:18,cursor:"pointer"}}>×</button>
           <div style={{fontSize:60,margin:"20px 0 16px"}}>🌸</div>
@@ -5633,7 +5763,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
   }
 
   return(
-    <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       {/* Hero */}
       <div style={{padding:"54px 22px 28px",background:`linear-gradient(160deg,rgba(201,70,61,0.18),${acc.soft} 60%,transparent)`,position:"relative",textAlign:"center",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
         <button onClick={onClose} style={{position:"absolute",top:48,left:18,background:"rgba(0,0,0,0.25)",border:"none",borderRadius:"50%",width:34,height:34,color:"#fff",fontSize:18,cursor:"pointer"}}>×</button>
@@ -5677,7 +5807,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
         </div>
 
         {/* CTA */}
-        <button onClick={()=>!billingBusy && onActivate(sel)} disabled={billingBusy} className="pop-press" style={{width:"100%",padding:"16px",background:C.red,border:"none",borderRadius:14,color:"#fff",fontSize:15,fontWeight:700,cursor:billingBusy?"wait":"pointer",marginBottom:10,boxShadow:"0 4px 16px rgba(201,70,61,0.3)",opacity:billingBusy?0.7:1}}>
+        <button onClick={()=>!billingBusy && onActivate(sel)} disabled={billingBusy} className="pop-press" style={{width:"100%",padding:"16px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:15,fontWeight:700,cursor:billingBusy?"wait":"pointer",marginBottom:10,boxShadow:"0 4px 16px rgba(201,70,61,0.3)",opacity:billingBusy?0.7:1}}>
           {billingBusy ? "Traitement en cours…" : "Devenir Premium"}
         </button>
         {/* Restaurer les achats (obligatoire sur iOS, pratique sur Android) */}
@@ -5714,7 +5844,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
             <div style={{fontSize:12,color:C.t2,marginBottom:9,textAlign:"center"}}>Entre ton code pour débloquer le Premium</div>
             <div style={{display:"flex",gap:8}}>
               <input value={codeVal} onChange={e=>{setCodeVal(e.target.value);setCodeError(false);}} onKeyDown={e=>{if(e.key==="Enter")tryCode();}} autoFocus placeholder="CODE-INVITATION" style={{flex:1,boxSizing:"border-box",padding:"11px 13px",background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,color:C.text,fontSize:14,fontFamily:"inherit",textTransform:"uppercase"}}/>
-              <button onClick={tryCode} style={{padding:"0 18px",background:C.red,border:"none",borderRadius:10,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>OK</button>
+              <button onClick={tryCode} style={{padding:"0 18px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>OK</button>
             </div>
             {codeError && <div style={{fontSize:11,color:C.red,marginTop:8,textAlign:"center"}}>Code invalide. Vérifie et réessaie.</div>}
           </div>
@@ -5726,9 +5856,8 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent,script,setScript}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent,script,setScript,onBack}){
   const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
-  const [showBadges,setShowBadges] = useState(false);
   const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
   const [soundOn,setSoundOnState] = useState(()=>sfx.isSoundOn());
   const toggleSound = ()=>{
@@ -5747,151 +5876,77 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
     });
   };
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
-  const total = db ? Object.values(db).reduce((a,b)=>a+b.length,0) : 0;
-  // next title progress
-  const tier = rank || {min:0,title:"Curieux du Japon",emoji:"🌱"};
-  const nextTier = TITLES.find(t=>t.min>(xp||0));
-  const prevMin = tier.min;
-  const nextMin = nextTier ? nextTier.min : tier.min;
-  const progress = nextTier ? Math.min(((xp||0)-prevMin)/(nextMin-prevMin),1) : 1;
+  // Rangée de préférence bolt-style : icône + libellé + contrôle (switch ou
+  // texte), posée dans une carte à séparateurs (`divide-y`) plutôt qu'une
+  // carte isolée par réglage.
+  const Switch = ({on,onClick})=>(
+    <div onClick={onClick} style={{width:44,height:24,borderRadius:12,background:on?C.red:C.s3,cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
+      <div style={{position:"absolute",top:2,left:on?22:2,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
+    </div>
+  );
+  const PrefRow = ({Icon,label,sub,control,onClick,danger,last})=>(
+    <div onClick={onClick} style={{padding:"14px 16px",display:"flex",alignItems:"center",gap:12,borderBottom:last?"none":`1px solid ${C.border}`,cursor:onClick?"pointer":"default"}}>
+      <Icon size={19} color={danger?C.red:C.t3}/>
+      <div style={{flex:1,minWidth:0}}>
+        <div style={{fontSize:13,color:danger?C.red:C.text}}>{label}</div>
+        {sub && <div style={{fontSize:11,color:C.t3,marginTop:1,lineHeight:1.4}}>{sub}</div>}
+      </div>
+      {control}
+    </div>
+  );
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:16}}>人 · PROFIL</div>
-        <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{width:50,height:50,borderRadius:"50%",background:"rgba(201,70,61,0.1)",border:"2px solid rgba(201,70,61,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:user.emojiAvatar?24:20,fontFamily:"'Noto Serif JP',serif",color:C.red,flexShrink:0,overflow:"hidden"}}>
+        {/* Retour — Profil n'est pas un onglet de la barre du bas (contrairement
+            à Home/Explorer/Scénarios/Apprendre/Voyage) : il a besoin de son
+            propre bouton retour, comme Tuteur ou le feed du jour. */}
+        {onBack && (
+          <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:16,display:"flex",alignItems:"center",gap:5}}>
+            <ChevronLeft size={14}/> Accueil
+          </button>
+        )}
+        {/* Carte identité — centrée, comme ProfileScreen.tsx (bolt) */}
+        <SectionCard C={C} style={{display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center",padding:20,marginBottom:16}}>
+          <div style={{width:80,height:80,borderRadius:"50%",background:C.s2,border:`2px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:user.emojiAvatar?34:26,fontFamily:"'Noto Serif JP',serif",color:C.red,marginBottom:12,overflow:"hidden"}}>
             {user.photo
               ? <img src={user.photo} alt="" referrerPolicy="no-referrer" style={{width:"100%",height:"100%",objectFit:"cover"}} onError={(e)=>{e.target.style.display="none"; e.target.parentNode.textContent=user.emojiAvatar||(user.name||"V")[0].toUpperCase();}}/>
               : user.emojiAvatar
               ? user.emojiAvatar
               : (user.name||"V")[0].toUpperCase()}
           </div>
-          <div style={{flex:1}}>
-            <div style={{fontSize:16,color:C.text,marginBottom:4}}>{user.name}</div>
-            {user.email && <div style={{fontSize:11,color:C.t3,marginBottom:2}}>{user.email}</div>}
-            <div style={{fontSize:12,color:C.text,fontWeight:500}}>{tier.emoji} {tier.title} <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{tier.jp}</span></div>
-          </div>
-        </div>
+          <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:700,fontSize:19,color:C.text}}>{user.name}</div>
+          {user.email && <div style={{fontSize:13,color:C.t3,marginTop:2}}>{user.email}</div>}
+          {isPremium && (
+            <span style={{marginTop:8,fontSize:12,fontWeight:600,color:C.gold,background:`${C.gold}14`,padding:"5px 12px",borderRadius:999,display:"inline-flex",alignItems:"center",gap:5}}>
+              <Crown size={12}/> Premium
+            </span>
+          )}
+        </SectionCard>
 
-        {/* Bannière Premium */}
-        <div onClick={onOpenPremium} className="lift" style={{marginBottom:14,padding:"16px 18px",borderRadius:16,cursor:"pointer",background:isPremium?`linear-gradient(135deg,rgba(158,122,26,0.18),rgba(201,70,61,0.08))`:`linear-gradient(135deg,rgba(201,70,61,0.16),rgba(158,122,26,0.06))`,border:`1px solid ${isPremium?"rgba(158,122,26,0.4)":"rgba(201,70,61,0.3)"}`,display:"flex",alignItems:"center",gap:14}}>
-          <span style={{fontSize:30}}>{isPremium?"🌸":"✨"}</span>
-          <div style={{flex:1}}>
-            <div style={{fontSize:15,color:C.text,fontWeight:700,marginBottom:2}}>{isPremium?"Membre Premium":"Passe à Premium"}</div>
-            <div style={{fontSize:11,color:C.t2,lineHeight:1.4}}>{isPremium?"Merci de ton soutien 🙏 Gérer mon abonnement":"Sans pub · voyages illimités · tout débloqué"}</div>
-          </div>
-          <span style={{fontSize:18,color:C.t3}}>›</span>
+        {/* 3 tuiles stats — streak / XP / niveau */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:16}}>
+          {[
+            {Icon:Flame, label:"Streak", value:`${streak?.count||0}j`, color:C.red},
+            {Icon:Star, label:"XP total", value:String(xp||0), color:C.gold},
+            {Icon:Sparkles, label:"Niveau", value:lvlL[user.level]||user.level||"—", color:C.indigo},
+          ].map(s=>(
+            <SectionCard key={s.label} C={C} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"14px 8px"}}>
+              <div style={iconTileStyle(s.color, 34, 10)}><s.Icon size={17} color={s.color}/></div>
+              <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:700,fontSize:14,color:C.text}}>{s.value}</div>
+              <div style={{fontSize:10,color:C.t3}}>{s.label}</div>
+            </SectionCard>
+          ))}
         </div>
-
-        {/* Mode sombre — juste sous Premium */}
-        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div>
-            <div style={{fontSize:13,color:C.text,marginBottom:2}}>{dark?"Mode sombre 🌙":"Mode clair ☀️"}</div>
-            <div style={{fontSize:11,color:C.t3}}>Basculer le thème de l'app</div>
-          </div>
-          <div onClick={()=>setDark(d=>!d)} style={{width:48,height:26,borderRadius:13,background:dark?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
-            <div style={{position:"absolute",top:3,left:dark?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
-          </div>
-        </div>
-
-        {/* Affichage du japonais — kana / kanji / romaji. Seul point de
-            réglage de l'app depuis le retrait du bouton bascule de l'en-tête
-            de l'accueil (remplacé par l'accès rapide au Tuteur). */}
-        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-          <div style={{fontSize:13,color:C.text,marginBottom:2}}>Affichage du japonais</div>
-          <div style={{fontSize:11,color:C.t3,marginBottom:12}}>Comment le japonais s'affiche dans l'app</div>
-          <div style={{display:"flex",gap:8}}>
-            {[{id:"kana",label:"あ Kana"},{id:"kanji",label:"漢 Kanji"},{id:"romaji",label:"A Romaji"}].map(opt=>{
-              const on = script===opt.id;
-              return (
-                <button key={opt.id} onClick={()=>setScript(opt.id)} style={{flex:1,padding:"9px 0",borderRadius:10,border:`1px solid ${on?C.red:C.border}`,background:on?"rgba(201,70,61,0.12)":C.s2,color:on?C.text:C.t2,fontSize:12,fontWeight:on?600:500,cursor:"pointer"}}>
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Sons — jingles de feedback (bonnes réponses, streak, niveau) */}
-        <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div>
-            <div style={{fontSize:13,color:C.text,marginBottom:2}}>{soundOn?"Sons activés 🔔":"Sons coupés 🔕"}</div>
-            <div style={{fontSize:11,color:C.t3}}>Jingles de réussite, streak, niveau</div>
-          </div>
-          <div onClick={toggleSound} style={{width:48,height:26,borderRadius:13,background:soundOn?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
-            <div style={{position:"absolute",top:3,left:soundOn?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
-          </div>
-        </div>
-
-        {/* Kana mastery */}
-        {(()=>{
-          const hira = HIRAGANA || []; const kata = KATAKANA || [];
-          const kp = kanaProgress || {};
-          const masteredIn = (deck)=> deck.filter(c => (kp[c.k]?.known||0) >= 2).length;
-          const hiraDone = masteredIn(hira), kataDone = masteredIn(kata);
-          const hiraPct = hira.length ? hiraDone/hira.length : 0;
-          const kataPct = kata.length ? kataDone/kata.length : 0;
-          const Bar = ({label, jp, done, total, pct, color})=>(
-            <div style={{marginBottom:10}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:5}}>
-                <span style={{fontSize:12,color:C.text}}>{label} <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{jp}</span></span>
-                <span style={{fontSize:11,color:C.t2}}>{done}/{total}</span>
-              </div>
-              <div style={{height:6,background:C.s3,borderRadius:3,overflow:"hidden"}}>
-                <div style={{height:"100%",width:`${pct*100}%`,background:color,borderRadius:3,transition:"width .5s"}}/>
-              </div>
-            </div>
-          );
-          return(
-            <div style={{marginBottom:14,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14}}>
-              <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:12,textTransform:"uppercase"}}>🔤 Maîtrise des syllabaires</div>
-              <Bar label="Hiragana" jp="ひらがな" done={hiraDone} total={hira.length} pct={hiraPct} color={C.red}/>
-              <Bar label="Katakana" jp="カタカナ" done={kataDone} total={kata.length} pct={kataPct} color={C.gold}/>
-              {(hiraDone+kataDone)===0 && <div style={{fontSize:11,color:C.t3,marginTop:6}}>Entraîne-toi dans l'onglet Apprendre pour remplir ces barres 🎴</div>}
-            </div>
-          );
-        })()}
-        {/* Alerte streak in-app — renommé (Phase 2) pour ne plus être confondu
-            avec le rappel par notification push, encore en placeholder ci-dessous */}
-        <div style={{marginBottom:12,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div style={{flex:1,paddingRight:12}}>
-            <div style={{fontSize:13,color:C.text,marginBottom:2}}>🔔 Alerte streak dans l'app</div>
-            <div style={{fontSize:11,color:C.t3,lineHeight:1.4}}>Affiche un bandeau sur l'accueil pour protéger ton streak si la mission du jour n'est pas faite.</div>
-          </div>
-          <div onClick={()=>setReminders(r=>!r)} style={{width:48,height:26,borderRadius:13,background:reminders?C.red:"rgba(26,20,16,0.14)",cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
-            <div style={{position:"absolute",top:3,left:reminders?22:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
-          </div>
-        </div>
-
-        {/* Rappel quotidien (notification push) — placeholder, Phase 2.
-            Aucun plugin push installé : le toggle est visuellement fini mais inerte. */}
-        {!FEATURE_FLAGS.dailyReminder && (
-          <div style={{marginBottom:16,padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"space-between",opacity:0.75}}>
-            <div style={{flex:1,paddingRight:12}}>
-              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
-                <span style={{fontSize:13,color:C.text}}>📲 Rappel quotidien</span>
-                <span style={{fontSize:9,fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",padding:"3px 8px",borderRadius:20,background:C.s2,color:C.t3}}>Bientôt</span>
-              </div>
-              <div style={{fontSize:11,color:C.t3,lineHeight:1.4}}>Notification sur ton téléphone à l'heure de ton choix.</div>
-            </div>
-            <div aria-disabled="true" style={{width:48,height:26,borderRadius:13,background:"rgba(26,20,16,0.14)",cursor:"not-allowed",position:"relative",flexShrink:0}}>
-              <div style={{position:"absolute",top:3,left:3,width:20,height:20,borderRadius:"50%",background:"#fff",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
-            </div>
-          </div>
-        )}
 
         {/* Ma collection (favoris) */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11}}>
-          <div style={{fontSize:10,color:C.t3,letterSpacing:".22em",textTransform:"uppercase"}}>Ma collection ♥</div>
-          <span style={{fontSize:11,color:C.t3}}>{favs?.length||0} sauvegardé{(favs?.length||0)>1?"s":""}</span>
-        </div>
+        <SectionTitle C={C} title="Ma collection" action={<span style={{fontSize:11,color:C.t3}}>{favs?.length||0} sauvegardé{(favs?.length||0)>1?"s":""}</span>}/>
         {(!favs || favs.length===0) ? (
-          <div style={{padding:"22px 16px",textAlign:"center",background:C.s2,border:`1px dashed ${C.border}`,borderRadius:12,marginBottom:22}}>
-            <div style={{fontSize:22,marginBottom:8}}>♡</div>
+          <div style={{padding:"22px 16px",textAlign:"center",background:C.s2,border:`1px dashed ${C.s3}`,borderRadius:16,marginBottom:16}}>
+            <Heart size={22} color={C.t3} style={{marginBottom:8}}/>
             <div style={{fontSize:12,color:C.t3,lineHeight:1.6}}>Touche le cœur sur une carte<br/>pour la sauvegarder ici</div>
           </div>
         ) : (
-          <div style={{display:"flex",flexDirection:"column",gap:9,marginBottom:22}}>
+          <SectionCard C={C} style={{padding:8,marginBottom:16}}>
             {favs.map((f,i)=>{
               const it=f.item;
               const meta={
@@ -5904,7 +5959,7 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
                 vie:{emoji:it.emoji||"🏙️", title:it.titre, sub:it.categorie, c:"#5B7E9B"},
               }[f.type]||{emoji:"♥",title:"",sub:"",c:C.red};
               return(
-                <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
+                <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 6px",borderBottom:i<favs.length-1?`1px solid ${C.border}`:"none"}}>
                   <span style={{fontSize:22,flexShrink:0}}>{meta.emoji}</span>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{fontSize:13,color:C.text,fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{meta.title}</div>
@@ -5915,69 +5970,76 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
                 </div>
               );
             })}
-          </div>
+          </SectionCard>
         )}
 
         {(()=>{
           const achievements = computeAchievements({ streak, xp, unlocks, scenProgress, kanaProgress, favs, pathProgress });
           const earned = achievements.filter(a=>a.unlocked).length;
           return(
-            <>
-              <div onClick={()=>setShowBadges(v=>!v)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11,cursor:"pointer",userSelect:"none"}}>
-                <span style={{fontSize:10,color:C.t3,letterSpacing:".22em",textTransform:"uppercase"}}>Collection de badges</span>
-                <span style={{display:"flex",alignItems:"center",gap:8}}>
-                  <span style={{fontSize:11,color:C.t2,fontWeight:600}}>{earned}/{achievements.length}</span>
-                  <span style={{fontSize:12,color:C.t3,transform:showBadges?"rotate(180deg)":"none",transition:"transform .2s"}}>▾</span>
-                </span>
+            <div style={{marginBottom:16}}>
+              <SectionTitle C={C} title="Badges" action={<span style={{fontSize:11,color:C.t2,fontWeight:600}}>{earned}/{achievements.length}</span>}/>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9}}>
+                {achievements.map((b,i)=>(
+                  <div key={i} title={b.desc} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.32)":C.border}`,borderRadius:18,padding:"14px 8px",textAlign:"center",opacity:b.unlocked?1:.5,transition:"all .3s"}}>
+                    <div style={{width:44,height:44,margin:"0 auto 7px",borderRadius:"50%",background:b.unlocked?C.s2:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:21,filter:b.unlocked?"none":"grayscale(1)"}}>{b.emoji}</div>
+                    <div style={{fontSize:10,color:b.unlocked?C.text:C.t3,lineHeight:1.25,marginBottom:3}}>{b.label}</div>
+                    <div style={{fontSize:8,color:C.t3,lineHeight:1.3}}>{b.unlocked?"✓":b.desc}</div>
+                  </div>
+                ))}
               </div>
-              {showBadges && (
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9,animation:"fadeUp .25s ease"}}>
-                  {achievements.map((b,i)=>(
-                    <div key={i} title={b.desc} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.32)":C.border}`,borderRadius:12,padding:"13px 8px",textAlign:"center",opacity:b.unlocked?1:.45,transition:"all .3s"}}>
-                      <div style={{fontSize:24,marginBottom:5,filter:b.unlocked?"none":"grayscale(1)"}}>{b.emoji}</div>
-                      <div style={{fontSize:10,color:b.unlocked?C.text:C.t3,lineHeight:1.25,marginBottom:3}}>{b.label}</div>
-                      <div style={{fontSize:8,color:C.t3,lineHeight:1.3}}>{b.unlocked?"✓":b.desc}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
+            </div>
           );
         })()}
 
-        {/* Revoir la présentation */}
-        <button onClick={()=>onShowTour&&onShowTour()}
-          style={{marginTop:22,width:"100%",padding:"13px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
-          ✨ Revoir la présentation
+        {/* Bannière Premium — calquée sur ProfileScreen.tsx (bolt) */}
+        <button onClick={onOpenPremium} className="lift" style={{width:"100%",marginBottom:16,padding:16,borderRadius:20,cursor:"pointer",textAlign:"left",background:isPremium?`linear-gradient(135deg,${C.gold}22,${C.red}0d)`:`linear-gradient(90deg,${C.gold}22,${C.gold}0d)`,border:`1px solid ${C.gold}44`,display:"flex",alignItems:"center",gap:14}}>
+          <Crown size={24} color={C.gold} style={{flexShrink:0}}/>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:15,color:C.gold}}>{isPremium?"Membre Premium":"Passer Premium"}</div>
+            <div style={{fontSize:11,color:C.t2,marginTop:1}}>{isPremium?"Merci de ton soutien — gérer mon abonnement":"Débloque tout le contenu"}</div>
+          </div>
+          <ChevronRight size={20} color={C.gold}/>
         </button>
 
-        {/* Se déconnecter — seulement si connecté */}
-        {session?.user && (
-          <button onClick={async ()=>{ if(confirm("Te déconnecter ? Tes données restent sauvegardées dans le cloud.")) await onLogout&&onLogout(); }}
-            style={{marginTop:10,width:"100%",padding:"13px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
-            ⎋ Se déconnecter
-          </button>
-        )}
+        {/* Préférences — carte à séparateurs, comme ProfileScreen.tsx (bolt) */}
+        <SectionTitle C={C} title="Préférences"/>
+        <SectionCard C={C} style={{padding:0,marginBottom:16}}>
+          <PrefRow Icon={dark?Volume2:Sparkles} label={dark?"Mode sombre":"Mode clair"} sub="Basculer le thème de l'app" control={<Switch on={dark} onClick={()=>setDark(d=>!d)}/>}/>
+          <PrefRow Icon={Bell} label="Alerte streak dans l'app" sub="Bandeau sur l'accueil si la mission du jour n'est pas faite" control={<Switch on={reminders} onClick={()=>setReminders(r=>!r)}/>}/>
+          <PrefRow Icon={Volume2} label="Son" sub="Jingles de réussite, streak, niveau" control={<Switch on={soundOn} onClick={toggleSound}/>}/>
+          <PrefRow Icon={Type} label="Affichage des kana" sub="Comment le japonais s'affiche dans l'app" last control={
+            <div style={{display:"flex",gap:4}}>
+              {[{id:"kana",label:"あ"},{id:"kanji",label:"漢"},{id:"romaji",label:"A"}].map(opt=>(
+                <button key={opt.id} onClick={()=>setScript(opt.id)} style={{width:28,height:28,borderRadius:8,border:`1px solid ${script===opt.id?C.red:C.s3}`,background:script===opt.id?`${C.red}14`:"transparent",color:script===opt.id?C.red:C.t3,fontSize:13,fontWeight:600,cursor:"pointer"}}>{opt.label}</button>
+              ))}
+            </div>
+          }/>
+        </SectionCard>
 
-        {/* Réinitialiser le profil */}
-        <button onClick={()=>{ if(confirm("Réinitialiser ton profil ? Tu repasseras par l'onboarding.")) onReset&&onReset(); }}
-          style={{marginTop:10,width:"100%",padding:"13px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
-          ↺ Réinitialiser le profil
-        </button>
+        {/* Compte */}
+        <SectionTitle C={C} title="Compte"/>
+        <SectionCard C={C} style={{padding:0,marginBottom:16}}>
+          <PrefRow Icon={Sparkles} label="Revoir la présentation" onClick={()=>onShowTour&&onShowTour()} control={<ChevronRight size={18} color={C.t3}/>}/>
+          {session?.user && (
+            <PrefRow Icon={LogOut} label="Se déconnecter" onClick={async ()=>{ if(confirm("Te déconnecter ? Tes données restent sauvegardées dans le cloud.")) await onLogout&&onLogout(); }}/>
+          )}
+          <PrefRow Icon={RotateCcw} label="Réinitialiser le profil" onClick={()=>{ if(confirm("Réinitialiser ton profil ? Tu repasseras par l'onboarding.")) onReset&&onReset(); }}/>
+          <PrefRow Icon={Trash2} label="Supprimer mon compte" danger last onClick={()=>onDeleteAccount&&onDeleteAccount()}/>
+        </SectionCard>
 
-        {/* Supprimer le compte */}
-        <button onClick={()=>onDeleteAccount&&onDeleteAccount()}
-          style={{marginTop:10,width:"100%",padding:"13px",background:"transparent",border:`1px solid rgba(201,70,61,0.3)`,borderRadius:12,color:C.red,fontSize:13,cursor:"pointer",letterSpacing:".03em"}}>
-          🗑️ Supprimer mon compte
-        </button>
-        <div style={{marginTop:10,textAlign:"center",fontSize:10,color:C.t3,lineHeight:1.5}}>
-          Ton profil est sauvegardé sur cet appareil —<br/>l'onboarding ne réapparaîtra qu'après réinitialisation.
-        </div>
+        <div style={{textAlign:"center",fontSize:11,color:C.t3,paddingBottom:4}}>Isekai'd v1.0.0 — Le Japon, un peu chaque jour</div>
       </div>
     </div>
   );
 }
-const TABS=[{id:"home",kanji:"家",label:"Home"},{id:"explore",kanji:"探",label:"Explorer"},{id:"scenarios",kanji:"場",label:"Scénarios"},{id:"learn",kanji:"学",label:"Apprendre"},{id:"voyage",kanji:"旅",label:"Voyage"}];
+const TABS=[
+  {id:"home",kanji:"家",label:"Home",icon:HomeIcon},
+  {id:"explore",kanji:"探",label:"Explorer",icon:Compass},
+  {id:"scenarios",kanji:"場",label:"Scénarios",icon:Drama},
+  {id:"learn",kanji:"学",label:"Apprendre",icon:BookOpen},
+  {id:"voyage",kanji:"旅",label:"Voyage",icon:Plane},
+];
 // ─── Achievement unlocked popup ───────────────────────────────────────────────
 function AchievementPopup({C, achievement, onClose}){
   if(!achievement) return null;
@@ -5989,7 +6051,7 @@ function AchievementPopup({C, achievement, onClose}){
         <div style={{fontSize:66,marginBottom:14,animation:"popIn .6s ease .15s both"}}>{achievement.emoji}</div>
         <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:6}}>{achievement.label}</div>
         <div style={{fontSize:13,color:C.t2,lineHeight:1.5,marginBottom:22}}>{achievement.desc}</div>
-        <button onClick={onClose} style={{width:"100%",padding:"13px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Super ! 🎉</button>
+        <button onClick={onClose} style={{width:"100%",padding:"13px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Super ! 🎉</button>
       </div>
     </>
   );
@@ -6090,7 +6152,7 @@ function WeeklyRecapPopup({C, recap, onClose}){
         <button onClick={share} disabled={sharing} className="pop-press" style={{width:"100%",padding:"13px",background:"transparent",border:`1px solid ${C.gold}66`,borderRadius:12,color:C.gold,fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:10,opacity:sharing?0.6:1}}>
           {sharing ? "…" : "📤 Partager"}
         </button>
-        <button onClick={onClose} style={{width:"100%",padding:"13px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Continuer 🎌</button>
+        <button onClick={onClose} style={{width:"100%",padding:"13px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer"}}>Continuer 🎌</button>
       </div>
     </>
   );
@@ -6173,7 +6235,7 @@ function DailyWelcome({C, streak, dailyInfo, onClose, isPremium}){
           </div>
         )}
 
-        <button onClick={onClose} className="pop-press" style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",animation:milestone?"ring 1.4s ease .6s 2":"none"}}>
+        <button onClick={onClose} className="pop-press" style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",animation:milestone?"ring 1.4s ease .6s 2":"none"}}>
           {milestone ? "Génial ! →" : "Continuer l'aventure →"}
         </button>
       </div>
@@ -6240,7 +6302,7 @@ function AuthScreen({C}){
 
       {msg && <div style={{fontSize:12,color:msg.type==="err"?C.red:C.green,marginBottom:12,textAlign:"center"}}>{msg.text}</div>}
 
-      <button onClick={submitEmail} disabled={busy} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:busy?"default":"pointer",opacity:busy?0.7:1,marginBottom:14}}>
+      <button onClick={submitEmail} disabled={busy} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:busy?"default":"pointer",opacity:busy?0.7:1,marginBottom:14}}>
         {busy ? "..." : mode==="signup" ? "Créer mon compte" : "Se connecter"}
       </button>
 
@@ -6336,9 +6398,10 @@ function BottomNav({C,active,onChange,pulseTab,onPulseEnd}){
       {TABS.map(t=>{
         const on=t.id===active;
         const pulsing = t.id===pulseTab;
+        const Icon = t.icon;
         return(
           <button key={t.id} onClick={()=>onChange(t.id)} onAnimationEnd={pulsing?onPulseEnd:undefined} style={{flex:1,border:"none",background:"transparent",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:3,color:on?C.red:C.t3,transition:"color .2s",position:"relative",borderRadius:16,animation:pulsing?"ring 1s ease-out 2":"none"}}>
-            <span style={{fontFamily:"'Noto Serif JP',serif",fontSize:on?20:18,transition:"font-size .2s"}}>{t.kanji}</span>
+            <Icon size={22} strokeWidth={on?2.5:2}/>
             <span style={{fontSize:9,letterSpacing:".04em"}}>{t.label}</span>
             {on&&<div style={{position:"absolute",bottom:8,width:4,height:4,borderRadius:"50%",background:C.red}}/>}
           </button>
@@ -6364,10 +6427,10 @@ function Onboarding({onComplete, googleInfo}){
   const [emojiAvatar,setEmojiAvatar]=useState(googleInfo?.photo ? null : "🦊");
   const ok=[why.length>0,!!goal,!!level][step];
   const toggle=id=>setWhy(w=>w.includes(id)?w.filter(x=>x!==id):[...w,id]);
-  const chip=active=>({padding:"15px 12px",borderRadius:10,cursor:"pointer",background:active?"rgba(201,70,61,0.09)":"rgba(26,20,16,0.04)",border:`1px solid ${active?"rgba(201,70,61,0.3)":C.border}`,transition:"all .2s"});
+  const chip=active=>({padding:"15px 12px",borderRadius:16,cursor:"pointer",background:active?`${C.red}0d`:C.s1,border:`2px solid ${active?C.red:C.s3}`,transition:"all .2s"});
   const titles=[{jp:"なぜ日本？",fr:"Pourquoi le Japon ?"},{jp:"目標は何？",fr:"Quel est ton objectif ?"},{jp:"あなたは？",fr:"Parle-moi de toi"}];
   return(
-    <div style={{height:"100%",display:"flex",flexDirection:"column",background:C.bg,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{height:"100%",display:"flex",flexDirection:"column",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       <div style={{padding:"50px 26px 0",flexShrink:0}}>
         <div style={{display:"flex",gap:5,marginBottom:28}}>
           {[0,1,2].map(i=>(<div key={i} style={{height:2,flex:1,borderRadius:1,background:i<=step?C.red:"rgba(26,20,16,0.1)",transition:"background .4s"}}/>))}
@@ -6379,8 +6442,21 @@ function Onboarding({onComplete, googleInfo}){
         </div>
       </div>
       <div key={`b${step}`} style={{flex:1,overflowY:"auto",padding:"22px 26px",animation:"fadeUp .35s ease"}}>
-        {step===0&&(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>{WHY.map(o=>(<div key={o.id} style={chip(why.includes(o.id))} onClick={()=>toggle(o.id)}><div style={{fontSize:26,marginBottom:7,textAlign:"center"}}>{o.emoji}</div><div style={{fontSize:12,color:why.includes(o.id)?C.text:C.t2,textAlign:"center",lineHeight:1.4}}>{o.label}</div></div>))}</div>)}
-        {step===1&&(<div style={{display:"flex",flexDirection:"column",gap:10}}>{GOALS.map(o=>(<div key={o.id} style={{...chip(goal===o.id),display:"flex",alignItems:"center",gap:14,padding:"16px"}} onClick={()=>setGoal(o.id)}><span style={{fontSize:24}}>{o.emoji}</span><span style={{fontSize:14,color:goal===o.id?C.text:C.t2,flex:1}}>{o.label}</span>{goal===o.id&&<span style={{color:C.red}}>✓</span>}</div>))}</div>)}
+        {step===0&&(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>{WHY.map(o=>{ const active=why.includes(o.id); return(
+          <div key={o.id} style={{...chip(active),display:"flex",flexDirection:"column",alignItems:"center",gap:8}} onClick={()=>toggle(o.id)}>
+            <o.Icon size={26} color={active?C.red:C.t3}/>
+            <div style={{fontSize:12,fontWeight:500,color:active?C.red:C.t2,textAlign:"center",lineHeight:1.3}}>{o.label}</div>
+          </div>
+        );})}</div>)}
+        {step===1&&(<div style={{display:"flex",flexDirection:"column",gap:10}}>{GOALS.map(o=>{ const active=goal===o.id; return(
+          <div key={o.id} style={{...chip(active),display:"flex",alignItems:"center",gap:14,padding:"16px"}} onClick={()=>setGoal(o.id)}>
+            <div style={{width:38,height:38,borderRadius:"50%",background:active?C.red:C.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <o.Icon size={18} color={active?"#fff":C.t3}/>
+            </div>
+            <span style={{fontSize:14,fontWeight:500,color:active?C.red:C.t2,flex:1}}>{o.label}</span>
+            {active&&<Check size={20} color={C.red}/>}
+          </div>
+        );})}</div>)}
         {step===2&&(
           <div style={{display:"flex",flexDirection:"column",gap:12}}>
             {LEVELS.map(o=>(<div key={o.id} style={{...chip(level===o.id),display:"flex",alignItems:"center",gap:14,padding:"16px"}} onClick={()=>setLevel(o.id)}><span style={{fontSize:28}}>{o.emoji}</span><div style={{flex:1}}><div style={{fontSize:14,color:level===o.id?C.text:C.t2,marginBottom:2}}>{o.label}</div><div style={{fontSize:11,color:C.t3}}>{o.sub}</div></div>{level===o.id&&<span style={{color:C.red}}>✓</span>}</div>))}
@@ -6416,7 +6492,7 @@ function Onboarding({onComplete, googleInfo}){
       </div>
       <div style={{padding:"14px 26px 34px",flexShrink:0}}>
         <button onClick={()=>step<2?setStep(s=>s+1):onComplete({why,goal,level,name:name||"Voyageur",photo:photo||null,emojiAvatar:photo?null:emojiAvatar})} disabled={!ok}
-          style={{width:"100%",padding:"15px",background:ok?C.red:"rgba(26,20,16,0.08)",border:"none",borderRadius:12,color:ok?"#fff":C.t3,fontSize:15,cursor:ok?"pointer":"default",letterSpacing:".04em",transition:"all .2s"}}>
+          style={{width:"100%",padding:"15px",background:ok?C.red:"rgba(26,20,16,0.08)",border:"none",borderRadius:999,color:ok?"#fff":C.t3,fontSize:15,cursor:ok?"pointer":"default",letterSpacing:".04em",transition:"all .2s"}}>
           {step<2?"Continuer →":"Commencer l'aventure 🌸"}
         </button>
       </div>
@@ -6427,13 +6503,12 @@ function Onboarding({onComplete, googleInfo}){
 function Splash({onDone}){
   useEffect(()=>{const t=setTimeout(onDone,2500);return()=>clearTimeout(t);},[]);
   return(
-    <div style={{height:"100%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"#0F0B08",position:"relative",overflow:"hidden"}}>
-      <Petals/>
+    <div style={{height:"100%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:`linear-gradient(180deg, ${LIGHT.red} 0%, #8A2A2A 45%, ${LIGHT.text} 130%)`,position:"relative",overflow:"hidden"}}>
       <div style={{position:"relative",zIndex:1,textAlign:"center",animation:"fadeIn .8s ease"}}>
-        <div style={{fontSize:70,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:"#F0E6D3",lineHeight:1,animation:"fadeUp .9s ease"}}>異世界</div>
-        <div style={{height:1,background:"linear-gradient(90deg,transparent,#C9463D,transparent)",margin:"16px auto",width:70}}/>
-        <div style={{fontSize:12,letterSpacing:".42em",color:"#9C8A74",textTransform:"uppercase"}}>ISEKAI'D</div>
-        <div style={{fontSize:10,color:"#5E4E3C",marginTop:6,letterSpacing:".22em"}}>Experience Japan every day.</div>
+        <div style={{fontSize:70,fontFamily:"'Noto Serif JP',serif",fontWeight:200,color:"#FDFBF7",lineHeight:1,animation:"fadeUp .9s ease"}}>異世界</div>
+        <div style={{height:1,background:"linear-gradient(90deg,transparent,rgba(253,251,247,0.6),transparent)",margin:"16px auto",width:70}}/>
+        <div style={{fontSize:12,letterSpacing:".42em",color:"#FBF7F0",textTransform:"uppercase"}}>ISEKAI'D</div>
+        <div style={{fontSize:10,color:"rgba(251,247,240,0.75)",marginTop:6,letterSpacing:".22em"}}>Experience Japan every day.</div>
       </div>
     </div>
   );
@@ -6883,7 +6958,6 @@ export default function IsekaidApp(){
   // état ; repli synchrone (aucune régression) si l'API/l'appareil ne suit
   // pas — .screen-in prend alors le relais visuellement.
   const setTab = (t)=>{
-    if(t==="explore") completeTask("explore");
     withViewTransition(()=> flushSync(()=> setTabRaw(t)));
   };
   const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
@@ -7001,6 +7075,7 @@ export default function IsekaidApp(){
     const newProg = {done:[...scenProgress.done, s.id], xp:0};
     setScenProgress(newProg); saveScenarioProgress(newProg);
     completeTask("scenario");
+    completeWeeklyItem(item=>item.scenario===s.id);
   };
 
   // Une catégorie est débloquée si : premium, OU pas verrouillable, OU le streak
@@ -7049,6 +7124,35 @@ export default function IsekaidApp(){
       }
       saveMission(m);
       return m;
+    });
+  };
+  // Défi de la semaine — état levé ici (comme `mission`) pour que les items
+  // liés à une vraie action (scenario réussi, favori ajouté) se cochent au
+  // moment de l'action, plutôt que d'être recalculés depuis un état cumulatif
+  // (qui cocherait rétroactivement un item pour une action faite il y a des
+  // semaines). `matchItem(item)` reçoit chaque item du thème de la semaine en
+  // cours ; le premier qui matche et n'est pas déjà fait est coché.
+  const [weeklyProgress,setWeeklyProgress]=useState(()=>loadWeeklyProgress());
+  const completeWeeklyItem = (matchItem)=>{
+    setWeeklyProgress(prev=>{
+      const week = isoWeekKey();
+      const cur = prev.week===week ? prev : {week, done:[]};
+      const theme = weeklyChallengeForWeek(week);
+      const idx = theme.items.findIndex(matchItem);
+      if(idx<0 || cur.done.includes(idx)) return cur===prev ? prev : cur;
+      const next = {...cur, done:[...cur.done, idx]};
+      saveWeeklyProgress(next);
+      return next;
+    });
+  };
+  const toggleWeeklyItemManual = (idx)=>{
+    setWeeklyProgress(prev=>{
+      const week = isoWeekKey();
+      const cur = prev.week===week ? prev : {week, done:[]};
+      const has = cur.done.includes(idx);
+      const next = { ...cur, done: has ? cur.done.filter(i=>i!==idx) : [...cur.done, idx] };
+      saveWeeklyProgress(next);
+      return next;
     });
   };
   const [showSearch,setShowSearch]=useState(false);
@@ -7176,6 +7280,14 @@ export default function IsekaidApp(){
   // On garde donc l'état courant dans une ref pour fermer les panneaux globaux, revenir
   // à l'onglet "home", puis seulement quitter l'app si on y est déjà.
   const backStateRef = useRef();
+  // Cible mobile pour le retour matériel/geste Android à l'intérieur d'un
+  // onglet (Explorer/Scénarios/Apprendre/Voyage/Tuteur ont chacun leur propre
+  // navigation imbriquée — sans ça, un seul retour depuis 2-3 niveaux de
+  // profondeur saute directement à Home au lieu de reculer d'un cran). Chaque
+  // écran qui a un état de navigation interne enregistre ici une fonction
+  // "reculer d'un niveau ? true/false" via useInScreenBack (voir plus bas) ;
+  // remplacée à chaque changement d'écran/état, nettoyée au démontage.
+  const inScreenBackRef = useRef(null);
   useEffect(()=>{
     backStateRef.current = { wikiEntry, showSearch, spotlightLieu, showPremiumPage, newAchievement, weeklyRecap, showWelcome, tab };
   });
@@ -7195,6 +7307,7 @@ export default function IsekaidApp(){
           if(s.newAchievement){ setNewAchievement(null); return; }
           if(s.weeklyRecap){ setWeeklyRecap(null); return; }
           if(s.showWelcome){ setShowWelcome(false); return; }
+          if(inScreenBackRef.current && inScreenBackRef.current()) return;
           if(s.tab!=="home"){ setTab("home"); return; }
           capApp.exitApp();
         });
@@ -7338,7 +7451,10 @@ export default function IsekaidApp(){
                           : [{id, type, item, savedAt:Date.now()}, ...prev];
       saveFavs(next);
       // Mission « ajouter une carte en favori » : validée seulement à l'ajout (pas au retrait)
-      if(!exists) completeTask("fav");
+      if(!exists){
+        completeTask("fav");
+        completeWeeklyItem(it=>it.favType===type);
+      }
       return next;
     });
   };
@@ -7516,13 +7632,13 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className={supportsViewTransitions()?"":"screen-in"} style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} xp={xp} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
-              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
-              {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
+              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} backRef={inScreenBackRef}/>}
+              {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript}/>}
-              {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onBack={()=>setTab("home")}/>}
+              {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef}/>}
               {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
             </div>
@@ -7532,7 +7648,7 @@ export default function IsekaidApp(){
             {wikiEntry && <WikiPanel C={C} entry={wikiEntry} onClose={()=>setWikiEntry(null)} script={script}/>}
             {showWelcome && <DailyWelcome C={C} streak={streak} dailyInfo={dailyInfo} isPremium={isPremium} onClose={()=>setShowWelcome(false)}/>}
             {missionReward && (
-              <CelebrationOverlay emoji="🎯" title="Mission accomplie !" subtitle="Bravo 🎌" color={C.green} onDone={()=>setMissionReward(false)}/>
+              <CelebrationOverlay C={C} emoji="🎯" title="Mission accomplie !" subtitle="Bravo 🎌" color={C.green} onDone={()=>setMissionReward(false)}/>
             )}
             {/* Global search */}
             {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}

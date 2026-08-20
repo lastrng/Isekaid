@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchDailyFeed } from "./supabase";
+import { Sparkles } from "lucide-react";
 
 /* ============================================================
    Le Japon du jour — feed quotidien
@@ -80,7 +81,7 @@ export function HomeDailyCard({ C, onOpen }){
       onClick={() => { if(latest) markFeedSeen(latest.id); onOpen && onOpen(); }}
       style={{
         cursor: "pointer",
-        borderRadius: 18,
+        borderRadius: 16,
         overflow: "hidden",
         border: `1px solid ${border}`,
         background: surface,
@@ -89,7 +90,7 @@ export function HomeDailyCard({ C, onOpen }){
       }}
     >
       {latest?.image_url && (
-        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", background: C.bg }}>
+        <div style={{ position: "relative", width: "100%", height: 160, background: C.bg }}>
           <img
             src={latest.image_url}
             alt={latest.title || "Le Japon du jour"}
@@ -97,31 +98,28 @@ export function HomeDailyCard({ C, onOpen }){
             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           />
           <div style={{
-            position: "absolute", top: 10, left: 10,
-            background: "rgba(0,0,0,.55)", backdropFilter: "blur(4px)",
-            color: "#fff", fontSize: 10, fontWeight: 700, letterSpacing: ".12em",
+            position: "absolute", top: 12, left: 12,
+            background: C.red, color: "#fff", fontSize: 11, fontWeight: 600,
             padding: "5px 10px", borderRadius: 999,
+            display: "flex", alignItems: "center", gap: 5,
           }}>
-            🇯🇵 LE JAPON DU JOUR
+            <Sparkles size={12}/> À la une
           </div>
         </div>
       )}
-      <div style={{ padding: "14px 16px" }}>
-        <div style={{ fontSize: 10, color: C.gold, letterSpacing: ".14em", marginBottom: 6, textTransform: "uppercase" }}>
-          {latest ? relativeDay(latest.published_at || latest.created_at) : "Nouveau chaque matin"}
-        </div>
+      <div style={{ padding: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <div style={{ fontSize: 16, fontWeight: 800, color: C.text, lineHeight: 1.25 }}>
+          <div style={{ fontFamily:"'Noto Serif JP',serif", fontWeight: 600, fontSize: 15, color: C.text }}>
             {latest ? latest.title : "Une découverte japonaise chaque jour"}
           </div>
           {isNew && <span aria-label="Nouveau" style={{ width: 7, height: 7, borderRadius: "50%", background: C.gold, flexShrink: 0 }}/>}
         </div>
         {latest?.subtitle && (
-          <div style={{ fontSize: 13, color: C.t2 || C.t3, marginTop: 4 }}>{latest.subtitle}</div>
+          <div style={{ fontSize: 12, color: C.t3, marginTop: 3 }}>{latest.subtitle}</div>
         )}
-        <div style={{ fontSize: 12, color: C.gold, fontWeight: 600, marginTop: 10 }}>
-          Voir le feed →
-        </div>
+        {latest?.body && (
+          <div style={{ fontSize: 13, color: C.t2, marginTop: 6, lineHeight: 1.4, overflow:"hidden", textOverflow:"ellipsis", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>{latest.body}</div>
+        )}
       </div>
     </div>
   );

@@ -12,7 +12,11 @@ import { m, LazyMotion, AnimatePresence, loadDomAnimationFeatures, usePrefersRed
 
 const PARTICLES = ["✨","🎉","🎊","⭐","🌸"];
 
-export function CelebrationOverlay({ emoji="🎉", title, subtitle, color="#C9463D", duration=1800, onDone }){
+export function CelebrationOverlay({ C, emoji="🎉", title, subtitle, color="#C9463D", duration=1800, onDone }){
+  const s1 = C?.s1 || "#1A1410";
+  const text = C?.text || "#F0E6D3";
+  const t2 = C?.t2 || "rgba(240,230,211,0.7)";
+  const shadow = C ? "0 20px 60px rgba(28,20,16,0.18)" : "0 20px 60px rgba(0,0,0,0.5)";
   const [visible, setVisible] = useState(true);
   const reduced = usePrefersReducedMotion();
 
@@ -53,10 +57,10 @@ export function CelebrationOverlay({ emoji="🎉", title, subtitle, color="#C946
               animate={{opacity:1,scale:1}}
               exit={reduced?{opacity:0}:{opacity:0,scale:0.9}}
               transition={reduced?{duration:0.12}:{type:"spring",stiffness:340,damping:20}}
-              style={{background:"#1A1410",border:`1px solid ${color}55`,borderRadius:20,padding:"26px 30px",textAlign:"center",boxShadow:"0 20px 60px rgba(0,0,0,0.5)",maxWidth:280}}>
+              style={{background:s1,border:`1px solid ${color}55`,borderRadius:24,padding:"26px 30px",textAlign:"center",boxShadow:shadow,maxWidth:280}}>
               <div style={{fontSize:46,marginBottom:10}}>{emoji}</div>
-              <div style={{fontSize:17,fontWeight:600,color:"#F0E6D3",marginBottom:subtitle?4:0}}>{title}</div>
-              {subtitle && <div style={{fontSize:13,color:"rgba(240,230,211,0.7)"}}>{subtitle}</div>}
+              <div style={{fontSize:17,fontFamily:"'Noto Serif JP',serif",fontWeight:600,color:text,marginBottom:subtitle?4:0}}>{title}</div>
+              {subtitle && <div style={{fontSize:13,color:t2}}>{subtitle}</div>}
             </m.div>
           </m.div>
         )}
