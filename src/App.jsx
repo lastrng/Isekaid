@@ -2631,12 +2631,21 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
     setPicked(choix);
     if(choix.correct){ setScore(v=>v+1); sfx.playCorrect(); } else sfx.playWrong();
   };
+  // Snapshot de `alreadyDone` PRIS AU MOMENT où cette tentative se termine —
+  // pas la prop `alreadyDone` elle-même, qui peut déjà refléter la mise à
+  // jour déclenchée par onComplete(s) ci-dessous : React 18 batch le
+  // setFinished(true) local et le setScenProgress du parent dans le même
+  // commit, donc au premier rendu de l'écran de résultat, `alreadyDone`
+  // vaudrait déjà `true` — et "Scénario validé !" ne s'afficherait jamais
+  // au tout premier succès (on verrait "Déjà complété" à la place).
+  const wasAlreadyDoneRef = useRef(alreadyDone);
   const nextStep = ()=>{
     if(step < s.etapes.length-1){ setStep(step+1); setPicked(null); }
     else {
+      const passed = score/s.etapes.length >= 0.7;
+      wasAlreadyDoneRef.current = alreadyDone;
       setFinished(true);
       const perfect = score === s.etapes.length;
-      const passed = score/s.etapes.length >= 0.7;
       if(passed) (perfect ? sfx.playLevelUp() : sfx.playComplete());
       // reward only first successful (>=70%) completion
       if(!alreadyDone && passed) onComplete(s);
@@ -2658,7 +2667,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
   if(finished){
     const pct = Math.round((score/s.etapes.length)*100);
     const passed = score/s.etapes.length >= 0.7;
-    const earned = passed && !alreadyDone;
+    const earned = passed && !wasAlreadyDoneRef.current;
     return(
       <div style={{padding:"60px 24px",textAlign:"center",position:"relative",overflow:"hidden"}}>
         {/* Confettis si réussi */}
@@ -2679,7 +2688,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
             <div style={{fontSize:13,color:C.green,fontWeight:600,marginBottom:4}}>Scénario validé ! ✓</div>
             <div style={{fontSize:13,color:C.t2}}>Tu maîtrises cette situation 🎌</div>
           </div>
-        ) : alreadyDone && passed ? (
+        ) : wasAlreadyDoneRef.current && passed ? (
           <div style={{margin:"18px 0",fontSize:12,color:C.t3}}>Déjà complété ✓</div>
         ) : !passed ? (
           <div style={{margin:"18px 0",fontSize:12,color:C.t3}}>Atteins 70% pour valider ce scénario</div>
