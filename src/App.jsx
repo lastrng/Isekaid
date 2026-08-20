@@ -2590,9 +2590,9 @@ function ScenarioApprofondir({C, s, links, onBack, onOpenItem}){
               <span style={{fontSize:28,flexShrink:0,display:photo?"none":"flex",width:photo?0:"auto"}}>{item.emoji}</span>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontSize:9,color:meta.color,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{meta.label}</div>
-                <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
+                <div style={{display:"flex",flexWrap:"wrap",alignItems:"baseline",gap:8,marginBottom:3}}>
                   <span style={{fontSize:14,color:C.text,fontWeight:500}}>{title}</span>
-                  {jp && <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{jp}</span>}
+                  {jp && <span style={{fontSize:11,color:C.t3,fontFamily:"'Noto Serif JP',serif",flexShrink:0}}>{jp}</span>}
                 </div>
                 <div style={{fontSize:12,color:C.t2,lineHeight:1.4}}>{tagline}</div>
               </div>
