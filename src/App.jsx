@@ -9,7 +9,7 @@ import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, sign
 import { DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { JapanNewsCard } from "./JapanNews";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
-import { speakJP, SpeakButton } from "./tts";
+import { speakJP, SpeakButton, stopSpeak } from "./tts";
 import { TutorEntryCard, TutorScreen, estimateNiveau, NiveauInfo } from "./Tutor";
 import { DiscoveriesScreen, useLatestUnlockedDiscovery, DiscoveryTeaserCard, isDiscoveryNew, useExploreDiscoveries, requiredDay } from "./ExploreDiscoveries";
 import { scenarioTutorTarget, buildBridgeContext } from "./scenarioTutorBridge";
@@ -2806,8 +2806,37 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
   // qu'ailleurs dans ce fichier — voir ExploreScreen/ScenariosScreen).
   const shuffledChoix = useMemo(()=> shuffle(etape.choix), [step, playId]);
 
+  // Lecture enchaînée de toutes les réponses (bouton distinct de celui de la
+  // Situation) : lit chaque choix l'un après l'autre en surlignant celui en
+  // cours (playingIdx). `playTokenRef` invalide toute séquence en cours dès
+  // qu'on change d'étape/refait le scénario ou qu'on répond — sans ça, une
+  // séquence lancée puis abandonnée continuerait d'avancer en arrière-plan.
+  const [playingIdx, setPlayingIdx] = useState(null);
+  const playTokenRef = useRef(0);
+  const stopPlayingChoices = ()=>{ playTokenRef.current++; stopSpeak(); setPlayingIdx(null); };
+  const playAllChoices = ()=>{
+    if(playingIdx!==null){ stopPlayingChoices(); return; } // re-tap = arrêter
+    const token = ++playTokenRef.current;
+    const withAudio = shuffledChoix.map((c,i)=>({c,i})).filter(x=>x.c.jp);
+    if(!withAudio.length) return;
+    let pos = 0;
+    const playNext = ()=>{
+      if(token!==playTokenRef.current) return; // séquence invalidée entre-temps
+      if(pos>=withAudio.length){ setPlayingIdx(null); return; }
+      const {c,i} = withAudio[pos];
+      setPlayingIdx(i);
+      pos++;
+      speakJP(c.jp, playNext);
+    };
+    playNext();
+  };
+  useEffect(()=>{ stopPlayingChoices(); // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[step, playId]);
+  useEffect(()=> stopPlayingChoices, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const choose = (choix)=>{
     if(picked) return;
+    stopPlayingChoices();
     setPicked(choix);
     if(choix.correct){ setScore(v=>v+1); sfx.playCorrect(); } else sfx.playWrong();
   };
@@ -2911,7 +2940,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
         <div style={{padding:"18px",background:`${C.red}11`,border:`1px solid ${C.red}33`,borderRadius:14,marginBottom:18}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:8}}>
             <div style={{fontSize:10,color:C.red,letterSpacing:".2em",textTransform:"uppercase"}}>{s.emoji} Situation</div>
-            {situationJP && <SpeakButton C={C} text={situationJP} color={C.red} size={26}/>}
+            {situationJP && <span onClickCapture={stopPlayingChoices}><SpeakButton C={C} text={situationJP} color={C.red} size={26}/></span>}
           </div>
           <div style={{fontSize:15,color:C.text,lineHeight:1.55}}>
             {script==="romaji" && etape.situation_romaji ? etape.situation_romaji
@@ -2922,6 +2951,9 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
 
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,gap:10}}>
           <div style={{fontSize:13,color:C.t2,fontWeight:500,flex:1}}>{etape.question}</div>
+          <button onClick={playAllChoices} className="pop-press" style={{flexShrink:0,display:"flex",alignItems:"center",gap:5,fontSize:11,padding:"5px 11px",background:playingIdx!==null?C.indigo:"transparent",border:`1px solid ${playingIdx!==null?C.indigo:C.border}`,borderRadius:16,color:playingIdx!==null?"#fff":C.t3,cursor:"pointer",whiteSpace:"nowrap"}}>
+            {playingIdx!==null ? <>⏸ Arrêter</> : <>🔊 Écouter les réponses</>}
+          </button>
           {hideRomajiByLevel && (
             <button onClick={()=>setShowRomaji(v=>!v)} className="pop-press" style={{flexShrink:0,fontSize:11,padding:"5px 11px",background:showRomaji?C.s2:"transparent",border:`1px solid ${showRomaji?C.red+"55":C.border}`,borderRadius:16,color:showRomaji?C.red:C.t3,cursor:"pointer",whiteSpace:"nowrap"}}>
               {showRomaji ? "あ Masquer rōmaji" : "A Afficher rōmaji"}
@@ -2937,6 +2969,11 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
               if(c.correct){ bg="rgba(78,128,96,0.1)"; bd="rgba(78,128,96,0.4)"; if(picked===c) anim="bounceIn .5s ease"; }
               else if(c===picked){ bg="rgba(201,70,61,0.08)"; bd="rgba(201,70,61,0.4)"; anim="shake .4s ease"; }
             }
+            // Surlignage de la réponse en cours de lecture (bouton "Écouter les
+            // réponses" ci-dessus) — prime sur le style "picked" s'il y a lieu
+            // (en pratique choose() coupe la lecture, donc rarement les deux).
+            const isPlaying = playingIdx===i;
+            if(isPlaying){ bg=`${C.indigo}18`; bd=C.indigo; }
             return(
               <div key={i} onClick={()=>!picked&&choose(c)} className={picked?"":"lift"} style={{textAlign:"left",padding:"14px 16px",background:bg,border:`2px solid ${bd}`,borderRadius:16,cursor:picked?"default":"pointer",transition:"background var(--dur-slow) var(--ease-smooth), border-color var(--dur-slow) var(--ease-smooth)",animation:anim}}>
                 <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
@@ -2949,7 +2986,11 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
                         une fois la réponse donnée, à titre de correction/révision. */}
                     {picked && <div style={{fontSize:13,color:C.t2,marginTop:2}}>{c.fr}</div>}
                   </div>
-                  {picked && c.jp && <SpeakButton C={C} text={c.jp} color={C.red}/>}
+                  {/* Coupe une éventuelle lecture enchaînée en cours (bouton
+                      "Écouter les réponses") avant de jouer ce choix précis —
+                      pause() ne déclenche pas "ended", donc sans ça la
+                      séquence resterait bloquée sur l'étape interrompue. */}
+                  {c.jp && <span onClickCapture={stopPlayingChoices}><SpeakButton C={C} text={c.jp} color={C.red}/></span>}
                 </div>
                 {picked===c && <div style={{marginTop:4,fontSize:12,color:c.correct?C.green:C.red,animation:"fadeIn .4s ease .15s both"}}>{c.correct?"✓ ":"✕ "}{c.feedback}</div>}
                 {picked && c.correct && picked!==c && <div style={{marginTop:4,fontSize:12,color:C.green,animation:"fadeIn .4s ease .15s both"}}>✓ {c.feedback}</div>}

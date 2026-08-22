@@ -34,29 +34,44 @@ export function hasJapaneseVoice(){
   } catch(e){ return false; }
 }
 
-export function speakJP(text){
-  if(!text) return;
+// onEnd (optionnel) : appelé une fois la lecture terminée (ou en erreur) — sert
+// à enchaîner plusieurs phrases à la suite (voir ScenarioPlay, lecture de
+// toutes les réponses). N'affecte aucun appelant existant qui l'omet.
+export function speakJP(text, onEnd){
+  if(!text){ onEnd?.(); return; }
   const file = AUDIO_MANIFEST[text.trim()];
   if(file){
     try {
       if(_currentAudio){ _currentAudio.pause(); _currentAudio = null; }
-      _currentAudio = new Audio("/" + file);
-      _currentAudio.play().catch(()=> browserSpeak(text)); // repli si la lecture échoue
+      const audio = new Audio("/" + file);
+      _currentAudio = audio;
+      audio.onended = ()=>{ if(_currentAudio===audio) _currentAudio=null; onEnd?.(); };
+      audio.play().catch(()=> browserSpeak(text, onEnd)); // repli si la lecture échoue
       return;
     } catch(e){ /* on continue vers le repli */ }
   }
-  browserSpeak(text);
+  browserSpeak(text, onEnd);
 }
 
-function browserSpeak(text){
+// Interrompt toute lecture en cours (MP3 pré-généré ou Web Speech) — utile
+// pour arrêter une séquence enchaînée (lecture de toutes les réponses) avant
+// qu'elle aille au bout, ex. quand l'utilisateur change d'étape ou répond.
+export function stopSpeak(){
+  try { if(_currentAudio){ _currentAudio.pause(); _currentAudio = null; } } catch(e){}
+  try { if(window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e){}
+}
+
+function browserSpeak(text, onEnd){
   try {
-    if(!window.speechSynthesis || !text) return;
+    if(!window.speechSynthesis || !text){ onEnd?.(); return; }
     const speak = ()=>{
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.lang = "ja-JP";
       u.rate = 0.85;
       u.pitch = 1.0;
+      u.onend = ()=> onEnd?.();
+      u.onerror = ()=> onEnd?.();
       const voices = window.speechSynthesis.getVoices();
       const jp = voices.find(v=>v.lang==="ja-JP") || voices.find(v=>v.lang?.toLowerCase().startsWith("ja"));
       if(jp) u.voice = jp;
@@ -71,7 +86,7 @@ function browserSpeak(text){
       // Filet de sécurité : tente quand même après un court délai
       setTimeout(speak, 250);
     }
-  } catch(e){}
+  } catch(e){ onEnd?.(); }
 }
 
 // Hook réactif : certains navigateurs chargent les voix de façon asynchrone,
