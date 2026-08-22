@@ -2,129 +2,184 @@
 
 **Sous-titre :** Du néon de Tokyo au silence des temples
 
-**Intro :** Sept jours, quatre villes, une seule certitude : tu vas aimer. On part du chaos coloré de Tokyo, on se pose à Hakone face au Fuji avec un verre de saké fumant, on se perd dans les ruelles de Kyoto, et on termine à Osaka en engloutissant des takoyaki devant les néons. C'est le grand classique qui marche — parce que ça marche vraiment.
+**Intro :** Tes premiers pas au Japon en une semaine : le chaos organisé de Tokyo, l'apaisement des eaux thermales de Hakone, l'immersion spirituelle à Kyoto, et la gourmandise débridée d'Osaka. Un vrai coup de cœur, promis.
 
-**Rythme :** équilibré · **Budget indicatif :** ¥¥
+**Rythme :** équilibré · **Budget indicatif :** ¥¥¥
 
 ## Hébergement
-- **Tokyo** — Hôtel urbain (¥¥¥) → catalogue: Park Hyatt Tokyo
-  Des vues surréalistes sur la ville et un service classe mondiale si tu veux te faire plaisir.
-- **Hakone** — Ryokan traditionnel (¥¥¥) → catalogue: Ryokan avec rotenburo
-  Bain privé face à la nature, kaiseki le soir : l'essence du Japon en une nuit.
-- **Kyoto** — Ryokan traditionnel (¥¥¥) → catalogue: Ryokan Gion
-  À Gion, au cœur de l'atmosphère geisha. Tatami, futon, silence.
-- **Osaka** — Hôtel confortable (¥¥)
-  Près de Dotonbori ou Namba pour l'accès aux restaurants et à l'ambiance.
+- **Tokyo** — hôtel moderne (¥¥¥) → catalogue: Park Hyatt Tokyo
+  Luxe avec vue panoramique sur la capitale.
+- **Hakone** — ryokan traditionnel (¥¥¥) → catalogue: Ryokan avec rotenburo
+  Bain en plein air face à la nature — l'expérience quintessentielle.
+- **Kyoto** — ryokan traditionnel (¥¥¥) → catalogue: Ryokan Gion
+  Immersion dans le Kyoto d'autrefois, en cœur de Gion.
+- **Osaka** — hôtel 3-étoiles (¥¥)
+  Pratique près de Namba ou Dotonbori pour profiter de la vie nocturne.
 
 ## Jour 1 — Tokyo
-*Tokyo te reçoit. Premier jour : on pose les bases — le Tokyo ancien et authentique.*
+*Ton premier jour à Tokyo : les temples historiques d'Asakusa, le chaos coloré d'Akihabara et la vue sereine d'Ueno.*
 
-💡 **Conseil du jour :** Pose ton téléphone au Senso-ji : absorbe l'encens, l'ambiance, les gens. Les photos, tu les as déjà tous vu.
+💡 **Conseil du jour :** Dépose ton gros bagage à la consigne de la gare, fonce avec juste ton petit sac — tu seras bien plus libre pour explorer.
 
 **Senso-ji**
-Le temple le plus visité du pays, vrai. Mais viens avant 8h : tu auras la lanterne rouge géante presque pour toi seul, et tu comprendras pourquoi ce lieu hypnotise les gens.
+Le temple le plus visité du pays, mais viens avant 8h et tu le vivras comme un habitant, pas comme un touriste. La lanterne de papier rouge au-dessus de la porte (chochin) vaut à elle seule le lever tôt.
 
-  🚶 métro, ~10 min
+  🚶 à pied, ~2 min
+
+**Nakamise-dori**
+La vraie ruelle commerçante des pèlerins d'autrefois : éventails, poupées, crackers au miel. Le matin, tu verras les marchands qui ouvrent les volets peints — un spectacle oublié.
+
+  🚶 train, ~8 min
 
 **Akihabara**
-Otaku central, oui, mais aussi le pouls électrique de Tokyo. Les vrais trésors (vintage, figures de collection) dorment aux niveaux supérieurs — monte, cherche, négocie.
+Udon électronique en contraste total : figurines rares, jeux rétro, l'universum manga-anime. Grimpe aux étages supérieurs si tu cherches du vrai vintage.
 
-  🚶 métro, ~10 min
+  🚶 train, ~15 min
 
 **Ichiran Ramen**
-Ton premier ramen au Japon : mieux vaut un bon bol dans une file d'attente qu'un restaurant luxe sans âme. Ici, c'est simple, c'est bon, c'est l'essence.
+Midi approche, les ramen ici sont légendaires (branche d'Osaka débarquée à Tokyo). Personnalise ton bol sur la fiche : c'est ton bol, fais-le comme tu veux.
+
+  🚶 train, ~5 min
+
+**Parc d'Ueno**
+En fin d'après-midi, le parc respire. Glisse dans le Musée National si tu as l'énergie : c'est là qu'on comprend vraiment la civilisation japonaise sous chaque objet exposé.
 
 ## Jour 2 — Tokyo
-*Jour 2 à Tokyo : change de registre. Fini le passé, vive le futur — et l'absurde.*
+*Tokyo moderne : spirituel le matin avec le Meiji, coloré et vibrant le reste de la journée — Harajuku, Shibuya, et le digital immersif.*
 
-💡 **Conseil du jour :** Le Carrefour de Shibuya, c'est hypnotisant mais vide de sens à le regarder depuis le sol. Trouve une terrasse, un café, un angle d'observation — ça change tout.
+💡 **Conseil du jour :** Réserve tes billets teamLab en ligne avant même d'arriver au Japon, ça remplit deux mois à l'avance.
+
+**Sanctuaire Meiji**
+Un sanctuaire niché dans une forêt urbaine — la sérénité au cœur de la mégapole. Va tôt, tu pourrais croiser une vraie cérémonie de mariage shinto en route.
+
+  🚶 à pied, ~15 min — À côté du sanctuaire, sorties Meiji-Jingu ou Harajuku.
+
+**Takeshita-dori**
+La rue la plus folle de Tokyo : mode jeune, crêpes sucrées, graffiti kawaii. Préfère la semaine ou tôt le matin pour circuler. La crêpe pliée ? Un must, même sucré-sucré.
+
+  🚶 train, ~5 min
 
 **Carrefour de Shibuya**
-C'est fou, c'est chaotique, c'est Tokyo résumé en une intersection. Oui, les photos sont partout, mais être dedans physiquement crée une vertigo qu'aucun écran ne restitue.
+Le carrefour piéton emblématique où la circulation s'arrête pour toi. Observe d'en haut depuis un café : mille personnes synchronisées, c'est hypnotique.
 
-  🚶 métro, ~20 min — Toyosu est plus loin, mais ça en vaut la peine.
+  🚶 train, ~25 min
 
 **teamLab Planets**
-Réserve tes billets en ligne bien avant — les places s'envolent. À l'intérieur, tu entres dans un rêve : lumières, eau, art, technologie qui se dissout dans la beauté. Porte un short.
+Tes yeux vont halluciner : projections numériques, eau, lumière, immersion complète. Porte un short, tu vas mouiller tes pieds pour de bon.
+
+  🚶 train, ~15 min
+
+**Shibuya Sky**
+Au coucher du soleil, la vue bascule progressivement de la lumière du jour aux néons de la nuit. Réserve en ligne pour éviter la file et chope un créneau vers 17h-18h.
 
 ## Jour 3 — Hakone
-> 🚄 Arrivée depuis la ville précédente : train de montagne, ~1h30 — Les petites lignes locales montent vers Hakone avec des vues en cascade — prends une place à gauche.
+> 🚄 Arrivée depuis la ville précédente : train, ~1 h 15 min — Shinkansen depuis Tokyo jusqu'à Odawara, puis train local vers Hakone.
 
-*Hakone te change. C'est la transition : Tokyo derrière toi, Kyoto devant, mais toi ici, face à la montagne.*
+*Jour détente : les volcans fument, les onsen chauffent, et tu flottes entre l'art et les nuages au pied du mont Fuji.*
 
-💡 **Conseil du jour :** Prends le rotenburo (bain en plein air) au coucher du soleil. Essaie aussi le matin avant le petit-déjeuner. Deux moments, deux ambiances complètement différentes.
+💡 **Conseil du jour :** Réserve le rotenburo privatif du ryokan dès ton arrivée, c'est souvent complet pour la fin de journée.
+
+**Musée en plein air**
+Sculptures et installations en plein air dans la montagne : c'est le genre de musée où tu marches plus que tu observes. Pause ashiyu (bain de pieds) gratuit au milieu, tes jambes te diront merci.
+
+  🚶 téléphérique, ~30 min
 
 **Owakudani**
-Des remontées mécaniques, des sources chaudes fumantes, des œufs noirs : c'est un peu touristique, mais la géologie brute du Japon se lit ici. À avoir fait une fois.
+Les eaux sulfureuses bouillonnent en altitude : un paysage presque lunaire. Goûte les œufs noirs cuits là même (kuro-tamago) — selon la légende, en manger un ajoute des années à ta vie.
 
-  🚶 bus, ~30 min
+  🚶 bus, ~30 min — Navette depuis la gare ou Owakudani.
 
 **Onsen de Hakone**
-L'onsen n'est pas juste une douche chaude : c'est un rituel. On se lave d'abord, puis on trempe, puis on sort régénéré. Zéro téléphone, zéro stress.
-
-  🚶 bus, ~15 min
-
-**Ryokan avec rotenburo**
-Tu dors ici ce soir. Dès l'arrivée, jette-toi dans le rotenburo privatif de ta chambre — face à la forêt, l'eau chaude, le silence. C'est pour cette image que tu as fait ce voyage.
-
-## Jour 4 — Kyoto
-> 🚄 Arrivée depuis la ville précédente : train direct, ~2h — Hakone vers Kyoto : passe Fuji, puis la gare change de couleur, d'énergie — tu sens Kyoto arriver.
-
-*Kyoto. Le Japon que tu imagines. Ici, c'est du temple à chaque coin de rue.*
-
-💡 **Conseil du jour :** Loue un vélo à ta gare et oublie les bus : sur deux roues, tu vois Kyoto différemment, tu traînes sans culpabilité, tu croises les vraies vies.
-
-**Fushimi Inari**
-Des torii rouge-orange par milliers qui grimpent une montagne — oui, c'est l'une des images les plus iconiques du Japon, mais c'est iconique pour une raison. Grimpe jusqu'au sommet, pas juste jusqu'à la première photo.
-
-  🚶 train, ~40 min
-
-**Marché Nishiki**
-Un marché couvert traditionnel qui bouillit de vie : poissons frais, pickles, mochi chaud, mets inconnus — c'est un concentré de Kyoto gourmand. Ne te retiens pas.
-
-## Jour 5 — Kyoto
-*Jour 5 à Kyoto : plus de temples, plus de nature, un goût du rythme de la vie ici.*
-
-💡 **Conseil du jour :** Pars tôt le matin — avant 8h — pour chaque site : tu vas éviter l'avalanche de groupes touristiques et vraiment respirer les lieux.
-
-**Kinkaku-ji**
-Le temple d'or réfléchi dans le lac : c'est beau, presque trop. Mais une fois vu au calme du matin, le charme opère sans artifice.
-
-  🚶 train, ~30 min
-
-**Bambouseraie d'Arashiyama**
-La bambouseraie est touristique, d'accord. Mais grimpe à 7h du matin quand tu peux marcher entre les tiges géantes presque seul — c'est une forêt sacrée, vraiment.
-
-## Jour 6 — Osaka
-> 🚄 Arrivée depuis la ville précédente : train, ~75 min — Kyoto à Osaka : train rapide, le paysage change, les bâtiments grimpent — ça se sent, tu entres dans une autre ville.
-
-*Osaka. Kyoto c'était silence et spiritualité. Ici : bruyant, vivant, délicieux.*
-
-💡 **Conseil du jour :** Visite le château le matin (moins de monde), puis laisse-toi porter par Dotonbori la nuit — surtout ne programme rien, errer, c'est le point.
-
-**Château d'Osaka**
-Le donjon blanc se dresse face aux gratte-ciel modernes : un contraste brutal qui résume Osaka. Monte au top pour la vue sur la ville — c'est moins zen que Kyoto, c'est plus honnête.
-
-  🚶 métro, ~15 min
-
-**Dotonbori**
-Un couloir survolté : enseignes géantes, restaurants remplis, gens partout, le panneau Glico d'ici partout sur Instagram. Oui, c'est touristique — mais Osaka, c'est ça, authentiquement.
+Si tu as des tatouages, cherche un onsen kashikiri (privé) ou une chambre avec bain intérieur — beaucoup de petits ryokan sont cool avec ça. L'eau thermale apaise vraiment.
 
   🚶 à pied, ~5 min
 
-**Takoyaki de Dotonbori**
-Les takoyaki d'Osaka ne ressemblent à rien d'autre : boulette croustillante dehors, crème dedans, poulpe tendre. Debout, au stand, en regardant passer le chaos — c'est comme ça qu'il faut les manger.
+**Ryokan avec rotenburo**
+La chambre t'attend avec un kimono, une table basse, le silence. Le rotenburo en début de soirée face à la montagne sombre — c'est pour ça qu'on vient à Hakone.
 
-## Jour 7 — Osaka
-*Dernier jour. Pas de grosse visite, juste du temps pour flâner, manger, peut-être acheter une bricole.*
+## Jour 4 — Kyoto
+> 🚄 Arrivée depuis la ville précédente : train, ~2 h 30 min — Trajet entre Hakone et Kyoto : train jusqu'à Odawara, puis Shinkansen.
 
-💡 **Conseil du jour :** Traîne au Marché Kuromon le matin, puis fonds-toi dans Shinsaibashi l'après-midi — c'est du temps pour respirer avant le retour.
+*Kyoto, enfin : mille sanctuaires, portiques vermillon, et l'impression de voyager cinq siècles en arrière.*
 
-**Marché Kuromon**
-Un marché de quartier animé où les habitants font leurs courses : poissons grill, wagyu à croquer, atmosphère de vraie vie. C'est moins pittoresque que Nishiki, c'est plus juste.
+💡 **Conseil du jour :** Reste une nuit supplémentaire si possible — Kyoto ne se voit pas en deux jours, c'est gâcher.
+
+**Fushimi Inari**
+Dix mille portiques vermillon s'empilent sur la montagne : c'est de la folie visuelle. Monte avant 9h ou après 16h, sinon tu marches entre les selfie-sticks. Le sommet regarde Kyoto du haut, seul(e) avec les ombres.
+
+  🚶 bus, ~20 min
+
+**Kiyomizu-dera**
+Grimpe par Sannenzaka, la ruelle historique oubliée des touristes : petits restaurants, céramiques, l'atmosphère d'avant-guerre. Kiyomizu offre une plateforme en bois suspendue et une vue qui justifie l'existence.
+
+  🚶 à pied, ~15 min
+
+**Quartier de Gion**
+Le plus beau quartier du Japon : geishas en route, façades en bois noir, lanternes papier. Flâne en début de soirée vers 17h-18h, quand les maikos se préparent. Respecte-les : photos de loin, jamais frontales.
+
+## Jour 5 — Kyoto
+*Jour 2 à Kyoto : les paysages légendaires (bambouseraie, temple d'or), le château, et la vraie bouffe de marché.*
+
+💡 **Conseil du jour :** Lève-toi à 6h pour la bambouseraie vide — seul(e) au monde entre les tiges vertes, une méditation involontaire.
+
+**Bambouseraie d'Arashiyama**
+Bambouseraie mythique : si tu la fais à midi, tu te demanderas pourquoi tout le monde la recommande. À 7h, tu comprendras. Le silence vert, c'est presque effrayant de beauté.
+
+  🚶 bus, ~40 min
+
+**Kinkaku-ji**
+Le pavillon d'or recouvert de feuilles de vrai or qui se reflète dans un bassin tranquille : c'est la photo de carte postale, mais méritée. Evite 11h-14h, la foule est dingue.
+
+  🚶 train, ~25 min
+
+**Château de Nijo**
+Les planchers qui grinçent (uguisubari) ? Créés exprès pour alerter les gardes des intrus. Le système fonctionne encore, imparable. Les jardins calmes, les paravents peints, l'histoire respire.
+
+  🚶 train, ~5 min
+
+**Marché Nishiki**
+Marché traditionnel niché entre les rues : boucheries raffinées, pâtisseries, brochet. Goûte le tamagoyaki sucré-salé, les fruits de mer grillés. Mâche sur place, ne sors pas avec ta bouchée.
+
+## Jour 6 — Osaka
+> 🚄 Arrivée depuis la ville précédente : train, ~75 min — Trajet Kyoto-Osaka : train local ou limited express.
+
+*Osaka : moins raffinée, plus gourmande. Ici, on mange debout, on crie, on vit. C'est l'envers joyeux de Kyoto.*
+
+💡 **Conseil du jour :** Oublie tes bonnes manières : à Osaka, on trempe une fois dans la sauce commune du kushikatsu, pas deux, et on croque avec gusto.
+
+**Château d'Osaka**
+Château reconstruit de béton, mais l'histoire shogun colle encore aux pierres extérieures. Monte au donjon pour la panorama urbaine. Le parc vaut le coup, surtout au printemps.
 
   🚶 métro, ~10 min
 
+**Shinsekai**
+Quartier rétro et authentique : façades écaillées, petites gargotes qui fument, lampadaires d'un autre temps. Le kushikatsu ici est rituel : tu trempes une fois dans la sauce, tu croque en marchant.
+
+  🚶 train, ~10 min
+
+**Dotonbori**
+Le quartier de nuit par excellence : énormes enseignes lumineuses (le géant écrevisse rouge), restaurants entassés. Repère le panneau Glico du coureur rougeoyant — photo obligatoire.
+
+  🚶 à pied, ~5 min — Dans Dotonbori, facile à trouver via les files d'attente.
+
+**Takoyaki de Dotonbori**
+Boules d'octopus cuites à la perfection, intérieur brûlant : souffle avant de croquer. Sauce tamarind-sucré, mayo et flocons de bonite qui dansent sur la chaleur — street food définitive.
+
+## Jour 7 — Osaka
+*Dernier jour : temple tranquille, marché du matin, derniers achats — une sortie douce avant l'aéroport.*
+
+💡 **Conseil du jour :** Laisse de la marge : derniers achats le matin, trajet à l'aéroport l'après-midi. Rien ne te presse, tu reviendras.
+
+**Sumiyoshi Taisha**
+Sanctuaire moins connu, donc respirable. Le pont Taiko-bashi très raide et légendaire en photo : les pèlerins montaient et descendaient ici depuis des générations. Place sacrée, calme.
+
+  🚶 train, ~20 min
+
+**Marché Kuromon**
+Marché du matin plein de vendeurs énergiques : brochettes de bœuf wagyu, huîtres grillées, fruits de mer brillants. Viens avant 10h quand tout est frais et bondé de locaux.
+
+  🚶 train, ~5 min
+
 **Shinsaibashi**
-Galerie marchande couverte, grande, aisée — parfait pour les derniers souvenirs sans stress. Et à côté, Dotonbori si tu veux une dose de chaos en prime.
+Grande avenue commerçante couverte (idéal si la pluie revient). Derniers souvenirs, fringues, gadgets. À côté de Dotonbori pour une dernière sentation électrique avant de partir.
 

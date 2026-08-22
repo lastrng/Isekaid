@@ -1,72 +1,107 @@
 # Saveurs du Kansai — brouillon (verified: false)
 
-**Sous-titre :** Saveurs de rue, marchés et douceurs du Kansai
+**Sous-titre :** Du néon gourmand de Osaka aux temple-marchés de Kyoto et Nara
 
-**Intro :** Quatre jours pour découvrir le Kansai comme un vrai gourmand. D'Osaka bruyante et délicieuse à Kyoto sereine, en passant par les daims de Nara — tu vas goûter le Japon comme il se mange vraiment.
+**Intro :** Quatre jours à travers le Kansai pour les amoureux de bonne chère et d'atmosphères authentiques. Osaka t'explose les saveurs, Kyoto susurre ses traditions culinaires, Nara t'offre daims joueurs et douceurs incontournables. À ne pas louper si tu veux goûter le vrai Japon.
 
 **Rythme :** équilibré · **Budget indicatif :** ¥¥
 
 ## Hébergement
-- **Osaka** — Hôtel urbain (¥¥)
-  Près de Namba pour accéder à Dotonbori en quelques minutes. Le cœur de l'action.
-- **Kyoto** — Ryokan traditionnel (¥¥¥) → catalogue: Ryokan Gion
-  Une nuit immersive pour bien sentir l'essence de Kyoto. Les repas inclus mettent l'accent sur la cuisine kaiseki.
-- **Nara** — Guesthouse (¥¥)
-  Simple et accueillante, proche de la gare. Juste une nuit avant de repartir.
+- **Osaka** — hôtel urbain (¥¥)
+  Reste centré pour rayonner sur les quartiers gourmands.
+- **Kyoto** — ryokan traditionnel (¥¥¥) → catalogue: Ryokan Gion
+  Rive-toi au Gion pour l'ambiance et la proximité des ruelles historiques.
+- **Nara** — petit hôtel (¥¥)
+  À deux pas de la gare, pratique pour explorer le parc et les temples dès le matin.
 
 ## Jour 1 — Osaka
-*Bienvenue à Osaka, la capitale gourmande du Japon. Aujourd'hui, tu plonges tête première dans la street food mythique.*
+*Bienvenue à Osaka, la capitale qui bouffe sans retenue. Aujourd'hui : châteaux, ruelles rétro et néon piétonnier.*
 
-💡 **Conseil du jour :** Viens à Dotonbori plutôt en fin d'après-midi ou en soirée : les lumières s'allument, la rue pulse, et les files aux stands ne font que commencer.
+💡 **Conseil du jour :** Arrive tôt au château pour le parc en mode tranquille, puis laisse-toi porter par l'énergie des quartiers marchands en fin d'après-midi.
+
+**Château d'Osaka**
+Le donjon offre une vue époustouflante sur Osaka moderne. C'est ton repère visuel du jour — tu comprendras mieux comment la ville s'étend.
+
+  🚶 métro, ~15 min — Plonge direct dans le Shinsekai à l'ancienne : couloirs étroits, petites enseignes, odeurs de frit.
+
+**Shinsekai**
+Le kushikatsu (brochettes panées) est LE déjeuner d'Osaka. Respecte la règle : une seule trempette par brochette, sinon tu insultes le bouillon. Rigolo et savoureux.
+
+  🚶 métro, ~10 min — À quelques pas du Shinsekai.
 
 **Dotonbori**
-Dotonbori, c'est l'Osaka qu'on voit au cinéma : chaotique, brillant, absolument vivant. Le décor est le repas. Repère le panneau Glico du coureur rouge — c'est la photo qu'il faut.
+Dotonbori est le spectacle Osaka qu'on rêvait de voir. Le panneau Glico du coureur reste un passage obligé — prépare ton téléphone pour la photo culte.
 
-  🚶 à pied, ~5 min — Les stands de takoyaki sont partout dans Dotonbori.
+  🚶 à pied, ~5 min — Reste à Dotonbori pour une pause bonbons.
 
 **Takoyaki de Dotonbori**
-Les takoyaki, c'est LE test de la street food d'Osaka. Boules de pâte croustillantes, cœur coulant brûlant, sauce sucrée-salée : tu comprends pourquoi Osaka n'arrête pas d'en parler.
+Le takoyaki (boulettes de poulpe) est street food à l'état pur. Brûlant, liquide au cœur, croquant dehors — à manger debout en admirant les néons.
 
 ## Jour 2 — Osaka
-*Jour 2, on quitte la rue pour le marché. Kuromon, c'est où les vrais Osakiens viennent manger.*
+*Jour 2 : on reste à Osaka, direction le sud-est. Sanctuaire secret, marché frais et shopping couvert.*
 
-💡 **Conseil du jour :** Apporte de la patience et du ventre vide : les étals débordent de trésors et tu vas vouloir tout goûter.
+💡 **Conseil du jour :** Visite Sumiyoshi tôt pour l'ambiance apaisée, puis attaque le marché Kuromon avant midi — c'est quand la fraîcheur et les étals sont au max.
+
+**Sumiyoshi Taisha**
+Sumiyoshi Taisha est moins blindé que ses cousins plus célèbres. Le pont Taiko-bashi, avec sa courbe prononcée, crée une belle photo. Ici, tu croises les locaux, pas les tour-ops.
+
+  🚶 train, ~20 min — Nankai depuis Sumiyoshi, direct vers le cœur gastronomique.
 
 **Marché Kuromon**
-Kuromon est un marché couvert où règnent les poissons frais, les huîtres grillées et les brochettes de wagyu. L'atmosphère ? Énergique, généreuse, pas du tout touristique. Les vendeurs sont fiers de ce qu'ils vendent.
+Kuromon est LE marché vivant d'Osaka : vous, fruits de mer, viandes wagyu grillées sur place. Les vendeurs sont sympas, ça rigole. Viens tôt, reste affamé, goûte large.
 
-  🚶 métro, ~10 min — Direction le quartier shopping.
+  🚶 métro, ~10 min — Chemine tranquille de Kuromon vers le shopping.
 
 **Shinsaibashi**
-Shinsaibashi, c'est une rue couverte pleine de boutiques, de petits restaurants, de flânerie. Après la chaleur du marché, c'est le bon moment pour bouger, prendre l'air (couvert), et chercher des souvenirs gourmands.
+Shinsaibashi est ton refuge pluie ou gris. Galerie commerciale préservée, ambiance rétro, petits restaurants discrets entre les magasins. Pas de prise de tête, juste du shopping cool.
 
 ## Jour 3 — Kyoto
-> 🚄 Arrivée depuis la ville précédente : train, ~30-45 min — Train rapide depuis Osaka. À l'arrivée, tu sens déjà la différence : Kyoto respire.
+> 🚄 Arrivée depuis la ville précédente : train, ~75 min — Direct depuis Osaka vers Kyoto, paysage qui bascule entre métropole et collines.
 
-*On monte à Kyoto par train. Ici, la gastronomie est plus calme, plus réfléchie — kaiseki, mets de saison, respect du produit.*
+*Kyoto, c'est autre chose. Les temples parlent, les marches chantent, les geikos se préparent. Quatre étapes pour goûter l'âme.*
 
-💡 **Conseil du jour :** Ralentis. À Kyoto, on ne dévale pas les lieux en courant. Le marché Nishiki mérite du temps, et Fushimi Inari aussi.
-
-**Marché Nishiki**
-Le marché Nishiki, c'est l'âme gourmande de Kyoto en cent mètres : tamagoyaki sucré-salé, mochi colorés, fruits de saison, poisson séché, légumes de rêve. Les vendeurs sont volontiers bavards — ils adorent partager.
-
-  🚶 train, ~15 min — Court trajet vers le sanctuaire.
+💡 **Conseil du jour :** Réserve toi une dégustation ou un dîner kaiseki pour le soir : Kyoto cuisine autrement que Osaka — plus épuré, plus respectueux des saisons.
 
 **Fushimi Inari**
-Fushimi Inari, c'est mille portiques rouges qui s'enfoncent dans la montagne. On vient ici pour la beauté après la gourmandise, pour respirer et réfléchir. En fin d'après-midi, quand les touristes repartent, c'est magique.
+Fushimi Inari est magique en début de matin ou coucher de soleil. Oublie midi. Monte parmi les milliers de toriis rouges jusqu'au calme — la solitude crée l'émerveillement.
+
+  🚶 train, ~30 min — Descend via Fushimi Inari par le train, puis bus pour Kiyomizu. La route serpente.
+
+**Kiyomizu-dera**
+Le chemin montant par Sannenzaka vaut le prix du temple. Petites boutiques d'artisanat, vendeurs de mochi, ambiance ultra-préservée. Kiyomizu posé au-dessus, c'est la récompense.
+
+  🚶 bus, ~15 min — Redescend vers le centre, direction la cuisine de rue légère.
+
+**Marché Nishiki**
+Nishiki est le marché de Kyoto — mais moins chaotique qu'Osaka, plus raffiné. Tamagoyaki sucré, mochi mou, petits plats. Ici on grignote respectueusement, pas on dévore.
+
+  🚶 à pied, ~10 min — À deux pas de Nishiki.
+
+**Quartier de Gion**
+Gion en fin d'après-midi offre une chance d'apercevoir une geiko ou maiko se rendant à un rendez-vous. Discrétion absolue, pas de photos. C'est du privilège pur.
 
 ## Jour 4 — Nara
-> 🚄 Arrivée depuis la ville précédente : train, ~45 min — Train direct. Nara est petit et doux, l'endroit idéal pour terminer.
+> 🚄 Arrivée depuis la ville précédente : train, ~45 min — Kintetsu depuis Kyoto, trajet bucolique vers Nara.
 
-*Dernier jour : Nara, où les daims errent librement et où on mange encore mieux.*
+*Dernier jour : Nara te reçoit avec ses daims joueurs, ses monstres de temples et ses pâtisseries qui fondent.*
 
-💡 **Conseil du jour :** Lève-toi tôt pour le parc et le mochi encore chaud. Les daims sont plus doux le matin, et tu évites la cohue d'après-midi.
-
-**Nakatanidou**
-Nakatanidou fabrique le mochi depuis toujours. Regarder les artisans piler la pâte à grande vitesse, c'est du spectacle. Le mochi tiède juste après — sucré, léger, un peu gluant — c'est le goût de Nara.
-
-  🚶 à pied, ~10 min — Le parc s'étend juste après le marché.
+💡 **Conseil du jour :** Pars tôt au parc avant la cohue touristique. Et ne rate pas de manger un mochi chaud à Nakatanidou — c'est ton dernier souvenir sucré du voyage.
 
 **Parc de Nara**
-Le parc de Nara, c'est une suspension entre réalité et féerie. Des daims partout, des temples cachés dans les bois, une herbe parfaite. C'est ici qu'on comprend pourquoi Nara est restée dans les cœurs depuis mille ans.
+Le parc est ton terrain de jeu : daims croisés, pelouse verte, temple dansant dans le lointain. Les daims adorent les 'shika senbei' (petits biscuits) vendus partout — ils se révérencient aussi, ce qui rend tout irréel.
+
+  🚶 à pied, ~15 min — À travers le parc, ponctué de daims à carresser.
+
+**Tōdai-ji**
+Le Bouddha géant de Tōdai-ji écrase par sa présence. Passe par le pilier percé du trou des narines — c'est devenu un jeu du touriste, mais ça sert à quelque chose, paraît-il.
+
+  🚶 à pied, ~20 min — Vers Sanjo-dori, le cœur commercial de Nara.
+
+**Nakatanidou**
+Nakatanidou : tu manges du mochi frais pilé sous tes yeux. Chaud, moelleux, garni de crème ou pâte rouge — c'est ta dernière volupté culinaire du Kansai.
+
+  🚶 bus, ~10 min — Court dernier voyage pour clore le voyage.
+
+**Kasuga Taisha**
+Kasuga Taisha, plus intime que Todai-ji, ferme ta boucle Nara. Si tu as de la chance, c'est un jour de festival — les lanternes allumées créent un rêve. Sinon, reste magique aussi.
 

@@ -18143,29 +18143,47 @@
             {
               "lieuId": "senso-ji",
               "heure": "9:00",
-              "noteParcours": "Le temple le plus visité du pays, vrai. Mais viens avant 8h : tu auras la lanterne rouge géante presque pour toi seul, et tu comprendras pourquoi ce lieu hypnotise les gens."
+              "noteParcours": "Le temple le plus visité du pays, mais viens avant 8h et tu le vivras comme un habitant, pas comme un touriste. La lanterne de papier rouge au-dessus de la porte (chochin) vaut à elle seule le lever tôt."
+            },
+            {
+              "lieuId": "nakamise",
+              "heure": "9:45",
+              "noteParcours": "La vraie ruelle commerçante des pèlerins d'autrefois : éventails, poupées, crackers au miel. Le matin, tu verras les marchands qui ouvrent les volets peints — un spectacle oublié.",
+              "arrivee": {
+                "mode": "à pied",
+                "duree": "~2 min"
+              }
             },
             {
               "lieuId": "akihabara",
               "heure": "11:00",
-              "noteParcours": "Otaku central, oui, mais aussi le pouls électrique de Tokyo. Les vrais trésors (vintage, figures de collection) dorment aux niveaux supérieurs — monte, cherche, négocie.",
+              "noteParcours": "Udon électronique en contraste total : figurines rares, jeux rétro, l'universum manga-anime. Grimpe aux étages supérieurs si tu cherches du vrai vintage.",
               "arrivee": {
-                "mode": "métro",
-                "duree": "~10 min"
+                "mode": "train",
+                "duree": "~8 min"
               }
             },
             {
               "lieuId": "ichiran",
               "heure": "13:00",
-              "noteParcours": "Ton premier ramen au Japon : mieux vaut un bon bol dans une file d'attente qu'un restaurant luxe sans âme. Ici, c'est simple, c'est bon, c'est l'essence.",
+              "noteParcours": "Midi approche, les ramen ici sont légendaires (branche d'Osaka débarquée à Tokyo). Personnalise ton bol sur la fiche : c'est ton bol, fais-le comme tu veux.",
               "arrivee": {
-                "mode": "métro",
-                "duree": "~10 min"
+                "mode": "train",
+                "duree": "~15 min"
+              }
+            },
+            {
+              "lieuId": "ueno-park",
+              "heure": "15:00",
+              "noteParcours": "En fin d'après-midi, le parc respire. Glisse dans le Musée National si tu as l'énergie : c'est là qu'on comprend vraiment la civilisation japonaise sous chaque objet exposé.",
+              "arrivee": {
+                "mode": "train",
+                "duree": "~5 min"
               }
             }
           ],
-          "recit": "Tokyo te reçoit. Premier jour : on pose les bases — le Tokyo ancien et authentique.",
-          "conseilDuJour": "Pose ton téléphone au Senso-ji : absorbe l'encens, l'ambiance, les gens. Les photos, tu les as déjà tous vu."
+          "recit": "Ton premier jour à Tokyo : les temples historiques d'Asakusa, le chaos coloré d'Akihabara et la vue sereine d'Ueno.",
+          "conseilDuJour": "Dépose ton gros bagage à la consigne de la gare, fonce avec juste ton petit sac — tu seras bien plus libre pour explorer."
         },
         {
           "num": 2,
@@ -18173,23 +18191,50 @@
           "titre": "Tokyo moderne",
           "etapes": [
             {
-              "lieuId": "shibuya-crossing",
+              "lieuId": "meiji-jingu",
               "heure": "9:00",
-              "noteParcours": "C'est fou, c'est chaotique, c'est Tokyo résumé en une intersection. Oui, les photos sont partout, mais être dedans physiquement crée une vertigo qu'aucun écran ne restitue."
+              "noteParcours": "Un sanctuaire niché dans une forêt urbaine — la sérénité au cœur de la mégapole. Va tôt, tu pourrais croiser une vraie cérémonie de mariage shinto en route."
+            },
+            {
+              "lieuId": "takeshita-dori",
+              "heure": "10:30",
+              "noteParcours": "La rue la plus folle de Tokyo : mode jeune, crêpes sucrées, graffiti kawaii. Préfère la semaine ou tôt le matin pour circuler. La crêpe pliée ? Un must, même sucré-sucré.",
+              "arrivee": {
+                "mode": "à pied",
+                "duree": "~15 min",
+                "note": "À côté du sanctuaire, sorties Meiji-Jingu ou Harajuku."
+              }
+            },
+            {
+              "lieuId": "shibuya-crossing",
+              "heure": "12:00",
+              "noteParcours": "Le carrefour piéton emblématique où la circulation s'arrête pour toi. Observe d'en haut depuis un café : mille personnes synchronisées, c'est hypnotique.",
+              "arrivee": {
+                "mode": "train",
+                "duree": "~5 min"
+              }
             },
             {
               "lieuId": "teamlab",
-              "heure": "11:00",
-              "noteParcours": "Réserve tes billets en ligne bien avant — les places s'envolent. À l'intérieur, tu entres dans un rêve : lumières, eau, art, technologie qui se dissout dans la beauté. Porte un short.",
+              "heure": "14:00",
+              "noteParcours": "Tes yeux vont halluciner : projections numériques, eau, lumière, immersion complète. Porte un short, tu vas mouiller tes pieds pour de bon.",
               "arrivee": {
-                "mode": "métro",
-                "duree": "~20 min",
-                "note": "Toyosu est plus loin, mais ça en vaut la peine."
+                "mode": "train",
+                "duree": "~25 min"
+              }
+            },
+            {
+              "lieuId": "shibuya-sky",
+              "heure": "17:00",
+              "noteParcours": "Au coucher du soleil, la vue bascule progressivement de la lumière du jour aux néons de la nuit. Réserve en ligne pour éviter la file et chope un créneau vers 17h-18h.",
+              "arrivee": {
+                "mode": "train",
+                "duree": "~15 min"
               }
             }
           ],
-          "recit": "Jour 2 à Tokyo : change de registre. Fini le passé, vive le futur — et l'absurde.",
-          "conseilDuJour": "Le Carrefour de Shibuya, c'est hypnotisant mais vide de sens à le regarder depuis le sol. Trouve une terrasse, un café, un angle d'observation — ça change tout."
+          "recit": "Tokyo moderne : spirituel le matin avec le Meiji, coloré et vibrant le reste de la journée — Harajuku, Shibuya, et le digital immersif.",
+          "conseilDuJour": "Réserve tes billets teamLab en ligne avant même d'arriver au Japon, ça remplit deux mois à l'avance."
         },
         {
           "num": 3,
@@ -18197,35 +18242,45 @@
           "titre": "Détente à Hakone",
           "etapes": [
             {
-              "lieuId": "owakudani",
+              "lieuId": "open-air-museum",
               "heure": "9:00",
-              "noteParcours": "Des remontées mécaniques, des sources chaudes fumantes, des œufs noirs : c'est un peu touristique, mais la géologie brute du Japon se lit ici. À avoir fait une fois."
+              "noteParcours": "Sculptures et installations en plein air dans la montagne : c'est le genre de musée où tu marches plus que tu observes. Pause ashiyu (bain de pieds) gratuit au milieu, tes jambes te diront merci."
             },
             {
-              "lieuId": "onsen-hakone",
-              "heure": "11:00",
-              "noteParcours": "L'onsen n'est pas juste une douche chaude : c'est un rituel. On se lave d'abord, puis on trempe, puis on sort régénéré. Zéro téléphone, zéro stress.",
+              "lieuId": "owakudani",
+              "heure": "11:30",
+              "noteParcours": "Les eaux sulfureuses bouillonnent en altitude : un paysage presque lunaire. Goûte les œufs noirs cuits là même (kuro-tamago) — selon la légende, en manger un ajoute des années à ta vie.",
               "arrivee": {
-                "mode": "bus",
+                "mode": "téléphérique",
                 "duree": "~30 min"
               }
             },
             {
-              "lieuId": "ryokan-hakone",
-              "heure": "13:00",
-              "noteParcours": "Tu dors ici ce soir. Dès l'arrivée, jette-toi dans le rotenburo privatif de ta chambre — face à la forêt, l'eau chaude, le silence. C'est pour cette image que tu as fait ce voyage.",
+              "lieuId": "onsen-hakone",
+              "heure": "14:00",
+              "noteParcours": "Si tu as des tatouages, cherche un onsen kashikiri (privé) ou une chambre avec bain intérieur — beaucoup de petits ryokan sont cool avec ça. L'eau thermale apaise vraiment.",
               "arrivee": {
                 "mode": "bus",
-                "duree": "~15 min"
+                "duree": "~30 min",
+                "note": "Navette depuis la gare ou Owakudani."
+              }
+            },
+            {
+              "lieuId": "ryokan-hakone",
+              "heure": "16:00",
+              "noteParcours": "La chambre t'attend avec un kimono, une table basse, le silence. Le rotenburo en début de soirée face à la montagne sombre — c'est pour ça qu'on vient à Hakone.",
+              "arrivee": {
+                "mode": "à pied",
+                "duree": "~5 min"
               }
             }
           ],
-          "recit": "Hakone te change. C'est la transition : Tokyo derrière toi, Kyoto devant, mais toi ici, face à la montagne.",
-          "conseilDuJour": "Prends le rotenburo (bain en plein air) au coucher du soleil. Essaie aussi le matin avant le petit-déjeuner. Deux moments, deux ambiances complètement différentes.",
+          "recit": "Jour détente : les volcans fument, les onsen chauffent, et tu flottes entre l'art et les nuages au pied du mont Fuji.",
+          "conseilDuJour": "Réserve le rotenburo privatif du ryokan dès ton arrivée, c'est souvent complet pour la fin de journée.",
           "arriveeVille": {
-            "mode": "train de montagne",
-            "duree": "~1h30",
-            "note": "Les petites lignes locales montent vers Hakone avec des vues en cascade — prends une place à gauche."
+            "mode": "train",
+            "duree": "~1 h 15 min",
+            "note": "Shinkansen depuis Tokyo jusqu'à Odawara, puis train local vers Hakone."
           }
         },
         {
@@ -18235,25 +18290,34 @@
           "etapes": [
             {
               "lieuId": "fushimi-inari",
-              "heure": "9:00",
-              "noteParcours": "Des torii rouge-orange par milliers qui grimpent une montagne — oui, c'est l'une des images les plus iconiques du Japon, mais c'est iconique pour une raison. Grimpe jusqu'au sommet, pas juste jusqu'à la première photo."
+              "heure": "10:00",
+              "noteParcours": "Dix mille portiques vermillon s'empilent sur la montagne : c'est de la folie visuelle. Monte avant 9h ou après 16h, sinon tu marches entre les selfie-sticks. Le sommet regarde Kyoto du haut, seul(e) avec les ombres."
             },
             {
-              "lieuId": "nishiki",
-              "heure": "11:00",
-              "noteParcours": "Un marché couvert traditionnel qui bouillit de vie : poissons frais, pickles, mochi chaud, mets inconnus — c'est un concentré de Kyoto gourmand. Ne te retiens pas.",
+              "lieuId": "kiyomizu-dera",
+              "heure": "13:00",
+              "noteParcours": "Grimpe par Sannenzaka, la ruelle historique oubliée des touristes : petits restaurants, céramiques, l'atmosphère d'avant-guerre. Kiyomizu offre une plateforme en bois suspendue et une vue qui justifie l'existence.",
               "arrivee": {
-                "mode": "train",
-                "duree": "~40 min"
+                "mode": "bus",
+                "duree": "~20 min"
+              }
+            },
+            {
+              "lieuId": "gion",
+              "heure": "18:00",
+              "noteParcours": "Le plus beau quartier du Japon : geishas en route, façades en bois noir, lanternes papier. Flâne en début de soirée vers 17h-18h, quand les maikos se préparent. Respecte-les : photos de loin, jamais frontales.",
+              "arrivee": {
+                "mode": "à pied",
+                "duree": "~15 min"
               }
             }
           ],
-          "recit": "Kyoto. Le Japon que tu imagines. Ici, c'est du temple à chaque coin de rue.",
-          "conseilDuJour": "Loue un vélo à ta gare et oublie les bus : sur deux roues, tu vois Kyoto différemment, tu traînes sans culpabilité, tu croises les vraies vies.",
+          "recit": "Kyoto, enfin : mille sanctuaires, portiques vermillon, et l'impression de voyager cinq siècles en arrière.",
+          "conseilDuJour": "Reste une nuit supplémentaire si possible — Kyoto ne se voit pas en deux jours, c'est gâcher.",
           "arriveeVille": {
-            "mode": "train direct",
-            "duree": "~2h",
-            "note": "Hakone vers Kyoto : passe Fuji, puis la gare change de couleur, d'énergie — tu sens Kyoto arriver."
+            "mode": "train",
+            "duree": "~2 h 30 min",
+            "note": "Trajet entre Hakone et Kyoto : train jusqu'à Odawara, puis Shinkansen."
           }
         },
         {
@@ -18262,22 +18326,40 @@
           "titre": "Temples de Kyoto",
           "etapes": [
             {
-              "lieuId": "kinkaku-ji",
-              "heure": "9:00",
-              "noteParcours": "Le temple d'or réfléchi dans le lac : c'est beau, presque trop. Mais une fois vu au calme du matin, le charme opère sans artifice."
+              "lieuId": "arashiyama",
+              "heure": "7:00",
+              "noteParcours": "Bambouseraie mythique : si tu la fais à midi, tu te demanderas pourquoi tout le monde la recommande. À 7h, tu comprendras. Le silence vert, c'est presque effrayant de beauté."
             },
             {
-              "lieuId": "arashiyama",
-              "heure": "11:00",
-              "noteParcours": "La bambouseraie est touristique, d'accord. Mais grimpe à 7h du matin quand tu peux marcher entre les tiges géantes presque seul — c'est une forêt sacrée, vraiment.",
+              "lieuId": "kinkaku-ji",
+              "heure": "9:30",
+              "noteParcours": "Le pavillon d'or recouvert de feuilles de vrai or qui se reflète dans un bassin tranquille : c'est la photo de carte postale, mais méritée. Evite 11h-14h, la foule est dingue.",
+              "arrivee": {
+                "mode": "bus",
+                "duree": "~40 min"
+              }
+            },
+            {
+              "lieuId": "nijo-castle",
+              "heure": "12:00",
+              "noteParcours": "Les planchers qui grinçent (uguisubari) ? Créés exprès pour alerter les gardes des intrus. Le système fonctionne encore, imparable. Les jardins calmes, les paravents peints, l'histoire respire.",
               "arrivee": {
                 "mode": "train",
-                "duree": "~30 min"
+                "duree": "~25 min"
+              }
+            },
+            {
+              "lieuId": "nishiki",
+              "heure": "14:00",
+              "noteParcours": "Marché traditionnel niché entre les rues : boucheries raffinées, pâtisseries, brochet. Goûte le tamagoyaki sucré-salé, les fruits de mer grillés. Mâche sur place, ne sors pas avec ta bouchée.",
+              "arrivee": {
+                "mode": "train",
+                "duree": "~5 min"
               }
             }
           ],
-          "recit": "Jour 5 à Kyoto : plus de temples, plus de nature, un goût du rythme de la vie ici.",
-          "conseilDuJour": "Pars tôt le matin — avant 8h — pour chaque site : tu vas éviter l'avalanche de groupes touristiques et vraiment respirer les lieux."
+          "recit": "Jour 2 à Kyoto : les paysages légendaires (bambouseraie, temple d'or), le château, et la vraie bouffe de marché.",
+          "conseilDuJour": "Lève-toi à 6h pour la bambouseraie vide — seul(e) au monde entre les tiges vertes, une méditation involontaire."
         },
         {
           "num": 6,
@@ -18287,33 +18369,43 @@
             {
               "lieuId": "osaka-castle",
               "heure": "9:00",
-              "noteParcours": "Le donjon blanc se dresse face aux gratte-ciel modernes : un contraste brutal qui résume Osaka. Monte au top pour la vue sur la ville — c'est moins zen que Kyoto, c'est plus honnête."
+              "noteParcours": "Château reconstruit de béton, mais l'histoire shogun colle encore aux pierres extérieures. Monte au donjon pour la panorama urbaine. Le parc vaut le coup, surtout au printemps."
+            },
+            {
+              "lieuId": "shinsekai",
+              "heure": "12:00",
+              "noteParcours": "Quartier rétro et authentique : façades écaillées, petites gargotes qui fument, lampadaires d'un autre temps. Le kushikatsu ici est rituel : tu trempes une fois dans la sauce, tu croque en marchant.",
+              "arrivee": {
+                "mode": "métro",
+                "duree": "~10 min"
+              }
             },
             {
               "lieuId": "dotonbori",
-              "heure": "11:00",
-              "noteParcours": "Un couloir survolté : enseignes géantes, restaurants remplis, gens partout, le panneau Glico d'ici partout sur Instagram. Oui, c'est touristique — mais Osaka, c'est ça, authentiquement.",
+              "heure": "15:00",
+              "noteParcours": "Le quartier de nuit par excellence : énormes enseignes lumineuses (le géant écrevisse rouge), restaurants entassés. Repère le panneau Glico du coureur rougeoyant — photo obligatoire.",
               "arrivee": {
-                "mode": "métro",
-                "duree": "~15 min"
+                "mode": "train",
+                "duree": "~10 min"
               }
             },
             {
               "lieuId": "takoyaki",
-              "heure": "13:00",
-              "noteParcours": "Les takoyaki d'Osaka ne ressemblent à rien d'autre : boulette croustillante dehors, crème dedans, poulpe tendre. Debout, au stand, en regardant passer le chaos — c'est comme ça qu'il faut les manger.",
+              "heure": "17:00",
+              "noteParcours": "Boules d'octopus cuites à la perfection, intérieur brûlant : souffle avant de croquer. Sauce tamarind-sucré, mayo et flocons de bonite qui dansent sur la chaleur — street food définitive.",
               "arrivee": {
                 "mode": "à pied",
-                "duree": "~5 min"
+                "duree": "~5 min",
+                "note": "Dans Dotonbori, facile à trouver via les files d'attente."
               }
             }
           ],
-          "recit": "Osaka. Kyoto c'était silence et spiritualité. Ici : bruyant, vivant, délicieux.",
-          "conseilDuJour": "Visite le château le matin (moins de monde), puis laisse-toi porter par Dotonbori la nuit — surtout ne programme rien, errer, c'est le point.",
+          "recit": "Osaka : moins raffinée, plus gourmande. Ici, on mange debout, on crie, on vit. C'est l'envers joyeux de Kyoto.",
+          "conseilDuJour": "Oublie tes bonnes manières : à Osaka, on trempe une fois dans la sauce commune du kushikatsu, pas deux, et on croque avec gusto.",
           "arriveeVille": {
             "mode": "train",
             "duree": "~75 min",
-            "note": "Kyoto à Osaka : train rapide, le paysage change, les bâtiments grimpent — ça se sent, tu entres dans une autre ville."
+            "note": "Trajet Kyoto-Osaka : train local ou limited express."
           }
         },
         {
@@ -18322,60 +18414,69 @@
           "titre": "Derniers achats",
           "etapes": [
             {
-              "lieuId": "kuromon",
+              "lieuId": "sumiyoshi",
               "heure": "9:00",
-              "noteParcours": "Un marché de quartier animé où les habitants font leurs courses : poissons grill, wagyu à croquer, atmosphère de vraie vie. C'est moins pittoresque que Nishiki, c'est plus juste."
+              "noteParcours": "Sanctuaire moins connu, donc respirable. Le pont Taiko-bashi très raide et légendaire en photo : les pèlerins montaient et descendaient ici depuis des générations. Place sacrée, calme."
+            },
+            {
+              "lieuId": "kuromon",
+              "heure": "11:00",
+              "noteParcours": "Marché du matin plein de vendeurs énergiques : brochettes de bœuf wagyu, huîtres grillées, fruits de mer brillants. Viens avant 10h quand tout est frais et bondé de locaux.",
+              "arrivee": {
+                "mode": "train",
+                "duree": "~20 min"
+              }
             },
             {
               "lieuId": "shinsaibashi",
-              "heure": "11:00",
-              "noteParcours": "Galerie marchande couverte, grande, aisée — parfait pour les derniers souvenirs sans stress. Et à côté, Dotonbori si tu veux une dose de chaos en prime.",
+              "heure": "14:00",
+              "noteParcours": "Grande avenue commerçante couverte (idéal si la pluie revient). Derniers souvenirs, fringues, gadgets. À côté de Dotonbori pour une dernière sentation électrique avant de partir.",
               "arrivee": {
-                "mode": "métro",
-                "duree": "~10 min"
+                "mode": "train",
+                "duree": "~5 min"
               }
             }
           ],
-          "recit": "Dernier jour. Pas de grosse visite, juste du temps pour flâner, manger, peut-être acheter une bricole.",
-          "conseilDuJour": "Traîne au Marché Kuromon le matin, puis fonds-toi dans Shinsaibashi l'après-midi — c'est du temps pour respirer avant le retour."
+          "recit": "Dernier jour : temple tranquille, marché du matin, derniers achats — une sortie douce avant l'aéroport.",
+          "conseilDuJour": "Laisse de la marge : derniers achats le matin, trajet à l'aéroport l'après-midi. Rien ne te presse, tu reviendras."
         }
       ],
       "sousTitre": "Du néon de Tokyo au silence des temples",
-      "intro": "Sept jours, quatre villes, une seule certitude : tu vas aimer. On part du chaos coloré de Tokyo, on se pose à Hakone face au Fuji avec un verre de saké fumant, on se perd dans les ruelles de Kyoto, et on termine à Osaka en engloutissant des takoyaki devant les néons. C'est le grand classique qui marche — parce que ça marche vraiment.",
+      "intro": "Tes premiers pas au Japon en une semaine : le chaos organisé de Tokyo, l'apaisement des eaux thermales de Hakone, l'immersion spirituelle à Kyoto, et la gourmandise débridée d'Osaka. Un vrai coup de cœur, promis.",
       "rythme": "équilibré",
-      "budgetIndicatif": "¥¥",
+      "budgetIndicatif": "¥¥¥",
       "hebergement": [
         {
           "villeId": "tokyo",
-          "type": "Hôtel urbain",
+          "type": "hôtel moderne",
           "gamme": "¥¥¥",
           "lieuId": "park-hyatt",
-          "note": "Des vues surréalistes sur la ville et un service classe mondiale si tu veux te faire plaisir."
+          "note": "Luxe avec vue panoramique sur la capitale."
         },
         {
           "villeId": "hakone",
-          "type": "Ryokan traditionnel",
+          "type": "ryokan traditionnel",
           "gamme": "¥¥¥",
           "lieuId": "ryokan-hakone",
-          "note": "Bain privé face à la nature, kaiseki le soir : l'essence du Japon en une nuit."
+          "note": "Bain en plein air face à la nature — l'expérience quintessentielle."
         },
         {
           "villeId": "kyoto",
-          "type": "Ryokan traditionnel",
+          "type": "ryokan traditionnel",
           "gamme": "¥¥¥",
           "lieuId": "ryokan-kyoto",
-          "note": "À Gion, au cœur de l'atmosphère geisha. Tatami, futon, silence."
+          "note": "Immersion dans le Kyoto d'autrefois, en cœur de Gion."
         },
         {
           "villeId": "osaka",
-          "type": "Hôtel confortable",
+          "type": "hôtel 3-étoiles",
           "gamme": "¥¥",
-          "note": "Près de Dotonbori ou Namba pour l'accès aux restaurants et à l'ambiance."
+          "note": "Pratique près de Namba ou Dotonbori pour profiter de la vie nocturne."
         }
       ],
       "contenuGenere": {
         "verified": true,
-        "genereLe": "2026-08-22T14:12:02.607Z",
+        "genereLe": "2026-08-22T16:49:12.250Z",
         "model": "claude-haiku-4-5-20251001",
         "garde_fous_errors": [],
         "line_warnings": [],
@@ -18404,20 +18505,29 @@
             {
               "lieuId": "fushimi-inari",
               "heure": "9:00",
-              "noteParcours": "Les portes torii de Fushimi Inari s'étirent sur la montagne comme une vague figée. Tu comprends pourquoi les Japonais l'appellent 'la porte vers l'invisible' — c'est vertigineux, une vraie communion avec le shintoïsme. Monte tôt pour vivre ça presque seul."
+              "noteParcours": "Les milliers de torii rouges d'Inari sont un hymne au Shinto en pierre et en couleur. C'est l'image du Japon qui hante les rêves, mais magnifique de vivre en vrai : monte, marche, laisse la foule en bas."
             },
             {
-              "lieuId": "kinkaku-ji",
-              "heure": "11:00",
-              "noteParcours": "Le Pavillon d'Or semble irréel quand tu le découvres depuis le chemin. Oui, c'est touristique, mais regarde l'eau, écoute le silence entre les groupes — le temple t'atteint malgré la foule. À cette heure, tu as juste la fin de matinée avant le rush du midi.",
+              "lieuId": "kiyomizu-dera",
+              "heure": "12:00",
+              "noteParcours": "Le temple qui épargne le bois depuis des siècles. Arrive par Sannenzaka, les petites rues où les marchands vendent des souvenirs comme autrefois. La plateforme qui surplombe Kyoto est un moment de pause parfait en fin de matinée.",
               "arrivee": {
                 "mode": "Bus",
-                "duree": "~25-30 min"
+                "duree": "~20 min"
+              }
+            },
+            {
+              "lieuId": "gion",
+              "heure": "16:00",
+              "noteParcours": "Le Gion de fin d'après-midi, c'est Kyoto vue par un cinéaste. Maisons de bois, lanternes de papier, parfois une geiko qui passe. Respecte, regarde, respire — n'y viens pas pour prendre des selfies.",
+              "arrivee": {
+                "mode": "Métro",
+                "duree": "~10 min"
               }
             }
           ],
-          "recit": "Premier jour à Kyoto : tu arrives frais et curieux. C'est le moment parfait pour les sanctuaires, avant que la fatigue du voyage ne te rattrape.",
-          "conseilDuJour": "Traîne dans les ruelles secondaires entre les deux étapes — les meilleures photos (et les moins touristiques) se cachent loin des circuits officiels."
+          "recit": "Arrivée à Kyoto : commence par les sanctuaires les plus iconiques de la ville, des mille portiques rouges aux temples dorés perchés sur les collines.",
+          "conseilDuJour": "Lève-toi tôt pour Fushimi Inari : la foule arrive tard, et tu verras les portiques baignés d'une lumière douce que les cartes postales ne captent jamais."
         },
         {
           "num": 2,
@@ -18426,21 +18536,49 @@
           "etapes": [
             {
               "lieuId": "arashiyama",
-              "heure": "9:00",
-              "noteParcours": "La Bambouseraie d'Arashiyama avant l'aube est magique : tu marches dans un tunnel vert-gris presque vide, les sons sont étouffés, tu respires l'humidité. C'est une méditation. Ne lâche pas ce moment pour des photos — vis-le d'abord."
+              "heure": "7:00",
+              "noteParcours": "Arashiyama ne se visite pas, elle se vit. Les bruits s'effacent dans la forêt de bambou, tu entends juste le vent. C'est tôt, c'est calme, c'est transformant."
+            },
+            {
+              "lieuId": "kinkaku-ji",
+              "heure": "9:30",
+              "noteParcours": "Le pavillon d'or est un cliché photographié des milliards de fois — et pourtant. Il brille pour vrai, reflété dans l'étang. Viens avant 11h si tu veux du silence.",
+              "arrivee": {
+                "mode": "Bus",
+                "duree": "~20 min",
+                "note": "Transfert rapide vers le nord de Kyoto."
+              }
+            },
+            {
+              "lieuId": "nijo-castle",
+              "heure": "12:00",
+              "noteParcours": "Nijo, c'est l'histoire ninja discrète : le plancher qui grinçe intentionnellement (uguisubari) pour avertir les gardes. Un détail de génie qui t'amuse tout en te rappelant les intrigues féodales.",
+              "arrivee": {
+                "mode": "Bus",
+                "duree": "~30 min"
+              }
+            },
+            {
+              "lieuId": "nishiki",
+              "heure": "14:00",
+              "noteParcours": "Nishiki n'est pas un musée, c'est un marché vivant où les Kyotoïtes vraiment achètent. Tamagoyaki chaud, mochi moelleux, poisson frais. Goûte en marchant une fois serait un sacrilège — reste au comptoir.",
+              "arrivee": {
+                "mode": "Métro",
+                "duree": "~15 min"
+              }
             },
             {
               "lieuId": "ryokan-kyoto",
-              "heure": "11:00",
-              "noteParcours": "Check-in au ryokan = basculer dans une autre temporalité. Les tatamis, l'onsen, le service silencieux — c'est un cocon. Le soir, le kaiseki arrive sur la table : chaque assiette raconte une histoire. C'est ça, le Japon traditionnel qu'on rêve de vivre.",
+              "heure": "16:00",
+              "noteParcours": "Ton entrée en immersion Kyoto. Onsen chaud, kimono de coton, kaiseki en plusieurs actes : chaque plat raconte la saison. C'est luxe, oui, mais justifié.",
               "arrivee": {
-                "mode": "Train puis à pied",
-                "duree": "~20 min"
+                "mode": "Métro",
+                "duree": "~10 min"
               }
             }
           ],
-          "recit": "Deuxième jour : la nature et la détente. Le matin dans les bambous, l'après-midi et la nuit dans le ryokan pour te laisser respirer.",
-          "conseilDuJour": "Dès ton arrivée au ryokan, demande où manger le soir si le kaiseki n'est pas inclus — les petits restaurants autour de Gion se remplissent vite."
+          "recit": "Jour nature et zen : bambouseraie sauvage, temple d'or, château avec secrets de bois qui grinçent, puis saveurs du marché avant une soirée au ryokan.",
+          "conseilDuJour": "Pars avant 8h pour Arashiyama et sois quasiment seul dans les tiges de bambou : le monde arrive après 9h."
         },
         {
           "num": 3,
@@ -18450,29 +18588,43 @@
             {
               "lieuId": "nara-park",
               "heure": "9:00",
-              "noteParcours": "Le Parc de Nara c'est un immense terrain de douce folie : des daims sacrés qui te saluent, des lanternes en pierre, des temples enfouis sous les feuilles. Tu oublis où commence la nature et où finit le spirituel. Marche sans but — chaque virage révèle quelque chose."
+              "noteParcours": "Les daims de Nara ne sont pas une attraction : ils vivent là. Respecte-les, nourris-les avec les biscuits prévus, incline-toi quand ils te saluent. C'est un moment de connexion bête et simple avec la nature qu'on oublie."
             },
             {
               "lieuId": "todai-ji",
-              "heure": "11:00",
-              "noteParcours": "Tōdai-ji te prépare dès avant d'y entrer : l'approche est solennelle. À l'intérieur, le Grand Bouddha est assis dans une salle qui semble hors du temps. Ce temple a survécu aux tremblements de terre, aux incendies, aux guerres — sa présence c'est la preuve qu'on peut reconstruire après l'effondrement.",
+              "heure": "10:30",
+              "noteParcours": "Tōdai-ji abrite l'une des plus grandes statues de Bouddha au monde, coulée en bronze. C'est écrasant, muet, merveilleux. Et si tu passes par le trou du pilier, c'est un défi bienveillant du temple.",
               "arrivee": {
-                "mode": "Bus",
-                "duree": "~10-15 min"
+                "mode": "À pied",
+                "duree": "~15 min"
+              }
+            },
+            {
+              "lieuId": "mochi-nara",
+              "heure": "12:30",
+              "noteParcours": "Nakatanidou prépare les mochi comme depuis des siècles : pilage rapide, dextérité, chaleur. Manges-les tièdes, directement. C'est la vraie gourmandise nara, pas un souvenir.",
+              "arrivee": {
+                "mode": "À pied",
+                "duree": "~20 min"
               }
             },
             {
               "lieuId": "kasuga",
-              "heure": "13:00",
-              "noteParcours": "Kasuga Taisha est plus intime que Tōdai-ji. Les lanternes en pierre parsèment la forêt comme des gardiens silencieux. Même sans les festivals, c'est un havre — moins de touristes, plus d'authentique.",
+              "heure": "14:00",
+              "noteParcours": "Kasuga Taisha brille surtout lors des festivals de lanternes (février, août), mais même en visite normale, le sanctuaire apaise. Les lanternes éternelles de pierre jonchent le chemin — une méditation à elle seule.",
               "arrivee": {
                 "mode": "Bus",
                 "duree": "~10 min"
               }
             }
           ],
-          "recit": "Trajet vers Nara : une heure de train à peine. Les daims te font oublier l'heure, et les temples sont gérés par des prêtres qui travaillent depuis des siècles.",
-          "conseilDuJour": "Les daims sont adorables mais rusés — ne laisse rien traîner (sacs, cartes, papiers). Garde les biscuits en main et attend leur geste — ils négocient."
+          "recit": "Journée nature et révérence : daims en liberté, Bouddha géant en bronze, mochi tiède, lanternes au sanctuaire. Nara respire différemment de Kyoto.",
+          "conseilDuJour": "Achète les biscuits shika senbei à l'entrée du parc et amuse-toi à voir les daims se prosterner pour avoir leur récompense : c'est absurde et touchant.",
+          "arriveeVille": {
+            "mode": "Train",
+            "duree": "~45 min",
+            "note": "Ligne Kintetsu depuis Kyoto jusqu'à Nara : trajet rapide, entrée directe au parc de gare."
+          }
         },
         {
           "num": 4,
@@ -18482,20 +18634,26 @@
             {
               "lieuId": "peace-park",
               "heure": "9:00",
-              "noteParcours": "Le Parc du Mémorial de la Paix n'est pas un divertissement : c'est un endroit où le temps s'arrête. Tu entres dans la gravité de l'histoire. Le dôme de Genbaku reste debout comme un cri de pierre. Lent, respectueux, recueilli — c'est ce qui convient."
+              "noteParcours": "Le Parc du Mémorial n'est jamais juste touristique. Le dôme en ruines, le musée, les noms gravés : tu seras solide dans tes sentiments. Un moment de recueillement sincère, pas un décor."
             },
             {
               "lieuId": "shukkeien",
-              "heure": "11:00",
-              "noteParcours": "Après le poids du mémorial, le Jardin Shukkei-en c'est comme respirer à nouveau. Les étangs mirrés, les ponts de bois, les échos des carpes — c'est un antidote de beauté. Le jardin a été détruit puis reconstruit avec soin : il symbolise la renaissance sans renier le passé.",
+              "heure": "13:00",
+              "noteParcours": "Après l'intensité du mémorial, Shukkei-en t'offre du silence zen : étang, ponts de bois, érable d'automne. Juste se poser, regarder l'eau. Le château d'Hiroshima jouxte le jardin si tu veux poursuivre.",
               "arrivee": {
                 "mode": "Tram",
-                "duree": "~5-10 min"
+                "duree": "~10 min",
+                "note": "Transfert léger, tu respires dans le jardin."
               }
             }
           ],
-          "recit": "Hiroshima : change complètement de registre. Ce n'est plus du pur dépaysement zen, c'est de la mémoire vivante. Prépare-toi émotionnellement.",
-          "conseilDuJour": "Visite le musée du Mémorial de la Paix sans casque ni audio touristique rapide — laisse-toi porter par le silence et les histoires sans filtre."
+          "recit": "Hiroshima confronte : parc mémorial, musée émouvant, histoire lourde mais nécessaire. Et un jardin classique pour respirer après.",
+          "conseilDuJour": "Consacre 2-3 heures au musée du Parc du Mémorial : c'est intense, mais c'est un passage dont tu sortiras changé.",
+          "arriveeVille": {
+            "mode": "Train",
+            "duree": "~1 h 30",
+            "note": "Depuis Nara, retour à Kyoto puis direction Hiroshima via shinkansen (express). Changement de tempo : tu quittes le temple pour l'histoire."
+          }
         },
         {
           "num": 5,
@@ -18505,38 +18663,51 @@
             {
               "lieuId": "miyajima",
               "heure": "9:00",
-              "noteParcours": "Miyajima avec son torii flottant dans l'eau est une carte postale vivante. Sauf que tu le découvres depuis le ferry, et là c'est surnaturel. Les marées transforment le paysage deux fois par jour — c'est une île qui respire. Marche pieds nus sur la plage si tu peux, goûte le sel."
+              "noteParcours": "Miyajima est l'une des trois plus belles vues du Japon. Le grand torii rouge dans l'eau, les sanctuaires éparpillés, les pèlerins. Si la marée est haute, tu as l'illusion qu'il flotte. Si elle est basse, tu marches jusqu'à lui comme un défi quotidien."
             },
             {
               "lieuId": "okonomiyaki-hiro",
-              "heure": "11:00",
-              "noteParcours": "Okonomimura est une ruelle de petits restaurants, chacun dans sa spécialité du moment. Tu vois le cuisinier étaler ta pâte sur la plaque, empiler les couches, servir avec un art martial culinaire. L'okonomiyaki de Hiroshima c'est un sandwich en pyramide savante — noodles, œuf, sauce, bonite fumante sur le dessus. C'est gloutonnerie honorable et fin de voyage idéale.",
+              "heure": "17:00",
+              "noteParcours": "Okonomimura : des dizaines de petits restaurants empilés. Le style Hiroshima, c'est étagé (chou, nouilles, œuf), mangé à la spatule directement sur la plaque chaude. C'est bruyant, fumant, joyeux — parfait avant de partir.",
               "arrivee": {
-                "mode": "Ferry puis tram",
-                "duree": "~1h"
+                "mode": "Tram et ferry",
+                "duree": "~1 h",
+                "note": "Retour à Hiroshima en fin d'après-midi pour clôturer en saveurs."
               }
             }
           ],
-          "recit": "Dernier jour : l'île sacrée de Miyajima puis Okonomimura pour terminer en saveurs. Du spirituel au délicieux.",
-          "conseilDuJour": "Rentre à Hiroshima l'après-midi pour dîner à Okonomimura en fin de journée — le rythme est parfait et tu ne rattrapes pas la foule du midi."
+          "recit": "Dernier jour : île sacrée de Miyajima et son grand torii flottant, puis okonomiyaki à Hiroshima avant le départ. Deux saveurs d'une même région.",
+          "conseilDuJour": "Vérifie les horaires de marée avant Miyajima : le torii à marée haute semble suspendre le monde."
         }
       ],
-      "sousTitre": "Du néon de Kyoto aux temples de l'âme",
-      "intro": "Cinq jours pour respirer le Japon authentique : des sanctuaires cachés aux temples millénaires, des jardins zen au recueillement de Hiroshima. Pas de selfies pressés — juste du temps pour écouter, observer, se perdre. Du chamanisme palpable aux daims de Nara qui te rendent la révérence, c'est une immersion dans ce qui fait battre le cœur du Japon traditionnel.",
+      "sousTitre": "Du néon oublié aux temples éternels",
+      "intro": "Cinq jours pour respirer l'âme du Japon traditionnel : des sanctuaires cachés de Kyoto aux daims bienveillants de Nara, en passant par la sérénité recueillie d'Hiroshima. Un voyage où chaque pas en montagne, chaque pas dans un jardin, te ramène à l'essence même du pays.",
       "rythme": "équilibré",
-      "budgetIndicatif": "¥¥¥",
+      "budgetIndicatif": "¥¥",
       "hebergement": [
         {
           "villeId": "kyoto",
           "type": "Ryokan traditionnel",
           "gamme": "¥¥¥",
           "lieuId": "ryokan-kyoto",
-          "note": "Expérience kaiseki incluse — dormir ici, ce n'est pas juste trouver un lit, c'est vivre une nuit à la sauce japonaise."
+          "note": "Une nuit en ryokan, c'est un cours accéléré de zen et de cuisine-art : onsen, tatami, kaiseki. Essayer Ryokan Gion pour vraiment sentir Kyoto."
+        },
+        {
+          "villeId": "nara",
+          "type": "Hôtel confortable",
+          "gamme": "¥¥",
+          "note": "Nara se visite bien en une journée depuis Kyoto, mais dormir là permet de profiter du parc au calme du matin."
+        },
+        {
+          "villeId": "hiroshima",
+          "type": "Hôtel urbain",
+          "gamme": "¥¥",
+          "note": "Base confortable pour deux jours d'immersion historique et nature. Proche du tram pour rayonner vers Miyajima."
         }
       ],
       "contenuGenere": {
         "verified": true,
-        "genereLe": "2026-08-22T14:52:26.351Z",
+        "genereLe": "2026-08-22T16:49:47.873Z",
         "model": "claude-haiku-4-5-20251001",
         "garde_fous_errors": [],
         "line_warnings": [],
@@ -18563,20 +18734,47 @@
             {
               "lieuId": "senso-ji",
               "heure": "9:00",
-              "noteParcours": "Le cœur touristique mais inévitable d'Asakusa. Le matin avant 8h, la lanterne géante est à toi presque seul, et tu respires l'encens sans être écrasé. C'est là que Tokyo lâche prise d'être moderne pour une seconde."
+              "noteParcours": "C'est LE lieu de référence, le temple qui a vu naître Tokyo. La lanterne rouge géante est presque cinématographique en début de matin — profites-en avant les cars touristiques."
+            },
+            {
+              "lieuId": "nakamise",
+              "heure": "9:45",
+              "noteParcours": "C'est la rue marchande la plus ancienne du pays : bonbons maison, souvenirs, petits restaurants nichés. Vrai conseil : les gâteaux ningyo-yaki tout chauds valent le détour plus que les t-shirts touristiques.",
+              "arrivee": {
+                "mode": "à pied",
+                "duree": "~2 min"
+              }
+            },
+            {
+              "lieuId": "kappabashi",
+              "heure": "11:00",
+              "noteParcours": "Une rue de spécialistes : coutellerie, vaisselle pro, faux plats de restaurant (sampuru). C'est le quartier des cuisiniers en herbe — tu trouveras des couteaux que les chefs utilisent vraiment.",
+              "arrivee": {
+                "mode": "métro",
+                "duree": "~10 min"
+              }
             },
             {
               "lieuId": "ichiran",
-              "heure": "11:00",
-              "noteParcours": "Après le temple, un ramen chaud te ramène à la réalité : c'est simple, c'est bon, c'est l'authenticité low-cost. La machine à l'entrée intimide zéro quand tu vois les images.",
+              "heure": "13:00",
+              "noteParcours": "L'interlude gourmand. Ichiran c'est simple, efficace, délicieux — et la machine à billets avec ses options bizarres (ail ? piquant?) t'amuse autant qu'elle te nourrit.",
               "arrivee": {
                 "mode": "métro",
                 "duree": "~15 min"
               }
+            },
+            {
+              "lieuId": "ueno-park",
+              "heure": "15:00",
+              "noteParcours": "Un parc qui respire, idéal l'après-midi pour décompresser. Le Musée National juste à côté vaut une heure si tu as l'énergie — c'est le plus ancien du Japon et il parle d'histoire sans baratin.",
+              "arrivee": {
+                "mode": "métro",
+                "duree": "~10 min"
+              }
             }
           ],
-          "recit": "Plonge d'abord dans le vieux Tokyo, avant la déferlante pop culture.",
-          "conseilDuJour": "Lève-toi tôt pour les deux : les temples gratuits et les rues bondées ne pardonnent pas les grasses matinées."
+          "recit": "On découvre le Tokyo des origines : le temple millénaire d'Asakusa, la rue marchande figée dans le temps, et cette énergie brute des apprentis-cuisinier qui passent par Nakamise.",
+          "conseilDuJour": "Pose ton alarme à 7h30 — arriver tôt à Senso-ji t'épargne la foule du milieu de journée et te laisse le temple presque pour toi."
         },
         {
           "num": 2,
@@ -18586,20 +18784,47 @@
             {
               "lieuId": "akihabara",
               "heure": "9:00",
-              "noteParcours": "Épicentre des otakus, des rétro-gamers, des collectionneurs. Les étages supérieurs des magasins cachent les vraies pépites ; descends aussi au sous-sol si tu cherches du vintage."
+              "noteParcours": "Le paradis des collectionneurs. Les pépites — figurines rares, cartouches vintage, mangas introuvables — dorment aux étages supérieurs loin des blinker du rez-de-chaussée."
+            },
+            {
+              "lieuId": "takeshita-dori",
+              "heure": "12:00",
+              "noteParcours": "Rue de shopping mode et chic kawaii. La signature : une crêpe pliée à emporter. Vrai bonus si tu croises un photoshoot de cosplay amateur — ça arrive souvent l'après-midi.",
+              "arrivee": {
+                "mode": "métro",
+                "duree": "~15 min"
+              }
+            },
+            {
+              "lieuId": "meiji-jingu",
+              "heure": "13:30",
+              "noteParcours": "On quitte le clinquant pour retrouver la forêt. Ce sanctuaire au milieu de la verdure offre une pause presque surréelle à deux pas de Harajuku. Les samedis et dimanches matin, tu peux tomber sur un mariage shinto traditionnel.",
+              "arrivee": {
+                "mode": "à pied",
+                "duree": "~8 min"
+              }
             },
             {
               "lieuId": "shibuya-crossing",
-              "heure": "11:00",
-              "noteParcours": "Le carrefour piéton emblématique, où le Japon moderne pulse en direct. Plus de sens avec la vue d'en haut depuis un café : tu vois la vague humaine coordonnée, presque chorégraphique.",
+              "heure": "15:30",
+              "noteParcours": "LE carrefour mythique. Moins pour le traverser (c'est une rue comme les autres) que pour l'observer d'en haut : le flux humain devient une chorégraphie.",
               "arrivee": {
                 "mode": "métro",
                 "duree": "~10 min"
               }
+            },
+            {
+              "lieuId": "shibuya-sky",
+              "heure": "17:30",
+              "noteParcours": "L'observatoire où Tokyo change de couleur au coucher du soleil. Les billets en ligne réduisent l'attente — essentiel quand le coucher tire vers 17h.",
+              "arrivee": {
+                "mode": "à pied",
+                "duree": "~5 min"
+              }
             }
           ],
-          "recit": "Demain, tu plonges dans la pop culture décalée et l'énergie effrénée de la ville moderne.",
-          "conseilDuJour": "Apporte ton appareil photo : Akihabara le matin puis Shibuya à l'heure de pointe = deux mondes Tokyo en un jour."
+          "recit": "On bascule dans le Japon de la pop culture, manga, anime, jeux vidéo. Akihabara pour les trésors, Harajuku pour la mode jeune, et la folie douce de Shibuya en fin de journée.",
+          "conseilDuJour": "Oublie les guides de Harajuku le samedi : reviens-y en semaine, fin de matinée — tu profiteras vraiment des crêpes et des devantures sans te battre pour avancer."
         },
         {
           "num": 3,
@@ -18608,45 +18833,57 @@
           "etapes": [
             {
               "lieuId": "teamlab",
-              "heure": "9:00",
-              "noteParcours": "Un musée où tu marches dedans plutôt que tu le regardes. Les installations jouent avec la lumière, l'eau, ton propre corps. C'est Tokyo version art immersif : contrôlé, luminescent, légèrement dérangeant en beauté."
+              "heure": "10:00",
+              "noteParcours": "L'art numérique redéfini : galeries immersives où tu deviens acteur de ce qui t'entoure. C'est kitsch, c'est magique, et ça photographie mieux que la réalité."
+            },
+            {
+              "lieuId": "odaiba",
+              "heure": "13:00",
+              "noteParcours": "Une île de loisirs futuriste : musées, shopping, et ce Gundam colossal de DiverCity qui anime ses articulations à certaines heures. Vue nocturne sur le pont Rainbow illuminé : à ne pas rater.",
+              "arrivee": {
+                "mode": "métro",
+                "duree": "~10 min"
+              }
+            },
+            {
+              "lieuId": "ginza",
+              "heure": "16:00",
+              "noteParcours": "Le quartier chic par excellence. Les grandes avenues deviennent piétonnes le week-end après-midi : parfait pour flâner. Les sous-sols (depachika) des grands magasins regorgent de délices culinaires à goûter ou ramener.",
+              "arrivee": {
+                "mode": "métro",
+                "duree": "~15 min"
+              }
             },
             {
               "lieuId": "park-hyatt",
-              "heure": "11:00",
-              "noteParcours": "Finalmente, monte au 52e étage pour un verre avec vue. Même sans dormir là, c'est l'endroit pour poser tes yeux sur toute la mégapole qui pulse après trois jours d'immersion.",
+              "heure": "19:00",
+              "noteParcours": "Ton dernier point de vue sur Tokyo. Même sans y rester, monte au New York Bar au 52e étage — un cocktail avec la ville à tes pieds, c'est l'apothéose rêvée d'un court séjour.",
               "arrivee": {
-                "mode": "train",
-                "duree": "~20 min"
+                "mode": "métro",
+                "duree": "~12 min"
               }
             }
           ],
-          "recit": "Dernier jour : fusions numériques et Tokyo depuis les nuages.",
-          "conseilDuJour": "Réserve tes billets teamLab en ligne dès aujourd'hui si tu ne l'as pas encore fait — ça affiche complet régulièrement."
+          "recit": "Dernier jour, on plonge dans l'art immersif teamLab, l'île futuriste d'Odaiba avec ses géants de plastique, et on finit sur les vitrines de luxe de Ginza ou l'apéritif au sommet du monde.",
+          "conseilDuJour": "Réserve tes billets teamLab dès aujourd'hui pour demain ou après-demain — ça affiche complet régulièrement. Et porte vraiment un short : tu vas entrer dans l'eau."
         }
       ],
-      "sousTitre": "Du néon au temple, trois jours de Tokyo",
-      "intro": "Tokyo, c'est l'overdose de contraste qui vire à l'addiction. Trois jours, c'est serré, mais faisable pour attraper l'essence : un temple dans la brume du matin, la frénésie d'Akihabara, un bar skyline où la mégapole scintille sous tes pieds. Allô Tokyo.",
-      "rythme": "dense",
+      "sousTitre": "Du néon de Tokyo au silence des temples",
+      "intro": "Trois jours pour saisir Tokyo dans toute sa contradiction : temples ancestraux et carrefours illuminés, figurines d'anime et ramen de maître, art immersif et traditions tacites. Une plongée ludique dans la mégapole, sans pression.",
+      "rythme": "équilibré",
       "budgetIndicatif": "¥¥",
       "hebergement": [
         {
           "villeId": "tokyo",
-          "type": "Hôtel ou ryokan",
-          "gamme": "¥¥",
-          "note": "Central, près d'une ligne principale, idéal pour rayonner dans la ville."
-        },
-        {
-          "villeId": "tokyo",
-          "type": "Hôtel de luxe",
+          "type": "Hôtel de charme",
           "gamme": "¥¥¥",
           "lieuId": "park-hyatt",
-          "note": "Pour l'expérience: vues panoramiques sur Tokyo et cocktails au sommet."
+          "note": "Luxe et vue sur la mégapole — le New York Bar au 52e étage vaut le coup d'y monter, même pour un verre."
         }
       ],
       "contenuGenere": {
-        "verified": false,
-        "genereLe": "2026-08-22T14:53:03.941Z",
+        "verified": true,
+        "genereLe": "2026-08-22T16:50:07.718Z",
         "model": "claude-haiku-4-5-20251001",
         "garde_fous_errors": [],
         "line_warnings": [],
@@ -18673,23 +18910,43 @@
           "titre": "Street food d'Osaka",
           "etapes": [
             {
-              "lieuId": "dotonbori",
+              "lieuId": "osaka-castle",
               "heure": "9:00",
-              "noteParcours": "Dotonbori, c'est l'Osaka qu'on voit au cinéma : chaotique, brillant, absolument vivant. Le décor est le repas. Repère le panneau Glico du coureur rouge — c'est la photo qu'il faut."
+              "noteParcours": "Le donjon offre une vue époustouflante sur Osaka moderne. C'est ton repère visuel du jour — tu comprendras mieux comment la ville s'étend."
+            },
+            {
+              "lieuId": "shinsekai",
+              "heure": "12:00",
+              "noteParcours": "Le kushikatsu (brochettes panées) est LE déjeuner d'Osaka. Respecte la règle : une seule trempette par brochette, sinon tu insultes le bouillon. Rigolo et savoureux.",
+              "arrivee": {
+                "mode": "métro",
+                "duree": "~15 min",
+                "note": "Plonge direct dans le Shinsekai à l'ancienne : couloirs étroits, petites enseignes, odeurs de frit."
+              }
+            },
+            {
+              "lieuId": "dotonbori",
+              "heure": "15:00",
+              "noteParcours": "Dotonbori est le spectacle Osaka qu'on rêvait de voir. Le panneau Glico du coureur reste un passage obligé — prépare ton téléphone pour la photo culte.",
+              "arrivee": {
+                "mode": "métro",
+                "duree": "~10 min",
+                "note": "À quelques pas du Shinsekai."
+              }
             },
             {
               "lieuId": "takoyaki",
-              "heure": "11:00",
-              "noteParcours": "Les takoyaki, c'est LE test de la street food d'Osaka. Boules de pâte croustillantes, cœur coulant brûlant, sauce sucrée-salée : tu comprends pourquoi Osaka n'arrête pas d'en parler.",
+              "heure": "17:00",
+              "noteParcours": "Le takoyaki (boulettes de poulpe) est street food à l'état pur. Brûlant, liquide au cœur, croquant dehors — à manger debout en admirant les néons.",
               "arrivee": {
                 "mode": "à pied",
                 "duree": "~5 min",
-                "note": "Les stands de takoyaki sont partout dans Dotonbori."
+                "note": "Reste à Dotonbori pour une pause bonbons."
               }
             }
           ],
-          "recit": "Bienvenue à Osaka, la capitale gourmande du Japon. Aujourd'hui, tu plonges tête première dans la street food mythique.",
-          "conseilDuJour": "Viens à Dotonbori plutôt en fin d'après-midi ou en soirée : les lumières s'allument, la rue pulse, et les files aux stands ne font que commencer."
+          "recit": "Bienvenue à Osaka, la capitale qui bouffe sans retenue. Aujourd'hui : châteaux, ruelles rétro et néon piétonnier.",
+          "conseilDuJour": "Arrive tôt au château pour le parc en mode tranquille, puis laisse-toi porter par l'énergie des quartiers marchands en fin d'après-midi."
         },
         {
           "num": 2,
@@ -18697,23 +18954,33 @@
           "titre": "Marché Kuromon",
           "etapes": [
             {
-              "lieuId": "kuromon",
+              "lieuId": "sumiyoshi",
               "heure": "9:00",
-              "noteParcours": "Kuromon est un marché couvert où règnent les poissons frais, les huîtres grillées et les brochettes de wagyu. L'atmosphère ? Énergique, généreuse, pas du tout touristique. Les vendeurs sont fiers de ce qu'ils vendent."
+              "noteParcours": "Sumiyoshi Taisha est moins blindé que ses cousins plus célèbres. Le pont Taiko-bashi, avec sa courbe prononcée, crée une belle photo. Ici, tu croises les locaux, pas les tour-ops."
+            },
+            {
+              "lieuId": "kuromon",
+              "heure": "11:00",
+              "noteParcours": "Kuromon est LE marché vivant d'Osaka : vous, fruits de mer, viandes wagyu grillées sur place. Les vendeurs sont sympas, ça rigole. Viens tôt, reste affamé, goûte large.",
+              "arrivee": {
+                "mode": "train",
+                "duree": "~20 min",
+                "note": "Nankai depuis Sumiyoshi, direct vers le cœur gastronomique."
+              }
             },
             {
               "lieuId": "shinsaibashi",
-              "heure": "11:00",
-              "noteParcours": "Shinsaibashi, c'est une rue couverte pleine de boutiques, de petits restaurants, de flânerie. Après la chaleur du marché, c'est le bon moment pour bouger, prendre l'air (couvert), et chercher des souvenirs gourmands.",
+              "heure": "14:00",
+              "noteParcours": "Shinsaibashi est ton refuge pluie ou gris. Galerie commerciale préservée, ambiance rétro, petits restaurants discrets entre les magasins. Pas de prise de tête, juste du shopping cool.",
               "arrivee": {
                 "mode": "métro",
                 "duree": "~10 min",
-                "note": "Direction le quartier shopping."
+                "note": "Chemine tranquille de Kuromon vers le shopping."
               }
             }
           ],
-          "recit": "Jour 2, on quitte la rue pour le marché. Kuromon, c'est où les vrais Osakiens viennent manger.",
-          "conseilDuJour": "Apporte de la patience et du ventre vide : les étals débordent de trésors et tu vas vouloir tout goûter."
+          "recit": "Jour 2 : on reste à Osaka, direction le sud-est. Sanctuaire secret, marché frais et shopping couvert.",
+          "conseilDuJour": "Visite Sumiyoshi tôt pour l'ambiance apaisée, puis attaque le marché Kuromon avant midi — c'est quand la fraîcheur et les étals sont au max."
         },
         {
           "num": 3,
@@ -18721,27 +18988,47 @@
           "titre": "Cuisine de Kyoto",
           "etapes": [
             {
-              "lieuId": "nishiki",
+              "lieuId": "fushimi-inari",
               "heure": "9:00",
-              "noteParcours": "Le marché Nishiki, c'est l'âme gourmande de Kyoto en cent mètres : tamagoyaki sucré-salé, mochi colorés, fruits de saison, poisson séché, légumes de rêve. Les vendeurs sont volontiers bavards — ils adorent partager."
+              "noteParcours": "Fushimi Inari est magique en début de matin ou coucher de soleil. Oublie midi. Monte parmi les milliers de toriis rouges jusqu'au calme — la solitude crée l'émerveillement."
             },
             {
-              "lieuId": "fushimi-inari",
-              "heure": "11:00",
-              "noteParcours": "Fushimi Inari, c'est mille portiques rouges qui s'enfoncent dans la montagne. On vient ici pour la beauté après la gourmandise, pour respirer et réfléchir. En fin d'après-midi, quand les touristes repartent, c'est magique.",
+              "lieuId": "kiyomizu-dera",
+              "heure": "12:00",
+              "noteParcours": "Le chemin montant par Sannenzaka vaut le prix du temple. Petites boutiques d'artisanat, vendeurs de mochi, ambiance ultra-préservée. Kiyomizu posé au-dessus, c'est la récompense.",
               "arrivee": {
                 "mode": "train",
+                "duree": "~30 min",
+                "note": "Descend via Fushimi Inari par le train, puis bus pour Kiyomizu. La route serpente."
+              }
+            },
+            {
+              "lieuId": "nishiki",
+              "heure": "14:30",
+              "noteParcours": "Nishiki est le marché de Kyoto — mais moins chaotique qu'Osaka, plus raffiné. Tamagoyaki sucré, mochi mou, petits plats. Ici on grignote respectueusement, pas on dévore.",
+              "arrivee": {
+                "mode": "bus",
                 "duree": "~15 min",
-                "note": "Court trajet vers le sanctuaire."
+                "note": "Redescend vers le centre, direction la cuisine de rue légère."
+              }
+            },
+            {
+              "lieuId": "gion",
+              "heure": "17:00",
+              "noteParcours": "Gion en fin d'après-midi offre une chance d'apercevoir une geiko ou maiko se rendant à un rendez-vous. Discrétion absolue, pas de photos. C'est du privilège pur.",
+              "arrivee": {
+                "mode": "à pied",
+                "duree": "~10 min",
+                "note": "À deux pas de Nishiki."
               }
             }
           ],
-          "recit": "On monte à Kyoto par train. Ici, la gastronomie est plus calme, plus réfléchie — kaiseki, mets de saison, respect du produit.",
-          "conseilDuJour": "Ralentis. À Kyoto, on ne dévale pas les lieux en courant. Le marché Nishiki mérite du temps, et Fushimi Inari aussi.",
+          "recit": "Kyoto, c'est autre chose. Les temples parlent, les marches chantent, les geikos se préparent. Quatre étapes pour goûter l'âme.",
+          "conseilDuJour": "Réserve toi une dégustation ou un dîner kaiseki pour le soir : Kyoto cuisine autrement que Osaka — plus épuré, plus respectueux des saisons.",
           "arriveeVille": {
             "mode": "train",
-            "duree": "~30-45 min",
-            "note": "Train rapide depuis Osaka. À l'arrivée, tu sens déjà la différence : Kyoto respire."
+            "duree": "~75 min",
+            "note": "Direct depuis Osaka vers Kyoto, paysage qui bascule entre métropole et collines."
           }
         },
         {
@@ -18750,58 +19037,78 @@
           "titre": "Douceurs de Nara",
           "etapes": [
             {
-              "lieuId": "mochi-nara",
+              "lieuId": "nara-park",
               "heure": "9:00",
-              "noteParcours": "Nakatanidou fabrique le mochi depuis toujours. Regarder les artisans piler la pâte à grande vitesse, c'est du spectacle. Le mochi tiède juste après — sucré, léger, un peu gluant — c'est le goût de Nara."
+              "noteParcours": "Le parc est ton terrain de jeu : daims croisés, pelouse verte, temple dansant dans le lointain. Les daims adorent les 'shika senbei' (petits biscuits) vendus partout — ils se révérencient aussi, ce qui rend tout irréel."
             },
             {
-              "lieuId": "nara-park",
-              "heure": "11:00",
-              "noteParcours": "Le parc de Nara, c'est une suspension entre réalité et féerie. Des daims partout, des temples cachés dans les bois, une herbe parfaite. C'est ici qu'on comprend pourquoi Nara est restée dans les cœurs depuis mille ans.",
+              "lieuId": "todai-ji",
+              "heure": "10:30",
+              "noteParcours": "Le Bouddha géant de Tōdai-ji écrase par sa présence. Passe par le pilier percé du trou des narines — c'est devenu un jeu du touriste, mais ça sert à quelque chose, paraît-il.",
               "arrivee": {
                 "mode": "à pied",
+                "duree": "~15 min",
+                "note": "À travers le parc, ponctué de daims à carresser."
+              }
+            },
+            {
+              "lieuId": "mochi-nara",
+              "heure": "12:30",
+              "noteParcours": "Nakatanidou : tu manges du mochi frais pilé sous tes yeux. Chaud, moelleux, garni de crème ou pâte rouge — c'est ta dernière volupté culinaire du Kansai.",
+              "arrivee": {
+                "mode": "à pied",
+                "duree": "~20 min",
+                "note": "Vers Sanjo-dori, le cœur commercial de Nara."
+              }
+            },
+            {
+              "lieuId": "kasuga",
+              "heure": "14:00",
+              "noteParcours": "Kasuga Taisha, plus intime que Todai-ji, ferme ta boucle Nara. Si tu as de la chance, c'est un jour de festival — les lanternes allumées créent un rêve. Sinon, reste magique aussi.",
+              "arrivee": {
+                "mode": "bus",
                 "duree": "~10 min",
-                "note": "Le parc s'étend juste après le marché."
+                "note": "Court dernier voyage pour clore le voyage."
               }
             }
           ],
-          "recit": "Dernier jour : Nara, où les daims errent librement et où on mange encore mieux.",
-          "conseilDuJour": "Lève-toi tôt pour le parc et le mochi encore chaud. Les daims sont plus doux le matin, et tu évites la cohue d'après-midi.",
+          "recit": "Dernier jour : Nara te reçoit avec ses daims joueurs, ses monstres de temples et ses pâtisseries qui fondent.",
+          "conseilDuJour": "Pars tôt au parc avant la cohue touristique. Et ne rate pas de manger un mochi chaud à Nakatanidou — c'est ton dernier souvenir sucré du voyage.",
           "arriveeVille": {
             "mode": "train",
             "duree": "~45 min",
-            "note": "Train direct. Nara est petit et doux, l'endroit idéal pour terminer."
+            "note": "Kintetsu depuis Kyoto, trajet bucolique vers Nara."
           }
         }
       ],
-      "sousTitre": "Saveurs de rue, marchés et douceurs du Kansai",
-      "intro": "Quatre jours pour découvrir le Kansai comme un vrai gourmand. D'Osaka bruyante et délicieuse à Kyoto sereine, en passant par les daims de Nara — tu vas goûter le Japon comme il se mange vraiment.",
+      "sousTitre": "Du néon gourmand de Osaka aux temple-marchés de Kyoto et Nara",
+      "intro": "Quatre jours à travers le Kansai pour les amoureux de bonne chère et d'atmosphères authentiques. Osaka t'explose les saveurs, Kyoto susurre ses traditions culinaires, Nara t'offre daims joueurs et douceurs incontournables. À ne pas louper si tu veux goûter le vrai Japon.",
       "rythme": "équilibré",
       "budgetIndicatif": "¥¥",
       "hebergement": [
         {
           "villeId": "osaka",
-          "type": "Hôtel urbain",
+          "type": "hôtel urbain",
           "gamme": "¥¥",
-          "note": "Près de Namba pour accéder à Dotonbori en quelques minutes. Le cœur de l'action."
+          "note": "Reste centré pour rayonner sur les quartiers gourmands."
         },
         {
           "villeId": "kyoto",
-          "type": "Ryokan traditionnel",
+          "type": "ryokan traditionnel",
           "gamme": "¥¥¥",
           "lieuId": "ryokan-kyoto",
-          "note": "Une nuit immersive pour bien sentir l'essence de Kyoto. Les repas inclus mettent l'accent sur la cuisine kaiseki."
+          "note": "Rive-toi au Gion pour l'ambiance et la proximité des ruelles historiques."
         },
         {
           "villeId": "nara",
-          "type": "Guesthouse",
+          "type": "petit hôtel",
           "gamme": "¥¥",
-          "note": "Simple et accueillante, proche de la gare. Juste une nuit avant de repartir."
+          "note": "À deux pas de la gare, pratique pour explorer le parc et les temples dès le matin."
         }
       ],
       "contenuGenere": {
-        "verified": false,
-        "genereLe": "2026-08-22T14:53:34.920Z",
+        "verified": true,
+        "genereLe": "2026-08-22T16:50:33.290Z",
         "model": "claude-haiku-4-5-20251001",
         "garde_fous_errors": [],
         "line_warnings": [],

@@ -2,40 +2,50 @@
   "id": "tokyo-express-3j",
   "contenuGenere": {
     "verified": false,
-    "genereLe": "2026-08-22T14:53:03.941Z",
+    "genereLe": "2026-08-22T16:50:07.718Z",
     "model": "claude-haiku-4-5-20251001",
     "garde_fous_errors": [],
     "line_warnings": [],
     "number_warnings": []
   },
-  "sousTitre": "Du néon au temple, trois jours de Tokyo",
-  "intro": "Tokyo, c'est l'overdose de contraste qui vire à l'addiction. Trois jours, c'est serré, mais faisable pour attraper l'essence : un temple dans la brume du matin, la frénésie d'Akihabara, un bar skyline où la mégapole scintille sous tes pieds. Allô Tokyo.",
-  "rythme": "dense",
+  "sousTitre": "Du néon de Tokyo au silence des temples",
+  "intro": "Trois jours pour saisir Tokyo dans toute sa contradiction : temples ancestraux et carrefours illuminés, figurines d'anime et ramen de maître, art immersif et traditions tacites. Une plongée ludique dans la mégapole, sans pression.",
+  "rythme": "équilibré",
   "budgetIndicatif": "¥¥",
   "hebergement": [
     {
       "villeId": "tokyo",
-      "type": "Hôtel ou ryokan",
-      "gamme": "¥¥",
-      "note": "Central, près d'une ligne principale, idéal pour rayonner dans la ville."
-    },
-    {
-      "villeId": "tokyo",
-      "type": "Hôtel de luxe",
+      "type": "Hôtel de charme",
       "gamme": "¥¥¥",
       "lieuId": "park-hyatt",
-      "note": "Pour l'expérience: vues panoramiques sur Tokyo et cocktails au sommet."
+      "note": "Luxe et vue sur la mégapole — le New York Bar au 52e étage vaut le coup d'y monter, même pour un verre."
     }
   ],
   "jours": [
     {
       "num": 1,
-      "intro": "Plonge d'abord dans le vieux Tokyo, avant la déferlante pop culture.",
-      "conseilDuJour": "Lève-toi tôt pour les deux : les temples gratuits et les rues bondées ne pardonnent pas les grasses matinées.",
+      "intro": "On découvre le Tokyo des origines : le temple millénaire d'Asakusa, la rue marchande figée dans le temps, et cette énergie brute des apprentis-cuisinier qui passent par Nakamise.",
+      "conseilDuJour": "Pose ton alarme à 7h30 — arriver tôt à Senso-ji t'épargne la foule du milieu de journée et te laisse le temple presque pour toi.",
       "etapes": [
         {
           "lieuId": "senso-ji",
-          "noteParcours": "Le cœur touristique mais inévitable d'Asakusa. Le matin avant 8h, la lanterne géante est à toi presque seul, et tu respires l'encens sans être écrasé. C'est là que Tokyo lâche prise d'être moderne pour une seconde."
+          "noteParcours": "C'est LE lieu de référence, le temple qui a vu naître Tokyo. La lanterne rouge géante est presque cinématographique en début de matin — profites-en avant les cars touristiques."
+        },
+        {
+          "lieuId": "nakamise",
+          "arrivee": {
+            "mode": "à pied",
+            "duree": "~2 min"
+          },
+          "noteParcours": "C'est la rue marchande la plus ancienne du pays : bonbons maison, souvenirs, petits restaurants nichés. Vrai conseil : les gâteaux ningyo-yaki tout chauds valent le détour plus que les t-shirts touristiques."
+        },
+        {
+          "lieuId": "kappabashi",
+          "arrivee": {
+            "mode": "métro",
+            "duree": "~10 min"
+          },
+          "noteParcours": "Une rue de spécialistes : coutellerie, vaisselle pro, faux plats de restaurant (sampuru). C'est le quartier des cuisiniers en herbe — tu trouveras des couteaux que les chefs utilisent vraiment."
         },
         {
           "lieuId": "ichiran",
@@ -43,18 +53,42 @@
             "mode": "métro",
             "duree": "~15 min"
           },
-          "noteParcours": "Après le temple, un ramen chaud te ramène à la réalité : c'est simple, c'est bon, c'est l'authenticité low-cost. La machine à l'entrée intimide zéro quand tu vois les images."
+          "noteParcours": "L'interlude gourmand. Ichiran c'est simple, efficace, délicieux — et la machine à billets avec ses options bizarres (ail ? piquant?) t'amuse autant qu'elle te nourrit."
+        },
+        {
+          "lieuId": "ueno-park",
+          "arrivee": {
+            "mode": "métro",
+            "duree": "~10 min"
+          },
+          "noteParcours": "Un parc qui respire, idéal l'après-midi pour décompresser. Le Musée National juste à côté vaut une heure si tu as l'énergie — c'est le plus ancien du Japon et il parle d'histoire sans baratin."
         }
       ]
     },
     {
       "num": 2,
-      "intro": "Demain, tu plonges dans la pop culture décalée et l'énergie effrénée de la ville moderne.",
-      "conseilDuJour": "Apporte ton appareil photo : Akihabara le matin puis Shibuya à l'heure de pointe = deux mondes Tokyo en un jour.",
+      "intro": "On bascule dans le Japon de la pop culture, manga, anime, jeux vidéo. Akihabara pour les trésors, Harajuku pour la mode jeune, et la folie douce de Shibuya en fin de journée.",
+      "conseilDuJour": "Oublie les guides de Harajuku le samedi : reviens-y en semaine, fin de matinée — tu profiteras vraiment des crêpes et des devantures sans te battre pour avancer.",
       "etapes": [
         {
           "lieuId": "akihabara",
-          "noteParcours": "Épicentre des otakus, des rétro-gamers, des collectionneurs. Les étages supérieurs des magasins cachent les vraies pépites ; descends aussi au sous-sol si tu cherches du vintage."
+          "noteParcours": "Le paradis des collectionneurs. Les pépites — figurines rares, cartouches vintage, mangas introuvables — dorment aux étages supérieurs loin des blinker du rez-de-chaussée."
+        },
+        {
+          "lieuId": "takeshita-dori",
+          "arrivee": {
+            "mode": "métro",
+            "duree": "~15 min"
+          },
+          "noteParcours": "Rue de shopping mode et chic kawaii. La signature : une crêpe pliée à emporter. Vrai bonus si tu croises un photoshoot de cosplay amateur — ça arrive souvent l'après-midi."
+        },
+        {
+          "lieuId": "meiji-jingu",
+          "arrivee": {
+            "mode": "à pied",
+            "duree": "~8 min"
+          },
+          "noteParcours": "On quitte le clinquant pour retrouver la forêt. Ce sanctuaire au milieu de la verdure offre une pause presque surréelle à deux pas de Harajuku. Les samedis et dimanches matin, tu peux tomber sur un mariage shinto traditionnel."
         },
         {
           "lieuId": "shibuya-crossing",
@@ -62,26 +96,50 @@
             "mode": "métro",
             "duree": "~10 min"
           },
-          "noteParcours": "Le carrefour piéton emblématique, où le Japon moderne pulse en direct. Plus de sens avec la vue d'en haut depuis un café : tu vois la vague humaine coordonnée, presque chorégraphique."
+          "noteParcours": "LE carrefour mythique. Moins pour le traverser (c'est une rue comme les autres) que pour l'observer d'en haut : le flux humain devient une chorégraphie."
+        },
+        {
+          "lieuId": "shibuya-sky",
+          "arrivee": {
+            "mode": "à pied",
+            "duree": "~5 min"
+          },
+          "noteParcours": "L'observatoire où Tokyo change de couleur au coucher du soleil. Les billets en ligne réduisent l'attente — essentiel quand le coucher tire vers 17h."
         }
       ]
     },
     {
       "num": 3,
-      "intro": "Dernier jour : fusions numériques et Tokyo depuis les nuages.",
-      "conseilDuJour": "Réserve tes billets teamLab en ligne dès aujourd'hui si tu ne l'as pas encore fait — ça affiche complet régulièrement.",
+      "intro": "Dernier jour, on plonge dans l'art immersif teamLab, l'île futuriste d'Odaiba avec ses géants de plastique, et on finit sur les vitrines de luxe de Ginza ou l'apéritif au sommet du monde.",
+      "conseilDuJour": "Réserve tes billets teamLab dès aujourd'hui pour demain ou après-demain — ça affiche complet régulièrement. Et porte vraiment un short : tu vas entrer dans l'eau.",
       "etapes": [
         {
           "lieuId": "teamlab",
-          "noteParcours": "Un musée où tu marches dedans plutôt que tu le regardes. Les installations jouent avec la lumière, l'eau, ton propre corps. C'est Tokyo version art immersif : contrôlé, luminescent, légèrement dérangeant en beauté."
+          "noteParcours": "L'art numérique redéfini : galeries immersives où tu deviens acteur de ce qui t'entoure. C'est kitsch, c'est magique, et ça photographie mieux que la réalité."
+        },
+        {
+          "lieuId": "odaiba",
+          "arrivee": {
+            "mode": "métro",
+            "duree": "~10 min"
+          },
+          "noteParcours": "Une île de loisirs futuriste : musées, shopping, et ce Gundam colossal de DiverCity qui anime ses articulations à certaines heures. Vue nocturne sur le pont Rainbow illuminé : à ne pas rater."
+        },
+        {
+          "lieuId": "ginza",
+          "arrivee": {
+            "mode": "métro",
+            "duree": "~15 min"
+          },
+          "noteParcours": "Le quartier chic par excellence. Les grandes avenues deviennent piétonnes le week-end après-midi : parfait pour flâner. Les sous-sols (depachika) des grands magasins regorgent de délices culinaires à goûter ou ramener."
         },
         {
           "lieuId": "park-hyatt",
           "arrivee": {
-            "mode": "train",
-            "duree": "~20 min"
+            "mode": "métro",
+            "duree": "~12 min"
           },
-          "noteParcours": "Finalmente, monte au 52e étage pour un verre avec vue. Même sans dormir là, c'est l'endroit pour poser tes yeux sur toute la mégapole qui pulse après trois jours d'immersion."
+          "noteParcours": "Ton dernier point de vue sur Tokyo. Même sans y rester, monte au New York Bar au 52e étage — un cocktail avec la ville à tes pieds, c'est l'apothéose rêvée d'un court séjour."
         }
       ]
     }

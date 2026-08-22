@@ -1,82 +1,115 @@
 # Japon culturel — brouillon (verified: false)
 
-**Sous-titre :** Du néon de Kyoto aux temples de l'âme
+**Sous-titre :** Du néon oublié aux temples éternels
 
-**Intro :** Cinq jours pour respirer le Japon authentique : des sanctuaires cachés aux temples millénaires, des jardins zen au recueillement de Hiroshima. Pas de selfies pressés — juste du temps pour écouter, observer, se perdre. Du chamanisme palpable aux daims de Nara qui te rendent la révérence, c'est une immersion dans ce qui fait battre le cœur du Japon traditionnel.
+**Intro :** Cinq jours pour respirer l'âme du Japon traditionnel : des sanctuaires cachés de Kyoto aux daims bienveillants de Nara, en passant par la sérénité recueillie d'Hiroshima. Un voyage où chaque pas en montagne, chaque pas dans un jardin, te ramène à l'essence même du pays.
 
-**Rythme :** équilibré · **Budget indicatif :** ¥¥¥
+**Rythme :** équilibré · **Budget indicatif :** ¥¥
 
 ## Hébergement
 - **Kyoto** — Ryokan traditionnel (¥¥¥) → catalogue: Ryokan Gion
-  Expérience kaiseki incluse — dormir ici, ce n'est pas juste trouver un lit, c'est vivre une nuit à la sauce japonaise.
+  Une nuit en ryokan, c'est un cours accéléré de zen et de cuisine-art : onsen, tatami, kaiseki. Essayer Ryokan Gion pour vraiment sentir Kyoto.
+- **Nara** — Hôtel confortable (¥¥)
+  Nara se visite bien en une journée depuis Kyoto, mais dormir là permet de profiter du parc au calme du matin.
+- **Hiroshima** — Hôtel urbain (¥¥)
+  Base confortable pour deux jours d'immersion historique et nature. Proche du tram pour rayonner vers Miyajima.
 
 ## Jour 1 — Kyoto
-*Premier jour à Kyoto : tu arrives frais et curieux. C'est le moment parfait pour les sanctuaires, avant que la fatigue du voyage ne te rattrape.*
+*Arrivée à Kyoto : commence par les sanctuaires les plus iconiques de la ville, des mille portiques rouges aux temples dorés perchés sur les collines.*
 
-💡 **Conseil du jour :** Traîne dans les ruelles secondaires entre les deux étapes — les meilleures photos (et les moins touristiques) se cachent loin des circuits officiels.
+💡 **Conseil du jour :** Lève-toi tôt pour Fushimi Inari : la foule arrive tard, et tu verras les portiques baignés d'une lumière douce que les cartes postales ne captent jamais.
 
 **Fushimi Inari**
-Les portes torii de Fushimi Inari s'étirent sur la montagne comme une vague figée. Tu comprends pourquoi les Japonais l'appellent 'la porte vers l'invisible' — c'est vertigineux, une vraie communion avec le shintoïsme. Monte tôt pour vivre ça presque seul.
+Les milliers de torii rouges d'Inari sont un hymne au Shinto en pierre et en couleur. C'est l'image du Japon qui hante les rêves, mais magnifique de vivre en vrai : monte, marche, laisse la foule en bas.
 
-  🚶 Bus, ~25-30 min
+  🚶 Bus, ~20 min
 
-**Kinkaku-ji**
-Le Pavillon d'Or semble irréel quand tu le découvres depuis le chemin. Oui, c'est touristique, mais regarde l'eau, écoute le silence entre les groupes — le temple t'atteint malgré la foule. À cette heure, tu as juste la fin de matinée avant le rush du midi.
+**Kiyomizu-dera**
+Le temple qui épargne le bois depuis des siècles. Arrive par Sannenzaka, les petites rues où les marchands vendent des souvenirs comme autrefois. La plateforme qui surplombe Kyoto est un moment de pause parfait en fin de matinée.
+
+  🚶 Métro, ~10 min
+
+**Quartier de Gion**
+Le Gion de fin d'après-midi, c'est Kyoto vue par un cinéaste. Maisons de bois, lanternes de papier, parfois une geiko qui passe. Respecte, regarde, respire — n'y viens pas pour prendre des selfies.
 
 ## Jour 2 — Kyoto
-*Deuxième jour : la nature et la détente. Le matin dans les bambous, l'après-midi et la nuit dans le ryokan pour te laisser respirer.*
+*Jour nature et zen : bambouseraie sauvage, temple d'or, château avec secrets de bois qui grinçent, puis saveurs du marché avant une soirée au ryokan.*
 
-💡 **Conseil du jour :** Dès ton arrivée au ryokan, demande où manger le soir si le kaiseki n'est pas inclus — les petits restaurants autour de Gion se remplissent vite.
+💡 **Conseil du jour :** Pars avant 8h pour Arashiyama et sois quasiment seul dans les tiges de bambou : le monde arrive après 9h.
 
 **Bambouseraie d'Arashiyama**
-La Bambouseraie d'Arashiyama avant l'aube est magique : tu marches dans un tunnel vert-gris presque vide, les sons sont étouffés, tu respires l'humidité. C'est une méditation. Ne lâche pas ce moment pour des photos — vis-le d'abord.
+Arashiyama ne se visite pas, elle se vit. Les bruits s'effacent dans la forêt de bambou, tu entends juste le vent. C'est tôt, c'est calme, c'est transformant.
 
-  🚶 Train puis à pied, ~20 min
+  🚶 Bus, ~20 min — Transfert rapide vers le nord de Kyoto.
+
+**Kinkaku-ji**
+Le pavillon d'or est un cliché photographié des milliards de fois — et pourtant. Il brille pour vrai, reflété dans l'étang. Viens avant 11h si tu veux du silence.
+
+  🚶 Bus, ~30 min
+
+**Château de Nijo**
+Nijo, c'est l'histoire ninja discrète : le plancher qui grinçe intentionnellement (uguisubari) pour avertir les gardes. Un détail de génie qui t'amuse tout en te rappelant les intrigues féodales.
+
+  🚶 Métro, ~15 min
+
+**Marché Nishiki**
+Nishiki n'est pas un musée, c'est un marché vivant où les Kyotoïtes vraiment achètent. Tamagoyaki chaud, mochi moelleux, poisson frais. Goûte en marchant une fois serait un sacrilège — reste au comptoir.
+
+  🚶 Métro, ~10 min
 
 **Ryokan Gion**
-Check-in au ryokan = basculer dans une autre temporalité. Les tatamis, l'onsen, le service silencieux — c'est un cocon. Le soir, le kaiseki arrive sur la table : chaque assiette raconte une histoire. C'est ça, le Japon traditionnel qu'on rêve de vivre.
+Ton entrée en immersion Kyoto. Onsen chaud, kimono de coton, kaiseki en plusieurs actes : chaque plat raconte la saison. C'est luxe, oui, mais justifié.
 
 ## Jour 3 — Nara
-*Trajet vers Nara : une heure de train à peine. Les daims te font oublier l'heure, et les temples sont gérés par des prêtres qui travaillent depuis des siècles.*
+> 🚄 Arrivée depuis la ville précédente : Train, ~45 min — Ligne Kintetsu depuis Kyoto jusqu'à Nara : trajet rapide, entrée directe au parc de gare.
 
-💡 **Conseil du jour :** Les daims sont adorables mais rusés — ne laisse rien traîner (sacs, cartes, papiers). Garde les biscuits en main et attend leur geste — ils négocient.
+*Journée nature et révérence : daims en liberté, Bouddha géant en bronze, mochi tiède, lanternes au sanctuaire. Nara respire différemment de Kyoto.*
+
+💡 **Conseil du jour :** Achète les biscuits shika senbei à l'entrée du parc et amuse-toi à voir les daims se prosterner pour avoir leur récompense : c'est absurde et touchant.
 
 **Parc de Nara**
-Le Parc de Nara c'est un immense terrain de douce folie : des daims sacrés qui te saluent, des lanternes en pierre, des temples enfouis sous les feuilles. Tu oublis où commence la nature et où finit le spirituel. Marche sans but — chaque virage révèle quelque chose.
+Les daims de Nara ne sont pas une attraction : ils vivent là. Respecte-les, nourris-les avec les biscuits prévus, incline-toi quand ils te saluent. C'est un moment de connexion bête et simple avec la nature qu'on oublie.
 
-  🚶 Bus, ~10-15 min
+  🚶 À pied, ~15 min
 
 **Tōdai-ji**
-Tōdai-ji te prépare dès avant d'y entrer : l'approche est solennelle. À l'intérieur, le Grand Bouddha est assis dans une salle qui semble hors du temps. Ce temple a survécu aux tremblements de terre, aux incendies, aux guerres — sa présence c'est la preuve qu'on peut reconstruire après l'effondrement.
+Tōdai-ji abrite l'une des plus grandes statues de Bouddha au monde, coulée en bronze. C'est écrasant, muet, merveilleux. Et si tu passes par le trou du pilier, c'est un défi bienveillant du temple.
+
+  🚶 À pied, ~20 min
+
+**Nakatanidou**
+Nakatanidou prépare les mochi comme depuis des siècles : pilage rapide, dextérité, chaleur. Manges-les tièdes, directement. C'est la vraie gourmandise nara, pas un souvenir.
 
   🚶 Bus, ~10 min
 
 **Kasuga Taisha**
-Kasuga Taisha est plus intime que Tōdai-ji. Les lanternes en pierre parsèment la forêt comme des gardiens silencieux. Même sans les festivals, c'est un havre — moins de touristes, plus d'authentique.
+Kasuga Taisha brille surtout lors des festivals de lanternes (février, août), mais même en visite normale, le sanctuaire apaise. Les lanternes éternelles de pierre jonchent le chemin — une méditation à elle seule.
 
 ## Jour 4 — Hiroshima
-*Hiroshima : change complètement de registre. Ce n'est plus du pur dépaysement zen, c'est de la mémoire vivante. Prépare-toi émotionnellement.*
+> 🚄 Arrivée depuis la ville précédente : Train, ~1 h 30 — Depuis Nara, retour à Kyoto puis direction Hiroshima via shinkansen (express). Changement de tempo : tu quittes le temple pour l'histoire.
 
-💡 **Conseil du jour :** Visite le musée du Mémorial de la Paix sans casque ni audio touristique rapide — laisse-toi porter par le silence et les histoires sans filtre.
+*Hiroshima confronte : parc mémorial, musée émouvant, histoire lourde mais nécessaire. Et un jardin classique pour respirer après.*
+
+💡 **Conseil du jour :** Consacre 2-3 heures au musée du Parc du Mémorial : c'est intense, mais c'est un passage dont tu sortiras changé.
 
 **Parc du Mémorial de la Paix**
-Le Parc du Mémorial de la Paix n'est pas un divertissement : c'est un endroit où le temps s'arrête. Tu entres dans la gravité de l'histoire. Le dôme de Genbaku reste debout comme un cri de pierre. Lent, respectueux, recueilli — c'est ce qui convient.
+Le Parc du Mémorial n'est jamais juste touristique. Le dôme en ruines, le musée, les noms gravés : tu seras solide dans tes sentiments. Un moment de recueillement sincère, pas un décor.
 
-  🚶 Tram, ~5-10 min
+  🚶 Tram, ~10 min — Transfert léger, tu respires dans le jardin.
 
 **Jardin Shukkei-en**
-Après le poids du mémorial, le Jardin Shukkei-en c'est comme respirer à nouveau. Les étangs mirrés, les ponts de bois, les échos des carpes — c'est un antidote de beauté. Le jardin a été détruit puis reconstruit avec soin : il symbolise la renaissance sans renier le passé.
+Après l'intensité du mémorial, Shukkei-en t'offre du silence zen : étang, ponts de bois, érable d'automne. Juste se poser, regarder l'eau. Le château d'Hiroshima jouxte le jardin si tu veux poursuivre.
 
 ## Jour 5 — Hiroshima
-*Dernier jour : l'île sacrée de Miyajima puis Okonomimura pour terminer en saveurs. Du spirituel au délicieux.*
+*Dernier jour : île sacrée de Miyajima et son grand torii flottant, puis okonomiyaki à Hiroshima avant le départ. Deux saveurs d'une même région.*
 
-💡 **Conseil du jour :** Rentre à Hiroshima l'après-midi pour dîner à Okonomimura en fin de journée — le rythme est parfait et tu ne rattrapes pas la foule du midi.
+💡 **Conseil du jour :** Vérifie les horaires de marée avant Miyajima : le torii à marée haute semble suspendre le monde.
 
 **Île de Miyajima**
-Miyajima avec son torii flottant dans l'eau est une carte postale vivante. Sauf que tu le découvres depuis le ferry, et là c'est surnaturel. Les marées transforment le paysage deux fois par jour — c'est une île qui respire. Marche pieds nus sur la plage si tu peux, goûte le sel.
+Miyajima est l'une des trois plus belles vues du Japon. Le grand torii rouge dans l'eau, les sanctuaires éparpillés, les pèlerins. Si la marée est haute, tu as l'illusion qu'il flotte. Si elle est basse, tu marches jusqu'à lui comme un défi quotidien.
 
-  🚶 Ferry puis tram, ~1h
+  🚶 Tram et ferry, ~1 h — Retour à Hiroshima en fin d'après-midi pour clôturer en saveurs.
 
 **Okonomimura**
-Okonomimura est une ruelle de petits restaurants, chacun dans sa spécialité du moment. Tu vois le cuisinier étaler ta pâte sur la plaque, empiler les couches, servir avec un art martial culinaire. L'okonomiyaki de Hiroshima c'est un sandwich en pyramide savante — noodles, œuf, sauce, bonite fumante sur le dessus. C'est gloutonnerie honorable et fin de voyage idéale.
+Okonomimura : des dizaines de petits restaurants empilés. Le style Hiroshima, c'est étagé (chou, nouilles, œuf), mangé à la spatule directement sur la plaque chaude. C'est bruyant, fumant, joyeux — parfait avant de partir.
 

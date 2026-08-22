@@ -1,53 +1,91 @@
 # Tokyo en 3 jours — brouillon (verified: false)
 
-**Sous-titre :** Du néon au temple, trois jours de Tokyo
+**Sous-titre :** Du néon de Tokyo au silence des temples
 
-**Intro :** Tokyo, c'est l'overdose de contraste qui vire à l'addiction. Trois jours, c'est serré, mais faisable pour attraper l'essence : un temple dans la brume du matin, la frénésie d'Akihabara, un bar skyline où la mégapole scintille sous tes pieds. Allô Tokyo.
+**Intro :** Trois jours pour saisir Tokyo dans toute sa contradiction : temples ancestraux et carrefours illuminés, figurines d'anime et ramen de maître, art immersif et traditions tacites. Une plongée ludique dans la mégapole, sans pression.
 
-**Rythme :** dense · **Budget indicatif :** ¥¥
+**Rythme :** équilibré · **Budget indicatif :** ¥¥
 
 ## Hébergement
-- **Tokyo** — Hôtel ou ryokan (¥¥)
-  Central, près d'une ligne principale, idéal pour rayonner dans la ville.
-- **Tokyo** — Hôtel de luxe (¥¥¥) → catalogue: Park Hyatt Tokyo
-  Pour l'expérience: vues panoramiques sur Tokyo et cocktails au sommet.
+- **Tokyo** — Hôtel de charme (¥¥¥) → catalogue: Park Hyatt Tokyo
+  Luxe et vue sur la mégapole — le New York Bar au 52e étage vaut le coup d'y monter, même pour un verre.
 
 ## Jour 1 — Tokyo
-*Plonge d'abord dans le vieux Tokyo, avant la déferlante pop culture.*
+*On découvre le Tokyo des origines : le temple millénaire d'Asakusa, la rue marchande figée dans le temps, et cette énergie brute des apprentis-cuisinier qui passent par Nakamise.*
 
-💡 **Conseil du jour :** Lève-toi tôt pour les deux : les temples gratuits et les rues bondées ne pardonnent pas les grasses matinées.
+💡 **Conseil du jour :** Pose ton alarme à 7h30 — arriver tôt à Senso-ji t'épargne la foule du milieu de journée et te laisse le temple presque pour toi.
 
 **Senso-ji**
-Le cœur touristique mais inévitable d'Asakusa. Le matin avant 8h, la lanterne géante est à toi presque seul, et tu respires l'encens sans être écrasé. C'est là que Tokyo lâche prise d'être moderne pour une seconde.
+C'est LE lieu de référence, le temple qui a vu naître Tokyo. La lanterne rouge géante est presque cinématographique en début de matin — profites-en avant les cars touristiques.
+
+  🚶 à pied, ~2 min
+
+**Nakamise-dori**
+C'est la rue marchande la plus ancienne du pays : bonbons maison, souvenirs, petits restaurants nichés. Vrai conseil : les gâteaux ningyo-yaki tout chauds valent le détour plus que les t-shirts touristiques.
+
+  🚶 métro, ~10 min
+
+**Kappabashi**
+Une rue de spécialistes : coutellerie, vaisselle pro, faux plats de restaurant (sampuru). C'est le quartier des cuisiniers en herbe — tu trouveras des couteaux que les chefs utilisent vraiment.
 
   🚶 métro, ~15 min
 
 **Ichiran Ramen**
-Après le temple, un ramen chaud te ramène à la réalité : c'est simple, c'est bon, c'est l'authenticité low-cost. La machine à l'entrée intimide zéro quand tu vois les images.
+L'interlude gourmand. Ichiran c'est simple, efficace, délicieux — et la machine à billets avec ses options bizarres (ail ? piquant?) t'amuse autant qu'elle te nourrit.
+
+  🚶 métro, ~10 min
+
+**Parc d'Ueno**
+Un parc qui respire, idéal l'après-midi pour décompresser. Le Musée National juste à côté vaut une heure si tu as l'énergie — c'est le plus ancien du Japon et il parle d'histoire sans baratin.
 
 ## Jour 2 — Tokyo
-*Demain, tu plonges dans la pop culture décalée et l'énergie effrénée de la ville moderne.*
+*On bascule dans le Japon de la pop culture, manga, anime, jeux vidéo. Akihabara pour les trésors, Harajuku pour la mode jeune, et la folie douce de Shibuya en fin de journée.*
 
-💡 **Conseil du jour :** Apporte ton appareil photo : Akihabara le matin puis Shibuya à l'heure de pointe = deux mondes Tokyo en un jour.
+💡 **Conseil du jour :** Oublie les guides de Harajuku le samedi : reviens-y en semaine, fin de matinée — tu profiteras vraiment des crêpes et des devantures sans te battre pour avancer.
 
 **Akihabara**
-Épicentre des otakus, des rétro-gamers, des collectionneurs. Les étages supérieurs des magasins cachent les vraies pépites ; descends aussi au sous-sol si tu cherches du vintage.
+Le paradis des collectionneurs. Les pépites — figurines rares, cartouches vintage, mangas introuvables — dorment aux étages supérieurs loin des blinker du rez-de-chaussée.
+
+  🚶 métro, ~15 min
+
+**Takeshita-dori**
+Rue de shopping mode et chic kawaii. La signature : une crêpe pliée à emporter. Vrai bonus si tu croises un photoshoot de cosplay amateur — ça arrive souvent l'après-midi.
+
+  🚶 à pied, ~8 min
+
+**Sanctuaire Meiji**
+On quitte le clinquant pour retrouver la forêt. Ce sanctuaire au milieu de la verdure offre une pause presque surréelle à deux pas de Harajuku. Les samedis et dimanches matin, tu peux tomber sur un mariage shinto traditionnel.
 
   🚶 métro, ~10 min
 
 **Carrefour de Shibuya**
-Le carrefour piéton emblématique, où le Japon moderne pulse en direct. Plus de sens avec la vue d'en haut depuis un café : tu vois la vague humaine coordonnée, presque chorégraphique.
+LE carrefour mythique. Moins pour le traverser (c'est une rue comme les autres) que pour l'observer d'en haut : le flux humain devient une chorégraphie.
+
+  🚶 à pied, ~5 min
+
+**Shibuya Sky**
+L'observatoire où Tokyo change de couleur au coucher du soleil. Les billets en ligne réduisent l'attente — essentiel quand le coucher tire vers 17h.
 
 ## Jour 3 — Tokyo
-*Dernier jour : fusions numériques et Tokyo depuis les nuages.*
+*Dernier jour, on plonge dans l'art immersif teamLab, l'île futuriste d'Odaiba avec ses géants de plastique, et on finit sur les vitrines de luxe de Ginza ou l'apéritif au sommet du monde.*
 
-💡 **Conseil du jour :** Réserve tes billets teamLab en ligne dès aujourd'hui si tu ne l'as pas encore fait — ça affiche complet régulièrement.
+💡 **Conseil du jour :** Réserve tes billets teamLab dès aujourd'hui pour demain ou après-demain — ça affiche complet régulièrement. Et porte vraiment un short : tu vas entrer dans l'eau.
 
 **teamLab Planets**
-Un musée où tu marches dedans plutôt que tu le regardes. Les installations jouent avec la lumière, l'eau, ton propre corps. C'est Tokyo version art immersif : contrôlé, luminescent, légèrement dérangeant en beauté.
+L'art numérique redéfini : galeries immersives où tu deviens acteur de ce qui t'entoure. C'est kitsch, c'est magique, et ça photographie mieux que la réalité.
 
-  🚶 train, ~20 min
+  🚶 métro, ~10 min
+
+**Odaiba**
+Une île de loisirs futuriste : musées, shopping, et ce Gundam colossal de DiverCity qui anime ses articulations à certaines heures. Vue nocturne sur le pont Rainbow illuminé : à ne pas rater.
+
+  🚶 métro, ~15 min
+
+**Ginza**
+Le quartier chic par excellence. Les grandes avenues deviennent piétonnes le week-end après-midi : parfait pour flâner. Les sous-sols (depachika) des grands magasins regorgent de délices culinaires à goûter ou ramener.
+
+  🚶 métro, ~12 min
 
 **Park Hyatt Tokyo**
-Finalmente, monte au 52e étage pour un verre avec vue. Même sans dormir là, c'est l'endroit pour poser tes yeux sur toute la mégapole qui pulse après trois jours d'immersion.
+Ton dernier point de vue sur Tokyo. Même sans y rester, monte au New York Bar au 52e étage — un cocktail avec la ville à tes pieds, c'est l'apothéose rêvée d'un court séjour.
 
