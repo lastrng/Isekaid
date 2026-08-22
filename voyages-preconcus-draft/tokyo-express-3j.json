@@ -1,0 +1,89 @@
+{
+  "id": "tokyo-express-3j",
+  "contenuGenere": {
+    "verified": false,
+    "genereLe": "2026-08-22T14:53:03.941Z",
+    "model": "claude-haiku-4-5-20251001",
+    "garde_fous_errors": [],
+    "line_warnings": [],
+    "number_warnings": []
+  },
+  "sousTitre": "Du néon au temple, trois jours de Tokyo",
+  "intro": "Tokyo, c'est l'overdose de contraste qui vire à l'addiction. Trois jours, c'est serré, mais faisable pour attraper l'essence : un temple dans la brume du matin, la frénésie d'Akihabara, un bar skyline où la mégapole scintille sous tes pieds. Allô Tokyo.",
+  "rythme": "dense",
+  "budgetIndicatif": "¥¥",
+  "hebergement": [
+    {
+      "villeId": "tokyo",
+      "type": "Hôtel ou ryokan",
+      "gamme": "¥¥",
+      "note": "Central, près d'une ligne principale, idéal pour rayonner dans la ville."
+    },
+    {
+      "villeId": "tokyo",
+      "type": "Hôtel de luxe",
+      "gamme": "¥¥¥",
+      "lieuId": "park-hyatt",
+      "note": "Pour l'expérience: vues panoramiques sur Tokyo et cocktails au sommet."
+    }
+  ],
+  "jours": [
+    {
+      "num": 1,
+      "intro": "Plonge d'abord dans le vieux Tokyo, avant la déferlante pop culture.",
+      "conseilDuJour": "Lève-toi tôt pour les deux : les temples gratuits et les rues bondées ne pardonnent pas les grasses matinées.",
+      "etapes": [
+        {
+          "lieuId": "senso-ji",
+          "noteParcours": "Le cœur touristique mais inévitable d'Asakusa. Le matin avant 8h, la lanterne géante est à toi presque seul, et tu respires l'encens sans être écrasé. C'est là que Tokyo lâche prise d'être moderne pour une seconde."
+        },
+        {
+          "lieuId": "ichiran",
+          "arrivee": {
+            "mode": "métro",
+            "duree": "~15 min"
+          },
+          "noteParcours": "Après le temple, un ramen chaud te ramène à la réalité : c'est simple, c'est bon, c'est l'authenticité low-cost. La machine à l'entrée intimide zéro quand tu vois les images."
+        }
+      ]
+    },
+    {
+      "num": 2,
+      "intro": "Demain, tu plonges dans la pop culture décalée et l'énergie effrénée de la ville moderne.",
+      "conseilDuJour": "Apporte ton appareil photo : Akihabara le matin puis Shibuya à l'heure de pointe = deux mondes Tokyo en un jour.",
+      "etapes": [
+        {
+          "lieuId": "akihabara",
+          "noteParcours": "Épicentre des otakus, des rétro-gamers, des collectionneurs. Les étages supérieurs des magasins cachent les vraies pépites ; descends aussi au sous-sol si tu cherches du vintage."
+        },
+        {
+          "lieuId": "shibuya-crossing",
+          "arrivee": {
+            "mode": "métro",
+            "duree": "~10 min"
+          },
+          "noteParcours": "Le carrefour piéton emblématique, où le Japon moderne pulse en direct. Plus de sens avec la vue d'en haut depuis un café : tu vois la vague humaine coordonnée, presque chorégraphique."
+        }
+      ]
+    },
+    {
+      "num": 3,
+      "intro": "Dernier jour : fusions numériques et Tokyo depuis les nuages.",
+      "conseilDuJour": "Réserve tes billets teamLab en ligne dès aujourd'hui si tu ne l'as pas encore fait — ça affiche complet régulièrement.",
+      "etapes": [
+        {
+          "lieuId": "teamlab",
+          "noteParcours": "Un musée où tu marches dedans plutôt que tu le regardes. Les installations jouent avec la lumière, l'eau, ton propre corps. C'est Tokyo version art immersif : contrôlé, luminescent, légèrement dérangeant en beauté."
+        },
+        {
+          "lieuId": "park-hyatt",
+          "arrivee": {
+            "mode": "train",
+            "duree": "~20 min"
+          },
+          "noteParcours": "Finalmente, monte au 52e étage pour un verre avec vue. Même sans dormir là, c'est l'endroit pour poser tes yeux sur toute la mégapole qui pulse après trois jours d'immersion."
+        }
+      ]
+    }
+  ]
+}

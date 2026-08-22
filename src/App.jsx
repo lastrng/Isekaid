@@ -4827,14 +4827,31 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
         <div style={{padding:"24px 22px"}}>
           <div style={{fontSize:10,color:C.red,letterSpacing:".25em",textTransform:"uppercase",marginBottom:8,fontWeight:600}}>旅程 · Itinéraire</div>
           <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,lineHeight:1.1,marginBottom:8}}>{trip.titre}</div>
-          <div style={{fontSize:12,color:C.t2,lineHeight:1.55,marginBottom:12}}>{trip.description}</div>
+          {trip.sousTitre && <div style={{fontSize:13,color:C.red,fontStyle:"italic",marginBottom:8}}>{trip.sousTitre}</div>}
+          <div style={{fontSize:12,color:C.t2,lineHeight:1.55,marginBottom:12}}>{trip.intro || trip.description}</div>
           <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
             <span style={{fontSize:11,padding:"4px 11px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>🗓️ {trip.duree} jours</span>
             <span style={{fontSize:11,padding:"4px 11px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>{trip.emoji} {trip.niveau}</span>
             <span style={{fontSize:11,padding:"4px 11px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>📍 {trip.villes.map(id=>villeById[id]?.nom||id).join(" · ")}</span>
+            {trip.budgetIndicatif && <span style={{fontSize:11,padding:"4px 11px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>💰 {trip.budgetIndicatif}</span>}
           </div>
         </div>
       </div>
+
+      {/* Hébergement suggéré */}
+      {Array.isArray(trip.hebergement) && trip.hebergement.length>0 && (
+        <div style={{margin:"0 20px 18px",padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:16}}>
+          <div style={{fontSize:10,color:C.t3,letterSpacing:".2em",textTransform:"uppercase",marginBottom:10,fontWeight:600}}>🛏️ Où dormir</div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {trip.hebergement.map((h,i)=>(
+              <div key={i}>
+                <div style={{fontSize:12,color:C.text,fontWeight:600,marginBottom:2}}>{villeById[h.villeId]?.nom||h.villeId} — {h.type} <span style={{color:C.t3,fontWeight:400}}>{h.gamme}</span></div>
+                {h.note && <div style={{fontSize:11,color:C.t2,lineHeight:1.4}}>{h.note}</div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Sélecteur de jour — onglets horizontaux */}
       <div style={{display:"flex",gap:8,overflowX:"auto",padding:"0 20px 16px",WebkitOverflowScrolling:"touch"}}>
@@ -4847,13 +4864,32 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
 
       {/* Timeline du jour sélectionné */}
       <div key={dayIdx} className="screen-in" style={{padding:"0 20px 20px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
           <span style={{fontSize:22}}>{ville?.emoji}</span>
           <div>
             <div style={{fontSize:16,color:C.text,fontWeight:600}}>{day?.titre || `Jour ${day?.num}`}</div>
             <div style={{fontSize:11,color:C.t3}}>{ville?.nom}</div>
           </div>
         </div>
+
+        {/* Arrivée depuis la ville précédente */}
+        {day?.arriveeVille && (
+          <div style={{display:"flex",alignItems:"flex-start",gap:8,padding:"9px 12px",background:C.s2,borderRadius:12,marginBottom:12,fontSize:11,color:C.t2,lineHeight:1.4}}>
+            <span style={{flexShrink:0}}>🚄</span>
+            <span><b style={{color:C.text}}>{day.arriveeVille.mode}, {day.arriveeVille.duree}</b>{day.arriveeVille.note ? ` — ${day.arriveeVille.note}` : ""}</span>
+          </div>
+        )}
+
+        {/* Récit du jour */}
+        {day?.recit && <div style={{fontSize:12,color:C.t2,fontStyle:"italic",lineHeight:1.5,marginBottom:10}}>{day.recit}</div>}
+
+        {/* Conseil du jour */}
+        {day?.conseilDuJour && (
+          <div style={{display:"flex",alignItems:"flex-start",gap:8,padding:"10px 12px",background:`${C.gold}18`,border:`1px solid ${C.gold}44`,borderRadius:12,marginBottom:16,fontSize:11,color:C.t2,lineHeight:1.45}}>
+            <span style={{flexShrink:0}}>💡</span>
+            <span>{day.conseilDuJour}</span>
+          </div>
+        )}
 
         {/* Étapes en timeline verticale */}
         <div style={{position:"relative"}}>
@@ -4863,29 +4899,37 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
             const isLast = i === day.etapes.length-1;
             const img = l.photo || l.image;
             return(
-              <div key={i} style={{display:"flex",gap:14,position:"relative",paddingBottom:isLast?0:18}}>
-                {/* Colonne timeline : heure + point + ligne */}
-                <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,width:48}}>
-                  <div style={{fontSize:13,fontWeight:700,color:C.red,marginBottom:6,fontFamily:"'Noto Serif JP',serif"}}>{e.heure||""}</div>
-                  <div style={{width:38,height:38,borderRadius:"50%",background:`${C.red}18`,border:`2px solid ${C.red}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0,zIndex:1}}>{l.emoji}</div>
-                  {!isLast && <div style={{width:2,flex:1,background:`${C.red}33`,marginTop:4,minHeight:30}}/>}
-                </div>
-                {/* Carte du lieu */}
-                <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(l.id)} style={{flex:1,minWidth:0,background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden",cursor:"pointer",marginBottom:2}}>
-                  <div style={{height:110,position:"relative",background:`linear-gradient(135deg,${C.red}22,${C.s2})`,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                    {/* Emoji de fallback, toujours présent en arrière-plan */}
-                    <span style={{fontSize:44,opacity:0.5}}>{l.emoji}</span>
-                    {img && <img src={img} alt={l.nom} loading="lazy" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}} onError={(e)=>{e.target.style.display="none";}}/>}
+              <div key={i}>
+                {e.arrivee && (
+                  <div style={{display:"flex",alignItems:"center",gap:6,padding:"4px 0 4px 48px",fontSize:10,color:C.t3}}>
+                    🚶 {e.arrivee.mode}, {e.arrivee.duree}{e.arrivee.note ? ` — ${e.arrivee.note}` : ""}
                   </div>
-                  <div style={{padding:"11px 13px"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:3}}>
-                      <span style={{fontSize:14,color:C.text,fontWeight:600}}>{l.nom}</span>
-                      {l.nom_jp && <span style={{fontSize:10,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{l.nom_jp}</span>}
+                )}
+                <div style={{display:"flex",gap:14,position:"relative",paddingBottom:isLast?0:18}}>
+                  {/* Colonne timeline : heure + point + ligne */}
+                  <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,width:48}}>
+                    <div style={{fontSize:13,fontWeight:700,color:C.red,marginBottom:6,fontFamily:"'Noto Serif JP',serif"}}>{e.heure||""}</div>
+                    <div style={{width:38,height:38,borderRadius:"50%",background:`${C.red}18`,border:`2px solid ${C.red}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0,zIndex:1}}>{l.emoji}</div>
+                    {!isLast && <div style={{width:2,flex:1,background:`${C.red}33`,marginTop:4,minHeight:30}}/>}
+                  </div>
+                  {/* Carte du lieu */}
+                  <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(l.id)} style={{flex:1,minWidth:0,background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden",cursor:"pointer",marginBottom:2}}>
+                    <div style={{height:110,position:"relative",background:`linear-gradient(135deg,${C.red}22,${C.s2})`,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      {/* Emoji de fallback, toujours présent en arrière-plan */}
+                      <span style={{fontSize:44,opacity:0.5}}>{l.emoji}</span>
+                      {img && <img src={img} alt={l.nom} loading="lazy" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}} onError={(e)=>{e.target.style.display="none";}}/>}
                     </div>
-                    <div style={{fontSize:11,color:C.t2,lineHeight:1.45,marginBottom:6}}>{(l.description||"").slice(0,90)}{(l.description||"").length>90?"…":""}</div>
-                    <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-                      {l.categorie && <span style={{fontSize:9,padding:"2px 8px",background:C.s2,borderRadius:12,color:C.t3}}>{l.categorie}</span>}
-                      {l.duree && <span style={{fontSize:9,padding:"2px 8px",background:C.s2,borderRadius:12,color:C.t3}}>⏱️ {l.duree}</span>}
+                    <div style={{padding:"11px 13px"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:3}}>
+                        <span style={{fontSize:14,color:C.text,fontWeight:600}}>{l.nom}</span>
+                        {l.nom_jp && <span style={{fontSize:10,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{l.nom_jp}</span>}
+                      </div>
+                      <div style={{fontSize:11,color:C.t2,lineHeight:1.45,marginBottom:6}}>{(l.description||"").slice(0,90)}{(l.description||"").length>90?"…":""}</div>
+                      {e.noteParcours && <div style={{fontSize:11,color:C.t2,fontStyle:"italic",lineHeight:1.45,marginBottom:6,paddingTop:6,borderTop:`1px solid ${C.border}`}}>{e.noteParcours}</div>}
+                      <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                        {l.categorie && <span style={{fontSize:9,padding:"2px 8px",background:C.s2,borderRadius:12,color:C.t3}}>{l.categorie}</span>}
+                        {l.duree && <span style={{fontSize:9,padding:"2px 8px",background:C.s2,borderRadius:12,color:C.t3}}>⏱️ {l.duree}</span>}
+                      </div>
                     </div>
                   </div>
                 </div>

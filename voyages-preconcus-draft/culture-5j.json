@@ -1,0 +1,137 @@
+{
+  "id": "culture-5j",
+  "contenuGenere": {
+    "verified": false,
+    "genereLe": "2026-08-22T14:52:26.351Z",
+    "model": "claude-haiku-4-5-20251001",
+    "garde_fous_errors": [],
+    "line_warnings": [],
+    "number_warnings": []
+  },
+  "sousTitre": "Du néon de Kyoto aux temples de l'âme",
+  "intro": "Cinq jours pour respirer le Japon authentique : des sanctuaires cachés aux temples millénaires, des jardins zen au recueillement de Hiroshima. Pas de selfies pressés — juste du temps pour écouter, observer, se perdre. Du chamanisme palpable aux daims de Nara qui te rendent la révérence, c'est une immersion dans ce qui fait battre le cœur du Japon traditionnel.",
+  "rythme": "équilibré",
+  "budgetIndicatif": "¥¥¥",
+  "hebergement": [
+    {
+      "villeId": "kyoto",
+      "type": "Ryokan traditionnel",
+      "gamme": "¥¥¥",
+      "lieuId": "ryokan-kyoto",
+      "note": "Expérience kaiseki incluse — dormir ici, ce n'est pas juste trouver un lit, c'est vivre une nuit à la sauce japonaise."
+    }
+  ],
+  "jours": [
+    {
+      "num": 1,
+      "intro": "Premier jour à Kyoto : tu arrives frais et curieux. C'est le moment parfait pour les sanctuaires, avant que la fatigue du voyage ne te rattrape.",
+      "conseilDuJour": "Traîne dans les ruelles secondaires entre les deux étapes — les meilleures photos (et les moins touristiques) se cachent loin des circuits officiels.",
+      "etapes": [
+        {
+          "lieuId": "fushimi-inari",
+          "noteParcours": "Les portes torii de Fushimi Inari s'étirent sur la montagne comme une vague figée. Tu comprends pourquoi les Japonais l'appellent 'la porte vers l'invisible' — c'est vertigineux, une vraie communion avec le shintoïsme. Monte tôt pour vivre ça presque seul."
+        },
+        {
+          "lieuId": "kinkaku-ji",
+          "arrivee": {
+            "mode": "Bus",
+            "duree": "~25-30 min"
+          },
+          "noteParcours": "Le Pavillon d'Or semble irréel quand tu le découvres depuis le chemin. Oui, c'est touristique, mais regarde l'eau, écoute le silence entre les groupes — le temple t'atteint malgré la foule. À cette heure, tu as juste la fin de matinée avant le rush du midi."
+        }
+      ]
+    },
+    {
+      "num": 2,
+      "intro": "Deuxième jour : la nature et la détente. Le matin dans les bambous, l'après-midi et la nuit dans le ryokan pour te laisser respirer.",
+      "conseilDuJour": "Dès ton arrivée au ryokan, demande où manger le soir si le kaiseki n'est pas inclus — les petits restaurants autour de Gion se remplissent vite.",
+      "etapes": [
+        {
+          "lieuId": "arashiyama",
+          "noteParcours": "La Bambouseraie d'Arashiyama avant l'aube est magique : tu marches dans un tunnel vert-gris presque vide, les sons sont étouffés, tu respires l'humidité. C'est une méditation. Ne lâche pas ce moment pour des photos — vis-le d'abord."
+        },
+        {
+          "lieuId": "ryokan-kyoto",
+          "arrivee": {
+            "mode": "Train puis à pied",
+            "duree": "~20 min"
+          },
+          "noteParcours": "Check-in au ryokan = basculer dans une autre temporalité. Les tatamis, l'onsen, le service silencieux — c'est un cocon. Le soir, le kaiseki arrive sur la table : chaque assiette raconte une histoire. C'est ça, le Japon traditionnel qu'on rêve de vivre."
+        }
+      ]
+    },
+    {
+      "num": 3,
+      "intro": "Trajet vers Nara : une heure de train à peine. Les daims te font oublier l'heure, et les temples sont gérés par des prêtres qui travaillent depuis des siècles.",
+      "conseilDuJour": "Les daims sont adorables mais rusés — ne laisse rien traîner (sacs, cartes, papiers). Garde les biscuits en main et attend leur geste — ils négocient.",
+      "etapes": [
+        {
+          "lieuId": "nara-park",
+          "arriveeVille": {
+            "mode": "Train",
+            "duree": "~1h"
+          },
+          "noteParcours": "Le Parc de Nara c'est un immense terrain de douce folie : des daims sacrés qui te saluent, des lanternes en pierre, des temples enfouis sous les feuilles. Tu oublis où commence la nature et où finit le spirituel. Marche sans but — chaque virage révèle quelque chose."
+        },
+        {
+          "lieuId": "todai-ji",
+          "arrivee": {
+            "mode": "Bus",
+            "duree": "~10-15 min"
+          },
+          "noteParcours": "Tōdai-ji te prépare dès avant d'y entrer : l'approche est solennelle. À l'intérieur, le Grand Bouddha est assis dans une salle qui semble hors du temps. Ce temple a survécu aux tremblements de terre, aux incendies, aux guerres — sa présence c'est la preuve qu'on peut reconstruire après l'effondrement."
+        },
+        {
+          "lieuId": "kasuga",
+          "arrivee": {
+            "mode": "Bus",
+            "duree": "~10 min"
+          },
+          "noteParcours": "Kasuga Taisha est plus intime que Tōdai-ji. Les lanternes en pierre parsèment la forêt comme des gardiens silencieux. Même sans les festivals, c'est un havre — moins de touristes, plus d'authentique."
+        }
+      ]
+    },
+    {
+      "num": 4,
+      "intro": "Hiroshima : change complètement de registre. Ce n'est plus du pur dépaysement zen, c'est de la mémoire vivante. Prépare-toi émotionnellement.",
+      "conseilDuJour": "Visite le musée du Mémorial de la Paix sans casque ni audio touristique rapide — laisse-toi porter par le silence et les histoires sans filtre.",
+      "etapes": [
+        {
+          "lieuId": "peace-park",
+          "arriveeVille": {
+            "mode": "Train (Shinkansen)",
+            "duree": "~1h15"
+          },
+          "noteParcours": "Le Parc du Mémorial de la Paix n'est pas un divertissement : c'est un endroit où le temps s'arrête. Tu entres dans la gravité de l'histoire. Le dôme de Genbaku reste debout comme un cri de pierre. Lent, respectueux, recueilli — c'est ce qui convient."
+        },
+        {
+          "lieuId": "shukkeien",
+          "arrivee": {
+            "mode": "Tram",
+            "duree": "~5-10 min"
+          },
+          "noteParcours": "Après le poids du mémorial, le Jardin Shukkei-en c'est comme respirer à nouveau. Les étangs mirrés, les ponts de bois, les échos des carpes — c'est un antidote de beauté. Le jardin a été détruit puis reconstruit avec soin : il symbolise la renaissance sans renier le passé."
+        }
+      ]
+    },
+    {
+      "num": 5,
+      "intro": "Dernier jour : l'île sacrée de Miyajima puis Okonomimura pour terminer en saveurs. Du spirituel au délicieux.",
+      "conseilDuJour": "Rentre à Hiroshima l'après-midi pour dîner à Okonomimura en fin de journée — le rythme est parfait et tu ne rattrapes pas la foule du midi.",
+      "etapes": [
+        {
+          "lieuId": "miyajima",
+          "noteParcours": "Miyajima avec son torii flottant dans l'eau est une carte postale vivante. Sauf que tu le découvres depuis le ferry, et là c'est surnaturel. Les marées transforment le paysage deux fois par jour — c'est une île qui respire. Marche pieds nus sur la plage si tu peux, goûte le sel."
+        },
+        {
+          "lieuId": "okonomiyaki-hiro",
+          "arrivee": {
+            "mode": "Ferry puis tram",
+            "duree": "~1h"
+          },
+          "noteParcours": "Okonomimura est une ruelle de petits restaurants, chacun dans sa spécialité du moment. Tu vois le cuisinier étaler ta pâte sur la plaque, empiler les couches, servir avec un art martial culinaire. L'okonomiyaki de Hiroshima c'est un sandwich en pyramide savante — noodles, œuf, sauce, bonite fumante sur le dessus. C'est gloutonnerie honorable et fin de voyage idéale."
+        }
+      ]
+    }
+  ]
+}
