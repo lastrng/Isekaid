@@ -10199,55 +10199,141 @@
           "jp": "メニューをください",
           "romaji": "Menyū wo kudasai",
           "fr": "Le menu, s'il vous plaît",
-          "kana": "めにゅー を ください"
+          "kana": "めにゅー を ください",
+          "mots": [
+            {
+              "jp": "メニューを",
+              "fr": "menu"
+            },
+            {
+              "jp": "ください",
+              "fr": "s'il vous plaît"
+            }
+          ]
         },
         {
           "jp": "これをください",
           "romaji": "Kore wo kudasai",
           "fr": "Je voudrais ça (en montrant)",
-          "kana": "これ を ください"
+          "kana": "これ を ください",
+          "mots": [
+            {
+              "jp": "これを",
+              "fr": "ça"
+            },
+            {
+              "jp": "ください",
+              "fr": "Je voudrais"
+            }
+          ]
         },
         {
           "jp": "おすすめは何ですか？",
           "romaji": "Osusume wa nan desu ka?",
           "fr": "Qu'est-ce que vous recommandez ?",
-          "kana": "おすすめ わ なん です か?"
+          "kana": "おすすめ わ なん です か?",
+          "mots": [
+            {
+              "jp": "おすすめは",
+              "fr": "vous recommandez"
+            },
+            {
+              "jp": "何ですか？",
+              "fr": "Qu'est-ce que"
+            }
+          ]
         },
         {
           "jp": "お会計お願いします",
           "romaji": "Okaikei onegaishimasu",
           "fr": "L'addition, s'il vous plaît",
-          "kana": "おかいけい おねがいします"
+          "kana": "おかいけい おねがいします",
+          "mots": [
+            {
+              "jp": "お会計",
+              "fr": "L'addition"
+            },
+            {
+              "jp": "お願いします",
+              "fr": "s'il vous plaît"
+            }
+          ]
         },
         {
           "jp": "とても美味しいです",
           "romaji": "Totemo oishii desu",
           "fr": "C'est très bon",
-          "kana": "とても おいしい です"
+          "kana": "とても おいしい です",
+          "mots": [
+            {
+              "jp": "とても美味しい",
+              "fr": "très bon"
+            },
+            {
+              "jp": "です",
+              "fr": "C'est"
+            }
+          ]
         },
         {
           "jp": "ごちそうさまでした",
           "romaji": "Gochisōsama deshita",
           "fr": "Merci pour le repas (en partant)",
-          "kana": "ごちそうさま でした"
+          "kana": "ごちそうさま でした",
+          "mots": [
+            {
+              "jp": "ごちそうさまでした",
+              "fr": "Merci pour le repas"
+            }
+          ]
         },
         {
           "jp": "二人です",
           "romaji": "Futari desu",
           "fr": "Nous sommes deux (personnes)",
-          "kana": "ふたり です"
+          "kana": "ふたり です",
+          "mots": [
+            {
+              "jp": "二人",
+              "fr": "deux"
+            },
+            {
+              "jp": "です",
+              "fr": "Nous sommes"
+            }
+          ]
         },
         {
           "jp": "水をください",
           "romaji": "Mizu wo kudasai",
           "fr": "De l'eau, s'il vous plaît",
-          "kana": "みず を ください"
+          "kana": "みず を ください",
+          "mots": [
+            {
+              "jp": "水を",
+              "fr": "eau"
+            },
+            {
+              "jp": "ください",
+              "fr": "s'il vous plaît"
+            }
+          ]
         },
         {
           "jp": "これは何ですか？",
           "romaji": "Kore wa nan desu ka?",
           "fr": "Qu'est-ce que c'est ?",
-          "kana": "これ わ なん です か?"
+          "kana": "これ わ なん です か?",
+          "mots": [
+            {
+              "jp": "これは",
+              "fr": "c'est"
+            },
+            {
+              "jp": "何ですか？",
+              "fr": "Qu'est-ce que"
+            }
+          ]
         }
       ]
     },
@@ -10262,49 +10348,117 @@
           "jp": "袋をください",
           "romaji": "Fukuro wo kudasai",
           "fr": "Un sac, s'il vous plaît",
-          "kana": "ふくろ を ください"
+          "kana": "ふくろ を ください",
+          "mots": [
+            {
+              "jp": "袋を",
+              "fr": "sac"
+            },
+            {
+              "jp": "ください",
+              "fr": "s'il vous plaît"
+            }
+          ]
         },
         {
           "jp": "温めますか？",
           "romaji": "Atatamemasu ka?",
           "fr": "Vous voulez que je le réchauffe ? (on vous le demandera)",
-          "kana": "あたためます か?"
+          "kana": "あたためます か?",
+          "mots": [
+            {
+              "jp": "温めますか？",
+              "fr": "réchauffe"
+            }
+          ]
         },
         {
           "jp": "はい、お願いします",
           "romaji": "Hai, onegaishimasu",
           "fr": "Oui, s'il vous plaît",
-          "kana": "はい, おねがいします"
+          "kana": "はい, おねがいします",
+          "mots": [
+            {
+              "jp": "はい、",
+              "fr": "Oui"
+            },
+            {
+              "jp": "お願いします",
+              "fr": "s'il vous plaît"
+            }
+          ]
         },
         {
           "jp": "カードで払えますか？",
           "romaji": "Kādo de haraemasu ka?",
           "fr": "Puis-je payer par carte ?",
-          "kana": "かーど で はらえます か?"
+          "kana": "かーど で はらえます か?",
+          "mots": [
+            {
+              "jp": "カードで",
+              "fr": "par carte"
+            },
+            {
+              "jp": "払えますか？",
+              "fr": "Puis-je payer"
+            }
+          ]
         },
         {
           "jp": "大丈夫です",
           "romaji": "Daijōbu desu",
           "fr": "Ça va / Non merci (pour refuser poliment)",
-          "kana": "だいじょうぶ です"
+          "kana": "だいじょうぶ です",
+          "mots": [
+            {
+              "jp": "大丈夫です",
+              "fr": "Ça va"
+            }
+          ]
         },
         {
           "jp": "これはいくらですか？",
           "romaji": "Kore wa ikura desu ka?",
           "fr": "Combien ça coûte ?",
-          "kana": "これ わ いくら です か?"
+          "kana": "これ わ いくら です か?",
+          "mots": [
+            {
+              "jp": "これはいくらですか？",
+              "fr": "Combien ça coûte ?"
+            }
+          ]
         },
         {
           "jp": "レジはどこですか？",
           "romaji": "Reji wa doko desu ka?",
           "fr": "Où est la caisse ?",
-          "kana": "れじ わ どこ です か?"
+          "kana": "れじ わ どこ です か?",
+          "mots": [
+            {
+              "jp": "レジは",
+              "fr": "la caisse"
+            },
+            {
+              "jp": "どこですか？",
+              "fr": "Où est"
+            }
+          ]
         },
         {
           "jp": "現金で払います",
           "romaji": "Genkin de haraimasu",
           "fr": "Je paie en espèces",
-          "kana": "げんきん で はらいます"
+          "kana": "げんきん で はらいます",
+          "mots": [
+            {
+              "jp": "現金で",
+              "fr": "en espèces"
+            },
+            {
+              "jp": "払います",
+              "fr": "Je paie"
+            }
+          ]
         }
       ]
     },
@@ -10319,49 +10473,129 @@
           "jp": "東京駅までいくらですか？",
           "romaji": "Tōkyō-eki made ikura desu ka?",
           "fr": "Combien jusqu'à la gare de Tokyo ?",
-          "kana": "とうきょうえき まで いくら です か?"
+          "kana": "とうきょうえき まで いくら です か?",
+          "mots": [
+            {
+              "jp": "東京駅まで",
+              "fr": "jusqu'à la gare de Tokyo"
+            },
+            {
+              "jp": "いくらですか？",
+              "fr": "Combien"
+            }
+          ]
         },
         {
           "jp": "この電車は新宿に止まりますか？",
           "romaji": "Kono densha wa Shinjuku ni tomarimasu ka?",
           "fr": "Ce train s'arrête-t-il à Shinjuku ?",
-          "kana": "この でんしゃ わ しんじゅく に とまります か?"
+          "kana": "この でんしゃ わ しんじゅく に とまります か?",
+          "mots": [
+            {
+              "jp": "この電車は",
+              "fr": "Ce train"
+            },
+            {
+              "jp": "新宿に",
+              "fr": "à Shinjuku"
+            },
+            {
+              "jp": "止まりますか？",
+              "fr": "s'arrête-t-il"
+            }
+          ]
         },
         {
           "jp": "乗り換えはどこですか？",
           "romaji": "Norikae wa doko desu ka?",
           "fr": "Où est la correspondance ?",
-          "kana": "のりかえ わ どこ です か?"
+          "kana": "のりかえ わ どこ です か?",
+          "mots": [
+            {
+              "jp": "乗り換えは",
+              "fr": "la correspondance"
+            },
+            {
+              "jp": "どこですか？",
+              "fr": "Où est"
+            }
+          ]
         },
         {
           "jp": "次は何駅ですか？",
           "romaji": "Tsugi wa nani-eki desu ka?",
           "fr": "Quelle est la prochaine gare ?",
-          "kana": "つぎ わ なにえき です か?"
+          "kana": "つぎ わ なにえき です か?",
+          "mots": [
+            {
+              "jp": "次は何駅ですか？",
+              "fr": "Quelle est la prochaine gare ?"
+            }
+          ]
         },
         {
           "jp": "すみません、降ります",
           "romaji": "Sumimasen, orimasu",
           "fr": "Excusez-moi, je descends",
-          "kana": "すみません, おります"
+          "kana": "すみません, おります",
+          "mots": [
+            {
+              "jp": "すみません、",
+              "fr": "Excusez-moi"
+            },
+            {
+              "jp": "降ります",
+              "fr": "je descends"
+            }
+          ]
         },
         {
           "jp": "切符はどこで買えますか？",
           "romaji": "Kippu wa doko de kaemasu ka?",
           "fr": "Où puis-je acheter un billet ?",
-          "kana": "きっぷ わ どこ で かえます か?"
+          "kana": "きっぷ わ どこ で かえます か?",
+          "mots": [
+            {
+              "jp": "切符は",
+              "fr": "un billet"
+            },
+            {
+              "jp": "どこで",
+              "fr": "Où"
+            },
+            {
+              "jp": "買えますか？",
+              "fr": "puis-je acheter"
+            }
+          ]
         },
         {
           "jp": "渋谷に行きたいです",
           "romaji": "Shibuya ni ikitai desu",
           "fr": "Je voudrais aller à Shibuya",
-          "kana": "しぶや に いきたい です"
+          "kana": "しぶや に いきたい です",
+          "mots": [
+            {
+              "jp": "渋谷に",
+              "fr": "à Shibuya"
+            },
+            {
+              "jp": "行きたいです",
+              "fr": "Je voudrais aller"
+            }
+          ]
         },
         {
           "jp": "何番線ですか？",
           "romaji": "Nan-ban-sen desu ka?",
           "fr": "Quel quai / quelle voie ?",
-          "kana": "なんばんせん です か?"
+          "kana": "なんばんせん です か?",
+          "mots": [
+            {
+              "jp": "何番線ですか？",
+              "fr": "Quel quai / quelle voie ?"
+            }
+          ]
         }
       ]
     },
@@ -10376,55 +10610,133 @@
           "jp": "これはいくらですか？",
           "romaji": "Kore wa ikura desu ka?",
           "fr": "Combien coûte ceci ?",
-          "kana": "これ わ いくら です か?"
+          "kana": "これ わ いくら です か?",
+          "mots": [
+            {
+              "jp": "これは",
+              "fr": "ceci"
+            },
+            {
+              "jp": "いくらですか？",
+              "fr": "Combien coûte"
+            }
+          ]
         },
         {
           "jp": "試着できますか？",
           "romaji": "Shichaku dekimasu ka?",
           "fr": "Puis-je essayer ?",
-          "kana": "しちゃく できます か?"
+          "kana": "しちゃく できます か?",
+          "mots": [
+            {
+              "jp": "試着できますか？",
+              "fr": "Puis-je essayer ?"
+            }
+          ]
         },
         {
           "jp": "もっと大きいサイズはありますか？",
           "romaji": "Motto ōkii saizu wa arimasu ka?",
           "fr": "Avez-vous une taille plus grande ?",
-          "kana": "もっと うきい さいず わ あります か?"
+          "kana": "もっと うきい さいず わ あります か?",
+          "mots": [
+            {
+              "jp": "もっと大きい",
+              "fr": "plus grande"
+            },
+            {
+              "jp": "サイズは",
+              "fr": "une taille"
+            },
+            {
+              "jp": "ありますか？",
+              "fr": "Avez-vous"
+            }
+          ]
         },
         {
           "jp": "これをください",
           "romaji": "Kore wo kudasai",
           "fr": "Je prends ceci",
-          "kana": "これ を ください"
+          "kana": "これ を ください",
+          "mots": [
+            {
+              "jp": "これを",
+              "fr": "ceci"
+            },
+            {
+              "jp": "ください",
+              "fr": "Je prends"
+            }
+          ]
         },
         {
           "jp": "見ているだけです",
           "romaji": "Mite iru dake desu",
           "fr": "Je regarde juste (merci)",
-          "kana": "みて いる だけ です"
+          "kana": "みて いる だけ です",
+          "mots": [
+            {
+              "jp": "見ているだけです",
+              "fr": "Je regarde juste"
+            }
+          ]
         },
         {
           "jp": "試着してもいいですか？",
           "romaji": "Shichaku shite mo ii desu ka?",
           "fr": "Puis-je essayer ?",
-          "kana": "しちゃく して も いい です か?"
+          "kana": "しちゃく して も いい です か?",
+          "mots": [
+            {
+              "jp": "試着してもいいですか？",
+              "fr": "Puis-je essayer ?"
+            }
+          ]
         },
         {
           "jp": "他の色はありますか？",
           "romaji": "Hoka no iro wa arimasu ka?",
           "fr": "Avez-vous d'autres couleurs ?",
-          "kana": "ほか の いろ わ あります か?"
+          "kana": "ほか の いろ わ あります か?",
+          "mots": [
+            {
+              "jp": "他の色は",
+              "fr": "d'autres couleurs"
+            },
+            {
+              "jp": "ありますか？",
+              "fr": "Avez-vous"
+            }
+          ]
         },
         {
           "jp": "免税できますか？",
           "romaji": "Menzei dekimasu ka?",
           "fr": "Puis-je être détaxé(e) ?",
-          "kana": "めんぜい できます か?"
+          "kana": "めんぜい できます か?",
+          "mots": [
+            {
+              "jp": "免税できますか？",
+              "fr": "Puis-je être détaxé(e) ?"
+            }
+          ]
         },
         {
           "jp": "袋をください",
           "romaji": "Fukuro wo kudasai",
           "fr": "Un sac, s'il vous plaît",
-          "kana": "ふくろ を ください"
+          "kana": "ふくろ を ください",
+          "mots": [
+            {
+              "jp": "袋を",
+              "fr": "sac"
+            },
+            {
+              "jp": "ください",
+              "fr": "s'il vous plaît"
+            }
+          ]
         }
       ]
     },
@@ -10439,55 +10751,149 @@
           "jp": "チェックインお願いします",
           "romaji": "Chekku-in onegaishimasu",
           "fr": "Je voudrais faire le check-in",
-          "kana": "ちぇっくいん おねがいします"
+          "kana": "ちぇっくいん おねがいします",
+          "mots": [
+            {
+              "jp": "チェックイン",
+              "fr": "check-in"
+            },
+            {
+              "jp": "お願いします",
+              "fr": "Je voudrais faire le"
+            }
+          ]
         },
         {
           "jp": "予約しています",
           "romaji": "Yoyaku shite imasu",
           "fr": "J'ai une réservation",
-          "kana": "よやく して います"
+          "kana": "よやく して います",
+          "mots": [
+            {
+              "jp": "予約",
+              "fr": "réservation"
+            },
+            {
+              "jp": "しています",
+              "fr": "J'ai une"
+            }
+          ]
         },
         {
           "jp": "Wi-Fiはありますか？",
           "romaji": "Wai-Fai wa arimasu ka?",
           "fr": "Y a-t-il du wifi ?",
-          "kana": "わいふぁい わ あります か?"
+          "kana": "わいふぁい わ あります か?",
+          "mots": [
+            {
+              "jp": "Wi-Fiは",
+              "fr": "du wifi"
+            },
+            {
+              "jp": "ありますか？",
+              "fr": "Y a-t-il"
+            }
+          ]
         },
         {
           "jp": "朝食は何時ですか？",
           "romaji": "Chōshoku wa nan-ji desu ka?",
           "fr": "À quelle heure est le petit-déjeuner ?",
-          "kana": "ちょうしょく わ なんじ です か?"
+          "kana": "ちょうしょく わ なんじ です か?",
+          "mots": [
+            {
+              "jp": "朝食は",
+              "fr": "le petit-déjeuner"
+            },
+            {
+              "jp": "何時ですか？",
+              "fr": "À quelle heure est"
+            }
+          ]
         },
         {
           "jp": "荷物を預けられますか？",
           "romaji": "Nimotsu wo azukeraremasu ka?",
           "fr": "Puis-je laisser mes bagages ?",
-          "kana": "にもつ を あずけられます か?"
+          "kana": "にもつ を あずけられます か?",
+          "mots": [
+            {
+              "jp": "荷物を",
+              "fr": "mes bagages"
+            },
+            {
+              "jp": "預けられますか？",
+              "fr": "Puis-je laisser"
+            }
+          ]
         },
         {
           "jp": "チェックインをお願いします",
           "romaji": "Chekku-in wo onegaishimasu",
           "fr": "Je voudrais m'enregistrer",
-          "kana": "ちぇっくいん を おねがいします"
+          "kana": "ちぇっくいん を おねがいします",
+          "mots": [
+            {
+              "jp": "チェックインを",
+              "fr": "m'enregistrer"
+            },
+            {
+              "jp": "お願いします",
+              "fr": "Je voudrais"
+            }
+          ]
         },
         {
           "jp": "荷物を預かってもらえますか？",
           "romaji": "Nimotsu wo azukatte moraemasu ka?",
           "fr": "Pouvez-vous garder mes bagages ?",
-          "kana": "にもつ を あずかって もらえます か?"
+          "kana": "にもつ を あずかって もらえます か?",
+          "mots": [
+            {
+              "jp": "荷物を",
+              "fr": "mes bagages"
+            },
+            {
+              "jp": "預かってもらえますか？",
+              "fr": "Pouvez-vous garder"
+            }
+          ]
         },
         {
           "jp": "Wi-Fiのパスワードは何ですか？",
           "romaji": "Wi-Fi no pasuwādo wa nan desu ka?",
           "fr": "Quel est le mot de passe Wi-Fi ?",
-          "kana": "Wi-Fi の ぱすわーど わ なん です か?"
+          "kana": "Wi-Fi の ぱすわーど わ なん です か?",
+          "mots": [
+            {
+              "jp": "Wi-Fiの",
+              "fr": "Wi-Fi"
+            },
+            {
+              "jp": "パスワードは",
+              "fr": "le mot de passe"
+            },
+            {
+              "jp": "何ですか？",
+              "fr": "Quel est"
+            }
+          ]
         },
         {
           "jp": "朝食は何時からですか？",
           "romaji": "Chōshoku wa nanji kara desu ka?",
           "fr": "À partir de quelle heure le petit-déjeuner ?",
-          "kana": "ちょうしょく わ なんじ から です か?"
+          "kana": "ちょうしょく わ なんじ から です か?",
+          "mots": [
+            {
+              "jp": "朝食は",
+              "fr": "le petit-déjeuner"
+            },
+            {
+              "jp": "何時からですか？",
+              "fr": "À partir de quelle heure"
+            }
+          ]
         }
       ]
     },
@@ -10502,55 +10908,137 @@
           "jp": "すみません",
           "romaji": "Sumimasen",
           "fr": "Excusez-moi / Pardon (passe-partout)",
-          "kana": "すみません"
+          "kana": "すみません",
+          "mots": [
+            {
+              "jp": "すみません",
+              "fr": "Excusez-moi"
+            }
+          ]
         },
         {
           "jp": "道に迷いました",
           "romaji": "Michi ni mayoimashita",
           "fr": "Je suis perdu(e)",
-          "kana": "みち に まよいました"
+          "kana": "みち に まよいました",
+          "mots": [
+            {
+              "jp": "道に迷いました",
+              "fr": "Je suis perdu(e)"
+            }
+          ]
         },
         {
           "jp": "トイレはどこですか？",
           "romaji": "Toire wa doko desu ka?",
           "fr": "Où sont les toilettes ?",
-          "kana": "といれ わ どこ です か?"
+          "kana": "といれ わ どこ です か?",
+          "mots": [
+            {
+              "jp": "トイレは",
+              "fr": "les toilettes"
+            },
+            {
+              "jp": "どこですか？",
+              "fr": "Où sont"
+            }
+          ]
         },
         {
           "jp": "英語を話せますか？",
           "romaji": "Eigo wo hanasemasu ka?",
           "fr": "Parlez-vous anglais ?",
-          "kana": "えいご を はなせます か?"
+          "kana": "えいご を はなせます か?",
+          "mots": [
+            {
+              "jp": "英語を",
+              "fr": "anglais"
+            },
+            {
+              "jp": "話せますか？",
+              "fr": "Parlez-vous"
+            }
+          ]
         },
         {
           "jp": "助けてください",
           "romaji": "Tasukete kudasai",
           "fr": "Aidez-moi, s'il vous plaît",
-          "kana": "たすけて ください"
+          "kana": "たすけて ください",
+          "mots": [
+            {
+              "jp": "助けて",
+              "fr": "Aidez-moi"
+            },
+            {
+              "jp": "ください",
+              "fr": "s'il vous plaît"
+            }
+          ]
         },
         {
           "jp": "わかりません",
           "romaji": "Wakarimasen",
           "fr": "Je ne comprends pas",
-          "kana": "わかりません"
+          "kana": "わかりません",
+          "mots": [
+            {
+              "jp": "わかりません",
+              "fr": "Je ne comprends pas"
+            }
+          ]
         },
         {
           "jp": "病院はどこですか？",
           "romaji": "Byōin wa doko desu ka?",
           "fr": "Où est l'hôpital ?",
-          "kana": "びょういん わ どこ です か?"
+          "kana": "びょういん わ どこ です か?",
+          "mots": [
+            {
+              "jp": "病院は",
+              "fr": "l'hôpital"
+            },
+            {
+              "jp": "どこですか？",
+              "fr": "Où est"
+            }
+          ]
         },
         {
           "jp": "もう一度お願いします",
           "romaji": "Mō ichido onegaishimasu",
           "fr": "Encore une fois, s'il vous plaît",
-          "kana": "もう いちど おねがいします"
+          "kana": "もう いちど おねがいします",
+          "mots": [
+            {
+              "jp": "もう一度",
+              "fr": "Encore une fois"
+            },
+            {
+              "jp": "お願いします",
+              "fr": "s'il vous plaît"
+            }
+          ]
         },
         {
           "jp": "ゆっくり話してください",
           "romaji": "Yukkuri hanashite kudasai",
           "fr": "Parlez lentement, s'il vous plaît",
-          "kana": "ゆっくり はなして ください"
+          "kana": "ゆっくり はなして ください",
+          "mots": [
+            {
+              "jp": "ゆっくり",
+              "fr": "lentement"
+            },
+            {
+              "jp": "話して",
+              "fr": "Parlez"
+            },
+            {
+              "jp": "ください",
+              "fr": "s'il vous plaît"
+            }
+          ]
         }
       ]
     },
@@ -10565,55 +11053,109 @@
           "jp": "おはようございます",
           "romaji": "Ohayō gozaimasu",
           "fr": "Bonjour (le matin)",
-          "kana": "おはよう ございます"
+          "kana": "おはよう ございます",
+          "mots": [
+            {
+              "jp": "おはようございます",
+              "fr": "Bonjour"
+            }
+          ]
         },
         {
           "jp": "こんにちは",
           "romaji": "Konnichiwa",
           "fr": "Bonjour (journée)",
-          "kana": "こんにちわ"
+          "kana": "こんにちわ",
+          "mots": [
+            {
+              "jp": "こんにちは",
+              "fr": "Bonjour"
+            }
+          ]
         },
         {
           "jp": "ありがとうございます",
           "romaji": "Arigatō gozaimasu",
           "fr": "Merci beaucoup",
-          "kana": "ありがとう ございます"
+          "kana": "ありがとう ございます",
+          "mots": [
+            {
+              "jp": "ありがとうございます",
+              "fr": "Merci beaucoup"
+            }
+          ]
         },
         {
           "jp": "すみません",
           "romaji": "Sumimasen",
           "fr": "Pardon / Excusez-moi",
-          "kana": "すみません"
+          "kana": "すみません",
+          "mots": [
+            {
+              "jp": "すみません",
+              "fr": "Pardon"
+            }
+          ]
         },
         {
           "jp": "はじめまして",
           "romaji": "Hajimemashite",
           "fr": "Enchanté(e) (première rencontre)",
-          "kana": "はじめまして"
+          "kana": "はじめまして",
+          "mots": [
+            {
+              "jp": "はじめまして",
+              "fr": "Enchanté(e)"
+            }
+          ]
         },
         {
           "jp": "さようなら",
           "romaji": "Sayōnara",
           "fr": "Au revoir",
-          "kana": "さようなら"
+          "kana": "さようなら",
+          "mots": [
+            {
+              "jp": "さようなら",
+              "fr": "Au revoir"
+            }
+          ]
         },
         {
           "jp": "いいえ",
           "romaji": "Iie",
           "fr": "Non",
-          "kana": "いいえ"
+          "kana": "いいえ",
+          "mots": [
+            {
+              "jp": "いいえ",
+              "fr": "Non"
+            }
+          ]
         },
         {
           "jp": "はい",
           "romaji": "Hai",
           "fr": "Oui",
-          "kana": "はい"
+          "kana": "はい",
+          "mots": [
+            {
+              "jp": "はい",
+              "fr": "Oui"
+            }
+          ]
         },
         {
           "jp": "どうぞ",
           "romaji": "Dōzo",
           "fr": "Je vous en prie / Allez-y",
-          "kana": "どうぞ"
+          "kana": "どうぞ",
+          "mots": [
+            {
+              "jp": "どうぞ",
+              "fr": "Je vous en prie"
+            }
+          ]
         }
       ]
     },
@@ -10628,37 +11170,97 @@
           "jp": "観光で来ました",
           "romaji": "Kankō de kimashita",
           "fr": "Je viens pour le tourisme",
-          "kana": "かんこう で きました"
+          "kana": "かんこう で きました",
+          "mots": [
+            {
+              "jp": "観光で",
+              "fr": "pour le tourisme"
+            },
+            {
+              "jp": "来ました",
+              "fr": "Je viens"
+            }
+          ]
         },
         {
           "jp": "荷物はどこですか？",
           "romaji": "Nimotsu wa doko desu ka?",
           "fr": "Où sont les bagages ?",
-          "kana": "にもつ わ どこ です か?"
+          "kana": "にもつ わ どこ です か?",
+          "mots": [
+            {
+              "jp": "荷物は",
+              "fr": "les bagages"
+            },
+            {
+              "jp": "どこですか？",
+              "fr": "Où sont"
+            }
+          ]
         },
         {
           "jp": "両替はどこですか？",
           "romaji": "Ryōgae wa doko desu ka?",
           "fr": "Où change-t-on de l'argent ?",
-          "kana": "りょうがえ わ どこ です か?"
+          "kana": "りょうがえ わ どこ です か?",
+          "mots": [
+            {
+              "jp": "両替は",
+              "fr": "de l'argent"
+            },
+            {
+              "jp": "どこですか？",
+              "fr": "Où change-t-on"
+            }
+          ]
         },
         {
           "jp": "電車の乗り場はどこですか？",
           "romaji": "Densha no noriba wa doko desu ka?",
           "fr": "Où est l'embarquement du train ?",
-          "kana": "でんしゃ の のりば わ どこ です か?"
+          "kana": "でんしゃ の のりば わ どこ です か?",
+          "mots": [
+            {
+              "jp": "電車の乗り場は",
+              "fr": "l'embarquement du train"
+            },
+            {
+              "jp": "どこですか？",
+              "fr": "Où est"
+            }
+          ]
         },
         {
           "jp": "SIMカードを買いたいです",
           "romaji": "SIM kādo wo kaitai desu",
           "fr": "Je voudrais acheter une carte SIM",
-          "kana": "SIMかーど を かいたい です"
+          "kana": "SIMかーど を かいたい です",
+          "mots": [
+            {
+              "jp": "SIMカードを",
+              "fr": "une carte SIM"
+            },
+            {
+              "jp": "買いたいです",
+              "fr": "Je voudrais acheter"
+            }
+          ]
         },
         {
           "jp": "これは持ち込めますか？",
           "romaji": "Kore wa mochikomemasu ka?",
           "fr": "Puis-je emporter ceci (en cabine) ?",
-          "kana": "これ わ もちこめます か?"
+          "kana": "これ わ もちこめます か?",
+          "mots": [
+            {
+              "jp": "これは",
+              "fr": "ceci"
+            },
+            {
+              "jp": "持ち込めますか？",
+              "fr": "Puis-je emporter"
+            }
+          ]
         }
       ]
     },
@@ -10673,37 +11275,97 @@
           "jp": "ここまでお願いします",
           "romaji": "Koko made onegaishimasu",
           "fr": "Jusqu'ici, s'il vous plaît (en montrant)",
-          "kana": "ここ まで おねがいします"
+          "kana": "ここ まで おねがいします",
+          "mots": [
+            {
+              "jp": "ここまで",
+              "fr": "Jusqu'ici"
+            },
+            {
+              "jp": "お願いします",
+              "fr": "s'il vous plaît"
+            }
+          ]
         },
         {
           "jp": "この住所までお願いします",
           "romaji": "Kono jūsho made onegaishimasu",
           "fr": "À cette adresse, s'il vous plaît",
-          "kana": "この じゅうしょ まで おねがいします"
+          "kana": "この じゅうしょ まで おねがいします",
+          "mots": [
+            {
+              "jp": "この住所まで",
+              "fr": "À cette adresse"
+            },
+            {
+              "jp": "お願いします",
+              "fr": "s'il vous plaît"
+            }
+          ]
         },
         {
           "jp": "急いでいます",
           "romaji": "Isoideimasu",
           "fr": "Je suis pressé(e)",
-          "kana": "いそいでいます"
+          "kana": "いそいでいます",
+          "mots": [
+            {
+              "jp": "急いでいます",
+              "fr": "Je suis pressé(e)"
+            }
+          ]
         },
         {
           "jp": "ここで止めてください",
           "romaji": "Koko de tomete kudasai",
           "fr": "Arrêtez-vous ici, s'il vous plaît",
-          "kana": "ここ で とめて ください"
+          "kana": "ここ で とめて ください",
+          "mots": [
+            {
+              "jp": "ここで",
+              "fr": "ici"
+            },
+            {
+              "jp": "止めて",
+              "fr": "Arrêtez-vous"
+            },
+            {
+              "jp": "ください",
+              "fr": "s'il vous plaît"
+            }
+          ]
         },
         {
           "jp": "カードは使えますか？",
           "romaji": "Kādo wa tsukaemasu ka?",
           "fr": "Acceptez-vous la carte ?",
-          "kana": "かーど わ つかえます か?"
+          "kana": "かーど わ つかえます か?",
+          "mots": [
+            {
+              "jp": "カードは",
+              "fr": "la carte"
+            },
+            {
+              "jp": "使えますか？",
+              "fr": "Acceptez-vous"
+            }
+          ]
         },
         {
           "jp": "領収書をください",
           "romaji": "Ryōshūsho wo kudasai",
           "fr": "Un reçu, s'il vous plaît",
-          "kana": "りょうしゅうしょ を ください"
+          "kana": "りょうしゅうしょ を ください",
+          "mots": [
+            {
+              "jp": "領収書を",
+              "fr": "reçu"
+            },
+            {
+              "jp": "ください",
+              "fr": "s'il vous plaît"
+            }
+          ]
         }
       ]
     },
@@ -10718,37 +11380,97 @@
           "jp": "頭が痛いです",
           "romaji": "Atama ga itai desu",
           "fr": "J'ai mal à la tête",
-          "kana": "あたま が いたい です"
+          "kana": "あたま が いたい です",
+          "mots": [
+            {
+              "jp": "頭が",
+              "fr": "à la tête"
+            },
+            {
+              "jp": "痛いです",
+              "fr": "J'ai mal"
+            }
+          ]
         },
         {
           "jp": "お腹が痛いです",
           "romaji": "Onaka ga itai desu",
           "fr": "J'ai mal au ventre",
-          "kana": "おなか が いたい です"
+          "kana": "おなか が いたい です",
+          "mots": [
+            {
+              "jp": "お腹が",
+              "fr": "au ventre"
+            },
+            {
+              "jp": "痛いです",
+              "fr": "J'ai mal"
+            }
+          ]
         },
         {
           "jp": "風邪薬はありますか？",
           "romaji": "Kazegusuri wa arimasu ka?",
           "fr": "Avez-vous un médicament contre le rhume ?",
-          "kana": "かぜぐすり わ あります か?"
+          "kana": "かぜぐすり わ あります か?",
+          "mots": [
+            {
+              "jp": "風邪薬は",
+              "fr": "un médicament contre le rhume"
+            },
+            {
+              "jp": "ありますか？",
+              "fr": "Avez-vous"
+            }
+          ]
         },
         {
           "jp": "熱があります",
           "romaji": "Netsu ga arimasu",
           "fr": "J'ai de la fièvre",
-          "kana": "ねつ が あります"
+          "kana": "ねつ が あります",
+          "mots": [
+            {
+              "jp": "熱が",
+              "fr": "de la fièvre"
+            },
+            {
+              "jp": "あります",
+              "fr": "J'ai"
+            }
+          ]
         },
         {
           "jp": "これはどう飲みますか？",
           "romaji": "Kore wa dō nomimasu ka?",
           "fr": "Comment prend-on ceci ?",
-          "kana": "これ わ どう のみます か?"
+          "kana": "これ わ どう のみます か?",
+          "mots": [
+            {
+              "jp": "これは",
+              "fr": "ceci"
+            },
+            {
+              "jp": "どう飲みますか？",
+              "fr": "Comment prend-on"
+            }
+          ]
         },
         {
           "jp": "アレルギーがあります",
           "romaji": "Arerugī ga arimasu",
           "fr": "J'ai des allergies",
-          "kana": "あれるぎー が あります"
+          "kana": "あれるぎー が あります",
+          "mots": [
+            {
+              "jp": "アレルギーが",
+              "fr": "des allergies"
+            },
+            {
+              "jp": "あります",
+              "fr": "J'ai"
+            }
+          ]
         }
       ]
     },
@@ -10763,37 +11485,97 @@
           "jp": "写真を撮ってもいいですか？",
           "romaji": "Shashin wo totte mo ii desu ka?",
           "fr": "Puis-je prendre une photo ?",
-          "kana": "しゃしん を とって も いい です か?"
+          "kana": "しゃしん を とって も いい です か?",
+          "mots": [
+            {
+              "jp": "写真を",
+              "fr": "une photo"
+            },
+            {
+              "jp": "撮ってもいいですか？",
+              "fr": "Puis-je prendre"
+            }
+          ]
         },
         {
           "jp": "写真を撮ってもらえますか？",
           "romaji": "Shashin wo totte moraemasu ka?",
           "fr": "Pouvez-vous me prendre en photo ?",
-          "kana": "しゃしん を とって もらえます か?"
+          "kana": "しゃしん を とって もらえます か?",
+          "mots": [
+            {
+              "jp": "写真を",
+              "fr": "en photo"
+            },
+            {
+              "jp": "撮ってもらえますか？",
+              "fr": "Pouvez-vous me prendre"
+            }
+          ]
         },
         {
           "jp": "入場料はいくらですか？",
           "romaji": "Nyūjōryō wa ikura desu ka?",
           "fr": "Combien coûte l'entrée ?",
-          "kana": "にゅうじょうりょう わ いくら です か?"
+          "kana": "にゅうじょうりょう わ いくら です か?",
+          "mots": [
+            {
+              "jp": "入場料は",
+              "fr": "l'entrée"
+            },
+            {
+              "jp": "いくらですか？",
+              "fr": "Combien coûte"
+            }
+          ]
         },
         {
           "jp": "何時まで開いていますか？",
           "romaji": "Nanji made aiteimasu ka?",
           "fr": "Jusqu'à quelle heure est-ce ouvert ?",
-          "kana": "なんじ まで あいています か?"
+          "kana": "なんじ まで あいています か?",
+          "mots": [
+            {
+              "jp": "何時まで",
+              "fr": "Jusqu'à quelle heure"
+            },
+            {
+              "jp": "開いていますか？",
+              "fr": "est-ce ouvert"
+            }
+          ]
         },
         {
           "jp": "駅はどっちですか？",
           "romaji": "Eki wa dotchi desu ka?",
           "fr": "De quel côté est la gare ?",
-          "kana": "えき わ どっち です か?"
+          "kana": "えき わ どっち です か?",
+          "mots": [
+            {
+              "jp": "駅は",
+              "fr": "la gare"
+            },
+            {
+              "jp": "どっちですか？",
+              "fr": "De quel côté est"
+            }
+          ]
         },
         {
           "jp": "パンフレットはありますか？",
           "romaji": "Panfuretto wa arimasu ka?",
           "fr": "Avez-vous une brochure ?",
-          "kana": "ぱんふれっと わ あります か?"
+          "kana": "ぱんふれっと わ あります か?",
+          "mots": [
+            {
+              "jp": "パンフレットは",
+              "fr": "une brochure"
+            },
+            {
+              "jp": "ありますか？",
+              "fr": "Avez-vous"
+            }
+          ]
         }
       ]
     }
@@ -17832,7 +18614,33 @@
           "feedback": "« 温めますか？ » (atatamemasu ka) = « je le réchauffe ? »"
         }
       ],
-      "texte_kana": "いらっしゃいませ。こちらのおにぎりは２００えんです。おべんとうは５００えんです。あたためますか？"
+      "texte_kana": "いらっしゃいませ。こちらのおにぎりは２００えんです。おべんとうは５００えんです。あたためますか？",
+      "mots": [
+        {
+          "jp": "いらっしゃいませ。",
+          "fr": "Bienvenue."
+        },
+        {
+          "jp": "こちらのおにぎりは",
+          "fr": "Cet onigiri"
+        },
+        {
+          "jp": "200円です。",
+          "fr": "coûte 200 yens."
+        },
+        {
+          "jp": "お弁当は",
+          "fr": "Le bentō"
+        },
+        {
+          "jp": "500円です。",
+          "fr": "coûte 500 yens."
+        },
+        {
+          "jp": "温めますか？",
+          "fr": "Voulez-vous que je le réchauffe ?"
+        }
+      ]
     },
     {
       "id": "ce-meteo",
@@ -17864,7 +18672,33 @@
           "feedback": "« 傘を持って行って » = emportez un parapluie, car il pleuvra le soir."
         }
       ],
-      "texte_kana": "きょうははれです。でも、ゆうがたからあめがふります。かさをもっていってください。"
+      "texte_kana": "きょうははれです。でも、ゆうがたからあめがふります。かさをもっていってください。",
+      "mots": [
+        {
+          "jp": "今日は",
+          "fr": "Aujourd'hui"
+        },
+        {
+          "jp": "晴れです。",
+          "fr": "il fait beau."
+        },
+        {
+          "jp": "でも、",
+          "fr": "Mais"
+        },
+        {
+          "jp": "夕方から",
+          "fr": "à partir du soir,"
+        },
+        {
+          "jp": "雨が降ります。",
+          "fr": "il va pleuvoir."
+        },
+        {
+          "jp": "傘を持って行ってください。",
+          "fr": "Emportez un parapluie."
+        }
+      ]
     },
     {
       "id": "ce-message",
@@ -17896,7 +18730,25 @@
           "feedback": "« 三時に駅で » = à 15h à la gare."
         }
       ],
-      "texte_kana": "あした、いっしょにえいがをみにいきませんか？さんじにえきであいましょう。れんらくしてください。"
+      "texte_kana": "あした、いっしょにえいがをみにいきませんか？さんじにえきであいましょう。れんらくしてください。",
+      "mots": [
+        {
+          "jp": "明日、",
+          "fr": "Demain,"
+        },
+        {
+          "jp": "一緒に映画を見に行きませんか？",
+          "fr": "on va voir un film ensemble ?"
+        },
+        {
+          "jp": "三時に駅で会いましょう。",
+          "fr": "Retrouvons-nous à 15h à la gare."
+        },
+        {
+          "jp": "連絡してください。",
+          "fr": "Contacte-moi."
+        }
+      ]
     },
     {
       "id": "ce-annonce",
@@ -17928,7 +18780,25 @@
           "feedback": "« お忘れ物のないように » = veillez à ne rien oublier."
         }
       ],
-      "texte_kana": "つぎはとうきょうえきです。おおりのかたはおわすれもののないようにごちゅういください。ありがとうございました。"
+      "texte_kana": "つぎはとうきょうえきです。おおりのかたはおわすれもののないようにごちゅういください。ありがとうございました。",
+      "mots": [
+        {
+          "jp": "次は東京駅です。",
+          "fr": "Prochain arrêt : gare de Tokyo."
+        },
+        {
+          "jp": "お降りの方は",
+          "fr": "Les personnes qui descendent,"
+        },
+        {
+          "jp": "お忘れ物のないようにご注意ください。",
+          "fr": "attention à ne rien oublier."
+        },
+        {
+          "jp": "ありがとうございました。",
+          "fr": "Merci."
+        }
+      ]
     },
     {
       "id": "ce-gare",
@@ -17959,6 +18829,32 @@
           ],
           "correct": 0,
           "feedback": "自由席 (jiyūseki) à 4000円 < 指定席 (shiteiseki) à 5000円."
+        }
+      ],
+      "mots": [
+        {
+          "jp": "東京駅から京都駅まで、",
+          "fr": "De la gare de Tokyo à celle de Kyoto,"
+        },
+        {
+          "jp": "新幹線で約2時間半かかります。",
+          "fr": "le Shinkansen met environ 2h30."
+        },
+        {
+          "jp": "指定席は",
+          "fr": "Une place réservée"
+        },
+        {
+          "jp": "5000円です。",
+          "fr": "coûte 5000 yens."
+        },
+        {
+          "jp": "自由席は",
+          "fr": "Une place libre,"
+        },
+        {
+          "jp": "4000円です。",
+          "fr": "4000 yens."
         }
       ]
     },
@@ -17992,6 +18888,24 @@
           "correct": 0,
           "feedback": "« 11時から14時まで » = de 11h à 14h."
         }
+      ],
+      "mots": [
+        {
+          "jp": "本日のランチセットは、",
+          "fr": "Le menu du jour,"
+        },
+        {
+          "jp": "ラーメンと餃子で900円です。",
+          "fr": "c'est ramen + gyoza pour 900 yens."
+        },
+        {
+          "jp": "ドリンクは別料金です。",
+          "fr": "Les boissons sont en supplément."
+        },
+        {
+          "jp": "11時から14時まで注文できます。",
+          "fr": "On peut commander de 11h à 14h."
+        }
       ]
     },
     {
@@ -18024,7 +18938,25 @@
           "feedback": "3円 = 3 yens."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "いらっしゃいませ。",
+          "fr": "Bienvenue."
+        },
+        {
+          "jp": "袋はいりますか？",
+          "fr": "Voulez-vous un sac ?"
+        },
+        {
+          "jp": "はい、",
+          "fr": "Oui,"
+        },
+        {
+          "jp": "3円です。",
+          "fr": "ça fait 3 yens."
+        }
+      ]
     },
     {
       "id": "ce-d-horaire",
@@ -18056,7 +18988,21 @@
           "feedback": "月曜日 (getsuyōbi) = lundi."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "営業時間：",
+          "fr": "Horaires :"
+        },
+        {
+          "jp": "午前10時から午後8時まで。",
+          "fr": "de 10h à 20h."
+        },
+        {
+          "jp": "月曜日は休みです。",
+          "fr": "Fermé le lundi."
+        }
+      ]
     },
     {
       "id": "ce-d-menu",
@@ -18088,7 +19034,25 @@
           "feedback": "お茶は無料 (muryō) = thé gratuit."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "ラーメン 800円。",
+          "fr": "Ramen 800 yens."
+        },
+        {
+          "jp": "チャーハン 600円。",
+          "fr": "Riz frit 600 yens."
+        },
+        {
+          "jp": "餃子 400円。",
+          "fr": "Gyoza 400 yens."
+        },
+        {
+          "jp": "お茶は無料です。",
+          "fr": "Le thé est gratuit."
+        }
+      ]
     },
     {
       "id": "ce-d-meteo2",
@@ -18120,7 +19084,21 @@
           "feedback": "25度 = 25 degrés."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "今日は晴れです。",
+          "fr": "Aujourd'hui il fait beau."
+        },
+        {
+          "jp": "明日は雨です。",
+          "fr": "Demain il pleuvra."
+        },
+        {
+          "jp": "気温は25度です。",
+          "fr": "La température est de 25 degrés."
+        }
+      ]
     },
     {
       "id": "ce-d-presentation",
@@ -18152,7 +19130,25 @@
           "feedback": "学生 (gakusei) = étudiant(e)."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "私はマリーです。",
+          "fr": "Je suis Marie."
+        },
+        {
+          "jp": "フランス人です。",
+          "fr": "Je suis française."
+        },
+        {
+          "jp": "学生です。",
+          "fr": "Je suis étudiante."
+        },
+        {
+          "jp": "よろしくお願いします。",
+          "fr": "Enchantée."
+        }
+      ]
     },
     {
       "id": "ce-d-famille",
@@ -18184,7 +19180,21 @@
           "feedback": "犬 (inu) = chien."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "家族は四人です。",
+          "fr": "Ma famille compte quatre personnes."
+        },
+        {
+          "jp": "父と母と妹がいます。",
+          "fr": "Il y a mon père, ma mère et ma petite sœur."
+        },
+        {
+          "jp": "犬もいます。",
+          "fr": "Il y a aussi un chien."
+        }
+      ]
     },
     {
       "id": "ce-d-courses",
@@ -18216,7 +19226,17 @@
           "feedback": "1000円ぐらい (gurai) = environ 1000 yens."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "卵、牛乳、パン、りんごを買います。",
+          "fr": "J'achète des œufs, du lait, du pain et des pommes."
+        },
+        {
+          "jp": "全部で1000円ぐらいです。",
+          "fr": "En tout, environ 1000 yens."
+        }
+      ]
     },
     {
       "id": "ce-d-train2",
@@ -18248,7 +19268,17 @@
           "feedback": "9時15分 = 9h15."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "次の電車は3番線です。",
+          "fr": "Le prochain train est sur la voie 3."
+        },
+        {
+          "jp": "9時15分に出発します。",
+          "fr": "Il part à 9h15."
+        }
+      ]
     },
     {
       "id": "ce-d-cafe",
@@ -18280,7 +19310,21 @@
           "feedback": "350+450=800, le set à 700 est moins cher."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "コーヒーは350円です。",
+          "fr": "Le café coûte 350 yens."
+        },
+        {
+          "jp": "ケーキは450円です。",
+          "fr": "Le gâteau 450 yens."
+        },
+        {
+          "jp": "セットは700円です。",
+          "fr": "Le menu (set) 700 yens."
+        }
+      ]
     },
     {
       "id": "ce-d-panneau",
@@ -18312,7 +19356,21 @@
           "feedback": "禁煙 (kin'en) = non-fumeur."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "ここは禁煙です。",
+          "fr": "Ici, c'est non-fumeur."
+        },
+        {
+          "jp": "写真禁止。",
+          "fr": "Photos interdites."
+        },
+        {
+          "jp": "飲食禁止。",
+          "fr": "Manger et boire interdits."
+        }
+      ]
     },
     {
       "id": "ce-d-anniversaire",
@@ -18344,7 +19402,21 @@
           "feedback": "友達と (tomodachi to) = avec des amis."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "明日は誕生日です。",
+          "fr": "Demain c'est mon anniversaire."
+        },
+        {
+          "jp": "友達とレストランに行きます。",
+          "fr": "Je vais au restaurant avec des amis."
+        },
+        {
+          "jp": "とても楽しみです。",
+          "fr": "J'ai vraiment hâte."
+        }
+      ]
     },
     {
       "id": "ce-d-direction2",
@@ -18376,7 +19448,21 @@
           "feedback": "歩いて2分 = 2 min à pied."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "銀行は駅の前です。",
+          "fr": "La banque est devant la gare."
+        },
+        {
+          "jp": "コンビニの隣です。",
+          "fr": "À côté du konbini."
+        },
+        {
+          "jp": "歩いて2分です。",
+          "fr": "À 2 minutes à pied."
+        }
+      ]
     },
     {
       "id": "ce-i-hotel",
@@ -18408,7 +19494,25 @@
           "feedback": "別料金 (betsu ryōkin) = supplément."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "ご予約ありがとうございます。",
+          "fr": "Merci pour votre réservation."
+        },
+        {
+          "jp": "チェックインは午後3時から、",
+          "fr": "Le check-in est à partir de 15h,"
+        },
+        {
+          "jp": "チェックアウトは午前11時までです。",
+          "fr": "le check-out jusqu'à 11h."
+        },
+        {
+          "jp": "朝食は別料金で1500円です。",
+          "fr": "Le petit-déjeuner est en supplément à 1500 yens."
+        }
+      ]
     },
     {
       "id": "ce-i-meteo3",
@@ -18440,7 +19544,25 @@
           "feedback": "午後から雨 = pluie à partir de l'après-midi."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "週末の天気をお知らせします。",
+          "fr": "Voici la météo du week-end."
+        },
+        {
+          "jp": "土曜日は一日中晴れますが、",
+          "fr": "Samedi sera ensoleillé toute la journée, mais"
+        },
+        {
+          "jp": "日曜日は午後から雨が降るでしょう。",
+          "fr": "dimanche il pleuvra à partir de l'après-midi."
+        },
+        {
+          "jp": "お出かけの際は傘をお持ちください。",
+          "fr": "Pensez à prendre un parapluie en sortant."
+        }
+      ]
     },
     {
       "id": "ce-i-email",
@@ -18472,7 +19594,25 @@
           "feedback": "場所は同じ = même lieu."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "会議の時間が変更になりました。",
+          "fr": "L'horaire de la réunion a changé."
+        },
+        {
+          "jp": "明日の午後2時から3時に変わりました。",
+          "fr": "Demain, ce sera de 14h à 15h au lieu de l'horaire prévu."
+        },
+        {
+          "jp": "場所は同じ会議室です。",
+          "fr": "Le lieu reste la même salle de réunion."
+        },
+        {
+          "jp": "よろしくお願いします。",
+          "fr": ""
+        }
+      ]
     },
     {
       "id": "ce-i-recette",
@@ -18504,7 +19644,41 @@
           "feedback": "3分焼きます = cuire 3 minutes."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "まず、",
+          "fr": "D'abord,"
+        },
+        {
+          "jp": "卵を二つ割ります。",
+          "fr": "cassez deux œufs."
+        },
+        {
+          "jp": "次に、",
+          "fr": "Ensuite,"
+        },
+        {
+          "jp": "塩を少し入れて混ぜます。",
+          "fr": "ajoutez un peu de sel et mélangez."
+        },
+        {
+          "jp": "それから、",
+          "fr": "Puis,"
+        },
+        {
+          "jp": "フライパンで3分焼きます。",
+          "fr": "faites cuire 3 minutes à la poêle."
+        },
+        {
+          "jp": "最後に、",
+          "fr": "Enfin,"
+        },
+        {
+          "jp": "ご飯と一緒に食べます。",
+          "fr": "mangez avec du riz."
+        }
+      ]
     },
     {
       "id": "ce-i-annonce2",
@@ -18536,7 +19710,25 @@
           "feedback": "一部のみ (ichibu nomi) = seulement une partie."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "本日は特別展を開催しております。",
+          "fr": "Aujourd'hui se tient une exposition spéciale."
+        },
+        {
+          "jp": "入場は午後5時まで、",
+          "fr": "L'entrée est possible jusqu'à 17h,"
+        },
+        {
+          "jp": "閉館は午後5時半です。",
+          "fr": "la fermeture est à 17h30."
+        },
+        {
+          "jp": "写真撮影は一部のみ可能です。",
+          "fr": "Les photos ne sont autorisées que dans certaines zones."
+        }
+      ]
     },
     {
       "id": "ce-i-sante",
@@ -18568,7 +19760,29 @@
           "feedback": "三日分 (mikkabun) = pour 3 jours."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "この薬は一日三回、",
+          "fr": "Prenez ce médicament trois fois par jour,"
+        },
+        {
+          "jp": "食後に飲んでください。",
+          "fr": "après les repas."
+        },
+        {
+          "jp": "三日分あります。",
+          "fr": "Il y en a pour trois jours."
+        },
+        {
+          "jp": "熱が下がらない場合は、",
+          "fr": "Si la fièvre ne baisse pas,"
+        },
+        {
+          "jp": "また来てください。",
+          "fr": "revenez."
+        }
+      ]
     },
     {
       "id": "ce-i-invitation",
@@ -18600,7 +19814,29 @@
           "feedback": "夜7時 = 19h."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "来週の土曜日、",
+          "fr": "Samedi prochain,"
+        },
+        {
+          "jp": "家でパーティーをします。",
+          "fr": "je fais une fête à la maison."
+        },
+        {
+          "jp": "夜7時から始まります。",
+          "fr": "Ça commence à 19h."
+        },
+        {
+          "jp": "飲み物は用意しますが、",
+          "fr": "Je prépare les boissons, mais"
+        },
+        {
+          "jp": "何か食べ物を持ってきてください。",
+          "fr": "apportez quelque chose à manger."
+        }
+      ]
     },
     {
       "id": "ce-i-voyage",
@@ -18632,7 +19868,29 @@
           "feedback": "紅葉 (kōyō) = feuilles d'automne."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "来月、",
+          "fr": "Le mois prochain,"
+        },
+        {
+          "jp": "京都へ三泊四日で旅行します。",
+          "fr": "je voyage à Kyoto pour 4 jours et 3 nuits."
+        },
+        {
+          "jp": "お寺やお庭を見たいです。",
+          "fr": "Je veux voir des temples et des jardins."
+        },
+        {
+          "jp": "紅葉の季節なので、",
+          "fr": "Comme c'est la saison des feuilles d'automne,"
+        },
+        {
+          "jp": "とても綺麗だと思います。",
+          "fr": "je pense que ce sera très beau."
+        }
+      ]
     },
     {
       "id": "ce-i-banque",
@@ -18664,7 +19922,29 @@
           "feedback": "サインでも大丈夫 = une signature convient."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "口座を開きたいのですが、",
+          "fr": "Je voudrais ouvrir un compte, mais"
+        },
+        {
+          "jp": "パスポートと印鑑が必要です。",
+          "fr": "il faut un passeport et un sceau (inkan)."
+        },
+        {
+          "jp": "今日は印鑑をお持ちですか？",
+          "fr": "Avez-vous votre sceau aujourd'hui ?"
+        },
+        {
+          "jp": "なければ、",
+          "fr": "Sinon,"
+        },
+        {
+          "jp": "サインでも大丈夫です。",
+          "fr": "une signature suffit."
+        }
+      ]
     },
     {
       "id": "ce-i-meteo-saison",
@@ -18696,7 +19976,33 @@
           "feedback": "四季 (shiki) = quatre saisons."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "日本には四季があります。",
+          "fr": "Le Japon a quatre saisons."
+        },
+        {
+          "jp": "春は桜、",
+          "fr": "Au printemps les cerisiers,"
+        },
+        {
+          "jp": "夏は祭り、",
+          "fr": "en été les festivals,"
+        },
+        {
+          "jp": "秋は紅葉、",
+          "fr": "en automne les feuilles rouges,"
+        },
+        {
+          "jp": "冬は雪が楽しめます。",
+          "fr": "en hiver la neige."
+        },
+        {
+          "jp": "一番好きな季節は人によって違います。",
+          "fr": "La saison préférée varie selon les personnes."
+        }
+      ]
     },
     {
       "id": "ce-i-colis",
@@ -18728,7 +20034,25 @@
           "feedback": "明日までにお電話 = appeler avant demain."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "お荷物のお届けに参りましたが、",
+          "fr": "Nous sommes venus livrer votre colis, mais"
+        },
+        {
+          "jp": "ご不在でした。",
+          "fr": "vous étiez absent."
+        },
+        {
+          "jp": "再配達をご希望の方は、",
+          "fr": "Pour une nouvelle livraison,"
+        },
+        {
+          "jp": "明日までにお電話ください。",
+          "fr": "appelez avant demain."
+        }
+      ]
     },
     {
       "id": "ce-i-restaurant3",
@@ -18760,7 +20084,29 @@
           "feedback": "7時か9時 = 19h ou 21h."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "申し訳ございませんが、",
+          "fr": "Nous sommes désolés, mais"
+        },
+        {
+          "jp": "今夜は満席です。",
+          "fr": "c'est complet ce soir."
+        },
+        {
+          "jp": "明日の夜でしたら、",
+          "fr": "Pour demain soir,"
+        },
+        {
+          "jp": "7時か9時に空きがございます。",
+          "fr": "il y a de la place à 19h ou 21h."
+        },
+        {
+          "jp": "何名様でしょうか？",
+          "fr": "Pour combien de personnes ?"
+        }
+      ]
     },
     {
       "id": "ce-a-travail",
@@ -18792,7 +20138,29 @@
           "feedback": "支障が出る場合は認められない = refusé si gêne le travail."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "在宅勤務制度について、",
+          "fr": "Concernant le télétravail,"
+        },
+        {
+          "jp": "来月から週二回まで利用可能となります。",
+          "fr": "il sera possible jusqu'à deux fois par semaine à partir du mois prochain."
+        },
+        {
+          "jp": "希望者は上司に申請してください。",
+          "fr": "Les intéressés doivent en faire la demande à leur supérieur."
+        },
+        {
+          "jp": "なお、",
+          "fr": "Par ailleurs,"
+        },
+        {
+          "jp": "業務に支障が出る場合は認められないことがあります。",
+          "fr": "cela peut être refusé si le travail en pâtit."
+        }
+      ]
     },
     {
       "id": "ce-a-environnement",
@@ -18824,7 +20192,33 @@
           "feedback": "根本的な解決にはまだ遠い = encore loin."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "近年、",
+          "fr": "Ces dernières années,"
+        },
+        {
+          "jp": "プラスチックごみの削減が世界的な課題となっている。",
+          "fr": "la réduction des déchets plastiques est devenue un enjeu mondial."
+        },
+        {
+          "jp": "日本でもレジ袋の有料化が始まり、",
+          "fr": "Au Japon aussi, les sacs plastiques sont devenus payants et"
+        },
+        {
+          "jp": "多くの人がエコバッグを持ち歩くようになった。",
+          "fr": "beaucoup de gens transportent désormais un sac réutilisable."
+        },
+        {
+          "jp": "しかし、",
+          "fr": "Mais"
+        },
+        {
+          "jp": "根本的な解決にはまだ遠い。",
+          "fr": "on est encore loin d'une solution de fond."
+        }
+      ]
     },
     {
       "id": "ce-a-keigo",
@@ -18856,7 +20250,25 @@
           "feedback": "予約番号をお知らせ = communiquer le numéro."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "恐れ入りますが、",
+          "fr": "Je suis navré, mais"
+        },
+        {
+          "jp": "お客様の予約は確認できませんでした。",
+          "fr": "nous n'avons pas pu confirmer votre réservation."
+        },
+        {
+          "jp": "お手数をおかけしますが、",
+          "fr": "Désolé de vous déranger, mais"
+        },
+        {
+          "jp": "予約番号をお知らせいただけますでしょうか。",
+          "fr": "pourriez-vous nous communiquer votre numéro de réservation ?"
+        }
+      ]
     },
     {
       "id": "ce-a-societe",
@@ -18888,7 +20300,21 @@
           "feedback": "外国人労働者の受け入れを拡大 = élargir l'accueil de travailleurs étrangers."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "日本は世界で最も高齢化が進んだ国の一つである。",
+          "fr": "Le Japon est l'un des pays les plus vieillissants au monde."
+        },
+        {
+          "jp": "労働力の不足を補うため、",
+          "fr": "Pour combler le manque de main-d'œuvre,"
+        },
+        {
+          "jp": "政府は外国人労働者の受け入れを拡大する方針を示している。",
+          "fr": "le gouvernement affiche une politique d'élargissement de l'accueil de travailleurs étrangers."
+        }
+      ]
     },
     {
       "id": "ce-a-tradition",
@@ -18920,7 +20346,29 @@
           "feedback": "この調和こそが日本らしさ = cette harmonie fait le caractère japonais."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "日本の魅力の一つは、",
+          "fr": "L'un des charmes du Japon réside sans doute dans"
+        },
+        {
+          "jp": "伝統と現代が共存している点だろう。",
+          "fr": "la coexistence de la tradition et de la modernité."
+        },
+        {
+          "jp": "最新技術のビルの隣に古い神社があり、",
+          "fr": "À côté d'un immeuble high-tech se trouve un vieux sanctuaire, et"
+        },
+        {
+          "jp": "人々は当たり前のように両方を行き来する。",
+          "fr": "les gens passent de l'un à l'autre tout naturellement."
+        },
+        {
+          "jp": "この調和こそが日本らしさだと言える。",
+          "fr": "C'est précisément cette harmonie qui fait le caractère japonais."
+        }
+      ]
     },
     {
       "id": "ce-a-economie",
@@ -18952,7 +20400,29 @@
           "feedback": "輸入品の価格上昇 = hausse des prix d'importation."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "円安の影響で、",
+          "fr": "En raison de la faiblesse du yen,"
+        },
+        {
+          "jp": "訪日外国人観光客が急増している。",
+          "fr": "le nombre de touristes étrangers au Japon explose."
+        },
+        {
+          "jp": "観光業界にとっては追い風だが、",
+          "fr": "C'est un vent favorable pour le tourisme, mais"
+        },
+        {
+          "jp": "輸入品の価格上昇により、",
+          "fr": "la hausse du prix des produits importés"
+        },
+        {
+          "jp": "国内の家計には負担が増している。",
+          "fr": "pèse de plus en plus sur les ménages du pays."
+        }
+      ]
     },
     {
       "id": "ce-a-litterature",
@@ -18984,7 +20454,33 @@
           "feedback": "時間が止まったかのよう = comme si le temps s'arrêtait."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "窓の外には、",
+          "fr": "Dehors, par la fenêtre,"
+        },
+        {
+          "jp": "ただ白い雪が静かに降り続けていた。",
+          "fr": "la neige blanche continuait simplement de tomber en silence."
+        },
+        {
+          "jp": "彼女は何も言わず、",
+          "fr": "Elle ne disait rien,"
+        },
+        {
+          "jp": "ずっとその様子を眺めていた。",
+          "fr": "contemplant longuement ce spectacle."
+        },
+        {
+          "jp": "時間が止まったかのような、",
+          "fr": "comme si le temps s'était arrêté."
+        },
+        {
+          "jp": "不思議な午後だった。",
+          "fr": "C'était un après-midi étrange,"
+        }
+      ]
     },
     {
       "id": "ce-a-techno",
@@ -19016,7 +20512,33 @@
           "feedback": "改めて考える必要 = besoin de repenser."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "人工知能の発展により、",
+          "fr": "Avec le développement de l'intelligence artificielle,"
+        },
+        {
+          "jp": "私たちの生活は便利になった一方で、",
+          "fr": "notre vie est devenue plus pratique, mais"
+        },
+        {
+          "jp": "新たな課題も生まれている。",
+          "fr": "de nouveaux défis émergent aussi."
+        },
+        {
+          "jp": "仕事の在り方や、",
+          "fr": "la nature du travail"
+        },
+        {
+          "jp": "人と人とのつながりについて、",
+          "fr": "et les liens entre les personnes ?"
+        },
+        {
+          "jp": "改めて考える必要があるのではないだろうか。",
+          "fr": "Ne faudrait-il pas repenser"
+        }
+      ]
     },
     {
       "id": "ce-a-discours",
@@ -19048,7 +20570,25 @@
           "feedback": "皆様のご支援のおかげ = grâce au soutien de tous."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "本日はお忙しい中、お集まりいただき誠にありがとうございます。",
+          "fr": "Merci infiniment d'être venus aujourd'hui malgré vos emplois du temps chargés."
+        },
+        {
+          "jp": "皆様のご支援のおかげで、",
+          "fr": "C'est grâce à votre soutien à tous que"
+        },
+        {
+          "jp": "ここまで参ることができました。",
+          "fr": "nous avons pu arriver jusqu'ici."
+        },
+        {
+          "jp": "今後とも変わらぬご厚情を賜りますようお願い申し上げます。",
+          "fr": "Nous vous prions de bien vouloir continuer à nous accorder votre bienveillance."
+        }
+      ]
     },
     {
       "id": "ce-a-mukashi",
@@ -19080,7 +20620,37 @@
           "feedback": "美しい娘 = une belle jeune fille."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "昔々、ある村に",
+          "fr": "Il y a très longtemps, dans un village"
+        },
+        {
+          "jp": "貧しいが心の優しいおじいさんが住んでいた。",
+          "fr": "vivait un vieil homme pauvre mais au cœur bon."
+        },
+        {
+          "jp": "ある日、",
+          "fr": "Un jour,"
+        },
+        {
+          "jp": "おじいさんは傷ついた鶴を助けた。",
+          "fr": "il sauva une grue blessée."
+        },
+        {
+          "jp": "その夜、",
+          "fr": "Cette nuit-là,"
+        },
+        {
+          "jp": "美しい娘が訪ねてきて、",
+          "fr": "une belle jeune fille vint frapper à sa porte et"
+        },
+        {
+          "jp": "一晩泊めてほしいと頼んだ。",
+          "fr": "demanda à être hébergée pour une nuit."
+        }
+      ]
     },
     {
       "id": "ce-a-editorial",
@@ -19112,7 +20682,17 @@
           "feedback": "答えのない問題に向き合う力 = affronter les problèmes sans réponse."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "暗記中心の教育から、自分で考える力を育てる教育への転換が求められている。",
+          "fr": "On réclame un passage d'une éducation centrée sur la mémorisation à une éducation qui développe la capacité de penser par soi-même."
+        },
+        {
+          "jp": "答えのない問題に向き合う力こそ、これからの時代に必要とされるだろう。",
+          "fr": "C'est justement la capacité d'affronter des problèmes sans réponse qui sera nécessaire à l'avenir."
+        }
+      ]
     },
     {
       "id": "ce-a-haiku",
@@ -19144,7 +20724,29 @@
           "feedback": "想像力に委ねる = confié à l'imagination."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "俳句は世界で最も短い詩と言われる。",
+          "fr": "Le haïku est dit le plus court poème du monde."
+        },
+        {
+          "jp": "五・七・五の十七音で、",
+          "fr": "Composé de 17 sons en 5-7-5,"
+        },
+        {
+          "jp": "季節の言葉を入れるのが基本である。",
+          "fr": "il inclut en principe un mot de saison."
+        },
+        {
+          "jp": "短いからこそ、",
+          "fr": "C'est justement parce qu'il est court"
+        },
+        {
+          "jp": "読む人の想像力に多くを委ねる。",
+          "fr": "qu'il laisse beaucoup à l'imagination du lecteur."
+        }
+      ]
     }
   ],
   "comprehension_orale": [
@@ -19178,7 +20780,21 @@
           "feedback": "« はじめまして » s'utilise lors d'une première rencontre."
         }
       ],
-      "audio_kana": "はじめまして。たなかです。よろしくおねがいします。"
+      "audio_kana": "はじめまして。たなかです。よろしくおねがいします。",
+      "mots": [
+        {
+          "jp": "はじめまして。",
+          "fr": "Enchanté."
+        },
+        {
+          "jp": "田中です。",
+          "fr": "Je suis Tanaka."
+        },
+        {
+          "jp": "よろしくお願いします。",
+          "fr": "Ravi de faire votre connaissance."
+        }
+      ]
     },
     {
       "id": "co-commande",
@@ -19210,7 +20826,17 @@
           "feedback": "« 一つ » (hitotsu) = un."
         }
       ],
-      "audio_kana": "すみません、ラーメンをひとつおねがいします。"
+      "audio_kana": "すみません、ラーメンをひとつおねがいします。",
+      "mots": [
+        {
+          "jp": "すみません、",
+          "fr": "Excusez-moi,"
+        },
+        {
+          "jp": "ラーメンを一つお願いします。",
+          "fr": "un ramen s'il vous plaît."
+        }
+      ]
     },
     {
       "id": "co-heure",
@@ -19242,7 +20868,21 @@
           "feedback": "« 遅れないでください » = ne soyez pas en retard."
         }
       ],
-      "audio_kana": "あしたのあさ、くじにあいましょう。おくれないでください。"
+      "audio_kana": "あしたのあさ、くじにあいましょう。おくれないでください。",
+      "mots": [
+        {
+          "jp": "明日の朝、",
+          "fr": "Demain matin,"
+        },
+        {
+          "jp": "九時に会いましょう。",
+          "fr": "retrouvons-nous à 9h."
+        },
+        {
+          "jp": "遅れないでください。",
+          "fr": "Ne soyez pas en retard."
+        }
+      ]
     },
     {
       "id": "co-direction",
@@ -19274,7 +20914,17 @@
           "feedback": "« 二つ目の角 » = le deuxième coin."
         }
       ],
-      "audio_kana": "まっすぐいって、ふたつめのかどをみぎにまがってください。"
+      "audio_kana": "まっすぐいって、ふたつめのかどをみぎにまがってください。",
+      "mots": [
+        {
+          "jp": "まっすぐ行って、",
+          "fr": "Allez tout droit, puis"
+        },
+        {
+          "jp": "二つ目の角を右に曲がってください。",
+          "fr": "tournez à droite au deuxième coin."
+        }
+      ]
     },
     {
       "id": "co-train-annonce",
@@ -19305,6 +20955,20 @@
           ],
           "correct": 0,
           "feedback": "« 右側 » (migigawa) = côté droit."
+        }
+      ],
+      "mots": [
+        {
+          "jp": "次は渋谷、渋谷です。",
+          "fr": "Prochain arrêt : Shibuya, Shibuya."
+        },
+        {
+          "jp": "お出口は右側です。",
+          "fr": "La sortie est sur la droite."
+        },
+        {
+          "jp": "お忘れ物のないようご注意ください。",
+          "fr": "Veillez à ne rien oublier."
         }
       ]
     },
@@ -19338,6 +21002,16 @@
           "correct": 0,
           "feedback": "Le choix chaud/glacé indique un café."
         }
+      ],
+      "mots": [
+        {
+          "jp": "ご注文はお決まりですか？",
+          "fr": "Avez-vous choisi ?"
+        },
+        {
+          "jp": "ホットとアイス、どちらになさいますか？",
+          "fr": "Chaud ou glacé, que prenez-vous ?"
+        }
       ]
     },
     {
@@ -19369,6 +21043,24 @@
           ],
           "correct": 0,
           "feedback": "« 歩いて5分くらい » = environ 5 min."
+        }
+      ],
+      "mots": [
+        {
+          "jp": "すみません、",
+          "fr": "Excusez-moi,"
+        },
+        {
+          "jp": "駅はまっすぐ行って、",
+          "fr": "pour la gare : tout droit,"
+        },
+        {
+          "jp": "二つ目の信号を右です。",
+          "fr": "à droite au deuxième feu."
+        },
+        {
+          "jp": "歩いて5分くらいです。",
+          "fr": "Environ 5 min à pied."
         }
       ]
     },
@@ -19402,7 +21094,21 @@
           "feedback": "今何時 = quelle heure."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "すみません、",
+          "fr": "Excusez-moi,"
+        },
+        {
+          "jp": "今何時ですか？",
+          "fr": "quelle heure est-il ?"
+        },
+        {
+          "jp": "三時半です。",
+          "fr": "Il est 15h30."
+        }
+      ]
     },
     {
       "id": "co-d-cafe2",
@@ -19434,7 +21140,21 @@
           "feedback": "ホット = chaud."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "コーヒーを一つお願いします。",
+          "fr": "Un café s'il vous plaît."
+        },
+        {
+          "jp": "ホットですか、アイスですか？",
+          "fr": "Chaud ou glacé ?"
+        },
+        {
+          "jp": "ホットでお願いします。",
+          "fr": "Chaud, s'il vous plaît."
+        }
+      ]
     },
     {
       "id": "co-d-meteo4",
@@ -19466,7 +21186,21 @@
           "feedback": "傘が必要 = parapluie nécessaire."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "明日の天気はどうですか？",
+          "fr": "Quel temps demain ?"
+        },
+        {
+          "jp": "雨が降ります。",
+          "fr": "Il pleuvra."
+        },
+        {
+          "jp": "傘が必要です。",
+          "fr": "Un parapluie est nécessaire."
+        }
+      ]
     },
     {
       "id": "co-d-achat",
@@ -19498,7 +21232,25 @@
           "feedback": "これをください = je prends ça."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "これはいくらですか？",
+          "fr": "Combien ça coûte ?"
+        },
+        {
+          "jp": "500円です。",
+          "fr": "500 yens."
+        },
+        {
+          "jp": "じゃあ、",
+          "fr": "Bon,"
+        },
+        {
+          "jp": "これをください。",
+          "fr": "je prends ça."
+        }
+      ]
     },
     {
       "id": "co-d-saluer",
@@ -19530,7 +21282,25 @@
           "feedback": "いい天気 = beau temps."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "おはようございます。",
+          "fr": "Bonjour."
+        },
+        {
+          "jp": "今日はいい天気ですね。",
+          "fr": "Il fait beau aujourd'hui, n'est-ce pas ?"
+        },
+        {
+          "jp": "そうですね、",
+          "fr": "Oui,"
+        },
+        {
+          "jp": "気持ちいいです。",
+          "fr": "c'est agréable."
+        }
+      ]
     },
     {
       "id": "co-d-resto2",
@@ -19562,7 +21332,21 @@
           "feedback": "一つ (hitotsu) = un."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "ご注文は？",
+          "fr": "Votre commande ?"
+        },
+        {
+          "jp": "親子丼を一つお願いします。",
+          "fr": "Un oyakodon, s'il vous plaît."
+        },
+        {
+          "jp": "かしこまりました。",
+          "fr": "Bien, entendu."
+        }
+      ]
     },
     {
       "id": "co-d-tel",
@@ -19594,7 +21378,25 @@
           "feedback": "はい、そうです = oui c'est Tanaka."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "もしもし、",
+          "fr": "Allô,"
+        },
+        {
+          "jp": "田中さんですか？",
+          "fr": "c'est M. Tanaka ?"
+        },
+        {
+          "jp": "はい、そうです。",
+          "fr": "Oui, c'est moi."
+        },
+        {
+          "jp": "鈴木です。",
+          "fr": "Ici Suzuki."
+        }
+      ]
     },
     {
       "id": "co-d-magasin",
@@ -19626,7 +21428,25 @@
           "feedback": "あちら = par là."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "すみません、",
+          "fr": "Excusez-moi,"
+        },
+        {
+          "jp": "トイレはどこですか？",
+          "fr": "où sont les toilettes ?"
+        },
+        {
+          "jp": "あちらです。",
+          "fr": "Par là."
+        },
+        {
+          "jp": "ありがとうございます。",
+          "fr": "Merci."
+        }
+      ]
     },
     {
       "id": "co-d-invitation2",
@@ -19658,7 +21478,21 @@
           "feedback": "行きましょう = allons-y."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "週末、映画を見に行きませんか？",
+          "fr": "Tu ne veux pas aller voir un film ce week-end ?"
+        },
+        {
+          "jp": "いいですね、",
+          "fr": "Bonne idée,"
+        },
+        {
+          "jp": "行きましょう。",
+          "fr": "allons-y."
+        }
+      ]
     },
     {
       "id": "co-d-famille2",
@@ -19690,7 +21524,25 @@
           "feedback": "いません = il n'y en a pas."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "兄弟はいますか？",
+          "fr": "As-tu des frères et sœurs ?"
+        },
+        {
+          "jp": "はい、兄が一人います。",
+          "fr": "Oui, j'ai un grand frère."
+        },
+        {
+          "jp": "お姉さんは？",
+          "fr": "Une grande sœur ?"
+        },
+        {
+          "jp": "いません。",
+          "fr": "Non."
+        }
+      ]
     },
     {
       "id": "co-d-hobby",
@@ -19722,7 +21574,21 @@
           "feedback": "ギター = guitare."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "趣味は何ですか？",
+          "fr": "Quel est ton loisir ?"
+        },
+        {
+          "jp": "音楽が好きです。",
+          "fr": "J'aime la musique."
+        },
+        {
+          "jp": "ギターを弾きます。",
+          "fr": "Je joue de la guitare."
+        }
+      ]
     },
     {
       "id": "co-d-station",
@@ -19754,7 +21620,21 @@
           "feedback": "約十分 = environ 10 min."
         }
       ],
-      "niveau": "Débutant"
+      "niveau": "Débutant",
+      "mots": [
+        {
+          "jp": "東京駅はここから何駅ですか？",
+          "fr": "Combien de stations jusqu'à Tokyo d'ici ?"
+        },
+        {
+          "jp": "三駅です。",
+          "fr": "Trois stations."
+        },
+        {
+          "jp": "約十分です。",
+          "fr": "Environ 10 minutes."
+        }
+      ]
     },
     {
       "id": "co-i-train2",
@@ -19786,7 +21666,21 @@
           "feedback": "三番線 = voie 3."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "次の駅で快速電車に乗り換えてください。",
+          "fr": "Au prochain arrêt, changez pour le train rapide."
+        },
+        {
+          "jp": "三番線です。",
+          "fr": "C'est la voie 3."
+        },
+        {
+          "jp": "お乗り換えの際は足元にご注意ください。",
+          "fr": "Attention à vos pieds lors du changement."
+        }
+      ]
     },
     {
       "id": "co-i-rdv",
@@ -19818,7 +21712,21 @@
           "feedback": "木曜日なら大丈夫 = jeudi ça va."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "来週の水曜日、午後はご都合いかがですか？",
+          "fr": "Mercredi prochain l'après-midi vous convient-il ?"
+        },
+        {
+          "jp": "水曜日は難しいですが、",
+          "fr": "Mercredi c'est difficile, mais"
+        },
+        {
+          "jp": "木曜日なら大丈夫です。",
+          "fr": "jeudi ça va."
+        }
+      ]
     },
     {
       "id": "co-i-meteo5",
@@ -19850,7 +21758,21 @@
           "feedback": "外出はお控え = évitez de sortir."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "台風が近づいています。",
+          "fr": "Un typhon approche."
+        },
+        {
+          "jp": "明日は電車が止まる可能性があります。",
+          "fr": "Demain, les trains risquent d'être arrêtés."
+        },
+        {
+          "jp": "外出はお控えください。",
+          "fr": "Évitez de sortir."
+        }
+      ]
     },
     {
       "id": "co-i-resto3",
@@ -19882,7 +21804,25 @@
           "feedback": "確認してまいります = je vais vérifier."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "卵アレルギーがあるのですが、",
+          "fr": "J'ai une allergie aux œufs,"
+        },
+        {
+          "jp": "この料理は大丈夫ですか？",
+          "fr": "est-ce que ce plat est OK ?"
+        },
+        {
+          "jp": "少々お待ちください。",
+          "fr": "Un instant,"
+        },
+        {
+          "jp": "確認してまいります。",
+          "fr": "je vais vérifier."
+        }
+      ]
     },
     {
       "id": "co-i-hotel2",
@@ -19914,7 +21854,25 @@
           "feedback": "夕方まで = jusqu'au soir."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "チェックアウトは何時までですか？",
+          "fr": "Jusqu'à quelle heure le check-out ?"
+        },
+        {
+          "jp": "午前十一時までです。",
+          "fr": "Jusqu'à 11h."
+        },
+        {
+          "jp": "荷物は預かれますか？",
+          "fr": "Pouvez-vous garder mes bagages ?"
+        },
+        {
+          "jp": "はい、夕方まで大丈夫です。",
+          "fr": "Oui, jusqu'au soir."
+        }
+      ]
     },
     {
       "id": "co-i-magasin2",
@@ -19946,7 +21904,25 @@
           "feedback": "来週入荷予定 = réassort semaine prochaine."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "このシャツのMサイズはありますか？",
+          "fr": "Avez-vous cette chemise en taille M ?"
+        },
+        {
+          "jp": "申し訳ありません、",
+          "fr": "Désolé,"
+        },
+        {
+          "jp": "ただいま品切れです。",
+          "fr": "c'est en rupture actuellement."
+        },
+        {
+          "jp": "来週入荷予定です。",
+          "fr": "Réapprovisionnement prévu la semaine prochaine."
+        }
+      ]
     },
     {
       "id": "co-i-banque2",
@@ -19978,7 +21954,25 @@
           "feedback": "画面の右上 = en haut à droite."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "この機械は英語が使えますか？",
+          "fr": "Cette machine fonctionne-t-elle en anglais ?"
+        },
+        {
+          "jp": "はい、",
+          "fr": "Oui,"
+        },
+        {
+          "jp": "画面の右上で言語を変えられます。",
+          "fr": "vous pouvez changer la langue en haut à droite de l'écran."
+        },
+        {
+          "jp": "ありがとう、助かります。",
+          "fr": "Merci, ça m'aide."
+        }
+      ]
     },
     {
       "id": "co-i-cours",
@@ -20010,7 +22004,21 @@
           "feedback": "メールで質問 = questions par e-mail."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "宿題は明日までに出してください。",
+          "fr": "Rendez le devoir pour demain."
+        },
+        {
+          "jp": "もし分からないところがあれば、",
+          "fr": "Si quelque chose n'est pas clair,"
+        },
+        {
+          "jp": "メールで質問してもいいですよ。",
+          "fr": "vous pouvez poser des questions par e-mail."
+        }
+      ]
     },
     {
       "id": "co-i-pharmacie",
@@ -20042,7 +22050,21 @@
           "feedback": "運転する前 = avant de conduire."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "この薬は眠くなることがあります。",
+          "fr": "Ce médicament peut donner sommeil."
+        },
+        {
+          "jp": "運転する前には飲まないでください。",
+          "fr": "Ne le prenez pas avant de conduire."
+        },
+        {
+          "jp": "一日二回までです。",
+          "fr": "Deux fois par jour maximum."
+        }
+      ]
     },
     {
       "id": "co-i-reservation",
@@ -20074,7 +22096,25 @@
           "feedback": "土曜日なら = samedi possible."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "二名で予約したいのですが、",
+          "fr": "Je voudrais réserver pour deux,"
+        },
+        {
+          "jp": "金曜日の夜は空いていますか？",
+          "fr": "vendredi soir est-il libre ?"
+        },
+        {
+          "jp": "金曜日は満席ですが、",
+          "fr": "Vendredi c'est complet, mais"
+        },
+        {
+          "jp": "土曜日なら七時に取れます。",
+          "fr": "samedi je peux à 19h."
+        }
+      ]
     },
     {
       "id": "co-i-perdu",
@@ -20106,7 +22146,29 @@
           "feedback": "山手線 = ligne Yamanote."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "電車にかばんを忘れてしまいました。",
+          "fr": "J'ai oublié mon sac dans le train."
+        },
+        {
+          "jp": "何線ですか？",
+          "fr": "Quelle ligne ?"
+        },
+        {
+          "jp": "山手線です。",
+          "fr": "La ligne Yamanote."
+        },
+        {
+          "jp": "では、",
+          "fr": "Alors,"
+        },
+        {
+          "jp": "終点の駅に問い合わせてください。",
+          "fr": "renseignez-vous à la gare terminus."
+        }
+      ]
     },
     {
       "id": "co-i-meteo-tv",
@@ -20138,7 +22200,25 @@
           "feedback": "北海道では雪 = neige à Hokkaido."
         }
       ],
-      "niveau": "Intermédiaire"
+      "niveau": "Intermédiaire",
+      "mots": [
+        {
+          "jp": "明日は全国的に晴れるでしょう。",
+          "fr": "Demain il fera beau dans tout le pays."
+        },
+        {
+          "jp": "ただし、",
+          "fr": "Toutefois,"
+        },
+        {
+          "jp": "北海道では雪が予想されます。",
+          "fr": "de la neige est prévue à Hokkaido."
+        },
+        {
+          "jp": "気温は東京で十五度の予想です。",
+          "fr": "La température sera de 15 degrés à Tokyo."
+        }
+      ]
     },
     {
       "id": "co-a-annonce-vol",
@@ -20170,7 +22250,25 @@
           "feedback": "悪天候のため = à cause du mauvais temps."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "パリ行き、JL415便をご利用のお客様にご案内いたします。",
+          "fr": "Avis aux passagers du vol JL415 à destination de Paris."
+        },
+        {
+          "jp": "出発が悪天候のため、",
+          "fr": "En raison du mauvais temps,"
+        },
+        {
+          "jp": "約一時間遅れる見込みです。",
+          "fr": "le départ devrait être retardé d'environ une heure."
+        },
+        {
+          "jp": "ご迷惑をおかけし申し訳ございません。",
+          "fr": "Nous vous prions de nous excuser pour la gêne occasionnée."
+        }
+      ]
     },
     {
       "id": "co-a-entretien",
@@ -20202,7 +22300,21 @@
           "feedback": "新規顧客の開拓 = développer de nouveaux clients."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "前職ではどのような業務を担当されていましたか？",
+          "fr": "Quelles missions assuriez-vous dans votre emploi précédent ?"
+        },
+        {
+          "jp": "主に海外営業を担当し、",
+          "fr": "Je m'occupais principalement de la vente à l'international et"
+        },
+        {
+          "jp": "新規顧客の開拓に力を入れておりました。",
+          "fr": "je me consacrais au développement de nouveaux clients."
+        }
+      ]
     },
     {
       "id": "co-a-conference",
@@ -20234,7 +22346,21 @@
           "feedback": "させていただきます = keigo poli."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "本日はお忙しい中、お越しいただきありがとうございます。",
+          "fr": "Merci d'être venus aujourd'hui malgré vos occupations."
+        },
+        {
+          "jp": "これより、",
+          "fr": "Je vais à présent"
+        },
+        {
+          "jp": "地球温暖化の現状と私たちにできることについてお話しさせていただきます。",
+          "fr": "vous parler de l'état actuel du réchauffement climatique et de ce que nous pouvons faire."
+        }
+      ]
     },
     {
       "id": "co-a-hopital",
@@ -20266,7 +22392,29 @@
           "feedback": "休養を取る = se reposer."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "検査の結果、",
+          "fr": "Les résultats de l'examen"
+        },
+        {
+          "jp": "特に問題はありませんでした。",
+          "fr": "ne montrent pas de problème particulier."
+        },
+        {
+          "jp": "ただ、",
+          "fr": "Cependant,"
+        },
+        {
+          "jp": "少し疲れがたまっているようなので、",
+          "fr": "vous semblez accumuler un peu de fatigue, donc"
+        },
+        {
+          "jp": "しっかり休養を取ることをお勧めします。",
+          "fr": "je vous recommande de bien vous reposer."
+        }
+      ]
     },
     {
       "id": "co-a-news",
@@ -20298,7 +22446,33 @@
           "feedback": "津波の心配はありません = pas de risque de tsunami."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "今朝未明、",
+          "fr": "Tôt ce matin,"
+        },
+        {
+          "jp": "東京で震度四の地震がありました。",
+          "fr": "un séisme d'intensité 4 a eu lieu à Tokyo."
+        },
+        {
+          "jp": "津波の心配はありません。",
+          "fr": "Pas de risque de tsunami."
+        },
+        {
+          "jp": "鉄道各社は",
+          "fr": "Les compagnies ferroviaires"
+        },
+        {
+          "jp": "安全確認のため、",
+          "fr": "pour vérifier la sécurité."
+        },
+        {
+          "jp": "一時運転を見合わせました。",
+          "fr": "ont temporairement suspendu le trafic"
+        }
+      ]
     },
     {
       "id": "co-a-plainte",
@@ -20330,7 +22504,25 @@
           "feedback": "交換させていただきます = nous échangeons."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "先日購入した商品が届いたのですが、",
+          "fr": "Le produit que j'ai acheté l'autre jour est arrivé, mais"
+        },
+        {
+          "jp": "傷がついていました。",
+          "fr": "il était abîmé."
+        },
+        {
+          "jp": "大変申し訳ございません。",
+          "fr": "Nous sommes vraiment désolés."
+        },
+        {
+          "jp": "すぐに新しいものと交換させていただきます。",
+          "fr": "Nous allons l'échanger immédiatement contre un neuf."
+        }
+      ]
     },
     {
       "id": "co-a-debat",
@@ -20362,7 +22554,33 @@
           "feedback": "コミュニケーションが難しくなる = communication plus difficile."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "私はリモートワークに賛成です。",
+          "fr": "Je suis pour le télétravail."
+        },
+        {
+          "jp": "通勤時間が減り、",
+          "fr": "Le temps de trajet diminue et"
+        },
+        {
+          "jp": "効率が上がると思います。",
+          "fr": "je pense que l'efficacité augmente."
+        },
+        {
+          "jp": "なるほど。",
+          "fr": "Je vois."
+        },
+        {
+          "jp": "でも、",
+          "fr": "Mais"
+        },
+        {
+          "jp": "コミュニケーションが難しくなる面もありますよね。",
+          "fr": "il y a aussi l'aspect où la communication devient plus difficile, non ?"
+        }
+      ]
     },
     {
       "id": "co-a-tradition2",
@@ -20394,7 +22612,25 @@
           "feedback": "ご遠慮ください = veuillez vous abstenir."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "こちらが本堂でございます。",
+          "fr": "Voici le bâtiment principal."
+        },
+        {
+          "jp": "お参りの際は、",
+          "fr": "Pour prier,"
+        },
+        {
+          "jp": "まず手水で手と口を清めてから進んでください。",
+          "fr": "purifiez d'abord vos mains et votre bouche au pavillon d'ablutions avant d'avancer."
+        },
+        {
+          "jp": "写真撮影はこのエリアではご遠慮ください。",
+          "fr": "Merci de vous abstenir de photographier dans cette zone."
+        }
+      ]
     },
     {
       "id": "co-a-projet",
@@ -20426,7 +22662,29 @@
           "feedback": "早めにご相談 = consulter rapidement."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "今回のプロジェクトですが、",
+          "fr": "Concernant ce projet,"
+        },
+        {
+          "jp": "納期が一週間早まりました。",
+          "fr": "l'échéance a été avancée d'une semaine."
+        },
+        {
+          "jp": "つきましては、",
+          "fr": "Par conséquent,"
+        },
+        {
+          "jp": "来週までに各自の進捗を共有していただけますか。",
+          "fr": "pourriez-vous partager l'avancement de chacun d'ici la semaine prochaine ?"
+        },
+        {
+          "jp": "難しい場合は早めにご相談ください。",
+          "fr": "En cas de difficulté, consultez-nous au plus tôt."
+        }
+      ]
     },
     {
       "id": "co-a-radio",
@@ -20458,7 +22716,25 @@
           "feedback": "心に残る旅 = le voyage marquant."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "さて、",
+          "fr": "Bien,"
+        },
+        {
+          "jp": "次のコーナーは皆様からのお便りを紹介します。",
+          "fr": "dans la prochaine rubrique, nous présentons vos messages."
+        },
+        {
+          "jp": "今日のテーマは「人生で一番心に残る旅」です。",
+          "fr": "Le thème du jour est « le voyage le plus marquant de votre vie »."
+        },
+        {
+          "jp": "たくさんのご応募ありがとうございました。",
+          "fr": "Merci pour vos nombreuses participations."
+        }
+      ]
     },
     {
       "id": "co-a-keigo2",
@@ -20490,7 +22766,25 @@
           "feedback": "お飲み物 = une boisson."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "いらっしゃいませ。",
+          "fr": "Bienvenue."
+        },
+        {
+          "jp": "ただいま担当の者がまいりますので、",
+          "fr": "La personne responsable arrive,"
+        },
+        {
+          "jp": "あちらのソファーで少々お待ちいただけますでしょうか。",
+          "fr": "pourriez-vous patienter un instant sur le canapé là-bas ?"
+        },
+        {
+          "jp": "お飲み物はいかがなさいますか。",
+          "fr": "Que désirez-vous boire ?"
+        }
+      ]
     },
     {
       "id": "co-a-meteo-detail",
@@ -20522,7 +22816,29 @@
           "feedback": "大気が不安定, 雷雨の可能性 = instable, orages possibles."
         }
       ],
-      "niveau": "Avancé"
+      "niveau": "Avancé",
+      "mots": [
+        {
+          "jp": "週明けは高気圧に覆われ、",
+          "fr": "En début de semaine, un anticyclone couvrira la région et"
+        },
+        {
+          "jp": "安定した晴天が続くでしょう。",
+          "fr": "un temps stable et ensoleillé devrait persister."
+        },
+        {
+          "jp": "しかし、",
+          "fr": "Mais"
+        },
+        {
+          "jp": "週の半ばからは前線の影響で大気が不安定になり、",
+          "fr": "à partir du milieu de semaine, sous l'influence d'un front, l'atmosphère deviendra instable et"
+        },
+        {
+          "jp": "所により雷雨の可能性があります。",
+          "fr": "des orages sont possibles par endroits."
+        }
+      ]
     }
   ],
   "defis_jour": [

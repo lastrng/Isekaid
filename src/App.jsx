@@ -84,6 +84,75 @@ function jpSub(entry, script, jpField="jp"){
   if(script==="kana")   return entry.romaji || "";  // sous le kana → le romaji
   return entry.romaji || "";                        // sous le kanji → le romaji
 }
+// Extrait la réplique japonaise citée entre « » dans le texte de situation
+// d'une étape de scénario (ex. « Il te demande ton nom : « お名前は？ » » →
+// « お名前は？ »). Certaines situations sont purement descriptives (pas de
+// réplique directe) — renvoie null dans ce cas, pas de bouton audio affiché.
+function extractSituationJP(situation){
+  const m = situation && situation.match(/«\s*([^»]+?)\s*»/);
+  return m ? m[1] : null;
+}
+// ─── Correspondance mot-à-mot JP/FR (surlignage interactif) ─────────────────
+// Calcule les segments d'une phrase japonaise et de sa traduction française à
+// partir de `mots` ([{jp,fr}] en ordre de lecture japonais — voir les entrées
+// enrichies dans japan-data.json) : repère chaque `mots[i].fr` dans la
+// traduction complète pour pouvoir surligner le mot français correspondant
+// quand on survole/touche le segment japonais (et vice-versa). Fonction pure
+// (pas un hook) — appelable directement dans une boucle .map() sans enfreindre
+// les Rules of Hooks. Renvoie null si `mots` est absent (contenu pas encore
+// enrichi) : les écrans appelants retombent alors sur l'affichage simple.
+function alignWords(mots, fullFr){
+  if(!mots || !mots.length || !fullFr) return null;
+  const claims = [];
+  mots.forEach((m,i)=>{
+    if(!m.fr) return;
+    let searchFrom = 0, idx = -1;
+    while(true){
+      idx = fullFr.indexOf(m.fr, searchFrom);
+      if(idx===-1) break;
+      const overlap = claims.some(c=> idx < c.end && idx+m.fr.length > c.start);
+      if(!overlap) break;
+      searchFrom = idx+1;
+    }
+    if(idx!==-1) claims.push({start:idx, end:idx+m.fr.length, idx:i});
+  });
+  if(!claims.length) return null;
+  claims.sort((a,b)=>a.start-b.start);
+  const frSegs = [];
+  let cursor = 0;
+  claims.forEach(c=>{
+    if(c.start>cursor) frSegs.push({text:fullFr.slice(cursor,c.start), wordIndex:null});
+    frSegs.push({text:fullFr.slice(c.start,c.end), wordIndex:c.idx});
+    cursor = c.end;
+  });
+  if(cursor<fullFr.length) frSegs.push({text:fullFr.slice(cursor), wordIndex:null});
+  const jpSegs = mots.map((m,i)=>({text:m.jp, wordIndex:i}));
+  return {jpSegs, frSegs};
+}
+// Ligne de segments cliquables/survolables (tap sur mobile, hover sur desktop) —
+// le mot actif se surligne dans la couleur d'accent ; `active`/`setActive` sont
+// partagés entre la ligne JP et la ligne FR d'une même phrase pour synchroniser
+// le surlignage dans les deux sens.
+function AlignedRow({segs, active, setActive, activeColor, style}){
+  return (
+    <span style={style}>
+      {segs.map((seg,i)=> seg.wordIndex==null ? (
+        <span key={i}>{seg.text}</span>
+      ) : (
+        <span key={i}
+          onMouseEnter={()=>setActive(seg.wordIndex)}
+          onMouseLeave={()=>setActive(null)}
+          onClick={(e)=>{ e.stopPropagation(); setActive(active===seg.wordIndex?null:seg.wordIndex); }}
+          style={{cursor:"pointer",borderRadius:4,transition:"background .15s ease, color .15s ease",
+            background: active===seg.wordIndex ? `${activeColor}2a` : "transparent",
+            color: active===seg.wordIndex ? activeColor : "inherit",
+            fontWeight: active===seg.wordIndex ? 700 : "inherit"}}>
+          {seg.text}
+        </span>
+      ))}
+    </span>
+  );
+}
 const SEASON_ACCENT = {
   printemps:{accent:"#E08BA8", soft:"rgba(224,139,168,0.10)", emoji:"🌸", particle:"🌸", label:"Printemps", tagline:"Saison du hanami — les cerisiers en fleurs", saisonFr:"ce printemps"},
   "été":    {accent:"#3C9DC4", soft:"rgba(60,157,196,0.10)",  emoji:"🎐", particle:"💧", label:"Été",       tagline:"Saison des matsuri et des feux d'artifice", saisonFr:"cet été"},
@@ -2726,6 +2795,10 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
   const hideRomajiByLevel = s.niveau==="Intermédiaire" || s.niveau==="Avancé";
   const [showRomaji,setShowRomaji] = useState(!hideRomajiByLevel);
   const etape = s.etapes[step];
+  // Réplique japonaise à écouter dans la Situation (voir extractSituationJP) —
+  // toujours la forme kanji/kana native, indépendamment du script d'affichage
+  // choisi (romaji/kana) : c'est cette forme qui est indexée dans AUDIO_MANIFEST.
+  const situationJP = useMemo(()=>extractSituationJP(etape.situation), [etape.situation]);
   // Ordre des choix mélangé à chaque étape (et à chaque "Refaire") pour que
   // la bonne réponse ne soit pas toujours en première position — mémoïsé
   // pour rester stable pendant que le feedback (picked) est affiché. Doit
@@ -2836,7 +2909,10 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
       <div style={{padding:"10px 20px 110px"}}>
         {/* Situation */}
         <div style={{padding:"18px",background:`${C.red}11`,border:`1px solid ${C.red}33`,borderRadius:14,marginBottom:18}}>
-          <div style={{fontSize:10,color:C.red,letterSpacing:".2em",marginBottom:8,textTransform:"uppercase"}}>{s.emoji} Situation</div>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:8}}>
+            <div style={{fontSize:10,color:C.red,letterSpacing:".2em",textTransform:"uppercase"}}>{s.emoji} Situation</div>
+            {situationJP && <SpeakButton C={C} text={situationJP} color={C.red} size={26}/>}
+          </div>
           <div style={{fontSize:15,color:C.text,lineHeight:1.55}}>
             {script==="romaji" && etape.situation_romaji ? etape.situation_romaji
               : script==="kana" && etape.situation_kana ? etape.situation_kana
@@ -3710,6 +3786,13 @@ function ShareSheet({ C, situation, script, onClose }){
 
 function SituationDetail({C, s, onBack, script}){
   const [showShare, setShowShare] = useState(false);
+  // "Uniquement rōmaji" : bascule locale à l'écran, indépendante du réglage
+  // de script global (Profil) — désactive le surlignage mot-à-mot (pas de
+  // découpage rōmaji par mot dans les données), juste la lecture romanisée.
+  const [romajiOnly, setRomajiOnly] = useState(false);
+  // Mot actif par phrase (index de phrase → index de mot dans `mots`), pour
+  // synchroniser le surlignage JP↔FR de chaque ligne indépendamment des autres.
+  const [activeWords, setActiveWords] = useState({});
   // Palette éditoriale "fiche magazine" — crème en clair, encre profonde en sombre,
   // distincte du reste de l'app pour un effet "carte à collectionner".
   const dark = C.bg === "#0F0B08";
@@ -3740,23 +3823,48 @@ function SituationDetail({C, s, onBack, script}){
         </div>
         <div style={{width:40,height:2,background:accent,marginBottom:14}}/>
         <div style={{fontSize:14,color:inkSoft,fontStyle:"italic",lineHeight:1.6,fontFamily:"'Noto Serif JP',serif"}}>{s.contexte}</div>
-        <div style={{fontSize:11,color:accent,marginTop:14,letterSpacing:".05em"}}>{s.phrases.length} phrases · de l'arrivée au départ</div>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginTop:14}}>
+          <div style={{fontSize:11,color:accent,letterSpacing:".05em"}}>{s.phrases.length} phrases · de l'arrivée au départ</div>
+          <button onClick={()=>setRomajiOnly(v=>!v)} className="pop-press" style={{flexShrink:0,padding:"6px 13px",borderRadius:16,border:`1px solid ${romajiOnly?accent:hair}`,background:romajiOnly?accent:"transparent",color:romajiOnly?"#fff":inkSoft,fontSize:11,fontWeight:500,cursor:"pointer",whiteSpace:"nowrap"}}>
+            A {romajiOnly ? "Rōmaji seul ✓" : "Rōmaji seul"}
+          </button>
+        </div>
       </div>
 
-      {/* Liste de phrases — style éditorial : ligne par ligne, traduction à droite */}
+      {/* Liste de phrases — style éditorial : ligne par ligne, traduction à droite.
+          Survole/touche un mot japonais pour surligner son équivalent français
+          (et vice-versa) — voir alignWords/AlignedRow. Repli sur l'affichage
+          simple si la phrase n'a pas encore de découpage `mots`. */}
       <div style={{padding:"0 24px 110px"}}>
-        {s.phrases.map((p,i)=>(
-          <div key={i} style={{paddingTop:18,paddingBottom:18,borderTop:`1px solid ${hair}`,animation:`fadeUp .4s ease ${i*0.05}s both`}}>
-            <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}}>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",color:ink,marginBottom:5,lineHeight:1.35}}>{jpMain(p, script)}</div>
-                <div style={{fontSize:13,color:inkSoft,fontStyle:"italic",fontFamily:"'Noto Serif JP',serif"}}>{jpSub(p, script)}</div>
+        {s.phrases.map((p,i)=>{
+          const align = !romajiOnly ? alignWords(p.mots, p.fr) : null;
+          const active = activeWords[i] ?? null;
+          const setActive = (w)=> setActiveWords(a=>({...a, [i]: w}));
+          return(
+            <div key={i} style={{paddingTop:18,paddingBottom:18,borderTop:`1px solid ${hair}`,animation:`fadeUp .4s ease ${i*0.05}s both`}}>
+              <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}}>
+                <div style={{flex:1,minWidth:0}}>
+                  {romajiOnly ? (
+                    <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",color:ink,marginBottom:5,lineHeight:1.35}}>{p.romaji}</div>
+                  ) : align ? (
+                    <AlignedRow segs={align.jpSegs} active={active} setActive={setActive} activeColor={accent}
+                      style={{display:"block",fontSize:21,fontFamily:"'Noto Serif JP',serif",color:ink,marginBottom:5,lineHeight:1.35}}/>
+                  ) : (
+                    <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",color:ink,marginBottom:5,lineHeight:1.35}}>{jpMain(p, script)}</div>
+                  )}
+                  {!romajiOnly && <div style={{fontSize:13,color:inkSoft,fontStyle:"italic",fontFamily:"'Noto Serif JP',serif"}}>{align ? p.romaji : jpSub(p, script)}</div>}
+                </div>
+                <SpeakButton C={C} text={p.jp} color={accent}/>
               </div>
-              <SpeakButton C={C} text={p.jp} color={accent}/>
+              {align ? (
+                <AlignedRow segs={align.frSegs} active={active} setActive={setActive} activeColor={accent}
+                  style={{display:"block",fontSize:13,color:inkSoft,marginTop:8,textAlign:"right",fontFamily:"'Noto Serif JP',serif",fontStyle:"italic"}}/>
+              ) : (
+                <div style={{fontSize:13,color:inkSoft,marginTop:8,textAlign:"right",fontFamily:"'Noto Serif JP',serif",fontStyle:"italic"}}>{p.fr}</div>
+              )}
             </div>
-            <div style={{fontSize:13,color:inkSoft,marginTop:8,textAlign:"right",fontFamily:"'Noto Serif JP',serif",fontStyle:"italic"}}>{p.fr}</div>
-          </div>
-        ))}
+          );
+        })}
         {/* Pied éditorial */}
         <div style={{borderTop:`1px solid ${hair}`,marginTop:6,paddingTop:18,textAlign:"center"}}>
           <div style={{fontSize:13,color:inkSoft,fontStyle:"italic",fontFamily:"'Noto Serif JP',serif",lineHeight:1.5}}>Apprends les lignes une fois. Utilise-les à chaque fois.</div>
@@ -3861,11 +3969,17 @@ function ComprehensionRead({ C, db, script, onRecord, onComplete }){
   const [showText, setShowText] = useState(false); // texte caché par défaut ? Non : écrite = on lit. On montre.
   const [answers, setAnswers] = useState({});
   const [showTrad, setShowTrad] = useState(false);
+  // "Uniquement rōmaji" : bascule locale, indépendante du réglage de script
+  // global (Profil) — voir même pattern dans SituationDetail.
+  const [romajiOnly, setRomajiOnly] = useState(false);
+  // Mot actif pour le surlignage interactif JP↔FR (voir alignWords/AlignedRow) —
+  // un seul exercice affiché à la fois, donc un seul état suffit ici.
+  const [activeWord, setActiveWord] = useState(null);
   const topRef = useRef(null);
   // Au changement d'exercice ou de niveau, on remonte sur le texte de départ
   useEffect(()=>{ if(topRef.current) topRef.current.scrollIntoView({block:"start"}); }, [idx, level]);
   // Reset l'index quand on change de niveau
-  useEffect(()=>{ setIdx(0); setAnswers({}); setShowTrad(false); }, [level]);
+  useEffect(()=>{ setIdx(0); setAnswers({}); setShowTrad(false); setActiveWord(null); }, [level]);
   const exo = exos[idx];
 
   const levelChips = (
@@ -3896,35 +4010,55 @@ function ComprehensionRead({ C, db, script, onRecord, onComplete }){
   useEffect(()=>{ if(allAnswered) onComplete && onComplete(); }, [allAnswered]);
 
   const next = ()=>{
-    setAnswers({}); setShowTrad(false);
+    setAnswers({}); setShowTrad(false); setActiveWord(null);
     if(idx+1<exos.length) setIdx(idx+1); else setIdx(0);
   };
 
-  // Texte selon le mode de script
+  // Texte selon le mode de script — "rōmaji seul" (bascule locale) prime sur
+  // le réglage global s'il est actif.
   // Texte selon le mode : kana (défaut) → kanji → romaji
-  const mainText = script==="romaji" ? exo.texte_romaji
+  const mainText = romajiOnly ? exo.texte_romaji
+                 : script==="romaji" ? exo.texte_romaji
                  : script==="kana"   ? (exo.texte_kana || exo.texte_jp)
                  : exo.texte_jp;
+  // Surlignage interactif JP↔FR (voir alignWords/AlignedRow) : nécessite
+  // `exo.mots` (pas encore enrichi sur tous les textes) et le texte natif —
+  // désactivé en mode "rōmaji seul" (pas de découpage rōmaji par mot).
+  const align = !romajiOnly ? alignWords(exo.mots, exo.traduction) : null;
 
   return(
     <div ref={topRef} style={{scrollMarginTop:60}}>
       {levelChips}
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
-        <div style={{fontSize:15,color:C.text,fontWeight:600}}>📖 {exo.titre}</div>
-        <span style={{fontSize:11,color:C.t3,fontWeight:600}}>{idx+1}/{exos.length} · {exo.niveau}</span>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,gap:10}}>
+        <div style={{fontSize:15,color:C.text,fontWeight:600,flex:1,minWidth:0}}>📖 {exo.titre}</div>
+        <button onClick={()=>setRomajiOnly(v=>!v)} className="pop-press" style={{flexShrink:0,padding:"5px 11px",borderRadius:14,border:`1px solid ${romajiOnly?C.red:C.border}`,background:romajiOnly?C.red:"transparent",color:romajiOnly?"#fff":C.t3,fontSize:10,fontWeight:500,cursor:"pointer",whiteSpace:"nowrap"}}>A Rōmaji seul</button>
+        <span style={{fontSize:11,color:C.t3,fontWeight:600,flexShrink:0}}>{idx+1}/{exos.length} · {exo.niveau}</span>
       </div>
 
       {/* Le texte à lire */}
       <div style={{padding:"18px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:8}}>
-        <div style={{fontSize:18,lineHeight:1.9,color:C.text,fontFamily:"'Noto Serif JP',serif"}}>{mainText}</div>
+        {align ? (
+          <AlignedRow segs={align.jpSegs} active={activeWord} setActive={setActiveWord} activeColor="#5B9BD5"
+            style={{display:"block",fontSize:18,lineHeight:1.9,color:C.text,fontFamily:"'Noto Serif JP',serif"}}/>
+        ) : (
+          <div style={{fontSize:18,lineHeight:1.9,color:C.text,fontFamily:"'Noto Serif JP',serif"}}>{mainText}</div>
+        )}
         <button onClick={()=>speakJP(exo.texte_jp)} style={{marginTop:12,padding:"7px 14px",background:"rgba(91,155,213,0.12)",border:"none",borderRadius:20,color:"#5B9BD5",fontSize:12,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6}}>🔊 Écouter</button>
       </div>
 
-      {/* Traduction repliable */}
+      {/* Traduction repliable — survole/touche un mot japonais ci-dessus pour
+          surligner son équivalent français une fois révélée (voir align). */}
       <button onClick={()=>setShowTrad(v=>!v)} style={{width:"100%",padding:"10px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:10,color:C.t2,fontSize:12,cursor:"pointer",marginBottom:18}}>
         {showTrad ? "▲ Masquer la traduction" : "▼ Afficher la traduction"}
       </button>
-      {showTrad && <div style={{padding:"12px 16px",background:C.s2,borderRadius:10,fontSize:13,color:C.t2,fontStyle:"italic",marginBottom:18,marginTop:-8}}>{exo.traduction}</div>}
+      {showTrad && (
+        align ? (
+          <AlignedRow segs={align.frSegs} active={activeWord} setActive={setActiveWord} activeColor="#5B9BD5"
+            style={{display:"block",padding:"12px 16px",background:C.s2,borderRadius:10,fontSize:13,color:C.t2,fontStyle:"italic",marginBottom:18,marginTop:-8}}/>
+        ) : (
+          <div style={{padding:"12px 16px",background:C.s2,borderRadius:10,fontSize:13,color:C.t2,fontStyle:"italic",marginBottom:18,marginTop:-8}}>{exo.traduction}</div>
+        )
+      )}
 
       {/* Questions */}
       <div style={{display:"flex",flexDirection:"column",gap:18}}>
@@ -3980,10 +4114,15 @@ function ComprehensionListen({ C, db, onComplete }){
   const [showRomaji, setShowRomaji] = useState(false);
   const [showTrad, setShowTrad] = useState(false);
   const [answers, setAnswers] = useState({});
+  // Mot actif pour le surlignage interactif JP↔FR (voir alignWords/AlignedRow).
+  const [activeWord, setActiveWord] = useState(null);
   const topRef = useRef(null);
   useEffect(()=>{ if(topRef.current) topRef.current.scrollIntoView({block:"start"}); }, [idx, level]);
-  useEffect(()=>{ setIdx(0); setAnswers({}); setRevealed(false); setShowRomaji(false); setShowTrad(false); }, [level]);
+  useEffect(()=>{ setIdx(0); setAnswers({}); setRevealed(false); setShowRomaji(false); setShowTrad(false); setActiveWord(null); }, [level]);
   const exo = exos[idx];
+  // Nécessite `exo.mots` (pas encore enrichi sur tous les textes) — repli
+  // silencieux sur l'affichage simple sinon.
+  const align = alignWords(exo?.mots, exo?.traduction);
 
   const levelChips = (
     <div style={{display:"flex",gap:8,overflowX:"auto",WebkitOverflowScrolling:"touch",marginBottom:16,paddingBottom:2}}>
@@ -4010,7 +4149,7 @@ function ComprehensionListen({ C, db, onComplete }){
   const score = exo.questions.filter((q,qi)=>answers[qi]===q.correct).length;
   // Mission "comp" validée à la vraie complétion d'un exercice d'écoute.
   useEffect(()=>{ if(allAnswered) onComplete && onComplete(); }, [allAnswered]);
-  const next = ()=>{ setAnswers({}); setRevealed(false); setShowRomaji(false); setShowTrad(false); if(idx+1<exos.length) setIdx(idx+1); else setIdx(0); };
+  const next = ()=>{ setAnswers({}); setRevealed(false); setShowRomaji(false); setShowTrad(false); setActiveWord(null); if(idx+1<exos.length) setIdx(idx+1); else setIdx(0); };
 
   return(
     <div ref={topRef} style={{scrollMarginTop:60}}>
@@ -4035,13 +4174,25 @@ function ComprehensionListen({ C, db, onComplete }){
       </button>
       {revealed && (
         <div style={{padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,marginBottom:18,marginTop:-8}}>
-          <div style={{fontSize:17,lineHeight:1.8,color:C.text,fontFamily:"'Noto Serif JP',serif"}}>{exo.audio_kana || exo.audio_jp}</div>
+          {align ? (
+            <AlignedRow segs={align.jpSegs} active={activeWord} setActive={setActiveWord} activeColor="#9A6A8A"
+              style={{display:"block",fontSize:17,lineHeight:1.8,color:C.text,fontFamily:"'Noto Serif JP',serif"}}/>
+          ) : (
+            <div style={{fontSize:17,lineHeight:1.8,color:C.text,fontFamily:"'Noto Serif JP',serif"}}>{exo.audio_kana || exo.audio_jp}</div>
+          )}
           <div style={{display:"flex",gap:8,marginTop:12}}>
             <button onClick={()=>setShowRomaji(v=>!v)} className="pop-press" style={{padding:"6px 12px",borderRadius:16,border:`1px solid ${showRomaji?"#9A6A8A":C.border}`,background:showRomaji?"#9A6A8A":"transparent",color:showRomaji?"#fff":C.t2,fontSize:11,fontWeight:500,cursor:"pointer"}}>あ Rōmaji</button>
             <button onClick={()=>setShowTrad(v=>!v)} className="pop-press" style={{padding:"6px 12px",borderRadius:16,border:`1px solid ${showTrad?"#9A6A8A":C.border}`,background:showTrad?"#9A6A8A":"transparent",color:showTrad?"#fff":C.t2,fontSize:11,fontWeight:500,cursor:"pointer"}}>🇫🇷 Traduction</button>
           </div>
           {showRomaji && <div style={{fontSize:13,color:C.t2,fontStyle:"italic",marginTop:10}}>{exo.audio_romaji}</div>}
-          {showTrad && <div style={{fontSize:12,color:C.t2,fontStyle:"italic",marginTop:showRomaji?4:10}}>{exo.traduction}</div>}
+          {showTrad && (
+            align ? (
+              <AlignedRow segs={align.frSegs} active={activeWord} setActive={setActiveWord} activeColor="#9A6A8A"
+                style={{display:"block",fontSize:12,color:C.t2,fontStyle:"italic",marginTop:showRomaji?4:10}}/>
+            ) : (
+              <div style={{fontSize:12,color:C.t2,fontStyle:"italic",marginTop:showRomaji?4:10}}>{exo.traduction}</div>
+            )
+          )}
         </div>
       )}
 
@@ -4168,6 +4319,11 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
   const [mode,setMode] = useState(null);   // "flash" | "quiz"
   const [situation,setSituation] = useState(null); // selected situation
   const [pathStep,setPathStep] = useState(null);   // active path step (detail)
+  // Palier "phrases" du parcours guidé : bascule locale rōmaji + mot actif par
+  // phrase pour le surlignage interactif (voir alignWords/AlignedRow, même
+  // mécanisme que SituationDetail — ces paliers réutilisent les mêmes phrases).
+  const [pathRomajiOnly,setPathRomajiOnly] = useState(false);
+  const [pathPhraseActive,setPathPhraseActive] = useState({});
   const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
   // null = choix | "path" | "alphabets" | "situations" | "read" | "listen" | "review"
   // initialMode : deep-link depuis la carte d'accueil "Révisions du jour" —
@@ -4265,18 +4421,43 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
           )}
           {step.type==="phrases" && sit && (
             <div style={{marginBottom:14}}>
-              <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",marginBottom:10,textTransform:"uppercase"}}>📚 Apprends ces phrases</div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:10}}>
+                <div style={{fontSize:10,color:C.t3,letterSpacing:".18em",textTransform:"uppercase"}}>📚 Apprends ces phrases</div>
+                <button onClick={()=>setPathRomajiOnly(v=>!v)} className="pop-press" style={{flexShrink:0,padding:"5px 11px",borderRadius:14,border:`1px solid ${pathRomajiOnly?C.gold:C.border}`,background:pathRomajiOnly?C.gold:"transparent",color:pathRomajiOnly?"#fff":C.t3,fontSize:10,fontWeight:500,cursor:"pointer",whiteSpace:"nowrap"}}>
+                  A Rōmaji seul
+                </button>
+              </div>
+              {/* Survole/touche un mot japonais pour surligner son équivalent
+                  français (et vice-versa) — voir alignWords/AlignedRow. Repli
+                  sur l'affichage simple si la phrase n'a pas de `mots`. */}
               <div style={{display:"flex",flexDirection:"column",gap:9}}>
-                {sit.phrases.map((p,i)=>(
-                  <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,padding:"13px 15px"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
-                      <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text}}>{jpMain(p, script)}</div>
-                      <SpeakButton C={C} text={p.jp} color={C.gold} size={26}/>
+                {sit.phrases.map((p,i)=>{
+                  const align = !pathRomajiOnly ? alignWords(p.mots, p.fr) : null;
+                  const active = pathPhraseActive[i] ?? null;
+                  const setActive = (w)=> setPathPhraseActive(a=>({...a, [i]: w}));
+                  return(
+                    <div key={i} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,padding:"13px 15px"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
+                        {pathRomajiOnly ? (
+                          <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text}}>{p.romaji}</div>
+                        ) : align ? (
+                          <AlignedRow segs={align.jpSegs} active={active} setActive={setActive} activeColor={C.gold}
+                            style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text}}/>
+                        ) : (
+                          <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text}}>{jpMain(p, script)}</div>
+                        )}
+                        <SpeakButton C={C} text={p.jp} color={C.gold} size={26}/>
+                      </div>
+                      {!pathRomajiOnly && <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:3}}>{align ? p.romaji : jpSub(p, script)}</div>}
+                      {align ? (
+                        <AlignedRow segs={align.frSegs} active={active} setActive={setActive} activeColor={C.gold}
+                          style={{display:"block",fontSize:13,color:C.t2}}/>
+                      ) : (
+                        <div style={{fontSize:13,color:C.t2}}>{p.fr}</div>
+                      )}
                     </div>
-                    <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:3}}>{jpSub(p, script)}</div>
-                    <div style={{fontSize:13,color:C.t2}}>{p.fr}</div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}

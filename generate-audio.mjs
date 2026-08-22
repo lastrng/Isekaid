@@ -55,9 +55,15 @@ function collectPhrases(db) {
   (db.wiki || []).forEach(w => add(w.jp));
   (db.situations || []).forEach(s => (s.phrases || []).forEach(p => add(p.jp)));
   (db.proverbes || []).forEach(p => add(p.jp));
-  (db.scenarios || []).forEach(s => (s.etapes || []).forEach(e =>
-    (e.choix || []).forEach(c => add(c.jp))
-  ));
+  (db.scenarios || []).forEach(s => (s.etapes || []).forEach(e => {
+    (e.choix || []).forEach(c => add(c.jp));
+    // Réplique citée entre « » dans le texte de situation (voir
+    // extractSituationJP dans App.jsx — même logique d'extraction) : les
+    // situations purement descriptives (pas de réplique directe) n'ont pas
+    // de guillemets et sont ignorées ici.
+    const m = e.situation && e.situation.match(/«\s*([^»]+?)\s*»/);
+    if (m) add(m[1]);
+  }));
   // Contenu supplémentaire ajouté depuis la v1
   (db.villes || []).forEach(v => add(v.nom_jp));
   (db.lieux || []).forEach(l => add(l.nom_jp));
