@@ -19,7 +19,7 @@ import { FeatureIntroScreen } from "./FeatureIntro";
 import { CelebrationOverlay } from "./Celebration";
 import {
   Home as HomeIcon, Compass, Drama, BookOpen, Plane,
-  Flame, Search, Sparkles, Crown, Star, ChevronRight, ChevronLeft, MessageSquare,
+  Flame, Search, Sparkles, Crown, ChevronRight, ChevronLeft, MessageSquare,
   CheckCircle2, Circle, TrendingUp, Lock, Heart, Trophy, RotateCcw,
   Layers, Headphones, BookText, PenTool, Check, X, Plus, MapPin, MapPinned,
   Calendar, Clock, Share2, Printer, Trash2, Send, Volume2, AlertCircle,
@@ -1463,7 +1463,7 @@ function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
   );
 }
 
-function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,onOpenTradition,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,xp,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem,onOpenWeeklyTarget}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,onOpenTradition,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem,onOpenWeeklyTarget}){
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   // Cibles du spotlight (Système 4.a, voir SECTION_INTRO_STEPS.home) : une
@@ -1518,6 +1518,13 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   const { items: feedItems } = useDailyFeed(1);
   const latestFeed = feedItems && feedItems[0];
   const feedIsNew = !!latestFeed && isFeedNew(latestFeed.id);
+  // Le slider "Japon du jour" ci-dessous peut voir sa première carte changer
+  // (la carte "À la une" apparaît une fois latestFeed chargé de façon async,
+  // après le rendu initial où seules lieu/tradition/coutume sont connues) —
+  // sans ça, l'ancrage de scroll du navigateur peut décaler scrollLeft pour
+  // compenser l'insertion, laissant la marge de gauche/1re carte hors-champ.
+  const dailySliderRef = useRef(null);
+  useEffect(()=>{ if(dailySliderRef.current) dailySliderRef.current.scrollLeft = 0; }, [!!latestFeed]);
   const lieuIsNew = isLieuNew(today);
   const handleOpenLieu = (l)=>{ markLieuSeen(today); onOpenLieu && onOpenLieu(l); };
   const handleOpenFeed = ()=>{ if(latestFeed) markFeedSeen(latestFeed.id); onTask && onTask("daily"); onGoTab("daily"); };
@@ -1564,7 +1571,6 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
           </div>
           <div style={{textAlign:"right"}}>
             <div style={{fontSize:14,fontWeight:600,color:"#FDFBF7"}}>{rank?.emoji} {rank?.title}</div>
-            <div style={{fontSize:11,color:"rgba(253,251,247,0.75)"}}>{xp||0} pts</div>
           </div>
         </div>
       </div>
@@ -1628,7 +1634,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
           <SectionTitle C={C} title="Le Japon du jour" action={
             <button onClick={handleOpenFeed} style={{background:"none",border:"none",color:C.red,fontSize:12,fontWeight:600,cursor:"pointer",padding:0}}>Tout voir</button>
           }/>
-          <div style={{display:"flex",gap:12,overflowX:"auto",WebkitOverflowScrolling:"touch",scrollSnapType:"x proximity",marginLeft:-20,marginRight:-20,paddingLeft:20,paddingRight:20,paddingBottom:2}}>
+          <div ref={dailySliderRef} style={{display:"flex",gap:12,overflowX:"auto",WebkitOverflowScrolling:"touch",scrollSnapType:"x proximity",scrollPaddingLeft:20,scrollPaddingRight:20,overflowAnchor:"none",marginLeft:-20,marginRight:-20,paddingLeft:20,paddingRight:20,paddingBottom:2}}>
             {latestFeed && (
               <DailySlideCard C={C} emoji="✨" label="À LA UNE" title={latestFeed.title} subtitle={latestFeed.subtitle}
                 photo={latestFeed.image_url} fallbackEmoji="🇯🇵" isNew={feedIsNew}
@@ -6311,8 +6317,12 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent,script,setScript,onBack,onOpenLieu,onOpenTradition,onOpenDetail}){
+function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent,script,setScript,onBack,onOpenLieu,onOpenTradition,onOpenDetail}){
   const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
+  // Badges : seules les 2 premières lignes (grille 3 colonnes = 6 badges)
+  // sont visibles par défaut, le reste se dévoile au clic — voir la section
+  // "Badges" plus bas.
+  const [showAllBadges, setShowAllBadges] = useState(false);
   const [soundOn,setSoundOnState] = useState(()=>sfx.isSoundOn());
   const toggleSound = ()=>{
     setSoundOnState(prev=>{
@@ -6377,15 +6387,15 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
           )}
         </SectionCard>
 
-        {/* 3 tuiles stats — streak / XP / niveau */}
+        {/* 2 tuiles stats — streak / niveau (XP retiré : redondant avec le
+            streak, dont il n'était qu'un alias — voir computeXP) */}
         {/* Niveau : même calcul que "Niveau estimé" du Tuteur IA (estimateNiveau)
             — auparavant cette tuile affichait le niveau déclaré à l'onboarding
             (échelle différente : Débutant/Intermédiaire/Avancé, jamais recalculé),
             ce qui contredisait le Tuteur (Débutant/Faux-débutant/Intermédiaire). */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:16}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
           {[
             {Icon:Flame, label:"Streak", value:`${streak?.count||0}j`, color:C.red},
-            {Icon:Star, label:"XP total", value:String(xp||0), color:C.gold},
             {Icon:Sparkles, label:"Niveau", value:<NiveauInfo C={C} niveau={estimateNiveau(kanaProgress, scenProgress, streak, user?.level)}/>, color:C.indigo},
           ].map(s=>(
             <SectionCard key={s.label} C={C} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"14px 8px"}}>
@@ -6442,13 +6452,19 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
         )}
 
         {(()=>{
-          const achievements = computeAchievements({ streak, xp, unlocks, scenProgress, kanaProgress, favs, pathProgress });
+          const achievements = computeAchievements({ streak, unlocks, scenProgress, kanaProgress, favs, pathProgress });
           const earned = achievements.filter(a=>a.unlocked).length;
+          // 2 lignes de 3 colonnes = 6 badges visibles par défaut, le reste
+          // se dévoile au clic sur "Voir tout" (jamais masqué si l'utilisateur
+          // a déjà déplié, même si la liste redevient courte entre-temps).
+          const BADGES_VISIBLE = 6;
+          const hasMore = achievements.length > BADGES_VISIBLE;
+          const shown = showAllBadges ? achievements : achievements.slice(0, BADGES_VISIBLE);
           return(
             <div style={{marginBottom:16}}>
               <SectionTitle C={C} title="Badges" action={<span style={{fontSize:11,color:C.t2,fontWeight:600}}>{earned}/{achievements.length}</span>}/>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9}}>
-                {achievements.map((b,i)=>(
+                {shown.map((b,i)=>(
                   <div key={i} title={b.desc} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.32)":C.border}`,borderRadius:18,padding:"14px 8px",textAlign:"center",opacity:b.unlocked?1:.5,transition:"all .3s"}}>
                     <div style={{width:44,height:44,margin:"0 auto 7px",borderRadius:"50%",background:b.unlocked?C.s2:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:21,filter:b.unlocked?"none":"grayscale(1)"}}>{b.emoji}</div>
                     <div style={{fontSize:10,color:b.unlocked?C.text:C.t3,lineHeight:1.25,marginBottom:3}}>{b.label}</div>
@@ -6456,6 +6472,11 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
                   </div>
                 ))}
               </div>
+              {hasMore && (
+                <button onClick={()=>setShowAllBadges(v=>!v)} className="pop-press" style={{width:"100%",marginTop:10,padding:"10px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:12,color:C.t2,fontSize:12,cursor:"pointer"}}>
+                  {showAllBadges ? "▲ Réduire" : `▼ Voir tout (${achievements.length})`}
+                </button>
+              )}
             </div>
           );
         })()}
@@ -8126,12 +8147,12 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className={supportsViewTransitions()?"":"screen-in"} style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} xp={xp} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} backRef={inScreenBackRef} initialCategoryFilter={pendingExploreCategory} onInitialCategoryConsumed={()=>setPendingExploreCategory(null)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)} kanaProgress={kanaProgress} pathProgress={pathProgress} onGoTab={setTab}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onBack={()=>setTab("home")} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onBack={()=>setTab("home")} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef}/>}
               {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
