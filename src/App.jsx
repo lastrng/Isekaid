@@ -1638,6 +1638,8 @@ const SECTION_INTRO_STEPS = {
   explore: [
     { emoji:"🔓", title:"Le contenu se débloque avec ton streak",
       text:"Reviens chaque jour : traditions, société et découvertes s'ouvrent progressivement. Premium débloque tout immédiatement." },
+    { emoji:"❤️", title:"Garde des lieux partout dans l'app",
+      text:"Sur chaque fiche lieu, ajoute-le à tes favoris — retrouve-les ensuite dans Voyage." },
   ],
   scenarios: [
     { emoji:"🎭", title:"Entraîne-toi sur des situations réelles",
@@ -1654,8 +1656,6 @@ const SECTION_INTRO_STEPS = {
       text:"Les kana que tu commences à oublier reviennent au bon moment, pour ancrer ta mémoire." },
   ],
   voyage: [
-    { emoji:"❤️", title:"Garde des lieux partout dans l'app",
-      text:"Sur chaque fiche lieu, ajoute-le à tes favoris — ils t'attendront ici." },
     { emoji:"🗺️", title:"Crée ton itinéraire",
       text:"Jour par jour, avec la carte, les horaires et tes notes — ou pars d'un itinéraire préconçu." },
     { emoji:"✨", title:"Trois portes pour commencer",
@@ -1693,8 +1693,8 @@ function HomeWelcomeBeat({text, onDone}){
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
   return (
-    <div onClick={dismiss} style={{position:"fixed",inset:0,zIndex:305,background:"#0a0a0a",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"opacity var(--dur-slow,.24s) var(--ease-smooth,ease)",opacity:leaving?0:1}}>
-      <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:200,fontSize:28,color:"#F0E6D3",textAlign:"center",padding:"0 32px",animation:"fadeUp var(--dur-cinematic,.45s) var(--ease-smooth,ease) .15s both"}}>
+    <div onClick={dismiss} style={{position:"fixed",inset:0,zIndex:305,background:`linear-gradient(180deg, ${LIGHT.red} 0%, #8A2A2A 100%)`,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"opacity var(--dur-slow,.24s) var(--ease-smooth,ease)",opacity:leaving?0:1}}>
+      <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:200,fontSize:28,color:LIGHT.bg,textAlign:"center",padding:"0 32px",animation:"fadeUp var(--dur-cinematic,.45s) var(--ease-smooth,ease) .15s both"}}>
         {text}
       </div>
     </div>
@@ -4677,7 +4677,9 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
   const [showPremium, setShowPremium] = useState(false);
   const [showIntro, setShowIntro] = useState(()=>!sectionIntroSeen("voyage"));
   const dismissIntro = ()=>{ markSectionIntroSeen("voyage"); setShowIntro(false); onIntroDone && onIntroDone(); };
-  const landingRef = useRef(null); // cible du spotlight (voir SECTION_INTRO_STEPS.voyage)
+  const landingRef = useRef(null); // conteneur scrollable, non utilisé comme cible de spotlight (trop grand : le surlignage sort de l'écran une fois scrollé)
+  const createRef = useRef(null); // cible spotlight étape 1 (voir SECTION_INTRO_STEPS.voyage)
+  const precoRef = useRef(null); // cible spotlight étape 2
   // Retour matériel/geste : ferme d'abord la modale Premium/l'aperçu
   // d'itinéraire, sinon revient à l'accueil Voyage plutôt qu'à Home directement.
   useInScreenBack(backRef, ()=>{
@@ -4686,7 +4688,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
     if(view!=="home"){ setView("home"); setActiveTripId(null); return true; }
     return false;
   });
-  const voyageTourTargets = useMemo(()=>[landingRef,landingRef,landingRef], []); // identité stable, voir HomeScreen
+  const voyageTourTargets = useMemo(()=>[createRef,precoRef], []); // identité stable, voir HomeScreen
   const [tripCelebration, setTripCelebration] = useState(false); // voyage tout juste créé/adopté
   const pushTimer = useRef(null);
   // Index lieux pour les fiches visuelles
@@ -4815,7 +4817,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
         </div>
 
         {trips.length===0 ? (
-          <div style={{textAlign:"center",padding:"48px 20px"}}>
+          <div ref={createRef} style={{textAlign:"center",padding:"48px 20px"}}>
             <div style={{width:64,height:64,borderRadius:"50%",background:C.s2,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px"}}>
               <Plane size={28} color={C.t3}/>
             </div>
@@ -4830,9 +4832,11 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
           </div>
         ) : (
           <>
-            <SectionTitle C={C} title="Mes voyages" action={
-              <button onClick={tryCreate} style={{...btnGhostStyle(C,{color:C.red,fontWeight:600,padding:"4px 0",display:"flex",alignItems:"center",gap:4}) }}><Plus size={16}/> Nouveau</button>
-            }/>
+            <div ref={createRef}>
+              <SectionTitle C={C} title="Mes voyages" action={
+                <button onClick={tryCreate} style={{...btnGhostStyle(C,{color:C.red,fontWeight:600,padding:"4px 0",display:"flex",alignItems:"center",gap:4}) }}><Plus size={16}/> Nouveau</button>
+              }/>
+            </div>
             {trips.map(t=>{
               const nbLieux = t.jours.reduce((a,j)=>a+j.etapes.length,0);
               const checklistDone = (t.checklist||[]).filter(c=>c.done).length;
@@ -4875,7 +4879,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
         )}
 
         {/* Itinéraires préconçus */}
-        <div style={{marginTop:trips.length?28:8}}>
+        <div ref={precoRef} style={{marginTop:trips.length?28:8}}>
           <SectionTitle C={C} title="Itinéraires préconçus" action={<button onClick={()=>setView("browse")} style={btnGhostStyle(C,{color:C.red,fontWeight:600,padding:0})}>Tout voir</button>}/>
           <div style={{display:"flex",gap:12,overflowX:"auto",WebkitOverflowScrolling:"touch",marginLeft:-20,marginRight:-20,paddingLeft:20,paddingRight:20}}>
             {preconcus.slice(0,4).map(p=>(
