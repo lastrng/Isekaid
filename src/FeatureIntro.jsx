@@ -24,10 +24,10 @@ const CHAPTERS = [
     color:"#B83838", promise:"Ton rendez-vous quotidien avec le Japon." },
   { id:"explore",   kanji:"探", label:"EXPLORER",  jp:"日本を知る",   Icon:Compass,
     color:"#4276A0", promise:"La culture japonaise, un jour à la fois." },
-  { id:"scenarios", kanji:"場", label:"SCÉNARIOS", jp:"その場で話す", Icon:Drama,
-    color:"#5E9659", promise:"Mets-toi en situation — on te corrige, en douceur." },
   { id:"learn",     kanji:"学", label:"APPRENDRE", jp:"一歩ずつ",     Icon:BookOpen,
     color:"#C9A961", promise:"Apprends le japonais qui te servira vraiment." },
+  { id:"scenarios", kanji:"場", label:"SCÉNARIOS", jp:"その場で話す", Icon:Drama,
+    color:"#5E9659", promise:"Mets-toi en situation — on te corrige, en douceur." },
   { id:"voyage",    kanji:"旅", label:"VOYAGE",    jp:"夢の旅へ",     Icon:Plane,
     color:"#D96B86", promise:"Prépare le voyage dont tu rêves." },
 ];

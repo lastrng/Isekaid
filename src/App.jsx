@@ -2892,11 +2892,18 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
   );
 }
 
-function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutorBridge,onIntroDone,isFav,toggleFav,wikiMap,onWikiTap,initialScenarioId,onInitialScenarioConsumed}){
+function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutorBridge,onIntroDone,isFav,toggleFav,wikiMap,onWikiTap,initialScenarioId,onInitialScenarioConsumed,kanaProgress,pathProgress,onGoTab}){
   const [active,setActive] = useState(null);
   const [levelFilter,setLevelFilter] = useState("Tous");
   const [showIntro,setShowIntro] = useState(()=>!sectionIntroSeen("scenarios"));
   const dismissIntro = ()=>{ markSectionIntroSeen("scenarios"); setShowIntro(false); onIntroDone && onIntroDone(); };
+  // Recommandation "apprends d'abord un peu" — se cache dès que l'utilisateur a
+  // un minimum de bases (parcours guidé ou kana) ou qu'il l'a fermée lui-même ;
+  // ne bloque jamais l'accès aux scénarios, juste un conseil.
+  const [learnTipDismissed,setLearnTipDismissed] = useState(()=>scenariosLearnTipDismissed());
+  const hasSomeLearning = (pathProgress?.completed?.length||0) >= 2 || kanaMastered(kanaProgress) >= 10;
+  const showLearnTip = !hasSomeLearning && !learnTipDismissed;
+  const dismissLearnTip = ()=>{ markScenariosLearnTipDismissed(); setLearnTipDismissed(true); };
   const listRef = useRef(null); // cible du spotlight (voir SECTION_INTRO_STEPS.scenarios)
   const scenariosTourTargets = useMemo(()=>[listRef,listRef], []); // identité stable, voir HomeScreen
   // Deep-link depuis le "Défi de la semaine" (voir weeklyItemTarget) : ouvre
@@ -2930,6 +2937,18 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutor
         <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:18,color:C.text}}>Scénarios</div>
         <div style={{fontSize:12,color:C.t3,marginTop:1}}>Mets-toi en situation{totalDone>0?` · ${totalDone}/${allScenarios.length} complétés`:""}</div>
       </div>
+
+      {showLearnTip && (
+        <div style={{margin:"14px 20px 0",padding:"14px 16px",borderRadius:16,background:`${C.gold}14`,border:`1px solid ${C.gold}44`,boxShadow:C.shadow||"none",display:"flex",alignItems:"flex-start",gap:12}}>
+          <span style={{fontSize:20,flexShrink:0}}>💡</span>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:13,color:C.text,fontWeight:600,marginBottom:2}}>Un peu de bases d'abord ?</div>
+            <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginBottom:8}}>Il est recommandé d'avoir complété quelques modules dans Apprendre avant de te lancer dans les scénarios — tu t'y sentiras plus à l'aise.</div>
+            <button onClick={()=>onGoTab&&onGoTab("learn")} style={{background:"none",border:"none",color:C.gold,fontSize:12,fontWeight:600,cursor:"pointer",padding:0}}>Aller à Apprendre →</button>
+          </div>
+          <button onClick={dismissLearnTip} aria-label="Fermer" style={{background:"none",border:"none",color:C.t3,cursor:"pointer",fontSize:14,padding:0,flexShrink:0}}>✕</button>
+        </div>
+      )}
 
       <div style={{padding:"16px 20px 0"}}>
         {/* Filtre par difficulté — chips horizontaux (bolt) */}
@@ -6263,8 +6282,8 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
 const TABS=[
   {id:"home",kanji:"家",label:"Home",icon:HomeIcon},
   {id:"explore",kanji:"探",label:"Explorer",icon:Compass},
-  {id:"scenarios",kanji:"場",label:"Scénarios",icon:Drama},
   {id:"learn",kanji:"学",label:"Apprendre",icon:BookOpen},
+  {id:"scenarios",kanji:"場",label:"Scénarios",icon:Drama},
   {id:"voyage",kanji:"旅",label:"Voyage",icon:Plane},
 ];
 // ─── Achievement unlocked popup ───────────────────────────────────────────────
@@ -6752,6 +6771,10 @@ function markIntroSeen(){ try { localStorage.setItem(INTRO_KEY, "1"); } catch {}
 // une seule fois chacun — voir SectionIntro plus bas.
 function sectionIntroSeen(id){ try { return localStorage.getItem(`isekaid_section_intro_${id}_v1`)==="1"; } catch { return false; } }
 function markSectionIntroSeen(id){ try { localStorage.setItem(`isekaid_section_intro_${id}_v1`, "1"); } catch {} }
+// Conseil "apprends d'abord un peu" sur l'écran Scénarios (voir ScenariosScreen)
+const SCENARIOS_LEARN_TIP_KEY = "isekaid_scenarios_learn_tip_dismissed_v1";
+function scenariosLearnTipDismissed(){ try { return localStorage.getItem(SCENARIOS_LEARN_TIP_KEY)==="1"; } catch { return false; } }
+function markScenariosLearnTipDismissed(){ try { localStorage.setItem(SCENARIOS_LEARN_TIP_KEY, "1"); } catch {} }
 // Atterrissage 1er lancement sur Home (Système 4.a) : bienvenue + spotlight
 // des zones, indépendant de la présentation des 5 piliers (Système 1) pour
 // couvrir aussi les comptes qui n'auraient pas eu la présentation.
@@ -7884,7 +7907,7 @@ export default function IsekaidApp(){
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} xp={xp} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} backRef={inScreenBackRef} initialCategoryFilter={pendingExploreCategory} onInitialCategoryConsumed={()=>setPendingExploreCategory(null)}/>}
-              {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)}/>}
+              {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)} kanaProgress={kanaProgress} pathProgress={pathProgress} onGoTab={setTab}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onBack={()=>setTab("home")} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef}/>}
