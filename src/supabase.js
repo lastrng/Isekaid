@@ -185,3 +185,20 @@ export async function sendItineraryGenerate({ lieux, days }){
   }
   return data;
 }
+// Invoque l'Edge Function carnet-render : transforme le HTML déjà assemblé
+// côté client (voir src/carnet.js, buildCarnetHTML) en PDF via le microservice
+// weasyprint du VPS. Réponse "application/pdf" → supabase-js la renvoie en
+// Blob dans `data` (content-type non-JSON/texte).
+export async function sendCarnetRender(html){
+  const { data, error } = await supabase.functions.invoke("carnet-render", {
+    body: { html },
+    timeout: 30000,
+  });
+  if(error){
+    let payload = null;
+    try { payload = await error.context?.json?.(); } catch { /* réponse non-JSON ou déjà consommée */ }
+    if(payload?.error === "premium_required") return { premiumRequired: true };
+    throw error;
+  }
+  return { blob: data };
+}

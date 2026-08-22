@@ -33,6 +33,35 @@ export function estimateNiveau(kanaProgress, scenProgress, streak, selfReportedL
   return NIVEAU_ORDER[Math.max(NIVEAU_ORDER.indexOf(behavioral), NIVEAU_ORDER.indexOf(floor))];
 }
 const NIVEAU_LABEL = { "débutant":"Débutant", "faux-débutant":"Faux-débutant", "intermédiaire":"Intermédiaire" };
+// Repère CECRL indicatif — le tuteur n'évalue pas formellement le niveau,
+// c'est une équivalence approximative pour donner un repère à ceux qui
+// connaissent déjà cette échelle (n'apparaît que dans l'infobulle).
+const NIVEAU_CEFR = { "débutant":"A1", "faux-débutant":"A2", "intermédiaire":"B1" };
+
+// Libellé de niveau "friendly" (Débutant/Faux-débutant/Intermédiaire) + petite
+// infobulle tap-to-reveal donnant l'équivalent CECRL — composant partagé pour
+// que le niveau affiché soit identique partout dans l'app (Tuteur IA, Profil…)
+// au lieu de deux échelles différentes qui se contredisaient.
+export function NiveauInfo({C, niveau, style}){
+  const [open,setOpen] = useState(false);
+  const label = NIVEAU_LABEL[niveau] || niveau;
+  const cefr = NIVEAU_CEFR[niveau];
+  return (
+    <span style={{position:"relative",display:"inline-flex",alignItems:"center",gap:5,...style}}>
+      {label}
+      {cefr && (
+        <>
+          <button onClick={()=>setOpen(o=>!o)} aria-label="Équivalent CECRL" style={{width:15,height:15,borderRadius:"50%",border:`1px solid ${C.t3}`,background:"transparent",color:C.t3,fontSize:9,lineHeight:1,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0}}>i</button>
+          {open && (
+            <span onClick={()=>setOpen(false)} style={{position:"absolute",top:"100%",left:0,marginTop:4,background:C.s1,border:`1px solid ${C.border}`,borderRadius:8,padding:"6px 10px",fontSize:11,color:C.t2,whiteSpace:"nowrap",zIndex:20,boxShadow:C.shadow||"0 4px 12px rgba(0,0,0,0.15)",cursor:"pointer"}}>
+              Équivalent CECRL : <b style={{color:C.text}}>{cefr}</b>
+            </span>
+          )}
+        </>
+      )}
+    </span>
+  );
+}
 
 // ─── Entrée sur l'accueil ───────────────────────────────────────────────────
 // En-tête réplique le style de SH (App.jsx) — pas d'import cross-fichier
@@ -117,7 +146,7 @@ export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isP
         <div style={{...card,background:C.s2,border:"none",padding:16,display:"flex",alignItems:"center",gap:14}}>
           <div style={{width:48,height:48,borderRadius:12,background:C.s1,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>🤖</div>
           <div style={{flex:1}}>
-            <div style={{fontSize:14,fontWeight:500,color:C.text}}>Niveau estimé : {NIVEAU_LABEL[niveau]}</div>
+            <div style={{fontSize:14,fontWeight:500,color:C.text}}>Niveau estimé : <NiveauInfo C={C} niveau={niveau}/></div>
             <div style={{fontSize:11,color:C.t3}}>Basé sur ta progression</div>
           </div>
         </div>

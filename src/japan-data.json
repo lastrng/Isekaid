@@ -10886,7 +10886,8 @@
               "feedback": "« ga imasu » signifie « il y a » : on dirait que tu parles d'une autre personne !"
             }
           ],
-          "situation_romaji": "Il te demande ton nom : « Onamae wa? »"
+          "situation_romaji": "Il te demande ton nom : « Onamae wa? »",
+          "situation_kana": "Il te demande ton nom : « おなまえは？ »"
         },
         {
           "situation": "Pour conclure poliment la présentation…",
@@ -11276,7 +11277,8 @@
               "feedback": "Décrit sans dire que tu veux payer avec."
             }
           ],
-          "situation_romaji": "L'employé te demande : « Fukuro wa go-riyō desu ka? »"
+          "situation_romaji": "L'employé te demande : « Fukuro wa go-riyō desu ka? »",
+          "situation_kana": "L'employé te demande : « ふくろはごりようですか？ »"
         },
         {
           "situation": "Tu as payé, l'employé te tend ton sac.",
@@ -11367,7 +11369,8 @@
               "feedback": "Tu nies être seul alors que tu l'es."
             }
           ],
-          "situation_romaji": "Le serveur t'accueille : « いらっしゃいませ！何名様ですか？ »"
+          "situation_romaji": "Le serveur t'accueille : « いらっしゃいませ！何名様ですか？ »",
+          "situation_kana": "Le serveur t'accueille : « いらっしゃいませ！なんめいさまですか？ »"
         },
         {
           "situation": "On t'apporte le menu. Tu veux commander un ramen.",
@@ -11575,7 +11578,8 @@
               "feedback": "Tu t'excuses au lieu de remercier."
             }
           ],
-          "situation_romaji": "L'agent indique le quai 5 : « 5番線です »"
+          "situation_romaji": "L'agent indique le quai 5 : « 5番線です »",
+          "situation_kana": "L'agent indique le quai 5 : « 5ばんせんです »"
         }
       ]
     },
@@ -11627,7 +11631,8 @@
               "feedback": "Question vague qui ne donne pas ton nom."
             }
           ],
-          "situation_romaji": "La réceptionniste demande : « ご予約のお名前は？ »"
+          "situation_romaji": "La réceptionniste demande : « ご予約のお名前は？ »",
+          "situation_kana": "La réceptionniste demande : « ごよやくのおなまえは？ »"
         },
         {
           "situation": "Tu veux demander à quelle heure est le petit-déjeuner.",
@@ -11757,7 +11762,8 @@
               "feedback": "Hors sujet."
             }
           ],
-          "situation_romaji": "La vendeuse dit « 3000円です ». Tu veux payer par carte."
+          "situation_romaji": "La vendeuse dit « 3000円です ». Tu veux payer par carte.",
+          "situation_kana": "La vendeuse dit « 3000えんです ». Tu veux payer par carte."
         }
       ]
     },
@@ -11991,7 +11997,8 @@
               "feedback": "Exprime un goût, pas une commande."
             }
           ],
-          "situation_romaji": "Le serveur demande : « ご注文は？ »"
+          "situation_romaji": "Le serveur demande : « ご注文は？ »",
+          "situation_kana": "Le serveur demande : « ごちゅうもんは？ »"
         },
         {
           "situation": "Il demande : « ホットですか、アイスですか？ »",
@@ -12082,7 +12089,8 @@
               "feedback": "L'inverse de ce que tu veux."
             }
           ],
-          "situation_romaji": "Le caissier demande : « 温めますか？ »"
+          "situation_romaji": "Le caissier demande : « 温めますか？ »",
+          "situation_kana": "Le caissier demande : « あたためますか？ »"
         },
         {
           "situation": "Il demande : « 袋はいりますか？ »",
@@ -12121,7 +12129,8 @@
               "feedback": "Esquive ; une réponse claire est attendue."
             }
           ],
-          "situation_romaji": "Il demande : « 袋はいりますか？ »"
+          "situation_romaji": "Il demande : « 袋はいりますか？ »",
+          "situation_kana": "Il demande : « ふくろはいりますか？ »"
         }
       ]
     },
@@ -12446,7 +12455,8 @@
               "feedback": "Trop elliptique ; la forme complète est attendue."
             }
           ],
-          "situation_romaji": "On te demande : « ご出身は？ »"
+          "situation_romaji": "On te demande : « ご出身は？ »",
+          "situation_kana": "On te demande : « ごしゅっしんは？ »"
         },
         {
           "situation": "On te demande : « 日本語が上手ですね！ »",
@@ -12485,7 +12495,8 @@
               "feedback": "Vantard et présomptueux."
             }
           ],
-          "situation_romaji": "On te demande : « 日本語が上手ですね！ »"
+          "situation_romaji": "On te demande : « 日本語が上手ですね！ »",
+          "situation_kana": "On te demande : « にほんごがじょうずですね！ »"
         }
       ]
     },
@@ -12537,7 +12548,8 @@
               "feedback": "Contradictoire avec une consultation."
             }
           ],
-          "situation_romaji": "À l'accueil, la réceptionniste demande : « 今日はどうされましたか？ »"
+          "situation_romaji": "À l'accueil, la réceptionniste demande : « 今日はどうされましたか？ »",
+          "situation_kana": "À l'accueil, la réceptionniste demande : « きょうはどうされましたか？ »"
         },
         {
           "situation": "Elle te demande : « いつからですか？ »",
@@ -12615,7 +12627,8 @@
               "feedback": "« atama ga ii » = être intelligent : contresens total."
             }
           ],
-          "situation_romaji": "Le médecin t'examine et demande : « 他に症状はありますか？ »"
+          "situation_romaji": "Le médecin t'examine et demande : « 他に症状はありますか？ »",
+          "situation_kana": "Le médecin t'examine et demande : « ほかにしょうじょうはありますか？ »"
         },
         {
           "situation": "Il demande : « 食欲はありますか？ »",
@@ -12654,7 +12667,8 @@
               "feedback": "Sens opposé à « peu d'appétit »."
             }
           ],
-          "situation_romaji": "Il demande : « 食欲はありますか？ »"
+          "situation_romaji": "Il demande : « 食欲はありますか？ »",
+          "situation_kana": "Il demande : « しょくよくはありますか？ »"
         },
         {
           "situation": "Le médecin conclut : « 風邪ですね。薬を出します »",
@@ -12693,7 +12707,8 @@
               "feedback": "Déplacé face au médecin."
             }
           ],
-          "situation_romaji": "Le médecin conclut : « 風邪ですね。薬を出します »"
+          "situation_romaji": "Le médecin conclut : « 風邪ですね。薬を出します »",
+          "situation_kana": "Le médecin conclut : « かぜですね。くすりをだします »"
         },
         {
           "situation": "Il ajoute : « お大事に »",
@@ -12732,7 +12747,8 @@
               "feedback": "Possible mais sec ; un merci est plus chaleureux."
             }
           ],
-          "situation_romaji": "Il ajoute : « お大事に »"
+          "situation_romaji": "Il ajoute : « お大事に »",
+          "situation_kana": "Il ajoute : « おだいじに »"
         }
       ]
     },
@@ -12784,7 +12800,8 @@
               "feedback": "Inutile dans un salon : évidemment oui."
             }
           ],
-          "situation_romaji": "Le coiffeur demande : « 今日はどうなさいますか？ »"
+          "situation_romaji": "Le coiffeur demande : « 今日はどうなさいますか？ »",
+          "situation_kana": "Le coiffeur demande : « きょうはどうなさいますか？ »"
         },
         {
           "situation": "Il demande : « どのくらい切りますか？ »",
@@ -12823,7 +12840,8 @@
               "feedback": "Pourquoi venir alors ?"
             }
           ],
-          "situation_romaji": "Il demande : « どのくらい切りますか？ »"
+          "situation_romaji": "Il demande : « どのくらい切りますか？ »",
+          "situation_kana": "Il demande : « どのくらいきりますか？ »"
         },
         {
           "situation": "Il demande : « 前髪はどうしますか？ »",
@@ -12862,7 +12880,8 @@
               "feedback": "Décide pour éviter une surprise."
             }
           ],
-          "situation_romaji": "Il demande : « 前髪はどうしますか？ »"
+          "situation_romaji": "Il demande : « 前髪はどうしますか？ »",
+          "situation_kana": "Il demande : « まえがみはどうしますか？ »"
         },
         {
           "situation": "Pendant le shampoing, il demande : « 痒いところはありますか？ »",
@@ -12901,7 +12920,8 @@
               "feedback": "Gentil mais ne répond pas à la question posée."
             }
           ],
-          "situation_romaji": "Pendant le shampoing, il demande : « 痒いところはありますか？ »"
+          "situation_romaji": "Pendant le shampoing, il demande : « 痒いところはありますか？ »",
+          "situation_kana": "Pendant le shampoing, il demande : « かゆいところはありますか？ »"
         },
         {
           "situation": "À la fin, il te montre le résultat : « いかがですか？ »",
@@ -13031,7 +13051,8 @@
               "feedback": "Difficile d'ignorer qu'il fait beau."
             }
           ],
-          "situation_romaji": "Elle remarque : « 今日はいい天気ですね »"
+          "situation_romaji": "Elle remarque : « 今日はいい天気ですね »",
+          "situation_kana": "Elle remarque : « きょうはいいてんきですね »"
         },
         {
           "situation": "Elle demande : « お仕事は何ですか？ »",
@@ -13070,7 +13091,8 @@
               "feedback": "Tu l'es déjà ; ça parle d'un souhait futur."
             }
           ],
-          "situation_romaji": "Elle demande : « お仕事は何ですか？ »"
+          "situation_romaji": "Elle demande : « お仕事は何ですか？ »",
+          "situation_kana": "Elle demande : « おしごとはなんですか？ »"
         },
         {
           "situation": "Elle s'extasie : « すごいですね！ »",
@@ -13148,7 +13170,8 @@
               "feedback": "C'est une invitation, pas un commerce."
             }
           ],
-          "situation_romaji": "Elle te propose : « 今度、お茶でもどうですか？ »"
+          "situation_romaji": "Elle te propose : « 今度、お茶でもどうですか？ »",
+          "situation_kana": "Elle te propose : « こんど、おちゃでもどうですか？ »"
         },
         {
           "situation": "Elle conclut : « それじゃあ、また »",
@@ -13239,7 +13262,8 @@
               "feedback": "Tu demandes leur emplacement."
             }
           ],
-          "situation_romaji": "L'employé demande : « 何をお送りですか？ »"
+          "situation_romaji": "L'employé demande : « 何をお送りですか？ »",
+          "situation_kana": "L'employé demande : « なにをおおくりですか？ »"
         },
         {
           "situation": "Il demande : « 航空便ですか、船便ですか？ »",
@@ -13278,7 +13302,8 @@
               "feedback": "Choisis « kōkūbin » pour rapide."
             }
           ],
-          "situation_romaji": "Il demande : « 航空便ですか、船便ですか？ »"
+          "situation_romaji": "Il demande : « 航空便ですか、船便ですか？ »",
+          "situation_kana": "Il demande : « こうくうびんですか、ふなびんですか？ »"
         },
         {
           "situation": "Il pèse ton colis et annonce : « 1500円になります »",
@@ -13317,7 +13342,8 @@
               "feedback": "Problématique pour envoyer ton colis."
             }
           ],
-          "situation_romaji": "Il pèse ton colis et annonce : « 1500円になります »"
+          "situation_romaji": "Il pèse ton colis et annonce : « 1500円になります »",
+          "situation_kana": "Il pèse ton colis et annonce : « 1500えんになります »"
         },
         {
           "situation": "Il demande : « 中身は何ですか？ »",
@@ -13356,7 +13382,8 @@
               "feedback": "Tu sais ce que tu envoies."
             }
           ],
-          "situation_romaji": "Il demande : « 中身は何ですか？ »"
+          "situation_romaji": "Il demande : « 中身は何ですか？ »",
+          "situation_kana": "Il demande : « なかみはなんですか？ »"
         },
         {
           "situation": "Transaction finie, il dit : « ありがとうございました »",

@@ -3,13 +3,14 @@ import EXPLORE_IMAGES from "./explore-images.json";
 import VIDEO_MAP from "./video-map.json";
 import LIEU_EDITORIAL from "./lieu-editorial.json";
 import * as sfx from "./sfx.js";
+import { buildCarnetHTML } from "./carnet.js";
 import { useState, useEffect, useRef, useMemo, Fragment } from "react";
-import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations, sendItineraryGenerate } from "./supabase";
-import { HomeDailyCard, DailyFeedScreen, useDailyFeed } from "./DailyFeed";
+import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations, sendItineraryGenerate, sendCarnetRender } from "./supabase";
+import { DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { JapanNewsCard } from "./JapanNews";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 import { speakJP, SpeakButton } from "./tts";
-import { TutorEntryCard, TutorScreen, estimateNiveau } from "./Tutor";
+import { TutorEntryCard, TutorScreen, estimateNiveau, NiveauInfo } from "./Tutor";
 import { DiscoveriesScreen, useLatestUnlockedDiscovery, DiscoveryTeaserCard, isDiscoveryNew, useExploreDiscoveries, requiredDay } from "./ExploreDiscoveries";
 import { scenarioTutorTarget, buildBridgeContext } from "./scenarioTutorBridge";
 import { MOTION_CSS_VARS, withViewTransition, supportsViewTransitions } from "./motion";
@@ -755,6 +756,21 @@ function getTodaysLieu(db, today){
   return pickDaily(pool, today, "lieu-spotlight");
 }
 
+// Tradition / coutume du jour — même principe de sélection déterministe que
+// getTodaysLieu. db.traditions mélange traditions saisonnières (saison ∈
+// printemps/été/automne/hiver) et coutumes du quotidien (saison==="quotidien",
+// voir SEASONS et EXPLORE_SECTIONS "Coutumes du quotidien").
+function getTodaysTradition(db, today){
+  const pool = (db?.traditions || []).filter(t => t.saison && t.saison !== "quotidien");
+  if(!pool.length) return null;
+  return pickDaily(pool, today, "tradition-spotlight");
+}
+function getTodaysCoutume(db, today){
+  const pool = (db?.traditions || []).filter(t => t.saison === "quotidien");
+  if(!pool.length) return null;
+  return pickDaily(pool, today, "coutume-spotlight");
+}
+
 function DailyPlaceSpotlight({C, db, today, lieu: lieuProp, isNew, isFav, toggleFav, onOpenLieu}){
   const lieu = lieuProp || getTodaysLieu(db, today);
   if(!lieu) return null;
@@ -799,6 +815,34 @@ function DailyPlaceSpotlight({C, db, today, lieu: lieuProp, isNew, isFav, toggle
           <div style={{fontSize:10,color:"rgba(255,255,255,0.7)",letterSpacing:".15em",textTransform:"uppercase",marginBottom:3}}>{lieu.categorie || lieu.type}</div>
           <div style={{fontSize:19,color:"#fff",fontWeight:600,marginBottom:2}}>{lieu.emoji} {lieu.nom}</div>
           {lieu.quartier && <div style={{fontSize:12,color:"rgba(255,255,255,0.8)"}}>{lieu.quartier}</div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Slider "Le Japon du jour" — carte compacte partagée par les 4 pastilles
+// quotidiennes (article du jour, lieu, tradition, coutume). Même gabarit
+// visuel que DailyPlaceSpotlight (média + dégradé + badge + titre en
+// surimpression) mais dimensionné pour un défilement horizontal.
+function DailySlideCard({C, emoji, label, title, subtitle, photo, fallbackEmoji, isNew, onClick}){
+  return (
+    <div onClick={onClick} className="lift" style={{cursor:"pointer",flexShrink:0,width:172,scrollSnapAlign:"start",borderRadius:16,overflow:"hidden",border:`1px solid ${C.border}`,boxShadow:C.shadow||"none",background:C.s1}}>
+      <div style={{position:"relative",width:"100%",height:172,background:C.s2}}>
+        {photo ? (
+          <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}}
+            style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+        ) : (
+          <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:40}}>{fallbackEmoji}</div>
+        )}
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.05) 35%,rgba(15,11,8,0.8) 100%)"}}/>
+        <div style={{position:"absolute",top:8,left:8,right:8,display:"flex",alignItems:"center",gap:5,background:"rgba(0,0,0,.55)",backdropFilter:"blur(4px)",color:"#fff",fontSize:9,fontWeight:700,letterSpacing:".08em",padding:"4px 8px",borderRadius:999,width:"fit-content"}}>
+          {emoji} {label}
+          {isNew && <span aria-label="Nouveau" style={{width:5,height:5,borderRadius:"50%",background:C.gold,flexShrink:0}}/>}
+        </div>
+        <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"10px 12px"}}>
+          <div style={{fontSize:13,color:"#fff",fontWeight:600,lineHeight:1.25,overflow:"hidden",textOverflow:"ellipsis",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{title}</div>
+          {subtitle && <div style={{fontSize:10.5,color:"rgba(255,255,255,0.78)",marginTop:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subtitle}</div>}
         </div>
       </div>
     </div>
@@ -1162,47 +1206,56 @@ function isoWeekKey(date=new Date()){
 const WEEKLY_CHALLENGE_POOL = [
   { id:"transports", emoji:"🚃", title:"Semaine transports", items:[
     { text:"Apprends à dire « Où est la gare ? » (駅はどこですか)" },
-    { text:"Découvre une région du Japon dans Explorer" },
+    { text:"Découvre une région du Japon dans Explorer", target:{tab:"explore",category:"regions"} },
     { text:"Retiens 3 mots de la gare : 駅・切符・乗り換え" },
     { text:"Complète un scénario « Prendre le train »", scenario:"train" },
-    { text:"Ajoute une étape transport à un voyage" },
+    { text:"Ajoute une étape transport à un voyage", target:{tab:"voyage"} },
   ]},
   { id:"restauration", emoji:"🍜", title:"Semaine restauration", items:[
     { text:"Apprends « Itadakimasu » et « Gochisōsama » et leur sens" },
-    { text:"Découvre un plat japonais dans Explorer (Gastronomie)" },
+    { text:"Découvre un plat japonais dans Explorer (Gastronomie)", target:{tab:"explore"} },
     { text:"Complète un scénario « Au restaurant »", scenario:"restaurant" },
     { text:"Retiens comment commander : « ～をください »" },
     { text:"Ajoute un plat à tes favoris" },
   ]},
   { id:"konbini", emoji:"🏪", title:"Semaine konbini & shopping", items:[
-    { text:"Découvre pourquoi le konbini est un « temple de la vie quotidienne »" },
+    { text:"Découvre pourquoi le konbini est un « temple de la vie quotidienne »", target:{tab:"explore",category:"vie_quotidienne"} },
     { text:"Apprends à demander le prix : « いくらですか »" },
     { text:"Complète un scénario « Au konbini »", scenario:"konbini-scenario" },
     { text:"Retiens « 袋はいりません » (je n'ai pas besoin de sac)" },
-    { text:"Pratique une série de katakana" },
+    { text:"Pratique une série de katakana", target:{tab:"learn",learnMode:"alphabets"} },
   ]},
   { id:"politesses", emoji:"🙇", title:"Semaine politesses", items:[
-    { text:"Découvre un code social japonais dans Explorer" },
+    { text:"Découvre un code social japonais dans Explorer", target:{tab:"explore",category:"codes_sociaux"} },
     { text:"Complète un scénario « Se présenter »", scenario:"presentation" },
     { text:"Retiens « Yoroshiku onegaishimasu »" },
-    { text:"Découvre la différence honne / tatemae" },
-    { text:"Pratique une ligne de hiragana" },
+    { text:"Découvre la différence honne / tatemae", target:{tab:"explore",category:"decouvertes"} },
+    { text:"Pratique une ligne de hiragana", target:{tab:"learn",learnMode:"alphabets"} },
   ]},
   { id:"hebergement", emoji:"🏯", title:"Semaine hébergement", items:[
-    { text:"Découvre un lieu d'hébergement typique (ryokan, etc.) dans Explorer" },
+    { text:"Découvre un lieu d'hébergement typique (ryokan, etc.) dans Explorer", target:{tab:"explore"} },
     { text:"Apprends « 予約しています » (j'ai une réservation)" },
     { text:"Complète un scénario « Se débrouiller »" },
-    { text:"Ajoute un hébergement à un voyage" },
+    { text:"Ajoute un hébergement à un voyage", target:{tab:"voyage"} },
     { text:"Retiens un mot lié au confort japonais (温泉, 布団…)" },
   ]},
   { id:"sorties", emoji:"🎏", title:"Semaine sorties & loisirs", items:[
-    { text:"Découvre une tradition ou un festival japonais" },
+    { text:"Découvre une tradition ou un festival japonais", target:{tab:"explore",category:"traditions"} },
     { text:"Complète un scénario « Rencontre sociale »" },
     { text:"Retiens une expression intraduisible (komorebi, ichigo ichie…)" },
-    { text:"Explore une ville ou un quartier japonais" },
-    { text:"Ajoute un lieu à tes favoris", favType:"lieu" },
+    { text:"Explore une ville ou un quartier japonais", target:{tab:"explore",category:"regions"} },
+    { text:"Ajoute un lieu à tes favoris", favType:"lieu", target:{tab:"explore",category:"regions"} },
   ]},
 ];
+
+// Résout la cible de navigation d'un item de défi : soit `target` explicite
+// (ci-dessus), soit dérivée de `scenario` (ouvre directement ce scénario) —
+// pas de doublon d'id à maintenir en plus de celui utilisé pour l'auto-complétion.
+function weeklyItemTarget(item){
+  if(item.target) return item.target;
+  if(item.scenario) return { tab:"scenarios", scenarioId:item.scenario };
+  return null;
+}
 
 function weeklyChallengeForWeek(weekKey){
   let seed = 2166136261;
@@ -1229,7 +1282,7 @@ function saveWeeklyProgress(w){ try { localStorage.setItem(WEEKLY_KEY, JSON.stri
 // détenus par IsekaidApp (voir completeWeeklyItem) : les items liés à une
 // vraie action (scenario/favType) s'y cochent automatiquement au moment de
 // l'action réelle, jamais à la main — voir le commentaire sur WEEKLY_CHALLENGE_POOL.
-function WeeklyChallengeCard({C, progress, onToggleItem}){
+function WeeklyChallengeCard({C, progress, onToggleItem, onOpenTarget}){
   if(!FEATURE_FLAGS.weeklyChallenge) return null;
   const theme = weeklyChallengeForWeek(progress.week);
   const done = progress.done || [];
@@ -1253,11 +1306,18 @@ function WeeklyChallengeCard({C, progress, onToggleItem}){
         {theme.items.map((item,idx)=>{
           const ok = done.includes(idx);
           const auto = !!(item.scenario || item.favType);
+          const target = weeklyItemTarget(item);
+          const clickable = target || !auto;
+          const handleClick = ()=>{
+            if(target){ onOpenTarget && onOpenTarget(target); return; }
+            if(!auto) onToggleItem(idx);
+          };
           return(
-            <div key={idx} onClick={()=>{ if(!auto) onToggleItem(idx); }} style={{display:"flex",alignItems:"center",gap:11,cursor:auto?"default":"pointer"}}>
+            <div key={idx} onClick={clickable?handleClick:undefined} style={{display:"flex",alignItems:"center",gap:11,cursor:clickable?"pointer":"default"}}>
               <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,background:ok?C.green:C.s2,border:`1px solid ${ok?C.green:C.border}`,color:"#fff"}}>{ok?"✓":""}</div>
               <div style={{flex:1,fontSize:13,color:C.text,textDecoration:ok?"line-through":"none",opacity:ok?0.6:1}}>{item.text}</div>
-              {auto && <span style={{fontSize:9,color:C.t3,flexShrink:0}} title="Se coche automatiquement">auto</span>}
+              {auto && !target && <span style={{fontSize:9,color:C.t3,flexShrink:0}} title="Se coche automatiquement">auto</span>}
+              {target && <ChevronRight size={15} color={C.t3} style={{flexShrink:0}}/>}
             </div>
           );
         })}
@@ -1334,7 +1394,7 @@ function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
   );
 }
 
-function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,xp,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,onOpenTradition,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,xp,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem,onOpenWeeklyTarget}){
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   // Cibles du spotlight (Système 4.a, voir SECTION_INTRO_STEPS.home) : une
@@ -1373,7 +1433,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   },[]);
 
   // La mission "Lire le contenu du jour" (trigger "daily") se valide à
-  // l'ouverture du feed "Le Japon du jour" (voir HomeDailyCard ci-dessous).
+  // l'ouverture du feed "Le Japon du jour" (voir le slider ci-dessous).
 
   const {month,day,weekday,hour} = getJPDate();
   const g = greet(hour, user.name==="Voyageur"?"":user.name);
@@ -1384,10 +1444,14 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   // Données du jour partagées par ResumeCard + carte "Japon du jour"
   // (un seul fetch du feed, une seule sélection du lieu du jour).
   const todaysLieu = useMemo(()=>getTodaysLieu(db, today), [db, today]);
+  const todaysTradition = useMemo(()=>getTodaysTradition(db, today), [db, today]);
+  const todaysCoutume = useMemo(()=>getTodaysCoutume(db, today), [db, today]);
   const { items: feedItems } = useDailyFeed(1);
   const latestFeed = feedItems && feedItems[0];
+  const feedIsNew = !!latestFeed && isFeedNew(latestFeed.id);
   const lieuIsNew = isLieuNew(today);
   const handleOpenLieu = (l)=>{ markLieuSeen(today); onOpenLieu && onOpenLieu(l); };
+  const handleOpenFeed = ()=>{ if(latestFeed) markFeedSeen(latestFeed.id); onTask && onTask("daily"); onGoTab("daily"); };
   // Découverte Explorer débloquée par le streak (pas calendaire comme le
   // reste de la section, mais "fraîchement arrivée" du point de vue de
   // l'utilisateur — voir ExploreDiscoveries.jsx).
@@ -1489,12 +1553,34 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
           <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
         </div>
 
-        {/* Le Japon du jour — un seul article + « Tout voir », comme HomeScreen.tsx (bolt) */}
+        {/* Le Japon du jour — slider avec l'article du jour + les autres
+            pastilles générées quotidiennement (lieu, tradition, coutume). */}
         <div ref={japonDuJourRef}>
           <SectionTitle C={C} title="Le Japon du jour" action={
-            <button onClick={()=>{ onTask && onTask("daily"); onGoTab("daily"); }} style={{background:"none",border:"none",color:C.red,fontSize:12,fontWeight:600,cursor:"pointer",padding:0}}>Tout voir</button>
+            <button onClick={handleOpenFeed} style={{background:"none",border:"none",color:C.red,fontSize:12,fontWeight:600,cursor:"pointer",padding:0}}>Tout voir</button>
           }/>
-          <HomeDailyCard C={C} onOpen={()=>{ onTask && onTask("daily"); onGoTab("daily"); }}/>
+          <div style={{display:"flex",gap:12,overflowX:"auto",WebkitOverflowScrolling:"touch",scrollSnapType:"x proximity",marginLeft:-20,marginRight:-20,paddingLeft:20,paddingRight:20,paddingBottom:2}}>
+            {latestFeed && (
+              <DailySlideCard C={C} emoji="✨" label="À LA UNE" title={latestFeed.title} subtitle={latestFeed.subtitle}
+                photo={latestFeed.image_url} fallbackEmoji="🇯🇵" isNew={feedIsNew}
+                onClick={handleOpenFeed}/>
+            )}
+            {todaysLieu && (
+              <DailySlideCard C={C} emoji="📍" label="LIEU DU JOUR" title={todaysLieu.nom} subtitle={todaysLieu.quartier}
+                photo={todaysLieu.photo || todaysLieu.image} fallbackEmoji={todaysLieu.emoji} isNew={lieuIsNew}
+                onClick={()=>handleOpenLieu(todaysLieu)}/>
+            )}
+            {todaysTradition && (
+              <DailySlideCard C={C} emoji="⛩️" label="TRADITION DU JOUR" title={todaysTradition.nom} subtitle={todaysTradition.tagline}
+                photo={explorePhoto("traditions", todaysTradition, DATA.traditions.indexOf(todaysTradition))} fallbackEmoji={todaysTradition.emoji}
+                onClick={()=>onOpenTradition && onOpenTradition(todaysTradition)}/>
+            )}
+            {todaysCoutume && (
+              <DailySlideCard C={C} emoji="🏮" label="COUTUME DU JOUR" title={todaysCoutume.nom} subtitle={todaysCoutume.tagline}
+                photo={explorePhoto("traditions", todaysCoutume, DATA.traditions.indexOf(todaysCoutume))} fallbackEmoji={todaysCoutume.emoji}
+                onClick={()=>onOpenTradition && onOpenTradition(todaysCoutume)}/>
+            )}
+          </div>
         </div>
 
         {/* Pour toi — grille 2 col, comme HomeScreen.tsx (bolt) */}
@@ -1529,7 +1615,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
         {/* Défi de la semaine — carte autonome, comme HomeScreen.tsx (bolt) */}
         <div>
           <SectionTitle C={C} title="Défi de la semaine"/>
-          <WeeklyChallengeCard C={C} progress={weeklyProgress} onToggleItem={onToggleWeeklyItem}/>
+          <WeeklyChallengeCard C={C} progress={weeklyProgress} onToggleItem={onToggleWeeklyItem} onOpenTarget={(t)=>{ onOpenWeeklyTarget ? onOpenWeeklyTarget(t) : onGoTab(t.tab); }}/>
         </div>
       </div>
 
@@ -1585,7 +1671,7 @@ const SECTION_INTRO_STEPS = {
     { emoji:"🔄", title:"Continue ton activité",
       text:"Reprends le fil là où tu t'étais arrêté." },
     { emoji:"🇯🇵", title:"Le Japon du jour",
-      text:"Un article frais chaque jour, avec accès à tout le feed." },
+      text:"Article, lieu, tradition et coutume du jour — glisse pour tout découvrir." },
     { emoji:"✨", title:"Pour toi",
       text:"Deux raccourcis vers ta progression et la préparation de ton voyage." },
   ],
@@ -1679,16 +1765,28 @@ function SectionIntro({C, color, steps, onDone, targetRefs}){
     </>
   );
 }
-function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,isPremium,onOpenPremium,onIntroDone,onSearch,onExplore,backRef}){
+function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,isPremium,onOpenPremium,onIntroDone,onSearch,onExplore,backRef,initialCategoryFilter,onInitialCategoryConsumed}){
   const [view,setView] = useState(null);
   const [viewFilter,setViewFilter] = useState(null);
   const [confirmCat,setConfirmCat] = useState(null);
   const [toast,setToast] = useState(null);
-  const [sectionFilter,setSectionFilter] = useState("all");
+  // Préfiltré depuis le "Défi de la semaine" (voir weeklyItemTarget) si présent —
+  // ne fait que filtrer la liste, n'ouvre jamais directement une catégorie
+  // verrouillée : l'utilisateur garde la main sur le déblocage.
+  const [sectionFilter,setSectionFilter] = useState(()=>initialCategoryFilter || "all");
   const [showIntro,setShowIntro] = useState(()=>!sectionIntroSeen("explore"));
   const dismissIntro = ()=>{ markSectionIntroSeen("explore"); setShowIntro(false); onIntroDone && onIntroDone(); };
   const modulesRef = useRef(null); // cible du spotlight (voir SECTION_INTRO_STEPS.explore)
   const exploreTourTargets = useMemo(()=>[modulesRef], []); // identité stable, voir HomeScreen
+  useEffect(()=>{
+    if(initialCategoryFilter) onInitialCategoryConsumed?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+  // Doit rester AVANT les `return` anticipés ci-dessous (view==="traditions" etc.) :
+  // un hook appelé seulement sur certains rendus casse les Rules of Hooks et
+  // provoque un crash React ("Rendered fewer hooks than expected") dès qu'on
+  // rouvre un sous-écran après un premier passage par la vue détail.
+  const allMods = useMemo(()=> EXPLORE_SECTIONS.flatMap(s=>s.mods.map(m=>({...m, catId:m.cat||"decouvertes"}))), []);
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   // Retour matériel/geste : ferme d'abord la modale de déblocage, sinon
@@ -1731,7 +1829,6 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
     {id:"histoire",         label:"Histoire",              Icon:Landmark, color:C.text},
     {id:"decouvertes",      label:"Découvertes du jour",   Icon:Sparkles, color:"#D96B86"},
   ];
-  const allMods = useMemo(()=> EXPLORE_SECTIONS.flatMap(s=>s.mods.map(m=>({...m, catId:m.cat||"decouvertes"}))), []);
   const filteredMods = sectionFilter==="all" ? allMods : allMods.filter(m=>m.catId===sectionFilter);
   const activeCatLabel = BOLT_CATS.find(c=>c.id===sectionFilter)?.label || "Tout le contenu";
   return(
@@ -2613,6 +2710,10 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
   const [picked,setPicked] = useState(null);
   const [score,setScore] = useState(0);
   const [finished,setFinished] = useState(false);
+  // Incrémenté à chaque "Refaire" pour forcer un nouveau mélange des choix
+  // (sinon useMemo ci-dessous, gardé stable pendant l'affichage du feedback,
+  // rejouerait le même ordre qu'à la tentative précédente).
+  const [playId,setPlayId] = useState(0);
   const [approfondir,setApprofondir] = useState(false);
   const [detailItem,setDetailItem] = useState(null); // {type,item}
   const exploreLinks = useMemo(()=>{
@@ -2625,6 +2726,12 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
   const hideRomajiByLevel = s.niveau==="Intermédiaire" || s.niveau==="Avancé";
   const [showRomaji,setShowRomaji] = useState(!hideRomajiByLevel);
   const etape = s.etapes[step];
+  // Ordre des choix mélangé à chaque étape (et à chaque "Refaire") pour que
+  // la bonne réponse ne soit pas toujours en première position — mémoïsé
+  // pour rester stable pendant que le feedback (picked) est affiché. Doit
+  // rester AVANT les `return` anticipés ci-dessous (mêmes Rules of Hooks
+  // qu'ailleurs dans ce fichier — voir ExploreScreen/ScenariosScreen).
+  const shuffledChoix = useMemo(()=> shuffle(etape.choix), [step, playId]);
 
   const choose = (choix)=>{
     if(picked) return;
@@ -2704,7 +2811,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
           </button>
         )}
         <div style={{display:"flex",gap:11,marginTop:8}}>
-          <button onClick={()=>{setStep(0);setPicked(null);setScore(0);setFinished(false);}} className="pop-press" style={{...btnSecondaryStyle(C),display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+          <button onClick={()=>{setStep(0);setPicked(null);setScore(0);setFinished(false);setPlayId(v=>v+1);}} className="pop-press" style={{...btnSecondaryStyle(C),display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
             <RotateCcw size={16}/> Refaire
           </button>
           <button onClick={onExit} className="pop-press" style={{...btnPrimaryStyle(C),flex:1}}>Autres scénarios</button>
@@ -2730,7 +2837,11 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
         {/* Situation */}
         <div style={{padding:"18px",background:`${C.red}11`,border:`1px solid ${C.red}33`,borderRadius:14,marginBottom:18}}>
           <div style={{fontSize:10,color:C.red,letterSpacing:".2em",marginBottom:8,textTransform:"uppercase"}}>{s.emoji} Situation</div>
-          <div style={{fontSize:15,color:C.text,lineHeight:1.55}}>{script==="romaji" && etape.situation_romaji ? etape.situation_romaji : etape.situation}</div>
+          <div style={{fontSize:15,color:C.text,lineHeight:1.55}}>
+            {script==="romaji" && etape.situation_romaji ? etape.situation_romaji
+              : script==="kana" && etape.situation_kana ? etape.situation_kana
+              : etape.situation}
+          </div>
         </div>
 
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,gap:10}}>
@@ -2744,7 +2855,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
 
         {/* Choices */}
         <div style={{display:"flex",flexDirection:"column",gap:10}}>
-          {etape.choix.map((c,i)=>{
+          {shuffledChoix.map((c,i)=>{
             let bg=C.s1, bd=C.border, anim="none";
             if(picked){
               if(c.correct){ bg="rgba(78,128,96,0.1)"; bd="rgba(78,128,96,0.4)"; if(picked===c) anim="bounceIn .5s ease"; }
@@ -2781,13 +2892,25 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
   );
 }
 
-function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutorBridge,onIntroDone,isFav,toggleFav,wikiMap,onWikiTap}){
+function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutorBridge,onIntroDone,isFav,toggleFav,wikiMap,onWikiTap,initialScenarioId,onInitialScenarioConsumed}){
   const [active,setActive] = useState(null);
   const [levelFilter,setLevelFilter] = useState("Tous");
   const [showIntro,setShowIntro] = useState(()=>!sectionIntroSeen("scenarios"));
   const dismissIntro = ()=>{ markSectionIntroSeen("scenarios"); setShowIntro(false); onIntroDone && onIntroDone(); };
   const listRef = useRef(null); // cible du spotlight (voir SECTION_INTRO_STEPS.scenarios)
   const scenariosTourTargets = useMemo(()=>[listRef,listRef], []); // identité stable, voir HomeScreen
+  // Deep-link depuis le "Défi de la semaine" (voir weeklyItemTarget) : ouvre
+  // directement le scénario visé. Doit rester AVANT le `return` anticipé
+  // ci-dessous (même règle que dans ExploreScreen — un hook conditionnel
+  // casse les Rules of Hooks et fait planter tout l'écran).
+  useEffect(()=>{
+    if(initialScenarioId){
+      const s = (db?.scenarios||[]).find(x=>x.id===initialScenarioId);
+      if(s) setActive(s);
+      onInitialScenarioConsumed?.();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
   const LEVEL_ORDER = { "Débutant":0, "Intermédiaire":1, "Avancé":2 };
   const allScenarios = [...(db?.scenarios || [])].sort((a,b)=>
     (LEVEL_ORDER[a.niveau]??1) - (LEVEL_ORDER[b.niveau]??1)
@@ -3825,17 +3948,22 @@ function ComprehensionRead({ C, db, script, onRecord, onComplete }){
 }
 
 // ── Compréhension orale : écouter (texte caché) + répondre ──
-function ComprehensionListen({ C, db, script, onComplete }){
+function ComprehensionListen({ C, db, onComplete }){
   const allExos = db?.comprehension_orale || [];
   const LEVELS = ["Débutant","Intermédiaire","Avancé"];
   const [level, setLevel] = useState("Débutant");
   const exos = allExos.filter(e=>e.niveau===level);
   const [idx, setIdx] = useState(0);
-  const [revealed, setRevealed] = useState(false); // texte caché par défaut
+  // Révélation en 3 temps : kana d'abord (lecture pure), rōmaji et traduction
+  // FR en options séparées — jamais tout donné d'un coup, sinon l'exercice
+  // d'écoute ne teste plus rien (donner la traduction = donner la réponse).
+  const [revealed, setRevealed] = useState(false); // texte (kana) caché par défaut
+  const [showRomaji, setShowRomaji] = useState(false);
+  const [showTrad, setShowTrad] = useState(false);
   const [answers, setAnswers] = useState({});
   const topRef = useRef(null);
   useEffect(()=>{ if(topRef.current) topRef.current.scrollIntoView({block:"start"}); }, [idx, level]);
-  useEffect(()=>{ setIdx(0); setAnswers({}); setRevealed(false); }, [level]);
+  useEffect(()=>{ setIdx(0); setAnswers({}); setRevealed(false); setShowRomaji(false); setShowTrad(false); }, [level]);
   const exo = exos[idx];
 
   const levelChips = (
@@ -3863,7 +3991,7 @@ function ComprehensionListen({ C, db, script, onComplete }){
   const score = exo.questions.filter((q,qi)=>answers[qi]===q.correct).length;
   // Mission "comp" validée à la vraie complétion d'un exercice d'écoute.
   useEffect(()=>{ if(allAnswered) onComplete && onComplete(); }, [allAnswered]);
-  const next = ()=>{ setAnswers({}); setRevealed(false); if(idx+1<exos.length) setIdx(idx+1); else setIdx(0); };
+  const next = ()=>{ setAnswers({}); setRevealed(false); setShowRomaji(false); setShowTrad(false); if(idx+1<exos.length) setIdx(idx+1); else setIdx(0); };
 
   return(
     <div ref={topRef} style={{scrollMarginTop:60}}>
@@ -3879,14 +4007,22 @@ function ComprehensionListen({ C, db, script, onComplete }){
         <div style={{fontSize:12,color:C.t2,marginTop:12}}>Appuie pour écouter — autant de fois que nécessaire</div>
       </div>
 
-      {/* Texte caché, révélable */}
+      {/* Texte caché, révélable en 3 temps : kana d'abord (lecture pure),
+          puis rōmaji et traduction FR en options séparées — la traduction ne
+          doit jamais apparaître avant que l'utilisateur l'ait demandée, sinon
+          elle donne toutes les réponses d'un coup. */}
       <button onClick={()=>setRevealed(v=>!v)} style={{width:"100%",padding:"11px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:11,color:C.t2,fontSize:12,cursor:"pointer",marginBottom:18}}>
-        {revealed ? "🙈 Masquer le texte" : "👁 Afficher le texte"}
+        {revealed ? "🙈 Masquer le texte" : "👁 Afficher le texte (kana)"}
       </button>
       {revealed && (
         <div style={{padding:"16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,marginBottom:18,marginTop:-8}}>
-          <div style={{fontSize:17,lineHeight:1.8,color:C.text,fontFamily:"'Noto Serif JP',serif",marginBottom:8}}>{script==="romaji"?exo.audio_romaji:script==="kana"?(exo.audio_kana||exo.audio_jp):exo.audio_jp}</div>
-          <div style={{fontSize:12,color:C.t2,fontStyle:"italic"}}>{exo.traduction}</div>
+          <div style={{fontSize:17,lineHeight:1.8,color:C.text,fontFamily:"'Noto Serif JP',serif"}}>{exo.audio_kana || exo.audio_jp}</div>
+          <div style={{display:"flex",gap:8,marginTop:12}}>
+            <button onClick={()=>setShowRomaji(v=>!v)} className="pop-press" style={{padding:"6px 12px",borderRadius:16,border:`1px solid ${showRomaji?"#9A6A8A":C.border}`,background:showRomaji?"#9A6A8A":"transparent",color:showRomaji?"#fff":C.t2,fontSize:11,fontWeight:500,cursor:"pointer"}}>あ Rōmaji</button>
+            <button onClick={()=>setShowTrad(v=>!v)} className="pop-press" style={{padding:"6px 12px",borderRadius:16,border:`1px solid ${showTrad?"#9A6A8A":C.border}`,background:showTrad?"#9A6A8A":"transparent",color:showTrad?"#fff":C.t2,fontSize:11,fontWeight:500,cursor:"pointer"}}>🇫🇷 Traduction</button>
+          </div>
+          {showRomaji && <div style={{fontSize:13,color:C.t2,fontStyle:"italic",marginTop:10}}>{exo.audio_romaji}</div>}
+          {showTrad && <div style={{fontSize:12,color:C.t2,fontStyle:"italic",marginTop:showRomaji?4:10}}>{exo.traduction}</div>}
         </div>
       )}
 
@@ -4525,6 +4661,9 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
 function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, isFav, toggleFav, favs, onOpenLieu, onIntroDone, backRef}){
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
+  // "Lieu à découvrir" — bandeau saisonnier (SeasonBanner), même sélection que
+  // sur l'accueil (voir HomeScreen). Inspiration pour la préparation du voyage.
+  const seasonLieux = useMemo(()=>seasonalLieux(db, seasonKey), [db, seasonKey]);
   const villes = db?.villes || [];
   const lieux = db?.lieux || [];
   const preconcus = db?.voyages_preconcus || [];
@@ -4670,6 +4809,11 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
       </div>
 
       <div ref={landingRef} style={{padding:"18px 20px 110px"}}>
+        {/* Lieu à découvrir — bandeau saisonnier, inspiration pour préparer le voyage */}
+        <div style={{marginBottom:18}}>
+          <SeasonBanner C={C} acc={acc} lieux={seasonLieux} onOpenLieu={onOpenLieu}/>
+        </div>
+
         {trips.length===0 ? (
           <div style={{textAlign:"center",padding:"48px 20px"}}>
             <div style={{width:64,height:64,borderRadius:"50%",background:C.s2,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px"}}>
@@ -5260,6 +5404,42 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
   // ── Export / Partage ──
   const [shareOpen, setShareOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  // Aperçu PDF affiché dans une iframe IN-APP plutôt que via window.open() +
+  // window.close() : dans le WebView Android de l'app (Capacitor), l'ouverture
+  // d'une "fenêtre" séparée est peu fiable et window.close() n'a souvent aucun
+  // effet, ce qui bloquait l'utilisateur hors de l'app sans moyen d'y revenir.
+  // Ici "Fermer" est un bouton React classique (setPdfHtml(null)) — garanti de
+  // fonctionner puisqu'il ne dépend d'aucune sémantique multi-fenêtre.
+  const [pdfHtml, setPdfHtml] = useState(null);
+  const pdfIframeRef = useRef(null);
+  // Vrai PDF (weasyprint, via carnet-render) — état séparé de pdfHtml (aperçu
+  // HTML gratuit hors-ligne) puisque l'iframe passe de srcDoc à src une fois
+  // qu'on a de vrais octets PDF. URL blob révoquée à la fermeture.
+  const [pdfBlobUrl, setPdfBlobUrl] = useState(null);
+  const [carnetLoading, setCarnetLoading] = useState(false);
+  const [carnetError, setCarnetError] = useState(null);
+  const closePdfPreview = ()=>{
+    if(pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
+    setPdfBlobUrl(null);
+    setPdfHtml(null);
+  };
+  const downloadCarnetPDF = async ()=>{
+    setCarnetError(null);
+    setCarnetLoading(true);
+    try {
+      const html = buildCarnetHTML(trip, villeById, lieuById);
+      const result = await sendCarnetRender(html);
+      if(result.premiumRequired){ setShareOpen(false); onOpenPremium && onOpenPremium(); return; }
+      if(!result.blob){ setCarnetError("Le carnet n'a pas pu être généré."); return; }
+      setPdfBlobUrl(URL.createObjectURL(result.blob));
+      setShareOpen(false);
+    } catch(e) {
+      console.warn("[carnet] génération PDF échouée:", e?.message);
+      setCarnetError("Le carnet n'a pas pu être généré. Réessaie plus tard.");
+    } finally {
+      setCarnetLoading(false);
+    }
+  };
 
   // Construit un texte lisible de tout l'itinéraire
   const buildTripText = ()=>{
@@ -5344,21 +5524,13 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
         .checklist { margin-top: 24px; page-break-inside: avoid; }
         .footer { margin-top: 30px; padding-top: 12px; border-top: 1px solid #eee; color: #999; font-size: 11px; text-align: center; }
         .kanji { color:#C9463D; font-size: 20px; }
-        .back-bar { position: sticky; top: 0; display: flex; justify-content: flex-end; padding: 10px 0 16px; background: #fff; }
-        .back-btn { border: 1px solid #ddd; background: #fff; color: #1C1410; font-family: inherit; font-size: 13px; padding: 8px 16px; border-radius: 20px; cursor: pointer; }
-        .back-btn:hover { background: #f5f5f5; }
-        @media print { .back-bar { display: none; } }
       </style></head><body>
-      <div class="back-bar no-print"><button class="back-btn" onclick="window.close()">✕ Fermer et revenir à l'app</button></div>
       <div class="header"><h1><span class="kanji">異</span> ${trip.titre}</h1>
       <div class="sub">${trip.jours.length} jour${trip.jours.length>1?"s":""} · ${villesNoms}</div></div>
       ${joursHTML}${clHTML}
       <div class="footer">✨ Créé avec Isekai'd — isekaid.vercel.app</div>
       </body></html>`;
-    const w = window.open("", "_blank");
-    if(!w){ alert("Autorise les fenêtres pop-up pour exporter en PDF."); return; }
-    w.document.write(html); w.document.close();
-    setTimeout(()=>{ w.print(); }, 350);
+    setPdfHtml(html);
     setShareOpen(false);
   };
 
@@ -5617,12 +5789,41 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
               {copied ? "✓ Copié !" : "📋 Copier le texte"}
             </button>
 
-            <button onClick={exportPDF} style={{width:"100%",padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+            <button onClick={exportPDF} style={{width:"100%",padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
               📄 Exporter en PDF
             </button>
 
+            {/* Carnet illustré — aperçu HTML gratuit/hors-ligne (voir carnet.js),
+                dans le même mécanisme iframe que exportPDF ci-dessus. */}
+            <button onClick={()=>{ setPdfHtml(buildCarnetHTML(trip, villeById, lieuById)); setShareOpen(false); }} style={{width:"100%",padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              📖 Aperçu du carnet illustré
+            </button>
+
+            {/* Vrai PDF (weasyprint via carnet-render, Premium) — nécessite
+                le microservice VPS + la fonction déployés, voir carnet-render-service/README.md. */}
+            <button onClick={downloadCarnetPDF} disabled={carnetLoading} style={{width:"100%",padding:"14px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:14,fontWeight:500,cursor:carnetLoading?"default":"pointer",marginBottom:carnetError?6:16,display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:carnetLoading?0.6:1}}>
+              {carnetLoading ? "⏳ Génération du carnet…" : "⬇️ Télécharger le PDF du carnet"}
+            </button>
+            {carnetError && <div style={{fontSize:11,color:C.red,textAlign:"center",marginBottom:10}}>{carnetError}</div>}
+
             <button onClick={()=>setShareOpen(false)} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Fermer</button>
           </div>
+        </div>
+      )}
+
+      {/* Aperçu carnet (HTML) ou vrai PDF — in-app (iframe), pas de fenêtre
+          séparée : voir le commentaire sur pdfHtml plus haut. */}
+      {(pdfHtml || pdfBlobUrl) && (
+        <div style={{position:"fixed",inset:0,zIndex:400,background:"#fff",display:"flex",flexDirection:"column"}}>
+          <div style={{flexShrink:0,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,padding:"14px 16px",borderBottom:"1px solid #eee",paddingTop:"calc(14px + env(safe-area-inset-top, 0px))"}}>
+            <button onClick={closePdfPreview} style={{background:"#f5f5f5",border:"1px solid #ddd",borderRadius:20,padding:"8px 16px",color:"#1C1410",fontSize:13,cursor:"pointer"}}>✕ Fermer et revenir à l'app</button>
+            {pdfHtml && !pdfBlobUrl && (
+              <button onClick={()=>pdfIframeRef.current?.contentWindow?.print()} style={{background:C.red,border:"none",borderRadius:20,padding:"8px 16px",color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>🖨️ Imprimer / PDF</button>
+            )}
+          </div>
+          {pdfBlobUrl
+            ? <iframe title="Carnet PDF" src={pdfBlobUrl} style={{flex:1,width:"100%",border:"none"}}/>
+            : <iframe ref={pdfIframeRef} title="Export PDF" srcDoc={pdfHtml} style={{flex:1,width:"100%",border:"none"}}/>}
         </div>
       )}
     </div>
@@ -5865,8 +6066,7 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
   );
 }
 
-function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent,script,setScript,onBack}){
-  const lvlL={beginner:"Débutant",intermediate:"Intermédiaire",advanced:"Avancé"};
+function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,xp,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent,script,setScript,onBack,onOpenLieu,onOpenTradition,onOpenDetail}){
   const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
   const [soundOn,setSoundOnState] = useState(()=>sfx.isSoundOn());
   const toggleSound = ()=>{
@@ -5933,11 +6133,15 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
         </SectionCard>
 
         {/* 3 tuiles stats — streak / XP / niveau */}
+        {/* Niveau : même calcul que "Niveau estimé" du Tuteur IA (estimateNiveau)
+            — auparavant cette tuile affichait le niveau déclaré à l'onboarding
+            (échelle différente : Débutant/Intermédiaire/Avancé, jamais recalculé),
+            ce qui contredisait le Tuteur (Débutant/Faux-débutant/Intermédiaire). */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:16}}>
           {[
             {Icon:Flame, label:"Streak", value:`${streak?.count||0}j`, color:C.red},
             {Icon:Star, label:"XP total", value:String(xp||0), color:C.gold},
-            {Icon:Sparkles, label:"Niveau", value:lvlL[user.level]||user.level||"—", color:C.indigo},
+            {Icon:Sparkles, label:"Niveau", value:<NiveauInfo C={C} niveau={estimateNiveau(kanaProgress, scenProgress, streak, user?.level)}/>, color:C.indigo},
           ].map(s=>(
             <SectionCard key={s.label} C={C} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"14px 8px"}}>
               <div style={iconTileStyle(s.color, 34, 10)}><s.Icon size={17} color={s.color}/></div>
@@ -5966,16 +6170,26 @@ function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,
                 code:{emoji:it.emoji||"🎌", title:it.titre, sub:it.categorie, c:C.red},
                 region:{emoji:it.emoji||"🗾", title:it.nom, sub:it.position, c:C.green},
                 vie:{emoji:it.emoji||"🏙️", title:it.titre, sub:it.categorie, c:"#5B7E9B"},
+                lieu:{emoji:it.emoji||"📍", title:it.nom, sub:it.quartier, c:C.indigo},
               }[f.type]||{emoji:"♥",title:"",sub:"",c:C.red};
+              // Ouvre la fiche détail correspondante — seuls les types reliés à un
+              // écran de détail existant sont cliquables (lieu/tradition/code/vie/
+              // région) ; expr/cult/repas restent des lignes d'info seules, aucun
+              // écran de détail réel n'existe encore pour ces types dans l'app.
+              const open = f.type==="lieu" ? ()=>onOpenLieu&&onOpenLieu(it)
+                : f.type==="tradition" ? ()=>onOpenTradition&&onOpenTradition(it)
+                : (f.type==="code"||f.type==="vie"||f.type==="region") ? ()=>onOpenDetail&&onOpenDetail(f.type,it)
+                : null;
               return(
-                <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 6px",borderBottom:i<favs.length-1?`1px solid ${C.border}`:"none"}}>
+                <div key={i} onClick={open||undefined} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 6px",borderBottom:i<favs.length-1?`1px solid ${C.border}`:"none",cursor:open?"pointer":"default"}}>
                   <span style={{fontSize:22,flexShrink:0}}>{meta.emoji}</span>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{fontSize:13,color:C.text,fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{meta.title}</div>
                     <div style={{fontSize:11,color:C.t3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{meta.sub}</div>
                   </div>
                   <span style={{fontSize:8,padding:"2px 7px",borderRadius:20,background:`${meta.c}1a`,color:meta.c,letterSpacing:".08em",textTransform:"uppercase",flexShrink:0}}>{f.type}</span>
-                  <button onClick={()=>toggleFav(f.type,it)} aria-label="Retirer" style={{background:"transparent",border:"none",cursor:"pointer",color:C.red,fontSize:15,flexShrink:0,padding:4}}>♥</button>
+                  <button onClick={(e)=>{e.stopPropagation(); toggleFav(f.type,it);}} aria-label="Retirer" style={{background:"transparent",border:"none",cursor:"pointer",color:C.red,fontSize:15,flexShrink:0,padding:4}}>♥</button>
+                  {open && <ChevronRight size={16} color={C.t3} style={{flexShrink:0}}/>}
                 </div>
               );
             })}
@@ -6357,14 +6571,15 @@ function SearchScreen({C, db, script, onClose, onWikiTap, initialQuery}){
 
   return(
     <div style={{position:"fixed",inset:0,zIndex:150,background:C.bg,display:"flex",flexDirection:"column"}}>
-      {/* Search bar */}
+      {/* Search bar — bouton retour toujours en premier (haut gauche), comme
+          partout ailleurs dans l'app, jamais après la barre de recherche. */}
       <div style={{padding:"50px 16px 12px",borderBottom:`1px solid ${C.border}`,display:"flex",gap:10,alignItems:"center"}}>
+        <button onClick={onClose} aria-label="Retour" style={{flexShrink:0,width:34,height:34,borderRadius:"50%",border:"none",background:C.s1,color:C.t2,fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
         <div style={{flex:1,display:"flex",alignItems:"center",gap:8,padding:"10px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12}}>
           <span style={{fontSize:15,color:C.t3}}>🔍</span>
           <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Rechercher un mot, plat, tradition…" style={{flex:1,background:"transparent",border:"none",outline:"none",color:C.text,fontSize:14}}/>
           {q && <span onClick={()=>setQ("")} style={{fontSize:16,color:C.t3,cursor:"pointer"}}>×</span>}
         </div>
-        <button onClick={onClose} style={{background:"transparent",border:"none",color:C.t2,fontSize:14,cursor:"pointer"}}>Fermer</button>
       </div>
 
       {/* Results */}
@@ -7054,6 +7269,19 @@ export default function IsekaidApp(){
   },[kanaProgress]);
   const [pendingLearnMode,setPendingLearnMode]=useState(null);
   const startReviewFromHome = ()=>{ setPendingLearnMode("review"); setTab("learn"); };
+  // Liens du "Défi de la semaine" (voir WEEKLY_CHALLENGE_POOL/weeklyItemTarget) :
+  // même principe de deep-link "consommé une fois" que pendingLearnMode
+  // ci-dessus, décliné pour Scénarios (ouvrir directement le bon scénario) et
+  // Explorer (préfiltrer sur la bonne catégorie).
+  const [pendingScenarioId,setPendingScenarioId]=useState(null);
+  const [pendingExploreCategory,setPendingExploreCategory]=useState(null);
+  const openWeeklyTarget = (target)=>{
+    if(!target) return;
+    if(target.tab==="scenarios"){ setPendingScenarioId(target.scenarioId||null); setTab("scenarios"); return; }
+    if(target.tab==="explore"){ setPendingExploreCategory(target.category||null); setTab("explore"); return; }
+    if(target.tab==="learn"){ setPendingLearnMode(target.learnMode||null); setTab("learn"); return; }
+    setTab(target.tab);
+  };
 
   const completePathStep = (stepId)=>{
     completeTask("path");
@@ -7166,6 +7394,12 @@ export default function IsekaidApp(){
   };
   const [showSearch,setShowSearch]=useState(false);
   const [spotlightLieu,setSpotlightLieu]=useState(null);
+  const [spotlightTradition,setSpotlightTradition]=useState(null); // tradition/coutume du jour ouverte depuis le slider "Le Japon du jour" (accueil)
+  // Fiche code social / vie quotidienne / région ouverte depuis "Ma collection"
+  // (Profil) — {type,item}, même principe que spotlightLieu/spotlightTradition
+  // mais générique puisque Code/Vie/RegionDetail partagent le même gabarit de
+  // props (C, <clé>, onBack, fav, onFav, wikiMap, onWikiTap, script).
+  const [spotlightDetail,setSpotlightDetail]=useState(null);
   const [pulseTab,setPulseTab]=useState(null); // pilier à mettre brièvement en avant (goal) à l'arrivée sur l'accueil
   const [newAchievement,setNewAchievement]=useState(null);
   // Tour guidé automatique déclenché par "Revoir la présentation" (Profil,
@@ -7298,7 +7532,7 @@ export default function IsekaidApp(){
   // remplacée à chaque changement d'écran/état, nettoyée au démontage.
   const inScreenBackRef = useRef(null);
   useEffect(()=>{
-    backStateRef.current = { wikiEntry, showSearch, spotlightLieu, showPremiumPage, newAchievement, weeklyRecap, showWelcome, tab };
+    backStateRef.current = { wikiEntry, showSearch, spotlightLieu, spotlightTradition, spotlightDetail, showPremiumPage, newAchievement, weeklyRecap, showWelcome, tab };
   });
   useEffect(()=>{
     let listener = null;
@@ -7312,6 +7546,8 @@ export default function IsekaidApp(){
           if(s.wikiEntry){ setWikiEntry(null); return; }
           if(s.showSearch){ setShowSearch(false); return; }
           if(s.spotlightLieu){ setSpotlightLieu(null); return; }
+          if(s.spotlightTradition){ setSpotlightTradition(null); return; }
+          if(s.spotlightDetail){ setSpotlightDetail(null); return; }
           if(s.showPremiumPage){ setShowPremiumPage(false); return; }
           if(s.newAchievement){ setNewAchievement(null); return; }
           if(s.weeklyRecap){ setWeeklyRecap(null); return; }
@@ -7641,12 +7877,12 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className={supportsViewTransitions()?"":"screen-in"} style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} xp={xp} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} xp={xp} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
-              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} backRef={inScreenBackRef}/>}
-              {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry}/>}
+              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} backRef={inScreenBackRef} initialCategoryFilter={pendingExploreCategory} onInitialCategoryConsumed={()=>setPendingExploreCategory(null)}/>}
+              {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onBack={()=>setTab("home")}/>}
+              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} xp={xp} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onBack={()=>setTab("home")} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/>}
               {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef}/>}
               {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
@@ -7662,6 +7898,18 @@ export default function IsekaidApp(){
             {/* Global search */}
             {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
             {spotlightLieu && <LieuSpotlightDetail C={C} lieu={spotlightLieu} onClose={()=>setSpotlightLieu(null)} isFav={isFav} toggleFav={toggleFav}/>}
+            {spotlightTradition && (
+              <div style={{position:"fixed",inset:0,zIndex:200,background:C.bg}}>
+                <TraditionDetail C={C} t={spotlightTradition} onBack={()=>setSpotlightTradition(null)} fav={isFav&&isFav("tradition",spotlightTradition)} onFav={toggleFav&&(()=>toggleFav("tradition",spotlightTradition))} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script}/>
+              </div>
+            )}
+            {spotlightDetail && (
+              <div style={{position:"fixed",inset:0,zIndex:200,background:C.bg}}>
+                {spotlightDetail.type==="code"   && <CodeDetail   C={C} c={spotlightDetail.item} onBack={()=>setSpotlightDetail(null)} fav={isFav&&isFav("code",spotlightDetail.item)}   onFav={toggleFav&&(()=>toggleFav("code",spotlightDetail.item))}   wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script}/>}
+                {spotlightDetail.type==="vie"    && <VieDetail    C={C} v={spotlightDetail.item} onBack={()=>setSpotlightDetail(null)} fav={isFav&&isFav("vie",spotlightDetail.item)}    onFav={toggleFav&&(()=>toggleFav("vie",spotlightDetail.item))}    wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script}/>}
+                {spotlightDetail.type==="region" && <RegionDetail C={C} r={spotlightDetail.item} onBack={()=>setSpotlightDetail(null)} fav={isFav&&isFav("region",spotlightDetail.item)} onFav={toggleFav&&(()=>toggleFav("region",spotlightDetail.item))} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script}/>}
+              </div>
+            )}
             {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)} onRedeemCode={redeemCode} billingError={billingError} billingBusy={billingBusy} liveOfferings={liveOfferings} onRestore={restorePremium}/>}
             {/* Achievement unlocked */}
             {newAchievement && <AchievementPopup C={C} achievement={newAchievement} onClose={()=>setNewAchievement(null)}/>}

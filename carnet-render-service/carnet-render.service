@@ -1,0 +1,15 @@
+[Unit]
+Description=Isekaid carnet-render (weasyprint microservice)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/isekaid-carnet-render
+EnvironmentFile=/opt/isekaid-carnet-render/.env
+ExecStart=/opt/isekaid-carnet-render/venv/bin/gunicorn -w 2 -b 127.0.0.1:8088 main:app
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

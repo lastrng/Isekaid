@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+@font-face { font-family: 'Caveat'; src: url('/tmp/fonts/Caveat.ttf'); }
+@font-face { font-family: 'Montserrat'; src: url('/tmp/fonts/Montserrat.ttf'); }
+
+@page {
+  size: 1440px 810px;   /* 16:9 paysage, comme l'original Canva */
+  margin: 0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --rouge: #B0201F;      /* rouge temple */
+  --turquoise: #1B9B8A;  /* turquoise */
+  --anthracite: #2B2A33; /* pilule sombre / total */
+  --texte: #33323A;
+  --gris: #6E6C78;
+}
+
+body { font-family: 'Montserrat', sans-serif; color: var(--texte); }
+
+.page {
+  width: 1440px; height: 810px;
+  position: relative; overflow: hidden;
+  page-break-after: always;
+  background: #ffffff;
+}
+.page:last-child { page-break-after: auto; }
+
+/* ---------- COUVERTURE ---------- */
+.cover { display: flex; align-items: center; justify-content: center; }
+.cover .bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #C62B24 0%, #E85A2A 55%, #F0A050 100%);
+  /* Remplacer par une photo : background: url('photo.jpg') center/cover; */
+}
+.cover .bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(0,0,0,0.12);
+}
+.cover .title {
+  position: relative; z-index: 2; text-align: center; color: #fff;
+}
+.cover .title .script {
+  font-family: 'Caveat', cursive; font-size: 150px; line-height: 1;
+  text-shadow: 0 3px 18px rgba(0,0,0,0.35);
+}
+.cover .pill {
+  display: inline-block; margin-top: 30px;
+  background: #fff; color: var(--texte);
+  font-weight: 600; font-size: 34px;
+  padding: 18px 54px; border-radius: 100px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+}
+
+/* ---------- TITRES MANUSCRITS ---------- */
+.h-script {
+  font-family: 'Caveat', cursive; font-size: 92px; color: var(--texte);
+  text-align: center; padding-top: 42px;
+}
+.h-script.light { color: #fff; }
+
+/* ---------- INTRO / TEXTE ---------- */
+.intro { padding: 90px 130px; display: flex; flex-direction: column; justify-content: center; }
+.intro h1 { font-family: 'Caveat', cursive; font-size: 100px; margin-bottom: 40px; color: var(--rouge); }
+.intro p { font-size: 34px; line-height: 1.55; color: var(--gris); max-width: 1050px; margin-bottom: 26px; }
+
+/* ---------- SOMMAIRE (grille villes) ---------- */
+.grid-villes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 50px; padding: 40px 120px; }
+.ville-card {
+  height: 250px; border-radius: 22px; overflow: hidden; position: relative;
+  background: linear-gradient(135deg, var(--turquoise), #14756a);
+  display: flex; align-items: flex-end;
+}
+.ville-card:nth-child(3n-1) { background: linear-gradient(135deg, var(--rouge), #7d1615); }
+.ville-card:nth-child(3n) { background: linear-gradient(135deg, #E85A2A, #b8431d); }
+.ville-card span {
+  color: #fff; font-weight: 700; font-size: 40px;
+  padding: 0 0 26px 34px; text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* ---------- INFOS PRATIQUES ---------- */
+.infos { padding: 40px 130px; }
+.infos .lead { font-size: 40px; font-weight: 700; color: var(--rouge); margin-bottom: 34px; }
+.infos ul { list-style: none; }
+.infos li { font-size: 32px; line-height: 1.7; color: var(--texte); padding-left: 46px; position: relative; }
+.infos li::before { content: '●'; color: var(--turquoise); position: absolute; left: 10px; font-size: 22px; top: 8px; }
+.infos .note { margin-top: 34px; font-size: 24px; color: var(--gris); font-style: italic; }
+
+/* ---------- BUDGET / COMPARATIF ---------- */
+.budget { padding: 30px 120px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px 60px; }
+.budget-item {
+  background: #F5F3F0; border-radius: 18px; padding: 34px 40px;
+  border-left: 10px solid var(--turquoise);
+}
+.budget-item:nth-child(even) { border-left-color: var(--rouge); }
+.budget-item h3 { font-size: 36px; margin-bottom: 14px; }
+.budget-item .price { font-size: 30px; color: var(--gris); line-height: 1.5; }
+.budget-item .price b { color: var(--texte); }
+
+/* ---------- SÉPARATEUR D'ÉTAPE ---------- */
+.etape { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.etape .bg { position: absolute; inset: 0; background: linear-gradient(135deg, #7d1615, var(--rouge) 60%, #E85A2A); }
+.etape .bg::after { content:''; position:absolute; inset:0; background: rgba(0,0,0,0.15); }
+.etape .step-num { position: relative; z-index: 2; font-family: 'Caveat', cursive; font-size: 70px; color: #ffd9a0; }
+.etape .step-name { position: relative; z-index: 2; font-family: 'Caveat', cursive; font-size: 180px; color: #fff; line-height: 1; text-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+
+/* ---------- PAGE JOUR ---------- */
+.jour { padding: 60px 120px; }
+.jour-head { display: flex; align-items: baseline; gap: 30px; border-bottom: 4px solid var(--turquoise); padding-bottom: 20px; margin-bottom: 16px; }
+.jour-head .day { font-family: 'Caveat', cursive; font-size: 76px; color: var(--rouge); }
+.jour-head .date { font-size: 34px; font-weight: 600; color: var(--gris); }
+.jour h2 { font-size: 40px; color: var(--turquoise); margin: 30px 0 24px; font-weight: 700; }
+.jour p { font-size: 31px; line-height: 1.6; color: var(--texte); max-width: 1120px; margin-bottom: 20px; }
+.jour .total-pill {
+  display: inline-block; margin-top: 30px; background: var(--anthracite); color: #fff;
+  font-weight: 700; font-size: 32px; padding: 16px 50px; border-radius: 100px;
+}
+
+/* ---------- AU PROGRAMME (grille activités) ---------- */
+.prog { padding: 20px 90px 40px; }
+.prog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px 44px; margin-top: 10px; }
+.act { display: flex; flex-direction: column; align-items: center; }
+.act .thumb {
+  width: 100%; height: 230px; border-radius: 16px;
+  background: linear-gradient(135deg, #d5d1cc, #b3aea8);
+  /* Remplacer par background: url('photo.jpg') center/cover; */
+}
+.act .label {
+  margin-top: -26px; z-index: 2; position: relative;
+  color: #fff; font-weight: 700; font-size: 27px; text-align: center;
+  padding: 15px 20px; border-radius: 100px; width: 88%;
+  background: var(--rouge);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+.act:nth-child(3n-1) .label { background: var(--turquoise); }
+.prog .total-center { text-align: center; margin-top: 40px; }
+.prog .total-center span {
+  display: inline-block; background: var(--anthracite); color: #fff;
+  font-weight: 700; font-size: 30px; padding: 16px 54px; border-radius: 100px;
+}
+
+/* ---------- NOTES ---------- */
+.notes { padding: 40px 130px; }
+.notes .lines { margin-top: 30px; }
+.notes .lines div { border-bottom: 2px solid #E2DFDA; height: 66px; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. COUVERTURE ============ -->
+<div class="page cover">
+  <div class="bg"><!-- background: url('[[PHOTO_COUVERTURE]]') center/cover; --></div>
+  <div class="title">
+    <div class="script">[[TITRE_MANUSCRIT]]</div>
+    <div class="pill">[[DESTINATION_ET_DATE]]</div>
+  </div>
+</div>
+
+<!-- ============ 2. INTRO ============ -->
+<div class="page intro">
+  <h1>[[TITRE_INTRO]]</h1>
+  <p>[[PARAGRAPHE_INTRO_1]]</p>
+  <p>[[PARAGRAPHE_INTRO_2]]</p>
+  <p>[[PARAGRAPHE_INTRO_3]]</p>
+</div>
+
+<!-- ============ 3. AU PROGRAMME (villes) ============ -->
+<div class="page">
+  <div class="h-script">Au programme</div>
+  <div class="grid-villes">
+    <div class="ville-card"><span>[[VILLE_1]]</span></div>
+    <div class="ville-card"><span>[[VILLE_2]]</span></div>
+    <div class="ville-card"><span>[[VILLE_3]]</span></div>
+    <div class="ville-card"><span>[[VILLE_4]]</span></div>
+    <div class="ville-card"><span>[[VILLE_5]]</span></div>
+    <div class="ville-card"><span>[[VILLE_6]]</span></div>
+  </div>
+</div>
+
+<!-- ============ 4. INFOS ESSENTIELLES ============ -->
+<div class="page infos">
+  <div class="h-script" style="text-align:left;padding-top:20px;">Informations essentielles</div>
+  <div class="lead">[[DUREE_ET_DATES]]</div>
+  <ul>
+    <li>[[INFO_1]]</li>
+    <li>[[INFO_2]]</li>
+    <li>[[INFO_3]]</li>
+    <li>[[INFO_4]]</li>
+  </ul>
+  <div class="note">[[NOTE_BAS_DE_PAGE]]</div>
+</div>
+
+<!-- ============ 5. BUDGET / VOLS ============ -->
+<div class="page">
+  <div class="h-script">Compagnies aériennes</div>
+  <div class="budget">
+    <div class="budget-item"><h3>[[COMPAGNIE_1]]</h3><div class="price"><b>[[PRIX_TOTAL_1]]</b> total<br>[[PRIX_PERS_1]] / personne</div></div>
+    <div class="budget-item"><h3>[[COMPAGNIE_2]]</h3><div class="price"><b>[[PRIX_TOTAL_2]]</b> total<br>[[PRIX_PERS_2]] / personne</div></div>
+    <div class="budget-item"><h3>[[COMPAGNIE_3]]</h3><div class="price"><b>[[PRIX_TOTAL_3]]</b> total<br>[[PRIX_PERS_3]] / personne</div></div>
+    <div class="budget-item"><h3>[[COMPAGNIE_4]]</h3><div class="price"><b>[[PRIX_TOTAL_4]]</b> total<br>[[PRIX_PERS_4]] / personne</div></div>
+  </div>
+</div>
+
+<!-- ============ 6. SÉPARATEUR D'ÉTAPE ============ -->
+<div class="page etape">
+  <div class="bg"></div>
+  <div class="step-num">[[NUMERO_ETAPE]] étape</div>
+  <div class="step-name">[[NOM_ETAPE]]</div>
+</div>
+
+<!-- ============ 7. PAGE JOUR ============ -->
+<div class="page jour">
+  <div class="jour-head">
+    <span class="day">Day [[NUMERO_JOUR]]</span>
+    <span class="date">[[DATE_JOUR]]</span>
+  </div>
+  <h2>[[TITRE_JOUR]]</h2>
+  <p>[[DESCRIPTION_JOUR_1]]</p>
+  <p>[[DESCRIPTION_JOUR_2]]</p>
+  <span class="total-pill">Total — [[BUDGET_JOUR]]</span>
+</div>
+
+<!-- ============ 8. AU PROGRAMME (activités) ============ -->
+<div class="page prog">
+  <div class="h-script">Au programme</div>
+  <div class="prog-grid">
+    <div class="act"><div class="thumb"></div><div class="label">[[ACTIVITE_1]]</div></div>
+    <div class="act"><div class="thumb"></div><div class="label">[[ACTIVITE_2]]</div></div>
+    <div class="act"><div class="thumb"></div><div class="label">[[ACTIVITE_3]]</div></div>
+    <div class="act"><div class="thumb"></div><div class="label">[[ACTIVITE_4]]</div></div>
+    <div class="act"><div class="thumb"></div><div class="label">[[ACTIVITE_5]]</div></div>
+    <div class="act"><div class="thumb"></div><div class="label">[[ACTIVITE_6]]</div></div>
+  </div>
+  <div class="total-center"><span>Total — [[BUDGET_PROGRAMME]]</span></div>
+</div>
+
+<!-- ============ 9. NOTES ============ -->
+<div class="page notes">
+  <div class="h-script" style="text-align:left;padding-top:20px;">Notes & rappels</div>
+  <div class="lines">
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+  </div>
+</div>
+
+</body>
+</html>
