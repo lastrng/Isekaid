@@ -169,12 +169,14 @@ export async function sendTutorMessage({ message, scenarioId, niveau, conversati
   return data;
 }
 // Invoque l'Edge Function itinerary-generate (Phase 4.4) : auto-génération
-// d'itinéraire premium à partir des lieux gardés. `lieux` = objets complets
-// (catalogue statique client, japan-data.json) — le serveur ne fait
-// qu'ordonnancer/regrouper, jamais de lookup ni d'invention de lieu.
-export async function sendItineraryGenerate({ lieux, days }){
+// d'itinéraire premium à partir de lieux du catalogue (favoris gardés, ou
+// pool filtré par le parcours de questions — VoyageWizard). `lieux` = objets
+// complets (catalogue statique client, japan-data.json) — le serveur ne fait
+// qu'ordonnancer/regrouper, jamais de lookup ni d'invention de lieu. `rythme`
+// est optionnel ("tranquille"|"equilibre"|"dense") et ignoré côté serveur si absent.
+export async function sendItineraryGenerate({ lieux, days, rythme }){
   const { data, error } = await supabase.functions.invoke("itinerary-generate", {
-    body: { lieux, days },
+    body: rythme ? { lieux, days, rythme } : { lieux, days },
     timeout: 30000,
   });
   if(error){

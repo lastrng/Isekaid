@@ -1,13 +1,18 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// itinerary-generate — Auto-génération d'itinéraire de voyage (Phase 4.4)
+// itinerary-generate — Auto-génération d'itinéraire de voyage (Phase 4.4,
+// étendue en Phase 2 du parcours de création guidé)
 //
 // Calqué sur tutor-chat : JWT vérifié, gating premium re-vérifié serveur
 // auprès de RevenueCat (fail-closed), sortie forcée par tool-use (JSON
-// strict). Reçoit les lieux GARDÉS par l'utilisateur (catalogue statique
-// côté client, japan-data.json — rien à chercher en base ici) et une durée
-// en jours ; renvoie un regroupement par ville + un ordre de jours, jamais
+// strict). Reçoit des lieux (catalogue statique côté client, japan-data.json
+// — soit les favoris gardés, soit le pool filtré par le parcours de
+// questions — rien à chercher en base ici), une durée en jours et un rythme
+// optionnel ; renvoie un regroupement par ville + un ordre de jours, jamais
 // un lieu inventé hors de la liste reçue (garde-fou appliqué après l'appel
-// IA, pas seulement demandé dans le prompt).
+// IA, pas seulement demandé dans le prompt). L'ordre des lieux à l'intérieur
+// d'un jour est en plus garanti géographiquement par un tri plus-proche-
+// voisin déterministe côté serveur (voir orderByProximity) — pas seulement
+// suggéré à l'IA, pour un tracé carte cohérent en Phase 3.
 //
 // ANTHROPIC_API_KEY et REVENUECAT_SECRET_KEY ne quittent jamais cette
 // fonction : jamais exposées au client.
@@ -28,6 +33,48 @@ const ITINERARY_MODEL = Deno.env.get("ITINERARY_MODEL") || "claude-haiku-4-5-202
 const MAX_LIEUX = 60; // borne large mais finie — anti-abus payload, pas une limite produit réaliste
 const MIN_DAYS = 1;
 const MAX_DAYS = 30;
+const RYTHME_VALUES = new Set(["tranquille", "equilibre", "dense"]);
+const RYTHME_HINT: Record<string, string> = {
+  tranquille: "Rythme choisi : TRANQUILLE — vise plutôt 2 à 3 lieux par jour, laisse du temps mort.",
+  equilibre: "Rythme choisi : ÉQUILIBRÉ — un bon rythme de croisière, ni trop chargé ni trop vide.",
+  dense: "Rythme choisi : DENSE — l'utilisateur veut voir un maximum, les journées peuvent être bien remplies.",
+};
+
+// Tri par plus proche voisin (glouton) sur lat/lng — remplace la simple
+// suggestion textuelle faite à l'IA par un ordre géographique garanti et
+// gratuit (pas de service de routing), pour un tracé carte cohérent en
+// Phase 3. Les lieux sans coordonnées sont laissés à la fin, inchangés.
+function orderByProximity(ids: string[], coordsById: Map<string, { lat: number | null; lng: number | null }>): string[] {
+  const withCoords = ids.filter((id) => {
+    const c = coordsById.get(id);
+    return c && typeof c.lat === "number" && typeof c.lng === "number";
+  });
+  const withoutCoords = ids.filter((id) => !withCoords.includes(id));
+  if (withCoords.length <= 1) return [...withCoords, ...withoutCoords];
+
+  const remaining = new Set(withCoords);
+  // Point de départ déterministe (le plus au nord) pour un ordre stable d'un
+  // appel à l'autre sur les mêmes lieux.
+  let current = withCoords.reduce((a, b) => (coordsById.get(a)!.lat! > coordsById.get(b)!.lat! ? a : b));
+  remaining.delete(current);
+  const ordered = [current];
+  while (remaining.size) {
+    const cur = coordsById.get(current)!;
+    let best: string | null = null;
+    let bestD = Infinity;
+    for (const id of remaining) {
+      const c = coordsById.get(id)!;
+      const dx = (cur.lat as number) - (c.lat as number);
+      const dy = (cur.lng as number) - (c.lng as number);
+      const d = dx * dx + dy * dy;
+      if (d < bestD) { bestD = d; best = id; }
+    }
+    ordered.push(best!);
+    remaining.delete(best!);
+    current = best!;
+  }
+  return [...ordered, ...withoutCoords];
+}
 
 // Identique à tutor-chat/index.ts : vérifie l'entitlement directement auprès
 // de RevenueCat (jamais un booléen envoyé par le client, spoofable). Panne/
@@ -159,6 +206,7 @@ Deno.serve(async (req: Request) => {
     const body = await req.json().catch(() => null);
     const rawLieux = Array.isArray(body?.lieux) ? body.lieux : [];
     const days = Math.min(MAX_DAYS, Math.max(MIN_DAYS, parseInt(body?.days, 10) || 0));
+    const rythme = RYTHME_VALUES.has(body?.rythme) ? body.rythme as string : "equilibre";
 
     // ── Nettoyage strict de l'entrée : seuls les champs utiles, jamais de
     // confiance aveugle dans la forme envoyée par le client ──────────────
@@ -191,6 +239,8 @@ Deno.serve(async (req: Request) => {
       "RÈGLE ABSOLUE : n'utilise QUE les IDs de lieu et de ville fournis dans la liste ci-dessous. N'invente, ne renomme et ne complète JAMAIS un lieu qui n'y figure pas.",
       "Regroupe les lieux par ville pour limiter les trajets. Choisis un ordre de villes cohérent géographiquement si plusieurs villes sont présentes.",
       `Répartis TOUS les lieux fournis sur exactement ${days} jour(s), en équilibrant la charge (ne surcharge pas un jour, n'en laisse pas un vide s'il reste des lieux à placer). Si un lieu a des coordonnées (lat/lng) proches d'un autre, tente de les mettre dans le même jour.`,
+      RYTHME_HINT[rythme],
+      "L'ordre exact des lieux DANS un jour n'a pas besoin d'être optimisé géographiquement de ta part — un tri par proximité est appliqué automatiquement après coup. Concentre-toi sur le bon regroupement par ville et jour.",
       "Pour chaque jour, écris un titre très court (1 phrase, en français) qui donne l'esprit de la journée (ex. \"Immersion dans le vieux Kyoto entre temples et bambouseraies\").",
       "",
       "Lieux disponibles (JSON) :",
@@ -236,6 +286,13 @@ Deno.serve(async (req: Request) => {
     for (const l of missing) {
       const target = [...jours].reverse().find((j: any) => j.villeId === l.villeId) || jours[jours.length - 1];
       target.lieuIds.push(l.id);
+    }
+
+    // ── Ordre géographique garanti par jour (post-traitement déterministe,
+    // pas de routing réel/payant — juste plus proche voisin sur lat/lng) ──
+    const coordsById = new Map(lieux.map((l) => [l.id, { lat: l.lat, lng: l.lng }]));
+    for (const j of jours) {
+      j.lieuIds = orderByProximity(j.lieuIds, coordsById);
     }
 
     return new Response(JSON.stringify({ villes: villes.length ? villes : [...knownVilleIds], jours }), {

@@ -3644,6 +3644,101 @@ function tripFromGenerated(generated, titre){
   };
 }
 
+// ─── Assistant de création (Phase 1 — parcours de questions) ─────────────────
+// Ordre de villes par défaut, curaté à la main (périmètre fermé de 9 villes) —
+// sert de base à "Laisse-moi choisir pour toi" ; suit à peu près l'itinéraire
+// "essentiel-7j" des voyages préconçus (Tokyo → Hakone → Kyoto/Uji/Nara →
+// Osaka), puis les extensions plus lointaines.
+const DEFAULT_VILLE_ROUTE = ["tokyo","hakone","kyoto","uji","nara","osaka","hiroshima","kanazawa","takayama"];
+
+function minJoursConseilles(ville){
+  const m = String(ville?.jours_conseilles||"").match(/\d+/);
+  return m ? parseInt(m[0],10) : 1;
+}
+
+// Sélectionne un sous-ensemble cohérent de villes pour une durée donnée en
+// suivant l'ordre géographique par défaut, en s'arrêtant dès que le budget de
+// jours est atteint (+1 jour de tolérance pour ne pas s'arrêter trop tôt sur
+// des fourchettes larges comme "3-4").
+function autoPickVilles(villes, days){
+  const byId = Object.fromEntries((villes||[]).map(v=>[v.id,v]));
+  const picked = []; let total = 0;
+  for(const id of DEFAULT_VILLE_ROUTE){
+    const v = byId[id]; if(!v) continue;
+    const cost = minJoursConseilles(v);
+    if(picked.length===0){ picked.push(id); total+=cost; continue; }
+    if(total + cost <= days + 1){ picked.push(id); total += cost; }
+    else break;
+  }
+  return picked;
+}
+
+// Regroupe les lieux du catalogue correspondant aux critères choisis (villes,
+// centres d'intérêt, rythme, saison) pour nourrir itinerary-generate. C'est
+// TOUJOURS ce pool, jamais l'IA, qui choisit les lieux candidats — l'IA ne
+// fait qu'ordonnancer/répartir sur les jours (même garde-fou que Phase 4.4).
+function pickCandidateLieux({ lieux, villes, villeIds, interets, rythme, saison, days }){
+  const inVilles = (lieux||[]).filter(l=>villeIds.includes(l.villeId));
+  const byInteret = interets?.length
+    ? inVilles.filter(l=>(l.interets||[]).some(i=>interets.includes(i)))
+    : inVilles;
+  const pool = byInteret.length>0 ? byInteret : inVilles; // ne jamais vider le pool si le filtre est trop strict
+
+  const perDay = rythme==="dense" ? 4 : rythme==="tranquille" ? 2 : 3;
+  const target = Math.max(villeIds.length, Math.min(60, Math.round(days*perDay)));
+
+  // Priorise les lieux de la saison choisie sans jamais exclure ceux dont la
+  // saison n'est pas renseignée (la grande majorité du catalogue).
+  const scored = [...pool].sort((a,b)=>{
+    if(!saison) return 0;
+    const sa = a.saison_ideale===saison ? 0 : 1;
+    const sb = b.saison_ideale===saison ? 0 : 1;
+    return sa - sb;
+  });
+
+  // Répartition proportionnelle au poids (jours_conseilles) de chaque ville,
+  // pour ne pas noyer une petite ville sous les lieux d'une grande.
+  const villeById = Object.fromEntries((villes||[]).map(v=>[v.id,v]));
+  const weights = villeIds.map(id=>Math.max(1, minJoursConseilles(villeById[id])));
+  const totalWeight = weights.reduce((a,b)=>a+b,0) || 1;
+  const quota = Object.fromEntries(villeIds.map((id,i)=>[id, Math.max(1, Math.round(target*weights[i]/totalWeight))]));
+
+  const result = [];
+  villeIds.forEach(id=>{ result.push(...scored.filter(l=>l.villeId===id).slice(0, quota[id])); });
+  return result.slice(0, 60);
+}
+
+// Titre par défaut du voyage généré, à partir des villes choisies.
+function tripTitleFromWizard(villeById, villeIds, days){
+  const noms = villeIds.map(id=>villeById[id]?.nom).filter(Boolean);
+  const villesLabel = noms.length===0 ? "Japon" : noms.length<=2 ? noms.join(" & ") : `${noms[0]} & ${noms.length-1} autres villes`;
+  return `${villesLabel} · ${days} jour${days>1?"s":""}`;
+}
+
+// Tags d'intérêt tels qu'ils existent réellement sur les lieux du catalogue
+// (japan-data.json, champ `interets`) — recoupe le `why` de l'onboarding
+// (anime/culture/lifestyle/gastro), sauf "nature", propre au voyage.
+const TRIP_INTERET_OPTIONS = [
+  {id:"culture",   label:"Culture & temples",     emoji:"⛩️"},
+  {id:"gastro",    label:"Gastronomie",            emoji:"🍣"},
+  {id:"anime",     label:"Pop-culture & anime",    emoji:"🎮"},
+  {id:"lifestyle", label:"Shopping & lifestyle",   emoji:"🍵"},
+  {id:"nature",    label:"Nature & onsen",         emoji:"🌿"},
+];
+const TRIP_RYTHME_OPTIONS = [
+  {id:"tranquille", label:"Tranquille", sub:"Prendre son temps, moins de lieux par jour", emoji:"🍵"},
+  {id:"equilibre",   label:"Équilibré",  sub:"Un bon rythme de croisière",                 emoji:"🚶"},
+  {id:"dense",       label:"Dense",      sub:"Voir un maximum, journées bien remplies",     emoji:"⚡"},
+];
+const TRIP_SAISON_OPTIONS = [
+  {id:"",          label:"Peu importe", emoji:"🤷"},
+  {id:"printemps", label:"Printemps",   emoji:"🌸"},
+  {id:"été",       label:"Été",         emoji:"☀️"},
+  {id:"automne",   label:"Automne",     emoji:"🍁"},
+  {id:"hiver",     label:"Hiver",       emoji:"❄️"},
+];
+const TRIP_DAYS_QUICK = [3,5,7,10];
+
 // ─── Générateur d'image partageable (Canvas natif) ───────────────────────────
 // Dessine une fiche de situation en image PNG (carré 1:1 ou vertical 9:16),
 // façon carrousel éditorial, avec la marque Isekai'd. Pensé pour le japonais.
@@ -5013,7 +5108,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
   // Création
   const tryCreate = ()=>{
     if(trips.length >= FREE_TRIP_LIMIT && !isPremium){ setShowPremium(true); return; }
-    setView("create");
+    setView("wizard");
   };
   const tryAdopt = (p)=>{
     if(trips.length >= FREE_TRIP_LIMIT && !isPremium){ setShowPremium(true); return; }
@@ -5033,7 +5128,13 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
     }));
   };
 
-  // ─── Vue : création ───
+  // ─── Vue : assistant de création (questions → génération IA) ───
+  if(view==="wizard"){
+    return <VoyageWizard C={C} villes={villes} lieux={lieux} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
+              onCancel={()=>setView("home")} onManual={()=>setView("create")}
+              onGenerated={(res, titre)=> createTrip(tripFromGenerated(res, titre))}/>;
+  }
+  // ─── Vue : création manuelle (page blanche assumée) ───
   if(view==="create"){
     return <VoyageCreate C={C} villes={villes} onCancel={()=>setView("home")} onCreate={createTrip}/>;
   }
@@ -5420,6 +5521,230 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
   );
 }
 
+// ─── Assistant de création — parcours de questions + génération IA ───────────
+// "Jamais une page blanche" : remplace le formulaire vide par un court
+// parcours (durée → villes → rythme → intérêts si inconnus → récap), qui
+// alimente directement itinerary-generate (réutilise Phase 4.4 telle quelle,
+// juste nourrie par le catalogue filtré plutôt que par les seuls favoris).
+function VoyageWizard({C, villes, lieux, user, isPremium, onOpenPremium, onCancel, onManual, onGenerated}){
+  const villeById = useMemo(()=>Object.fromEntries((villes||[]).map(v=>[v.id,v])), [villes]);
+  const profileWhy = user?.why || [];
+  const interetOverlap = useMemo(()=>TRIP_INTERET_OPTIONS.map(o=>o.id).filter(id=>profileWhy.includes(id)), [profileWhy]);
+  const interetsKnown = interetOverlap.length>0;
+
+  const steps = ["duree","villes","rythme","interets","recap"];
+  const [step, setStep] = useState(0);
+  const [days, setDays] = useState(5);
+  const [selVilles, setSelVilles] = useState([]);
+  const [rythme, setRythme] = useState("equilibre");
+  const [interets, setInterets] = useState(interetOverlap);
+  const [saison, setSaison] = useState("");
+  const [editInterets, setEditInterets] = useState(false); // ouvert manuellement depuis le récap
+
+  const [genBusy, setGenBusy] = useState(false);
+  const [genError, setGenError] = useState(null);
+  const [showTeaser, setShowTeaser] = useState(false);
+
+  const toggleVille = (id)=> setSelVilles(s=> s.includes(id) ? s.filter(x=>x!==id) : [...s,id]);
+  const toggleInteret = (id)=> setInterets(s=> s.includes(id) ? s.filter(x=>x!==id) : [...s,id]);
+
+  const canNext = [true, selVilles.length>0, true, true, true][step];
+
+  const goNext = ()=>{
+    if(!canNext) return;
+    let n = step+1;
+    if(steps[n]==="interets" && interetsKnown && !editInterets) n++; // saute la question déjà connue via le profil
+    setStep(n);
+  };
+  const goPrev = ()=>{
+    let n = step-1;
+    if(steps[n]==="interets" && interetsKnown && !editInterets) n--;
+    setStep(n);
+  };
+  const skipToRecap = ()=>{
+    if(selVilles.length===0) setSelVilles(autoPickVilles(villes, days));
+    setStep(steps.length-1);
+  };
+
+  const runGenerate = async ()=>{
+    if(!isPremium){ setShowTeaser(true); return; }
+    setGenBusy(true); setGenError(null);
+    try {
+      const candidateLieux = pickCandidateLieux({ lieux, villes, villeIds:selVilles, interets, rythme, saison, days });
+      const res = await sendItineraryGenerate({ lieux: candidateLieux, days, rythme });
+      if(res?.premiumRequired){ setGenBusy(false); setShowTeaser(true); return; }
+      if(!res?.jours?.length){ setGenBusy(false); setGenError("Réponse invalide, réessaie."); return; }
+      onGenerated(res, tripTitleFromWizard(villeById, selVilles, days));
+    } catch(e){
+      console.error("[voyage-wizard]", e);
+      setGenBusy(false);
+      setGenError("La génération a échoué. Réessaie dans un instant.");
+    }
+  };
+
+  const titles = {
+    duree:"Combien de jours ?", villes:"Quelles villes ?", rythme:"Quel rythme ?",
+    interets:"Tes centres d'intérêt", recap:"On récapitule",
+  };
+  const current = steps[step];
+  const previewCount = useMemo(()=>{
+    if(selVilles.length===0) return 0;
+    return pickCandidateLieux({ lieux, villes, villeIds:selVilles, interets, rythme, saison, days }).length;
+  }, [lieux, villes, selVilles, interets, rythme, saison, days]);
+
+  return(
+    <div style={{height:"100%",display:"flex",flexDirection:"column",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
+      <div style={{padding:"50px 20px 14px",flexShrink:0,borderBottom:`1px solid ${C.border}`}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
+          <button onClick={step===0?onCancel:goPrev} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0}}>‹ {step===0?"Annuler":"Précédent"}</button>
+          {current!=="recap" && <button onClick={skipToRecap} style={{background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer",padding:0}}>Génère quand même →</button>}
+        </div>
+        <div style={{display:"flex",gap:5,marginBottom:14}}>
+          {steps.map((s,i)=>(<div key={s} style={{height:2,flex:1,borderRadius:1,background:i<=step?C.red:C.s3,transition:"background .4s"}}/>))}
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <Sparkles size={16} color={C.red}/>
+          <div style={{fontSize:19,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{titles[current]}</div>
+        </div>
+      </div>
+
+      <div key={current} style={{flex:1,overflowY:"auto",padding:"20px 20px 24px",animation:"fadeUp .3s ease"}}>
+        {current==="duree" && (
+          <>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:20}}>
+              {TRIP_DAYS_QUICK.map(n=>(
+                <button key={n} onClick={()=>setDays(n)} style={chipStyle(C, days===n, {padding:"10px 18px",fontSize:14})}>{n} jours</button>
+              ))}
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:14,justifyContent:"center",padding:"14px 0"}}>
+              <button onClick={()=>setDays(n=>Math.max(1,n-1))} style={{width:40,height:40,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s1,color:C.text,fontSize:20,cursor:"pointer"}}>−</button>
+              <div style={{fontSize:18,color:C.text,fontWeight:600,minWidth:90,textAlign:"center"}}>{days} jour{days>1?"s":""}</div>
+              <button onClick={()=>setDays(n=>Math.min(30,n+1))} style={{width:40,height:40,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s1,color:C.text,fontSize:20,cursor:"pointer"}}>+</button>
+            </div>
+          </>
+        )}
+
+        {current==="villes" && (
+          <>
+            <button onClick={()=>setSelVilles(autoPickVilles(villes, days))} style={{width:"100%",marginBottom:16,padding:"12px",background:`linear-gradient(135deg,${C.red}14,${C.gold}14)`,border:`1px solid ${C.border}`,borderRadius:14,color:C.text,fontSize:13,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              ✨ Laisse-moi choisir pour toi
+            </button>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+              {villes.map(v=>{
+                const on = selVilles.includes(v.id);
+                return(
+                  <button key={v.id} onClick={()=>toggleVille(v.id)} style={{...chipStyle(C, on, {padding:"10px 14px",flexDirection:"column",alignItems:"flex-start",gap:2,textAlign:"left"})}}>
+                    <span>{v.emoji} {v.nom} {on?"✓":""}</span>
+                    <span style={{fontSize:10,opacity:.75,fontWeight:400}}>{v.jours_conseilles} j conseillés</span>
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
+
+        {current==="rythme" && (
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {TRIP_RYTHME_OPTIONS.map(o=>{
+              const active = rythme===o.id;
+              return(
+                <div key={o.id} onClick={()=>setRythme(o.id)} style={{display:"flex",alignItems:"center",gap:14,padding:16,borderRadius:16,cursor:"pointer",background:active?`${C.red}0d`:C.s1,border:`2px solid ${active?C.red:C.border}`}}>
+                  <span style={{fontSize:26}}>{o.emoji}</span>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:14,fontWeight:600,color:active?C.red:C.text}}>{o.label}</div>
+                    <div style={{fontSize:11,color:C.t3,marginTop:2}}>{o.sub}</div>
+                  </div>
+                  {active && <Check size={20} color={C.red}/>}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {current==="interets" && (
+          <>
+            <div style={{fontSize:12,color:C.t3,marginBottom:14,lineHeight:1.5}}>Ça pondère les lieux proposés. Laisse tout vide pour ne rien exclure.</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+              {TRIP_INTERET_OPTIONS.map(o=>{
+                const active = interets.includes(o.id);
+                return(
+                  <div key={o.id} onClick={()=>toggleInteret(o.id)} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:8,padding:"15px 12px",borderRadius:16,cursor:"pointer",background:active?`${C.red}0d`:C.s1,border:`2px solid ${active?C.red:C.border}`}}>
+                    <span style={{fontSize:24}}>{o.emoji}</span>
+                    <div style={{fontSize:12,fontWeight:500,color:active?C.red:C.t2,textAlign:"center"}}>{o.label}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+
+        {current==="recap" && (
+          <>
+            <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:20}}>
+              <RecapRow C={C} label="Durée" value={`${days} jour${days>1?"s":""}`} onEdit={()=>setStep(steps.indexOf("duree"))}/>
+              <RecapRow C={C} label="Villes" value={selVilles.length ? selVilles.map(id=>villeById[id]?.nom||id).join(", ") : "Aucune"} onEdit={()=>setStep(steps.indexOf("villes"))}/>
+              <RecapRow C={C} label="Rythme" value={TRIP_RYTHME_OPTIONS.find(o=>o.id===rythme)?.label} onEdit={()=>setStep(steps.indexOf("rythme"))}/>
+              <RecapRow C={C} label="Intérêts" value={interets.length ? interets.map(id=>TRIP_INTERET_OPTIONS.find(o=>o.id===id)?.label).join(", ") : "Tous"} onEdit={()=>{ setEditInterets(true); setStep(steps.indexOf("interets")); }}/>
+            </div>
+
+            <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",marginBottom:8,textTransform:"uppercase"}}>Saison (optionnel)</div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:22}}>
+              {TRIP_SAISON_OPTIONS.map(o=>(
+                <button key={o.id||"any"} onClick={()=>setSaison(o.id)} style={chipStyle(C, saison===o.id, {padding:"8px 13px"})}>{o.emoji} {o.label}</button>
+              ))}
+            </div>
+
+            {selVilles.length===0 ? (
+              <div style={{fontSize:12,color:C.red,marginBottom:14,textAlign:"center"}}>Choisis au moins une ville avant de générer.</div>
+            ) : (
+              <div style={{fontSize:12,color:C.t3,marginBottom:14,textAlign:"center"}}>{previewCount} lieu{previewCount>1?"x":""} du catalogue seront proposés à l'IA pour composer ton parcours.</div>
+            )}
+            {genError && <div style={{fontSize:12,color:C.red,marginBottom:14,textAlign:"center"}}>{genError}</div>}
+
+            <button onClick={runGenerate} disabled={genBusy || selVilles.length===0} style={{width:"100%",padding:"15px",background:genBusy||selVilles.length===0?C.s3:`linear-gradient(135deg,${C.red},${C.gold})`,border:"none",borderRadius:999,color:genBusy||selVilles.length===0?C.t3:"#fff",fontSize:14,fontWeight:600,cursor:genBusy||selVilles.length===0?"default":"pointer",marginBottom:10}}>
+              {genBusy ? "Génération en cours…" : `✨ Générer mon itinéraire ${!isPremium?"🔒":"→"}`}
+            </button>
+            <button onClick={onManual} style={{width:"100%",padding:"10px",background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer"}}>Je préfère tout choisir moi-même →</button>
+          </>
+        )}
+      </div>
+
+      {current!=="recap" && (
+        <div style={{padding:"14px 20px 28px",flexShrink:0}}>
+          <button onClick={goNext} disabled={!canNext} style={{width:"100%",padding:"15px",background:canNext?C.red:C.s3,border:"none",borderRadius:999,color:canNext?"#fff":C.t3,fontSize:14,fontWeight:600,cursor:canNext?"pointer":"default"}}>Continuer →</button>
+        </div>
+      )}
+
+      {/* Paywall contextuel — aperçu des critères choisis, jamais un mur sec */}
+      {showTeaser && (
+        <div onClick={()=>setShowTeaser(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+          <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:440,background:C.s1,borderRadius:"22px 22px 0 0",padding:"26px 22px 32px",animation:"fadeUp .3s ease"}}>
+            <div style={{textAlign:"center"}}>
+              <div style={{fontSize:40,marginBottom:12}}>✨</div>
+              <div style={{fontSize:19,color:C.text,fontWeight:700,marginBottom:8}}>Génération IA avec Premium</div>
+              <div style={{fontSize:13,color:C.t2,lineHeight:1.6,marginBottom:20}}>Tu as choisi {selVilles.length} ville{selVilles.length>1?"s":""} sur {days} jour{days>1?"s":""}. Premium ordonne intelligemment {previewCount} lieu{previewCount>1?"x":""} du catalogue, répartit tes journées et rédige une intro pour chacune.</div>
+              <button onClick={()=>{ setShowTeaser(false); onOpenPremium&&onOpenPremium(); }} style={{width:"100%",padding:"14px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:8}}>Découvrir Premium</button>
+              <button onClick={()=>{ setShowTeaser(false); onManual&&onManual(); }} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Plus tard, je créerai à la main</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function RecapRow({C, label, value, onEdit}){
+  return(
+    <div style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:13}}>
+      <div style={{flex:1,minWidth:0}}>
+        <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",textTransform:"uppercase",marginBottom:3}}>{label}</div>
+        <div style={{fontSize:13,color:C.text,fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{value}</div>
+      </div>
+      <button onClick={onEdit} style={{background:"transparent",border:"none",color:C.red,fontSize:12,fontWeight:600,cursor:"pointer",flexShrink:0}}>Modifier</button>
+    </div>
+  );
+}
+
 // ─── Écran de création de voyage ──────────────────────────────────────────────
 function VoyageCreate({C, villes, onCancel, onCreate}){
   const [titre, setTitre] = useState("Mon voyage au Japon");
@@ -5535,10 +5860,32 @@ const VOYAGE_TYPES = [
   {id:"acheter",label:"Acheter",emoji:"🛍️"},
 ];
 
+function escapeHtml(s){
+  return String(s||"").replace(/[&<>"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
 // ── Carte du jour (Leaflet + OpenStreetMap, gratuit, sans clé) ────────────────
-function DayMap({ C, points }){
+// Éditable : taper un pin le sélectionne (surligne + fait défiler la liste
+// jusqu'à lui) et ouvre une popup avec "Voir la fiche" / "Retirer" — pas
+// besoin de repasser par la liste. `points` porte un `etapeId` par lieu
+// (voir VoyageTrip) pour que le retrait cible la bonne étape.
+function DayMap({ C, points, selectedId, onSelectPin, onOpenDetail, onRemove, onAdd }){
   const containerRef = useRef(null);
   const instanceRef = useRef(null);
+  const markersRef = useRef([]); // [{id, idx, isFirst, marker}] — pour maj icône sans reconstruire la carte
+
+  const buildIcon = (L, { idx, isFirst, isSelected })=>{
+    const fill = isFirst ? C.green : C.red;
+    const size = isSelected ? 38 : 30;
+    return L.divIcon({
+      className:"",
+      html:`<div style="position:relative;width:${size}px;height:${size}px;transition:width .18s ease,height .18s ease">
+        <div style="position:absolute;inset:0;background:${fill};border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:${isSelected?`0 0 0 4px ${fill}44,0 4px 12px rgba(0,0,0,.4)`:"0 3px 8px rgba(0,0,0,.35)"};border:2.5px solid #fff"></div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:${isSelected?14:12}px;font-weight:700">${idx}</div>
+      </div>`,
+      iconSize:[size,size], iconAnchor:[size/2,size],
+    });
+  };
 
   const ensureLeaflet = ()=> new Promise((resolve)=>{
     if(window.L){ resolve(window.L); return; }
@@ -5574,38 +5921,67 @@ function DayMap({ C, points }){
         attribution:"© OpenStreetMap contributors © CARTO",
       }).addTo(map);
       const latlngs = [];
+      markersRef.current = [];
       valid.forEach((p)=>{
         const idx = points.indexOf(p) + 1;
         const isFirst = idx === 1;
-        const fill = isFirst ? C.green : C.red;
-        const icon = L.divIcon({
-          className:"",
-          html:`<div style="position:relative;width:30px;height:30px">
-            <div style="position:absolute;inset:0;background:${fill};border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 3px 8px rgba(0,0,0,.35);border:2.5px solid #fff"></div>
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700">${idx}</div>
-          </div>`,
-          iconSize:[30,30], iconAnchor:[15,30],
-        });
-        L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup(
-          `<div style="display:flex;align-items:center;gap:8px;min-width:110px">
+        const icon = buildIcon(L, { idx, isFirst, isSelected:false });
+        // Popup construite en DOM (pas juste une string HTML) pour pouvoir
+        // brancher de vrais handlers de clic sur "Voir la fiche"/"Retirer".
+        const popupEl = document.createElement("div");
+        popupEl.style.cssText = "display:flex;flex-direction:column;gap:8px;min-width:150px";
+        popupEl.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px">
             <span style="font-size:18px">${p.emoji||"📍"}</span>
-            <div><div style="font-weight:700;font-size:13px;line-height:1.3">${p.nom||"Lieu"}</div><div style="font-size:10px;opacity:.6">Étape ${idx}</div></div>
-          </div>`
-        );
+            <div><div style="font-weight:700;font-size:13px;line-height:1.3">${escapeHtml(p.nom||"Lieu")}</div><div style="font-size:10px;opacity:.6">Étape ${idx}</div></div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button data-act="detail" style="flex:1;padding:6px 8px;border:none;border-radius:8px;background:${C.red};color:#fff;font-size:11px;font-weight:600;cursor:pointer">Voir la fiche</button>
+            <button data-act="remove" style="padding:6px 10px;border:1px solid ${C.border};border-radius:8px;background:transparent;color:${C.t3};font-size:11px;cursor:pointer">Retirer</button>
+          </div>`;
+        popupEl.querySelector('[data-act="detail"]').addEventListener("click", ()=> onOpenDetail && onOpenDetail(p.id));
+        popupEl.querySelector('[data-act="remove"]').addEventListener("click", ()=> onRemove && onRemove(p.etapeId));
+        const marker = L.marker([p.lat,p.lng],{icon}).addTo(map)
+          .bindPopup(popupEl)
+          .on("click", ()=> onSelectPin && onSelectPin(p.id));
+        markersRef.current.push({ id:p.id, idx, isFirst, marker });
         latlngs.push([p.lat,p.lng]);
       });
       if(latlngs.length>1){
-        // Trait de route à deux couches — casing blanc en dessous, couleur
-        // pleine par-dessus — pour un rendu "route" plein et arrondi plutôt
-        // qu'un pointillé fin.
+        // Trait de route à deux couches — casing blanc statique en dessous,
+        // couleur d'accent par-dessus qui se "dessine" à l'apparition
+        // (stroke-dashoffset) — tracé simple entre pins, pas de routing réel.
         L.polyline(latlngs,{color:"#fff",weight:6,opacity:0.9,lineCap:"round",lineJoin:"round"}).addTo(map);
-        L.polyline(latlngs,{color:C.red,weight:3.5,opacity:0.85,lineCap:"round",lineJoin:"round"}).addTo(map);
+        const colorLine = L.polyline(latlngs,{color:C.red,weight:3.5,opacity:0.85,lineCap:"round",lineJoin:"round"}).addTo(map);
+        requestAnimationFrame(()=>{
+          const path = colorLine.getElement && colorLine.getElement();
+          if(path && path.getTotalLength){
+            const len = path.getTotalLength();
+            path.style.strokeDasharray = String(len);
+            path.style.strokeDashoffset = String(len);
+            path.getBoundingClientRect(); // force le reflow avant de lancer la transition
+            path.style.transition = "stroke-dashoffset .7s ease-out";
+            path.style.strokeDashoffset = "0";
+          }
+        });
       }
       if(latlngs.length===1) map.setView(latlngs[0],15); else map.fitBounds(latlngs,{padding:[36,36]});
       setTimeout(()=>map.invalidateSize(),100);
     });
     return ()=>{ cancelled=true; if(instanceRef.current){ instanceRef.current.remove(); instanceRef.current=null; } };
   }, [points, C.red, C.green]);
+
+  // Effet séparé et léger : ne fait que remplacer l'icône des marqueurs déjà
+  // posés (setIcon), sans jamais recréer la carte — sinon reconstruire la
+  // carte à chaque sélection fermerait la popup tout juste ouverte par le
+  // clic qui a déclenché cette sélection.
+  useEffect(()=>{
+    const L = window.L;
+    if(!L) return;
+    markersRef.current.forEach(({ id, idx, isFirst, marker })=>{
+      marker.setIcon(buildIcon(L, { idx, isFirst, isSelected: !!selectedId && id===selectedId }));
+    });
+  }, [selectedId]);
 
   const validCount = points.filter(p=> typeof p.lat==="number" && typeof p.lng==="number").length;
   if(validCount===0){
@@ -5628,12 +6004,20 @@ function DayMap({ C, points }){
       <div style={{position:"absolute",top:10,left:10,padding:"6px 12px",borderRadius:20,background:"rgba(0,0,0,.6)",backdropFilter:"blur(4px)",color:"#fff",fontSize:11,fontWeight:600,pointerEvents:"none"}}>
         📍 {validCount} lieu{validCount>1?"x":""}
       </div>
+      {onAdd && (
+        <button onClick={onAdd} aria-label="Ajouter un lieu" style={{position:"absolute",top:10,right:10,width:34,height:34,borderRadius:"50%",border:"none",background:C.red,color:"#fff",fontSize:18,fontWeight:600,cursor:"pointer",boxShadow:"0 3px 10px rgba(0,0,0,.35)",display:"flex",alignItems:"center",justifyContent:"center"}}>＋</button>
+      )}
     </div>
   );
 }
 
 function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPremium, isFav, toggleFav, onBack, onUpdate, onDelete}){
-  const customLieux = trip.customLieux || [];
+  // Mémoïsé : `trip.customLieux || []` créerait un nouveau tableau à CHAQUE
+  // rendu quand customLieux est absent, ce qui invaliderait lieuById puis
+  // dayPoints (voir plus bas) en cascade à chaque re-rendu, même sans
+  // rapport avec la carte — DayMap reconstruirait alors sa carte Leaflet en
+  // boucle et fermerait toute popup tout juste ouverte.
+  const customLieux = useMemo(()=> trip.customLieux || [], [trip.customLieux]);
   const lieuById = useMemo(()=>{
     const base = Object.fromEntries((db?.lieux||[]).map(l=>[l.id,l]));
     customLieux.forEach(l=>{ base[l.id]=l; });
@@ -5647,9 +6031,28 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
   const [detailId, setDetailId] = useState(null);
   const [noteEdit, setNoteEdit] = useState(null); // id d'étape en édition de note
   const [confirmDel, setConfirmDel] = useState(false);
+  const [selectedId, setSelectedId] = useState(null); // lieuId sélectionné — sync carte ↔ liste
 
   const day = trip.jours[dayIdx];
   const ville = day ? villeById[day.villeId] : null;
+  // Référence stable tant que `day` ne change pas réellement (immuable via
+  // onUpdate) — sinon un nouveau tableau à chaque rendu (ex. sélection d'un
+  // pin, qui ne touche pas trip.jours) ferait croire à DayMap que les points
+  // ont changé, et la carte se reconstruirait en fermant toute popup ouverte.
+  const dayPoints = useMemo(()=>
+    day ? day.etapes.map(e=> lieuById[e.lieuId] ? {...lieuById[e.lieuId], etapeId:e.id} : null).filter(Boolean) : [],
+  [day, lieuById]);
+
+  // Sélection venant d'un tap sur un pin → fait défiler la liste jusqu'à la
+  // ligne correspondante (le tap inverse, depuis la liste, ne fait que
+  // sélectionner sans naviguer — voir le badge numéroté plus bas).
+  useEffect(()=>{
+    if(!selectedId) return;
+    const el = document.querySelector(`[data-etape-lieu="${selectedId}"]`);
+    if(el) el.scrollIntoView({behavior:"smooth", block:"nearest"});
+  }, [selectedId]);
+  // Réinitialise la sélection quand on change de jour ou de voyage.
+  useEffect(()=>{ setSelectedId(null); }, [dayIdx, trip.id]);
 
   // ── Mutations ──
   const addLieu = (lieuId)=>{
@@ -5899,11 +6302,24 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
   if(sub==="catalogue"){
     const why = user?.why || [];
     const matchScore = (l)=> (l.interets||[]).filter(it=>why.includes(it)).length;
+    // Centroïde des lieux déjà planifiés ce jour-là, pour faire remonter en
+    // priorité les lieux du catalogue proches de ce qui est déjà prévu.
+    const dayCoords = (day?.etapes||[]).map(e=>lieuById[e.lieuId]).filter(l=>l && typeof l.lat==="number" && typeof l.lng==="number");
+    const centroid = dayCoords.length ? {
+      lat: dayCoords.reduce((a,l)=>a+l.lat,0)/dayCoords.length,
+      lng: dayCoords.reduce((a,l)=>a+l.lng,0)/dayCoords.length,
+    } : null;
+    const distScore = (l)=>{
+      if(!centroid || typeof l.lat!=="number" || typeof l.lng!=="number") return Infinity;
+      const dx=l.lat-centroid.lat, dy=l.lng-centroid.lng;
+      return dx*dx+dy*dy;
+    };
     const list = lieux
       .filter(l=> l.villeId===day.villeId && (catType==="tout"||l.type===catType))
-      .map(l=>({...l, _score: matchScore(l)}))
-      .sort((a,b)=> b._score - a._score);
+      .map(l=>({...l, _score: matchScore(l), _fav: isFav ? isFav("lieu", l) : false, _dist: distScore(l)}))
+      .sort((a,b)=> (b._fav - a._fav) || (b._score - a._score) || (a._dist - b._dist));
     const hasReco = why.length>0 && list.some(l=>l._score>0);
+    const hasFav = list.some(l=>l._fav);
     return(
       <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
         <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
@@ -5917,7 +6333,8 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
           </div>
         </div>
         <div style={{padding:"14px 20px 110px"}} className="stagger">
-          {hasReco && <div style={{fontSize:11,color:C.t3,marginBottom:12,lineHeight:1.5}}>✨ Les lieux <b style={{color:C.gold}}>recommandés pour toi</b> apparaissent en premier, selon tes centres d'intérêt.</div>}
+          {hasFav && <div style={{fontSize:11,color:C.t3,marginBottom:hasReco?4:12,lineHeight:1.5}}>❤️ Tes <b style={{color:C.red}}>lieux gardés</b> apparaissent en tout premier.</div>}
+          {hasReco && <div style={{fontSize:11,color:C.t3,marginBottom:12,lineHeight:1.5}}>✨ Ensuite, les lieux <b style={{color:C.gold}}>recommandés pour toi</b> selon tes centres d'intérêt et ta journée en cours.</div>}
           {list.length===0 && <div style={{textAlign:"center",color:C.t3,fontSize:12,padding:"30px 0"}}>Aucun lieu de ce type pour {ville?.nom}.</div>}
           {list.map(l=>{
             const inDay = idsInDay.has(l.id);
@@ -6008,7 +6425,12 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
               Jour {day.num} · {ville?.emoji} {ville?.nom||""}{day.titre?` · ${day.titre}`:""}
             </div>
             {day.etapes.length>0 && (
-              <DayMap C={C} points={day.etapes.map(e=>lieuById[e.lieuId]).filter(Boolean)}/>
+              <DayMap C={C}
+                points={dayPoints}
+                selectedId={selectedId} onSelectPin={setSelectedId}
+                onOpenDetail={(id)=>{ setDetailId(id); setSub("detail"); }}
+                onRemove={removeEtape}
+                onAdd={()=>{ setCatType("tout"); setSub("catalogue"); }}/>
             )}
             {day.etapes.length===0 ? (
               <div style={{textAlign:"center",padding:"24px 10px"}}>
@@ -6026,9 +6448,10 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
                         <button onClick={()=>moveEtape(i,-1)} disabled={i===0} style={{width:22,height:20,border:`1px solid ${C.border}`,borderRadius:6,background:C.s1,color:i===0?C.t3:C.t2,fontSize:10,cursor:i===0?"default":"pointer"}}>▲</button>
                         <button onClick={()=>moveEtape(i,1)} disabled={i===day.etapes.length-1} style={{width:22,height:20,border:`1px solid ${C.border}`,borderRadius:6,background:C.s1,color:i===day.etapes.length-1?C.t3:C.t2,fontSize:10,cursor:i===day.etapes.length-1?"default":"pointer"}}>▼</button>
                       </div>
-                      <div className="lift" onClick={()=>{if(l){setDetailId(l.id);setSub("detail");}}} style={{flex:1,background:C.s1,border:`1px solid ${C.border}`,borderRadius:13,padding:"12px 14px",cursor:l?"pointer":"default"}}>
+                      <div className="lift" data-etape-lieu={l?.id} onClick={()=>{if(l){setDetailId(l.id);setSub("detail");}}} style={{flex:1,background:C.s1,border:`1px solid ${l&&selectedId===l.id?C.red:C.border}`,borderRadius:13,padding:"12px 14px",cursor:l?"pointer":"default",transition:"border-color .2s ease"}}>
                         <div style={{display:"flex",alignItems:"center",gap:9}}>
-                          <span style={{flexShrink:0,width:22,height:22,borderRadius:"50%",background:C.s2,color:C.t2,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center"}}>{i+1}</span>
+                          {/* Taper le numéro sélectionne/surligne le pin correspondant sur la carte, sans ouvrir la fiche */}
+                          <span onClick={(ev)=>{ if(l){ ev.stopPropagation(); setSelectedId(l.id); } }} style={{flexShrink:0,width:22,height:22,borderRadius:"50%",background:l&&selectedId===l.id?C.red:C.s2,color:l&&selectedId===l.id?"#fff":C.t2,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center",cursor:l?"pointer":"default",transition:"background .2s ease"}}>{i+1}</span>
                           <span style={{fontSize:20}}>{l?.emoji||"📍"}</span>
                           <div style={{flex:1,minWidth:0}}>
                             <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l?.nom||e.nom||"Lieu"}</div>
