@@ -79,7 +79,7 @@ function orderByProximity(ids: string[], coordsById: Map<string, { lat: number |
 // Identique à tutor-chat/index.ts : vérifie l'entitlement directement auprès
 // de RevenueCat (jamais un booléen envoyé par le client, spoofable). Panne/
 // clé absente → fail-closed (refuse plutôt que d'ouvrir par défaut).
-async function isPremiumUser(userId: string): Promise<boolean> {
+async function isPremiumViaRevenueCat(userId: string): Promise<boolean> {
   if (!REVENUECAT_SECRET_KEY) {
     console.error("[itinerary-generate] REVENUECAT_SECRET_KEY absente — impossible de vérifier le premium, on refuse.");
     return false;
@@ -101,6 +101,21 @@ async function isPremiumUser(userId: string): Promise<boolean> {
     console.error("[itinerary-generate] vérification RevenueCat échouée:", e);
     return false;
   }
+}
+
+// Deuxième source de vérité serveur pour le Premium : les codes d'invitation,
+// validés et enregistrés par l'Edge Function redeem-premium-code (jamais
+// écrits directement par le client — voir la policy RLS sur premium_grants).
+// Sans ce check, un utilisateur passé Premium par code se voit refuser ici
+// (RevenueCat ne le connaît pas) alors que l'app le montre Premium partout.
+async function isPremiumViaAccessCode(supabase: ReturnType<typeof createClient>, userId: string): Promise<boolean> {
+  const { data } = await supabase.from("premium_grants").select("user_id").eq("user_id", userId).maybeSingle();
+  return !!data;
+}
+
+async function isPremiumUser(supabase: ReturnType<typeof createClient>, userId: string): Promise<boolean> {
+  if (await isPremiumViaRevenueCat(userId)) return true;
+  return isPremiumViaAccessCode(supabase, userId);
 }
 
 const RESPONSE_TOOL = {
@@ -198,7 +213,7 @@ Deno.serve(async (req: Request) => {
     const userId = userData.user.id;
 
     // ── Gating premium — serveur, fail-closed, jamais de confiance client ──
-    const premium = await isPremiumUser(userId);
+    const premium = await isPremiumUser(supabase, userId);
     if (!premium) {
       return new Response(JSON.stringify({ error: "premium_required" }), { status: 402, headers: jsonHeaders });
     }

@@ -5,7 +5,7 @@ import LIEU_EDITORIAL from "./lieu-editorial.json";
 import * as sfx from "./sfx.js";
 import { buildCarnetHTML } from "./carnet.js";
 import { useState, useEffect, useRef, useMemo, useCallback, Fragment } from "react";
-import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations, sendItineraryGenerate, sendCarnetRender } from "./supabase";
+import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations, sendItineraryGenerate, sendCarnetRender, redeemPremiumCode } from "./supabase";
 import { DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { JapanNewsCard } from "./JapanNews";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
@@ -7193,15 +7193,21 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
   const [codeOpen,setCodeOpen] = useState(false);
   const [codeVal,setCodeVal] = useState("");
   const [codeError,setCodeError] = useState(false);
+  const [codeBusy,setCodeBusy] = useState(false);
   // Utilise les prix live RevenueCat si dispos, sinon les prix par défaut codés en dur
   const prices = {
     monthly: liveOfferings?.monthly?.priceLabel || "3,99 €",
     annual:  liveOfferings?.annual?.priceLabel  || "29,99 €",
   };
   useEffect(()=>{ /* getProductDetails() remplacé par liveOfferings de RevenueCat */ },[]);
-  const tryCode = ()=>{
-    if(onRedeemCode && onRedeemCode(codeVal)){ setCodeError(false); }
-    else { setCodeError(true); }
+  // Vérification désormais serveur (voir redeemCode dans IsekaidApp) — plus
+  // un simple test synchrone en local.
+  const tryCode = async ()=>{
+    if(!onRedeemCode || codeBusy) return;
+    setCodeBusy(true);
+    const ok = await onRedeemCode(codeVal);
+    setCodeBusy(false);
+    setCodeError(!ok);
   };
 
   if(isPremium){
@@ -7311,8 +7317,8 @@ function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRe
           <div style={{padding:"14px",background:C.s1,border:`1px solid ${codeError?C.red:C.border}`,borderRadius:12,marginBottom:8}}>
             <div style={{fontSize:12,color:C.t2,marginBottom:9,textAlign:"center"}}>Entre ton code pour débloquer le Premium</div>
             <div style={{display:"flex",gap:8}}>
-              <input value={codeVal} onChange={e=>{setCodeVal(e.target.value);setCodeError(false);}} onKeyDown={e=>{if(e.key==="Enter")tryCode();}} autoFocus placeholder="CODE-INVITATION" style={{flex:1,boxSizing:"border-box",padding:"11px 13px",background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,color:C.text,fontSize:14,fontFamily:"inherit",textTransform:"uppercase"}}/>
-              <button onClick={tryCode} style={{padding:"0 18px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>OK</button>
+              <input value={codeVal} onChange={e=>{setCodeVal(e.target.value);setCodeError(false);}} onKeyDown={e=>{if(e.key==="Enter")tryCode();}} disabled={codeBusy} autoFocus placeholder="CODE-INVITATION" style={{flex:1,boxSizing:"border-box",padding:"11px 13px",background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,color:C.text,fontSize:14,fontFamily:"inherit",textTransform:"uppercase"}}/>
+              <button onClick={tryCode} disabled={codeBusy} style={{padding:"0 18px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:13,fontWeight:600,cursor:codeBusy?"wait":"pointer",opacity:codeBusy?0.7:1}}>{codeBusy?"…":"OK"}</button>
             </div>
             {codeError && <div style={{fontSize:11,color:C.red,marginTop:8,textAlign:"center"}}>Code invalide. Vérifie et réessaie.</div>}
           </div>
@@ -8416,9 +8422,10 @@ function saveUnlocks(u){ try { localStorage.setItem(UNLOCK_KEY, JSON.stringify(u
 
 // ── Premium ──
 const PREMIUM_KEY = "isekaid_premium_v1";
-// Code d'accès secret à partager avec tes amis pour débloquer le Premium à vie.
-// ⚠️ Change cette valeur pour ton propre code, puis garde-la confidentielle.
-const ACCESS_CODE = "ISEKAI-FRIENDS-2026";
+// Le code d'accès lui-même n'est plus stocké côté client (il l'était avant,
+// en clair dans le bundle JS/APK — trivialement extractible). La validation
+// se fait désormais côté serveur (Edge Function redeem-premium-code), qui
+// seule connaît le secret PREMIUM_ACCESS_CODE. Voir redeemCode plus bas.
 function loadPremium(){
   try { return JSON.parse(localStorage.getItem(PREMIUM_KEY)||"null"); } catch { return null; }
 }
@@ -8522,10 +8529,16 @@ export default function IsekaidApp(){
       setBillingError("restore_nothing");
     }
   };
-  // Active le Premium à vie via code d'accès. Retourne true si le code est valide.
-  const redeemCode = (code)=>{
-    const clean = (code||"").trim().toUpperCase();
-    if(clean === ACCESS_CODE.toUpperCase()){
+  // Active le Premium à vie via code d'accès. Le code est vérifié côté
+  // serveur (Edge Function redeem-premium-code) qui, s'il est valide,
+  // enregistre le statut dans premium_grants — reconnu par les fonctions de
+  // génération (itinerary-generate, tutor-chat, carnet-render). Sans cet
+  // aller-retour serveur, l'app affichait "Premium" localement mais ces
+  // fonctions refusaient quand même (elles ne connaissent que RevenueCat).
+  // Retourne true si le code est valide.
+  const redeemCode = async (code)=>{
+    const res = await redeemPremiumCode(code);
+    if(res.ok){
       const p = { active:true, plan:"code", since:new Date().toISOString() };
       setPremium(p); savePremium(p);
       return true;

@@ -28,8 +28,8 @@ const CARNET_RENDER_TOKEN = Deno.env.get("CARNET_RENDER_TOKEN") ?? "";
 
 const MAX_HTML_BYTES = 3 * 1024 * 1024; // 3 Mo — large mais fini, anti-abus payload
 
-// Identique à isPremiumUser dans itinerary-generate/index.ts.
-async function isPremiumUser(userId: string): Promise<boolean> {
+// Identique à itinerary-generate/index.ts.
+async function isPremiumViaRevenueCat(userId: string): Promise<boolean> {
   if (!REVENUECAT_SECRET_KEY) {
     console.error("[carnet-render] REVENUECAT_SECRET_KEY absente — impossible de vérifier le premium, on refuse.");
     return false;
@@ -51,6 +51,19 @@ async function isPremiumUser(userId: string): Promise<boolean> {
     console.error("[carnet-render] vérification RevenueCat échouée:", e);
     return false;
   }
+}
+
+// Deuxième source de vérité serveur pour le Premium : les codes d'invitation
+// (voir redeem-premium-code/index.ts et la table premium_grants). Identique
+// à itinerary-generate/index.ts.
+async function isPremiumViaAccessCode(supabase: ReturnType<typeof createClient>, userId: string): Promise<boolean> {
+  const { data } = await supabase.from("premium_grants").select("user_id").eq("user_id", userId).maybeSingle();
+  return !!data;
+}
+
+async function isPremiumUser(supabase: ReturnType<typeof createClient>, userId: string): Promise<boolean> {
+  if (await isPremiumViaRevenueCat(userId)) return true;
+  return isPremiumViaAccessCode(supabase, userId);
 }
 
 Deno.serve(async (req: Request) => {
@@ -83,7 +96,7 @@ Deno.serve(async (req: Request) => {
     const userId = userData.user.id;
 
     // ── Gating premium — serveur, fail-closed, jamais de confiance client ──
-    const premium = await isPremiumUser(userId);
+    const premium = await isPremiumUser(supabase, userId);
     if (!premium) {
       return new Response(JSON.stringify({ error: "premium_required" }), { status: 402, headers: jsonHeaders });
     }

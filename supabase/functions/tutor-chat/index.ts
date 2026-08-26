@@ -36,7 +36,7 @@ const HISTORY_LIMIT = parseInt(Deno.env.get("TUTOR_HISTORY_LIMIT") || "20", 10);
 // (voir src/purchases.js identifyUser) — les deux identifiants sont alignés.
 // Panne/timeout RevenueCat → traité comme non-premium (fail-closed : plus
 // sûr qu'un accès gratuit illimité en cas d'incident).
-async function isPremiumUser(userId: string): Promise<boolean> {
+async function isPremiumViaRevenueCat(userId: string): Promise<boolean> {
   if (!REVENUECAT_SECRET_KEY) {
     console.error("[tutor-chat] REVENUECAT_SECRET_KEY absente — impossible de vérifier le premium, on refuse.");
     return false;
@@ -58,6 +58,20 @@ async function isPremiumUser(userId: string): Promise<boolean> {
     console.error("[tutor-chat] vérification RevenueCat échouée:", e);
     return false;
   }
+}
+
+// Deuxième source de vérité serveur pour le Premium : les codes d'invitation,
+// validés et enregistrés par l'Edge Function redeem-premium-code (jamais
+// écrits directement par le client — voir la policy RLS sur premium_grants).
+// Identique à itinerary-generate/index.ts.
+async function isPremiumViaAccessCode(supabase: ReturnType<typeof createClient>, userId: string): Promise<boolean> {
+  const { data } = await supabase.from("premium_grants").select("user_id").eq("user_id", userId).maybeSingle();
+  return !!data;
+}
+
+async function isPremiumUser(supabase: ReturnType<typeof createClient>, userId: string): Promise<boolean> {
+  if (await isPremiumViaRevenueCat(userId)) return true;
+  return isPremiumViaAccessCode(supabase, userId);
 }
 
 const NIVEAU_INSTRUCTIONS: Record<string, string> = {
@@ -202,7 +216,7 @@ Deno.serve(async (req: Request) => {
     }
     const used = usedToday ?? 0;
     if (used >= FREE_DAILY_LIMIT) {
-      const premium = await isPremiumUser(userId);
+      const premium = await isPremiumUser(supabase, userId);
       if (!premium) {
         return new Response(
           JSON.stringify({ error: "premium_required", limit: FREE_DAILY_LIMIT }),

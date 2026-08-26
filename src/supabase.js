@@ -191,6 +191,24 @@ export async function sendItineraryGenerate({ lieux, days, rythme }){
 // côté client (voir src/carnet.js, buildCarnetHTML) en PDF via le microservice
 // weasyprint du VPS. Réponse "application/pdf" → supabase-js la renvoie en
 // Blob dans `data` (content-type non-JSON/texte).
+// Invoque l'Edge Function redeem-premium-code : valide le code d'invitation
+// côté serveur (jamais comparé en clair dans le bundle client) et, si valide,
+// l'enregistre dans premium_grants — reconnu par itinerary-generate,
+// tutor-chat et carnet-render au même titre qu'un abonnement RevenueCat.
+export async function redeemPremiumCode(code){
+  const { data, error } = await supabase.functions.invoke("redeem-premium-code", {
+    body: { code },
+    timeout: 15000,
+  });
+  if(error){
+    let payload = null;
+    try { payload = await error.context?.json?.(); } catch { /* réponse non-JSON ou déjà consommée */ }
+    if(payload?.error === "invalid_code") return { ok:false, reason:"invalid_code" };
+    return { ok:false, reason:"error" };
+  }
+  return { ok: !!data?.ok };
+}
+
 export async function sendCarnetRender(html){
   const { data, error } = await supabase.functions.invoke("carnet-render", {
     body: { html },
