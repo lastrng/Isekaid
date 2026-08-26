@@ -4,7 +4,7 @@ import VIDEO_MAP from "./video-map.json";
 import LIEU_EDITORIAL from "./lieu-editorial.json";
 import * as sfx from "./sfx.js";
 import { buildCarnetHTML } from "./carnet.js";
-import { useState, useEffect, useRef, useMemo, Fragment } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback, Fragment } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations, sendItineraryGenerate, sendCarnetRender } from "./supabase";
 import { DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { JapanNewsCard } from "./JapanNews";
@@ -1406,7 +1406,7 @@ function VoyageHomeCard({C, favs, onGoTab}){
   const trips = loadTrips();
   const trip = trips[0];
   const keptCount = (favs||[]).filter(f=>f.type==="lieu").length;
-  const nbLieux = trip ? trip.jours.reduce((a,j)=>a+j.etapes.length,0) : 0;
+  const nbLieux = trip ? trip.jours.reduce((a,j)=>a+j.activites.length,0) : 0;
 
   const content = trip ? {
     emoji: "🗾",
@@ -3594,12 +3594,51 @@ function savePathProgress(p){ try { localStorage.setItem(PATH_KEY, JSON.stringif
 const TRIPS_KEY = "isekaid_trips_v1";
 const FREE_TRIP_LIMIT = 1;
 function loadTrips(){
-  try { const raw=localStorage.getItem(TRIPS_KEY); return raw?JSON.parse(raw):[]; }
+  try { const raw=localStorage.getItem(TRIPS_KEY); return raw?JSON.parse(raw).map(normalizeTrip):[]; }
   catch { return []; }
 }
 function saveTrips(trips){ try { localStorage.setItem(TRIPS_KEY, JSON.stringify(trips)); } catch {} }
 function makeTripId(){ return "trip_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 function makeStepId(){ return "s_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function makeEtapeId(){ return "e_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+
+// Regroupe des jours contigus partageant le même villeId en étapes-villes
+// (même principe que carnet.js:groupJoursIntoEtapes, mais produit la forme
+// persistée : ids stables + FK etapeId posée sur chaque jour, plutôt qu'un
+// simple regroupement en mémoire pour la pagination du PDF).
+function deriveEtapesFromJours(jours){
+  const etapes = [];
+  const outJours = (jours||[]).map(j=>{
+    const last = etapes[etapes.length-1];
+    const etape = (last && last.villeId===j.villeId) ? last
+      : (etapes.push({ id: makeEtapeId(), villeId: j.villeId, nuits: 0, nonPlanifie: [] }), etapes[etapes.length-1]);
+    etape.nuits += 1;
+    return { ...j, etapeId: etape.id };
+  });
+  return { etapes, jours: outJours };
+}
+
+// Migration douce du modèle de voyage vers la v2 ("voyage à étapes") : posée
+// à la LECTURE (loadTrips, sync cloud), jamais forcée en masse — un voyage
+// déjà en v2 ressort inchangé (idempotent), un voyage v1 est normalisé et ne
+// sera réécrit qu'à la prochaine sauvegarde naturelle (persist()).
+function normalizeTrip(trip){
+  if(!trip || trip.modelVersion===2) return trip;
+  const jours = (trip.jours||[]).map(j=>({
+    ...j, activites: j.activites || j.etapes || [], etapes: undefined,
+  }));
+  const { etapes, jours: joursWithEtapeId } = trip.etapes
+    ? { etapes: trip.etapes, jours }
+    : deriveEtapesFromJours(jours);
+  return {
+    ...trip,
+    modelVersion: 2,
+    customLieux: trip.customLieux || [],
+    checklist: trip.checklist || [],
+    etapes,
+    jours: joursWithEtapeId,
+  };
+}
 
 // Check-list de préparatifs par défaut (inspirée d'un vrai voyage)
 const DEFAULT_CHECKLIST = [
@@ -3610,17 +3649,20 @@ const DEFAULT_CHECKLIST = [
 
 // Construit un voyage perso à partir d'un itinéraire préconçu
 function tripFromPreconcu(p){
+  const rawJours = p.jours.map(j=>({
+    num: j.num, date:"", villeId: j.villeId, titre: j.titre||"",
+    activites: (j.etapes||[]).map(e=>({ id: makeStepId(), lieuId: e.lieuId, note:"" }))
+  }));
+  const { etapes, jours } = deriveEtapesFromJours(rawJours);
   return {
     id: makeTripId(),
     titre: p.titre,
     mode_dates: "jours",
     dateDebut: "",
+    modelVersion: 2,
     villes: [...p.villes],
     source: p.id,
-    jours: p.jours.map(j=>({
-      num: j.num, date:"", villeId: j.villeId, titre: j.titre||"",
-      etapes: (j.etapes||[]).map(e=>({ id: makeStepId(), lieuId: e.lieuId, note:"" }))
-    })),
+    etapes, jours,
     checklist: DEFAULT_CHECKLIST.map((t,i)=>({ id:"c"+i, texte:t, fait:false })),
   };
 }
@@ -3630,16 +3672,19 @@ function tripFromPreconcu(p){
 // Les ids (trip/étapes) restent générés côté client comme partout ailleurs —
 // l'IA ne fait qu'ordonnancer/regrouper, jamais de logique d'identifiants.
 function tripFromGenerated(generated, titre){
+  const rawJours = (generated.jours||[]).map((j,i)=>({
+    num: i+1, date:"", villeId: j.villeId, titre: j.titre||"",
+    activites: (j.lieuIds||[]).map(lieuId=>({ id: makeStepId(), lieuId, note:"" })),
+  }));
+  const { etapes, jours } = deriveEtapesFromJours(rawJours);
   return {
     id: makeTripId(),
     titre,
     mode_dates: "jours",
     dateDebut: "",
+    modelVersion: 2,
     villes: [...(generated.villes||[])],
-    jours: (generated.jours||[]).map((j,i)=>({
-      num: i+1, date:"", villeId: j.villeId, titre: j.titre||"",
-      etapes: (j.lieuIds||[]).map(lieuId=>({ id: makeStepId(), lieuId, note:"" })),
-    })),
+    etapes, jours,
     checklist: DEFAULT_CHECKLIST.map((t,i)=>({ id:"c"+i, texte:t, fait:false })),
   };
 }
@@ -5044,7 +5089,7 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
   );
 }
 
-function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, isFav, toggleFav, favs, onOpenLieu, onIntroDone, backRef}){
+function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPremium, isFav, toggleFav, favs, onOpenLieu, onIntroDone, backRef}){
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   // "Lieu à découvrir" — bandeau saisonnier (SeasonBanner), même sélection que
@@ -5086,7 +5131,8 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
       fetchTrips(session.user.id).then(cloud=>{
         if(Array.isArray(cloud) && cloud.length>0){
           // Le cloud fait autorité au login (fusion simple : on prend le cloud s'il existe)
-          setTrips(cloud); saveTrips(cloud);
+          const normalized = cloud.map(normalizeTrip);
+          setTrips(normalized); saveTrips(normalized);
         } else if(loadTrips().length>0){
           // Pas de cloud mais des voyages locaux → on les pousse
           saveTripsCloud(session.user.id, loadTrips());
@@ -5123,7 +5169,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
   const addKeptLieuToTrip = (lieu, tripId, dayIndex)=>{
     persist(trips.map(t=>{
       if(t.id!==tripId) return t;
-      const jours = t.jours.map((j,i)=> i!==dayIndex ? j : ({...j, etapes:[...j.etapes, {id:makeStepId(), lieuId:lieu.id, note:""}]}));
+      const jours = t.jours.map((j,i)=> i!==dayIndex ? j : ({...j, activites:[...j.activites, {id:makeStepId(), lieuId:lieu.id, note:""}]}));
       return {...t, jours};
     }));
   };
@@ -5186,7 +5232,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
   if(view==="trip" && activeTrip){
     return (
       <>
-        <VoyageTrip C={C} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
+        <VoyageTrip C={C} dark={dark} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
           isFav={isFav} toggleFav={toggleFav}
           onBack={()=>setView("home")} onUpdate={updateTrip} onDelete={deleteTrip}/>
         {tripCelebration && <CelebrationOverlay C={C} emoji="🗾" title="Voyage créé !" subtitle={activeTrip.titre} color={acc.accent} onDone={()=>setTripCelebration(false)}/>}
@@ -5230,7 +5276,7 @@ function VoyageScreen({C, user, db, script, session, isPremium, onOpenPremium, i
               }/>
             </div>
             {trips.map(t=>{
-              const nbLieux = t.jours.reduce((a,j)=>a+j.etapes.length,0);
+              const nbLieux = t.jours.reduce((a,j)=>a+j.activites.length,0);
               const checklistDone = (t.checklist||[]).filter(c=>c.done).length;
               const checklistTotal = (t.checklist||[]).length;
               return(
@@ -5452,7 +5498,7 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
                   </div>
                   <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
                     {days.map(j=>{
-                      const already = j.etapes.some(e=>e.lieuId===addTarget.id);
+                      const already = j.activites.some(e=>e.lieuId===addTarget.id);
                       const added = justAdded===`${addTarget.id}:${j.num}`;
                       return(
                         <button key={j.id||j.idx} disabled={already||added} onClick={()=>confirmAdd(trip.id, j.idx, j.num)}
@@ -5768,13 +5814,15 @@ function VoyageCreate({C, villes, onCancel, onCreate}){
   const submit = ()=>{
     if(!canCreate) return;
     const n = modeDates==="jours" ? Math.max(1,Math.min(30,nbJours||1)) : (nbJours||selVilles.length||1);
-    const jours = Array.from({length:n},(_,i)=>({
-      num:i+1, date:"", villeId: selVilles[Math.min(i,selVilles.length-1)], titre:"", etapes:[]
+    const rawJours = Array.from({length:n},(_,i)=>({
+      num:i+1, date:"", villeId: selVilles[Math.min(i,selVilles.length-1)], titre:"", activites:[]
     }));
+    const { etapes, jours } = deriveEtapesFromJours(rawJours);
     onCreate({
       id: makeTripId(), titre:titre.trim(), mode_dates:modeDates,
       dateDebut: modeDates==="calendrier"?dateDebut:"",
-      villes:[...selVilles], jours,
+      modelVersion: 2,
+      villes:[...selVilles], etapes, jours,
       checklist: DEFAULT_CHECKLIST.map((t,i)=>({id:"c"+i,texte:t,fait:false})),
     });
   };
@@ -5869,7 +5917,28 @@ function escapeHtml(s){
 // jusqu'à lui) et ouvre une popup avec "Voir la fiche" / "Retirer" — pas
 // besoin de repasser par la liste. `points` porte un `etapeId` par lieu
 // (voir VoyageTrip) pour que le retrait cible la bonne étape.
-function DayMap({ C, points, selectedId, onSelectPin, onOpenDetail, onRemove, onAdd }){
+// Tuiles CARTO (gratuites, sans clé API) — Voyager (clair) suit l'existant,
+// Dark Matter (sombre) même famille/attribution, choisi selon le thème actif
+// de l'app (pas figé en dur : l'app n'est pas toujours en mode sombre).
+const MAP_TILE_URL_LIGHT = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+const MAP_TILE_URL_DARK  = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+// Vue par défaut quand la carte héros n'a encore aucun lieu (onglet "Non
+// planifié" vide, ou jour sans activité) — tout le Japon plutôt qu'un fond nu.
+const JAPAN_DEFAULT_CENTER = [36.5, 138];
+const JAPAN_DEFAULT_ZOOM = 5;
+
+// Distance à vol d'oiseau entre deux lieux (km) — pas de service de routing
+// (payant), juste de la trigo sur les coordonnées déjà en base. `null` si
+// l'un des deux lieux n'a pas de coordonnées (repli textuel côté appelant).
+function haversineKm(a, b){
+  if(!a || !b || typeof a.lat!=="number" || typeof a.lng!=="number" || typeof b.lat!=="number" || typeof b.lng!=="number") return null;
+  const R = 6371, toRad = d=>d*Math.PI/180;
+  const dLat = toRad(b.lat-a.lat), dLng = toRad(b.lng-a.lng);
+  const s = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(s));
+}
+
+function DayMap({ C, points, selectedId, onSelectPin, onOpenDetail, onRemove, onAdd, variant="card", dark=false, pinPopup=true, pointLabel="lieu" }){
   const containerRef = useRef(null);
   const instanceRef = useRef(null);
   const markersRef = useRef([]); // [{id, idx, isFirst, marker}] — pour maj icône sans reconstruire la carte
@@ -5906,17 +5975,18 @@ function DayMap({ C, points, selectedId, onSelectPin, onOpenDetail, onRemove, on
   useEffect(()=>{
     let cancelled = false;
     const valid = points.filter(p=> typeof p.lat==="number" && typeof p.lng==="number");
-    if(valid.length===0) return;
+    // En mode carte compacte, pas de lieu = pas de carte (le repli textuel
+    // plus bas suffit). En mode héros, la carte reste le fond de l'écran
+    // même vide (onglet "Non planifié", jour sans activité) — voir le
+    // recentrage par défaut sur le Japon plus bas.
+    if(valid.length===0 && variant!=="hero") return;
     ensureLeaflet().then((L)=>{
       if(cancelled || !containerRef.current || !L) return;
       if(instanceRef.current){ instanceRef.current.remove(); instanceRef.current=null; }
       const map = L.map(containerRef.current, { zoomControl:false });
       instanceRef.current = map;
       L.control.zoom({ position:"bottomright" }).addTo(map);
-      // Fond CARTO Voyager : rendu clair, routes et labels lisibles — un
-      // style beaucoup plus proche d'un Google Maps que les tuiles OSM
-      // brutes, tout en restant gratuit et sans clé API.
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+      L.tileLayer(dark ? MAP_TILE_URL_DARK : MAP_TILE_URL_LIGHT, {
         maxZoom:20, subdomains:"abcd",
         attribution:"© OpenStreetMap contributors © CARTO",
       }).addTo(map);
@@ -5926,24 +5996,28 @@ function DayMap({ C, points, selectedId, onSelectPin, onOpenDetail, onRemove, on
         const idx = points.indexOf(p) + 1;
         const isFirst = idx === 1;
         const icon = buildIcon(L, { idx, isFirst, isSelected:false });
-        // Popup construite en DOM (pas juste une string HTML) pour pouvoir
-        // brancher de vrais handlers de clic sur "Voir la fiche"/"Retirer".
-        const popupEl = document.createElement("div");
-        popupEl.style.cssText = "display:flex;flex-direction:column;gap:8px;min-width:150px";
-        popupEl.innerHTML = `
-          <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:18px">${p.emoji||"📍"}</span>
-            <div><div style="font-weight:700;font-size:13px;line-height:1.3">${escapeHtml(p.nom||"Lieu")}</div><div style="font-size:10px;opacity:.6">Étape ${idx}</div></div>
-          </div>
-          <div style="display:flex;gap:6px">
-            <button data-act="detail" style="flex:1;padding:6px 8px;border:none;border-radius:8px;background:${C.red};color:#fff;font-size:11px;font-weight:600;cursor:pointer">Voir la fiche</button>
-            <button data-act="remove" style="padding:6px 10px;border:1px solid ${C.border};border-radius:8px;background:transparent;color:${C.t3};font-size:11px;cursor:pointer">Retirer</button>
-          </div>`;
-        popupEl.querySelector('[data-act="detail"]').addEventListener("click", ()=> onOpenDetail && onOpenDetail(p.id));
-        popupEl.querySelector('[data-act="remove"]').addEventListener("click", ()=> onRemove && onRemove(p.etapeId));
         const marker = L.marker([p.lat,p.lng],{icon}).addTo(map)
-          .bindPopup(popupEl)
           .on("click", ()=> onSelectPin && onSelectPin(p.id));
+        // Popup construite en DOM (pas juste une string HTML) pour pouvoir
+        // brancher de vrais handlers de clic sur "Voir la fiche"/"Retirer" —
+        // absente en mode pinPopup=false (pins de ville, pas de fiche/retrait
+        // qui aurait un sens : le tap sélectionne juste le pin).
+        if(pinPopup){
+          const popupEl = document.createElement("div");
+          popupEl.style.cssText = "display:flex;flex-direction:column;gap:8px;min-width:150px";
+          popupEl.innerHTML = `
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px">${p.emoji||"📍"}</span>
+              <div><div style="font-weight:700;font-size:13px;line-height:1.3">${escapeHtml(p.nom||"Lieu")}</div><div style="font-size:10px;opacity:.6">Étape ${idx}</div></div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button data-act="detail" style="flex:1;padding:6px 8px;border:none;border-radius:8px;background:${C.red};color:#fff;font-size:11px;font-weight:600;cursor:pointer">Voir la fiche</button>
+              <button data-act="remove" style="padding:6px 10px;border:1px solid ${C.border};border-radius:8px;background:transparent;color:${C.t3};font-size:11px;cursor:pointer">Retirer</button>
+            </div>`;
+          popupEl.querySelector('[data-act="detail"]').addEventListener("click", ()=> onOpenDetail && onOpenDetail(p.id));
+          popupEl.querySelector('[data-act="remove"]').addEventListener("click", ()=> onRemove && onRemove(p.etapeId));
+          marker.bindPopup(popupEl);
+        }
         markersRef.current.push({ id:p.id, idx, isFirst, marker });
         latlngs.push([p.lat,p.lng]);
       });
@@ -5965,11 +6039,13 @@ function DayMap({ C, points, selectedId, onSelectPin, onOpenDetail, onRemove, on
           }
         });
       }
-      if(latlngs.length===1) map.setView(latlngs[0],15); else map.fitBounds(latlngs,{padding:[36,36]});
+      if(latlngs.length===1) map.setView(latlngs[0],15);
+      else if(latlngs.length>1) map.fitBounds(latlngs,{padding:[36,36]});
+      else map.setView(JAPAN_DEFAULT_CENTER, JAPAN_DEFAULT_ZOOM);
       setTimeout(()=>map.invalidateSize(),100);
     });
     return ()=>{ cancelled=true; if(instanceRef.current){ instanceRef.current.remove(); instanceRef.current=null; } };
-  }, [points, C.red, C.green]);
+  }, [points, C.red, C.green, dark, variant, pinPopup]);
 
   // Effet séparé et léger : ne fait que remplacer l'icône des marqueurs déjà
   // posés (setIcon), sans jamais recréer la carte — sinon reconstruire la
@@ -5984,34 +6060,105 @@ function DayMap({ C, points, selectedId, onSelectPin, onOpenDetail, onRemove, on
   }, [selectedId]);
 
   const validCount = points.filter(p=> typeof p.lat==="number" && typeof p.lng==="number").length;
-  if(validCount===0){
+  const hero = variant==="hero";
+  if(validCount===0 && !hero){
     return (
       <div style={{padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,fontSize:11,color:C.t3,textAlign:"center",marginBottom:14}}>
         🗺️ Carte indisponible : les lieux de ce jour n'ont pas encore de coordonnées.
       </div>
     );
   }
+  const badgeTop = hero ? "calc(10px + env(safe-area-inset-top, 0px))" : 10;
   return (
-    <div style={{marginBottom:16,position:"relative"}}>
+    <div style={hero ? {position:"absolute",inset:0} : {marginBottom:16,position:"relative"}}>
       <div
         ref={containerRef}
-        style={{
+        style={hero ? {
+          "--map-surface":C.s1, "--map-border":C.border, "--map-text":C.text,
+          width:"100%",height:"100%",zIndex:0,
+        } : {
           "--map-surface":C.s1, "--map-border":C.border, "--map-text":C.text,
           width:"100%",height:240,borderRadius:16,overflow:"hidden",
           border:`1px solid ${C.border}`,boxShadow:C.shadow||"none",zIndex:0,
         }}
       />
-      <div style={{position:"absolute",top:10,left:10,padding:"6px 12px",borderRadius:20,background:"rgba(0,0,0,.6)",backdropFilter:"blur(4px)",color:"#fff",fontSize:11,fontWeight:600,pointerEvents:"none"}}>
-        📍 {validCount} lieu{validCount>1?"x":""}
-      </div>
+      {validCount>0 && (
+        <div style={{position:"absolute",top:badgeTop,left:10,padding:"6px 12px",borderRadius:20,background:"rgba(0,0,0,.6)",backdropFilter:"blur(4px)",color:"#fff",fontSize:11,fontWeight:600,pointerEvents:"none"}}>
+          📍 {validCount} {pointLabel}{validCount>1?(pointLabel==="lieu"?"x":"s"):""}
+        </div>
+      )}
       {onAdd && (
-        <button onClick={onAdd} aria-label="Ajouter un lieu" style={{position:"absolute",top:10,right:10,width:34,height:34,borderRadius:"50%",border:"none",background:C.red,color:"#fff",fontSize:18,fontWeight:600,cursor:"pointer",boxShadow:"0 3px 10px rgba(0,0,0,.35)",display:"flex",alignItems:"center",justifyContent:"center"}}>＋</button>
+        <button onClick={onAdd} aria-label="Ajouter un lieu" style={{position:"absolute",top:badgeTop,right:10,width:34,height:34,borderRadius:"50%",border:"none",background:C.red,color:"#fff",fontSize:18,fontWeight:600,cursor:"pointer",boxShadow:"0 3px 10px rgba(0,0,0,.35)",display:"flex",alignItems:"center",justifyContent:"center"}}>＋</button>
       )}
     </div>
   );
 }
 
-function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPremium, isFav, toggleFav, onBack, onUpdate, onDelete}){
+// Panneau coulissant par-dessus la carte héros (VoyageTrip) — 3 positions
+// fixes (réduit/moyen/plein), glissées via la poignée uniquement (la rangée
+// d'onglets garde son propre scroll horizontal, pas de conflit de geste).
+// Hauteur du panneau = position "plein" (la plus grande) ; les positions plus
+// basses sont simulées par un translateY, pour rester sur transform/opacity
+// (perf + reduced-motion neutralisé globalement, voir CSS global) plutôt que
+// d'animer `height`.
+const SHEET_MIN_H = 60;
+function TripBottomSheet({ C, containerH, tabs, activeTab, onTabChange, children }){
+  const [pos, setPos] = useState(1); // 0=réduit 1=moyen 2=plein — démarre en position moyenne
+  const [drag, setDrag] = useState({ y:0, active:false });
+  const startY = useRef(0);
+  const startH = useRef(0);
+
+  const heights = useMemo(()=>{
+    const h = containerH || 600;
+    return [130, Math.round(h*0.5), Math.round(h*0.88)];
+  }, [containerH]);
+  const maxH = heights[2];
+
+  const onStart = (clientY)=>{ startY.current = clientY; startH.current = heights[pos]; setDrag({ y:0, active:true }); };
+  const onMove = (clientY)=>{ if(!drag.active) return; setDrag({ y: clientY-startY.current, active:true }); };
+  const onEnd = ()=>{
+    if(!drag.active) return;
+    const currentH = Math.max(SHEET_MIN_H, Math.min(maxH, startH.current - drag.y));
+    let nearest = 0, best = Infinity;
+    heights.forEach((h,i)=>{ const diff = Math.abs(h-currentH); if(diff<best){ best=diff; nearest=i; } });
+    setPos(nearest);
+    setDrag({ y:0, active:false });
+  };
+
+  const currentH = drag.active ? Math.max(SHEET_MIN_H, Math.min(maxH, startH.current - drag.y)) : heights[pos];
+  const translateY = maxH - currentH;
+
+  return (
+    <div style={{
+      position:"absolute", left:0, right:0, bottom:0, height:maxH, zIndex:5,
+      background:C.s1, borderRadius:"20px 20px 0 0", boxShadow:"0 -4px 40px rgba(0,0,0,.25)",
+      display:"flex", flexDirection:"column", overflow:"hidden",
+      transform:`translateY(${translateY}px)`,
+      transition: drag.active ? "none" : "transform var(--dur-slow) var(--ease-smooth)",
+    }}>
+      {/* Poignée — seule zone de drag vertical */}
+      <div
+        onMouseDown={e=>onStart(e.clientY)} onMouseMove={e=>onMove(e.clientY)} onMouseUp={onEnd} onMouseLeave={onEnd}
+        onTouchStart={e=>onStart(e.touches[0].clientY)} onTouchMove={e=>onMove(e.touches[0].clientY)} onTouchEnd={onEnd}
+        style={{flexShrink:0, cursor:"grab", touchAction:"none", padding:"9px 0 6px", display:"flex", justifyContent:"center"}}
+      >
+        <div style={{width:36,height:4,borderRadius:2,background:C.s3}}/>
+      </div>
+      {/* Onglets — scroll horizontal natif, indépendant du drag vertical */}
+      <div style={{flexShrink:0,display:"flex",gap:8,overflowX:"auto",padding:"0 16px 12px",WebkitOverflowScrolling:"touch"}}>
+        {tabs.map(t=>(
+          <button key={t.id} onClick={()=>onTabChange(t.id)} style={{flexShrink:0,padding:"7px 14px",borderRadius:16,fontSize:12,fontWeight:600,cursor:"pointer",border:`1px solid ${t.id===activeTab?C.red:C.border}`,background:t.id===activeTab?C.red:C.s2,color:t.id===activeTab?"#fff":C.t2,whiteSpace:"nowrap"}}>{t.label}</button>
+        ))}
+      </div>
+      {/* Contenu de l'onglet actif — scroll natif, ne déplace jamais le sheet */}
+      <div style={{flex:1,minHeight:0,overflowY:"auto",padding:"0 20px calc(20px + env(safe-area-inset-bottom, 0px))"}}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOpenPremium, isFav, toggleFav, onBack, onUpdate, onDelete}){
   // Mémoïsé : `trip.customLieux || []` créerait un nouveau tableau à CHAQUE
   // rendu quand customLieux est absent, ce qui invaliderait lieuById puis
   // dayPoints (voir plus bas) en cascade à chaque re-rendu, même sans
@@ -6031,7 +6178,41 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
   const [detailId, setDetailId] = useState(null);
   const [noteEdit, setNoteEdit] = useState(null); // id d'étape en édition de note
   const [confirmDel, setConfirmDel] = useState(false);
-  const [selectedId, setSelectedId] = useState(null); // lieuId sélectionné — sync carte ↔ liste
+  const [confirmDelEtapeId, setConfirmDelEtapeId] = useState(null); // étape en confirmation de suppression (macro)
+  const [showAddEtape, setShowAddEtape] = useState(false); // picker villes déplié (macro)
+  const [selectedId, setSelectedId] = useState(null); // lieuId (ou étapeId en vue macro) sélectionné — sync carte ↔ liste
+
+  // Onglet actif du bottom sheet : "resume" | "nonplanifie" | "day-<i>".
+  // "day-<i>" reste la source de vérité du jour affiché — synchronisé avec
+  // dayIdx à chaque changement d'onglet plutôt que dupliqué en deux états.
+  const [sheetTab, setSheetTab] = useState("day-0");
+  const changeSheetTab = (id)=>{
+    setSheetTab(id);
+    if(id.startsWith("day-")) setDayIdx(Number(id.slice(4)));
+  };
+  const sheetTabs = useMemo(()=> [
+    {id:"resume", label:"Résumé"},
+    {id:"nonplanifie", label:"Non planifié"},
+    ...trip.jours.map((j,i)=>({id:`day-${i}`, label:`Jour ${j.num}`})),
+  ], [trip.jours]);
+  const isDayTab = sheetTab.startsWith("day-");
+
+  // Mesure de la hauteur du conteneur héros (carte + sheet) pour calculer les
+  // 3 positions du sheet en pixels — callback ref plutôt que useEffect+ref
+  // classique car ce bloc se démonte/remonte à chaque aller-retour vers une
+  // sous-vue plein écran (catalogue/détail/…), un useEffect à deps figées ne
+  // se ré-exécuterait pas au retour.
+  const [heroH, setHeroH] = useState(0);
+  const heroRO = useRef(null);
+  const heroRefCallback = useCallback((node)=>{
+    if(heroRO.current){ heroRO.current.disconnect(); heroRO.current = null; }
+    if(node){
+      const ro = new ResizeObserver(()=> setHeroH(node.clientHeight));
+      ro.observe(node);
+      heroRO.current = ro;
+      setHeroH(node.clientHeight);
+    }
+  }, []);
 
   const day = trip.jours[dayIdx];
   const ville = day ? villeById[day.villeId] : null;
@@ -6040,8 +6221,21 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
   // pin, qui ne touche pas trip.jours) ferait croire à DayMap que les points
   // ont changé, et la carte se reconstruirait en fermant toute popup ouverte.
   const dayPoints = useMemo(()=>
-    day ? day.etapes.map(e=> lieuById[e.lieuId] ? {...lieuById[e.lieuId], etapeId:e.id} : null).filter(Boolean) : [],
+    day ? day.activites.map(e=> lieuById[e.lieuId] ? {...lieuById[e.lieuId], etapeId:e.id} : null).filter(Boolean) : [],
   [day, lieuById]);
+  // Onglet Résumé = vue macro : un pin par étape-ville (pas par lieu), aux
+  // coordonnées de la ville — reliés par le même tracé simple que DayMap
+  // utilise déjà pour les lieux (aucune logique de tracé à dupliquer).
+  const stagePoints = useMemo(()=>
+    trip.etapes.map(e=>{ const v = villeById[e.villeId]; return v ? {id:e.id, lat:v.lat, lng:v.lng, nom:v.nom, emoji:v.emoji} : null; }).filter(Boolean),
+  [trip.etapes, villeById]);
+  // Onglet Non planifié : stock par étape (Phase 1) — vide tant que rien ne
+  // l'alimente sinon le retrait d'une nuit (changeEtapeNights), mais déjà
+  // branché sur le vrai modèle en vue d'une UI de reprise en Phase 4.
+  const nonPlanifiePoints = useMemo(()=>
+    trip.etapes.flatMap(e=> (e.nonPlanifie||[]).map(np=> lieuById[np.lieuId] ? {...lieuById[np.lieuId], etapeId:np.id} : null).filter(Boolean)),
+  [trip.etapes, lieuById]);
+  const heroPoints = sheetTab==="resume" ? stagePoints : sheetTab==="nonplanifie" ? nonPlanifiePoints : dayPoints;
 
   // Sélection venant d'un tap sur un pin → fait défiler la liste jusqu'à la
   // ligne correspondante (le tap inverse, depuis la liste, ne fait que
@@ -6056,27 +6250,101 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
 
   // ── Mutations ──
   const addLieu = (lieuId)=>{
-    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:[...j.etapes, {id:makeStepId(), lieuId, note:""}]}));
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:[...j.activites, {id:makeStepId(), lieuId, note:""}]}));
     onUpdate({...trip, jours});
   };
   const removeEtape = (etapeId)=>{
-    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:j.etapes.filter(e=>e.id!==etapeId)}));
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:j.activites.filter(e=>e.id!==etapeId)}));
     onUpdate({...trip, jours});
   };
   const moveEtape = (idx, dir)=>{
-    const arr = [...day.etapes]; const ni = idx+dir;
+    const arr = [...day.activites]; const ni = idx+dir;
     if(ni<0||ni>=arr.length) return;
     [arr[idx],arr[ni]]=[arr[ni],arr[idx]];
-    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:arr}));
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:arr}));
     // Chaque ligne porte un view-transition-name stable (voir le render) :
     // le navigateur anime nativement le déplacement (FLIP) sans layout lib
     // dédiée ; repli = saut sec si l'API n'est pas supportée.
     withViewTransition(()=> flushSync(()=> onUpdate({...trip, jours})));
   };
   const setNote = (etapeId, note)=>{
-    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:j.etapes.map(e=>e.id===etapeId?{...e,note}:e)}));
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:j.activites.map(e=>e.id===etapeId?{...e,note}:e)}));
     onUpdate({...trip, jours});
   };
+
+  // ── Reprise du stock "non planifié" (onglet dédié, Phase 4) ──
+  // L'item garde sa forme {id,lieuId,note} intacte : il a été déposé là par
+  // changeEtapeNights depuis un day.activites, donc pas de reconstruction.
+  const assignNonPlanifie = (etapeId, npId, dayGlobalIdx)=>{
+    const etape = trip.etapes.find(e=>e.id===etapeId);
+    const item = etape && (etape.nonPlanifie||[]).find(n=>n.id===npId);
+    if(!item) return;
+    const etapes = trip.etapes.map(e=> e.id!==etapeId ? e : {...e, nonPlanifie:(e.nonPlanifie||[]).filter(n=>n.id!==npId)});
+    const jours = trip.jours.map((j,i)=> i!==dayGlobalIdx ? j : ({...j, activites:[...j.activites, item]}));
+    onUpdate({...trip, etapes, jours});
+  };
+  const removeNonPlanifie = (etapeId, npId)=>{
+    const etapes = trip.etapes.map(e=> e.id!==etapeId ? e : {...e, nonPlanifie:(e.nonPlanifie||[]).filter(n=>n.id!==npId)});
+    onUpdate({...trip, etapes});
+  };
+
+  // ── Mutations d'étapes-villes (vue macro, Phase 3) ──
+  // Les jours d'une étape restent groupés par construction (chaque mutation
+  // ci-dessous préserve cet invariant posé en Phase 1) — le regroupement se
+  // fait donc directement par etapeId, jamais en re-dérivant par villeId.
+  const renumberJours = (jours)=> jours.map((j,i)=>({...j, num:i+1}));
+
+  const moveEtapeStage = (idx, dir)=>{
+    const ni = idx+dir;
+    if(ni<0 || ni>=trip.etapes.length) return;
+    const etapes = [...trip.etapes];
+    [etapes[idx], etapes[ni]] = [etapes[ni], etapes[idx]];
+    const jours = renumberJours(etapes.flatMap(e=> trip.jours.filter(j=>j.etapeId===e.id)));
+    onUpdate({...trip, etapes, jours});
+  };
+
+  const changeEtapeNights = (idx, delta)=>{
+    const etape = trip.etapes[idx];
+    if(!etape) return;
+    if(delta<0 && etape.nuits<=1) return; // plancher 1 nuit — supprimer l'étape pour aller plus bas
+    if(delta>0){
+      const idxs = trip.jours.map((j,i)=> j.etapeId===etape.id ? i : -1).filter(i=>i>=0);
+      const insertAt = idxs.length ? idxs[idxs.length-1]+1 : trip.jours.length;
+      const newDay = { num:0, date:"", villeId:etape.villeId, etapeId:etape.id, titre:"", activites:[] };
+      const etapes = trip.etapes.map((e,i)=> i!==idx ? e : {...e, nuits:e.nuits+1});
+      const jours = renumberJours([...trip.jours.slice(0,insertAt), newDay, ...trip.jours.slice(insertAt)]);
+      onUpdate({...trip, etapes, jours});
+    } else {
+      const etapeJours = trip.jours.filter(j=>j.etapeId===etape.id);
+      const lastDay = etapeJours[etapeJours.length-1];
+      // Les activités du dernier jour retiré rejoignent le stock "non
+      // planifié" de l'étape plutôt que d'être perdues (Phase 4 les reprendra).
+      const etapes = trip.etapes.map((e,i)=> i!==idx ? e : {...e, nuits:e.nuits-1, nonPlanifie:[...(e.nonPlanifie||[]), ...lastDay.activites]});
+      const jours = renumberJours(trip.jours.filter(j=>j!==lastDay));
+      onUpdate({...trip, etapes, jours});
+    }
+  };
+
+  // Suppression d'étape : les activités de ses jours sont perdues (pas de
+  // "non planifié" de repli puisque l'étape elle-même disparaît) — désactivée
+  // côté rendu quand il ne reste qu'une seule étape (voir "Supprimer ce
+  // voyage" pour vider un voyage entièrement).
+  const deleteEtapeStage = (idx)=>{
+    const etape = trip.etapes[idx];
+    if(!etape || trip.etapes.length<=1) return;
+    const etapes = trip.etapes.filter((_,i)=>i!==idx);
+    const jours = renumberJours(trip.jours.filter(j=>j.etapeId!==etape.id));
+    onUpdate({...trip, etapes, jours});
+    setConfirmDelEtapeId(null);
+  };
+
+  const addEtapeStage = (villeId)=>{
+    const etape = { id: makeEtapeId(), villeId, nuits:1, nonPlanifie:[] };
+    const newDay = { num:0, date:"", villeId, etapeId:etape.id, titre:"", activites:[] };
+    onUpdate({...trip, etapes:[...trip.etapes, etape], jours: renumberJours([...trip.jours, newDay])});
+    setShowAddEtape(false);
+  };
+
   const toggleCheck = (cid)=> onUpdate({...trip, checklist:(trip.checklist||[]).map(c=>c.id===cid?{...c,fait:!c.fait}:c)});
   const addCheck = (texte)=> onUpdate({...trip, checklist:[...(trip.checklist||[]), {id:"c"+Date.now(), texte, fait:false}]});
   const removeCheck = (cid)=> onUpdate({...trip, checklist:(trip.checklist||[]).filter(c=>c.id!==cid)});
@@ -6092,12 +6360,12 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
     };
     const nextCustom = [...customLieux, lieu];
     // Ajoute directement au jour courant
-    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, etapes:[...j.etapes, {id:makeStepId(), lieuId:id, note:""}]}));
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:[...j.activites, {id:makeStepId(), lieuId:id, note:""}]}));
     onUpdate({...trip, customLieux: nextCustom, jours});
     setSub("day");
   };
 
-  const idsInDay = new Set((day?.etapes||[]).map(e=>e.lieuId));
+  const idsInDay = new Set((day?.activites||[]).map(e=>e.lieuId));
 
   // ── Export / Partage ──
   const [shareOpen, setShareOpen] = useState(false);
@@ -6148,8 +6416,8 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
     trip.jours.forEach(j=>{
       const v = villeById[j.villeId];
       txt += `📅 JOUR ${j.num} — ${v?.nom||""}${j.titre?` · ${j.titre}`:""}\n`;
-      if(j.etapes.length===0){ txt += `   (aucun lieu prévu)\n`; }
-      j.etapes.forEach((e,i)=>{
+      if(j.activites.length===0){ txt += `   (aucun lieu prévu)\n`; }
+      j.activites.forEach((e,i)=>{
         const l = lieuById[e.lieuId];
         txt += `   ${i+1}. ${l?.emoji||"📍"} ${l?.nom||"Lieu"}`;
         if(l?.budget) txt += ` (${l.budget})`;
@@ -6195,8 +6463,8 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
     const villesNoms = trip.villes.map(id=>villeById[id]?.nom||id).join(" · ");
     const joursHTML = trip.jours.map(j=>{
       const v = villeById[j.villeId];
-      const etapesHTML = j.etapes.length
-        ? j.etapes.map((e,i)=>{
+      const etapesHTML = j.activites.length
+        ? j.activites.map((e,i)=>{
             const l = lieuById[e.lieuId];
             return `<li><b>${l?.nom||"Lieu"}</b>${l?.categorie?` <span class="cat">· ${l.categorie}</span>`:""}${l?.budget?` <span class="cat">· ${l.budget}</span>`:""}${e.note?`<div class="note">📝 ${e.note}</div>`:""}</li>`;
           }).join("")
@@ -6304,7 +6572,7 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
     const matchScore = (l)=> (l.interets||[]).filter(it=>why.includes(it)).length;
     // Centroïde des lieux déjà planifiés ce jour-là, pour faire remonter en
     // priorité les lieux du catalogue proches de ce qui est déjà prévu.
-    const dayCoords = (day?.etapes||[]).map(e=>lieuById[e.lieuId]).filter(l=>l && typeof l.lat==="number" && typeof l.lng==="number");
+    const dayCoords = (day?.activites||[]).map(e=>lieuById[e.lieuId]).filter(l=>l && typeof l.lat==="number" && typeof l.lng==="number");
     const centroid = dayCoords.length ? {
       lat: dayCoords.reduce((a,l)=>a+l.lat,0)/dayCoords.length,
       lng: dayCoords.reduce((a,l)=>a+l.lng,0)/dayCoords.length,
@@ -6399,54 +6667,182 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
     );
   }
 
-  // ─── Vue principale : le jour ───
+  // ─── Vue principale : carte héros + bottom sheet ───
+  const dayTabLabel = day ? `Jour ${day.num} · ${ville?.emoji||""} ${ville?.nom||""}${day.titre?` · ${day.titre}`:""}` : "";
   return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
-      <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-          <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0}}>‹ Mes voyages</button>
-          <div style={{display:"flex",gap:7}}>
-            <button onClick={()=>setShareOpen(true)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,padding:"5px 12px",color:C.t2,fontSize:11,cursor:"pointer"}}>↗ Partager</button>
-            <button onClick={()=>setSub("checklist")} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,padding:"5px 12px",color:C.t2,fontSize:11,cursor:"pointer"}}>✅ Préparatifs</button>
-          </div>
-        </div>
-        <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:10}}>{trip.titre}</div>
-        <div style={{display:"flex",gap:6,overflowX:"auto",paddingBottom:4}}>
-          {trip.jours.map((j,i)=>(
-            <button key={i} onClick={()=>setDayIdx(i)} style={{flexShrink:0,padding:"6px 13px",borderRadius:16,fontSize:12,cursor:"pointer",border:`1px solid ${i===dayIdx?C.red:C.border}`,background:i===dayIdx?C.red:C.s1,color:i===dayIdx?"#fff":C.t2}}>J{j.num}</button>
-          ))}
-        </div>
+    <div style={{height:"100%",position:"relative",overflow:"hidden",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
+      {/* Carte héros plein écran — fond de tout l'écran, recentrée selon l'onglet actif du sheet */}
+      <div ref={heroRefCallback} style={{position:"absolute",inset:0}}>
+        <DayMap C={C} variant="hero" dark={dark}
+          points={heroPoints}
+          pinPopup={isDayTab} pointLabel={sheetTab==="resume" ? "étape" : "lieu"}
+          selectedId={selectedId} onSelectPin={setSelectedId}
+          onOpenDetail={(id)=>{ setDetailId(id); setSub("detail"); }}
+          onRemove={isDayTab ? removeEtape : undefined}
+          onAdd={isDayTab ? ()=>{ setCatType("tout"); setSub("catalogue"); } : undefined}/>
       </div>
 
-      <div style={{padding:"16px 20px 110px"}}>
-        {day && (
-          <>
-            <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginBottom:14,textTransform:"uppercase"}}>
-              Jour {day.num} · {ville?.emoji} {ville?.nom||""}{day.titre?` · ${day.titre}`:""}
+      {/* Retour, flottant au-dessus de la carte */}
+      <button onClick={onBack} style={{position:"absolute",top:"calc(14px + env(safe-area-inset-top, 0px))",left:14,zIndex:6,background:"rgba(0,0,0,.6)",backdropFilter:"blur(4px)",border:"none",borderRadius:20,padding:"7px 14px",color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer"}}>‹ Mes voyages</button>
+
+      <TripBottomSheet C={C} containerH={heroH} tabs={sheetTabs} activeTab={sheetTab} onTabChange={changeSheetTab}>
+        {sheetTab==="resume" && (
+          <div style={{paddingTop:2}}>
+            <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:4}}>{trip.titre}</div>
+            <div style={{fontSize:12,color:C.t3,marginBottom:18}}>{trip.jours.length} jour{trip.jours.length>1?"s":""} · {trip.villes.map(id=>villeById[id]?.nom||id).join(" · ")}</div>
+
+            {/* Étapes-villes — vue macro : réordonner, ajuster les nuits, supprimer */}
+            <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:16}}>
+              {trip.etapes.map((etape,i)=>{
+                const v = villeById[etape.villeId];
+                const firstDayIdx = trip.jours.findIndex(j=>j.etapeId===etape.id);
+                const selected = selectedId===etape.id;
+                return (
+                  <div key={etape.id} style={{background:C.s1,border:`1px solid ${selected?C.red:C.border}`,borderRadius:13,padding:"11px 12px",transition:"border-color .2s ease"}}>
+                    <div style={{display:"flex",alignItems:"flex-start",gap:9}}>
+                      <div onClick={()=>{ setSelectedId(etape.id); if(firstDayIdx>=0) changeSheetTab(`day-${firstDayIdx}`); }} style={{flex:1,minWidth:0,cursor:"pointer"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:7}}>
+                          <span style={{fontSize:18}}>{v?.emoji||"📍"}</span>
+                          <span style={{fontSize:13,color:C.text,fontWeight:600}}>Étape {i+1} · {v?.nom||etape.villeId}</span>
+                        </div>
+                        <div style={{fontSize:10,color:C.t3,marginTop:2}}>{v?.region||""}</div>
+                      </div>
+                      <div style={{display:"flex",flexDirection:"column",gap:2,flexShrink:0}}>
+                        <button onClick={()=>moveEtapeStage(i,-1)} disabled={i===0} aria-label="Monter" style={{width:24,height:22,border:`1px solid ${C.border}`,borderRadius:6,background:C.s2,color:i===0?C.t3:C.t2,fontSize:10,cursor:i===0?"default":"pointer"}}>▲</button>
+                        <button onClick={()=>moveEtapeStage(i,1)} disabled={i===trip.etapes.length-1} aria-label="Descendre" style={{width:24,height:22,border:`1px solid ${C.border}`,borderRadius:6,background:C.s2,color:i===trip.etapes.length-1?C.t3:C.t2,fontSize:10,cursor:i===trip.etapes.length-1?"default":"pointer"}}>▼</button>
+                      </div>
+                    </div>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:10}}>
+                      <div style={{display:"flex",alignItems:"center",gap:10}}>
+                        <button onClick={()=>changeEtapeNights(i,-1)} disabled={etape.nuits<=1} style={{width:26,height:26,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s2,color:etape.nuits<=1?C.t3:C.text,fontSize:14,cursor:etape.nuits<=1?"default":"pointer"}}>−</button>
+                        <span style={{fontSize:12,color:C.text,minWidth:64,textAlign:"center"}}>{etape.nuits} nuit{etape.nuits>1?"s":""}</span>
+                        <button onClick={()=>changeEtapeNights(i,1)} style={{width:26,height:26,borderRadius:"50%",border:`1px solid ${C.border}`,background:C.s2,color:C.text,fontSize:14,cursor:"pointer"}}>+</button>
+                      </div>
+                      {trip.etapes.length>1 && (
+                        confirmDelEtapeId===etape.id ? (
+                          <div style={{display:"flex",gap:6}}>
+                            <button onClick={()=>deleteEtapeStage(i)} style={{padding:"5px 10px",background:C.red,border:"none",borderRadius:8,color:"#fff",fontSize:11,cursor:"pointer"}}>Confirmer</button>
+                            <button onClick={()=>setConfirmDelEtapeId(null)} style={{padding:"5px 10px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:8,color:C.t2,fontSize:11,cursor:"pointer"}}>Annuler</button>
+                          </div>
+                        ) : (
+                          <button onClick={()=>setConfirmDelEtapeId(etape.id)} aria-label="Supprimer cette étape" style={{background:"transparent",border:"none",color:C.t3,fontSize:16,cursor:"pointer",padding:4}}>🗑</button>
+                        )
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            {day.etapes.length>0 && (
-              <DayMap C={C}
-                points={dayPoints}
-                selectedId={selectedId} onSelectPin={setSelectedId}
-                onOpenDetail={(id)=>{ setDetailId(id); setSub("detail"); }}
-                onRemove={removeEtape}
-                onAdd={()=>{ setCatType("tout"); setSub("catalogue"); }}/>
+
+            {showAddEtape ? (
+              <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:20}}>
+                {(db?.villes||[]).map(v=>(
+                  <button key={v.id} onClick={()=>addEtapeStage(v.id)} style={{padding:"8px 13px",borderRadius:18,fontSize:12,cursor:"pointer",border:`1px solid ${C.border}`,background:C.s1,color:C.t2}}>{v.emoji} {v.nom}</button>
+                ))}
+              </div>
+            ) : (
+              <button onClick={()=>setShowAddEtape(true)} style={{width:"100%",padding:"13px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:13,color:C.red,fontSize:13,fontWeight:500,cursor:"pointer",marginBottom:20}}>+ Ajouter une étape</button>
             )}
-            {day.etapes.length===0 ? (
+
+            <div style={{display:"flex",gap:8,marginBottom:20}}>
+              <button onClick={()=>setShareOpen(true)} style={{flex:1,background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,padding:"11px",color:C.text,fontSize:12,fontWeight:600,cursor:"pointer"}}>↗ Partager</button>
+              <button onClick={()=>setSub("checklist")} style={{flex:1,background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,padding:"11px",color:C.text,fontSize:12,fontWeight:600,cursor:"pointer"}}>✅ Préparatifs</button>
+            </div>
+            <div style={{marginTop:10,textAlign:"center"}}>
+              {!confirmDel ? (
+                <button onClick={()=>setConfirmDel(true)} style={{background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer"}}>Supprimer ce voyage</button>
+              ) : (
+                <div style={{display:"flex",gap:10,justifyContent:"center"}}>
+                  <button onClick={()=>onDelete(trip.id)} style={{padding:"8px 16px",background:C.red,border:"none",borderRadius:9,color:"#fff",fontSize:12,cursor:"pointer"}}>Confirmer la suppression</button>
+                  <button onClick={()=>setConfirmDel(false)} style={{padding:"8px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:9,color:C.t2,fontSize:12,cursor:"pointer"}}>Annuler</button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {sheetTab==="nonplanifie" && (
+          trip.etapes.every(e=>!(e.nonPlanifie||[]).length) ? (
+            <div style={{textAlign:"center",padding:"24px 10px"}}>
+              <div style={{fontSize:34,marginBottom:10}}>📍</div>
+              <div style={{fontSize:13,color:C.t2}}>Aucun lieu en attente pour l'instant.</div>
+              <div style={{fontSize:11,color:C.t3,marginTop:6,lineHeight:1.5}}>Les lieux d'une nuit supprimée atterrissent ici, en attente d'un jour.</div>
+            </div>
+          ) : (
+            <div style={{display:"flex",flexDirection:"column",gap:20,marginBottom:14}}>
+              {trip.etapes.filter(e=>(e.nonPlanifie||[]).length>0).map(etape=>{
+                const v = villeById[etape.villeId];
+                // Jours de CETTE étape avec leur index global (trip.jours), seule
+                // référence stable pour assignNonPlanifie (jours pas forcément
+                // contigus par étape après un réordonnancement macro... en
+                // pratique si, mais on ne recalcule jamais l'index autrement).
+                const etapeJours = trip.jours.map((j,i)=>({...j,_gi:i})).filter(j=>j.etapeId===etape.id);
+                return (
+                  <div key={etape.id}>
+                    <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginBottom:8,textTransform:"uppercase"}}>{v?.emoji} {v?.nom||etape.villeId}</div>
+                    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                      {(etape.nonPlanifie||[]).map(np=>{
+                        const l = lieuById[np.lieuId];
+                        return (
+                          <div key={np.id} data-etape-lieu={l?.id} style={{background:C.s1,border:`1px solid ${l&&selectedId===l.id?C.red:C.border}`,borderRadius:13,padding:"11px 13px",transition:"border-color .2s ease"}}>
+                            <div style={{display:"flex",alignItems:"center",gap:9}}>
+                              <span style={{fontSize:20}}>{l?.emoji||"📍"}</span>
+                              <div style={{flex:1,minWidth:0}}>
+                                <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l?.nom||"Lieu"}</div>
+                                {l && <div style={{fontSize:10,color:C.t3}}>{l.categorie} · {l.budget}</div>}
+                              </div>
+                              <button onClick={()=>removeNonPlanifie(etape.id, np.id)} aria-label="Retirer" style={{background:"transparent",border:"none",color:C.t3,fontSize:18,cursor:"pointer",flexShrink:0}}>×</button>
+                            </div>
+                            {etapeJours.length>0 && (
+                              <div style={{display:"flex",gap:6,marginTop:9,flexWrap:"wrap"}}>
+                                {etapeJours.map(j=>(
+                                  <button key={j._gi} onClick={()=>assignNonPlanifie(etape.id, np.id, j._gi)} style={{padding:"5px 11px",borderRadius:14,fontSize:11,border:`1px solid ${C.border}`,background:C.s2,color:C.t2,cursor:"pointer"}}>+ Jour {j.num}</button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )
+        )}
+
+        {isDayTab && day && (
+          <>
+            <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginBottom:14,marginTop:2,textTransform:"uppercase"}}>
+              {dayTabLabel}
+            </div>
+            {day.activites.length===0 ? (
               <div style={{textAlign:"center",padding:"24px 10px"}}>
                 <div style={{fontSize:34,marginBottom:10}}>📍</div>
                 <div style={{fontSize:13,color:C.t2,marginBottom:16}}>Aucun lieu pour ce jour.</div>
               </div>
             ) : (
               <div style={{display:"flex",flexDirection:"column",gap:9,marginBottom:14}}>
-                {day.etapes.map((e,i)=>{
+                {day.activites.map((e,i)=>{
                   const l = lieuById[e.lieuId];
+                  const prevL = i>0 ? lieuById[day.activites[i-1].lieuId] : null;
+                  const km = prevL && l ? haversineKm(prevL, l) : null;
                   return(
-                    <div key={e.id} style={{display:"flex",gap:9,alignItems:"flex-start",viewTransitionName:`etape-${e.id}`}}>
+                    <Fragment key={e.id}>
+                    {i>0 && (
+                      <div style={{display:"flex",alignItems:"center",gap:7,marginLeft:31,fontSize:10,color:C.t3}}>
+                        <span>↓</span>
+                        <span>{km!=null ? `${km<1 ? Math.round(km*1000)+" m" : km.toFixed(1)+" km"} à vol d'oiseau` : "distance inconnue"}</span>
+                        {prevL && l && typeof prevL.lat==="number" && typeof l.lat==="number" && (
+                          <a href={`https://www.google.com/maps/dir/?api=1&origin=${prevL.lat},${prevL.lng}&destination=${l.lat},${l.lng}`} target="_blank" rel="noopener noreferrer" onClick={ev=>ev.stopPropagation()} style={{marginLeft:"auto",color:C.red,textDecoration:"none",fontWeight:600}}>Ouvrir dans Maps ↗</a>
+                        )}
+                      </div>
+                    )}
+                    <div style={{display:"flex",gap:9,alignItems:"flex-start",viewTransitionName:`etape-${e.id}`}}>
                       {/* Flèches réordonner */}
                       <div style={{display:"flex",flexDirection:"column",gap:2,marginTop:6}}>
                         <button onClick={()=>moveEtape(i,-1)} disabled={i===0} style={{width:22,height:20,border:`1px solid ${C.border}`,borderRadius:6,background:C.s1,color:i===0?C.t3:C.t2,fontSize:10,cursor:i===0?"default":"pointer"}}>▲</button>
-                        <button onClick={()=>moveEtape(i,1)} disabled={i===day.etapes.length-1} style={{width:22,height:20,border:`1px solid ${C.border}`,borderRadius:6,background:C.s1,color:i===day.etapes.length-1?C.t3:C.t2,fontSize:10,cursor:i===day.etapes.length-1?"default":"pointer"}}>▼</button>
+                        <button onClick={()=>moveEtape(i,1)} disabled={i===day.activites.length-1} style={{width:22,height:20,border:`1px solid ${C.border}`,borderRadius:6,background:C.s1,color:i===day.activites.length-1?C.t3:C.t2,fontSize:10,cursor:i===day.activites.length-1?"default":"pointer"}}>▼</button>
                       </div>
                       <div className="lift" data-etape-lieu={l?.id} onClick={()=>{if(l){setDetailId(l.id);setSub("detail");}}} style={{flex:1,background:C.s1,border:`1px solid ${l&&selectedId===l.id?C.red:C.border}`,borderRadius:13,padding:"12px 14px",cursor:l?"pointer":"default",transition:"border-color .2s ease"}}>
                         <div style={{display:"flex",alignItems:"center",gap:9}}>
@@ -6469,27 +6865,16 @@ function VoyageTrip({C, trip, db, villeById, script, user, isPremium, onOpenPrem
                         )}
                       </div>
                     </div>
+                    </Fragment>
                   );
                 })}
               </div>
             )}
             {/* Ajouter un lieu */}
             <button onClick={()=>{setCatType("tout");setSub("catalogue");}} style={{width:"100%",padding:"13px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:13,color:C.red,fontSize:13,fontWeight:500,cursor:"pointer"}}>+ Ajouter un lieu à ce jour</button>
-
-            {/* Supprimer le voyage */}
-            <div style={{marginTop:30,textAlign:"center"}}>
-              {!confirmDel ? (
-                <button onClick={()=>setConfirmDel(true)} style={{background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer"}}>Supprimer ce voyage</button>
-              ) : (
-                <div style={{display:"flex",gap:10,justifyContent:"center"}}>
-                  <button onClick={()=>onDelete(trip.id)} style={{padding:"8px 16px",background:C.red,border:"none",borderRadius:9,color:"#fff",fontSize:12,cursor:"pointer"}}>Confirmer la suppression</button>
-                  <button onClick={()=>setConfirmDel(false)} style={{padding:"8px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:9,color:C.t2,fontSize:12,cursor:"pointer"}}>Annuler</button>
-                </div>
-              )}
-            </div>
           </>
         )}
-      </div>
+      </TripBottomSheet>
 
       {/* Modale de partage */}
       {shareOpen && (
@@ -8620,7 +9005,7 @@ export default function IsekaidApp(){
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)} kanaProgress={kanaProgress} pathProgress={pathProgress} onGoTab={setTab}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
               {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onBack={()=>setTab("home")} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/>}
-              {tab==="voyage"    &&<VoyageScreen    C={C} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef}/>}
+              {tab==="voyage"    &&<VoyageScreen    C={C} dark={dark} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef}/>}
               {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
             </div>

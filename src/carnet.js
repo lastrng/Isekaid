@@ -126,7 +126,7 @@ function buildCoverPage(trip, villeById, baseUrl){
 
 function buildIntroPage(trip, villeById){
   const villesNoms = (trip.villes||[]).map(id=>villeById[id]?.nom||id).join(", ");
-  const nbLieux = (trip.jours||[]).reduce((a,j)=>a+(j.etapes?.length||0), 0);
+  const nbLieux = (trip.jours||[]).reduce((a,j)=>a+(j.activites?.length||0), 0);
   const n = trip.jours?.length || 0;
   const duree = `${n} jour${n>1?"s":""}`;
   return `<div class="page intro">
@@ -151,7 +151,7 @@ function buildVillesPage(trip, villeById){
 
 function buildInfosPage(trip, villeById){
   const n = trip.jours?.length || 0;
-  const nbLieux = (trip.jours||[]).reduce((a,j)=>a+(j.etapes?.length||0), 0);
+  const nbLieux = (trip.jours||[]).reduce((a,j)=>a+(j.activites?.length||0), 0);
   const villesNoms = (trip.villes||[]).map(id=>villeById[id]?.nom||id).join(", ");
   return `<div class="page infos">
   <div class="h-script" style="text-align:left;padding-top:20px;">Informations essentielles</div>
@@ -179,8 +179,8 @@ function buildEtapePage(numero, nomVille){
 // décision validée avec l'utilisateur plutôt que d'afficher un total vide.
 function buildJourPage(trip, jour, villeById, lieuById){
   const ville = villeById[jour.villeId];
-  const lieuxNoms = (jour.etapes||[]).map(e=>lieuById[e.lieuId]?.nom).filter(Boolean);
-  const notes = (jour.etapes||[]).map(e=>e.note).filter(Boolean);
+  const lieuxNoms = (jour.activites||[]).map(e=>lieuById[e.lieuId]?.nom).filter(Boolean);
+  const notes = (jour.activites||[]).map(e=>e.note).filter(Boolean);
   const desc1 = lieuxNoms.length
     ? `Au programme aujourd'hui : ${escapeHtml(lieuxNoms.join(", "))}.`
     : "Journée libre.";
@@ -200,7 +200,7 @@ function buildJourPage(trip, jour, villeById, lieuById){
 // pour la même raison que .total-pill ci-dessus. Aucune page générée si le
 // jour n'a aucune étape prévue.
 function buildProgPages(jour, lieuById, baseUrl){
-  const etapes = jour.etapes || [];
+  const etapes = jour.activites || [];
   if(!etapes.length) return [];
   return chunk(etapes, 6).map(pageEtapes => {
     const acts = pageEtapes.map(e => {
