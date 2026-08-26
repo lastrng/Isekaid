@@ -14,7 +14,7 @@ import { TutorEntryCard, TutorScreen, estimateNiveau, NiveauInfo } from "./Tutor
 import { DiscoveriesScreen, useLatestUnlockedDiscovery, DiscoveryTeaserCard, isDiscoveryNew, useExploreDiscoveries, requiredDay } from "./ExploreDiscoveries";
 import { scenarioTutorTarget, buildBridgeContext } from "./scenarioTutorBridge";
 import { MOTION_CSS_VARS, withViewTransition, supportsViewTransitions } from "./motion";
-import { flushSync } from "react-dom";
+import { flushSync, createPortal } from "react-dom";
 import { FeatureIntroScreen } from "./FeatureIntro";
 import { CelebrationOverlay } from "./Celebration";
 import {
@@ -24,7 +24,7 @@ import {
   Layers, Headphones, BookText, PenTool, Check, X, Plus, MapPin, MapPinned,
   Calendar, Clock, Share2, Printer, Trash2, Send, Volume2, AlertCircle,
   Award, Settings, LogOut, Bell, Type, Mail, Eye, EyeOff, ArrowRight, ArrowLeft,
-  Flower2, Users, Landmark, Coffee, UtensilsCrossed,
+  Flower2, Users, Landmark, Coffee, UtensilsCrossed, GripVertical,
 } from "lucide-react";
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
@@ -6094,6 +6094,127 @@ function DayMap({ C, points, selectedId, onSelectPin, onOpenDetail, onRemove, on
   );
 }
 
+// Glisser-déposer vertical minimal pour réordonner une liste (étapes-villes
+// en vue macro, activités d'un jour en vue micro) — pas de lib externe (même
+// esprit que la carte : Leaflet en vanilla plutôt que react-leaflet, une
+// dépendance pour un besoin simple n'en vaut pas la peine). Le tri ne se fait
+// QUE côté poignée dédiée (Pointer Events + setPointerCapture + touch-action:
+// none dessus) : le reste de la ligne garde son scroll/tap normal, et le
+// conteneur défilant du bottom sheet n'est jamais concerné par le geste.
+// L'item glissé sort du flux (survole en position fixed, suit le doigt sans
+// throttle vu la taille des listes) pendant que les autres lignes se
+// réordonnent sous lui ; la mutation réelle (onCommit) n'est appliquée qu'au
+// relâchement, jamais à chaque frame — sinon DayMap/onUpdate tournerait en
+// boucle pendant tout le geste (voir les mises en garde similaires sur
+// customLieux/dayPoints plus haut).
+function useDragReorder(ids, onCommit){
+  const [order, setOrder] = useState(ids);
+  const [dragId, setDragId] = useState(null);
+  const [dragRect, setDragRect] = useState(null); // {top,left,width,height} au pointerdown
+  const [dragY, setDragY] = useState(0); // décalage vertical courant depuis dragRect.top
+  const rowRefs = useRef({});
+  // Données mutables du geste en cours, lues par les listeners window (voir
+  // plus bas) — pas de useState ici : elles changent à chaque pixel de
+  // déplacement et n'ont pas besoin de déclencher leur propre rendu (dragY
+  // s'en charge déjà pour l'affichage).
+  const gesture = useRef(null); // { id, startY, rects, order }
+
+  // Resynchronise sur les vraies données quand elles changent hors drag (ex.
+  // suppression d'un item par ailleurs) — jamais en plein geste, pour ne pas
+  // couper l'herbe sous le pied d'un tri en cours. Comparaison par valeur
+  // dans le setState (pas juste dans la dep list) : `ids` est un nouveau
+  // tableau à CHAQUE rendu côté appelant (`trip.etapes.map(...)`), donc cet
+  // effet se redéclenche à chaque rendu — sans ce garde-fou, un setOrder qui
+  // retourne un nouveau tableau de même contenu provoquerait un re-rendu, qui
+  // recrée `ids`, qui redéclenche l'effet : boucle infinie (silencieuse côté
+  // utilisateur, mais qui avale la synchro et empêche tout commit propre).
+  useEffect(()=>{
+    if(dragId) return;
+    setOrder(prev => (prev.length===ids.length && prev.every((v,i)=>v===ids[i])) ? prev : ids);
+  }, [ids, dragId]);
+
+  const setRowRef = (id)=> (node)=>{ if(node) rowRefs.current[id]=node; else delete rowRefs.current[id]; };
+
+  const onPointerDown = (id)=> (e)=>{
+    const node = rowRefs.current[id];
+    if(!node) return;
+    e.preventDefault();
+    const rect = node.getBoundingClientRect();
+    const rects = order.map(oid=> ({ id: oid, rect: oid===id ? rect : rowRefs.current[oid]?.getBoundingClientRect() }));
+    gesture.current = { id, startY: e.clientY, rects, order };
+    setDragId(id);
+    setDragRect({ top: rect.top, left: rect.left, width: rect.width, height: rect.height });
+    setDragY(0);
+  };
+
+  // Suivi du geste au niveau window plutôt que via setPointerCapture sur la
+  // poignée : la poignée CHANGE DE POSITION dans le DOM à chaque
+  // réordonnancement pendant le geste (React déplace le nœud de la ligne
+  // triée), et ce déplacement casse setPointerCapture sur Chromium dès le
+  // premier swap — confirmé en traçant gotpointercapture/lostpointercapture
+  // pendant le développement. Écouter sur window (jamais déplacé, jamais
+  // démonté) est le contournement standard et n'a pas besoin de capture :
+  // pointermove/pointerup remontent jusqu'à window quel que soit l'élément
+  // sous le doigt à cet instant.
+  useEffect(()=>{
+    if(!dragId) return;
+    const onMove = (e)=>{
+      const g = gesture.current;
+      if(!g) return;
+      const delta = e.clientY - g.startY;
+      setDragY(delta);
+      const draggedEntry = g.rects.find(r=>r.id===g.id);
+      if(!draggedEntry?.rect) return;
+      const draggedMid = draggedEntry.rect.top + draggedEntry.rect.height/2 + delta;
+      const others = g.rects.filter(r=>r.id!==g.id);
+      let idx = others.length;
+      for(let i=0;i<others.length;i++){
+        const r = others[i].rect;
+        if(!r) continue;
+        if(draggedMid < r.top + r.height/2){ idx = i; break; }
+      }
+      const newOrder = others.map(o=>o.id);
+      newOrder.splice(idx, 0, g.id);
+      gesture.current = { ...g, order: newOrder };
+      setOrder(prev => (prev.length===newOrder.length && prev.every((v,i)=>v===newOrder[i])) ? prev : newOrder);
+    };
+    const onUp = ()=>{
+      const g = gesture.current;
+      gesture.current = null;
+      setDragId(null); setDragRect(null); setDragY(0);
+      if(g) onCommit(g.order);
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+    return ()=>{
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+    };
+  }, [dragId]);
+
+  return {
+    order,
+    setRowRef,
+    isDragging: (id)=> id===dragId,
+    dragHandleProps: (id)=> ({
+      onPointerDown: onPointerDown(id),
+      style: { touchAction:"none", cursor:"grab" },
+    }),
+    floatingStyle: dragId!=null && dragRect ? {
+      position:"fixed", top: dragRect.top + dragY, left: dragRect.left, width: dragRect.width,
+      zIndex: 50, pointerEvents:"none", boxShadow:"0 10px 28px rgba(0,0,0,.35)", borderRadius:13,
+    } : null,
+  };
+}
+// Poignée de glisser-déposer — icône seule (pas de zone de tap élargie
+// nécessaire, contrairement aux ▲▼ qu'elle remplace : le geste de drag est
+// plus tolérant qu'un tap précis).
+function DragHandle({ C, style, ...props }){
+  return <div {...props} aria-label="Réordonner (glisser)" style={{display:"flex", alignItems:"center", justifyContent:"center", width:24, height:"100%", color:C.t3, flexShrink:0, ...style}}><GripVertical size={16}/></div>;
+}
+
 // Panneau coulissant par-dessus la carte héros (VoyageTrip) — 3 positions
 // fixes (réduit/moyen/plein), glissées via la poignée uniquement (la rangée
 // d'onglets garde son propre scroll horizontal, pas de conflit de geste).
@@ -6248,6 +6369,20 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
   // Réinitialise la sélection quand on change de jour ou de voyage.
   useEffect(()=>{ setSelectedId(null); }, [dayIdx, trip.id]);
 
+  // ── Glisser-déposer (poignée dédiée, voir useDragReorder) — remplace les
+  // anciennes flèches ▲▼ pour les deux listes réordonnables du voyage.
+  const activiteDrag = useDragReorder((day?.activites||[]).map(a=>a.id), (newOrderIds)=>{
+    if(!day) return;
+    const activites = newOrderIds.map(id=> day.activites.find(a=>a.id===id)).filter(Boolean);
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites}));
+    onUpdate({...trip, jours});
+  });
+  const etapeDrag = useDragReorder(trip.etapes.map(e=>e.id), (newOrderIds)=>{
+    const etapes = newOrderIds.map(id=> trip.etapes.find(e=>e.id===id)).filter(Boolean);
+    const jours = renumberJours(etapes.flatMap(e=> trip.jours.filter(j=>j.etapeId===e.id)));
+    onUpdate({...trip, etapes, jours});
+  });
+
   // ── Mutations ──
   const addLieu = (lieuId)=>{
     const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:[...j.activites, {id:makeStepId(), lieuId, note:""}]}));
@@ -6256,16 +6391,6 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
   const removeEtape = (etapeId)=>{
     const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:j.activites.filter(e=>e.id!==etapeId)}));
     onUpdate({...trip, jours});
-  };
-  const moveEtape = (idx, dir)=>{
-    const arr = [...day.activites]; const ni = idx+dir;
-    if(ni<0||ni>=arr.length) return;
-    [arr[idx],arr[ni]]=[arr[ni],arr[idx]];
-    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:arr}));
-    // Chaque ligne porte un view-transition-name stable (voir le render) :
-    // le navigateur anime nativement le déplacement (FLIP) sans layout lib
-    // dédiée ; repli = saut sec si l'API n'est pas supportée.
-    withViewTransition(()=> flushSync(()=> onUpdate({...trip, jours})));
   };
   const setNote = (etapeId, note)=>{
     const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:j.activites.map(e=>e.id===etapeId?{...e,note}:e)}));
@@ -6293,15 +6418,6 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
   // ci-dessous préserve cet invariant posé en Phase 1) — le regroupement se
   // fait donc directement par etapeId, jamais en re-dérivant par villeId.
   const renumberJours = (jours)=> jours.map((j,i)=>({...j, num:i+1}));
-
-  const moveEtapeStage = (idx, dir)=>{
-    const ni = idx+dir;
-    if(ni<0 || ni>=trip.etapes.length) return;
-    const etapes = [...trip.etapes];
-    [etapes[idx], etapes[ni]] = [etapes[ni], etapes[idx]];
-    const jours = renumberJours(etapes.flatMap(e=> trip.jours.filter(j=>j.etapeId===e.id)));
-    onUpdate({...trip, etapes, jours});
-  };
 
   const changeEtapeNights = (idx, delta)=>{
     const etape = trip.etapes[idx];
@@ -6691,14 +6807,19 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
             <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:4}}>{trip.titre}</div>
             <div style={{fontSize:12,color:C.t3,marginBottom:18}}>{trip.jours.length} jour{trip.jours.length>1?"s":""} · {trip.villes.map(id=>villeById[id]?.nom||id).join(" · ")}</div>
 
-            {/* Étapes-villes — vue macro : réordonner, ajuster les nuits, supprimer */}
+            {/* Étapes-villes — vue macro : glisser pour réordonner (poignée),
+                ajuster les nuits, supprimer */}
             <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:16}}>
-              {trip.etapes.map((etape,i)=>{
+              {etapeDrag.order.map((id,i)=>{
+                const etape = trip.etapes.find(e=>e.id===id);
+                if(!etape) return null;
                 const v = villeById[etape.villeId];
                 const firstDayIdx = trip.jours.findIndex(j=>j.etapeId===etape.id);
                 const selected = selectedId===etape.id;
-                return (
-                  <div key={etape.id} style={{background:C.s1,border:`1px solid ${selected?C.red:C.border}`,borderRadius:13,padding:"11px 12px",transition:"border-color .2s ease"}}>
+                const dragging = etapeDrag.isDragging(etape.id);
+                const cardStyle = {background:C.s1,border:`1px solid ${selected?C.red:C.border}`,borderRadius:13,padding:"11px 12px",transition:"border-color .2s ease"};
+                const cardInner = (
+                  <Fragment>
                     <div style={{display:"flex",alignItems:"flex-start",gap:9}}>
                       <div onClick={()=>{ setSelectedId(etape.id); if(firstDayIdx>=0) changeSheetTab(`day-${firstDayIdx}`); }} style={{flex:1,minWidth:0,cursor:"pointer"}}>
                         <div style={{display:"flex",alignItems:"center",gap:7}}>
@@ -6707,10 +6828,7 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
                         </div>
                         <div style={{fontSize:10,color:C.t3,marginTop:2}}>{v?.region||""}</div>
                       </div>
-                      <div style={{display:"flex",flexDirection:"column",gap:2,flexShrink:0}}>
-                        <button onClick={()=>moveEtapeStage(i,-1)} disabled={i===0} aria-label="Monter" style={{width:24,height:22,border:`1px solid ${C.border}`,borderRadius:6,background:C.s2,color:i===0?C.t3:C.t2,fontSize:10,cursor:i===0?"default":"pointer"}}>▲</button>
-                        <button onClick={()=>moveEtapeStage(i,1)} disabled={i===trip.etapes.length-1} aria-label="Descendre" style={{width:24,height:22,border:`1px solid ${C.border}`,borderRadius:6,background:C.s2,color:i===trip.etapes.length-1?C.t3:C.t2,fontSize:10,cursor:i===trip.etapes.length-1?"default":"pointer"}}>▼</button>
-                      </div>
+                      <DragHandle C={C} {...etapeDrag.dragHandleProps(etape.id)}/>
                     </div>
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:10}}>
                       <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -6729,7 +6847,24 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
                         )
                       )}
                     </div>
-                  </div>
+                  </Fragment>
+                );
+                // Pendant le drag, la ligne "en place" reste dans le flux (garde
+                // sa réf, sa place — donc le trou d'insertion visible) mais
+                // rendue transparente (opacity, PAS visibility:hidden — qui
+                // sort l'élément du hit-testing et coupe le pointer capture en
+                // plein geste sur Chromium) ; le rendu suivi du doigt est
+                // PORTALÉ hors du sheet (voir useDragReorder) puisque le sheet
+                // est translateY-é, ce qui casse position:fixed pour tout
+                // descendant non porté.
+                return (
+                  <Fragment key={etape.id}>
+                    <div ref={etapeDrag.setRowRef(etape.id)} style={{...cardStyle, opacity:dragging?0:1}}>{cardInner}</div>
+                    {dragging && createPortal(
+                      <div style={{...cardStyle, ...etapeDrag.floatingStyle}}>{cardInner}</div>,
+                      document.body
+                    )}
+                  </Fragment>
                 );
               })}
             </div>
@@ -6823,10 +6958,14 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
               </div>
             ) : (
               <div style={{display:"flex",flexDirection:"column",gap:9,marginBottom:14}}>
-                {day.activites.map((e,i)=>{
+                {activiteDrag.order.map((id,i)=>{
+                  const e = day.activites.find(a=>a.id===id);
+                  if(!e) return null;
                   const l = lieuById[e.lieuId];
-                  const prevL = i>0 ? lieuById[day.activites[i-1].lieuId] : null;
+                  const prevE = i>0 ? day.activites.find(a=>a.id===activiteDrag.order[i-1]) : null;
+                  const prevL = prevE ? lieuById[prevE.lieuId] : null;
                   const km = prevL && l ? haversineKm(prevL, l) : null;
+                  const dragging = activiteDrag.isDragging(e.id);
                   return(
                     <Fragment key={e.id}>
                     {i>0 && (
@@ -6838,33 +6977,49 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
                         )}
                       </div>
                     )}
-                    <div style={{display:"flex",gap:9,alignItems:"flex-start",viewTransitionName:`etape-${e.id}`}}>
-                      {/* Flèches réordonner */}
-                      <div style={{display:"flex",flexDirection:"column",gap:2,marginTop:6}}>
-                        <button onClick={()=>moveEtape(i,-1)} disabled={i===0} style={{width:22,height:20,border:`1px solid ${C.border}`,borderRadius:6,background:C.s1,color:i===0?C.t3:C.t2,fontSize:10,cursor:i===0?"default":"pointer"}}>▲</button>
-                        <button onClick={()=>moveEtape(i,1)} disabled={i===day.activites.length-1} style={{width:22,height:20,border:`1px solid ${C.border}`,borderRadius:6,background:C.s1,color:i===day.activites.length-1?C.t3:C.t2,fontSize:10,cursor:i===day.activites.length-1?"default":"pointer"}}>▼</button>
-                      </div>
-                      <div className="lift" data-etape-lieu={l?.id} onClick={()=>{if(l){setDetailId(l.id);setSub("detail");}}} style={{flex:1,background:C.s1,border:`1px solid ${l&&selectedId===l.id?C.red:C.border}`,borderRadius:13,padding:"12px 14px",cursor:l?"pointer":"default",transition:"border-color .2s ease"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:9}}>
-                          {/* Taper le numéro sélectionne/surligne le pin correspondant sur la carte, sans ouvrir la fiche */}
-                          <span onClick={(ev)=>{ if(l){ ev.stopPropagation(); setSelectedId(l.id); } }} style={{flexShrink:0,width:22,height:22,borderRadius:"50%",background:l&&selectedId===l.id?C.red:C.s2,color:l&&selectedId===l.id?"#fff":C.t2,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center",cursor:l?"pointer":"default",transition:"background .2s ease"}}>{i+1}</span>
-                          <span style={{fontSize:20}}>{l?.emoji||"📍"}</span>
-                          <div style={{flex:1,minWidth:0}}>
-                            <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l?.nom||e.nom||"Lieu"}</div>
-                            {l && <div style={{fontSize:10,color:C.t3}}>{l.categorie} · {l.budget}</div>}
+                    {(() => {
+                      const handleProps = activiteDrag.dragHandleProps(e.id);
+                      const rowInner = (
+                        <Fragment>
+                          <DragHandle C={C} {...handleProps} style={{...handleProps.style, marginTop:6, height:"auto", alignSelf:"stretch"}}/>
+                          <div className="lift" data-etape-lieu={l?.id} onClick={()=>{if(l){setDetailId(l.id);setSub("detail");}}} style={{flex:1,background:C.s1,border:`1px solid ${l&&selectedId===l.id?C.red:C.border}`,borderRadius:13,padding:"12px 14px",cursor:l?"pointer":"default",transition:"border-color .2s ease"}}>
+                            <div style={{display:"flex",alignItems:"center",gap:9}}>
+                              {/* Taper le numéro sélectionne/surligne le pin correspondant sur la carte, sans ouvrir la fiche */}
+                              <span onClick={(ev)=>{ if(l){ ev.stopPropagation(); setSelectedId(l.id); } }} style={{flexShrink:0,width:22,height:22,borderRadius:"50%",background:l&&selectedId===l.id?C.red:C.s2,color:l&&selectedId===l.id?"#fff":C.t2,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center",cursor:l?"pointer":"default",transition:"background .2s ease"}}>{i+1}</span>
+                              <span style={{fontSize:20}}>{l?.emoji||"📍"}</span>
+                              <div style={{flex:1,minWidth:0}}>
+                                <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l?.nom||e.nom||"Lieu"}</div>
+                                {l && <div style={{fontSize:10,color:C.t3}}>{l.categorie} · {l.budget}</div>}
+                              </div>
+                              <button onClick={(ev)=>{ev.stopPropagation(); removeEtape(e.id);}} style={{background:"transparent",border:"none",color:C.t3,fontSize:18,cursor:"pointer",flexShrink:0}}>×</button>
+                            </div>
+                            {/* Note */}
+                            {noteEdit===e.id ? (
+                              <input autoFocus defaultValue={e.note} onClick={ev=>ev.stopPropagation()} onBlur={ev=>{setNote(e.id,ev.target.value);setNoteEdit(null);}} onKeyDown={ev=>{if(ev.key==="Enter"){setNote(e.id,ev.target.value);setNoteEdit(null);}}} placeholder="Ta note..." style={{width:"100%",boxSizing:"border-box",marginTop:8,padding:"7px 9px",background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11,fontFamily:"inherit"}}/>
+                            ) : (
+                              <div onClick={(ev)=>{ev.stopPropagation();setNoteEdit(e.id);}} style={{marginTop:7,fontSize:11,color:e.note?C.t2:C.t3,fontStyle:e.note?"italic":"normal",cursor:"text"}}>
+                                {e.note ? `📝 ${e.note}` : "📝 Ajouter une note"}
+                              </div>
+                            )}
                           </div>
-                          <button onClick={(ev)=>{ev.stopPropagation(); removeEtape(e.id);}} style={{background:"transparent",border:"none",color:C.t3,fontSize:18,cursor:"pointer",flexShrink:0}}>×</button>
-                        </div>
-                        {/* Note */}
-                        {noteEdit===e.id ? (
-                          <input autoFocus defaultValue={e.note} onClick={ev=>ev.stopPropagation()} onBlur={ev=>{setNote(e.id,ev.target.value);setNoteEdit(null);}} onKeyDown={ev=>{if(ev.key==="Enter"){setNote(e.id,ev.target.value);setNoteEdit(null);}}} placeholder="Ta note..." style={{width:"100%",boxSizing:"border-box",marginTop:8,padding:"7px 9px",background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11,fontFamily:"inherit"}}/>
-                        ) : (
-                          <div onClick={(ev)=>{ev.stopPropagation();setNoteEdit(e.id);}} style={{marginTop:7,fontSize:11,color:e.note?C.t2:C.t3,fontStyle:e.note?"italic":"normal",cursor:"text"}}>
-                            {e.note ? `📝 ${e.note}` : "📝 Ajouter une note"}
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                        </Fragment>
+                      );
+                      // Voir le commentaire équivalent sur la liste des étapes
+                      // (vue macro) : le sheet est translateY-é, donc la ligne
+                      // suivie du doigt doit être portalée hors de son sous-arbre
+                      // pour que position:fixed soit bien relatif au viewport.
+                      // opacity (pas visibility:hidden) pour ne pas couper le
+                      // pointer capture en plein geste sur Chromium.
+                      return (
+                        <Fragment>
+                          <div ref={activiteDrag.setRowRef(e.id)} style={{display:"flex",gap:9,alignItems:"flex-start",opacity:dragging?0:1}}>{rowInner}</div>
+                          {dragging && createPortal(
+                            <div style={{display:"flex",gap:9,alignItems:"flex-start",...activiteDrag.floatingStyle}}>{rowInner}</div>,
+                            document.body
+                          )}
+                        </Fragment>
+                      );
+                    })()}
                     </Fragment>
                   );
                 })}
