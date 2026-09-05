@@ -47,7 +47,7 @@ export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount
     }
   };
   const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
-  const {summary:myJapan,resolveTrip:resolveMyJapanTrip,getPhotoUrl:getMemoryPhotoUrl,changePhoto:changeMemoryPhoto,retrySync:retryProfileSync,syncStatus:profileSyncStatus}=useMyJapanProfile({db,session});
+  const {summary:myJapan,resolveTrip:resolveMyJapanTrip,getPhotoUrl:getMemoryPhotoUrl,changePhoto:changeMemoryPhoto,changeNote:changeMemoryNote,retrySync:retryProfileSync,syncStatus:profileSyncStatus}=useMyJapanProfile({db,session});
   // Rangée de préférence bolt-style : icône + libellé + contrôle (switch ou
   // texte), posée dans une carte à séparateurs (`divide-y`) plutôt qu'une
   // carte isolée par réglage.
@@ -114,7 +114,7 @@ export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount
           ))}
         </div>
 
-        <MyJapanSection C={C} summary={myJapan} onResolveTrip={resolveMyJapanTrip} onMemoryPhoto={changeMemoryPhoto} getMemoryPhotoUrl={getMemoryPhotoUrl} syncStatus={session?.user?profileSyncStatus:null} onSyncNow={retryProfileSync}/>
+        <MyJapanSection C={C} summary={myJapan} onResolveTrip={resolveMyJapanTrip} onMemoryPhoto={changeMemoryPhoto} onMemoryNote={changeMemoryNote} getMemoryPhotoUrl={getMemoryPhotoUrl} syncStatus={session?.user?profileSyncStatus:null} onSyncNow={retryProfileSync}/>
 
         {/* Ma collection (favoris) */}
         <SectionTitle C={C} title="Ma collection" action={<span style={{fontSize:11,color:C.t3}}>{favs?.length||0} sauvegardé{(favs?.length||0)>1?"s":""}</span>}/>

@@ -1,3 +1,4 @@
+import { setMemoryNote } from "./memoryJournal.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { resolvePastTrip } from "../../entities/trip/tripLifecycle.js";
 import { loadTrips, saveTrips } from "../travel/tripModel.js";
@@ -26,6 +27,17 @@ export function useMyJapanProfile({db,session}){
       return next;
     });
     if(didTravel)trackProductEvent("trip_completed",{});
+  },[session?.user?.id]);
+
+  const changeNote=useCallback(async(memory,note)=>{
+    const next=setMemoryNote(loadTrips(),memory,note);
+    if(!saveTrips(next)) throw new Error("storage_full");
+    setTrips(next);
+    if(session?.user&&supabaseEnabled){
+      enqueueMutation({type:"trips",userId:session.user.id,payload:next});
+      await flushPendingMutations({trips:mutation=>saveTripsCloud(mutation.userId,mutation.payload)});
+    }
+    setSyncTick(t=>t+1);
   },[session?.user?.id]);
 
   const getPhotoUrl=useCallback(async photo=>!photo?null:photo.startsWith?.("data:")?photo:createMemoryPhotoUrl(photo),[]);
@@ -60,5 +72,5 @@ export function useMyJapanProfile({db,session}){
     return {pending:pending.length+countLocalMemoryPhotos(trips),hasError:pending.some(item=>(item.attempts||0)>0),lastSyncedAt:meta?.userId===session?.user?.id?meta.syncedAt:null};
   },[trips,syncTick,session?.user?.id]);
 
-  return {summary,resolveTrip,getPhotoUrl,changePhoto,retrySync,syncStatus};
+  return {summary,resolveTrip,getPhotoUrl,changePhoto,changeNote,retrySync,syncStatus};
 }

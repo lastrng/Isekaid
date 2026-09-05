@@ -28,8 +28,7 @@ export function buildMyJapanSummary({ trips = [], cities = [], places = [], curr
     const notes = done.map(({activity})=>activity.note?.trim()).filter(Boolean);
     done.forEach(({activity,day})=>{
       const note=activity.note?.trim();
-      if(!note) return;
-      memories.push({id:`${trip.id}:${activity.id||activity.lieuId}`,activityId:activity.id||null,tripId:trip.id,tripTitle:trip.titre||"Voyage au Japon",dayNumber:day.num||null,date:day.date||null,placeId:activity.lieuId||null,placeName:placeById.get(activity.lieuId)?.nom||"Souvenir",placeEmoji:placeById.get(activity.lieuId)?.emoji||"📍",note,photo:activity.memoryPhoto||null});
+      memories.push({id:`${trip.id}:${day.num}:${activity.id||activity.lieuId}`,activityId:activity.id||null,tripId:trip.id,tripTitle:trip.titre||"Voyage au Japon",dayNumber:day.num||null,date:day.date||null,placeId:activity.lieuId||null,placeName:placeById.get(activity.lieuId)?.nom||"Souvenir",placeEmoji:placeById.get(activity.lieuId)?.emoji||"📍",note:note||"",photo:activity.memoryPhoto||null});
     });
     return {
       id:trip.id, title:trip.titre || "Voyage au Japon", startDate:trip.dateDebut || null,
