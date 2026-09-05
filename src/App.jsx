@@ -1622,7 +1622,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
         </button>
         {(preparationTrips.length>0 || [JAPAN_RELATIONSHIP.PLANNING,JAPAN_RELATIONSHIP.SOON].includes(journeyContext.state))&&!inJapanMode&&<ReadinessCard C={C} trips={preparationTrips} preferredTripId={journeyContext.nextTrip?.trip?.id} kanaProgress={kanaProgress} scenarioProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab}/>}
 
-        {inJapanMode && journeyContext.nextActivity && <ActivityContext C={C} db={db} place={db?.lieux?.find(place=>place.id===journeyContext.nextActivity.lieuId)} onTutor={()=>onGoTab("tutor")}/>}
+        {inJapanMode && journeyContext.nextActivity && <ActivityContext C={C} db={db} trips={homeTrips} place={db?.lieux?.find(place=>place.id===journeyContext.nextActivity.lieuId)} onTutor={()=>onGoTab("tutor")}/>} 
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
           <button onClick={()=>journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?onOpenSos():onGoTab("tutor")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
             <div style={iconTileStyle(journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?C.red:C.indigo, 38, 12)}>{journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?<AlertCircle size={18} color={C.red}/>:<MessageSquare size={18} color={C.indigo}/>}</div>

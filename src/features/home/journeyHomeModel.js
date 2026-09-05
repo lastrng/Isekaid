@@ -17,7 +17,7 @@ export function buildJourneyHome({ user, trips = [], db = {}, currentDate = new 
   const visitedIds = new Set(summary.placeIds);
   const anchorId = planning ? trip?.jours?.flatMap(day=>day.activites||[])[0]?.lieuId : recent?.places[0]?.id;
   const anchor = db.lieux?.find(place=>place.id===anchorId);
-  const related = relatedToActivity(anchor,buildJapanGraph(db),{limit:50}).find(item=>item.kind==="tradition" || (item.kind==="place"&&!visitedIds.has(item.sourceId)));
+  const related = relatedToActivity(anchor,buildJapanGraph(db,{ trips }),{limit:50}).find(item=>item.kind==="tradition" || (item.kind==="place"&&!visitedIds.has(item.sourceId)));
   const memory = summary.memories.find(item=>item.tripId===recent?.id && item.note);
   const recommendations = getHomeRecommendations({ context, hasRelated: Boolean(related), readiness: null });
   return {mode,trip,preparationTrips,summary,recent,memory,related,recommendations,

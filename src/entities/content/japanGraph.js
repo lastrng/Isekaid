@@ -24,25 +24,40 @@ export const CONTENT_RELATIONS = {
 const PURPOSE_KINDS = {
   before: ["tip", "code", "daily"],
   speak: ["phrase", "situation"],
-  explore: ["tradition", "place", "city", "region"],
+  explore: ["tradition", "place", "city", "region", "history"],
+  personal: ["trip", "memory"],
 };
 export function graphThemes(item = {}) {
   const text = normalize([item.nom,item.titre,item.title,item.categorie,item.description,item.resume,item.contexte,item.summary,...(item.tags || []),...(item.interets || [])].join(" "));
   return [...new Set([...(item.themeIds || []), ...Object.entries(THEMES).filter(([,words]) => words.some(word => new RegExp(`(?:^|[^a-z])${word}s?(?=$|[^a-z])`).test(text))).map(([id]) => id)])];
 }
 
-export function buildJapanGraph(db = {}) {
-  const groups = [["tip",CONTEXTUAL_CONTENT],["tradition",db.traditions],["code",db.codes_sociaux],["daily",db.vie_quotidienne],["phrase",db.expressions],["situation",db.situations],["place",db.lieux],["city",db.villes],["region",db.regions]];
+export function buildJapanGraph(db = {}, { trips = [], memories = [] } = {}) {
+  const groups = [["tip",CONTEXTUAL_CONTENT],["tradition",db.traditions],["code",db.codes_sociaux],["daily",db.vie_quotidienne],["phrase",db.expressions],["situation",db.situations],["history",db.histoire],["place",db.lieux],["city",db.villes],["region",db.regions]];
   const cities = new Map((db.villes || []).map(city => [city.id, city]));
   const regions = new Map((db.regions || []).flatMap(region => [[normalize(region.nom), region.id], [normalize(region.id), region.id]]));
-  return groups.flatMap(([kind,items]) => (items || []).map(item => ({
+  const catalog = groups.flatMap(([kind,items]) => (items || []).map(item => ({
     id: `${kind}:${item.id || item.expression}`, kind, sourceId: item.id || item.expression,
     title: item.title || item.titre || item.nom || item.traduction,
     summary: item.summary || item.resume || item.tagline || item.contexte || item.description || "",
     cityId: item.cityId || item.villeId || (kind === "city" ? item.id : null),
     regionId: item.regionId || regions.get(normalize(item.region || cities.get(item.cityId || item.villeId)?.region)) || item.region || cities.get(item.villeId)?.region || null,
-    themeIds: item.themeIds || CONTENT_RELATIONS[`${kind}:${item.id || item.expression}`] || graphThemes(item), raw: item,
+    themeIds: item.themeIds || CONTENT_RELATIONS[`${kind}:${item.id || item.expression}`] || graphThemes(item), tags: item.tags || [], relations: item.relations || [], relatedContent: item.relatedContent || [], raw: item,
   })));
+  const placeById = new Map((db.lieux || []).map(place => [place.id, place]));
+  const personal = [];
+  for (const trip of trips || []) {
+    if (!trip?.id) continue;
+    const tripPlaces = [...new Set((trip.jours || []).flatMap(day => (day.activites || []).map(activity => activity.lieuId).filter(Boolean)))];
+    personal.push({ id: `trip:${trip.id}`, kind: "trip", sourceId: trip.id, title: trip.titre || "Mon voyage au Japon", summary: "Voyage personnel", cityId: null, regionId: null, themeIds: [], tags: [], relations: tripPlaces.map(id => `place:${id}`), relatedContent: tripPlaces.map(id => `place:${id}`), raw: trip });
+    (trip.jours || []).forEach(day => (day.activites || []).forEach(activity => {
+      if (!activity?.fait || (!activity.note && !activity.memoryPhoto)) return;
+      const place = placeById.get(activity.lieuId);
+      personal.push({ id: `memory:${trip.id}:${day.num}:${activity.id || activity.lieuId}`, kind: "memory", sourceId: activity.id || activity.lieuId, title: place?.nom || "Souvenir de voyage", summary: activity.note || "Souvenir enregistré", cityId: day.villeId || place?.villeId || null, regionId: place?.regionId || null, themeIds: graphThemes(place || {}), tags: ["souvenir"], relations: [`trip:${trip.id}`, ...(activity.lieuId ? [`place:${activity.lieuId}`] : [])], relatedContent: activity.lieuId ? [`place:${activity.lieuId}`] : [], raw: { ...activity, tripId: trip.id, dayNumber: day.num } });
+    }));
+  }
+  for (const memory of memories || []) if (memory?.id && !personal.some(item => item.id === `memory:${memory.id}`)) personal.push({ id: `memory:${memory.id}`, kind: "memory", sourceId: memory.id, title: memory.placeName || "Souvenir de voyage", summary: memory.note || "Souvenir enregistré", cityId: memory.cityId || null, regionId: null, themeIds: [], tags: ["souvenir"], relations: memory.placeId ? [`place:${memory.placeId}`] : [], relatedContent: memory.placeId ? [`place:${memory.placeId}`] : [], raw: memory });
+  return [...catalog, ...personal];
 }
 
 export function relatedToActivity(place, graph, { limit = 5, purpose } = {}) {
@@ -56,7 +71,7 @@ export function relatedToActivity(place, graph, { limit = 5, purpose } = {}) {
     const nearby = (place.a_proximite || []).includes(node.sourceId) && node.kind === "place";
     const sameCity = Boolean(cityId && node.cityId === cityId);
     const sameRegion = node.kind === "region" && Boolean(regionId && node.sourceId === regionId);
-    const explicit = (place.relatedContent || []).includes(node.id);
+    const explicit = (place.relatedContent || []).includes(node.id) || (node.relatedContent || []).includes(`place:${place.id}`) || (node.relations || []).includes(`place:${place.id}`);
     const score = (explicit ? 20 : 0) + (sameRegion ? 1 : 0) + shared.length * 4 + (nearby ? 9 : 0) + (sameCity ? 2 : 0) + (shared.length && node.kind === "tip" ? 8 : 0) + (shared.length && ["phrase","situation"].includes(node.kind) ? 3 : 0);
     return {...node, score, reason: explicit ? "Lié à ce lieu" : sameRegion ? "Dans cette région" : nearby ? "À proximité" : shared.length ? "Pour cette activité" : "Dans cette ville"};
   }).filter(node => node.score > 0).sort((a,b) => b.score-a.score || a.id.localeCompare(b.id));

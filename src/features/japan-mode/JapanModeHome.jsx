@@ -20,7 +20,7 @@ export function JapanModeHome({C,model,db,onOpenTrip,onSos,onPhrases,onToggle,on
     </section>
     <div aria-label="Actions recommandées" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>{model.recommendations.slice(1, 4).map(item => <button key={item.id} onClick={() => item.id === "sos" ? onSos() : item.id === "phrases" ? onPhrases() : onOpenTrip(model.trip?.id, "day")} style={{...button,background:item.id === "sos" ? C.red : C.s1,color:item.id === "sos" ? "#fff" : C.text,fontWeight:item.id === "sos" ? 700 : 400}}>{item.title}<br/><span style={{fontSize:10,fontWeight:400,color:item.id === "sos" ? "#fff" : C.t3}}>{item.text}</span></button>)}</div>
     {model.active && <p style={{ margin: 0, fontSize: 10, color: C.t3 }}>Mode Japon activé par les dates de ton voyage. La localisation n’est pas nécessaire.</p>}
-    <ActivityContext C={C} db={db} place={model.place} onTutor={online?onTutor:undefined}/>
+    <ActivityContext C={C} db={db} trips={model.trip ? [model.trip] : []} place={model.place} onTutor={online?onTutor:undefined}/>
     <details style={{fontSize:11,color:C.t2,lineHeight:1.6}}><summary>Ce qui reste disponible sans connexion</summary><p>Ton programme enregistré, les cases à cocher, les textes des lieux, les phrases et SOS restent accessibles dans l’application Android. Les modifications sont gardées sur ce téléphone avant synchronisation.</p><p>Les fonds de carte, certaines images et le tuteur demandent une connexion. L’audio dépend des voix installées sur ton téléphone.</p></details>
   </div>;
 }

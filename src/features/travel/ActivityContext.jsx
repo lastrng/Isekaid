@@ -2,8 +2,8 @@ import { useMemo, useState } from "react";
 import { buildJapanGraph, relatedToActivity } from "../../entities/content/japanGraph.js";
 import { SpeakButton } from "../../tts.jsx";
 
-export function ActivityContext({ C, db, place, onTutor }) {
-  const graph = useMemo(() => buildJapanGraph(db), [db]);
+export function ActivityContext({ C, db, place, trips = [], onTutor }) {
+  const graph = useMemo(() => buildJapanGraph(db, { trips }), [db, trips]);
   const [selected, setSelected] = useState("before");
   const groups = useMemo(() => [
     { id: "before", title: "À savoir" },
