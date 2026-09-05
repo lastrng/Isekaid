@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Check, Circle, Flame, Sparkles } from "lucide-react";
-import { completeDailyActivity, dailyProgress, loadDailyRitual } from "./dailyModel.js";
+import { completeDailyActivity, dailyDateKey, dailyProgress, loadDailyRitual } from "./dailyModel.js";
 
 const TYPE_COPY = {
   discover: "Découvrir",
@@ -8,13 +8,14 @@ const TYPE_COPY = {
   practice: "S’entraîner",
 };
 
-export function DailyRitual({ C, db, date, travelContext, streak, onOpenActivity, onDailyComplete }) {
-  const [ritual, setRitual] = useState(() => loadDailyRitual({ db, date, travelContext }));
+export function DailyRitual({ C, db, date, timeZone, travelContext, streak, onOpenActivity, onDailyComplete }) {
+  const dateKey = dailyDateKey(date || new Date(), timeZone);
+  const [ritual, setRitual] = useState(() => loadDailyRitual({ db, date: dateKey, travelContext }));
   useEffect(() => {
-    if (db) setRitual(loadDailyRitual({ db, date, travelContext }));
-  }, [db, date, travelContext]);
+    if (db) setRitual(loadDailyRitual({ db, date: dateKey, travelContext }));
+  }, [db, dateKey, travelContext]);
   const progress = dailyProgress(ritual);
-  const today = useMemo(() => new Date(date || Date.now()).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }), [date]);
+  const today = useMemo(() => new Date(`${dateKey}T12:00:00`).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }), [dateKey]);
   const complete = activity => {
     if (activity.done) return onOpenActivity?.(activity);
     const next = completeDailyActivity(ritual, activity.id);

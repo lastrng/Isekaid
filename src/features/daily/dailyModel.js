@@ -3,6 +3,16 @@ import { readJson, writeJson } from "../../lib/storage.js";
 
 const DAILY_KEY = "isekaid_daily_ritual_v1";
 
+export function dailyDateKey(date = new Date(), timeZone) {
+  const zone = timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  try {
+    const parts = new Intl.DateTimeFormat("en-CA", { timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(date instanceof Date ? date : new Date(date));
+    const values = Object.fromEntries(parts.filter(part => part.type !== "literal").map(part => [part.type, part.value]));
+    if (values.year && values.month && values.day) return `${values.year}-${values.month}-${values.day}`;
+  } catch {}
+  return dayKey(date instanceof Date ? date : new Date(date));
+}
+
 function hash(value) {
   let result = 2166136261;
   for (const char of String(value)) {
@@ -89,7 +99,7 @@ export function buildDailyRitual({ db = {}, date = new Date(), travelContext = n
     kind: index === 0 ? "discover" : index === 1 ? "learn" : "practice",
     done: false,
   }));
-  return { version: 1, date: dateKey, activities, completedAt: null };
+  return { version: 1, date: dateKey, activities, completedAt: null, offlineReady: activities.length > 0, lastSyncedAt: activities.length > 0 ? new Date().toISOString() : null };
 }
 
 export function loadDailyRitual({ db = {}, date = new Date(), travelContext = null } = {}) {
@@ -116,6 +126,10 @@ export function dailyProgress(ritual) {
   const total = ritual?.activities?.length || 0;
   const done = ritual?.activities?.filter(item => item.done).length || 0;
   return { done, total, percent: total ? Math.round(done / total * 100) : 0, complete: total > 0 && done === total };
+}
+
+export function isDailyOfflineReady(ritual) {
+  return Boolean(ritual?.offlineReady && ritual?.date && ritual.activities?.length);
 }
 
 export { DAILY_KEY, contentItems };

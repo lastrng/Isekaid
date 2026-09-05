@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildDailyRitual, completeDailyActivity, dailyProgress } from "../src/features/daily/dailyModel.js";
+import { buildDailyRitual, completeDailyActivity, dailyDateKey, dailyProgress, isDailyOfflineReady } from "../src/features/daily/dailyModel.js";
 
 const db = {
   culture: [{ id: "k", titre: "Kintsugi", contenu: "Réparer" }],
@@ -43,4 +43,11 @@ test("les traditions saisonnières du catalogue alimentent le Daily", () => {
   const seasonal = buildDailyRitual({ db: { ...db, traditions: [{ id: "momiji", nom: "Momijigari", saison: "automne", tagline: "Feuilles rouges" }] }, date: "2026-09-06", travelContext: { seasonKey: "automne" } });
   assert.equal(seasonal.activities[0].type, "tradition");
   assert.equal(seasonal.activities[0].label, "Saison japonaise");
+});
+
+test("la clé Daily respecte le fuseau horaire et le cache est offline-ready", () => {
+  const instant = new Date("2026-09-06T00:30:00Z");
+  assert.equal(dailyDateKey(instant, "Asia/Tokyo"), "2026-09-06");
+  assert.equal(dailyDateKey(instant, "America/Los_Angeles"), "2026-09-05");
+  assert.equal(isDailyOfflineReady(buildDailyRitual({ db, date: "2026-09-06" })), true);
 });

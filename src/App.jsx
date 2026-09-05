@@ -1631,7 +1631,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
         </div>
       </div>
 
-      {!inJapanMode && <DailyRitual C={C} db={db} date={today} travelContext={dailyTravelContext} streak={streak} onOpenActivity={openDailyActivity} onDailyComplete={onDailyComplete}/>}
+      {!inJapanMode && <DailyRitual C={C} db={db} timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone} travelContext={dailyTravelContext} streak={streak} onOpenActivity={openDailyActivity} onDailyComplete={onDailyComplete}/>}
       {inJapanMode && homeIntroStage===null ? <JapanModeHome C={C} model={japanMode} db={db} pendingMutations={loadPendingMutations().length} onOpenTrip={onOpenTrip} onSos={onOpenSos} onPhrases={onOpenPhrases} onToggle={onToggleToday} onTutor={()=>onGoTab("tutor")}/> : journeyHome && homeIntroStage===null ? <JourneyHome C={C} model={journeyHome} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition}/> : homeIntroStage===null ? <DreamHome C={C} user={user} db={db} currentDate={new Date()} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition} onOpenTrip={onOpenTrip}/> : <>
       {/* Actions rapides — chevauche l'en-tête (comme HomeScreen.tsx) */}
       <div style={{padding:"0 20px",marginTop:-24,marginBottom:4,position:"relative",zIndex:2}}>
