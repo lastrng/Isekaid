@@ -87,7 +87,10 @@ export async function handleOAuthCallback(url){
   }
 }
 export async function fetchProgress(userId){
-  const { data, error } = await supabase.from("progress").select("*").eq("user_id", userId).single();
+  // Le profil ne doit pas recevoir les colonnes de voyages, suppressions ou
+  // extensions ajoutées au schéma historique. Les voyages ont leur propre
+  // lecture bornée dans fetchTrips().
+  const { data, error } = await supabase.from("progress").select("profile,favorites,kana_progress,scenarios,path,mission,streak,unlocks,settings,updated_at").eq("user_id", userId).single();
   if(error) return null;
   if(!rememberProgressBase(userId,data)) return null;
   return data;
