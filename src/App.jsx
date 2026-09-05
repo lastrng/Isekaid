@@ -7579,7 +7579,7 @@ function explorePhoto(section, item, index){
 }
 
 function saveProfile(u){
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(normalizeProfile(u))); } catch {}
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(normalizeProfile(u))); return true; } catch { return false; }
 }
 
 // Extrait les infos de profil depuis une session Supabase (connexion Google/email).
@@ -8545,7 +8545,7 @@ export default function IsekaidApp(){
   // Save profile at end of onboarding
   const completeOnboarding = (u)=>{
     const normalizedProfile = normalizeProfile(u);
-    saveProfile(normalizedProfile);
+    if(!saveProfile(normalizedProfile)) throw new Error("Le stockage est plein ou indisponible. Tes réponses restent affichées ; libère de l’espace puis réessaie.");
     setUser(normalizedProfile);
     trackProductEvent("onboarding_completed",{relationship:normalizedProfile.japanRelationship,level:normalizedProfile.level,firstTrip:normalizedProfile.firstTrip===true});
     // Compte le jour 1 tout de suite (pas seulement après les 3 missions du
