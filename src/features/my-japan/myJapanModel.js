@@ -83,6 +83,7 @@ export function buildMyJapanSummary({ trips = [], cities = [], places = [], regi
   const stamps = buildPassportStamps({ visitedCityIds, cityById, regions, completedTrips });
   const memories = [];
   const completedTripDetails = completedTrips.map(trip=>{
+    const dateRange = getTripDateRange(trip);
     const done = (trip.jours||[]).flatMap(day=>(day.activites||[]).filter(activity=>activity.fait===true).map(activity=>({activity,day})));
     const cityIds = [...new Set(done.map(({day})=>day.villeId).filter(Boolean))];
     const notes = done.map(({activity})=>activity.note?.trim()).filter(Boolean);
@@ -92,7 +93,14 @@ export function buildMyJapanSummary({ trips = [], cities = [], places = [], regi
     });
     return {
       id:trip.id, title:trip.titre || "Voyage au Japon", startDate:trip.dateDebut || null,
-      days:trip.jours?.length || 0, completedPlaces:done.length, notes:notes.length,
+      endDate:trip.dateFin || null, days:trip.jours?.length || 0,
+      daysInJapan:dateRange?.duration ?? null,
+      completedPlaces:new Set(done.map(({activity})=>activity.lieuId).filter(Boolean)).size,
+      notes:notes.length,
+      noteEntries:done.filter(({activity})=>activity.note?.trim()).map(({activity,day})=>({
+        text:activity.note.trim(), dayNumber:day.num || null, date:day.date || null,
+        placeId:activity.lieuId || null,
+      })),
       cities:cityIds.map(id=>({id,name:cityById.get(id)?.nom||id,emoji:cityById.get(id)?.emoji||"📍"})),
       places:done.map(({activity})=>({id:activity.lieuId,name:placeById.get(activity.lieuId)?.nom||"Lieu visité",emoji:placeById.get(activity.lieuId)?.emoji||"📍"})),
     };
@@ -110,7 +118,8 @@ export function buildMyJapanSummary({ trips = [], cities = [], places = [], regi
     learnedExpressions, learnedExpressionsKnown: learnedExpressions !== null,
     learnedKana, learnedKanaKnown: learnedKana !== null,
     favoritesCount, favoritesKnown: favoritesCount !== null,
-    cityIds:[...visitedCityIds], regionNames:[...regions], placeIds:[...visitedPlaceIds], stamps, completedTripDetails, memories,
+    cityIds:[...visitedCityIds], regionNames:[...regions], placeIds:[...visitedPlaceIds], stamps,
+    completedTripDetails, tripRecaps:completedTripDetails, memories, journalEntries:memories,
     collections:[
       {id:"cities",label:"Villes",emoji:"🏙️",count:visitedCityIds.size,total:null},
       {id:"regions",label:"Régions",emoji:"🗾",count:regions.size,total:regionsCatalog.length || null},

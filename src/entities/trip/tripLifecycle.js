@@ -24,3 +24,18 @@ export function resolvePastTrip(trip, didTravel, resolvedAt = new Date()) {
     ? {...trip,status:TRIP_STATUS.COMPLETED,completedAt:resolvedAt.toISOString(),cancelledAt:undefined,updatedAt:resolvedAt.toISOString()}
     : {...trip,status:TRIP_STATUS.CANCELLED,cancelledAt:resolvedAt.toISOString(),completedAt:undefined,updatedAt:resolvedAt.toISOString()};
 }
+
+// Persiste automatiquement un voyage passé dès qu'une activité a réellement
+// été marquée comme faite. Un voyage passé sans preuve reste à confirmer afin
+// de ne jamais transformer une simple date échue en souvenir inventé.
+export function normalizeCompletedTrips(trips, currentDate = new Date(), resolvedAt = currentDate) {
+  let changed = false;
+  const normalized = (trips || []).map(trip => {
+    if (!trip || trip.status === TRIP_STATUS.COMPLETED || trip.status === TRIP_STATUS.CANCELLED) return trip;
+    if (getTripLifecycleStatus(trip, currentDate) !== TRIP_STATUS.COMPLETED) return trip;
+    changed = true;
+    const completedAt = trip.completedAt || (trip.dateFin ? new Date(`${trip.dateFin}T23:59:59Z`).toISOString() : resolvedAt.toISOString());
+    return { ...trip, status: TRIP_STATUS.COMPLETED, completedAt, updatedAt: trip.updatedAt || completedAt };
+  });
+  return { trips: normalized, changed };
+}

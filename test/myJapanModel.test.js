@@ -14,6 +14,8 @@ test("ne considère comme visités que les lieux explicitement terminés", () =>
   assert.equal(summary.stamps.find(stamp=>stamp.type==="trip").unlockedBy,"trip_completed");
   assert.equal(summary.completedTripDetails[0].places[0].name,"Sensō-ji");
   assert.equal(summary.completedTripDetails[0].notes,1);
+  assert.equal(summary.tripRecaps[0].noteEntries[0].text,"Très tôt");
+  assert.equal(summary.journalEntries.length,1);
   assert.equal(summary.memories[0].note,"Très tôt");
   assert.equal(summary.memories[0].placeName,"Sensō-ji");
   assert.equal(summary.collections.find(c=>c.id==="places").count,1);

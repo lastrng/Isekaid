@@ -1,4 +1,5 @@
 import { getTripTiming } from "../../entities/user/japanJourneyState.js";
+import { normalizeCompletedTrips } from "../../entities/trip/tripLifecycle.js";
 import { withTripDeletions } from "../../services/sync/tripSyncState.js";
 // Modèle pur et persistance locale du domaine Voyage.
 // Ce module ne dépend pas de React et peut être testé indépendamment des écrans.
@@ -8,7 +9,11 @@ const TRIPS_KEY = "isekaid_trips_v1";
 const FREE_TRIP_LIMIT = 1;
 function loadTrips(){
   const trips = readJson(TRIPS_KEY, []);
-  return Array.isArray(trips) ? withTripDeletions(trips).filter(trip=>!trip.deletedAt).map(normalizeTrip) : [];
+  if (!Array.isArray(trips)) return [];
+  const normalized = withTripDeletions(trips).filter(trip=>!trip.deletedAt).map(normalizeTrip);
+  const completed = normalizeCompletedTrips(normalized);
+  if (completed.changed) writeJson(TRIPS_KEY, completed.trips);
+  return completed.trips;
 }
 function saveTrips(trips){ return writeJson(TRIPS_KEY, trips); }
 function makeTripId(){ return "trip_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }

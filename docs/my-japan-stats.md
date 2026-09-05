@@ -47,3 +47,17 @@ des voyages :
 Chaque tampon expose `type`, `unlockedBy` et `evidence` afin d’ajouter d’autres
 collections plus tard sans attribuer de récompense sur la seule consultation
 d’un écran.
+
+## Après le voyage
+
+À la lecture des voyages, une période passée contenant au moins une activité
+marquée comme faite est normalisée en `completed` et reçoit `completedAt`.
+Une période passée sans activité faite reste `awaiting_confirmation` afin de
+laisser l’utilisateur confirmer ou annuler le voyage. Les voyages complétés
+restent dans le modèle et alimentent `completedTripDetails` et son alias
+`tripRecaps`.
+
+Chaque récapitulatif conserve les dates, la durée connue, les villes et lieux
+visités, le nombre de notes, les `noteEntries` structurées et les entrées du
+carnet (`journalEntries`). Les photos et notes existantes restent attachées
+aux activités du voyage.
