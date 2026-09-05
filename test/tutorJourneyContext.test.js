@@ -1,0 +1,23 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { buildTutorJourneyContext } from "../src/features/companion/journeyContext.js";
+import { sanitizeJourneyContext, journeyContextPrompt } from "../supabase/functions/tutor-chat/journey-context.js";
+
+test("le tuteur reçoit l'activité publique et aucun souvenir privé",()=>{
+  const context=buildTutorJourneyContext({currentDate:new Date(2026,8,5),user:{name:"SECRET",why:["culture"]},trips:[{dateDebut:"2026-09-05",jours:[{villeId:"kyoto",activites:[{lieuId:"shrine",note:"SECRET",memoryPhoto:"SECRET"}]}]}],db:{lieux:[{id:"shrine",nom:"Sanctuaire",categorie:"Shinto"}],villes:[{id:"kyoto",nom:"Kyoto"}]}});
+  assert.equal(context.state,"in_japan");
+  assert.equal(context.city,"Kyoto");
+  assert.equal(context.activity,"Sanctuaire");
+  assert.ok(!JSON.stringify(context).includes("SECRET"));
+});
+
+test("le serveur borne et filtre le contexte indépendamment du client",()=>{
+  const context=sanitizeJourneyContext({city:"x".repeat(10000),activity:"y".repeat(10000),category:"z".repeat(10000),interests:["secret","culture","gastro"],notes:"secret",premium:true,state:"invalid"});
+  assert.equal(context.city.length,80);
+  assert.deepEqual(context.interests,["culture","gastro"]);
+  assert.equal(context.state,undefined);
+  assert.equal(context.premium,undefined);
+  assert.ok(JSON.stringify(context).length<500);
+  assert.equal(journeyContextPrompt(null),"");
+  assert.equal(sanitizeJourneyContext([]),null);
+});

@@ -1,3 +1,5 @@
+import { ActivityContext } from "./features/travel/ActivityContext.jsx";
+import { buildTutorJourneyContext } from "./features/companion/journeyContext.js";
 import * as sfx from "./sfx.js";
 import { buildCarnetHTML } from "./carnet.js";
 import { useState, useEffect, useRef, useMemo, useCallback, Fragment, lazy, Suspense } from "react";
@@ -19,7 +21,6 @@ import { clearStoredNamespace } from "./lib/storage";
 import { JAPAN_RELATIONSHIP, normalizeProfile } from "./entities/user/profileModel";
 import { getActiveTrip, getDailyProgress, getNextActivity, getTripTiming } from "./entities/user/japanJourneyState";
 import { BottomNav } from "./app/navigation/BottomNav";
-import { getRelatedContent } from "./entities/content/relatedContent";
 import { getTripLifecycleStatus, TRIP_STATUS } from "./entities/trip/tripLifecycle";
 import { buildSearchIndex, searchCatalog } from "./data/searchIndex";
 import { disableDailyReminder, enableDailyReminder, loadDailyReminder, supportsDailyReminder } from "./features/reminders/dailyReminder";
@@ -1601,6 +1602,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
         </button>
         {(preparationTrips.length>0 || [JAPAN_RELATIONSHIP.PLANNING,JAPAN_RELATIONSHIP.SOON].includes(journeyContext.state))&&!inJapanMode&&<ReadinessCard C={C} trips={preparationTrips} preferredTripId={journeyContext.nextTrip?.trip?.id} kanaProgress={kanaProgress} scenarioProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab}/>}
 
+        {inJapanMode && journeyContext.nextActivity && <ActivityContext C={C} db={db} place={db?.lieux?.find(place=>place.id===journeyContext.nextActivity.lieuId)} onTutor={()=>onGoTab("tutor")}/>}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
           <button onClick={()=>journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?onOpenSos():onGoTab("tutor")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
             <div style={iconTileStyle(journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?C.red:C.indigo, 38, 12)}>{journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?<AlertCircle size={18} color={C.red}/>:<MessageSquare size={18} color={C.indigo}/>}</div>
@@ -6529,7 +6531,7 @@ function VoyageTrip({C, dark, initialSub="day", trip, db, villeById, script, use
     const l = lieuById[detailId];
     if(!l){ setSub("catalogue"); return null; }
     const proches = (l.a_proximite||[]).map(id=>lieuById[id]).filter(Boolean);
-    const contextualContent = getRelatedContent(l);
+
     const inDay = idsInDay.has(l.id);
     return(
       <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
@@ -6568,7 +6570,7 @@ function VoyageTrip({C, dark, initialSub="day", trip, db, villeById, script, use
           ) : (
             <div style={{fontSize:13,color:C.t2,lineHeight:1.65,marginBottom:14}}>{l.description}</div>
           )}
-          {contextualContent.length>0&&<div style={{marginBottom:16}}><div style={{fontSize:10,color:C.red,fontWeight:750,letterSpacing:".12em",marginBottom:8}}>À SAVOIR JUSTE AVANT</div>{contextualContent.map(item=><div key={item.id} style={{padding:13,background:`${C.gold}12`,border:`1px solid ${C.gold}35`,borderRadius:14,marginBottom:8}}><div style={{fontSize:13,fontWeight:650,color:C.text,marginBottom:4}}>{item.title}</div><div style={{fontSize:11,color:C.t2,lineHeight:1.55}}>{item.summary}</div></div>)}</div>}
+          <ActivityContext C={C} db={db} place={l}/>
           {l.conseil && (
             <div style={{background:"rgba(158,122,26,0.1)",border:"1px solid rgba(158,122,26,0.3)",borderRadius:12,padding:"12px 14px",marginBottom:14}}>
               <div style={{fontSize:9,color:C.gold,letterSpacing:".1em",marginBottom:5,textTransform:"uppercase"}}>💡 Conseil de voyageur</div>
@@ -6725,6 +6727,7 @@ function VoyageTrip({C, dark, initialSub="day", trip, db, villeById, script, use
       <button onClick={onBack} style={{position:"absolute",top:"calc(14px + env(safe-area-inset-top, 0px))",left:14,zIndex:6,background:"rgba(0,0,0,.6)",backdropFilter:"blur(4px)",border:"none",borderRadius:20,padding:"7px 14px",color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer"}}>‹ Mes voyages</button>
 
       <TripBottomSheet C={C} containerH={heroH} tabs={sheetTabs} activeTab={sheetTab} onTabChange={changeSheetTab}>
+        {isDayTab && <ActivityContext C={C} db={db} place={lieuById[(day?.activites||[]).find(activity=>!activity.fait)?.lieuId]}/>}
         {sheetTab==="resume" && (
           <div style={{paddingTop:2}}>
             <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:4}}>{trip.titre}</div>
@@ -8580,7 +8583,7 @@ export default function IsekaidApp(){
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
               {tab==="profile"   &&<Suspense fallback={<div style={{padding:28,color:C.t3}}>Chargement de Mon Japon…</div>}><ProfileScreen ui={{SectionCard,SectionTitle,iconTileStyle,computeAchievements}} C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/></Suspense>}
               {tab==="voyage"    &&<VoyageScreen    C={C} dark={dark} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef} initialView={pendingTravelView} onInitialViewConsumed={()=>setPendingTravelView(null)}/>}
-              {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
+              {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} journeyContext={buildTutorJourneyContext({user,trips:loadTrips(),db})} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}

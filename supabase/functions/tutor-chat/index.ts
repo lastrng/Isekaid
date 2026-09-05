@@ -1,3 +1,4 @@
+import { journeyContextPrompt } from "./journey-context.js";
 // ─────────────────────────────────────────────────────────────────────────────
 // tutor-chat — Edge Function du tuteur conversationnel japonais (Phases 3-4)
 //
@@ -104,7 +105,7 @@ const RESPONSE_TOOL = {
   },
 };
 
-function buildSystemPrompt(niveau: string, scenarioId: string, bridgeContext: string | null): string {
+function buildSystemPrompt(niveau: string, scenarioId: string, bridgeContext: string | null, journeyContext: unknown): string {
   const scenario = TUTOR_SCENARIOS.find((s) => s.id === scenarioId) ?? TUTOR_SCENARIOS.find((s) => s.id === "libre")!;
   const niveauInstr = NIVEAU_INSTRUCTIONS[niveau] || NIVEAU_INSTRUCTIONS["débutant"];
   return [
@@ -113,6 +114,7 @@ function buildSystemPrompt(niveau: string, scenarioId: string, bridgeContext: st
     niveauInstr,
     scenario.systemContext,
     bridgeContext,
+    journeyContextPrompt(journeyContext),
     "Si le dernier message de l'utilisateur contient une erreur (grammaire, particule, politesse, kana/kanji), explique-la brièvement et avec bienveillance dans 'correction', sans casser le fil de la conversation. Si aucune erreur, laisse 'correction' vide.",
     "Reste concis : 1 à 3 phrases courtes par réponse, adaptées à une conversation, pas un cours magistral.",
   ].filter(Boolean).join("\n\n");
@@ -303,7 +305,7 @@ Deno.serve(async (req: Request) => {
     }
     anthropicMessages.push({ role: "user", content: message });
 
-    const system = buildSystemPrompt(niveau, scenarioId, activeBridgeContext);
+    const system = buildSystemPrompt(niveau, scenarioId, activeBridgeContext, body?.journeyContext);
 
     // ── Appel Anthropic, avec un retry léger si le JSON/tool-use est absent ──
     let parsed: any = null;

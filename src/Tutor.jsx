@@ -84,7 +84,7 @@ export function TutorEntryCard({C, onOpen}){
 }
 
 // ─── Écran principal : sélection de scénario / historique / chat ──────────
-export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isPremium, onOpenPremium, selfReportedLevel, initialBridge, onBridgeConsumed, onMissionTrigger, onBack}){
+export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isPremium, onOpenPremium, selfReportedLevel, journeyContext, initialBridge, onBridgeConsumed, onMissionTrigger, onBack}){
   // Pont Scénarios scriptés → Tuteur : si un contexte de pont est en attente
   // (App.jsx), on saute le picker et on ouvre directement le chat dessus, une
   // seule fois — consommé immédiatement pour ne pas rouvrir en boucle.
@@ -115,7 +115,7 @@ export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isP
   if(view === "chat"){
     return (
       <ChatView C={C} niveau={niveau} scenarioId={activeScenarioId || "libre"}
-        conversationId={activeConversationId} bridgeContext={bridgeContext}
+        conversationId={activeConversationId} bridgeContext={bridgeContext} journeyContext={journeyContext}
         isPremium={isPremium} onOpenPremium={onOpenPremium}
         onConversationCreated={setActiveConversationId}
         onMissionTrigger={onMissionTrigger}
@@ -257,7 +257,7 @@ function describeError(e){
 }
 
 // ─── Chat ───────────────────────────────────────────────────────────────────
-function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremium, onOpenPremium, onConversationCreated, onMissionTrigger, onBack}){
+function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, journeyContext, isPremium, onOpenPremium, onConversationCreated, onMissionTrigger, onBack}){
   const scenario = getTutorScenario(scenarioId);
   const [convId, setConvId] = useState(conversationId);
   const [messages, setMessages] = useState([]); // {role, content_jp, content_fr, romaji, correction}
@@ -299,7 +299,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremi
       // Le contexte de pont (scénario scripté → tuteur) n'est envoyé qu'à la
       // toute première requête d'une conversation encore sans id — le serveur
       // le persiste sur la conversation, pas besoin de le renvoyer ensuite.
-      const res = await sendTutorMessage({ message: trimmed, scenarioId, niveau, conversationId: convId, bridgeContext: !convId ? bridgeContext : undefined });
+      const res = await sendTutorMessage({ message: trimmed, scenarioId, niveau, conversationId: convId, bridgeContext: !convId ? bridgeContext : undefined, journeyContext });
       if(res?.limitReached || res?.premiumRequired){
         setError(res.premiumRequired ? "premium" : res.period==="month" ? "monthly-limit" : "limit");
         if(res.premiumRequired && res.limit) setFreeLimit(res.limit);
@@ -348,6 +348,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremi
         <div style={{flex:1,minWidth:0}}>
           <div style={{fontSize:15,fontWeight:700,color:C.text}}>{scenario.titre}</div>
           <div style={{fontSize:11,color:C.t3}}>{NIVEAU_LABEL[niveau]}</div>
+          {journeyContext?.city && <div style={{fontSize:10,color:C.t3,marginTop:3}}>Ton voyage : {journeyContext.city}{journeyContext.activity ? ` · ${journeyContext.activity}` : ""}</div>}
           {usage && <div style={{fontSize:10,color:usage.usedToday/usage.dailyLimit>=.8?C.red:usage.usedToday/usage.dailyLimit>=.5?C.gold:C.t3,marginTop:2}}>{usage.usedToday}/{usage.dailyLimit} messages aujourd’hui{usage.usedToday/usage.dailyLimit>=.8?" · ⚠️ limite proche":""}</div>}
         </div>
       </div>
