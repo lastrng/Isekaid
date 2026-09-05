@@ -1,3 +1,5 @@
+import { JourneyHome } from "./features/home/JourneyHome.jsx";
+import { buildJourneyHome } from "./features/home/journeyHomeModel.js";
 import { ActivityContext } from "./features/travel/ActivityContext.jsx";
 import { buildTutorJourneyContext } from "./features/companion/journeyContext.js";
 import * as sfx from "./sfx.js";
@@ -1552,6 +1554,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   const contextCopy = useMemo(()=>getHomePrimaryAction(journeyContext,db?.lieux||[]),[journeyContext,db]);
   const preparationTrips = loadTrips().filter(trip=>!["cancelled","completed"].includes(trip.status) && tripTiming(trip)?.status!=="past");
   const inJapanMode = journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN;
+  const journeyHome = useMemo(()=>buildJourneyHome({user,trips:loadTrips(),db}),[user,db]);
   // Le premier tour montre encore les zones historiques une fois. Ensuite,
   // préparation et voyage privilégient uniquement les actions immédiates.
   const focusedTravelHome = homeIntroStage===null && [JAPAN_RELATIONSHIP.PLANNING,JAPAN_RELATIONSHIP.SOON,JAPAN_RELATIONSHIP.IN_JAPAN].includes(journeyContext.state);
@@ -1593,6 +1596,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
         </div>
       </div>
 
+      {journeyHome && homeIntroStage===null ? <JourneyHome C={C} model={journeyHome} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition}/> : <>
       {/* Actions rapides — chevauche l'en-tête (comme HomeScreen.tsx) */}
       <div style={{padding:"0 20px",marginTop:-24,marginBottom:4,position:"relative",zIndex:2}}>
         <button onClick={()=>contextCopy.tab==="voyage" && (journeyContext.activeTrip || journeyContext.nextTrip?.trip) ? onOpenTrip((journeyContext.activeTrip || journeyContext.nextTrip.trip).id,"day") : onGoTab(contextCopy.tab)} className="lift" style={{width:"100%",marginBottom:12,padding:"16px 17px",display:"flex",alignItems:"center",gap:13,textAlign:"left",cursor:"pointer",background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow}}>
@@ -1719,6 +1723,8 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
           <WeeklyChallengeCard C={C} progress={weeklyProgress} onToggleItem={onToggleWeeklyItem} onOpenTarget={(t)=>{ onOpenWeeklyTarget ? onOpenWeeklyTarget(t) : onGoTab(t.tab); }}/>
         </div>}
       </div>
+
+      </>}
 
       {/* Système 4.a — atterrissage 1er lancement, une seule fois */}
       {homeIntroStage==="welcome" && <HomeWelcomeBeat text={g.jp} onDone={()=>setHomeIntroStage("spotlight")}/>}
