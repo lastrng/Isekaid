@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { calculateReadinessScore } from "./readinessScore.js";
+import { trackProductEvent } from "../../services/analytics/analytics.js";
 
 export function ReadinessCard({ C, trips, preferredTripId, kanaProgress, vocabularyProgress, scenarioProgress, pathProgress, contentProgress, onOpenTrip, onNavigate }) {
   const [selectedId, setSelectedId] = useState(preferredTripId || trips[0]?.id || "");
   const [expanded, setExpanded] = useState(false);
   const trip = trips.find(item => item.id === selectedId) || trips[0];
   const score = calculateReadinessScore({ trip, kanaProgress, vocabularyProgress, scenarioProgress, pathProgress, contentProgress });
+  const previousScore = useRef(null);
+  useEffect(()=>{
+    if(previousScore.current !== null && previousScore.current !== score.global) trackProductEvent("readiness_score_changed",{score:score.global});
+    previousScore.current = score.global;
+  },[score.global]);
   const e = score.evidence;
   const openTrip = sub => onOpenTrip(trip?.id, sub);
   const domains = [

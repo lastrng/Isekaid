@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabaseEnabled, fetchTutorConversations, fetchTutorMessages, sendTutorMessage } from "./supabase";
 import { TUTOR_SCENARIOS, getTutorScenario } from "./tutorScenarios";
 import { SpeakButton } from "./tts";
+import { trackProductEvent } from "./services/analytics/analytics.js";
 
 // Niveau estimé à partir de ce que l'utilisateur a déjà accompli ailleurs
 // dans l'app (maîtrise SRS des kana, scénarios de dialogue réussis, meilleur
@@ -294,6 +295,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, journey
     setError(null);
     setErrorDetail(null);
     setMessages(prev=>[...prev, { role:"user", content_jp: trimmed }]);
+    if(messages.length===0) trackProductEvent("tutor_started",{scenario:scenarioId});
     setSending(true);
     try {
       // Le contexte de pont (scénario scripté → tuteur) n'est envoyé qu'à la

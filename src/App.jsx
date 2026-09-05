@@ -4516,7 +4516,7 @@ function LearnScreen({C,script,db,kanaProgress,onRecordKana,pathProgress,onCompl
       <div style={{padding:"20px 20px 110px"}}>
 
         {/* ── Écran de choix (aucun mode sélectionné) ── */}
-        {learnMode==="review" && <ReviewMode C={C} dueChars={dueChars} onRecord={onRecordKana} onExit={()=>setLearnMode(null)} onSessionComplete={()=>onMissionTrigger&&onMissionTrigger("review")}/>}
+        {learnMode==="review" && <ReviewMode C={C} dueChars={dueChars} onRecord={onRecordKana} onExit={()=>setLearnMode(null)} onSessionComplete={()=>{onMissionTrigger&&onMissionTrigger("review");trackProductEvent("kana_session_completed",{mode:"review"});}}/>}
 
         {!learnMode && (()=>{
           const doneCount = TOKYO_PATH.filter(s=>completed.includes(s.id)).length;
@@ -6278,6 +6278,7 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", trip, db, villeBy
       ? j.activites.map(a=>a.id===replaceEtapeId?{...a,lieuId,fait:false}:a)
       : [...j.activites, {id:makeStepId(), lieuId, note:""}]}));
     if(replaceEtapeId) commitWithUndo({...trip,jours}, "Lieu remplacé"); else onUpdate({...trip, jours});
+    trackProductEvent("place_added",{source:replaceEtapeId?"replace":"catalog"});
     setReplaceEtapeId(null);
   };
   const commitWithUndo = (updated, label)=>{ setLastAction({trip, label}); onUpdate(updated); };
@@ -6286,8 +6287,10 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", trip, db, villeBy
     commitWithUndo({...trip, jours}, "Lieu retiré");
   };
   const toggleActivityDone = (etapeId)=>{
+    const activity=day?.activites?.find(item=>item.id===etapeId);
     const jours=trip.jours.map((j,i)=>i!==dayIdx?j:{...j,activites:j.activites.map(a=>a.id===etapeId?{...a,fait:!a.fait}:a)});
     commitWithUndo({...trip,jours}, "Progression mise à jour");
+    if(activity?.fait!==true) trackProductEvent("place_completed",{});
   };
   const moveActivity = (etapeId, targetIdx)=>{
     if(targetIdx===dayIdx){ setMoveEdit(null); return; }
@@ -6390,6 +6393,7 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", trip, db, villeBy
     // Ajoute directement au jour courant
     const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:[...j.activites, {id:makeStepId(), lieuId:id, note:""}]}));
     onUpdate({...trip, customLieux: nextCustom, jours});
+    trackProductEvent("place_added",{source:"custom"});
     setSub("day");
   };
 
@@ -7799,10 +7803,12 @@ export default function IsekaidApp(){
     const destination = resolveDestination(t);
     withViewTransition(()=> flushSync(()=> setTabRaw(destination)));
   };
-  const openTripFromHome = (tripId,sub="day")=>{ setPendingTravelView(tripId ? {tripId,sub} : "new"); setTab("voyage"); };
+  const openTripFromHome = (tripId,sub="day")=>{ if(tripId) trackProductEvent("trip_started",{source:"home"}); setPendingTravelView(tripId ? {tripId,sub} : "new"); setTab("voyage"); };
   const openEssentialPhrases=()=>{setPendingLearnMode("situations");setTab("learn");};
   const toggleTodayFromHome=(tripId,activityId)=>{
     const next=toggleTodayActivity(loadTrips(),tripId,activityId);
+    const updated=next.find(trip=>trip.id===tripId)?.jours.flatMap(day=>day.activites).find(activity=>activity.id===activityId);
+    if(updated?.fait===true) trackProductEvent("place_completed",{});
     if(!saveTrips(next))throw new Error("storage_full");
     window.dispatchEvent(new Event("isekaid:trips-synced"));
     if(session?.user&&supabaseEnabled){
@@ -7947,6 +7953,7 @@ export default function IsekaidApp(){
     const newProg = {done:[...scenProgress.done, s.id], xp:0};
     setScenProgress(newProg); saveScenarioProgress(newProg);
     completeTask("scenario");
+    trackProductEvent("scenario_completed",{scenario:s.id});
     completeWeeklyItem(item=>item.scenario===s.id);
   };
 
@@ -8416,6 +8423,7 @@ export default function IsekaidApp(){
       if(!exists){
         completeTask("fav");
         completeWeeklyItem(it=>it.favType===type);
+        trackProductEvent("favorite_added",{type});
       }
       return next;
     });
