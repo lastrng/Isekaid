@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Browser } from "@capacitor/browser";
 
 /* ============================================================
    Actu Japon — vraie actualité, directement en français via le
@@ -39,6 +38,13 @@ function relativeNews(ms){
   if(diffH < 24) return `Il y a ${diffH} h`;
   const diffD = Math.floor(diffH / 24);
   return `Il y a ${diffD} j`;
+}
+
+async function openExternalUrl(url){
+  // Chargement à la demande : le bridge natif n'est utile qu'au clic et ne
+  // doit pas alourdir le bundle initial de l'accueil.
+  const { Browser } = await import("@capacitor/browser");
+  return Browser.open({ url });
 }
 
 export function useJapanNews(limit = 3){
@@ -83,7 +89,7 @@ export function JapanNewsCard({ C }){
 
   return (
     <div
-      onClick={() => Browser.open({ url: latest.url })}
+      onClick={() => openExternalUrl(latest.url)}
       className="lift"
       style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${border}`,background:surface,boxShadow:C.shadow||"none",position:"relative"}}
     >

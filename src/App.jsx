@@ -1,11 +1,7 @@
-import DATA from "./japan-data.json";
-import EXPLORE_IMAGES from "./explore-images.json";
-import VIDEO_MAP from "./video-map.json";
-import LIEU_EDITORIAL from "./lieu-editorial.json";
 import * as sfx from "./sfx.js";
 import { buildCarnetHTML } from "./carnet.js";
-import { useState, useEffect, useRef, useMemo, useCallback, Fragment } from "react";
-import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations, sendItineraryGenerate, sendCarnetRender, redeemPremiumCode } from "./supabase";
+import { useState, useEffect, useRef, useMemo, useCallback, Fragment, lazy, Suspense } from "react";
+import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations, sendItineraryGenerate, sendCarnetRender, redeemPremiumCode, deleteRemoteAccount } from "./supabase";
 import { DailyFeedScreen, useDailyFeed } from "./DailyFeed";
 import { JapanNewsCard } from "./JapanNews";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
@@ -17,6 +13,73 @@ import { MOTION_CSS_VARS, withViewTransition, supportsViewTransitions } from "./
 import { flushSync, createPortal } from "react-dom";
 import { FeatureIntroScreen } from "./FeatureIntro";
 import { CelebrationOverlay } from "./Celebration";
+import { alignWords, extractSituationJP, jpMain, jpSub } from "./lib/japaneseText";
+import { currentSeasonKey, seasonalLieux, SEASON_ACCENT } from "./lib/seasons";
+import { clearStoredNamespace } from "./lib/storage";
+import { JAPAN_RELATIONSHIP, normalizeProfile } from "./entities/user/profileModel";
+import { getActiveTrip, getDailyProgress, getNextActivity, getTripTiming } from "./entities/user/japanJourneyState";
+import { BottomNav } from "./app/navigation/BottomNav";
+import { getRelatedContent } from "./entities/content/relatedContent";
+import { getTripLifecycleStatus, TRIP_STATUS } from "./entities/trip/tripLifecycle";
+import { buildSearchIndex, searchCatalog } from "./data/searchIndex";
+import { disableDailyReminder, enableDailyReminder, loadDailyReminder, supportsDailyReminder } from "./features/reminders/dailyReminder";
+import { calculateReadinessScore } from "./features/readiness/readinessScore";
+import { buildHomeJourneyContext, getHomePrimaryAction } from "./features/home/homeContext";
+import { MyJapanSection } from "./features/my-japan/MyJapanSection";
+import { useMyJapanProfile } from "./features/my-japan/useMyJapanProfile";
+import { mergeTripSnapshots } from "./services/sync/tripSnapshots";
+import { useCloudBackup } from "./services/sync/useCloudBackup";
+import { trackProductEvent } from "./services/analytics/analytics";
+import { enqueueMutation, flushPendingMutations, loadPendingMutations } from "./services/sync/pendingMutations";
+import { SearchResultDetail } from "./features/search/SearchResultDetail";
+import { SosJapan } from "./features/sos/SosJapan";
+import {
+  dayKey,
+  isNewGreetingDay,
+  loadStreak,
+  markGreetingSeenToday,
+  nextStreakMilestone,
+  saveStreak,
+  STREAK_MILESTONES,
+  touchStreak,
+} from "./features/progress/streak";
+import {
+  HIRAGANA,
+  HIRAGANA_COMBO,
+  HIRAGANA_DAKUTEN,
+  KATAKANA,
+  KATAKANA_COMBO,
+  KATAKANA_DAKUTEN,
+  LEARN_DECKS,
+  deckMastery,
+  getDueForReview,
+  loadKanaProgress,
+  recordKana,
+  saveKanaProgress,
+  srsStats,
+} from "./features/learn/kanaModel";
+import {
+  DEFAULT_CHECKLIST,
+  FREE_TRIP_LIMIT,
+  TRIP_DAYS_QUICK,
+  TRIP_INTERET_OPTIONS,
+  TRIP_RYTHME_OPTIONS,
+  TRIP_SAISON_OPTIONS,
+  autoPickVilles,
+  deriveEtapesFromJours,
+  loadTrips,
+  makeEtapeId,
+  makeStepId,
+  makeTripId,
+  normalizeTrip,
+  pickCandidateLieux,
+  saveTrips,
+  tripFromGenerated,
+  tripFromPreconcu,
+  tripTitleFromWizard,
+  tripTiming,
+  validateGeneratedItinerary,
+} from "./features/travel/tripModel";
 import {
   Home as HomeIcon, Compass, Drama, BookOpen, Plane,
   Flame, Search, Sparkles, Crown, ChevronRight, ChevronLeft, MessageSquare,
@@ -26,6 +89,16 @@ import {
   Award, Settings, LogOut, Bell, Type, Mail, Eye, EyeOff, ArrowRight, ArrowLeft,
   Flower2, Users, Landmark, Coffee, UtensilsCrossed, GripVertical,
 } from "lucide-react";
+
+// Ressources éditoriales volumineuses, hydratées ensemble au démarrage.
+// Elles restent hors du bundle applicatif et sont disponibles avant `db`, qui
+// sert déjà de garde de rendu pour tous les écrans de contenu.
+let EXPLORE_IMAGES = {};
+let VIDEO_MAP = {};
+let LIEU_EDITORIAL = {};
+const ProfileScreen = lazy(()=>import("./features/profile/ProfileScreen").then(module=>({default:module.ProfileScreen})));
+const PremiumPage = lazy(()=>import("./features/premium/PremiumPage").then(module=>({default:module.PremiumPage})));
+const Onboarding = lazy(()=>import("./features/onboarding/Onboarding").then(module=>({default:module.Onboarding})));
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -59,39 +132,14 @@ const ZONE_GAP = 32;
 const ITEM_GAP = 14;
 
 // Accent saisonnier dynamique (selon le mois réel)
-function currentSeasonKey(date=new Date()){
-  const m = date.getMonth(); // 0-11
-  if(m>=2 && m<=4) return "printemps";
-  if(m>=5 && m<=7) return "été";
-  if(m>=8 && m<=10) return "automne";
-  return "hiver";
-}
 // ─── Affichage du japonais selon le mode de script (kana par défaut) ───
 // modes : "kana" (hiragana, défaut pédagogique) | "kanji" (japonais natif) | "romaji"
 // Texte principal affiché en grand
-function jpMain(entry, script, jpField="jp"){
-  if(!entry) return "";
-  const jp = entry[jpField] || entry.jp || "";
-  if(script==="romaji") return entry.romaji || jp;
-  if(script==="kana")   return entry.kana   || jp;  // si pas de kana, fallback kanji
-  return jp;
-}
 // Texte secondaire (sous le principal) : on montre une autre forme utile
-function jpSub(entry, script, jpField="jp"){
-  if(!entry) return "";
-  const jp = entry[jpField] || entry.jp || "";
-  if(script==="romaji") return jp;                  // sous le romaji → le japonais
-  if(script==="kana")   return entry.romaji || "";  // sous le kana → le romaji
-  return entry.romaji || "";                        // sous le kanji → le romaji
-}
 // Extrait la réplique japonaise citée entre « » dans le texte de situation
 // d'une étape de scénario (ex. « Il te demande ton nom : « お名前は？ » » →
 // « お名前は？ »). Certaines situations sont purement descriptives (pas de
 // réplique directe) — renvoie null dans ce cas, pas de bouton audio affiché.
-function extractSituationJP(situation){
-  const m = situation && situation.match(/«\s*([^»]+?)\s*»/);
-  return m ? m[1] : null;
-}
 // ─── Correspondance mot-à-mot JP/FR (surlignage interactif) ─────────────────
 // Calcule les segments d'une phrase japonaise et de sa traduction française à
 // partir de `mots` ([{jp,fr}] en ordre de lecture japonais — voir les entrées
@@ -101,34 +149,6 @@ function extractSituationJP(situation){
 // (pas un hook) — appelable directement dans une boucle .map() sans enfreindre
 // les Rules of Hooks. Renvoie null si `mots` est absent (contenu pas encore
 // enrichi) : les écrans appelants retombent alors sur l'affichage simple.
-function alignWords(mots, fullFr){
-  if(!mots || !mots.length || !fullFr) return null;
-  const claims = [];
-  mots.forEach((m,i)=>{
-    if(!m.fr) return;
-    let searchFrom = 0, idx = -1;
-    while(true){
-      idx = fullFr.indexOf(m.fr, searchFrom);
-      if(idx===-1) break;
-      const overlap = claims.some(c=> idx < c.end && idx+m.fr.length > c.start);
-      if(!overlap) break;
-      searchFrom = idx+1;
-    }
-    if(idx!==-1) claims.push({start:idx, end:idx+m.fr.length, idx:i});
-  });
-  if(!claims.length) return null;
-  claims.sort((a,b)=>a.start-b.start);
-  const frSegs = [];
-  let cursor = 0;
-  claims.forEach(c=>{
-    if(c.start>cursor) frSegs.push({text:fullFr.slice(cursor,c.start), wordIndex:null});
-    frSegs.push({text:fullFr.slice(c.start,c.end), wordIndex:c.idx});
-    cursor = c.end;
-  });
-  if(cursor<fullFr.length) frSegs.push({text:fullFr.slice(cursor), wordIndex:null});
-  const jpSegs = mots.map((m,i)=>({text:m.jp, wordIndex:i}));
-  return {jpSegs, frSegs};
-}
 // Ligne de segments cliquables/survolables (tap sur mobile, hover sur desktop) —
 // le mot actif se surligne dans la couleur d'accent ; `active`/`setActive` sont
 // partagés entre la ligne JP et la ligne FR d'une même phrase pour synchroniser
@@ -153,21 +173,12 @@ function AlignedRow({segs, active, setActive, activeColor, style}){
     </span>
   );
 }
-const SEASON_ACCENT = {
-  printemps:{accent:"#E08BA8", soft:"rgba(224,139,168,0.10)", emoji:"🌸", particle:"🌸", label:"Printemps", tagline:"Saison du hanami — les cerisiers en fleurs", saisonFr:"ce printemps"},
-  "été":    {accent:"#3C9DC4", soft:"rgba(60,157,196,0.10)",  emoji:"🎐", particle:"💧", label:"Été",       tagline:"Saison des matsuri et des feux d'artifice", saisonFr:"cet été"},
-  automne:  {accent:"#C97D3C", soft:"rgba(201,125,60,0.10)",  emoji:"🍁", particle:"🍁", label:"Automne",   tagline:"Saison du momiji — les érables flamboient", saisonFr:"cet automne"},
-  hiver:    {accent:"#7B9BB5", soft:"rgba(123,155,181,0.12)", emoji:"❄️", particle:"❄️", label:"Hiver",     tagline:"Saison des illuminations et de l'onsen", saisonFr:"cet hiver"},
-};
 // Sous-ensemble emblématique de lieux (sur les 151 du catalogue) taggués par
 // saison idéale — mapping minimal viable, pas un ré-étiquetage exhaustif.
 // Le champ `saison_ideale` existait déjà dans japan-data.json mais n'était
 // utilisé nulle part : 10 lieux déjà taggués (hiver/printemps/automne), 3
 // ajoutés pour l'été (sumida-river, gion, owakudani — tous liés aux matsuri
 // et feux d'artifice de la saison).
-function seasonalLieux(db, seasonKey){
-  return (db?.lieux || []).filter(l => l.saison_ideale === seasonKey);
-}
 
 // ─── Feature flags — centralise ce qui est fonctionnel vs en placeholder ───────
 // Un élément derrière un flag à `false` doit toujours afficher un état "Bientôt
@@ -175,7 +186,7 @@ function seasonalLieux(db, seasonKey){
 const FEATURE_FLAGS = {
   weeklyChallenge: true,   // Défi de la semaine — contenu réel, client-side
   seasonalBanner: true,    // Bandeau saisonnier — contenu réel, client-side
-  dailyReminder: false,    // Rappel quotidien (notification push) — UI placeholder uniquement
+  dailyReminder: true,     // Notification locale quotidienne via Capacitor
   tutor: true,             // Tuteur conversationnel — Edge Function + écrans livrés en Phase 3
 };
 
@@ -311,10 +322,6 @@ function greet(hour,name) {
   return {jp:`こんばんは${s}`,fr:`Bonsoir${name?", "+name:""}`};
 }
 
-// ─── Onboarding data ──────────────────────────────────────────────────────────
-const WHY    = [{id:"anime",label:"Anime & Manga",emoji:"⛩️",Icon:Sparkles},{id:"voyage",label:"Voyager au Japon",emoji:"✈️",Icon:Plane},{id:"culture",label:"Culture & Art",emoji:"🎋",Icon:Landmark},{id:"langue",label:"Apprendre le japonais",emoji:"🈶",Icon:BookOpen},{id:"lifestyle",label:"Lifestyle japonais",emoji:"🍵",Icon:Coffee},{id:"gastro",label:"Gastronomie",emoji:"🍣",Icon:UtensilsCrossed}];
-const GOALS  = [{id:"travel",label:"Préparer un voyage",emoji:"🗾",Icon:Plane},{id:"live",label:"Vivre au Japon",emoji:"🏯",Icon:HomeIcon},{id:"learn",label:"Apprendre la langue",emoji:"📚",Icon:BookOpen},{id:"imm",label:"Immersion culturelle",emoji:"🌸",Icon:Flower2}];
-const LEVELS = [{id:"beginner",label:"Débutant",sub:"Je découvre le Japon",emoji:"🌱"},{id:"intermediate",label:"Intermédiaire",sub:"Je connais les bases",emoji:"🌿"},{id:"advanced",label:"Avancé",sub:"Je maîtrise l'essentiel",emoji:"🎍"}];
 // Achievements réels — chaque badge a une condition basée sur l'activité de l'user
 // check(ctx) reçoit { streak, xp, unlocks, scenProgress, kanaProgress, favs }
 const ACHIEVEMENTS = [
@@ -1407,11 +1414,14 @@ function VoyageHomeCard({C, favs, onGoTab}){
   const trip = trips[0];
   const keptCount = (favs||[]).filter(f=>f.type==="lieu").length;
   const nbLieux = trip ? trip.jours.reduce((a,j)=>a+j.activites.length,0) : 0;
+  const timing = tripTiming(trip);
 
   const content = trip ? {
     emoji: "🗾",
     title: trip.titre,
-    sub: `${trip.jours.length} jour${trip.jours.length>1?"s":""} · ${nbLieux} lieu${nbLieux>1?"x":""}`,
+    sub: timing?.status==="upcoming" ? `Départ dans ${timing.daysUntil} jour${timing.daysUntil>1?"s":""} · ${nbLieux} lieux`
+      : timing?.status==="active" ? `Jour ${timing.dayNumber}/${timing.duration} · Ton programme est prêt`
+      : `${trip.jours.length} jour${trip.jours.length>1?"s":""} · ${nbLieux} lieu${nbLieux>1?"x":""}`,
   } : keptCount>0 ? {
     emoji: "❤️",
     title: `Tu as gardé ${keptCount} lieu${keptCount>1?"x":""}`,
@@ -1426,7 +1436,7 @@ function VoyageHomeCard({C, favs, onGoTab}){
     <div onClick={()=>onGoTab && onGoTab("voyage")} className="lift" style={{cursor:"pointer",padding:"16px 18px",borderRadius:18,background:C.s1,border:`1px solid ${C.border}`,boxShadow:C.shadow||"none",display:"flex",alignItems:"center",gap:14}}>
       <span style={{fontSize:30,flexShrink:0}}>{content.emoji}</span>
       <div style={{flex:1,minWidth:0}}>
-        <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",textTransform:"uppercase",marginBottom:3}}>{trip ? "Reprendre ton itinéraire" : "Ton voyage"}</div>
+        <div style={{fontSize:10,color:timing?.status==="active"?C.green:C.t3,letterSpacing:".1em",textTransform:"uppercase",marginBottom:3}}>{timing?.status==="active"?"📍 Voyage en cours":trip?"Reprendre ton itinéraire":"Ton voyage"}</div>
         <div style={{fontSize:14,color:C.text,fontWeight:600,marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{content.title}</div>
         <div style={{fontSize:12,color:C.t2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{content.sub}</div>
       </div>
@@ -1463,7 +1473,7 @@ function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
   );
 }
 
-function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,isPremium,onOpenLieu,onOpenTradition,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem,onOpenWeeklyTarget}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,onOpenSos,isPremium,onOpenLieu,onOpenTradition,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem,onOpenWeeklyTarget,kanaProgress,scenProgress,pathProgress}){
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   // Cibles du spotlight (Système 4.a, voir SECTION_INTRO_STEPS.home) : une
@@ -1537,6 +1547,13 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   const seasonKey = currentSeasonKey();
   const seasonAccent = SEASON_ACCENT[seasonKey];
   const seasonLieux = useMemo(()=>seasonalLieux(db, seasonKey), [db, seasonKey]);
+  const journeyContext = useMemo(()=>buildHomeJourneyContext({user,trips:loadTrips()}),[user]);
+  const contextCopy = useMemo(()=>getHomePrimaryAction(journeyContext,db?.lieux||[]),[journeyContext,db]);
+  const readiness = useMemo(()=>calculateReadinessScore({trip:journeyContext.activeTrip || journeyContext.nextTrip?.trip,kanaProgress,scenarioProgress:scenProgress,pathProgress}), [journeyContext.activeTrip,journeyContext.nextTrip?.trip,kanaProgress,scenProgress,pathProgress]);
+  const inJapanMode = journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN;
+  // Le premier tour montre encore les zones historiques une fois. Ensuite,
+  // préparation et voyage privilégient uniquement les actions immédiates.
+  const focusedTravelHome = homeIntroStage===null && [JAPAN_RELATIONSHIP.PLANNING,JAPAN_RELATIONSHIP.SOON,JAPAN_RELATIONSHIP.IN_JAPAN].includes(journeyContext.state);
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif",position:"relative"}}>
       {/* En-tête dégradé — calqué sur HomeScreen.tsx (bolt) */}
@@ -1577,19 +1594,25 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
 
       {/* Actions rapides — chevauche l'en-tête (comme HomeScreen.tsx) */}
       <div style={{padding:"0 20px",marginTop:-24,marginBottom:4,position:"relative",zIndex:2}}>
+        <button onClick={()=>onGoTab(contextCopy.tab)} className="lift" style={{width:"100%",marginBottom:12,padding:"16px 17px",display:"flex",alignItems:"center",gap:13,textAlign:"left",cursor:"pointer",background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow}}>
+          <span style={{fontSize:30}}>{contextCopy.emoji}</span>
+          <span style={{flex:1,minWidth:0}}><span style={{display:"block",fontSize:9,color:C.red,letterSpacing:".14em",fontWeight:700}}>{contextCopy.eyebrow}</span><span style={{display:"block",fontSize:15,color:C.text,fontWeight:650,marginTop:3}}>{contextCopy.title}</span><span style={{display:"block",fontSize:11,color:C.t2,lineHeight:1.4,marginTop:2}}>{contextCopy.text}</span></span>
+          <ChevronRight size={19} color={C.red}/>
+        </button>
+        {[JAPAN_RELATIONSHIP.PLANNING,JAPAN_RELATIONSHIP.SOON].includes(journeyContext.state)&&<div style={{marginBottom:12,padding:"13px 15px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,boxShadow:C.shadow}}><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}><span style={{fontSize:12,fontWeight:650,color:C.text}}>Prêt pour le Japon</span><span style={{fontSize:15,fontWeight:750,color:C.red}}>{readiness.global}%</span></div><div style={{height:6,background:C.s2,borderRadius:99,overflow:"hidden"}}><div style={{height:"100%",width:`${readiness.global}%`,background:C.red,borderRadius:99}}/></div><div style={{display:"flex",justifyContent:"space-between",gap:5,marginTop:8,fontSize:9,color:C.t3}}>{[["Voyage",readiness.categories.voyage],["Japonais",readiness.categories.japonais],["Codes",readiness.categories.codesSociaux],["Transport",readiness.categories.transports],["Prépa",readiness.categories.preparatifs]].map(([label,value])=><span key={label} title={`${label} : ${value}%`}>{label} {value}%</span>)}</div></div>}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-          <button onClick={()=>onGoTab("tutor")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
-            <div style={iconTileStyle(C.indigo, 38, 12)}><MessageSquare size={18} color={C.indigo}/></div>
+          <button onClick={()=>journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?onOpenSos():onGoTab("tutor")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
+            <div style={iconTileStyle(journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?C.red:C.indigo, 38, 12)}>{journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?<AlertCircle size={18} color={C.red}/>:<MessageSquare size={18} color={C.indigo}/>}</div>
             <div>
-              <div style={{fontSize:13,fontWeight:500,color:C.text}}>Tuteur IA</div>
-              <div style={{fontSize:11,color:C.t3}}>Parler japonais</div>
+              <div style={{fontSize:13,fontWeight:500,color:C.text}}>{journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?"SOS Japon":"Tuteur IA"}</div>
+              <div style={{fontSize:11,color:C.t3}}>{journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?"Aide immédiate":"Parler japonais"}</div>
             </div>
           </button>
-          <button onClick={()=>onGoTab("explore")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
-            <div style={iconTileStyle(C.green, 38, 12)}><Compass size={18} color={C.green}/></div>
+          <button onClick={()=>onGoTab(inJapanMode?"scenarios":"explore")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
+            <div style={iconTileStyle(C.green, 38, 12)}>{inJapanMode?<MessageSquare size={18} color={C.green}/>:<Compass size={18} color={C.green}/>}</div>
             <div>
-              <div style={{fontSize:13,fontWeight:500,color:C.text}}>Explorer</div>
-              <div style={{fontSize:11,color:C.t3}}>Culture & lieux</div>
+              <div style={{fontSize:13,fontWeight:500,color:C.text}}>{inJapanMode?"Phrases utiles":"Explorer"}</div>
+              <div style={{fontSize:11,color:C.t3}}>{inJapanMode?"Situations réelles":"Culture & lieux"}</div>
             </div>
           </button>
         </div>
@@ -1598,7 +1621,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
       <div style={{padding:"18px 20px 110px",position:"relative",zIndex:1,display:"flex",flexDirection:"column",gap:24}}>
 
         {/* Missions du jour — carte unique à cocher, comme HomeScreen.tsx (bolt) */}
-        {mission && (()=>{
+        {!inJapanMode && mission && (()=>{
           const todays = missionsForDay(mission);
           const done = mission.done || [];
           const allDone = done.length >= todays.length;
@@ -1623,14 +1646,14 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
         })()}
 
         {/* Continue ton activité — carte unique, comme HomeScreen.tsx (bolt) */}
-        <div ref={progressonsRef}>
+        {!inJapanMode&&<div ref={progressonsRef}>
           <SectionTitle C={C} title="Continue ton activité"/>
           <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
-        </div>
+        </div>}
 
         {/* Le Japon du jour — slider avec l'article du jour + les autres
             pastilles générées quotidiennement (lieu, tradition, coutume). */}
-        <div ref={japonDuJourRef}>
+        {!focusedTravelHome&&<div ref={japonDuJourRef}>
           <SectionTitle C={C} title="Le Japon du jour" action={
             <button onClick={handleOpenFeed} style={{background:"none",border:"none",color:C.red,fontSize:12,fontWeight:600,cursor:"pointer",padding:0}}>Tout voir</button>
           }/>
@@ -1647,19 +1670,19 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
             )}
             {todaysTradition && (
               <DailySlideCard C={C} emoji="⛩️" label="TRADITION DU JOUR" title={todaysTradition.nom} subtitle={todaysTradition.tagline}
-                photo={explorePhoto("traditions", todaysTradition, DATA.traditions.indexOf(todaysTradition))} fallbackEmoji={todaysTradition.emoji}
+                photo={explorePhoto("traditions", todaysTradition, db.traditions.indexOf(todaysTradition))} fallbackEmoji={todaysTradition.emoji}
                 onClick={()=>onOpenTradition && onOpenTradition(todaysTradition)}/>
             )}
             {todaysCoutume && (
               <DailySlideCard C={C} emoji="🏮" label="COUTUME DU JOUR" title={todaysCoutume.nom} subtitle={todaysCoutume.tagline}
-                photo={explorePhoto("traditions", todaysCoutume, DATA.traditions.indexOf(todaysCoutume))} fallbackEmoji={todaysCoutume.emoji}
+                photo={explorePhoto("traditions", todaysCoutume, db.traditions.indexOf(todaysCoutume))} fallbackEmoji={todaysCoutume.emoji}
                 onClick={()=>onOpenTradition && onOpenTradition(todaysCoutume)}/>
             )}
           </div>
-        </div>
+        </div>}
 
         {/* Pour toi — grille 2 col, comme HomeScreen.tsx (bolt) */}
-        <div ref={lanceeRef}>
+        {!focusedTravelHome&&<div ref={lanceeRef}>
           <SectionTitle C={C} title="Pour toi"/>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
             <button onClick={()=>onGoTab("learn")} className="lift" style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),padding:16,textAlign:"left",cursor:"pointer"}}>
@@ -1673,10 +1696,10 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
               <div style={{fontSize:11,color:C.t3,marginTop:2}}>Crée ton itinéraire</div>
             </button>
           </div>
-        </div>
+        </div>}
 
         {/* Bannière Premium — calquée sur HomeScreen.tsx (bolt) */}
-        {!isPremium && (
+        {!focusedTravelHome && !isPremium && (
           <button onClick={onOpenPremium} className="lift" style={{background:`linear-gradient(90deg, ${C.gold}22, ${C.gold}0d)`,border:`1px solid ${C.gold}44`,borderRadius:20,padding:16,display:"flex",alignItems:"center",gap:12,textAlign:"left",cursor:"pointer"}}>
             <Crown size={24} color={C.gold} style={{flexShrink:0}}/>
             <div style={{flex:1}}>
@@ -1688,10 +1711,10 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
         )}
 
         {/* Défi de la semaine — carte autonome, comme HomeScreen.tsx (bolt) */}
-        <div>
+        {!focusedTravelHome&&<div>
           <SectionTitle C={C} title="Défi de la semaine"/>
           <WeeklyChallengeCard C={C} progress={weeklyProgress} onToggleItem={onToggleWeeklyItem} onOpenTarget={(t)=>{ onOpenWeeklyTarget ? onOpenWeeklyTarget(t) : onGoTab(t.tab); }}/>
-        </div>
+        </div>}
       </div>
 
       {/* Système 4.a — atterrissage 1er lancement, une seule fois */}
@@ -1840,7 +1863,7 @@ function SectionIntro({C, color, steps, onDone, targetRefs}){
     </>
   );
 }
-function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,isPremium,onOpenPremium,onIntroDone,onSearch,onExplore,backRef,initialCategoryFilter,onInitialCategoryConsumed}){
+function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isUnlocked,unlockCategory,isPremium,onOpenPremium,onIntroDone,onSearch,onExplore,onGoTab,backRef,initialCategoryFilter,onInitialCategoryConsumed}){
   const [view,setView] = useState(null);
   const [viewFilter,setViewFilter] = useState(null);
   const [confirmCat,setConfirmCat] = useState(null);
@@ -1910,8 +1933,8 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
     <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       {/* En-tête — Header.tsx (bolt) : titre + sous-titre, pas de retour */}
       <div style={{padding:"50px 20px 14px",background:`${C.bg}e6`,backdropFilter:"blur(10px)",borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-        <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:18,color:C.text}}>Explorer</div>
-        <div style={{fontSize:12,color:C.t3,marginTop:1}}>Culture, traditions et régions</div>
+        <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:18,color:C.text}}>Découvrir</div>
+        <div style={{fontSize:12,color:C.t3,marginTop:1}}>Culture, japonais et situations réelles</div>
       </div>
 
       <div style={{padding:"16px 20px 0"}}>
@@ -1920,6 +1943,11 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
           <Search size={17} color={C.t3}/>
           <span style={{fontSize:13,color:C.t3}}>Rechercher une tradition, un mot, un lieu…</span>
         </button>
+      </div>
+
+      <div style={{padding:"12px 20px 0",display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <button onClick={()=>onGoTab?.("learn")} style={{padding:13,borderRadius:15,border:`1px solid ${C.border}`,background:C.s1,color:C.text,textAlign:"left",cursor:"pointer"}}><BookOpen size={18} color={C.gold}/><span style={{display:"block",fontSize:12,fontWeight:650,marginTop:7}}>Apprendre</span><span style={{display:"block",fontSize:10,color:C.t3,marginTop:2}}>Kana et expressions</span></button>
+        <button onClick={()=>onGoTab?.("scenarios")} style={{padding:13,borderRadius:15,border:`1px solid ${C.border}`,background:C.s1,color:C.text,textAlign:"left",cursor:"pointer"}}><Drama size={18} color={C.indigo}/><span style={{display:"block",fontSize:12,fontWeight:650,marginTop:7}}>S’entraîner</span><span style={{display:"block",fontSize:10,color:C.t3,marginTop:2}}>Scénarios pratiques</span></button>
       </div>
 
       {/* Grille de catégories — 6 boutons, calqués sur exploreCategories (bolt) */}
@@ -2464,7 +2492,7 @@ const SEASONS = [
 
 function TraditionDetail({C,t,onBack,fav,onFav,wikiMap,onWikiTap,script}){
   const wt=(text,style)=><WikiText C={C} text={text} style={style} wikiMap={wikiMap||{}} onWikiTap={onWikiTap}/>;
-  const photo = explorePhoto("traditions", t, DATA.traditions.indexOf(t));
+  const photo = explorePhoto("traditions", t, 0);
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
       {/* Photo bannière, si disponible */}
@@ -2674,7 +2702,7 @@ function TraditionsScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,initial
       {/* Tradition cards */}
       <div className="stagger" style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
         {filtered.map((t,i)=>{
-          const photo = explorePhoto("traditions", t, DATA.traditions.indexOf(t));
+          const photo = explorePhoto("traditions", t, db.traditions.indexOf(t));
           return(
           <div key={i} className="lift" onClick={()=>{ setSelected(t); onExplore && onExplore(); }} style={{
             background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,padding:"16px 16px",
@@ -3120,74 +3148,6 @@ function ScenariosScreen({C,script,db,scenariosDone,completeScenario,onOpenTutor
   );
 }
 
-// ─── Kana (hiragana + katakana) ───────────────────────────────────────────────
-const HIRAGANA = [
-  {k:"あ",r:"a"},{k:"い",r:"i"},{k:"う",r:"u"},{k:"え",r:"e"},{k:"お",r:"o"},
-  {k:"か",r:"ka"},{k:"き",r:"ki"},{k:"く",r:"ku"},{k:"け",r:"ke"},{k:"こ",r:"ko"},
-  {k:"さ",r:"sa"},{k:"し",r:"shi"},{k:"す",r:"su"},{k:"せ",r:"se"},{k:"そ",r:"so"},
-  {k:"た",r:"ta"},{k:"ち",r:"chi"},{k:"つ",r:"tsu"},{k:"て",r:"te"},{k:"と",r:"to"},
-  {k:"な",r:"na"},{k:"に",r:"ni"},{k:"ぬ",r:"nu"},{k:"ね",r:"ne"},{k:"の",r:"no"},
-  {k:"は",r:"ha"},{k:"ひ",r:"hi"},{k:"ふ",r:"fu"},{k:"へ",r:"he"},{k:"ほ",r:"ho"},
-  {k:"ま",r:"ma"},{k:"み",r:"mi"},{k:"む",r:"mu"},{k:"め",r:"me"},{k:"も",r:"mo"},
-  {k:"や",r:"ya"},{k:"ゆ",r:"yu"},{k:"よ",r:"yo"},
-  {k:"ら",r:"ra"},{k:"り",r:"ri"},{k:"る",r:"ru"},{k:"れ",r:"re"},{k:"ろ",r:"ro"},
-  {k:"わ",r:"wa"},{k:"を",r:"wo"},{k:"ん",r:"n"},
-];
-// Dakuten / handakuten (sons "voisés") — hiragana
-const HIRAGANA_DAKUTEN = [
-  {k:"が",r:"ga"},{k:"ぎ",r:"gi"},{k:"ぐ",r:"gu"},{k:"げ",r:"ge"},{k:"ご",r:"go"},
-  {k:"ざ",r:"za"},{k:"じ",r:"ji"},{k:"ず",r:"zu"},{k:"ぜ",r:"ze"},{k:"ぞ",r:"zo"},
-  {k:"だ",r:"da"},{k:"ぢ",r:"ji"},{k:"づ",r:"zu"},{k:"で",r:"de"},{k:"ど",r:"do"},
-  {k:"ば",r:"ba"},{k:"び",r:"bi"},{k:"ぶ",r:"bu"},{k:"べ",r:"be"},{k:"ぼ",r:"bo"},
-  {k:"ぱ",r:"pa"},{k:"ぴ",r:"pi"},{k:"ぷ",r:"pu"},{k:"ぺ",r:"pe"},{k:"ぽ",r:"po"},
-];
-// Combinaisons (yōon) — hiragana
-const HIRAGANA_COMBO = [
-  {k:"きゃ",r:"kya"},{k:"きゅ",r:"kyu"},{k:"きょ",r:"kyo"},
-  {k:"しゃ",r:"sha"},{k:"しゅ",r:"shu"},{k:"しょ",r:"sho"},
-  {k:"ちゃ",r:"cha"},{k:"ちゅ",r:"chu"},{k:"ちょ",r:"cho"},
-  {k:"にゃ",r:"nya"},{k:"にゅ",r:"nyu"},{k:"にょ",r:"nyo"},
-  {k:"ひゃ",r:"hya"},{k:"ひゅ",r:"hyu"},{k:"ひょ",r:"hyo"},
-  {k:"みゃ",r:"mya"},{k:"みゅ",r:"myu"},{k:"みょ",r:"myo"},
-  {k:"りゃ",r:"rya"},{k:"りゅ",r:"ryu"},{k:"りょ",r:"ryo"},
-  {k:"ぎゃ",r:"gya"},{k:"ぎゅ",r:"gyu"},{k:"ぎょ",r:"gyo"},
-  {k:"じゃ",r:"ja"},{k:"じゅ",r:"ju"},{k:"じょ",r:"jo"},
-  {k:"びゃ",r:"bya"},{k:"びゅ",r:"byu"},{k:"びょ",r:"byo"},
-];
-const KATAKANA = [
-  {k:"ア",r:"a"},{k:"イ",r:"i"},{k:"ウ",r:"u"},{k:"エ",r:"e"},{k:"オ",r:"o"},
-  {k:"カ",r:"ka"},{k:"キ",r:"ki"},{k:"ク",r:"ku"},{k:"ケ",r:"ke"},{k:"コ",r:"ko"},
-  {k:"サ",r:"sa"},{k:"シ",r:"shi"},{k:"ス",r:"su"},{k:"セ",r:"se"},{k:"ソ",r:"so"},
-  {k:"タ",r:"ta"},{k:"チ",r:"chi"},{k:"ツ",r:"tsu"},{k:"テ",r:"te"},{k:"ト",r:"to"},
-  {k:"ナ",r:"na"},{k:"ニ",r:"ni"},{k:"ヌ",r:"nu"},{k:"ネ",r:"ne"},{k:"ノ",r:"no"},
-  {k:"ハ",r:"ha"},{k:"ヒ",r:"hi"},{k:"フ",r:"fu"},{k:"ヘ",r:"he"},{k:"ホ",r:"ho"},
-  {k:"マ",r:"ma"},{k:"ミ",r:"mi"},{k:"ム",r:"mu"},{k:"メ",r:"me"},{k:"モ",r:"mo"},
-  {k:"ヤ",r:"ya"},{k:"ユ",r:"yu"},{k:"ヨ",r:"yo"},
-  {k:"ラ",r:"ra"},{k:"リ",r:"ri"},{k:"ル",r:"ru"},{k:"レ",r:"re"},{k:"ロ",r:"ro"},
-  {k:"ワ",r:"wa"},{k:"ヲ",r:"wo"},{k:"ン",r:"n"},
-];
-const KATAKANA_DAKUTEN = [
-  {k:"ガ",r:"ga"},{k:"ギ",r:"gi"},{k:"グ",r:"gu"},{k:"ゲ",r:"ge"},{k:"ゴ",r:"go"},
-  {k:"ザ",r:"za"},{k:"ジ",r:"ji"},{k:"ズ",r:"zu"},{k:"ゼ",r:"ze"},{k:"ゾ",r:"zo"},
-  {k:"ダ",r:"da"},{k:"ヂ",r:"ji"},{k:"ヅ",r:"zu"},{k:"デ",r:"de"},{k:"ド",r:"do"},
-  {k:"バ",r:"ba"},{k:"ビ",r:"bi"},{k:"ブ",r:"bu"},{k:"ベ",r:"be"},{k:"ボ",r:"bo"},
-  {k:"パ",r:"pa"},{k:"ピ",r:"pi"},{k:"プ",r:"pu"},{k:"ペ",r:"pe"},{k:"ポ",r:"po"},
-];
-const KATAKANA_COMBO = [
-  {k:"キャ",r:"kya"},{k:"キュ",r:"kyu"},{k:"キョ",r:"kyo"},
-  {k:"シャ",r:"sha"},{k:"シュ",r:"shu"},{k:"ショ",r:"sho"},
-  {k:"チャ",r:"cha"},{k:"チュ",r:"chu"},{k:"チョ",r:"cho"},
-  {k:"ニャ",r:"nya"},{k:"ニュ",r:"nyu"},{k:"ニョ",r:"nyo"},
-  {k:"ヒャ",r:"hya"},{k:"ヒュ",r:"hyu"},{k:"ヒョ",r:"hyo"},
-  {k:"ミャ",r:"mya"},{k:"ミュ",r:"myu"},{k:"ミョ",r:"myo"},
-  {k:"リャ",r:"rya"},{k:"リュ",r:"ryu"},{k:"リョ",r:"ryo"},
-  {k:"ギャ",r:"gya"},{k:"ギュ",r:"gyu"},{k:"ギョ",r:"gyo"},
-  {k:"ジャ",r:"ja"},{k:"ジュ",r:"ju"},{k:"ジョ",r:"jo"},
-  {k:"ビャ",r:"bya"},{k:"ビュ",r:"byu"},{k:"ビョ",r:"byo"},
-];
-function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-
-// ── Flashcard mode ──
 function FlashcardMode({C, deck, onExit, onRecord}){
   const [cards] = useState(()=>shuffle(deck));
   const [idx,setIdx] = useState(0);
@@ -3560,15 +3520,6 @@ const SITUATIONS = [
    ]},
 ];
 
-const LEARN_DECKS = [
-  {id:"hira", label:"Hiragana", jp:"ひらがな", emoji:"あ", deck:HIRAGANA, desc:"46 caractères de base · mots japonais", group:"Bases"},
-  {id:"kata", label:"Katakana", jp:"カタカナ", emoji:"ア", deck:KATAKANA, desc:"46 caractères de base · mots étrangers", group:"Bases"},
-  {id:"hira_dak", label:"Hiragana — dakuten", jp:"濁音", emoji:"が", deck:HIRAGANA_DAKUTEN, desc:"25 sons voisés (が ざ だ ば ぱ)", group:"Avancé"},
-  {id:"hira_combo", label:"Hiragana — combinaisons", jp:"拗音", emoji:"きゃ", deck:HIRAGANA_COMBO, desc:"30 combinaisons (きゃ しゅ ちょ…)", group:"Avancé"},
-  {id:"kata_dak", label:"Katakana — dakuten", jp:"濁音", emoji:"ガ", deck:KATAKANA_DAKUTEN, desc:"25 sons voisés (ガ ザ ダ バ パ)", group:"Avancé"},
-  {id:"kata_combo", label:"Katakana — combinaisons", jp:"拗音", emoji:"キャ", deck:KATAKANA_COMBO, desc:"30 combinaisons (キャ シュ チョ…)", group:"Avancé"},
-];
-
 // ─── Parcours "Survivre à Tokyo" ──────────────────────────────────────────────
 // 8 paliers : fondations (lire) puis situations dans l'ordre d'un voyage.
 const TOKYO_PATH = [
@@ -3591,198 +3542,6 @@ function savePathProgress(p){ try { localStorage.setItem(PATH_KEY, JSON.stringif
 // ─── Voyages (planificateur) ────────────────────────────────────────────────
 // Structure : tableau de voyages (prévu pour le premium multi-voyages).
 // Version gratuite : 1 seul voyage autorisé.
-const TRIPS_KEY = "isekaid_trips_v1";
-const FREE_TRIP_LIMIT = 1;
-function loadTrips(){
-  try { const raw=localStorage.getItem(TRIPS_KEY); return raw?JSON.parse(raw).map(normalizeTrip):[]; }
-  catch { return []; }
-}
-function saveTrips(trips){ try { localStorage.setItem(TRIPS_KEY, JSON.stringify(trips)); } catch {} }
-function makeTripId(){ return "trip_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
-function makeStepId(){ return "s_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
-function makeEtapeId(){ return "e_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
-
-// Regroupe des jours contigus partageant le même villeId en étapes-villes
-// (même principe que carnet.js:groupJoursIntoEtapes, mais produit la forme
-// persistée : ids stables + FK etapeId posée sur chaque jour, plutôt qu'un
-// simple regroupement en mémoire pour la pagination du PDF).
-function deriveEtapesFromJours(jours){
-  const etapes = [];
-  const outJours = (jours||[]).map(j=>{
-    const last = etapes[etapes.length-1];
-    const etape = (last && last.villeId===j.villeId) ? last
-      : (etapes.push({ id: makeEtapeId(), villeId: j.villeId, nuits: 0, nonPlanifie: [] }), etapes[etapes.length-1]);
-    etape.nuits += 1;
-    return { ...j, etapeId: etape.id };
-  });
-  return { etapes, jours: outJours };
-}
-
-// Migration douce du modèle de voyage vers la v2 ("voyage à étapes") : posée
-// à la LECTURE (loadTrips, sync cloud), jamais forcée en masse — un voyage
-// déjà en v2 ressort inchangé (idempotent), un voyage v1 est normalisé et ne
-// sera réécrit qu'à la prochaine sauvegarde naturelle (persist()).
-function normalizeTrip(trip){
-  if(!trip || trip.modelVersion===2) return trip;
-  const jours = (trip.jours||[]).map(j=>({
-    ...j, activites: j.activites || j.etapes || [], etapes: undefined,
-  }));
-  const { etapes, jours: joursWithEtapeId } = trip.etapes
-    ? { etapes: trip.etapes, jours }
-    : deriveEtapesFromJours(jours);
-  return {
-    ...trip,
-    modelVersion: 2,
-    customLieux: trip.customLieux || [],
-    checklist: trip.checklist || [],
-    etapes,
-    jours: joursWithEtapeId,
-  };
-}
-
-// Check-list de préparatifs par défaut (inspirée d'un vrai voyage)
-const DEFAULT_CHECKLIST = [
-  "Passeport valide (6 mois)","Billets d'avion","Réservations d'hôtels/ryokan",
-  "JR Pass (à commander avant le départ)","Carte IC (Suica/Pasmo)","Pocket WiFi ou eSIM",
-  "Adaptateur de prise (type A)","Yens en espèces","Assurance voyage",
-];
-
-// Construit un voyage perso à partir d'un itinéraire préconçu
-function tripFromPreconcu(p){
-  const rawJours = p.jours.map(j=>({
-    num: j.num, date:"", villeId: j.villeId, titre: j.titre||"",
-    activites: (j.etapes||[]).map(e=>({ id: makeStepId(), lieuId: e.lieuId, note:"" }))
-  }));
-  const { etapes, jours } = deriveEtapesFromJours(rawJours);
-  return {
-    id: makeTripId(),
-    titre: p.titre,
-    mode_dates: "jours",
-    dateDebut: "",
-    modelVersion: 2,
-    villes: [...p.villes],
-    source: p.id,
-    etapes, jours,
-    checklist: DEFAULT_CHECKLIST.map((t,i)=>({ id:"c"+i, texte:t, fait:false })),
-  };
-}
-
-// Construit un voyage perso à partir de la réponse de l'Edge Function
-// itinerary-generate (Phase 4.4) : { villes, jours:[{villeId,titre,lieuIds}] }.
-// Les ids (trip/étapes) restent générés côté client comme partout ailleurs —
-// l'IA ne fait qu'ordonnancer/regrouper, jamais de logique d'identifiants.
-function tripFromGenerated(generated, titre){
-  const rawJours = (generated.jours||[]).map((j,i)=>({
-    num: i+1, date:"", villeId: j.villeId, titre: j.titre||"",
-    activites: (j.lieuIds||[]).map(lieuId=>({ id: makeStepId(), lieuId, note:"" })),
-  }));
-  const { etapes, jours } = deriveEtapesFromJours(rawJours);
-  return {
-    id: makeTripId(),
-    titre,
-    mode_dates: "jours",
-    dateDebut: "",
-    modelVersion: 2,
-    villes: [...(generated.villes||[])],
-    etapes, jours,
-    checklist: DEFAULT_CHECKLIST.map((t,i)=>({ id:"c"+i, texte:t, fait:false })),
-  };
-}
-
-// ─── Assistant de création (Phase 1 — parcours de questions) ─────────────────
-// Ordre de villes par défaut, curaté à la main (périmètre fermé de 9 villes) —
-// sert de base à "Laisse-moi choisir pour toi" ; suit à peu près l'itinéraire
-// "essentiel-7j" des voyages préconçus (Tokyo → Hakone → Kyoto/Uji/Nara →
-// Osaka), puis les extensions plus lointaines.
-const DEFAULT_VILLE_ROUTE = ["tokyo","hakone","kyoto","uji","nara","osaka","hiroshima","kanazawa","takayama"];
-
-function minJoursConseilles(ville){
-  const m = String(ville?.jours_conseilles||"").match(/\d+/);
-  return m ? parseInt(m[0],10) : 1;
-}
-
-// Sélectionne un sous-ensemble cohérent de villes pour une durée donnée en
-// suivant l'ordre géographique par défaut, en s'arrêtant dès que le budget de
-// jours est atteint (+1 jour de tolérance pour ne pas s'arrêter trop tôt sur
-// des fourchettes larges comme "3-4").
-function autoPickVilles(villes, days){
-  const byId = Object.fromEntries((villes||[]).map(v=>[v.id,v]));
-  const picked = []; let total = 0;
-  for(const id of DEFAULT_VILLE_ROUTE){
-    const v = byId[id]; if(!v) continue;
-    const cost = minJoursConseilles(v);
-    if(picked.length===0){ picked.push(id); total+=cost; continue; }
-    if(total + cost <= days + 1){ picked.push(id); total += cost; }
-    else break;
-  }
-  return picked;
-}
-
-// Regroupe les lieux du catalogue correspondant aux critères choisis (villes,
-// centres d'intérêt, rythme, saison) pour nourrir itinerary-generate. C'est
-// TOUJOURS ce pool, jamais l'IA, qui choisit les lieux candidats — l'IA ne
-// fait qu'ordonnancer/répartir sur les jours (même garde-fou que Phase 4.4).
-function pickCandidateLieux({ lieux, villes, villeIds, interets, rythme, saison, days }){
-  const inVilles = (lieux||[]).filter(l=>villeIds.includes(l.villeId));
-  const byInteret = interets?.length
-    ? inVilles.filter(l=>(l.interets||[]).some(i=>interets.includes(i)))
-    : inVilles;
-  const pool = byInteret.length>0 ? byInteret : inVilles; // ne jamais vider le pool si le filtre est trop strict
-
-  const perDay = rythme==="dense" ? 4 : rythme==="tranquille" ? 2 : 3;
-  const target = Math.max(villeIds.length, Math.min(60, Math.round(days*perDay)));
-
-  // Priorise les lieux de la saison choisie sans jamais exclure ceux dont la
-  // saison n'est pas renseignée (la grande majorité du catalogue).
-  const scored = [...pool].sort((a,b)=>{
-    if(!saison) return 0;
-    const sa = a.saison_ideale===saison ? 0 : 1;
-    const sb = b.saison_ideale===saison ? 0 : 1;
-    return sa - sb;
-  });
-
-  // Répartition proportionnelle au poids (jours_conseilles) de chaque ville,
-  // pour ne pas noyer une petite ville sous les lieux d'une grande.
-  const villeById = Object.fromEntries((villes||[]).map(v=>[v.id,v]));
-  const weights = villeIds.map(id=>Math.max(1, minJoursConseilles(villeById[id])));
-  const totalWeight = weights.reduce((a,b)=>a+b,0) || 1;
-  const quota = Object.fromEntries(villeIds.map((id,i)=>[id, Math.max(1, Math.round(target*weights[i]/totalWeight))]));
-
-  const result = [];
-  villeIds.forEach(id=>{ result.push(...scored.filter(l=>l.villeId===id).slice(0, quota[id])); });
-  return result.slice(0, 60);
-}
-
-// Titre par défaut du voyage généré, à partir des villes choisies.
-function tripTitleFromWizard(villeById, villeIds, days){
-  const noms = villeIds.map(id=>villeById[id]?.nom).filter(Boolean);
-  const villesLabel = noms.length===0 ? "Japon" : noms.length<=2 ? noms.join(" & ") : `${noms[0]} & ${noms.length-1} autres villes`;
-  return `${villesLabel} · ${days} jour${days>1?"s":""}`;
-}
-
-// Tags d'intérêt tels qu'ils existent réellement sur les lieux du catalogue
-// (japan-data.json, champ `interets`) — recoupe le `why` de l'onboarding
-// (anime/culture/lifestyle/gastro), sauf "nature", propre au voyage.
-const TRIP_INTERET_OPTIONS = [
-  {id:"culture",   label:"Culture & temples",     emoji:"⛩️"},
-  {id:"gastro",    label:"Gastronomie",            emoji:"🍣"},
-  {id:"anime",     label:"Pop-culture & anime",    emoji:"🎮"},
-  {id:"lifestyle", label:"Shopping & lifestyle",   emoji:"🍵"},
-  {id:"nature",    label:"Nature & onsen",         emoji:"🌿"},
-];
-const TRIP_RYTHME_OPTIONS = [
-  {id:"tranquille", label:"Tranquille", sub:"Prendre son temps, moins de lieux par jour", emoji:"🍵"},
-  {id:"equilibre",   label:"Équilibré",  sub:"Un bon rythme de croisière",                 emoji:"🚶"},
-  {id:"dense",       label:"Dense",      sub:"Voir un maximum, journées bien remplies",     emoji:"⚡"},
-];
-const TRIP_SAISON_OPTIONS = [
-  {id:"",          label:"Peu importe", emoji:"🤷"},
-  {id:"printemps", label:"Printemps",   emoji:"🌸"},
-  {id:"été",       label:"Été",         emoji:"☀️"},
-  {id:"automne",   label:"Automne",     emoji:"🍁"},
-  {id:"hiver",     label:"Hiver",       emoji:"❄️"},
-];
-const TRIP_DAYS_QUICK = [3,5,7,10];
 
 // ─── Générateur d'image partageable (Canvas natif) ───────────────────────────
 // Dessine une fiche de situation en image PNG (carré 1:1 ou vertical 9:16),
@@ -5089,7 +4848,7 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
   );
 }
 
-function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPremium, isFav, toggleFav, favs, onOpenLieu, onIntroDone, backRef}){
+function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPremium, isFav, toggleFav, favs, onOpenLieu, onIntroDone, backRef, initialView, onInitialViewConsumed}){
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   // "Lieu à découvrir" — bandeau saisonnier (SeasonBanner), même sélection que
@@ -5101,8 +4860,9 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   const villeById = useMemo(()=>Object.fromEntries(villes.map(v=>[v.id,v])), [villes]);
 
   const [trips, setTrips] = useState(()=>loadTrips());
-  // vues : "home" | "browse" (préconçus) | "create" | "trip"
-  const [view, setView] = useState("home");
+  // vues : "home" | "browse" (préconçus) | "create" | "trip" | "sos"
+  const [view, setView] = useState(initialView || "home");
+  useEffect(()=>{ if(initialView){ setView(initialView); onInitialViewConsumed?.(); } },[initialView,onInitialViewConsumed]);
   const [activeTripId, setActiveTripId] = useState(null);
   const [previewPreco, setPreviewPreco] = useState(null); // voyage préconçu en aperçu visuel
   const [showPremium, setShowPremium] = useState(false);
@@ -5122,34 +4882,55 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   const voyageTourTargets = useMemo(()=>[createRef,precoRef], []); // identité stable, voir HomeScreen
   const [tripCelebration, setTripCelebration] = useState(false); // voyage tout juste créé/adopté
   const pushTimer = useRef(null);
+  const flushTripMutations = useCallback(()=>flushPendingMutations({trips:mutation=>saveTripsCloud(mutation.userId,mutation.payload)}), []);
   // Index lieux pour les fiches visuelles
   const lieuByIdGlobal = useMemo(()=>Object.fromEntries((db?.lieux||[]).map(l=>[l.id,l])), [db]);
 
   // ── Sync cloud : pull au login ──
   useEffect(()=>{
     if(session?.user && supabaseEnabled){
-      fetchTrips(session.user.id).then(cloud=>{
+      let cancelled=false;
+      (async()=>{
+        await flushTripMutations();
+        if(cancelled || loadPendingMutations().some(item=>item.type==="trips"&&item.userId===session.user.id)) return;
+        const cloud=await fetchTrips(session.user.id);
+        if(cancelled) return;
         if(Array.isArray(cloud) && cloud.length>0){
-          // Le cloud fait autorité au login (fusion simple : on prend le cloud s'il existe)
-          const normalized = cloud.map(normalizeTrip);
+          // Fusion par identifiant/date d'édition pour préserver les voyages
+          // créés ou modifiés depuis un autre appareil.
+          const normalized = mergeTripSnapshots(loadTrips(),cloud).map(normalizeTrip);
           setTrips(normalized); saveTrips(normalized);
+          if(normalized.length!==cloud.length || normalized.some((trip,index)=>trip!==cloud[index])){
+            enqueueMutation({type:"trips",userId:session.user.id,payload:normalized}); flushTripMutations();
+          }
         } else if(loadTrips().length>0){
           // Pas de cloud mais des voyages locaux → on les pousse
-          saveTripsCloud(session.user.id, loadTrips());
+          enqueueMutation({type:"trips",userId:session.user.id,payload:loadTrips()});
+          flushTripMutations();
         }
-      });
+      })();
+      return ()=>{cancelled=true;};
     }
-  },[session?.user?.id]);
+  },[session?.user?.id,flushTripMutations]);
+
+  useEffect(()=>{
+    if(!session?.user || !supabaseEnabled) return;
+    const retry=()=>flushTripMutations();
+    window.addEventListener("online",retry);
+    return ()=>window.removeEventListener("online",retry);
+  },[session?.user?.id,flushTripMutations]);
 
   // ── Persistance locale + push cloud debounce ──
   const persist = (next)=>{
     setTrips(next); saveTrips(next);
     if(session?.user && supabaseEnabled){
       clearTimeout(pushTimer.current);
-      pushTimer.current = setTimeout(()=>{ saveTripsCloud(session.user.id, next); }, 1200);
+      enqueueMutation({type:"trips",userId:session.user.id,payload:next});
+      pushTimer.current = setTimeout(flushTripMutations, 1200);
     }
   };
   const activeTrip = trips.find(t=>t.id===activeTripId);
+  const currentActiveTrip = useMemo(()=>getActiveTrip(trips), [trips]);
 
   // Création
   const tryCreate = ()=>{
@@ -5162,7 +4943,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
     persist([...trips, t]); setActiveTripId(t.id); setView("trip"); setTripCelebration(true); sfx.playComplete();
   };
   // Point de passage commun création manuelle + auto-génération (KeptPlacesScreen.onGenerate)
-  const createTrip = (trip)=>{ persist([...trips, trip]); setActiveTripId(trip.id); setView("trip"); setTripCelebration(true); sfx.playComplete(); };
+  const createTrip = (trip)=>{ persist([...trips, trip]); trackProductEvent("trip_created",{days:trip.jours?.length||0,source:trip.source?"template":trip.generation?"generated":"manual"}); setActiveTripId(trip.id); setView("trip"); setTripCelebration(true); sfx.playComplete(); };
   const updateTrip = (updated)=>{ persist(trips.map(t=>t.id===updated.id?updated:t)); };
   const deleteTrip = (id)=>{ persist(trips.filter(t=>t.id!==id)); setActiveTripId(null); setView("home"); };
   const keptLieux = (favs||[]).filter(f=>f.type==="lieu").map(f=>f.item);
@@ -5175,10 +4956,11 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   };
 
   // ─── Vue : assistant de création (questions → génération IA) ───
+  if(view==="sos") return <SosJapan C={C} onBack={()=>setView("home")}/>;
   if(view==="wizard"){
     return <VoyageWizard C={C} villes={villes} lieux={lieux} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
               onCancel={()=>setView("home")} onManual={()=>setView("create")}
-              onGenerated={(res, titre)=> createTrip(tripFromGenerated(res, titre))}/>;
+              onGenerated={(res, titre, preferences)=> createTrip(tripFromGenerated(res, titre, preferences))}/>;
   }
   // ─── Vue : création manuelle (page blanche assumée) ───
   if(view==="create"){
@@ -5225,7 +5007,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
     return <KeptPlacesScreen C={C} keptLieux={keptLieux} villeById={villeById} trips={trips} toggleFav={toggleFav}
               onOpenLieu={onOpenLieu} onAddToTrip={addKeptLieuToTrip} onCreateTrip={tryCreate}
               isPremium={isPremium} onOpenPremium={onOpenPremium}
-              onGenerate={(generated, titre)=> createTrip(tripFromGenerated(generated, titre))}
+              onGenerate={(generated, titre, preferences)=> createTrip(tripFromGenerated(generated, titre, preferences))}
               onBack={()=>setView("home")}/>;
   }
   // ─── Vue : un voyage ───
@@ -5244,11 +5026,12 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       <div style={{padding:"50px 20px 14px",background:`${C.bg}e6`,backdropFilter:"blur(10px)",borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-        <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:18,color:C.text}}>Voyage</div>
-        <div style={{fontSize:12,color:C.t3,marginTop:1}}>Prépare ton voyage au Japon</div>
+        <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:18,color:C.text}}>{currentActiveTrip?"Mode Japon":"Voyage"}</div>
+        <div style={{fontSize:12,color:C.t3,marginTop:1}}>{currentActiveTrip?"Les essentiels pour aujourd’hui":"Prépare ton voyage au Japon"}</div>
       </div>
 
       <div ref={landingRef} style={{padding:"18px 20px 110px"}}>
+        <button onClick={()=>setView("sos")} style={{width:"100%",marginBottom:14,padding:"14px 16px",borderRadius:16,border:"1px solid rgba(201,70,61,.35)",background:"rgba(201,70,61,.08)",color:C.text,display:"flex",alignItems:"center",gap:12,textAlign:"left",cursor:"pointer"}}><span style={{fontSize:27}}>🆘</span><span style={{flex:1}}><span style={{display:"block",fontSize:14,fontWeight:700}}>SOS Japon</span><span style={{display:"block",fontSize:11,color:C.t2,marginTop:2}}>Phrases essentielles disponibles hors ligne</span></span><ChevronRight size={18} color={C.red}/></button>
         {/* Lieu à découvrir — bandeau saisonnier, inspiration pour préparer le voyage */}
         <div style={{marginBottom:18}}>
           <SeasonBanner C={C} acc={acc} lieux={seasonLieux} onOpenLieu={onOpenLieu}/>
@@ -5277,6 +5060,12 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
             </div>
             {trips.map(t=>{
               const nbLieux = t.jours.reduce((a,j)=>a+j.activites.length,0);
+              const lifecycle=getTripLifecycleStatus(t);
+              const lifecycleLabel={
+                [TRIP_STATUS.PLANNED]:"Planifié",[TRIP_STATUS.ACTIVE]:"En cours",
+                [TRIP_STATUS.AWAITING_CONFIRMATION]:"À confirmer",[TRIP_STATUS.COMPLETED]:"Terminé",
+                [TRIP_STATUS.CANCELLED]:"Annulé",
+              }[lifecycle];
               const checklistDone = (t.checklist||[]).filter(c=>c.done).length;
               const checklistTotal = (t.checklist||[]).length;
               return(
@@ -5290,6 +5079,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
                     style={{position:"absolute",top:12,right:12,zIndex:2,width:28,height:28,borderRadius:"50%",border:"none",background:C.s2,color:C.t3,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}
                   ><Trash2 size={14}/></button>
                   <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:15,color:C.text,paddingRight:30}}>{t.titre}</div>
+                  <span style={{display:"inline-block",marginTop:6,padding:"3px 8px",borderRadius:99,fontSize:9,fontWeight:700,color:lifecycle===TRIP_STATUS.ACTIVE?C.green:lifecycle===TRIP_STATUS.AWAITING_CONFIRMATION?C.gold:lifecycle===TRIP_STATUS.CANCELLED?C.t3:C.red,background:C.s2}}>{lifecycleLabel}</span>
                   <div style={{display:"flex",alignItems:"center",gap:12,marginTop:6,fontSize:11,color:C.t3}}>
                     <span style={{display:"flex",alignItems:"center",gap:4}}><Calendar size={12}/> {t.jours.length} jour{t.jours.length>1?"s":""}</span>
                     <span style={{display:"flex",alignItems:"center",gap:4}}><MapPin size={12}/> {nbLieux} lieu{nbLieux>1?"x":""}</span>
@@ -5417,8 +5207,10 @@ function KeptPlacesScreen({C, keptLieux, villeById, trips, toggleFav, onOpenLieu
     try {
       const res = await sendItineraryGenerate({ lieux: keptLieux, days: genDays });
       if(res?.premiumRequired){ setGenBusy(false); setGenView("teaser"); return; }
-      if(!res?.jours?.length){ setGenBusy(false); setGenError("Réponse invalide, réessaie."); return; }
-      onGenerate(res, `Voyage automatique · ${genDays} jour${genDays>1?"s":""}`);
+      if(res?.costLimit){ setGenBusy(false); setGenError("Limite de protection des coûts atteinte : réessaie demain ou le mois prochain."); return; }
+      const checked = validateGeneratedItinerary(res, { lieux:keptLieux, villes:Object.keys(villeById), days:genDays });
+      if(!checked.valid || !checked.itinerary.jours.some(j=>j.lieuIds.length)){ setGenBusy(false); setGenError("L’itinéraire reçu ne contient aucun lieu vérifié."); return; }
+      onGenerate(checked.itinerary, `Voyage automatique · ${genDays} jour${genDays>1?"s":""}`, {quota:res.quota});
       setGenView(null);
     } catch(e){
       console.error("[itinerary-generate]", e);
@@ -5591,7 +5383,9 @@ function VoyageWizard({C, villes, lieux, user, isPremium, onOpenPremium, onCance
   const [genError, setGenError] = useState(null);
   const [showTeaser, setShowTeaser] = useState(false);
 
-  const toggleVille = (id)=> setSelVilles(s=> s.includes(id) ? s.filter(x=>x!==id) : [...s,id]);
+  useEffect(()=>{ setSelVilles(current=>current.slice(0, days)); }, [days]);
+
+  const toggleVille = (id)=> setSelVilles(s=> s.includes(id) ? s.filter(x=>x!==id) : s.length<days ? [...s,id] : s);
   const toggleInteret = (id)=> setInterets(s=> s.includes(id) ? s.filter(x=>x!==id) : [...s,id]);
 
   const canNext = [true, selVilles.length>0, true, true, true][step];
@@ -5619,8 +5413,10 @@ function VoyageWizard({C, villes, lieux, user, isPremium, onOpenPremium, onCance
       const candidateLieux = pickCandidateLieux({ lieux, villes, villeIds:selVilles, interets, rythme, saison, days });
       const res = await sendItineraryGenerate({ lieux: candidateLieux, days, rythme });
       if(res?.premiumRequired){ setGenBusy(false); setShowTeaser(true); return; }
-      if(!res?.jours?.length){ setGenBusy(false); setGenError("Réponse invalide, réessaie."); return; }
-      onGenerated(res, tripTitleFromWizard(villeById, selVilles, days));
+      if(res?.costLimit){ setGenBusy(false); setGenError("Tu as atteint la limite de génération qui protège les coûts (3/jour, 20/mois)."); return; }
+      const checked = validateGeneratedItinerary(res, { lieux:candidateLieux, villes:selVilles, days });
+      if(!checked.valid || !checked.itinerary.jours.some(j=>j.lieuIds.length)){ setGenBusy(false); setGenError("L’itinéraire reçu ne contient aucun lieu vérifié."); return; }
+      onGenerated(checked.itinerary, tripTitleFromWizard(villeById, selVilles, days), { rythme, interets, saison, quota:res.quota });
     } catch(e){
       console.error("[voyage-wizard]", e);
       setGenBusy(false);
@@ -5637,6 +5433,15 @@ function VoyageWizard({C, villes, lieux, user, isPremium, onOpenPremium, onCance
     if(selVilles.length===0) return 0;
     return pickCandidateLieux({ lieux, villes, villeIds:selVilles, interets, rythme, saison, days }).length;
   }, [lieux, villes, selVilles, interets, rythme, saison, days]);
+  // Même formule de cible que pickCandidateLieux (voir plus haut dans le
+  // fichier) : sert uniquement à détecter un catalogue trop maigre pour
+  // avertir l'utilisateur avant génération, pas à changer le comportement
+  // de l'IA elle-même.
+  const targetLieuxCount = useMemo(()=>{
+    const perDay = rythme==="dense" ? 4 : rythme==="tranquille" ? 2 : 3;
+    return Math.max(selVilles.length, Math.min(60, Math.round(days*perDay)));
+  }, [selVilles.length, rythme, days]);
+  const sparsePool = selVilles.length>0 && previewCount < targetLieuxCount*0.6;
 
   return(
     <div style={{height:"100%",display:"flex",flexDirection:"column",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
@@ -5743,7 +5548,18 @@ function VoyageWizard({C, villes, lieux, user, isPremium, onOpenPremium, onCance
             {selVilles.length===0 ? (
               <div style={{fontSize:12,color:C.red,marginBottom:14,textAlign:"center"}}>Choisis au moins une ville avant de générer.</div>
             ) : (
-              <div style={{fontSize:12,color:C.t3,marginBottom:14,textAlign:"center"}}>{previewCount} lieu{previewCount>1?"x":""} du catalogue seront proposés à l'IA pour composer ton parcours.</div>
+              <>
+                <div style={{fontSize:12,color:C.t3,marginBottom:sparsePool?4:14,textAlign:"center"}}>{previewCount} lieu{previewCount>1?"x":""} du catalogue seront proposés à l'IA pour composer ton parcours.</div>
+                <div style={{fontSize:11,color:C.green,marginBottom:14,textAlign:"center",lineHeight:1.5}}>Maîtrise des coûts : 1 seul appel IA. Les résumés, alertes et ajustements suivants sont calculés gratuitement sur ton appareil.</div>
+                {/* Le catalogue est très inégal selon les villes (ex. Tokyo vs
+                    une petite ville) — l'IA ne peut jamais inventer un lieu
+                    hors de cette liste, donc peu de lieux dispo = journées
+                    clairsemées. On prévient avant génération plutôt que de
+                    laisser découvrir un résultat décevant après coup. */}
+                {sparsePool && (
+                  <div style={{fontSize:11,color:C.gold,marginBottom:14,textAlign:"center",lineHeight:1.5}}>⚠️ Peu de lieux disponibles pour {selVilles.length>1?"ces villes":"cette ville"} sur {days} jours — les journées risquent d'être clairsemées. Réduis la durée, ajoute une ville, ou complète à la main après génération.</div>
+                )}
+              </>
             )}
             {genError && <div style={{fontSize:12,color:C.red,marginBottom:14,textAlign:"center"}}>{genError}</div>}
 
@@ -5809,7 +5625,7 @@ function VoyageCreate({C, villes, onCancel, onCreate}){
     [next[i], next[j]] = [next[j], next[i]];
     return next;
   });
-  const canCreate = titre.trim() && selVilles.length>0;
+  const canCreate = titre.trim() && selVilles.length>0 && nbJours>=selVilles.length;
 
   const submit = ()=>{
     if(!canCreate) return;
@@ -6225,9 +6041,11 @@ function DragHandle({ C, style, ...props }){
 const SHEET_MIN_H = 60;
 function TripBottomSheet({ C, containerH, tabs, activeTab, onTabChange, children }){
   const [pos, setPos] = useState(1); // 0=réduit 1=moyen 2=plein — démarre en position moyenne
+  const [showHint, setShowHint] = useState(()=>{ try { return localStorage.getItem("isekaid_trip_sheet_hint_v1")!=="1"; } catch { return true; } });
   const [drag, setDrag] = useState({ y:0, active:false });
   const startY = useRef(0);
   const startH = useRef(0);
+  const suppressHandleClick = useRef(false);
 
   const heights = useMemo(()=>{
     const h = containerH || 600;
@@ -6235,19 +6053,32 @@ function TripBottomSheet({ C, containerH, tabs, activeTab, onTabChange, children
   }, [containerH]);
   const maxH = heights[2];
 
-  const onStart = (clientY)=>{ startY.current = clientY; startH.current = heights[pos]; setDrag({ y:0, active:true }); };
-  const onMove = (clientY)=>{ if(!drag.active) return; setDrag({ y: clientY-startY.current, active:true }); };
+  const dismissHint = ()=>{ setShowHint(false); try { localStorage.setItem("isekaid_trip_sheet_hint_v1","1"); } catch {} };
+  const onStart = (clientY)=>{ suppressHandleClick.current=false; startY.current = clientY; startH.current = heights[pos]; setDrag({ y:0, active:true }); };
+  const onMove = (clientY)=>{ if(!drag.active) return; const y=clientY-startY.current; if(Math.abs(y)>6) suppressHandleClick.current=true; setDrag({ y, active:true }); };
   const onEnd = ()=>{
     if(!drag.active) return;
     const currentH = Math.max(SHEET_MIN_H, Math.min(maxH, startH.current - drag.y));
     let nearest = 0, best = Infinity;
     heights.forEach((h,i)=>{ const diff = Math.abs(h-currentH); if(diff<best){ best=diff; nearest=i; } });
     setPos(nearest);
+    dismissHint();
     setDrag({ y:0, active:false });
+  };
+  const toggleExpanded = ()=>{
+    if(suppressHandleClick.current){ suppressHandleClick.current=false; return; }
+    setPos(current=>current===2?1:2); dismissHint();
   };
 
   const currentH = drag.active ? Math.max(SHEET_MIN_H, Math.min(maxH, startH.current - drag.y)) : heights[pos];
   const translateY = maxH - currentH;
+  // Le sheet conserve toujours sa hauteur maximale et les positions basse /
+  // moyenne sont obtenues avec translateY. Sans espace compensatoire, le
+  // navigateur calcule la zone scrollable sur `maxH` (y compris la partie
+  // passée sous le viewport) : une liste peut alors sembler tenir et refuser
+  // de défiler alors que ses dernières lignes sont invisibles. Cette réserve
+  // rend précisément la portion masquée accessible au scroll.
+  const hiddenBottom = Math.max(0, translateY);
 
   return (
     <div style={{
@@ -6259,11 +6090,15 @@ function TripBottomSheet({ C, containerH, tabs, activeTab, onTabChange, children
     }}>
       {/* Poignée — seule zone de drag vertical */}
       <div
+        onClick={toggleExpanded}
         onMouseDown={e=>onStart(e.clientY)} onMouseMove={e=>onMove(e.clientY)} onMouseUp={onEnd} onMouseLeave={onEnd}
         onTouchStart={e=>onStart(e.touches[0].clientY)} onTouchMove={e=>onMove(e.touches[0].clientY)} onTouchEnd={onEnd}
         style={{flexShrink:0, cursor:"grab", touchAction:"none", padding:"9px 0 6px", display:"flex", justifyContent:"center"}}
       >
-        <div style={{width:36,height:4,borderRadius:2,background:C.s3}}/>
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:5}}>
+          <div style={{width:36,height:4,borderRadius:2,background:C.s3}}/>
+          {showHint && <div style={{fontSize:10,color:C.t3}}>Glisse ou touche pour voir toute la journée ↑</div>}
+        </div>
       </div>
       {/* Onglets — scroll horizontal natif, indépendant du drag vertical */}
       <div style={{flexShrink:0,display:"flex",gap:8,overflowX:"auto",padding:"0 16px 12px",WebkitOverflowScrolling:"touch"}}>
@@ -6272,11 +6107,38 @@ function TripBottomSheet({ C, containerH, tabs, activeTab, onTabChange, children
         ))}
       </div>
       {/* Contenu de l'onglet actif — scroll natif, ne déplace jamais le sheet */}
-      <div style={{flex:1,minHeight:0,overflowY:"auto",padding:"0 20px calc(20px + env(safe-area-inset-bottom, 0px))"}}>
+      <div style={{
+        flex:1, minHeight:0, overflowY:"auto", touchAction:"pan-y", WebkitOverflowScrolling:"touch",
+        padding:`0 20px calc(20px + env(safe-area-inset-bottom, 0px) + ${hiddenBottom}px)`,
+      }}>
         {children}
       </div>
     </div>
   );
+}
+
+function tripDurationMinutes(value){
+  const text=String(value||"").toLowerCase();
+  const hour=Number(text.match(/([\d.,]+)\s*h/)?.[1]?.replace(",","."))||0;
+  const mins=Number(text.match(/([\d.,]+)\s*min/)?.[1]?.replace(",","."))||0;
+  if(hour||mins) return Math.round(hour*60+mins);
+  const range=text.match(/(\d+)\s*[-–]\s*(\d+)/);
+  if(range) return Math.round((Number(range[1])+Number(range[2]))/2)*60;
+  return 90;
+}
+function tripDayMetrics(day, lieuById){
+  const places=(day?.activites||[]).map(a=>lieuById[a.lieuId]).filter(Boolean);
+  const visitMinutes=places.reduce((sum,p)=>sum+tripDurationMinutes(p.duree),0);
+  let km=0;
+  for(let i=1;i<places.length;i++) km+=haversineKm(places[i-1],places[i])||0;
+  const totalMinutes=visitMinutes+Math.max(0,places.length-1)*25;
+  return { places, km, totalMinutes, overloaded:places.length>4||totalMinutes>9*60 };
+}
+function activityPeriod(index,total){
+  const ratio=total<=1?0:index/total;
+  if(ratio<0.34) return "Matin";
+  if(ratio<0.7) return "Après-midi";
+  return "Soirée";
 }
 
 function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOpenPremium, isFav, toggleFav, onBack, onUpdate, onDelete}){
@@ -6292,12 +6154,17 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
     return base;
   }, [db, customLieux]);
   const lieux = [...(db?.lieux || []), ...customLieux];
-  const [dayIdx, setDayIdx] = useState(0);
+  const initialTiming = useMemo(()=>tripTiming(trip), [trip.id, trip.dateDebut, trip.jours.length]);
+  const [dayIdx, setDayIdx] = useState(()=>initialTiming?.status==="active" ? initialTiming.dayNumber-1 : 0);
   // sous-vues : "day" | "catalogue" | "detail" | "checklist" | "addcustom"
   const [sub, setSub] = useState("day");
   const [catType, setCatType] = useState("tout");
   const [detailId, setDetailId] = useState(null);
   const [noteEdit, setNoteEdit] = useState(null); // id d'étape en édition de note
+  const [moveEdit, setMoveEdit] = useState(null);
+  const [replaceEtapeId, setReplaceEtapeId] = useState(null);
+  const [recitExpanded, setRecitExpanded] = useState(false);
+  const [lastAction, setLastAction] = useState(null);
   const [confirmDel, setConfirmDel] = useState(false);
   const [confirmDelEtapeId, setConfirmDelEtapeId] = useState(null); // étape en confirmation de suppression (macro)
   const [showAddEtape, setShowAddEtape] = useState(false); // picker villes déplié (macro)
@@ -6306,7 +6173,7 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
   // Onglet actif du bottom sheet : "resume" | "nonplanifie" | "day-<i>".
   // "day-<i>" reste la source de vérité du jour affiché — synchronisé avec
   // dayIdx à chaque changement d'onglet plutôt que dupliqué en deux états.
-  const [sheetTab, setSheetTab] = useState("day-0");
+  const [sheetTab, setSheetTab] = useState(()=>`day-${initialTiming?.status==="active" ? initialTiming.dayNumber-1 : 0}`);
   const changeSheetTab = (id)=>{
     setSheetTab(id);
     if(id.startsWith("day-")) setDayIdx(Number(id.slice(4)));
@@ -6344,6 +6211,10 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
   const dayPoints = useMemo(()=>
     day ? day.activites.map(e=> lieuById[e.lieuId] ? {...lieuById[e.lieuId], etapeId:e.id} : null).filter(Boolean) : [],
   [day, lieuById]);
+  const dayMetrics = useMemo(()=>tripDayMetrics(day, lieuById), [day, lieuById]);
+  const dailyProgress = getDailyProgress(day);
+  const completedCount = dailyProgress.completed;
+  const nextActivity = getNextActivity(day);
   // Onglet Résumé = vue macro : un pin par étape-ville (pas par lieu), aux
   // coordonnées de la ville — reliés par le même tracé simple que DayMap
   // utilise déjà pour les lieux (aucune logique de tracé à dupliquer).
@@ -6368,6 +6239,7 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
   }, [selectedId]);
   // Réinitialise la sélection quand on change de jour ou de voyage.
   useEffect(()=>{ setSelectedId(null); }, [dayIdx, trip.id]);
+  useEffect(()=>{ setRecitExpanded(false); setMoveEdit(null); }, [dayIdx]);
 
   // ── Glisser-déposer (poignée dédiée, voir useDragReorder) — remplace les
   // anciennes flèches ▲▼ pour les deux listes réordonnables du voyage.
@@ -6385,12 +6257,35 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
 
   // ── Mutations ──
   const addLieu = (lieuId)=>{
-    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:[...j.activites, {id:makeStepId(), lieuId, note:""}]}));
-    onUpdate({...trip, jours});
+    const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:replaceEtapeId
+      ? j.activites.map(a=>a.id===replaceEtapeId?{...a,lieuId,fait:false}:a)
+      : [...j.activites, {id:makeStepId(), lieuId, note:""}]}));
+    if(replaceEtapeId) commitWithUndo({...trip,jours}, "Lieu remplacé"); else onUpdate({...trip, jours});
+    setReplaceEtapeId(null);
   };
+  const commitWithUndo = (updated, label)=>{ setLastAction({trip, label}); onUpdate(updated); };
   const removeEtape = (etapeId)=>{
     const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:j.activites.filter(e=>e.id!==etapeId)}));
-    onUpdate({...trip, jours});
+    commitWithUndo({...trip, jours}, "Lieu retiré");
+  };
+  const toggleActivityDone = (etapeId)=>{
+    const jours=trip.jours.map((j,i)=>i!==dayIdx?j:{...j,activites:j.activites.map(a=>a.id===etapeId?{...a,fait:!a.fait}:a)});
+    commitWithUndo({...trip,jours}, "Progression mise à jour");
+  };
+  const moveActivity = (etapeId, targetIdx)=>{
+    if(targetIdx===dayIdx){ setMoveEdit(null); return; }
+    const item=day.activites.find(a=>a.id===etapeId); if(!item) return;
+    const jours=trip.jours.map((j,i)=>i===dayIdx?{...j,activites:j.activites.filter(a=>a.id!==etapeId)}:i===targetIdx?{...j,activites:[...j.activites,item]}:j);
+    commitWithUndo({...trip,jours}, `Lieu déplacé au jour ${targetIdx+1}`); setMoveEdit(null);
+  };
+  const rebalanceLocally = ()=>{
+    const next=trip.jours.map(j=>({...j,activites:[]}));
+    for(const etape of trip.etapes){
+      const indexes=trip.jours.map((j,i)=>j.etapeId===etape.id?i:-1).filter(i=>i>=0);
+      const items=trip.jours.filter(j=>j.etapeId===etape.id).flatMap(j=>j.activites);
+      items.forEach((item,i)=>{ if(indexes.length) next[indexes[i%indexes.length]].activites.push(item); });
+    }
+    commitWithUndo({...trip,jours:next}, "Journées rééquilibrées localement");
   };
   const setNote = (etapeId, note)=>{
     const jours = trip.jours.map((j,i)=> i!==dayIdx ? j : ({...j, activites:j.activites.map(e=>e.id===etapeId?{...e,note}:e)}));
@@ -6621,6 +6516,7 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
     const l = lieuById[detailId];
     if(!l){ setSub("catalogue"); return null; }
     const proches = (l.a_proximite||[]).map(id=>lieuById[id]).filter(Boolean);
+    const contextualContent = getRelatedContent(l);
     const inDay = idsInDay.has(l.id);
     return(
       <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
@@ -6646,7 +6542,20 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
             <div style={{fontSize:13,color:C.gold,fontFamily:"'Noto Serif JP',serif"}}>{l.nom_jp}</div>
             <div style={{fontSize:11,color:C.t3,marginTop:3}}>{l.categorie} · {l.quartier} · {ville?.nom}</div>
           </div>
-          <div style={{fontSize:13,color:C.t2,lineHeight:1.65,marginBottom:14}}>{l.description}</div>
+          {/* Description enrichie (lieu-editorial.json) si disponible pour ce
+              lieu, sinon repli sur la courte description du catalogue — même
+              logique que LieuSpotlightDetail (fiche "Lieu du jour" accueil),
+              jusqu'ici jamais branchée ici alors que 80/151 lieux en ont une. */}
+          {LIEU_EDITORIAL[l.id]?.editorial ? (
+            <div style={{marginBottom:14}}>
+              {LIEU_EDITORIAL[l.id].editorial.split("\n\n").map((para,i)=>(
+                <p key={i} style={{fontSize:13,color:C.t2,lineHeight:1.65,margin:i===0?0:"10px 0 0"}}>{para}</p>
+              ))}
+            </div>
+          ) : (
+            <div style={{fontSize:13,color:C.t2,lineHeight:1.65,marginBottom:14}}>{l.description}</div>
+          )}
+          {contextualContent.length>0&&<div style={{marginBottom:16}}><div style={{fontSize:10,color:C.red,fontWeight:750,letterSpacing:".12em",marginBottom:8}}>À SAVOIR JUSTE AVANT</div>{contextualContent.map(item=><div key={item.id} style={{padding:13,background:`${C.gold}12`,border:`1px solid ${C.gold}35`,borderRadius:14,marginBottom:8}}><div style={{fontSize:13,fontWeight:650,color:C.text,marginBottom:4}}>{item.title}</div><div style={{fontSize:11,color:C.t2,lineHeight:1.55}}>{item.summary}</div></div>)}</div>}
           {l.conseil && (
             <div style={{background:"rgba(158,122,26,0.1)",border:"1px solid rgba(158,122,26,0.3)",borderRadius:12,padding:"12px 14px",marginBottom:14}}>
               <div style={{fontSize:9,color:C.gold,letterSpacing:".1em",marginBottom:5,textTransform:"uppercase"}}>💡 Conseil de voyageur</div>
@@ -6675,7 +6584,7 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
           {/* Ajouter */}
           <button onClick={()=>{ if(!inDay) addLieu(l.id); setSub("day"); }} disabled={inDay}
             style={{width:"100%",padding:"14px",background:inDay?C.s3:C.red,border:"none",borderRadius:999,color:inDay?C.t2:"#fff",fontSize:14,fontWeight:600,cursor:inDay?"default":"pointer"}}>
-            {inDay ? "✓ Déjà dans ce jour" : `+ Ajouter au jour ${day.num}`}
+            {inDay ? "✓ Déjà dans ce jour" : replaceEtapeId ? "↻ Choisir comme remplacement" : `+ Ajouter au jour ${day.num}`}
           </button>
         </div>
       </div>
@@ -6707,8 +6616,9 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
     return(
       <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
         <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
-          <button onClick={()=>setSub("day")} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Retour au jour {day.num}</button>
+          <button onClick={()=>{setReplaceEtapeId(null);setSub("day");}} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Retour au jour {day.num}</button>
           <div style={{fontSize:18,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:10}}>Explorer · {ville?.emoji} {ville?.nom}</div>
+          {replaceEtapeId && <div style={{fontSize:11,color:C.gold,marginBottom:9}}>Choisis le lieu qui remplacera l’étape sélectionnée.</div>}
           <div style={{display:"flex",gap:6,overflowX:"auto",paddingBottom:4}}>
             <FilterPill C={C} on={catType==="tout"} onClick={()=>setCatType("tout")}>Tout</FilterPill>
             {VOYAGE_TYPES.map(t=>(
@@ -6739,7 +6649,7 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
                     <FavButton C={C} active={isFav("lieu",l)} onClick={()=>{}}/>
                   </div>
                 )}
-                <button onClick={(e)=>{e.stopPropagation(); if(!inDay) addLieu(l.id);}} style={{flexShrink:0,width:30,height:30,borderRadius:"50%",border:"none",background:inDay?"transparent":C.red,color:inDay?C.green:"#fff",fontSize:inDay?16:20,cursor:inDay?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>{inDay?"✓":"＋"}</button>
+                <button onClick={(e)=>{e.stopPropagation(); if(!inDay){addLieu(l.id);setSub("day");}}} style={{flexShrink:0,width:30,height:30,borderRadius:"50%",border:"none",background:inDay?"transparent":C.red,color:inDay?C.green:"#fff",fontSize:inDay?16:20,cursor:inDay?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>{inDay?"✓":replaceEtapeId?"↻":"＋"}</button>
               </div>
             );
           })}
@@ -6806,6 +6716,14 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
           <div style={{paddingTop:2}}>
             <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:4}}>{trip.titre}</div>
             <div style={{fontSize:12,color:C.t3,marginBottom:18}}>{trip.jours.length} jour{trip.jours.length>1?"s":""} · {trip.villes.map(id=>villeById[id]?.nom||id).join(" · ")}</div>
+            {trip.generation && <div style={{fontSize:10,color:C.green,marginBottom:12}}>✓ Généré avec 1 appel IA · les ajustements ci-dessous sont locaux et gratuits</div>}
+            {trip.generation?.quota && (()=>{ const q=trip.generation.quota; const ratio=q.monthlyUsed/q.monthlyLimit; return <div style={{fontSize:10,color:ratio>=.8?C.red:ratio>=.5?C.gold:C.t3,marginBottom:12}}>Budget génération : {q.monthlyUsed}/{q.monthlyLimit} ce mois · {q.dailyUsed}/{q.dailyLimit} aujourd’hui{ratio>=.8?" · ⚠️ limite bientôt atteinte":""}</div>; })()}
+            {trip.jours.some(j=>tripDayMetrics(j,lieuById).overloaded) && (
+              <div style={{padding:"11px 12px",background:`${C.gold}14`,border:`1px solid ${C.gold}44`,borderRadius:12,marginBottom:14}}>
+                <div style={{fontSize:11,color:C.t2,lineHeight:1.45,marginBottom:8}}>Certaines journées sont chargées. Tu peux répartir les lieux entre les jours d’une même ville sans rappeler l’IA.</div>
+                <button onClick={rebalanceLocally} style={{width:"100%",padding:"8px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:9,color:C.text,fontSize:11,fontWeight:600,cursor:"pointer"}}>Rééquilibrer gratuitement</button>
+              </div>
+            )}
 
             {/* Étapes-villes — vue macro : glisser pour réordonner (poignée),
                 ajuster les nuits, supprimer */}
@@ -6924,7 +6842,7 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
                               <span style={{fontSize:20}}>{l?.emoji||"📍"}</span>
                               <div style={{flex:1,minWidth:0}}>
                                 <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l?.nom||"Lieu"}</div>
-                                {l && <div style={{fontSize:10,color:C.t3}}>{l.categorie} · {l.budget}</div>}
+                                {l && <div style={{fontSize:10,color:C.t3}}>{[l.categorie, l.duree, l.budget].filter(Boolean).join(" · ")}</div>}
                               </div>
                               <button onClick={()=>removeNonPlanifie(etape.id, np.id)} aria-label="Retirer" style={{background:"transparent",border:"none",color:C.t3,fontSize:18,cursor:"pointer",flexShrink:0}}>×</button>
                             </div>
@@ -6951,6 +6869,30 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
             <div style={{fontSize:10,color:C.t3,letterSpacing:".1em",marginBottom:14,marginTop:2,textTransform:"uppercase"}}>
               {dayTabLabel}
             </div>
+            {initialTiming?.status==="active" && dayIdx===initialTiming.dayNumber-1 && (
+              <div style={{padding:"10px 12px",background:`${C.green}18`,border:`1px solid ${C.green}44`,borderRadius:12,marginBottom:12}}>
+                <div style={{fontSize:10,color:C.green,fontWeight:700,letterSpacing:".1em"}}>📍 AUJOURD’HUI · {completedCount}/{day.activites.length} FAITS</div>
+                {nextActivity && <div style={{fontSize:12,color:C.text,marginTop:5}}>Prochaine étape : <b>{lieuById[nextActivity.lieuId]?.nom||"Lieu suivant"}</b></div>}
+              </div>
+            )}
+            <div style={{display:"flex",gap:7,flexWrap:"wrap",marginBottom:12}}>
+              <span style={{fontSize:10,padding:"5px 9px",background:C.s2,borderRadius:12,color:C.t2}}>📍 {dayMetrics.places.length} lieux</span>
+              <span style={{fontSize:10,padding:"5px 9px",background:C.s2,borderRadius:12,color:C.t2}}>⏱️ ≈ {Math.max(1,Math.round(dayMetrics.totalMinutes/60))} h</span>
+              <span style={{fontSize:10,padding:"5px 9px",background:C.s2,borderRadius:12,color:C.t2}}>🚶 ≈ {dayMetrics.km.toFixed(1)} km</span>
+            </div>
+            {dayMetrics.overloaded && <div style={{fontSize:11,color:C.gold,lineHeight:1.45,marginBottom:12}}>⚠️ Journée chargée : déplace une étape vers un autre jour pour garder un rythme agréable.</div>}
+            {day.recit && (
+              <div style={{marginBottom:12}}>
+                <div style={{fontSize:12,color:C.t2,lineHeight:1.6,display:recitExpanded?"block":"-webkit-box",WebkitLineClamp:recitExpanded?"unset":2,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{day.recit}</div>
+                <button onClick={()=>setRecitExpanded(v=>!v)} style={{background:"transparent",border:"none",padding:"5px 0",color:C.red,fontSize:11,cursor:"pointer"}}>{recitExpanded?"Réduire":"Lire le récit"}</button>
+              </div>
+            )}
+            {day.conseilDuJour && (
+              <div style={{display:"flex",alignItems:"flex-start",gap:8,padding:"10px 12px",background:`${C.gold}18`,border:`1px solid ${C.gold}44`,borderRadius:12,marginBottom:14,fontSize:11,color:C.t2,lineHeight:1.5}}>
+                <span style={{flexShrink:0}}>💡</span>
+                <span>{day.conseilDuJour}</span>
+              </div>
+            )}
             {day.activites.length===0 ? (
               <div style={{textAlign:"center",padding:"24px 10px"}}>
                 <div style={{fontSize:34,marginBottom:10}}>📍</div>
@@ -6966,8 +6908,11 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
                   const prevL = prevE ? lieuById[prevE.lieuId] : null;
                   const km = prevL && l ? haversineKm(prevL, l) : null;
                   const dragging = activiteDrag.isDragging(e.id);
+                  const period=activityPeriod(i, activiteDrag.order.length);
+                  const previousPeriod=i?activityPeriod(i-1,activiteDrag.order.length):null;
                   return(
                     <Fragment key={e.id}>
+                    {period!==previousPeriod && <div style={{fontSize:10,color:C.red,fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",marginTop:i?8:0}}>{period}</div>}
                     {i>0 && (
                       <div style={{display:"flex",alignItems:"center",gap:7,marginLeft:31,fontSize:10,color:C.t3}}>
                         <span>↓</span>
@@ -6989,10 +6934,18 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
                               <span style={{fontSize:20}}>{l?.emoji||"📍"}</span>
                               <div style={{flex:1,minWidth:0}}>
                                 <div style={{fontSize:13,color:C.text,fontWeight:500}}>{l?.nom||e.nom||"Lieu"}</div>
-                                {l && <div style={{fontSize:10,color:C.t3}}>{l.categorie} · {l.budget}</div>}
+                                {l && <div style={{fontSize:10,color:C.t3}}>{[l.categorie, l.duree, l.budget].filter(Boolean).join(" · ")}</div>}
                               </div>
-                              <button onClick={(ev)=>{ev.stopPropagation(); removeEtape(e.id);}} style={{background:"transparent",border:"none",color:C.t3,fontSize:18,cursor:"pointer",flexShrink:0}}>×</button>
+                              <button onClick={(ev)=>{ev.stopPropagation();setMoveEdit(moveEdit===e.id?null:e.id);}} aria-label="Actions" style={{background:"transparent",border:"none",color:C.t3,fontSize:20,cursor:"pointer",flexShrink:0}}>⋯</button>
                             </div>
+                            {moveEdit===e.id && <div onClick={ev=>ev.stopPropagation()} style={{marginTop:9,paddingTop:8,borderTop:`1px solid ${C.border}`,display:"flex",gap:6,flexWrap:"wrap"}}>
+                              <button onClick={()=>toggleActivityDone(e.id)} style={chipStyle(C,!!e.fait,{padding:"5px 9px",fontSize:10})}>{e.fait?"✓ Fait":"Marquer fait"}</button>
+                              {l?.lat!=null && <a href={`https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}`} target="_blank" rel="noopener noreferrer" style={{...chipStyle(C,false,{padding:"5px 9px",fontSize:10}),textDecoration:"none"}}>Itinéraire ↗</a>}
+                              <button onClick={()=>{setReplaceEtapeId(e.id);setCatType("tout");setSub("catalogue");}} style={chipStyle(C,false,{padding:"5px 9px",fontSize:10})}>Remplacer</button>
+                              {trip.jours.length>1 && <button onClick={()=>setMoveEdit(`move:${e.id}`)} style={chipStyle(C,false,{padding:"5px 9px",fontSize:10})}>Déplacer</button>}
+                              <button onClick={()=>removeEtape(e.id)} style={chipStyle(C,false,{padding:"5px 9px",fontSize:10,color:C.red})}>Retirer</button>
+                            </div>}
+                            {moveEdit===`move:${e.id}` && <div onClick={ev=>ev.stopPropagation()} style={{marginTop:8,display:"flex",gap:6,flexWrap:"wrap"}}>{trip.jours.map((j,idx)=>idx!==dayIdx&&<button key={j.num} onClick={()=>moveActivity(e.id,idx)} style={chipStyle(C,false,{padding:"5px 9px",fontSize:10})}>Jour {j.num}</button>)}</div>}
                             {/* Note */}
                             {noteEdit===e.id ? (
                               <input autoFocus defaultValue={e.note} onClick={ev=>ev.stopPropagation()} onBlur={ev=>{setNote(e.id,ev.target.value);setNoteEdit(null);}} onKeyDown={ev=>{if(ev.key==="Enter"){setNote(e.id,ev.target.value);setNoteEdit(null);}}} placeholder="Ta note..." style={{width:"100%",boxSizing:"border-box",marginTop:8,padding:"7px 9px",background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11,fontFamily:"inherit"}}/>
@@ -7025,8 +6978,12 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
                 })}
               </div>
             )}
+            <div style={{padding:"10px 12px",background:C.s2,borderRadius:12,marginBottom:12,fontSize:11,color:C.t2,lineHeight:1.5}}>
+              <b style={{color:C.text}}>Plan B local :</b> s’il pleut, privilégie les musées, commerces et pauses gourmandes déjà proches du parcours. En cas de fatigue, garde les {Math.min(2,dayMetrics.places.length)} premières étapes et déplace le reste — sans nouvelle génération IA.
+            </div>
             {/* Ajouter un lieu */}
             <button onClick={()=>{setCatType("tout");setSub("catalogue");}} style={{width:"100%",padding:"13px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:13,color:C.red,fontSize:13,fontWeight:500,cursor:"pointer"}}>+ Ajouter un lieu à ce jour</button>
+            {lastAction && <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginTop:10,padding:"9px 11px",background:C.text,borderRadius:10,color:C.bg,fontSize:11}}><span>{lastAction.label}</span><button onClick={()=>{onUpdate(lastAction.trip);setLastAction(null);}} style={{background:"transparent",border:"none",color:C.gold,fontWeight:700,cursor:"pointer"}}>Annuler</button></div>}
           </>
         )}
       </TripBottomSheet>
@@ -7174,374 +7131,6 @@ function CustomLieuForm({C, ville, onCancel, onSave}){
 }
 
 // ─── Page Premium ─────────────────────────────────────────────────────────────
-const PREMIUM_PLANS = [
-  { id:"annual",  label:"Annuel",  price:"29,99 €", per:"/ an",  sub:"soit 2,50 €/mois", badge:"Le plus avantageux · -37%", highlight:true },
-  { id:"monthly", label:"Mensuel", price:"3,99 €",  per:"/ mois", sub:"sans engagement", badge:null, highlight:false },
-];
-const PREMIUM_PERKS = [
-  { emoji:"🚫", title:"Sans publicité", desc:"Profite de l'app sans aucune interruption." },
-  { emoji:"🗺️", title:"Voyages illimités", desc:"Planifie autant de voyages que tu veux, plus de limite." },
-  { emoji:"✨", title:"Itinéraire automatique", desc:"Laisse l'app organiser tes lieux gardés en itinéraire jour par jour." },
-  { emoji:"🔓", title:"Tout le contenu débloqué", desc:"Accède immédiatement à toutes les sections, sans attendre les paliers de streak." },
-  { emoji:"🧑‍🏫", title:"Tuteur illimité", desc:"Discute sans limite avec ton tuteur de japonais, au lieu des 8 messages gratuits par jour." },
-  { emoji:"📍", title:"Lieux personnalisés", desc:"Ajoute tes propres adresses à tes itinéraires." },
-];
-
-function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRedeemCode, billingError, billingBusy, liveOfferings, onRestore}){
-  const [sel, setSel] = useState("annual");
-  const acc = SEASON_ACCENT[currentSeasonKey()];
-  const [codeOpen,setCodeOpen] = useState(false);
-  const [codeVal,setCodeVal] = useState("");
-  const [codeError,setCodeError] = useState(false);
-  const [codeBusy,setCodeBusy] = useState(false);
-  // Utilise les prix live RevenueCat si dispos, sinon les prix par défaut codés en dur
-  const prices = {
-    monthly: liveOfferings?.monthly?.priceLabel || "3,99 €",
-    annual:  liveOfferings?.annual?.priceLabel  || "29,99 €",
-  };
-  useEffect(()=>{ /* getProductDetails() remplacé par liveOfferings de RevenueCat */ },[]);
-  // Vérification désormais serveur (voir redeemCode dans IsekaidApp) — plus
-  // un simple test synchrone en local.
-  const tryCode = async ()=>{
-    if(!onRedeemCode || codeBusy) return;
-    setCodeBusy(true);
-    const ok = await onRedeemCode(codeVal);
-    setCodeBusy(false);
-    setCodeError(!ok);
-  };
-
-  if(isPremium){
-    return(
-      <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
-        <div style={{padding:"50px 22px 40px",textAlign:"center"}}>
-          <button onClick={onClose} style={{position:"absolute",top:48,left:18,background:C.s1,border:`1px solid ${C.border}`,borderRadius:"50%",width:34,height:34,color:C.t2,fontSize:18,cursor:"pointer"}}>×</button>
-          <div style={{fontSize:60,margin:"20px 0 16px"}}>🌸</div>
-          <div style={{fontSize:13,color:C.gold,letterSpacing:".2em",textTransform:"uppercase",marginBottom:8}}>Membre Premium</div>
-          <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:12}}>Merci de ton soutien 🙏</div>
-          <div style={{fontSize:14,color:C.t2,lineHeight:1.6,maxWidth:320,margin:"0 auto 30px"}}>
-            Tu profites de tous les avantages Isekai'd Premium. {premium?.plan==="code" ? <>Accès débloqué via <b style={{color:C.text}}>code d'invitation</b> 🎟️</> : <>Ton abonnement <b style={{color:C.text}}>{premium?.plan==="annual"?"annuel":"mensuel"}</b> est actif.</>}
-          </div>
-          <div style={{maxWidth:360,margin:"0 auto"}}>
-            {PREMIUM_PERKS.map((p,i)=>(
-              <div key={i} style={{display:"flex",alignItems:"center",gap:14,padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:10,textAlign:"left"}}>
-                <span style={{fontSize:26}}>{p.emoji}</span>
-                <div><div style={{fontSize:14,color:C.text,fontWeight:500}}>{p.title}</div><div style={{fontSize:11,color:C.t2}}>{p.desc}</div></div>
-                <span style={{marginLeft:"auto",color:C.green,fontSize:18}}>✓</span>
-              </div>
-            ))}
-          </div>
-          <button onClick={onCancel} style={{marginTop:24,background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer",textDecoration:"underline"}}>Gérer / annuler l'abonnement</button>
-        </div>
-      </div>
-    );
-  }
-
-  return(
-    <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
-      {/* Hero */}
-      <div style={{padding:"54px 22px 28px",background:`linear-gradient(160deg,rgba(201,70,61,0.18),${acc.soft} 60%,transparent)`,position:"relative",textAlign:"center",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
-        <button onClick={onClose} style={{position:"absolute",top:48,left:18,background:"rgba(0,0,0,0.25)",border:"none",borderRadius:"50%",width:34,height:34,color:"#fff",fontSize:18,cursor:"pointer"}}>×</button>
-        <div style={{fontSize:54,marginBottom:10}}>異</div>
-        <div style={{fontSize:11,color:C.gold,letterSpacing:".25em",textTransform:"uppercase",marginBottom:8}}>Isekai'd Premium</div>
-        <div style={{fontSize:25,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:10,lineHeight:1.3}}>Vis le Japon<br/>sans limite</div>
-        <div style={{fontSize:13,color:C.t2,lineHeight:1.6,maxWidth:300,margin:"0 auto"}}>Débloque tout le potentiel d'Isekai'd et soutiens le développement de l'app.</div>
-      </div>
-
-      <div style={{padding:"6px 22px 40px",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
-        {/* Avantages */}
-        <div style={{margin:"18px 0 26px"}}>
-          {PREMIUM_PERKS.map((p,i)=>(
-            <div key={i} className="lift" style={{display:"flex",alignItems:"center",gap:14,padding:"15px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:10}}>
-              <div style={{width:46,height:46,borderRadius:12,background:acc.soft,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{p.emoji}</div>
-              <div><div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:2}}>{p.title}</div><div style={{fontSize:12,color:C.t2,lineHeight:1.45}}>{p.desc}</div></div>
-            </div>
-          ))}
-        </div>
-
-        {/* Plans */}
-        <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:22}}>
-          {PREMIUM_PLANS.map(pl=>{
-            const on = sel===pl.id;
-            return(
-              <div key={pl.id} onClick={()=>setSel(pl.id)} style={{position:"relative",cursor:"pointer",padding:"18px 20px",borderRadius:16,background:on?`linear-gradient(135deg,rgba(201,70,61,0.12),transparent)`:C.s1,border:`2px solid ${on?C.red:C.border}`,transition:"all .2s"}}>
-                {pl.badge && <div style={{position:"absolute",top:-10,left:18,background:C.red,color:"#fff",fontSize:9,fontWeight:700,padding:"3px 10px",borderRadius:10,letterSpacing:".03em"}}>{pl.badge}</div>}
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <div>
-                    <div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:3}}>{pl.label}</div>
-                    <div style={{fontSize:11,color:C.t2}}>{pl.sub}</div>
-                  </div>
-                  <div style={{textAlign:"right"}}>
-                    <span style={{fontSize:22,color:C.text,fontWeight:700}}>{prices[pl.id] || pl.price}</span>
-                    <span style={{fontSize:11,color:C.t3}}> {pl.per}</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* CTA */}
-        <button onClick={()=>!billingBusy && onActivate(sel)} disabled={billingBusy} className="pop-press" style={{width:"100%",padding:"16px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:15,fontWeight:700,cursor:billingBusy?"wait":"pointer",marginBottom:10,boxShadow:"0 4px 16px rgba(201,70,61,0.3)",opacity:billingBusy?0.7:1}}>
-          {billingBusy ? "Traitement en cours…" : "Devenir Premium"}
-        </button>
-        {/* Restaurer les achats (obligatoire sur iOS, pratique sur Android) */}
-        {onRestore && (
-          <button onClick={()=>!billingBusy && onRestore()} disabled={billingBusy} style={{width:"100%",padding:"11px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:billingBusy?"wait":"pointer",marginBottom:10}}>
-            Restaurer mes achats
-          </button>
-        )}
-        {billingError && (
-          <div style={{padding:"12px 14px",background:`${C.red}14`,border:`1px solid ${C.red}44`,borderRadius:12,marginBottom:10,fontSize:12,color:C.text,lineHeight:1.5}}>
-            {billingError==="unavailable"
-              ? "Le paiement est disponible uniquement dans l'application Android ou iOS. Sur le web, utilise un code d'invitation."
-              : billingError==="cannot_pay" || billingError==="no_offerings"
-              ? "Impossible de contacter le store. Vérifie ta connexion et que tu es bien connecté à ton compte."
-              : billingError==="restore_nothing"
-              ? "Aucun achat trouvé sur ce compte. Si tu as acheté sur un autre appareil, connecte-toi avec le même compte."
-              : billingError==="product_not_found"
-              ? "Produit introuvable. L'app n'est peut-être pas encore disponible dans ta région."
-              : "Une erreur est survenue. Réessaie ou utilise un code d'invitation."}
-          </div>
-        )}
-        <div style={{fontSize:10,color:C.t3,textAlign:"center",lineHeight:1.6,marginBottom:8}}>
-          Paiement sécurisé via Google Play / App Store. Annulable à tout moment.<br/>
-          L'abonnement se renouvelle automatiquement sauf résiliation.
-        </div>
-
-        {/* Code d'invitation */}
-        {!codeOpen ? (
-          <button onClick={()=>setCodeOpen(true)} style={{width:"100%",padding:"12px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:12,color:C.t2,fontSize:13,cursor:"pointer",marginBottom:8}}>
-            🎟️ J'ai un code d'invitation
-          </button>
-        ) : (
-          <div style={{padding:"14px",background:C.s1,border:`1px solid ${codeError?C.red:C.border}`,borderRadius:12,marginBottom:8}}>
-            <div style={{fontSize:12,color:C.t2,marginBottom:9,textAlign:"center"}}>Entre ton code pour débloquer le Premium</div>
-            <div style={{display:"flex",gap:8}}>
-              <input value={codeVal} onChange={e=>{setCodeVal(e.target.value);setCodeError(false);}} onKeyDown={e=>{if(e.key==="Enter")tryCode();}} disabled={codeBusy} autoFocus placeholder="CODE-INVITATION" style={{flex:1,boxSizing:"border-box",padding:"11px 13px",background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,color:C.text,fontSize:14,fontFamily:"inherit",textTransform:"uppercase"}}/>
-              <button onClick={tryCode} disabled={codeBusy} style={{padding:"0 18px",background:C.red,border:"none",borderRadius:999,color:"#fff",fontSize:13,fontWeight:600,cursor:codeBusy?"wait":"pointer",opacity:codeBusy?0.7:1}}>{codeBusy?"…":"OK"}</button>
-            </div>
-            {codeError && <div style={{fontSize:11,color:C.red,marginTop:8,textAlign:"center"}}>Code invalide. Vérifie et réessaie.</div>}
-          </div>
-        )}
-
-        <button onClick={onClose} style={{width:"100%",padding:"12px",background:"transparent",border:"none",color:C.t3,fontSize:13,cursor:"pointer"}}>Peut-être plus tard</button>
-      </div>
-    </div>
-  );
-}
-
-function ProfileScreen({C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent,script,setScript,onBack,onOpenLieu,onOpenTradition,onOpenDetail}){
-  const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
-  // Badges : seules les 2 premières lignes (grille 3 colonnes = 6 badges)
-  // sont visibles par défaut, le reste se dévoile au clic — voir la section
-  // "Badges" plus bas.
-  const [showAllBadges, setShowAllBadges] = useState(false);
-  const [soundOn,setSoundOnState] = useState(()=>sfx.isSoundOn());
-  const toggleSound = ()=>{
-    setSoundOnState(prev=>{
-      const next = !prev;
-      sfx.setSoundOn(next);
-      if(next) sfx.playTap();
-      return next;
-    });
-  };
-  const setReminders = (fn)=>{
-    setRemindersState(prev=>{
-      const next = typeof fn==="function" ? fn(prev) : fn;
-      try { localStorage.setItem("isekaid_reminders_v1", next?"on":"off"); } catch {}
-      return next;
-    });
-  };
-  const goalL={travel:"Voyager",live:"Vivre au Japon",learn:"Apprendre",imm:"Immersion"};
-  // Rangée de préférence bolt-style : icône + libellé + contrôle (switch ou
-  // texte), posée dans une carte à séparateurs (`divide-y`) plutôt qu'une
-  // carte isolée par réglage.
-  const Switch = ({on,onClick})=>(
-    <div onClick={onClick} style={{width:44,height:24,borderRadius:12,background:on?C.red:C.s3,cursor:"pointer",position:"relative",transition:"background .25s",flexShrink:0}}>
-      <div style={{position:"absolute",top:2,left:on?22:2,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 1px 4px rgba(0,0,0,.22)"}}/>
-    </div>
-  );
-  const PrefRow = ({Icon,label,sub,control,onClick,danger,last})=>(
-    <div onClick={onClick} style={{padding:"14px 16px",display:"flex",alignItems:"center",gap:12,borderBottom:last?"none":`1px solid ${C.border}`,cursor:onClick?"pointer":"default"}}>
-      <Icon size={19} color={danger?C.red:C.t3}/>
-      <div style={{flex:1,minWidth:0}}>
-        <div style={{fontSize:13,color:danger?C.red:C.text}}>{label}</div>
-        {sub && <div style={{fontSize:11,color:C.t3,marginTop:1,lineHeight:1.4}}>{sub}</div>}
-      </div>
-      {control}
-    </div>
-  );
-  return(
-    <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-      <div style={{padding:"50px 20px 110px"}}>
-        {/* Retour — Profil n'est pas un onglet de la barre du bas (contrairement
-            à Home/Explorer/Scénarios/Apprendre/Voyage) : il a besoin de son
-            propre bouton retour, comme Tuteur ou le feed du jour. */}
-        {onBack && (
-          <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:16,display:"flex",alignItems:"center",gap:5}}>
-            <ChevronLeft size={14}/> Accueil
-          </button>
-        )}
-        {/* Carte identité — centrée, comme ProfileScreen.tsx (bolt) */}
-        <SectionCard C={C} style={{display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center",padding:20,marginBottom:16}}>
-          <div style={{width:80,height:80,borderRadius:"50%",background:C.s2,border:`2px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:user.emojiAvatar?34:26,fontFamily:"'Noto Serif JP',serif",color:C.red,marginBottom:12,overflow:"hidden"}}>
-            {user.photo
-              ? <img src={user.photo} alt="" referrerPolicy="no-referrer" style={{width:"100%",height:"100%",objectFit:"cover"}} onError={(e)=>{e.target.style.display="none"; e.target.parentNode.textContent=user.emojiAvatar||(user.name||"V")[0].toUpperCase();}}/>
-              : user.emojiAvatar
-              ? user.emojiAvatar
-              : (user.name||"V")[0].toUpperCase()}
-          </div>
-          <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:700,fontSize:19,color:C.text}}>{user.name}</div>
-          {user.email && <div style={{fontSize:13,color:C.t3,marginTop:2}}>{user.email}</div>}
-          {isPremium && (
-            <span style={{marginTop:8,fontSize:12,fontWeight:600,color:C.gold,background:`${C.gold}14`,padding:"5px 12px",borderRadius:999,display:"inline-flex",alignItems:"center",gap:5}}>
-              <Crown size={12}/> Premium
-            </span>
-          )}
-        </SectionCard>
-
-        {/* 2 tuiles stats — streak / niveau (XP retiré : redondant avec le
-            streak, dont il n'était qu'un alias — voir computeXP) */}
-        {/* Niveau : même calcul que "Niveau estimé" du Tuteur IA (estimateNiveau)
-            — auparavant cette tuile affichait le niveau déclaré à l'onboarding
-            (échelle différente : Débutant/Intermédiaire/Avancé, jamais recalculé),
-            ce qui contredisait le Tuteur (Débutant/Faux-débutant/Intermédiaire). */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
-          {[
-            {Icon:Flame, label:"Streak", value:`${streak?.count||0}j`, color:C.red},
-            {Icon:Sparkles, label:"Niveau", value:<NiveauInfo C={C} niveau={estimateNiveau(kanaProgress, scenProgress, streak, user?.level)}/>, color:C.indigo},
-          ].map(s=>(
-            <SectionCard key={s.label} C={C} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"14px 8px"}}>
-              <div style={iconTileStyle(s.color, 34, 10)}><s.Icon size={17} color={s.color}/></div>
-              <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:700,fontSize:14,color:C.text}}>{s.value}</div>
-              <div style={{fontSize:10,color:C.t3}}>{s.label}</div>
-            </SectionCard>
-          ))}
-        </div>
-
-        {/* Ma collection (favoris) */}
-        <SectionTitle C={C} title="Ma collection" action={<span style={{fontSize:11,color:C.t3}}>{favs?.length||0} sauvegardé{(favs?.length||0)>1?"s":""}</span>}/>
-        {(!favs || favs.length===0) ? (
-          <div style={{padding:"22px 16px",textAlign:"center",background:C.s2,border:`1px dashed ${C.s3}`,borderRadius:16,marginBottom:16}}>
-            <Heart size={22} color={C.t3} style={{marginBottom:8}}/>
-            <div style={{fontSize:12,color:C.t3,lineHeight:1.6}}>Touche le cœur sur une carte<br/>pour la sauvegarder ici</div>
-          </div>
-        ) : (
-          <SectionCard C={C} style={{padding:8,marginBottom:16}}>
-            {favs.map((f,i)=>{
-              const it=f.item;
-              const meta={
-                expr:{emoji:it.emoji||"🗣️", title:it.expression, sub:it.traduction, c:C.gold},
-                cult:{emoji:it.emoji||"🏮", title:it.titre, sub:it.tag, c:C.red},
-                repas:{emoji:it.emoji||"🍱", title:it.nom_jp, sub:it.traduction, c:C.green},
-                tradition:{emoji:it.emoji||"⛩️", title:it.nom, sub:it.mois, c:C.red},
-                code:{emoji:it.emoji||"🎌", title:it.titre, sub:it.categorie, c:C.red},
-                region:{emoji:it.emoji||"🗾", title:it.nom, sub:it.position, c:C.green},
-                vie:{emoji:it.emoji||"🏙️", title:it.titre, sub:it.categorie, c:"#5B7E9B"},
-                lieu:{emoji:it.emoji||"📍", title:it.nom, sub:it.quartier, c:C.indigo},
-              }[f.type]||{emoji:"♥",title:"",sub:"",c:C.red};
-              // Ouvre la fiche détail correspondante — seuls les types reliés à un
-              // écran de détail existant sont cliquables (lieu/tradition/code/vie/
-              // région) ; expr/cult/repas restent des lignes d'info seules, aucun
-              // écran de détail réel n'existe encore pour ces types dans l'app.
-              const open = f.type==="lieu" ? ()=>onOpenLieu&&onOpenLieu(it)
-                : f.type==="tradition" ? ()=>onOpenTradition&&onOpenTradition(it)
-                : (f.type==="code"||f.type==="vie"||f.type==="region") ? ()=>onOpenDetail&&onOpenDetail(f.type,it)
-                : null;
-              return(
-                <div key={i} onClick={open||undefined} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 6px",borderBottom:i<favs.length-1?`1px solid ${C.border}`:"none",cursor:open?"pointer":"default"}}>
-                  <span style={{fontSize:22,flexShrink:0}}>{meta.emoji}</span>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:13,color:C.text,fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{meta.title}</div>
-                    <div style={{fontSize:11,color:C.t3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{meta.sub}</div>
-                  </div>
-                  <span style={{fontSize:8,padding:"2px 7px",borderRadius:20,background:`${meta.c}1a`,color:meta.c,letterSpacing:".08em",textTransform:"uppercase",flexShrink:0}}>{f.type}</span>
-                  <button onClick={(e)=>{e.stopPropagation(); toggleFav(f.type,it);}} aria-label="Retirer" style={{background:"transparent",border:"none",cursor:"pointer",color:C.red,fontSize:15,flexShrink:0,padding:4}}>♥</button>
-                  {open && <ChevronRight size={16} color={C.t3} style={{flexShrink:0}}/>}
-                </div>
-              );
-            })}
-          </SectionCard>
-        )}
-
-        {(()=>{
-          const achievements = computeAchievements({ streak, unlocks, scenProgress, kanaProgress, favs, pathProgress });
-          const earned = achievements.filter(a=>a.unlocked).length;
-          // 2 lignes de 3 colonnes = 6 badges visibles par défaut, le reste
-          // se dévoile au clic sur "Voir tout" (jamais masqué si l'utilisateur
-          // a déjà déplié, même si la liste redevient courte entre-temps).
-          const BADGES_VISIBLE = 6;
-          const hasMore = achievements.length > BADGES_VISIBLE;
-          const shown = showAllBadges ? achievements : achievements.slice(0, BADGES_VISIBLE);
-          return(
-            <div style={{marginBottom:16}}>
-              <SectionTitle C={C} title="Badges" action={<span style={{fontSize:11,color:C.t2,fontWeight:600}}>{earned}/{achievements.length}</span>}/>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9}}>
-                {shown.map((b,i)=>(
-                  <div key={i} title={b.desc} style={{background:C.s1,border:`1px solid ${b.unlocked?"rgba(201,70,61,.32)":C.border}`,borderRadius:18,padding:"14px 8px",textAlign:"center",opacity:b.unlocked?1:.5,transition:"all .3s"}}>
-                    <div style={{width:44,height:44,margin:"0 auto 7px",borderRadius:"50%",background:b.unlocked?C.s2:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:21,filter:b.unlocked?"none":"grayscale(1)"}}>{b.emoji}</div>
-                    <div style={{fontSize:10,color:b.unlocked?C.text:C.t3,lineHeight:1.25,marginBottom:3}}>{b.label}</div>
-                    <div style={{fontSize:8,color:C.t3,lineHeight:1.3}}>{b.unlocked?"✓":b.desc}</div>
-                  </div>
-                ))}
-              </div>
-              {hasMore && (
-                <button onClick={()=>setShowAllBadges(v=>!v)} className="pop-press" style={{width:"100%",marginTop:10,padding:"10px",background:"transparent",border:`1px dashed ${C.border}`,borderRadius:12,color:C.t2,fontSize:12,cursor:"pointer"}}>
-                  {showAllBadges ? "▲ Réduire" : `▼ Voir tout (${achievements.length})`}
-                </button>
-              )}
-            </div>
-          );
-        })()}
-
-        {/* Bannière Premium — calquée sur ProfileScreen.tsx (bolt) */}
-        <button onClick={onOpenPremium} className="lift" style={{width:"100%",marginBottom:16,padding:16,borderRadius:20,cursor:"pointer",textAlign:"left",background:isPremium?`linear-gradient(135deg,${C.gold}22,${C.red}0d)`:`linear-gradient(90deg,${C.gold}22,${C.gold}0d)`,border:`1px solid ${C.gold}44`,display:"flex",alignItems:"center",gap:14}}>
-          <Crown size={24} color={C.gold} style={{flexShrink:0}}/>
-          <div style={{flex:1}}>
-            <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:600,fontSize:15,color:C.gold}}>{isPremium?"Membre Premium":"Passer Premium"}</div>
-            <div style={{fontSize:11,color:C.t2,marginTop:1}}>{isPremium?"Merci de ton soutien — gérer mon abonnement":"Débloque tout le contenu"}</div>
-          </div>
-          <ChevronRight size={20} color={C.gold}/>
-        </button>
-
-        {/* Préférences — carte à séparateurs, comme ProfileScreen.tsx (bolt) */}
-        <SectionTitle C={C} title="Préférences"/>
-        <SectionCard C={C} style={{padding:0,marginBottom:16}}>
-          <PrefRow Icon={dark?Volume2:Sparkles} label={dark?"Mode sombre":"Mode clair"} sub="Basculer le thème de l'app" control={<Switch on={dark} onClick={()=>setDark(d=>!d)}/>}/>
-          <PrefRow Icon={Bell} label="Alerte streak dans l'app" sub="Bandeau sur l'accueil si la mission du jour n'est pas faite" control={<Switch on={reminders} onClick={()=>setReminders(r=>!r)}/>}/>
-          <PrefRow Icon={Volume2} label="Son" sub="Jingles de réussite, streak, niveau" control={<Switch on={soundOn} onClick={toggleSound}/>}/>
-          <PrefRow Icon={Type} label="Affichage des kana" sub="Comment le japonais s'affiche dans l'app" last control={
-            <div style={{display:"flex",gap:4}}>
-              {[{id:"kana",label:"あ"},{id:"kanji",label:"漢"},{id:"romaji",label:"A"}].map(opt=>(
-                <button key={opt.id} onClick={()=>setScript(opt.id)} style={{width:28,height:28,borderRadius:8,border:`1px solid ${script===opt.id?C.red:C.s3}`,background:script===opt.id?`${C.red}14`:"transparent",color:script===opt.id?C.red:C.t3,fontSize:13,fontWeight:600,cursor:"pointer"}}>{opt.label}</button>
-              ))}
-            </div>
-          }/>
-        </SectionCard>
-
-        {/* Compte */}
-        <SectionTitle C={C} title="Compte"/>
-        <SectionCard C={C} style={{padding:0,marginBottom:16}}>
-          <PrefRow Icon={Sparkles} label="Revoir la présentation" onClick={()=>onShowTour&&onShowTour()} control={<ChevronRight size={18} color={C.t3}/>}/>
-          {session?.user && (
-            <PrefRow Icon={LogOut} label="Se déconnecter" onClick={async ()=>{ if(confirm("Te déconnecter ? Tes données restent sauvegardées dans le cloud.")) await onLogout&&onLogout(); }}/>
-          )}
-          <PrefRow Icon={RotateCcw} label="Réinitialiser le profil" onClick={()=>{ if(confirm("Réinitialiser ton profil ? Tu repasseras par l'onboarding.")) onReset&&onReset(); }}/>
-          <PrefRow Icon={Trash2} label="Supprimer mon compte" danger last onClick={()=>onDeleteAccount&&onDeleteAccount()}/>
-        </SectionCard>
-
-        <div style={{textAlign:"center",fontSize:11,color:C.t3,paddingBottom:4}}>Isekai'd v1.0.0 — Le Japon, un peu chaque jour</div>
-      </div>
-    </div>
-  );
-}
-const TABS=[
-  {id:"home",kanji:"家",label:"Home",icon:HomeIcon},
-  {id:"explore",kanji:"探",label:"Explorer",icon:Compass},
-  {id:"learn",kanji:"学",label:"Apprendre",icon:BookOpen},
-  {id:"scenarios",kanji:"場",label:"Scénarios",icon:Drama},
-  {id:"voyage",kanji:"旅",label:"Voyage",icon:Plane},
-];
 // ─── Achievement unlocked popup ───────────────────────────────────────────────
 function AchievementPopup({C, achievement, onClose}){
   if(!achievement) return null;
@@ -7825,27 +7414,11 @@ function traduireErreur(m){
   return m;
 }
 
-// ─── Recherche globale ────────────────────────────────────────────────────────
-function buildSearchIndex(db){
-  if(!db) return [];
-  const items = [];
-  (db.wiki||[]).forEach(w=> items.push({type:"Wiki", emoji:"📖", color:"#9E7A1A", title:w.mot, jp:w.jp, sub:w.definition, blob:`${w.mot} ${w.romaji} ${w.jp} ${w.definition} ${w.categorie}`, raw:w, kind:"wiki"}));
-  (db.expressions||[]).forEach(e=> items.push({type:"Expression", emoji:"💬", color:"#C9463D", title:e.traduction, jp:e.expression, sub:e.romaji, blob:`${e.expression} ${e.romaji} ${e.traduction} ${e.contexte}`, raw:e, kind:"expr"}));
-  (db.repas||[]).forEach(r=> items.push({type:"Repas", emoji:r.emoji||"🍱", color:"#3A6645", title:r.nom_jp, jp:r.nom_jp, sub:r.description||r.romaji, blob:`${r.nom_jp} ${r.romaji||""} ${r.description||""}`, raw:r, kind:"repas"}));
-  (db.traditions||[]).forEach(t=> items.push({type:"Tradition", emoji:t.emoji||"⛩️", color:"#C4956A", title:t.nom, jp:t.nom_jp, sub:t.tagline, blob:`${t.nom} ${t.nom_jp} ${t.tagline} ${t.histoire} ${t.saison}`, raw:t, kind:"tradition"}));
-  (db.codes_sociaux||[]).forEach(c=> items.push({type:"Code social", emoji:c.emoji||"🤫", color:"#8B6FB0", title:c.titre, jp:c.nom_jp, sub:c.resume, blob:`${c.titre} ${c.nom_jp} ${c.resume} ${c.explication}`, raw:c, kind:"code"}));
-  (db.vie_quotidienne||[]).forEach(v=> items.push({type:"Vie quotidienne", emoji:v.emoji||"🏙️", color:"#5B7E9B", title:v.titre, jp:v.nom_jp, sub:v.resume, blob:`${v.titre} ${v.nom_jp} ${v.resume} ${v.description}`, raw:v, kind:"vie"}));
-  (db.regions||[]).forEach(r=> items.push({type:"Région", emoji:r.emoji||"🗾", color:"#4E8060", title:r.nom, jp:r.nom_jp, sub:r.tagline, blob:`${r.nom} ${r.nom_jp} ${r.tagline} ${r.ambiance}`, raw:r, kind:"region"}));
-  return items;
-}
-
-function SearchScreen({C, db, script, onClose, onWikiTap, initialQuery}){
+function SearchScreen({C, db, script, onClose, onOpenResult, initialQuery}){
   const [q,setQ] = useState(initialQuery || "");
   const index = useMemo(()=>buildSearchIndex(db), [db]);
   const results = useMemo(()=>{
-    const query = q.trim().toLowerCase();
-    if(query.length < 2) return [];
-    return index.filter(it => it.blob.toLowerCase().includes(query)).slice(0, 40);
+    return searchCatalog(index, q);
   }, [q, index]);
 
   return(
@@ -7874,7 +7447,7 @@ function SearchScreen({C, db, script, onClose, onWikiTap, initialQuery}){
         )}
         <div style={{display:"flex",flexDirection:"column",gap:9}}>
           {results.map((it,i)=>(
-            <div key={i} onClick={()=>{ if(it.kind==="wiki"){ onWikiTap(it.raw); onClose(); } }} style={{display:"flex",alignItems:"center",gap:13,padding:"13px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,cursor:it.kind==="wiki"?"pointer":"default"}}>
+            <div key={i} onClick={()=>{ onOpenResult(it); onClose(); }} style={{display:"flex",alignItems:"center",gap:13,padding:"13px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,cursor:"pointer"}}>
               {it.kind==="wiki" && it.raw?.image ? (
                 <img src={it.raw.image} alt={it.title} loading="lazy" style={{width:42,height:42,borderRadius:10,objectFit:"cover",flexShrink:0,background:C.s2}} onError={(e)=>{ e.target.style.display="none"; e.target.nextSibling && (e.target.nextSibling.style.display="flex"); }}/>
               ) : null}
@@ -7890,114 +7463,6 @@ function SearchScreen({C, db, script, onClose, onWikiTap, initialQuery}){
             </div>
           ))}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function BottomNav({C,active,onChange,pulseTab,onPulseEnd}){
-  return(
-    <div style={{position:"absolute",bottom:0,left:0,right:0,height:72,display:"flex",background:C.navBg,backdropFilter:"blur(18px)",borderTop:`1px solid ${C.border}`,zIndex:100}}>
-      {TABS.map(t=>{
-        const on=t.id===active;
-        const pulsing = t.id===pulseTab;
-        const Icon = t.icon;
-        return(
-          <button key={t.id} onClick={()=>onChange(t.id)} onAnimationEnd={pulsing?onPulseEnd:undefined} style={{flex:1,border:"none",background:"transparent",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:3,color:on?C.red:C.t3,transition:"color .2s",position:"relative",borderRadius:16,animation:pulsing?"ring 1s ease-out 2":"none"}}>
-            <Icon size={22} strokeWidth={on?2.5:2}/>
-            <span style={{fontSize:9,letterSpacing:".04em"}}>{t.label}</span>
-            {on&&<div style={{position:"absolute",bottom:8,width:4,height:4,borderRadius:"50%",background:C.red}}/>}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-// ─── Onboarding ───────────────────────────────────────────────────────────────
-const AVATAR_PLACEHOLDERS = ["🦊","🐼","🐯","🐰","🦉","🐣","🍡","🌸","⛩️","🗻","🍜","🎌"];
-
-function Onboarding({onComplete, googleInfo}){
-  const C=LIGHT;
-  const [step,setStep]=useState(0);
-  const [why,setWhy]=useState([]);
-  const [goal,setGoal]=useState("");
-  const [level,setLevel]=useState("");
-  // Pré-remplit le nom depuis Google si dispo
-  const [name,setName]=useState(googleInfo?.name || "");
-  // Photo : soit la photo Google, soit un emoji placeholder choisi
-  const [photo,setPhoto]=useState(googleInfo?.photo || null);
-  const [emojiAvatar,setEmojiAvatar]=useState(googleInfo?.photo ? null : "🦊");
-  const ok=[why.length>0,!!goal,!!level][step];
-  const toggle=id=>setWhy(w=>w.includes(id)?w.filter(x=>x!==id):[...w,id]);
-  const chip=active=>({padding:"15px 12px",borderRadius:16,cursor:"pointer",background:active?`${C.red}0d`:C.s1,border:`2px solid ${active?C.red:C.s3}`,transition:"all .2s"});
-  const titles=[{jp:"なぜ日本？",fr:"Pourquoi le Japon ?"},{jp:"目標は何？",fr:"Quel est ton objectif ?"},{jp:"あなたは？",fr:"Parle-moi de toi"}];
-  return(
-    <div style={{height:"100%",display:"flex",flexDirection:"column",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
-      <div style={{padding:"50px 26px 0",flexShrink:0}}>
-        <div style={{display:"flex",gap:5,marginBottom:28}}>
-          {[0,1,2].map(i=>(<div key={i} style={{height:2,flex:1,borderRadius:1,background:i<=step?C.red:"rgba(26,20,16,0.1)",transition:"background .4s"}}/>))}
-        </div>
-        <div key={step} style={{animation:"fadeUp .35s ease"}}>
-          <div style={{fontSize:11,color:C.t3,letterSpacing:".28em",marginBottom:5}}>{step+1} / 3</div>
-          <div style={{fontSize:26,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:4}}>{titles[step].jp}</div>
-          <div style={{fontSize:14,color:C.t2}}>{titles[step].fr}</div>
-        </div>
-      </div>
-      <div key={`b${step}`} style={{flex:1,overflowY:"auto",padding:"22px 26px",animation:"fadeUp .35s ease"}}>
-        {step===0&&(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>{WHY.map(o=>{ const active=why.includes(o.id); return(
-          <div key={o.id} style={{...chip(active),display:"flex",flexDirection:"column",alignItems:"center",gap:8}} onClick={()=>toggle(o.id)}>
-            <o.Icon size={26} color={active?C.red:C.t3}/>
-            <div style={{fontSize:12,fontWeight:500,color:active?C.red:C.t2,textAlign:"center",lineHeight:1.3}}>{o.label}</div>
-          </div>
-        );})}</div>)}
-        {step===1&&(<div style={{display:"flex",flexDirection:"column",gap:10}}>{GOALS.map(o=>{ const active=goal===o.id; return(
-          <div key={o.id} style={{...chip(active),display:"flex",alignItems:"center",gap:14,padding:"16px"}} onClick={()=>setGoal(o.id)}>
-            <div style={{width:38,height:38,borderRadius:"50%",background:active?C.red:C.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <o.Icon size={18} color={active?"#fff":C.t3}/>
-            </div>
-            <span style={{fontSize:14,fontWeight:500,color:active?C.red:C.t2,flex:1}}>{o.label}</span>
-            {active&&<Check size={20} color={C.red}/>}
-          </div>
-        );})}</div>)}
-        {step===2&&(
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            {LEVELS.map(o=>(<div key={o.id} style={{...chip(level===o.id),display:"flex",alignItems:"center",gap:14,padding:"16px"}} onClick={()=>setLevel(o.id)}><span style={{fontSize:28}}>{o.emoji}</span><div style={{flex:1}}><div style={{fontSize:14,color:level===o.id?C.text:C.t2,marginBottom:2}}>{o.label}</div><div style={{fontSize:11,color:C.t3}}>{o.sub}</div></div>{level===o.id&&<span style={{color:C.red}}>✓</span>}</div>))}
-            <div style={{marginTop:6}}>
-              <div style={{fontSize:11,color:C.t3,marginBottom:8,letterSpacing:".12em"}}>Ta photo de profil</div>
-              {/* Aperçu photo actuelle */}
-              <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:12}}>
-                <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(201,70,61,0.09)",border:`2px solid rgba(201,70,61,0.25)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,overflow:"hidden",flexShrink:0}}>
-                  {photo
-                    ? <img src={photo} alt="" referrerPolicy="no-referrer" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                    : emojiAvatar}
-                </div>
-                <div style={{fontSize:12,color:C.t2,flex:1}}>
-                  {photo ? "Photo de ton compte Google" : "Choisis un avatar ci-dessous"}
-                  {photo && <div onClick={()=>{setPhoto(null);setEmojiAvatar("🦊");}} style={{fontSize:11,color:C.red,cursor:"pointer",marginTop:3}}>Utiliser un avatar à la place</div>}
-                </div>
-              </div>
-              {/* Grille d'emojis placeholder (si pas de photo Google) */}
-              {!photo && (
-                <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:8,marginBottom:16}}>
-                  {AVATAR_PLACEHOLDERS.map(em=>(
-                    <div key={em} onClick={()=>setEmojiAvatar(em)} style={{aspectRatio:"1",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,borderRadius:10,cursor:"pointer",background:emojiAvatar===em?"rgba(201,70,61,0.12)":"rgba(26,20,16,0.04)",border:`1px solid ${emojiAvatar===em?"rgba(201,70,61,0.35)":C.border}`}}>
-                      {em}
-                    </div>
-                  ))}
-                </div>
-              )}
-              <div style={{fontSize:11,color:C.t3,marginBottom:8,letterSpacing:".12em"}}>Ton prénom</div>
-              <input value={name} onChange={e=>setName(e.target.value)} placeholder="Ex : Léa" style={{background:"rgba(26,20,16,0.04)",border:`1px solid ${C.border}`,color:C.text}}/>
-            </div>
-          </div>
-        )}
-      </div>
-      <div style={{padding:"14px 26px 34px",flexShrink:0}}>
-        <button onClick={()=>step<2?setStep(s=>s+1):onComplete({why,goal,level,name:name||"Voyageur",photo:photo||null,emojiAvatar:photo?null:emojiAvatar})} disabled={!ok}
-          style={{width:"100%",padding:"15px",background:ok?C.red:"rgba(26,20,16,0.08)",border:"none",borderRadius:999,color:ok?"#fff":C.t3,fontSize:15,cursor:ok?"pointer":"default",letterSpacing:".04em",transition:"all .2s"}}>
-          {step<2?"Continuer →":"Commencer l'aventure 🌸"}
-        </button>
       </div>
     </div>
   );
@@ -8054,7 +7519,7 @@ function resetAllSectionIntros(){
 }
 const THEME_KEY = "isekaid_theme_v1";
 function loadProfile(){
-  try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
+  try { const raw = localStorage.getItem(STORE_KEY); return raw ? normalizeProfile(JSON.parse(raw)) : null; }
   catch { return null; }
 }
 // Récupère la photo Wikimedia associée à un item Explorer (traditions, culture,
@@ -8068,7 +7533,7 @@ function explorePhoto(section, item, index){
 }
 
 function saveProfile(u){
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(u)); } catch {}
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(normalizeProfile(u))); } catch {}
 }
 
 // Extrait les infos de profil depuis une session Supabase (connexion Google/email).
@@ -8098,61 +7563,6 @@ function saveTheme(isDark){
 const SCRIPT_KEY = "isekaid_script_v1";
 
 // ── Suivi des kana maîtrisés ──────────────────────────────────────────────────
-const KANA_KEY = "isekaid_kana_v1"; // { "あ": {seen, known}, ... }
-function loadKanaProgress(){
-  try { const raw=localStorage.getItem(KANA_KEY); return raw?JSON.parse(raw):{}; }
-  catch { return {}; }
-}
-function saveKanaProgress(p){ try { localStorage.setItem(KANA_KEY, JSON.stringify(p)); } catch {} }
-// Record a result for one character: known=true if recognized
-function recordKana(progress, char, known){
-  const cur = progress[char] || {seen:0, known:0};
-  const next = { seen:cur.seen+1, known:cur.known + (known?1:0) };
-  // ─── Répétition espacée (Leitner simplifié) ───
-  // box : niveau de maîtrise 0→5. Bonne réponse = monte d'un cran, mauvaise = redescend.
-  // due : timestamp de la prochaine révision recommandée.
-  const INTERVALS_DAYS = [0, 1, 3, 7, 14, 30]; // box 0..5
-  const prevBox = cur.box || 0;
-  const box = known ? Math.min(prevBox+1, 5) : Math.max(prevBox-1, 0);
-  const now = Date.now();
-  const due = now + INTERVALS_DAYS[box]*24*60*60*1000;
-  next.box = box;
-  next.due = due;
-  next.last = now;
-  return { ...progress, [char]: next };
-}
-
-// Renvoie la liste des caractères "à réviser" (échus), triés par priorité (plus en retard d'abord)
-function getDueForReview(kanaProgress, allChars){
-  if(!kanaProgress) return [];
-  const now = Date.now();
-  const due = [];
-  for(const c of (allChars||[])){
-    const p = kanaProgress[c.k];
-    if(!p) continue;                       // jamais vu → pas en révision (c'est de l'apprentissage)
-    if((p.box||0) >= 5) continue;          // maîtrisé → plus besoin de réviser souvent
-    if(p.due && p.due <= now){             // échu
-      due.push({ ...c, _overdue: now - p.due, _box: p.box||0 });
-    }
-  }
-  // Plus en retard d'abord, puis box le plus bas (le plus fragile)
-  due.sort((a,b)=> (b._overdue - a._overdue) || (a._box - b._box));
-  return due;
-}
-
-// Statistiques globales de maîtrise SRS
-function srsStats(kanaProgress){
-  const kp = kanaProgress || {};
-  const vals = Object.values(kp);
-  const now = Date.now();
-  return {
-    studied: vals.length,
-    mastered: vals.filter(v=>(v.box||0)>=5).length,
-    learning: vals.filter(v=>(v.box||0)>0 && (v.box||0)<5).length,
-    due: vals.filter(v=>v.due && v.due<=now && (v.box||0)<5).length,
-  };
-}
-
 // ─── Bilan hebdomadaire ─────────────────────────────────────────────────────
 // Journal léger, 100% local : capture un instantané au début de chaque
 // semaine ISO (mêmes bornes que le Défi de la semaine, isoWeekKey() ci-dessus)
@@ -8179,17 +7589,6 @@ function isoWeekBounds(weekKey){
   return { start, end };
 }
 
-// A char is "mastered" if known at least 3 times and success rate >= 70%
-function isMastered(entry){
-  if(!entry || entry.seen < 3) return false;
-  return (entry.known / entry.seen) >= 0.7;
-}
-function deckMastery(progress, deck){
-  let mastered = 0;
-  deck.forEach(c=>{ if(isMastered(progress[c.k])) mastered++; });
-  return { mastered, total: deck.length };
-}
-
 function loadScript(){
   try {
     const v = localStorage.getItem(SCRIPT_KEY);
@@ -8200,9 +7599,6 @@ function loadScript(){
 function saveScript(mode){
   try { localStorage.setItem(SCRIPT_KEY, mode); } catch {}
 }
-
-// ─── Streak logic ─────────────────────────────────────────────────────────────
-const STREAK_KEY = "isekaid_streak_v1";
 
 // ─── Mission quotidienne ──────────────────────────────────────────────────────
 const MISSION_KEY = "isekaid_mission_v1";
@@ -8271,83 +7667,6 @@ function loadMission(){
   } catch { return { day: dayKey(), done: [], claimed:false }; }
 }
 function saveMission(m){ try { localStorage.setItem(MISSION_KEY, JSON.stringify(m)); } catch {} }
-// Local day key YYYY-MM-DD (no timezone surprises)
-function dayKey(d=new Date()){
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-}
-function daysBetween(aKey,bKey){
-  const a=new Date(aKey+"T00:00:00"), b=new Date(bKey+"T00:00:00");
-  return Math.round((b-a)/86400000);
-}
-// Salutation quotidienne (Système 4.b) : joue une seule fois par jour, au
-// tout premier atterrissage sur Home — voir HomeScreen.
-const GREETING_KEY = "isekaid_last_greeting_date";
-function isNewGreetingDay(){
-  try { return localStorage.getItem(GREETING_KEY) !== dayKey(); } catch { return false; }
-}
-function markGreetingSeenToday(){
-  try { localStorage.setItem(GREETING_KEY, dayKey()); } catch {}
-}
-function loadStreak(){
-  try { const raw=localStorage.getItem(STREAK_KEY); return raw?JSON.parse(raw):null; }
-  catch { return null; }
-}
-// ─── Paliers de streak (micro-récompense visuelle, indépendante des
-// déblocages de contenu de UNLOCK_SCHEDULE) — réutilise la modale
-// DailyWelcome existante (champ `milestone`) pour la célébration.
-const STREAK_MILESTONES = [
-  { day:3,   label:"3 jours d'affilée",     emoji:"🔥" },
-  { day:7,   label:"1 semaine complète",    emoji:"⭐" },
-  { day:14,  label:"2 semaines de suite",   emoji:"🎖️" },
-  { day:30,  label:"1 mois de régularité",  emoji:"🏅" },
-  { day:100, label:"100 jours, légendaire", emoji:"🏆" },
-];
-function nextStreakMilestone(count){
-  return STREAK_MILESTONES.find(m=>m.day>count) || null;
-}
-
-// Returns { count, best, last, freezes, lastFreezeRecharge } updated for "today"
-// Streak consécutif avec 1 joker rechargeable (1 tous les 7 jours actifs).
-function touchStreak(){
-  const today = dayKey();
-  let s = loadStreak();
-  const prevCount = s?.count || 0;
-  if(!s || !s.last){
-    s = { count:1, best:1, last:today, freezes:1, freezeBase:0 };
-  } else if(s.last === today){
-    // déjà compté aujourd'hui — rien à faire
-  } else {
-    const gap = daysBetween(s.last, today);
-    if(gap === 1){
-      s.count += 1;                       // jour consécutif
-    } else if(gap === 2 && (s.freezes||0) > 0){
-      // 1 jour manqué mais un joker disponible → on consomme le joker, streak préservé
-      s.freezes -= 1;
-      s.count += 1;
-      s.frozenUsed = true;
-    } else {
-      s.count = 1;                        // streak cassé
-      s.frozenUsed = false;
-    }
-    s.last = today;
-    if(s.count > (s.best||0)) s.best = s.count;
-  }
-  // Recharge d'un joker tous les 7 jours de streak (max 2 en réserve)
-  const base = s.freezeBase || 0;
-  if(s.count - base >= 7){
-    s.freezes = Math.min((s.freezes||0) + 1, 2);
-    s.freezeBase = s.count;
-  }
-  if(s.freezes === undefined) s.freezes = 1;
-  // Palier franchi aujourd'hui (compteur qui vient de changer + tombe pile sur un palier)
-  s.milestone = (s.count !== prevCount && STREAK_MILESTONES.find(m=>m.day===s.count)) || null;
-  try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
-  return {...s};
-}
-function saveStreak(s){
-  try { localStorage.setItem(STREAK_KEY, JSON.stringify(s)); } catch {}
-}
-
 // ─── Contenu "Nouveau aujourd'hui" — pastille qui disparaît une fois consulté ──
 // Persistance locale (localStorage, comme le reste de l'app) de la dernière
 // consultation : dernier item app_feed ouvert, dernier jour où le lieu du
@@ -8460,6 +7779,7 @@ function favId(type, item){
 export default function IsekaidApp(){
   const [screen,setScreen]=useState("splash");
   const [tab,setTabRaw]=useState("home");
+  const [pendingTravelView,setPendingTravelView]=useState(null);
   // Transition d'onglet (System 3, Phase 1) : View Transitions API quand
   // disponible (crossfade + léger glissement, cf. vt-in/vt-out dans le CSS),
   // flushSync pour que React commette avant que l'API capture le nouvel
@@ -8468,11 +7788,14 @@ export default function IsekaidApp(){
   const setTab = (t)=>{
     withViewTransition(()=> flushSync(()=> setTabRaw(t)));
   };
+  const openSos = ()=>{ setPendingTravelView("sos"); setTab("voyage"); };
   const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
   const [dark,setDark]=useState(()=>loadTheme());
   const [accent,setAccent]=useState(()=>loadAccent());
   const chooseAccent = (id)=>{ setAccent(id); saveAccent(id); };
   const [db,setDb]=useState(null);
+  const [contentLoadError,setContentLoadError]=useState(false);
+  const [contentLoadAttempt,setContentLoadAttempt]=useState(0);
   const [streak,setStreak]=useState(()=>loadStreak()||{count:0,best:0,last:null,keys:0});
   const [favs,setFavs]=useState(()=>loadFavs());
   const [unlocks,setUnlocks]=useState(()=>getUnlocks());
@@ -8690,6 +8013,14 @@ export default function IsekaidApp(){
   // mais générique puisque Code/Vie/RegionDetail partagent le même gabarit de
   // props (C, <clé>, onBack, fav, onFav, wikiMap, onWikiTap, script).
   const [spotlightDetail,setSpotlightDetail]=useState(null);
+  const [searchResultDetail,setSearchResultDetail]=useState(null);
+  const openSearchResult = (result)=>{
+    if(result.kind==="wiki"){ setWikiEntry(result.raw); return; }
+    if(result.kind==="lieu"){ setSpotlightLieu(result.raw); return; }
+    if(result.kind==="tradition"){ setSpotlightTradition(result.raw); return; }
+    if(["code","vie","region"].includes(result.kind)){ setSpotlightDetail({type:result.kind,item:result.raw}); return; }
+    setSearchResultDetail(result);
+  };
   const [pulseTab,setPulseTab]=useState(null); // pilier à mettre brièvement en avant (goal) à l'arrivée sur l'accueil
   const [newAchievement,setNewAchievement]=useState(null);
   // Tour guidé automatique déclenché par "Revoir la présentation" (Profil,
@@ -8822,7 +8153,7 @@ export default function IsekaidApp(){
   // remplacée à chaque changement d'écran/état, nettoyée au démontage.
   const inScreenBackRef = useRef(null);
   useEffect(()=>{
-    backStateRef.current = { wikiEntry, showSearch, spotlightLieu, spotlightTradition, spotlightDetail, showPremiumPage, newAchievement, weeklyRecap, showWelcome, tab };
+    backStateRef.current = { wikiEntry, showSearch, spotlightLieu, spotlightTradition, spotlightDetail, searchResultDetail, showPremiumPage, newAchievement, weeklyRecap, showWelcome, tab };
   });
   useEffect(()=>{
     let listener = null;
@@ -8838,6 +8169,7 @@ export default function IsekaidApp(){
           if(s.spotlightLieu){ setSpotlightLieu(null); return; }
           if(s.spotlightTradition){ setSpotlightTradition(null); return; }
           if(s.spotlightDetail){ setSpotlightDetail(null); return; }
+          if(s.searchResultDetail){ setSearchResultDetail(null); return; }
           if(s.showPremiumPage){ setShowPremiumPage(false); return; }
           if(s.newAchievement){ setNewAchievement(null); return; }
           if(s.weeklyRecap){ setWeeklyRecap(null); return; }
@@ -8881,6 +8213,10 @@ export default function IsekaidApp(){
   // fait renvoyer au questionnaire à chaque connexion (voir les effets de
   // routage plus bas).
   const [cloudProfileChecked,setCloudProfileChecked]=useState(false);
+  const flushProgressMutations = useCallback(()=>flushPendingMutations({
+    progress:mutation=>saveProgress(mutation.userId,mutation.payload),
+    trips:mutation=>saveTripsCloud(mutation.userId,mutation.payload),
+  }), []);
 
   // Listen for auth changes
   useEffect(()=>{
@@ -8924,6 +8260,15 @@ export default function IsekaidApp(){
     (async ()=>{
       let resolvedUser = user;
       try {
+        await flushProgressMutations();
+        if(cancelled) return;
+        // Un échec de push signifie que le local est plus récent : ne jamais
+        // le remplacer par le cloud tant que cette mutation reste en attente.
+        if(loadPendingMutations().some(item=>item.type==="progress"&&item.userId===session.user.id)){
+          setCloudProfileChecked(true);
+          setScreen(s => (s==="auth" || s==="loading") ? (resolvedUser ? "app" : "onboarding") : s);
+          return;
+        }
         const p = await fetchProgress(session.user.id);
         if(cancelled) return;
         if(p){
@@ -8932,7 +8277,10 @@ export default function IsekaidApp(){
           if(p.scenarios && Object.keys(p.scenarios).length){ setScenProgress(p.scenarios); saveScenarioProgress(p.scenarios); }
           if(Array.isArray(p.favorites) && p.favorites.length){ setFavs(p.favorites); saveFavs(p.favorites); }
           if(p.kana_progress && Object.keys(p.kana_progress).length){ setKanaProgress(p.kana_progress); saveKanaProgress(p.kana_progress); }
-          if(p.profile && p.profile.name){ setUser(p.profile); saveProfile(p.profile); resolvedUser = p.profile; }
+          if(p.profile && p.profile.name){
+            const normalizedProfile = normalizeProfile(p.profile);
+            setUser(normalizedProfile); saveProfile(normalizedProfile); resolvedUser = normalizedProfile;
+          }
           if(p.path && Array.isArray(p.path.completed)){ setPathProgress(p.path); savePathProgress(p.path); }
           // Mission : ne charger depuis le cloud que si elle concerne le jour actuel.
           // Une mission cloud périmée (autre jour) ne doit pas écraser celle d'aujourd'hui.
@@ -8953,21 +8301,32 @@ export default function IsekaidApp(){
       setScreen(s => (s==="auth" || s==="loading") ? (resolvedUser ? "app" : "onboarding") : s);
     })();
     return ()=>{ cancelled = true; };
-  },[session?.user?.id]);
+  },[session?.user?.id,flushProgressMutations]);
+
+  useCloudBackup({userId:session?.user?.id,ready:cloudProfileChecked});
 
   // Push progress to cloud (debounced) whenever it changes and user is logged in
   const syncRef = useRef(null);
   useEffect(()=>{
-    if(!session?.user) return;
+    if(!session?.user || !cloudProfileChecked) return;
     clearTimeout(syncRef.current);
+    const snapshot = {
+      streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user, path:pathProgress, mission,
+      settings: { dark, accent, script, introSeen: introSeen(), premium }
+    };
+    enqueueMutation({type:"progress",userId:session.user.id,payload:snapshot});
     syncRef.current = setTimeout(()=>{
-      saveProgress(session.user.id, {
-        streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user, path:pathProgress, mission,
-        settings: { dark, accent, script, introSeen: introSeen(), premium }
-      });
+      flushProgressMutations();
     }, 800);
     return ()=> clearTimeout(syncRef.current);
-  },[streak, unlocks, scenProgress, favs, kanaProgress, user, pathProgress, mission, dark, accent, script, premium, session?.user?.id]);
+  },[streak, unlocks, scenProgress, favs, kanaProgress, user, pathProgress, mission, dark, accent, script, premium, session?.user?.id,cloudProfileChecked,flushProgressMutations]);
+
+  useEffect(()=>{
+    if(!session?.user) return;
+    const retry=()=>flushProgressMutations();
+    window.addEventListener("online",retry);
+    return ()=>window.removeEventListener("online",retry);
+  },[session?.user?.id,flushProgressMutations]);
 
   const logout = async ()=>{
     await signOut();
@@ -8999,14 +8358,33 @@ export default function IsekaidApp(){
 
   // Load content data on startup
   useEffect(()=>{
-    setDb(DATA);
+    let cancelled = false;
+    setContentLoadError(false);
+    // Le catalogue pèse plus d'un Mo : il est chargé après le JavaScript
+    // initial afin que le splash et la vérification de session restent légers.
+    Promise.all([
+      import("./japan-data.json"),
+      import("./explore-images.json"),
+      import("./video-map.json"),
+      import("./lieu-editorial.json"),
+    ]).then(([{ default: data }, { default: exploreImages }, { default: videoMap }, { default: lieuEditorial }])=>{
+      if(cancelled) return;
+      EXPLORE_IMAGES = exploreImages;
+      VIDEO_MAP = videoMap;
+      LIEU_EDITORIAL = lieuEditorial;
+      setDb(data);
+      setWikiMap(buildWikiMap(data.wiki));
+    }).catch((error)=>{
+      console.error("[content] chargement impossible:", error);
+      if(!cancelled) setContentLoadError(true);
+    });
     // On CHARGE le streak sans le valider. Le streak ne se valide que lorsque
     // l'utilisateur complète sa mission du jour (voir effet lié à missionDone).
     const s = loadStreak() || { count:0, best:0, last:null, freezes:1, freezeBase:0 };
     setStreak(s);
     setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
-    setWikiMap(buildWikiMap(DATA.wiki));
-  },[]);
+    return ()=>{ cancelled = true; };
+  },[contentLoadAttempt]);
 
   // Persist theme whenever it changes
   useEffect(()=>{ saveTheme(dark); },[dark]);
@@ -9063,8 +8441,10 @@ export default function IsekaidApp(){
 
   // Save profile at end of onboarding
   const completeOnboarding = (u)=>{
-    saveProfile(u);
-    setUser(u);
+    const normalizedProfile = normalizeProfile(u);
+    saveProfile(normalizedProfile);
+    setUser(normalizedProfile);
+    trackProductEvent("onboarding_completed",{relationship:normalizedProfile.japanRelationship,level:normalizedProfile.level,firstTrip:normalizedProfile.firstTrip===true});
     // Compte le jour 1 tout de suite (pas seulement après les 3 missions du
     // jour) : sans ça, le contenu au palier "jour 1" (Traditions, 1ère
     // Découverte) reste verrouillé pendant toute la première session.
@@ -9139,18 +8519,20 @@ export default function IsekaidApp(){
   const deleteAccount = async ()=>{
     if(!confirm("Supprimer définitivement ton compte et toutes tes données ? Cette action est irréversible.")) return;
     if(!confirm("Dernière confirmation — toutes tes données (progression, voyages, favoris) seront effacées.")) return;
-    // Supprimer les données Supabase si connecté
+    // La suppression du compte Auth doit se faire côté serveur avec la clé
+    // service_role. Les FK `on delete cascade` nettoient progression, tuteur et
+    // grants ; le client ne prétend plus supprimer un compte en faisant juste
+    // un sign-out.
     if(session?.user && supabaseEnabled){
       try {
-        await supabase.from("progress").delete().eq("user_id", session.user.id);
-        await signOut();
-      } catch(e){}
+        const result = await deleteRemoteAccount();
+        if(!result.ok) throw new Error("delete_failed");
+      } catch(e){
+        alert("La suppression du compte a échoué. Aucune donnée locale n’a été effacée. Réessaie plus tard.");
+        return;
+      }
     }
-    // Vider tout le localStorage
-    const keys = ["isekaid_profile_v1","isekaid_streak_v1","isekaid_favs_v1","isekaid_unlocks_v1",
-      "isekaid_scenarios_v1","isekaid_kana_v1","isekaid_ach_v1","isekaid_intro_seen_v1",
-      "isekaid_path_v1","isekaid_trips_v1","isekaid_theme_v1","isekaid_script_v1"];
-    keys.forEach(k=>{ try { localStorage.removeItem(k); } catch {} });
+    clearStoredNamespace();
     setUser(null); setSession(null); setScreen("auth"); setTab("home");
   };
 
@@ -9161,19 +8543,29 @@ export default function IsekaidApp(){
         {screen==="loading"     && <div style={{position:"fixed",inset:0,background:"#0F0B08",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{fontSize:32,animation:"flameFlicker 1s ease infinite"}}>異</div></div>}
         {screen==="splash"      &&<Splash onDone={afterSplash}/>}
         {screen==="auth"       &&<AuthScreen C={C}/>}
-        {screen==="onboarding" &&<Onboarding onComplete={completeOnboarding} googleInfo={googleUserInfo(session)}/>}
+        {screen==="onboarding" &&<Suspense fallback={null}><Onboarding C={LIGHT} onComplete={completeOnboarding} googleInfo={googleUserInfo(session)}/></Suspense>}
         {screen==="intro"      &&<FeatureIntroScreen onDone={finishIntro}/>}
-        {screen==="app"&&user&&(
+        {screen==="app"&&user&&!db&&(
+          <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16,padding:32,textAlign:"center",background:C.bg,color:C.text}}>
+            <div style={{fontSize:36}}>{contentLoadError?"⚠️":"異"}</div>
+            <div style={{fontSize:16,fontWeight:700}}>{contentLoadError?"Le contenu n’a pas pu être chargé":"Chargement du Japon…"}</div>
+            {contentLoadError && <>
+              <div style={{fontSize:13,color:C.t2,lineHeight:1.6}}>Vérifie l’espace disponible puis réessaie. Ta progression locale est conservée.</div>
+              <button onClick={()=>setContentLoadAttempt(n=>n+1)} style={btnPrimaryStyle(C,false)}>Réessayer</button>
+            </>}
+          </div>
+        )}
+        {screen==="app"&&user&&db&&(
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className={supportsViewTransitions()?"":"screen-in"} style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} onOpenSos={openSos} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
-              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} backRef={inScreenBackRef} initialCategoryFilter={pendingExploreCategory} onInitialCategoryConsumed={()=>setPendingExploreCategory(null)}/>}
+              {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} onGoTab={setTab} backRef={inScreenBackRef} initialCategoryFilter={pendingExploreCategory} onInitialCategoryConsumed={()=>setPendingExploreCategory(null)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)} kanaProgress={kanaProgress} pathProgress={pathProgress} onGoTab={setTab}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
-              {tab==="profile"   &&<ProfileScreen   C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onBack={()=>setTab("home")} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/>}
-              {tab==="voyage"    &&<VoyageScreen    C={C} dark={dark} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef}/>}
+              {tab==="profile"   &&<Suspense fallback={<div style={{padding:28,color:C.t3}}>Chargement de Mon Japon…</div>}><ProfileScreen ui={{SectionCard,SectionTitle,iconTileStyle,computeAchievements}} C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/></Suspense>}
+              {tab==="voyage"    &&<VoyageScreen    C={C} dark={dark} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef} initialView={pendingTravelView} onInitialViewConsumed={()=>setPendingTravelView(null)}/>}
               {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
             </div>
@@ -9186,7 +8578,7 @@ export default function IsekaidApp(){
               <CelebrationOverlay C={C} emoji="🎯" title="Mission accomplie !" subtitle="Bravo 🎌" color={C.green} onDone={()=>setMissionReward(false)}/>
             )}
             {/* Global search */}
-            {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onWikiTap={setWikiEntry}/>}
+            {showSearch && <SearchScreen C={C} db={db} script={script} onClose={()=>setShowSearch(false)} onOpenResult={openSearchResult}/>}
             {spotlightLieu && <LieuSpotlightDetail C={C} lieu={spotlightLieu} onClose={()=>setSpotlightLieu(null)} isFav={isFav} toggleFav={toggleFav}/>}
             {spotlightTradition && (
               <div style={{position:"fixed",inset:0,zIndex:200,background:C.bg}}>
@@ -9200,7 +8592,8 @@ export default function IsekaidApp(){
                 {spotlightDetail.type==="region" && <RegionDetail C={C} r={spotlightDetail.item} onBack={()=>setSpotlightDetail(null)} fav={isFav&&isFav("region",spotlightDetail.item)} onFav={toggleFav&&(()=>toggleFav("region",spotlightDetail.item))} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script}/>}
               </div>
             )}
-            {showPremiumPage && <PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)} onRedeemCode={redeemCode} billingError={billingError} billingBusy={billingBusy} liveOfferings={liveOfferings} onRestore={restorePremium}/>}
+            {searchResultDetail && <SearchResultDetail C={C} result={searchResultDetail} favorite={isFav(searchResultDetail.kind,searchResultDetail.raw)} onToggleFavorite={()=>toggleFav(searchResultDetail.kind,searchResultDetail.raw)} onBack={()=>setSearchResultDetail(null)}/>}
+            {showPremiumPage && <Suspense fallback={null}><PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)} onRedeemCode={redeemCode} billingError={billingError} billingBusy={billingBusy} liveOfferings={liveOfferings} onRestore={restorePremium}/></Suspense>}
             {/* Achievement unlocked */}
             {newAchievement && <AchievementPopup C={C} achievement={newAchievement} onClose={()=>setNewAchievement(null)}/>}
             {/* Bilan hebdomadaire */}

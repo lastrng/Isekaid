@@ -267,7 +267,8 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremi
   const [suggestions, setSuggestions] = useState([]);
   const [error, setError] = useState(null); // "network" | "limit" | "premium" | null
   const [errorDetail, setErrorDetail] = useState(null); // message technique brut, pour diagnostic
-  const [freeLimit, setFreeLimit] = useState(8);
+  const [freeLimit, setFreeLimit] = useState(5);
+  const [usage, setUsage] = useState(null);
   const scrollRef = useRef(null);
 
   useEffect(()=>{
@@ -300,7 +301,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremi
       // le persiste sur la conversation, pas besoin de le renvoyer ensuite.
       const res = await sendTutorMessage({ message: trimmed, scenarioId, niveau, conversationId: convId, bridgeContext: !convId ? bridgeContext : undefined });
       if(res?.limitReached || res?.premiumRequired){
-        setError(res.premiumRequired ? "premium" : "limit");
+        setError(res.premiumRequired ? "premium" : res.period==="month" ? "monthly-limit" : "limit");
         if(res.premiumRequired && res.limit) setFreeLimit(res.limit);
         // Le serveur rejette avant d'enregistrer quoi que ce soit : la bulle
         // optimiste ne correspond à rien de persisté, on la retire.
@@ -322,6 +323,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremi
         romaji: res.romaji || "", correction: res.correction || "",
       }]);
       setSuggestions(Array.isArray(res.suggestions) ? res.suggestions : []);
+      setUsage({usedToday:res.usedToday||0,dailyLimit:isPremium?20:freeLimit,usedMonth:res.usedMonth||0,monthlyLimit:res.monthlyLimit||300});
       onMissionTrigger?.("tutor");
     } catch(e){
       console.error("[tutor] échec envoi message:", e);
@@ -346,6 +348,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremi
         <div style={{flex:1,minWidth:0}}>
           <div style={{fontSize:15,fontWeight:700,color:C.text}}>{scenario.titre}</div>
           <div style={{fontSize:11,color:C.t3}}>{NIVEAU_LABEL[niveau]}</div>
+          {usage && <div style={{fontSize:10,color:usage.usedToday/usage.dailyLimit>=.8?C.red:usage.usedToday/usage.dailyLimit>=.5?C.gold:C.t3,marginTop:2}}>{usage.usedToday}/{usage.dailyLimit} messages aujourd’hui{usage.usedToday/usage.dailyLimit>=.8?" · ⚠️ limite proche":""}</div>}
         </div>
       </div>
 
@@ -388,6 +391,9 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremi
             Tu as atteint ta limite de messages pour aujourd'hui. Reviens demain pour continuer cette conversation 🎌
           </div>
         )}
+        {error === "monthly-limit" && (
+          <div style={{padding:"14px",background:"rgba(201,70,61,0.08)",border:"1px solid rgba(201,70,61,0.3)",borderRadius:12,color:C.red,fontSize:12,marginTop:6,textAlign:"center"}}>Limite mensuelle de protection des coûts atteinte. Le tuteur sera de nouveau disponible le mois prochain.</div>
+        )}
         {error === "premium" && (
           <div style={{padding:"18px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,marginTop:6}}>
             <div style={{fontSize:14,fontWeight:700,color:C.text,marginBottom:6}}>
@@ -412,7 +418,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, isPremi
         )}
       </div>
 
-      {error !== "limit" && error !== "premium" && (
+      {error !== "limit" && error !== "monthly-limit" && error !== "premium" && (
         <div style={{display:"flex",gap:8,padding:"10px 14px",borderTop:`1px solid ${C.border}`,flexShrink:0,paddingBottom:"calc(10px + env(safe-area-inset-bottom))"}}>
           <input
             value={input}

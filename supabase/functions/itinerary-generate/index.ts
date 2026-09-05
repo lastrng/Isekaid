@@ -33,6 +33,8 @@ const ITINERARY_MODEL = Deno.env.get("ITINERARY_MODEL") || "claude-haiku-4-5-202
 const MAX_LIEUX = 60; // borne large mais finie — anti-abus payload, pas une limite produit réaliste
 const MIN_DAYS = 1;
 const MAX_DAYS = 30;
+const DAILY_GENERATION_LIMIT = parseInt(Deno.env.get("ITINERARY_DAILY_LIMIT") || "3", 10);
+const MONTHLY_GENERATION_LIMIT = parseInt(Deno.env.get("ITINERARY_MONTHLY_LIMIT") || "20", 10);
 const RYTHME_VALUES = new Set(["tranquille", "equilibre", "dense"]);
 const RYTHME_HINT: Record<string, string> = {
   tranquille: "Rythme choisi : TRANQUILLE — vise plutôt 2 à 3 lieux par jour, laisse du temps mort.",
@@ -135,14 +137,13 @@ const RESPONSE_TOOL = {
           type: "object",
           properties: {
             villeId: { type: "string", description: "Doit être l'un des IDs de ville fournis en entrée." },
-            titre: { type: "string", description: "Courte intro du jour, 1 phrase, en français." },
             lieuIds: {
               type: "array",
               items: { type: "string" },
               description: "IDs de lieux pour ce jour, exclusivement parmi ceux fournis en entrée.",
             },
           },
-          required: ["villeId", "titre", "lieuIds"],
+          required: ["villeId", "lieuIds"],
         },
       },
     },
@@ -212,6 +213,10 @@ Deno.serve(async (req: Request) => {
     }
     const userId = userData.user.id;
 
+    // Quotas serveur non contournables par l'interface : au maximum 20 appels
+    // par utilisateur et par mois (3/jour), soit quelques dizaines de
+    // centimes même dans le cas haut. La réservation précède l'appel payant.
+
     // ── Gating premium — serveur, fail-closed, jamais de confiance client ──
     const premium = await isPremiumUser(supabase, userId);
     if (!premium) {
@@ -220,11 +225,16 @@ Deno.serve(async (req: Request) => {
 
     const body = await req.json().catch(() => null);
     const rawLieux = Array.isArray(body?.lieux) ? body.lieux : [];
-    const days = Math.min(MAX_DAYS, Math.max(MIN_DAYS, parseInt(body?.days, 10) || 0));
+    const requestedDays = Number.parseInt(body?.days, 10);
+    if (!Number.isInteger(requestedDays) || requestedDays < MIN_DAYS || requestedDays > MAX_DAYS) {
+      return new Response(JSON.stringify({ error: "invalid_days" }), { status: 400, headers: jsonHeaders });
+    }
+    const days = requestedDays;
     const rythme = RYTHME_VALUES.has(body?.rythme) ? body.rythme as string : "equilibre";
 
     // ── Nettoyage strict de l'entrée : seuls les champs utiles, jamais de
     // confiance aveugle dans la forme envoyée par le client ──────────────
+    const inputIds = new Set<string>();
     const lieux = rawLieux
       .filter((l: any) => l && typeof l.id === "string" && typeof l.villeId === "string")
       .slice(0, MAX_LIEUX)
@@ -236,17 +246,21 @@ Deno.serve(async (req: Request) => {
         quartier: safeString(l.quartier).slice(0, 60),
         lat: typeof l.lat === "number" ? l.lat : null,
         lng: typeof l.lng === "number" ? l.lng : null,
-      }));
+      }))
+      .filter((l) => l.id.length <= 120 && l.villeId.length <= 80 && !inputIds.has(l.id) && !!inputIds.add(l.id));
 
     if (lieux.length === 0) {
       return new Response(JSON.stringify({ error: "no_lieux" }), { status: 400, headers: jsonHeaders });
     }
-    if (!days) {
-      return new Response(JSON.stringify({ error: "invalid_days" }), { status: 400, headers: jsonHeaders });
-    }
-
     const knownLieuIds = new Set(lieux.map((l) => l.id));
     const knownVilleIds = new Set(lieux.map((l) => l.villeId));
+    const placeCityById = new Map(lieux.map((l) => [l.id, l.villeId]));
+    if (knownVilleIds.size > days) {
+      return new Response(JSON.stringify({ error: "too_many_cities_for_days" }), { status: 400, headers: jsonHeaders });
+    }
+    const {data:quota,error:usageError}=await supabase.rpc("reserve_ai_usage",{p_feature:"itinerary",p_daily_limit:DAILY_GENERATION_LIMIT,p_monthly_limit:MONTHLY_GENERATION_LIMIT});
+    if(usageError) return new Response(JSON.stringify({error:"usage_unavailable"}), {status:503,headers:jsonHeaders});
+    if(!quota?.allowed) return new Response(JSON.stringify({error:"cost_limit",...quota}), {status:429,headers:jsonHeaders});
 
     const system = [
       "Tu organises un itinéraire de voyage au Japon à partir d'une liste FERMÉE de lieux déjà choisis par l'utilisateur.",
@@ -256,7 +270,7 @@ Deno.serve(async (req: Request) => {
       `Répartis TOUS les lieux fournis sur exactement ${days} jour(s), en équilibrant la charge (ne surcharge pas un jour, n'en laisse pas un vide s'il reste des lieux à placer). Si un lieu a des coordonnées (lat/lng) proches d'un autre, tente de les mettre dans le même jour.`,
       RYTHME_HINT[rythme],
       "L'ordre exact des lieux DANS un jour n'a pas besoin d'être optimisé géographiquement de ta part — un tri par proximité est appliqué automatiquement après coup. Concentre-toi sur le bon regroupement par ville et jour.",
-      "Pour chaque jour, écris un titre très court (1 phrase, en français) qui donne l'esprit de la journée (ex. \"Immersion dans le vieux Kyoto entre temples et bambouseraies\").",
+      "Ne rédige aucun texte éditorial : l'application construit localement les titres, résumés, conseils et plans B afin de limiter le coût de génération. Renvoie seulement la répartition demandée.",
       "",
       "Lieux disponibles (JSON) :",
       JSON.stringify(lieux),
@@ -264,7 +278,9 @@ Deno.serve(async (req: Request) => {
 
     let parsed: any = null;
     let lastErr: unknown = null;
-    for (let attempt = 0; attempt < 2 && !parsed; attempt++) {
+    // Un seul appel facturable par action utilisateur. Une réponse invalide
+    // produit une erreur explicite, jamais une relance silencieuse coûteuse.
+    for (let attempt = 0; attempt < 1 && !parsed; attempt++) {
       try {
         parsed = await callAnthropic(system, `Génère l'itinéraire sur ${days} jour(s).`);
       } catch (e) {
@@ -280,13 +296,29 @@ Deno.serve(async (req: Request) => {
     // même si l'IA en a halluciné un ────────────────────────────────────────
     const villes = (Array.isArray(parsed.villes) ? parsed.villes : [])
       .filter((v: unknown) => typeof v === "string" && knownVilleIds.has(v));
+    const placedOnce = new Set<string>();
     const jours = (Array.isArray(parsed.jours) ? parsed.jours : [])
+      .slice(0, days)
       .map((j: any) => ({
         villeId: safeString(j?.villeId),
-        titre: safeString(j?.titre).slice(0, 200),
-        lieuIds: (Array.isArray(j?.lieuIds) ? j.lieuIds : []).filter((id: unknown) => typeof id === "string" && knownLieuIds.has(id)),
+        // Le titre libre de l'IA n'est pas conservé : libellé factuel uniquement.
+        titre: "",
+        lieuIds: (Array.isArray(j?.lieuIds) ? j.lieuIds : []).filter((id: unknown) => {
+          if (typeof id !== "string" || !knownLieuIds.has(id) || placedOnce.has(id)) return false;
+          if (placeCityById.get(id) !== safeString(j?.villeId)) return false;
+          placedOnce.add(id); return true;
+        }),
       }))
-      .filter((j: any) => knownVilleIds.has(j.villeId) && j.lieuIds.length > 0);
+      .filter((j: any) => knownVilleIds.has(j.villeId));
+
+    // Garantit exactement le nombre de jours demandé et au moins un jour par
+    // ville du catalogue fermé. Les jours ajoutés sont factuels et vides avant
+    // la redistribution déterministe ci-dessous.
+    for (const villeId of knownVilleIds) {
+      if (!jours.some((j: any) => j.villeId === villeId) && jours.length < days) jours.push({ villeId, titre: "", lieuIds: [] });
+    }
+    const cityRoute = [...knownVilleIds];
+    while (jours.length < days) jours.push({ villeId: cityRoute[jours.length % cityRoute.length], titre: "", lieuIds: [] });
 
     if (jours.length === 0) {
       return new Response(JSON.stringify({ error: "empty_itinerary" }), { status: 502, headers: jsonHeaders });
@@ -299,7 +331,9 @@ Deno.serve(async (req: Request) => {
     const placedLieuIds = new Set(jours.flatMap((j: any) => j.lieuIds));
     const missing = lieux.filter((l) => !placedLieuIds.has(l.id));
     for (const l of missing) {
-      const target = [...jours].reverse().find((j: any) => j.villeId === l.villeId) || jours[jours.length - 1];
+      const matching = jours.filter((j: any) => j.villeId === l.villeId).sort((a: any,b: any)=>a.lieuIds.length-b.lieuIds.length);
+      const target = matching[0];
+      if (!target) continue;
       target.lieuIds.push(l.id);
     }
 
@@ -308,9 +342,11 @@ Deno.serve(async (req: Request) => {
     const coordsById = new Map(lieux.map((l) => [l.id, { lat: l.lat, lng: l.lng }]));
     for (const j of jours) {
       j.lieuIds = orderByProximity(j.lieuIds, coordsById);
+      j.titre = `Journée à ${j.villeId}`;
     }
 
-    return new Response(JSON.stringify({ villes: villes.length ? villes : [...knownVilleIds], jours }), {
+    if(quota.monthlyUsed>=Math.ceil(quota.monthlyLimit*.8)) console.warn(`[cost-alert] itinerary ${userId}: ${quota.monthlyUsed}/${quota.monthlyLimit} ce mois`);
+    return new Response(JSON.stringify({ villes: villes.length ? villes : [...knownVilleIds], jours, quota }), {
       status: 200,
       headers: jsonHeaders,
     });

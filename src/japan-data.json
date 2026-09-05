@@ -218,7 +218,7 @@
       "exemple_jp": "彼は剣道の道を歩んでいる。",
       "exemple_fr": "Il suit la voie du kendo.",
       "emoji": "⛩️",
-      "kana": "dう"
+      "kana": "どう"
     },
     {
       "expression": "侘茶",
@@ -231,7 +231,7 @@
       "kana": "わびちゃ"
     },
     {
-      "expression": "木漏れ日",
+      "expression": "木霊",
       "romaji": "Ko-dama",
       "traduction": "Esprit qui hante les vieux arbres",
       "contexte": "Dans le shinto, les ko-dama sont des esprits divins qui habitent les arbres très anciens. On les reconnaît au fait que les forêts où ils vivent produisent un écho particulier quand on frappe des mains.",
@@ -268,7 +268,7 @@
       "exemple_jp": "花鳥風月を楽しむ旅に出たい。",
       "exemple_fr": "Je voudrais partir en voyage pour contempler la beauté naturelle.",
       "emoji": "🌙",
-      "kana": "かchうfうげつ"
+      "kana": "かちょうふうげつ"
     },
     {
       "expression": "以心伝心",
@@ -299,6 +299,126 @@
       "exemple_fr": "Ne jamais oublier l'esprit du débutant — rester toujours humble.",
       "emoji": "🌱",
       "kana": "しょしん わする べからず"
+    },
+    {
+      "expression": "すみません、道に迷いました",
+      "romaji": "Sumimasen, michi ni mayoimashita",
+      "traduction": "Excusez-moi, je me suis perdu",
+      "contexte": "Pour demander de l’aide après avoir perdu son chemin.",
+      "exemple_jp": "駅までの道を教えてください。道に迷いました。",
+      "exemple_fr": "Pouvez-vous m’indiquer le chemin de la gare ? Je me suis perdu.",
+      "emoji": "🧭",
+      "kana": "すみません、みちに まよいました"
+    },
+    {
+      "expression": "おすすめは何ですか",
+      "romaji": "Osusume wa nan desu ka",
+      "traduction": "Qu’est-ce que vous recommandez ?",
+      "contexte": "Au restaurant, dans une boutique ou pour choisir une spécialité locale.",
+      "exemple_jp": "この店のおすすめは何ですか。",
+      "exemple_fr": "Quelle est la spécialité de ce restaurant ?",
+      "emoji": "✨",
+      "kana": "おすすめは なんですか"
+    },
+    {
+      "expression": "これをください",
+      "romaji": "Kore o kudasai",
+      "traduction": "Je voudrais ceci, s’il vous plaît",
+      "contexte": "Une formule simple pour commander en montrant un article ou un plat.",
+      "exemple_jp": "すみません、これを一つください。",
+      "exemple_fr": "Excusez-moi, je voudrais celui-ci, s’il vous plaît.",
+      "emoji": "👉",
+      "kana": "これを ください"
+    },
+    {
+      "expression": "お会計をお願いします",
+      "romaji": "Okaikei o onegai shimasu",
+      "traduction": "L’addition, s’il vous plaît",
+      "contexte": "À dire au personnel quand on souhaite régler au restaurant.",
+      "exemple_jp": "ごちそうさまでした。お会計をお願いします。",
+      "exemple_fr": "Merci pour le repas. L’addition, s’il vous plaît.",
+      "emoji": "🧾",
+      "kana": "おかいけいを おねがいします"
+    },
+    {
+      "expression": "写真を撮ってもいいですか",
+      "romaji": "Shashin o totte mo ii desu ka",
+      "traduction": "Puis-je prendre une photo ?",
+      "contexte": "Pour demander la permission dans un temple, une boutique ou à une personne.",
+      "exemple_jp": "ここで写真を撮ってもいいですか。",
+      "exemple_fr": "Puis-je prendre une photo ici ?",
+      "emoji": "📷",
+      "kana": "しゃしんを とっても いいですか"
+    },
+    {
+      "expression": "予約しています",
+      "romaji": "Yoyaku shite imasu",
+      "traduction": "J’ai une réservation",
+      "contexte": "À l’arrivée dans un hôtel, un restaurant ou une activité.",
+      "exemple_jp": "田中の名前で予約しています。",
+      "exemple_fr": "J’ai une réservation au nom de Tanaka.",
+      "emoji": "📅",
+      "kana": "よやくして います"
+    },
+    {
+      "expression": "何時までですか",
+      "romaji": "Nanji made desu ka",
+      "traduction": "Jusqu’à quelle heure est-ce ouvert ?",
+      "contexte": "Pour vérifier l’heure de fermeture d’un lieu ou d’un service.",
+      "exemple_jp": "このお店は何時までですか。",
+      "exemple_fr": "Jusqu’à quelle heure cette boutique est-elle ouverte ?",
+      "emoji": "🕐",
+      "kana": "なんじまで ですか"
+    },
+    {
+      "expression": "現金だけですか",
+      "romaji": "Genkin dake desu ka",
+      "traduction": "Acceptez-vous seulement les espèces ?",
+      "contexte": "Utile dans les petites adresses où la carte n’est pas toujours acceptée.",
+      "exemple_jp": "支払いは現金だけですか。",
+      "exemple_fr": "Le paiement se fait-il uniquement en espèces ?",
+      "emoji": "💴",
+      "kana": "げんきんだけ ですか"
+    },
+    {
+      "expression": "別々に払えますか",
+      "romaji": "Betsubetsu ni haraemasu ka",
+      "traduction": "Peut-on payer séparément ?",
+      "contexte": "Pour demander une addition séparée, parfois indisponible dans les petits restaurants.",
+      "exemple_jp": "二人ですが、別々に払えますか。",
+      "exemple_fr": "Nous sommes deux, pouvons-nous payer séparément ?",
+      "emoji": "💳",
+      "kana": "べつべつに はらえますか"
+    },
+    {
+      "expression": "乗り換えはどこですか",
+      "romaji": "Norikae wa doko desu ka",
+      "traduction": "Où dois-je changer ?",
+      "contexte": "Dans une gare pour trouver une correspondance de train ou de métro.",
+      "exemple_jp": "京都行きの乗り換えはどこですか。",
+      "exemple_fr": "Où est la correspondance pour Kyoto ?",
+      "emoji": "🚆",
+      "kana": "のりかえは どこですか"
+    },
+    {
+      "expression": "荷物を預けられますか",
+      "romaji": "Nimotsu o azukeraremasu ka",
+      "traduction": "Puis-je laisser mes bagages ?",
+      "contexte": "À l’hôtel, dans un musée ou auprès d’une consigne.",
+      "exemple_jp": "チェックイン前に荷物を預けられますか。",
+      "exemple_fr": "Puis-je laisser mes bagages avant l’enregistrement ?",
+      "emoji": "🧳",
+      "kana": "にもつを あずけられますか"
+    },
+    {
+      "expression": "大丈夫です",
+      "romaji": "Daijōbu desu",
+      "traduction": "Ça va / Non merci",
+      "contexte": "Expression polyvalente : rassurer, refuser poliment ou dire que tout va bien selon le contexte.",
+      "exemple_jp": "袋は大丈夫です。",
+      "exemple_fr": "Je n’ai pas besoin de sac, merci.",
+      "emoji": "👌",
+      "kana": "だいじょうぶ です"
     }
   ],
   "culture": [
@@ -597,7 +717,7 @@
       "description": "Curry épais et doux, très différent de son cousin indien, servi sur du riz japonais avec des morceaux de légumes et de viande. Considéré comme plat national non officiel.",
       "fun_fact": "Les soldats de la Marine japonaise mangent du curry tous les vendredis depuis des décennies — une tradition née pour garder le compte des jours en mer.",
       "emoji": "🍛",
-      "kana": "かrえ らいす"
+      "kana": "かれーらいす"
     },
     {
       "nom_jp": "寿司",
@@ -627,7 +747,7 @@
       "description": "Légumes ou crevettes enrobés dans une pâte ultra-légère et frits dans de l'huile fraîche, servis avec un dipping de dashi, sauce soja et radis râpé. La pâte doit être préparée avec de l'eau glacée.",
       "fun_fact": "La tempura a été introduite au Japon par les missionnaires portugais au XVIe siècle lors des jours de jeûne (Quatuor temporum) — d'où son nom.",
       "emoji": "🦐",
-      "kana": "てmぷら"
+      "kana": "てんぷら"
     },
     {
       "nom_jp": "焼き鳥",
@@ -657,7 +777,7 @@
       "description": "Poudre de thé vert matcha émulsionnée dans du lait chaud ou froid, légèrement sucrée. Sa couleur vert vif et son goût umami intense en ont fait un symbole de la culture japonaise mondiale.",
       "fun_fact": "Le vrai matcha de cérémonie est l'un des produits les plus tracés du Japon — chaque lot est identifiable jusqu'à la parcelle de théiers qui l'a produit.",
       "emoji": "🍵",
-      "kana": "まっちゃ lあって"
+      "kana": "まっちゃらて"
     },
     {
       "nom_jp": "たこ焼き",
@@ -737,7 +857,7 @@
       "description": "Montagne de glace finement pilée arrosée de sirop de fraise, melon, azuki ou matcha, parfois couronnée de lait concentré et de mochi. Le dessert emblématique de l'été japonais.",
       "fun_fact": "Des boutiques spécialisées en kakigōri à Tokyo utilisent de la glace naturelle taillée dans des lacs de montagne — une pratique qui remonte à l'époque Heian.",
       "emoji": "🧊",
-      "kana": "かきgうり"
+      "kana": "かきごおり"
     },
     {
       "nom_jp": "鍋料理",
@@ -747,7 +867,67 @@
       "description": "Pot de bouillon frémissant au centre de la table, dans lequel on plonge légumes, tofu, champignons, crevettes et viandes fines. Le nabe est un repas social par excellence — on mange ensemble, au même rythme.",
       "fun_fact": "En japonais, 'nabe wo kakomu' (s'asseoir autour du nabe) est une expression pour désigner un moment de partage intime — le nabe est un vecteur de rapprochement familial.",
       "emoji": "🫕",
-      "kana": "なべ ryうり"
+      "kana": "なべりょうり"
+    },
+    {
+      "nom_jp": "親子丼",
+      "romaji": "Oyakodon",
+      "traduction": "Bol poulet et œuf",
+      "moment": "déjeuner",
+      "description": "Bol de riz couvert de poulet et d’œuf mijotés dans un bouillon légèrement sucré au soja.",
+      "fun_fact": "Oyakodon signifie « parent et enfant », le poulet et l’œuf réunis dans le même bol.",
+      "emoji": "🍚",
+      "kana": "おやこどん"
+    },
+    {
+      "nom_jp": "そば",
+      "romaji": "Soba",
+      "traduction": "Nouilles de sarrasin",
+      "moment": "déjeuner",
+      "description": "Nouilles fines de sarrasin, chaudes ou froides, appréciées pour leur goût franc et leur texture légère.",
+      "fun_fact": "Le soir du Nouvel An, les toshikoshi soba symbolisent le passage vers une longue vie.",
+      "emoji": "🥢",
+      "kana": "そば"
+    },
+    {
+      "nom_jp": "だし巻き卵",
+      "romaji": "Dashimaki tamago",
+      "traduction": "Omelette roulée au bouillon",
+      "moment": "petit-déjeuner ou accompagnement",
+      "description": "Omelette moelleuse cuite en fines couches avec du dashi, puis roulée dans une poêle rectangulaire.",
+      "fun_fact": "À Kyoto elle est souvent plus douce et riche en bouillon, tandis que Tokyo préfère une version plus sucrée.",
+      "emoji": "🍳",
+      "kana": "だしまきたまご"
+    },
+    {
+      "nom_jp": "鯛焼き",
+      "romaji": "Taiyaki",
+      "traduction": "Gâteau en forme de daurade",
+      "moment": "goûter",
+      "description": "Gaufre en forme de poisson, traditionnellement fourrée à la pâte de haricots rouges, parfois à la crème ou au chocolat.",
+      "fun_fact": "On débat volontiers pour savoir s’il faut commencer à le manger par la tête ou par la queue.",
+      "emoji": "🐟",
+      "kana": "たいやき"
+    },
+    {
+      "nom_jp": "茶漬け",
+      "romaji": "Ochazuke",
+      "traduction": "Riz au thé",
+      "moment": "repas léger",
+      "description": "Bol de riz sur lequel on verse du thé vert ou du dashi, complété de saumon, nori, sésame ou prune salée.",
+      "fun_fact": "C’est un plat de fin de soirée et de récupération, simple et profondément réconfortant.",
+      "emoji": "🍵",
+      "kana": "おちゃづけ"
+    },
+    {
+      "nom_jp": "わらび餅",
+      "romaji": "Warabi mochi",
+      "traduction": "Pâte translucide au kinako",
+      "moment": "dessert",
+      "description": "Bouchées souples à base d’amidon, couvertes de poudre de soja grillé et parfois de sirop kuromitsu.",
+      "fun_fact": "Malgré son nom, sa texture est bien plus fondante que celle du mochi de riz classique.",
+      "emoji": "🌾",
+      "kana": "わらびもち"
     }
   ],
   "songs": [
@@ -14293,6 +14473,20 @@
       "fr": "Demain, le vent de demain soufflera.",
       "sens": "Inutile de trop s'inquiéter : demain apportera ses propres solutions.",
       "kana": "あした わ あした の かぜ が ふく"
+    },
+    {
+      "jp": "郷に入っては郷に従え",
+      "romaji": "Gō ni itte wa gō ni shitagae",
+      "fr": "Dans un village, suis les usages du village.",
+      "sens": "Respecter les coutumes locales lorsque l’on voyage.",
+      "kana": "ごうに いっては ごうに したがえ"
+    },
+    {
+      "jp": "百聞は一見に如かず",
+      "romaji": "Hyakubun wa ikken ni shikazu",
+      "fr": "Cent récits ne valent pas un regard.",
+      "sens": "Voir par soi-même vaut mieux que beaucoup d’explications.",
+      "kana": "ひゃくぶんは いっけんに しかず"
     }
   ],
   "villes": [
@@ -14412,6 +14606,19 @@
       "lng": 135.7997,
       "jours_conseilles": "1/2 journée",
       "image": "/images/villes/uji.jpg"
+    },
+    {
+      "id": "himeji",
+      "nom": "Himeji",
+      "nom_jp": "姫路",
+      "region": "Kansai",
+      "emoji": "🏯",
+      "tagline": "Le plus beau château du Japon",
+      "description": "Petite ville portée par un seul monument, mais quel monument : le château de Himeji, jamais détruit, blanc et intact depuis le XVIIe siècle. Une excursion facile depuis Osaka, Kyoto ou Kobe.",
+      "lat": 34.8394,
+      "lng": 134.6939,
+      "jours_conseilles": "1/2 journée",
+      "image": "/images/villes/himeji.jpg"
     }
   ],
   "lieux": [
@@ -14441,7 +14648,11 @@
       "a_proximite": [
         "akihabara"
       ],
-      "image": "/images/lieux-photos/senso-ji.jpg"
+      "image": "/images/lieux-photos/senso-ji.jpg",
+      "photo": "/images/lieux-photos/senso-ji.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%B5%85%E8%8D%89%E5%AF%BA"
     },
     {
       "id": "shibuya-crossing",
@@ -14470,7 +14681,11 @@
       "a_proximite": [
         "ichiran"
       ],
-      "image": "/images/lieux-photos/shibuya-crossing.jpg"
+      "image": "/images/lieux-photos/shibuya-crossing.jpg",
+      "photo": "/images/lieux-photos/shibuya-crossing.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Shibuya_Scramble_crossing.jpg"
     },
     {
       "id": "teamlab",
@@ -14497,7 +14712,11 @@
       "prix_detail": "~3800¥ adulte",
       "site_web": "planets.teamlab.art",
       "a_proximite": [],
-      "image": "/images/lieux-photos/teamlab.jpg"
+      "image": "/images/lieux-photos/teamlab.jpg",
+      "photo": "/images/lieux-photos/teamlab.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%83%81%E3%83%BC%E3%83%A0%E3%83%A9%E3%83%9C"
     },
     {
       "id": "ichiran",
@@ -14525,7 +14744,11 @@
       "a_proximite": [
         "shibuya-crossing"
       ],
-      "image": "/images/lieux-photos/ichiran.jpg"
+      "image": "/images/lieux-photos/ichiran.jpg",
+      "photo": "/images/lieux-photos/ichiran.jpg",
+      "photo_author": "Redd Angelo reddangelo16",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Shibuya_(Unsplash).jpg"
     },
     {
       "id": "park-hyatt",
@@ -14551,7 +14774,11 @@
       "prix_detail": "Chambre dès ~60000¥/nuit",
       "site_web": "hyatt.com",
       "a_proximite": [],
-      "image": "/images/lieux-photos/park-hyatt.jpg"
+      "image": "/images/lieux-photos/park-hyatt.jpg",
+      "photo": "/images/lieux-photos/park-hyatt.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Shinjuku_Park_Tower_2.jpg"
     },
     {
       "id": "akihabara",
@@ -14580,7 +14807,11 @@
       "a_proximite": [
         "senso-ji"
       ],
-      "image": "/images/lieux-photos/akihabara.jpg"
+      "image": "/images/lieux-photos/akihabara.jpg",
+      "photo": "/images/lieux-photos/akihabara.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E7%A7%8B%E8%91%89%E5%8E%9F"
     },
     {
       "id": "fushimi-inari",
@@ -14608,7 +14839,11 @@
       "a_proximite": [
         "nishiki"
       ],
-      "image": "/images/lieux-photos/fushimi-inari.jpg"
+      "image": "/images/lieux-photos/fushimi-inari.jpg",
+      "photo": "/images/lieux-photos/fushimi-inari.jpg",
+      "photo_author": "Redd Angelo reddangelo16",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Lost_in_Japan_(Unsplash).jpg"
     },
     {
       "id": "kinkaku-ji",
@@ -14636,7 +14871,11 @@
       "a_proximite": [
         "arashiyama"
       ],
-      "image": "/images/lieux-photos/kinkaku-ji.jpg"
+      "image": "/images/lieux-photos/kinkaku-ji.jpg",
+      "photo": "/images/lieux-photos/kinkaku-ji.jpg",
+      "photo_author": "Kendall Henderson kendallhenderson",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kinkaku-ji_golden_temple_(Unsplash).jpg"
     },
     {
       "id": "arashiyama",
@@ -14665,7 +14904,11 @@
       "a_proximite": [
         "kinkaku-ji"
       ],
-      "image": "/images/lieux-photos/arashiyama.jpg"
+      "image": "/images/lieux-photos/arashiyama.jpg",
+      "photo": "/images/lieux-photos/arashiyama.jpg",
+      "photo_author": "Jørgen Håland jhaland",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Arashiyama,_Kyoto,_Japan_(Unsplash).jpg"
     },
     {
       "id": "nishiki",
@@ -14693,7 +14936,11 @@
       "a_proximite": [
         "fushimi-inari"
       ],
-      "image": "/images/lieux-photos/nishiki.jpg"
+      "image": "/images/lieux-photos/nishiki.jpg",
+      "photo": "/images/lieux-photos/nishiki.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E9%8C%A6%E5%B8%82%E5%A0%B4"
     },
     {
       "id": "ryokan-kyoto",
@@ -14722,7 +14969,11 @@
       "a_proximite": [
         "nishiki"
       ],
-      "image": "/images/lieux-photos/ryokan-kyoto.jpg"
+      "image": "/images/lieux-photos/ryokan-kyoto.jpg",
+      "photo": "/images/lieux-photos/ryokan-kyoto.jpg",
+      "photo_author": "Redd Angelo reddangelo16",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Clothing_store_window_(Unsplash).jpg"
     },
     {
       "id": "dotonbori",
@@ -14752,7 +15003,11 @@
         "takoyaki",
         "shinsaibashi"
       ],
-      "image": "/images/lieux-photos/dotonbori.jpg"
+      "image": "/images/lieux-photos/dotonbori.jpg",
+      "photo": "/images/lieux-photos/dotonbori.jpg",
+      "photo_author": "Mr.Naka guutarabunko",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Doutonbori_Osaka_Japan_Late1990%27s.jpg"
     },
     {
       "id": "osaka-castle",
@@ -14778,7 +15033,11 @@
       "prix_detail": "600¥ (donjon), parc gratuit",
       "site_web": "osakacastle.net",
       "a_proximite": [],
-      "image": "/images/lieux-photos/osaka-castle.jpg"
+      "image": "/images/lieux-photos/osaka-castle.jpg",
+      "photo": "/images/lieux-photos/osaka-castle.jpg",
+      "photo_author": "Balon Greyjoy",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:20190121_Skyline_from_Osaka_Castle-2.jpg"
     },
     {
       "id": "takoyaki",
@@ -14806,7 +15065,11 @@
       "a_proximite": [
         "dotonbori"
       ],
-      "image": "/images/lieux-photos/takoyaki.jpg"
+      "image": "/images/lieux-photos/takoyaki.jpg",
+      "photo": "/images/lieux-photos/takoyaki.jpg",
+      "photo_author": "DimiTalen",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:People_with_transparent_umbrellas_in_D%C5%8Dtonbori,_Osaka,_2016.jpg"
     },
     {
       "id": "kuromon",
@@ -14834,7 +15097,11 @@
       "a_proximite": [
         "dotonbori"
       ],
-      "image": "/images/lieux-photos/kuromon.jpg"
+      "image": "/images/lieux-photos/kuromon.jpg",
+      "photo": "/images/lieux-photos/kuromon.jpg",
+      "photo_author": "ほっきー",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E9%BB%92%E9%96%80%E5%B8%82%E5%A0%B4_2024(1).jpg"
     },
     {
       "id": "shinsaibashi",
@@ -14862,7 +15129,11 @@
       "a_proximite": [
         "dotonbori"
       ],
-      "image": "/images/lieux-photos/shinsaibashi.jpg"
+      "image": "/images/lieux-photos/shinsaibashi.jpg",
+      "photo": "/images/lieux-photos/shinsaibashi.jpg",
+      "photo_author": "Tokumeigakarinoaoshima",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Y!mobile_Shinsaibashi_Chuo_at_night.JPG"
     },
     {
       "id": "nara-park",
@@ -14892,7 +15163,11 @@
         "todai-ji",
         "kasuga"
       ],
-      "image": "/images/lieux-photos/nara-park.jpg"
+      "image": "/images/lieux-photos/nara-park.jpg",
+      "photo": "/images/lieux-photos/nara-park.jpg",
+      "photo_author": "Carl Flor carlflor",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Deer_Nara_(Unsplash).jpg"
     },
     {
       "id": "todai-ji",
@@ -14920,7 +15195,11 @@
       "a_proximite": [
         "nara-park"
       ],
-      "image": "/images/lieux-photos/todai-ji.jpg"
+      "image": "/images/lieux-photos/todai-ji.jpg",
+      "photo": "/images/lieux-photos/todai-ji.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%9D%B1%E5%A4%A7%E5%AF%BA"
     },
     {
       "id": "kasuga",
@@ -14949,7 +15228,11 @@
         "nara-park",
         "todai-ji"
       ],
-      "image": "/images/lieux-photos/kasuga.jpg"
+      "image": "/images/lieux-photos/kasuga.jpg",
+      "photo": "/images/lieux-photos/kasuga.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%98%A5%E6%97%A5%E5%A4%A7%E7%A4%BE"
     },
     {
       "id": "mochi-nara",
@@ -15005,7 +15288,11 @@
       "a_proximite": [
         "shukkeien"
       ],
-      "image": "/images/lieux-photos/peace-park.jpg"
+      "image": "/images/lieux-photos/peace-park.jpg",
+      "photo": "/images/lieux-photos/peace-park.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Hiroshima_Peace_Memorial_2.jpg"
     },
     {
       "id": "miyajima",
@@ -15032,7 +15319,11 @@
       "prix_detail": "Ferry ~180¥, torii gratuit",
       "site_web": "miyajima.or.jp",
       "a_proximite": [],
-      "image": "/images/lieux-photos/miyajima.jpg"
+      "image": "/images/lieux-photos/miyajima.jpg",
+      "photo": "/images/lieux-photos/miyajima.jpg",
+      "photo_author": "Balon Greyjoy",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:20181111_Itsukushima_Shrine_torii-2.jpg"
     },
     {
       "id": "okonomiyaki-hiro",
@@ -15060,7 +15351,11 @@
       "a_proximite": [
         "peace-park"
       ],
-      "image": "/images/lieux-photos/okonomiyaki-hiro.jpg"
+      "image": "/images/lieux-photos/okonomiyaki-hiro.jpg",
+      "photo": "/images/lieux-photos/okonomiyaki-hiro.jpg",
+      "photo_author": "Lmadcap from Tokyo, Japan",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Waiting_for_the_signal_(4793782396).jpg"
     },
     {
       "id": "shukkeien",
@@ -15089,7 +15384,11 @@
       "a_proximite": [
         "peace-park"
       ],
-      "image": "/images/lieux-photos/shukkeien.jpg"
+      "image": "/images/lieux-photos/shukkeien.jpg",
+      "photo": "/images/lieux-photos/shukkeien.jpg",
+      "photo_author": "かるちる",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:A-bombed_tree_(pinus_thunbergii,_E13a25-03)_No.1.jpg"
     },
     {
       "id": "onsen-hakone",
@@ -15117,7 +15416,11 @@
       "a_proximite": [
         "owakudani"
       ],
-      "image": "/images/lieux-photos/onsen-hakone.jpg"
+      "image": "/images/lieux-photos/onsen-hakone.jpg",
+      "photo": "/images/lieux-photos/onsen-hakone.jpg",
+      "photo_author": "laiet17",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Epicopeia_hainesii_109657173.jpg"
     },
     {
       "id": "owakudani",
@@ -15147,7 +15450,11 @@
         "onsen-hakone",
         "open-air-museum"
       ],
-      "image": "/images/lieux-photos/owakudani.jpg"
+      "image": "/images/lieux-photos/owakudani.jpg",
+      "photo": "/images/lieux-photos/owakudani.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%A4%A7%E6%B6%8C%E8%B0%B7"
     },
     {
       "id": "open-air-museum",
@@ -15176,7 +15483,11 @@
       "a_proximite": [
         "owakudani"
       ],
-      "image": "/images/lieux-photos/open-air-museum.jpg"
+      "image": "/images/lieux-photos/open-air-museum.jpg",
+      "photo": "/images/lieux-photos/open-air-museum.jpg",
+      "photo_author": "Antoine Bourdelle",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:HeraclesArcher_Gora-Hakone_20180829.jpg"
     },
     {
       "id": "ryokan-hakone",
@@ -15205,7 +15516,11 @@
       "a_proximite": [
         "onsen-hakone"
       ],
-      "image": "/images/lieux-photos/ryokan-hakone.jpg"
+      "image": "/images/lieux-photos/ryokan-hakone.jpg",
+      "photo": "/images/lieux-photos/ryokan-hakone.jpg",
+      "photo_author": "Alvinz",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Hakone-Yumoto_2018-07-12.jpg"
     },
     {
       "id": "meiji-jingu",
@@ -15233,7 +15548,11 @@
       "a_proximite": [
         "shibuya-crossing"
       ],
-      "image": "/images/lieux-photos/meiji-jingu.jpg"
+      "image": "/images/lieux-photos/meiji-jingu.jpg",
+      "photo": "/images/lieux-photos/meiji-jingu.jpg",
+      "photo_author": "Gideon Peter Caringal gcaringal",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Meiji_Jingu,_Shibuya-ku,_Japan_(Unsplash).jpg"
     },
     {
       "id": "tokyo-tower",
@@ -15259,7 +15578,11 @@
       "prix_detail": "~1200¥ (pont principal)",
       "site_web": "tokyotower.co.jp",
       "a_proximite": [],
-      "image": "/images/lieux-photos/tokyo-tower.jpg"
+      "image": "/images/lieux-photos/tokyo-tower.jpg",
+      "photo": "/images/lieux-photos/tokyo-tower.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E3%82%BF%E3%83%AF%E3%83%BC"
     },
     {
       "id": "tsukiji",
@@ -15285,7 +15608,11 @@
       "prix_detail": "Variable",
       "site_web": "tsukiji.or.jp",
       "a_proximite": [],
-      "image": "/images/lieux-photos/tsukiji.jpg"
+      "image": "/images/lieux-photos/tsukiji.jpg",
+      "photo": "/images/lieux-photos/tsukiji.jpg",
+      "photo_author": "Jonathan Forage jonathanforage",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Sashimi_at_the_Tsukiji_Markets_-_Tokyo_Japan_(Unsplash).jpg"
     },
     {
       "id": "ueno-park",
@@ -15314,7 +15641,11 @@
       "a_proximite": [
         "tsukiji"
       ],
-      "image": "/images/lieux-photos/ueno-park.jpg"
+      "image": "/images/lieux-photos/ueno-park.jpg",
+      "photo": "/images/lieux-photos/ueno-park.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E4%B8%8A%E9%87%8E%E5%85%AC%E5%9C%92"
     },
     {
       "id": "teamlab-borderless",
@@ -15343,7 +15674,13 @@
       "a_proximite": [
         "shibuya-crossing"
       ],
-      "image": "/images/Lieux/street-kart.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "photo": "/images/lieux-photos/teamlab-borderless.jpg",
+      "photo_author": "投稿者",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Nissin_Donbei_noodle_stand,_Shibuya_Sta_Tokyo_2012.JPG",
+      "image_original": "/images/Lieux/street-kart.jpg",
+      "image_fallback": true
     },
     {
       "id": "kiyomizu-dera",
@@ -15372,7 +15709,11 @@
         "ginkaku-ji-kyoto",
         "nishiki"
       ],
-      "image": "/images/lieux-photos/kiyomizu-dera.jpg"
+      "image": "/images/lieux-photos/kiyomizu-dera.jpg",
+      "photo": "/images/lieux-photos/kiyomizu-dera.jpg",
+      "photo_author": "Jimmy Bay jimmymystic",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kiyomizu-dera,_Ky%C5%8Dto-shi,_Japan_(Unsplash).jpg"
     },
     {
       "id": "ginkaku-ji-kyoto",
@@ -15400,7 +15741,13 @@
       "a_proximite": [
         "kiyomizu-dera"
       ],
-      "image": "/images/Lieux/ginkaku-ji.jpg"
+      "image": "/images/villes/kyoto.jpg",
+      "photo": "/images/lieux-photos/ginkaku-ji-kyoto.jpg",
+      "photo_author": "Yiannis Theologos Michellis",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Japan_Japan_2011_15_(7024877331).jpg",
+      "image_original": "/images/Lieux/ginkaku-ji.jpg",
+      "image_fallback": true
     },
     {
       "id": "gion",
@@ -15430,7 +15777,11 @@
         "kiyomizu-dera",
         "nishiki"
       ],
-      "image": "/images/lieux-photos/gion.jpg"
+      "image": "/images/lieux-photos/gion.jpg",
+      "photo": "/images/lieux-photos/gion.jpg",
+      "photo_author": "Redd Angelo reddangelo16",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Clothing_store_window_(Unsplash).jpg"
     },
     {
       "id": "nijo-castle",
@@ -15458,7 +15809,11 @@
       "a_proximite": [
         "nishiki"
       ],
-      "image": "/images/lieux-photos/nijo-castle.jpg"
+      "image": "/images/lieux-photos/nijo-castle.jpg",
+      "photo": "/images/lieux-photos/nijo-castle.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E4%BA%8C%E6%9D%A1%E5%9F%8E"
     },
     {
       "id": "sumiyoshi",
@@ -15486,7 +15841,11 @@
       "a_proximite": [
         "shinsekai"
       ],
-      "image": "/images/lieux-photos/sumiyoshi.jpg"
+      "image": "/images/lieux-photos/sumiyoshi.jpg",
+      "photo": "/images/lieux-photos/sumiyoshi.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E4%BD%8F%E5%90%89%E5%A4%A7%E7%A4%BE"
     },
     {
       "id": "shinsekai",
@@ -15515,11 +15874,15 @@
       "a_proximite": [
         "sumiyoshi"
       ],
-      "image": "/images/lieux-photos/shinsekai.jpg"
+      "image": "/images/lieux-photos/shinsekai.jpg",
+      "photo": "/images/lieux-photos/shinsekai.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%96%B0%E4%B8%96%E7%95%8C"
     },
     {
       "id": "himeji-castle",
-      "villeId": "kanazawa",
+      "villeId": "himeji",
       "nom": "Château de Himeji",
       "nom_jp": "姫路城",
       "type": "voir",
@@ -15541,7 +15904,11 @@
       "prix_detail": "1000¥ (+340¥ avec Koko-en)",
       "site_web": "himejicastle.jp",
       "a_proximite": [],
-      "image": "/images/lieux-photos/himeji-castle.jpg"
+      "image": "/images/lieux-photos/himeji-castle.jpg",
+      "photo": "/images/lieux-photos/himeji-castle.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%A7%AB%E8%B7%AF%E5%9F%8E"
     },
     {
       "id": "kenroku-en",
@@ -15570,7 +15937,11 @@
       "a_proximite": [
         "higashi-chaya"
       ],
-      "image": "/images/lieux-photos/kenroku-en.jpg"
+      "image": "/images/lieux-photos/kenroku-en.jpg",
+      "photo": "/images/lieux-photos/kenroku-en.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%85%BC%E5%85%AD%E5%9C%92"
     },
     {
       "id": "higashi-chaya",
@@ -15598,7 +15969,11 @@
       "a_proximite": [
         "kenroku-en"
       ],
-      "image": "/images/lieux-photos/higashi-chaya.jpg"
+      "image": "/images/lieux-photos/higashi-chaya.jpg",
+      "photo": "/images/lieux-photos/higashi-chaya.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%81%B2%E3%81%8C%E3%81%97%E8%8C%B6%E5%B1%8B%E8%A1%97"
     },
     {
       "id": "shirakawa-go",
@@ -15627,7 +16002,11 @@
       "a_proximite": [
         "takayama-old-town"
       ],
-      "image": "/images/lieux-photos/shirakawa-go.jpg"
+      "image": "/images/lieux-photos/shirakawa-go.jpg",
+      "photo": "/images/lieux-photos/shirakawa-go.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E7%99%BD%E5%B7%9D%E9%83%B7"
     },
     {
       "id": "takayama-old-town",
@@ -15684,7 +16063,11 @@
       "a_proximite": [
         "uji-matcha"
       ],
-      "image": "/images/lieux-photos/byodo-in.jpg"
+      "image": "/images/lieux-photos/byodo-in.jpg",
+      "photo": "/images/lieux-photos/byodo-in.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%B9%B3%E7%AD%89%E9%99%A2"
     },
     {
       "id": "uji-matcha",
@@ -15713,7 +16096,11 @@
       "a_proximite": [
         "byodo-in"
       ],
-      "image": "/images/lieux-photos/uji-matcha.jpg"
+      "image": "/images/lieux-photos/uji-matcha.jpg",
+      "photo": "/images/lieux-photos/uji-matcha.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%AE%87%E6%B2%BB%E6%8A%B9%E8%8C%B6"
     },
     {
       "id": "takeshita-dori",
@@ -15732,15 +16119,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "¥¥",
-      "lat": null,
-      "lng": null,
+      "lat": 35.6716,
+      "lng": 139.7045,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/takeshita-dori.jpg"
+      "image": "/images/lieux-photos/takeshita-dori.jpg",
+      "photo": "/images/lieux-photos/takeshita-dori.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E7%AB%B9%E4%B8%8B%E9%80%9A%E3%82%8A",
+      "coordinates_approximate": true
     },
     {
       "id": "meiji-jingu-gyoen",
@@ -15759,15 +16151,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "Gratuit",
-      "lat": null,
-      "lng": null,
+      "lat": 35.6764,
+      "lng": 139.6993,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/meiji-jingu-gyoen.jpg"
+      "image": "/images/lieux-photos/meiji-jingu-gyoen.jpg",
+      "photo": "/images/lieux-photos/meiji-jingu-gyoen.jpg",
+      "photo_author": "Brian Adler",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Meiji_Shrine_Inner_Garden.JPG",
+      "coordinates_approximate": true
     },
     {
       "id": "shibuya-sky",
@@ -15785,15 +16182,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "Gratuit",
-      "lat": null,
-      "lng": null,
+      "lat": 35.6585,
+      "lng": 139.7022,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/shibuya-sky.jpg"
+      "image": "/images/lieux-photos/shibuya-sky.jpg",
+      "photo": "/images/lieux-photos/shibuya-sky.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%B8%8B%E8%B0%B7%E3%82%B9%E3%82%AB%E3%82%A4",
+      "coordinates_approximate": true
     },
     {
       "id": "shinjuku-gyoen",
@@ -15812,15 +16214,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "Gratuit",
-      "lat": null,
-      "lng": null,
+      "lat": 35.6852,
+      "lng": 139.71,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/shinjuku-gyoen.jpg"
+      "image": "/images/lieux-photos/shinjuku-gyoen.jpg",
+      "photo": "/images/lieux-photos/shinjuku-gyoen.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%96%B0%E5%AE%BF%E5%BE%A1%E8%8B%91",
+      "coordinates_approximate": true
     },
     {
       "id": "omoide-yokocho",
@@ -15839,15 +16246,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "¥¥",
-      "lat": null,
-      "lng": null,
+      "lat": 35.6939,
+      "lng": 139.6995,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/omoide-yokocho.jpg"
+      "image": "/images/lieux-photos/omoide-yokocho.jpg",
+      "photo": "/images/lieux-photos/omoide-yokocho.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%80%9D%E3%81%84%E5%87%BA%E6%A8%AA%E4%B8%81",
+      "coordinates_approximate": true
     },
     {
       "id": "golden-gai",
@@ -15866,15 +16278,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "¥¥",
-      "lat": null,
-      "lng": null,
+      "lat": 35.6942,
+      "lng": 139.7048,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/golden-gai.jpg"
+      "image": "/images/lieux-photos/golden-gai.jpg",
+      "photo": "/images/lieux-photos/golden-gai.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%82%B4%E3%83%BC%E3%83%AB%E3%83%87%E3%83%B3%E8%A1%97",
+      "coordinates_approximate": true
     },
     {
       "id": "ginza",
@@ -15892,15 +16309,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "¥¥",
-      "lat": null,
-      "lng": null,
+      "lat": 35.6717,
+      "lng": 139.765,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/ginza.jpg"
+      "image": "/images/lieux-photos/ginza.jpg",
+      "photo": "/images/lieux-photos/ginza.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E9%8A%80%E5%BA%A7",
+      "coordinates_approximate": true
     },
     {
       "id": "teamlab-planets",
@@ -15919,15 +16341,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "¥¥",
-      "lat": null,
-      "lng": null,
+      "lat": 35.6491,
+      "lng": 139.7898,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/teamlab-planets.jpg"
+      "image": "/images/lieux-photos/teamlab-planets.jpg",
+      "photo": "/images/lieux-photos/teamlab-planets.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%83%81%E3%83%BC%E3%83%A0%E3%83%A9%E3%83%9C%E3%83%97%E3%83%A9%E3%83%8D%E3%83%83%E3%83%84",
+      "coordinates_approximate": true
     },
     {
       "id": "yanaka-ginza",
@@ -15946,15 +16373,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "Gratuit",
-      "lat": null,
-      "lng": null,
+      "lat": 35.7277,
+      "lng": 139.7654,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/yanaka-ginza.jpg"
+      "image": "/images/lieux-photos/yanaka-ginza.jpg",
+      "photo": "/images/lieux-photos/yanaka-ginza.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E8%B0%B7%E4%B8%AD%E9%8A%80%E5%BA%A7",
+      "coordinates_approximate": true
     },
     {
       "id": "nakamise",
@@ -15973,15 +16405,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "¥¥",
-      "lat": null,
-      "lng": null,
+      "lat": 35.7123,
+      "lng": 139.7966,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/nakamise.jpg"
+      "image": "/images/lieux-photos/nakamise.jpg",
+      "photo": "/images/lieux-photos/nakamise.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E4%BB%B2%E8%A6%8B%E4%B8%96%E9%80%9A%E3%82%8A",
+      "coordinates_approximate": true
     },
     {
       "id": "odaiba",
@@ -16000,15 +16437,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "¥¥",
-      "lat": null,
-      "lng": null,
+      "lat": 35.6267,
+      "lng": 139.7753,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/odaiba.jpg"
+      "image": "/images/lieux-photos/odaiba.jpg",
+      "photo": "/images/lieux-photos/odaiba.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%81%8A%E5%8F%B0%E5%A0%B4",
+      "coordinates_approximate": true
     },
     {
       "id": "kappabashi",
@@ -16027,15 +16469,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "¥¥",
-      "lat": null,
-      "lng": null,
+      "lat": 35.7147,
+      "lng": 139.788,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/kappabashi.jpg"
+      "image": "/images/lieux-photos/kappabashi.jpg",
+      "photo": "/images/lieux-photos/kappabashi.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%81%8B%E3%81%A3%E3%81%B1%E6%A9%8B",
+      "coordinates_approximate": true
     },
     {
       "id": "shimokitazawa",
@@ -16054,15 +16501,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "Gratuit",
-      "lat": null,
-      "lng": null,
+      "lat": 35.6615,
+      "lng": 139.668,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/shimokitazawa.jpg"
+      "image": "/images/lieux-photos/shimokitazawa.jpg",
+      "photo": "/images/lieux-photos/shimokitazawa.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E4%B8%8B%E5%8C%97%E6%B2%A2",
+      "coordinates_approximate": true
     },
     {
       "id": "sumida-river",
@@ -16081,15 +16533,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "¥¥",
-      "lat": null,
-      "lng": null,
+      "lat": 35.7107,
+      "lng": 139.798,
       "saison_ideale": "été",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/sumida-river.jpg"
+      "image": "/images/lieux-photos/sumida-river.jpg",
+      "photo": "/images/lieux-photos/sumida-river.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E9%9A%85%E7%94%B0%E5%B7%9D",
+      "coordinates_approximate": true
     },
     {
       "id": "ameyoko",
@@ -16108,15 +16565,20 @@
       "villeId": "tokyo",
       "duree": "1-2h",
       "budget": "¥¥",
-      "lat": null,
-      "lng": null,
+      "lat": 35.709,
+      "lng": 139.7747,
       "saison_ideale": "",
       "horaires": "",
       "acces": "",
       "prix_detail": "",
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/ameyoko.jpg"
+      "image": "/images/lieux-photos/ameyoko.jpg",
+      "photo": "/images/lieux-photos/ameyoko.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%A1%E6%A8%AA",
+      "coordinates_approximate": true
     },
     {
       "id": "sanctuaire-asakusa",
@@ -16138,7 +16600,11 @@
       "lng": 139.7966553,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/sanctuaire-asakusa.jpg"
+      "image": "/images/lieux-photos/sanctuaire-asakusa.jpg",
+      "photo": "/images/lieux-photos/sanctuaire-asakusa.jpg",
+      "photo_author": "Redd Angelo reddangelo16",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Senso-Ji_Temple_(Unsplash).jpg"
     },
     {
       "id": "teamlab-planets-tokyo-dmm",
@@ -16160,7 +16626,11 @@
       "lng": 139.7897739,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/teamlab-planets-tokyo-dmm.jpg"
+      "image": "/images/lieux-photos/teamlab-planets-tokyo-dmm.jpg",
+      "photo": "/images/lieux-photos/teamlab-planets-tokyo-dmm.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%83%81%E3%83%BC%E3%83%A0%E3%83%A9%E3%83%9C%E3%83%97%E3%83%A9%E3%83%8D%E3%83%83%E3%83%84"
     },
     {
       "id": "shinjuku-gyoen-park",
@@ -16182,7 +16652,11 @@
       "lng": 139.7100517,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/shinjuku-gyoen-park.jpg"
+      "image": "/images/lieux-photos/shinjuku-gyoen-park.jpg",
+      "photo": "/images/lieux-photos/shinjuku-gyoen-park.jpg",
+      "photo_author": "Arol Viñolas arol",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Shinjuku_Gyoen_National_Garden,_Shinjuku-ku,_Japan_(Unsplash).jpg"
     },
     {
       "id": "kaminarimon-gate",
@@ -16204,7 +16678,11 @@
       "lng": 139.7963656,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/kaminarimon-gate.jpg"
+      "image": "/images/lieux-photos/kaminarimon-gate.jpg",
+      "photo": "/images/lieux-photos/kaminarimon-gate.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E9%9B%B7%E9%96%80"
     },
     {
       "id": "musee-national-de-tokyo",
@@ -16226,7 +16704,11 @@
       "lng": 139.7765215,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/musee-national-de-tokyo.jpg"
+      "image": "/images/lieux-photos/musee-national-de-tokyo.jpg",
+      "photo": "/images/lieux-photos/musee-national-de-tokyo.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E5%9B%BD%E7%AB%8B%E5%8D%9A%E7%89%A9%E9%A4%A8"
     },
     {
       "id": "unicorn-gundam",
@@ -16248,7 +16730,11 @@
       "lng": 139.7754917,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/unicorn-gundam.jpg"
+      "image": "/images/lieux-photos/unicorn-gundam.jpg",
+      "photo": "/images/lieux-photos/unicorn-gundam.jpg",
+      "photo_author": "先従隗始",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Diver_City_Tokyo_20211127_02.jpg"
     },
     {
       "id": "musee-national-de-la-nature-et-des-scien",
@@ -16270,7 +16756,11 @@
       "lng": 139.7763336,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/musee-national-de-la-nature-et-des-scien.jpg"
+      "image": "/images/lieux-photos/musee-national-de-la-nature-et-des-scien.jpg",
+      "photo": "/images/lieux-photos/musee-national-de-la-nature-et-des-scien.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%9B%BD%E7%AB%8B%E7%A7%91%E5%AD%A6%E5%8D%9A%E7%89%A9%E9%A4%A8"
     },
     {
       "id": "teamlab-borderless-mori-building-digital",
@@ -16292,7 +16782,11 @@
       "lng": 139.7432671,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/teamlab-borderless-mori-building-digital.jpg"
+      "image": "/images/lieux-photos/teamlab-borderless-mori-building-digital.jpg",
+      "photo": "/images/lieux-photos/teamlab-borderless-mori-building-digital.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Azabudai_Hills,_opening_day_39.jpg"
     },
     {
       "id": "shibuya-crossing-chijk9",
@@ -16314,7 +16808,11 @@
       "lng": 139.7005596,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/shibuya-crossing-chijk9.jpg"
+      "image": "/images/lieux-photos/shibuya-crossing-chijk9.jpg",
+      "photo": "/images/lieux-photos/shibuya-crossing-chijk9.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%B8%8B%E8%B0%B7%E3%82%B9%E3%82%AF%E3%83%A9%E3%83%B3%E3%83%96%E3%83%AB%E4%BA%A4%E5%B7%AE%E7%82%B9"
     },
     {
       "id": "samurai-ninja-museum-asakusa-tokyo",
@@ -16336,7 +16834,9 @@
       "lng": 139.79177460000002,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/samurai-ninja-museum-asakusa-tokyo.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/samurai-ninja-museum-asakusa-tokyo.jpg",
+      "image_fallback": true
     },
     {
       "id": "musee-ghibli",
@@ -16358,7 +16858,11 @@
       "lng": 139.5704317,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/musee-ghibli.jpg"
+      "image": "/images/lieux-photos/musee-ghibli.jpg",
+      "photo": "/images/lieux-photos/musee-ghibli.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E4%B8%89%E9%B7%B9%E3%81%AE%E6%A3%AE%E3%82%B8%E3%83%96%E3%83%AA%E7%BE%8E%E8%A1%93%E9%A4%A8"
     },
     {
       "id": "zojo-ji",
@@ -16380,7 +16884,11 @@
       "lng": 139.7482928,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/zojo-ji.jpg"
+      "image": "/images/lieux-photos/zojo-ji.jpg",
+      "photo": "/images/lieux-photos/zojo-ji.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%A2%97%E4%B8%8A%E5%AF%BA"
     },
     {
       "id": "musee-national-de-l-art-occidental",
@@ -16402,7 +16910,11 @@
       "lng": 139.77581379999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/musee-national-de-l-art-occidental.jpg"
+      "image": "/images/lieux-photos/musee-national-de-l-art-occidental.jpg",
+      "photo": "/images/lieux-photos/musee-national-de-l-art-occidental.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%9B%BD%E7%AB%8B%E8%A5%BF%E6%B4%8B%E7%BE%8E%E8%A1%93%E9%A4%A8"
     },
     {
       "id": "gotoku-ji",
@@ -16424,7 +16936,11 @@
       "lng": 139.647481,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/gotoku-ji.jpg"
+      "image": "/images/lieux-photos/gotoku-ji.jpg",
+      "photo": "/images/lieux-photos/gotoku-ji.jpg",
+      "photo_author": "Niwrat",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Maneki-neko_(Japanese_Lucky_Cat)_Statues_at_Gotokuji_Temple,_Tokyo.jpg"
     },
     {
       "id": "north-observation-deck-tokyo-metropolita",
@@ -16446,7 +16962,9 @@
       "lng": 139.6916563,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/north-observation-deck-tokyo-metropolita.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/north-observation-deck-tokyo-metropolita.jpg",
+      "image_fallback": true
     },
     {
       "id": "siege-du-gouvernement-metropolitain-de-t",
@@ -16468,7 +16986,11 @@
       "lng": 139.6916863,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/siege-du-gouvernement-metropolitain-de-t.jpg"
+      "image": "/images/lieux-photos/siege-du-gouvernement-metropolitain-de-t.jpg",
+      "photo": "/images/lieux-photos/siege-du-gouvernement-metropolitain-de-t.jpg",
+      "photo_author": "Julia Caesar juliacaesar",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Tokyo,_Japan_(Unsplash_mEaYSkucTys).jpg"
     },
     {
       "id": "musee-nezu",
@@ -16490,7 +17012,11 @@
       "lng": 139.7170937,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/musee-nezu.jpg"
+      "image": "/images/lieux-photos/musee-nezu.jpg",
+      "photo": "/images/lieux-photos/musee-nezu.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%A0%B9%E6%B4%A5%E7%BE%8E%E8%A1%93%E9%A4%A8"
     },
     {
       "id": "asakusa-jinja",
@@ -16512,7 +17038,11 @@
       "lng": 139.7974389,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/asakusa-jinja.jpg"
+      "image": "/images/lieux-photos/asakusa-jinja.jpg",
+      "photo": "/images/lieux-photos/asakusa-jinja.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%B5%85%E8%8D%89%E7%A5%9E%E7%A4%BE"
     },
     {
       "id": "marunouchi-tokyo-station-square",
@@ -16534,7 +17064,11 @@
       "lng": 139.7654768,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/marunouchi-tokyo-station-square.jpg"
+      "image": "/images/lieux-photos/marunouchi-tokyo-station-square.jpg",
+      "photo": "/images/lieux-photos/marunouchi-tokyo-station-square.jpg",
+      "photo_author": "Bernard Spragg. NZ from Christchurch, New Zealand This photo was taken with Pana",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Tokyo_Station_._(42455223202).jpg"
     },
     {
       "id": "asakusa-culture-tourist-information-cent",
@@ -16556,7 +17090,11 @@
       "lng": 139.7965461,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/asakusa-culture-tourist-information-cent.jpg"
+      "image": "/images/lieux-photos/asakusa-culture-tourist-information-cent.jpg",
+      "photo": "/images/lieux-photos/asakusa-culture-tourist-information-cent.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://en.wikipedia.org/wiki/Asakusa%20Culture%20Tourist%20Information%20Center"
     },
     {
       "id": "samurai-museum-tokyo-shinjuku",
@@ -16578,7 +17116,11 @@
       "lng": 139.7052152,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/samurai-museum-tokyo-shinjuku.jpg"
+      "image": "/images/lieux-photos/samurai-museum-tokyo-shinjuku.jpg",
+      "photo": "/images/lieux-photos/samurai-museum-tokyo-shinjuku.jpg",
+      "photo_author": "Bernard Spragg. NZ from Christchurch, New Zealand",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Hanazono_shrine._Shinjuku._Tokyo._(42654941572).jpg"
     },
     {
       "id": "mosquee-de-tokyo",
@@ -16600,7 +17142,11 @@
       "lng": 139.67655349999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/mosquee-de-tokyo.jpg"
+      "image": "/images/lieux-photos/mosquee-de-tokyo.jpg",
+      "photo": "/images/lieux-photos/mosquee-de-tokyo.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Streetview_in_Shibuya-ku_(23304).jpg"
     },
     {
       "id": "artizon-museum",
@@ -16622,7 +17168,11 @@
       "lng": 139.77189189999999,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/artizon-museum.jpg"
+      "image": "/images/lieux-photos/artizon-museum.jpg",
+      "photo": "/images/lieux-photos/artizon-museum.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Mitsui_Garden_Hotel_Kyobashi.jpg"
     },
     {
       "id": "suga-shrine",
@@ -16644,7 +17194,11 @@
       "lng": 139.7224783,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/suga-shrine.jpg"
+      "image": "/images/lieux-photos/suga-shrine.jpg",
+      "photo": "/images/lieux-photos/suga-shrine.jpg",
+      "photo_author": "ウィキ太郎(Wiki Taro)",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Y%C5%8CUNJI_or_YOUUNJI_OIWAINARI_Temple_Shinjuku_Tokyo.jpg"
     },
     {
       "id": "hozomon",
@@ -16666,7 +17220,11 @@
       "lng": 139.7966333,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/hozomon.jpg"
+      "image": "/images/lieux-photos/hozomon.jpg",
+      "photo": "/images/lieux-photos/hozomon.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://en.wikipedia.org/wiki/H%C5%8Dz%C5%8Dmon"
     },
     {
       "id": "waho-an-nature-tokyo",
@@ -16688,7 +17246,9 @@
       "lng": 139.7052311,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/waho-an-nature-tokyo.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/waho-an-nature-tokyo.jpg",
+      "image_fallback": true
     },
     {
       "id": "matsuchiyama-shoden",
@@ -16710,7 +17270,11 @@
       "lng": 139.80302899999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/matsuchiyama-shoden.jpg"
+      "image": "/images/lieux-photos/matsuchiyama-shoden.jpg",
+      "photo": "/images/lieux-photos/matsuchiyama-shoden.jpg",
+      "photo_author": "先従隗始",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%C5%8Csawasan_Honry%C5%AB-ji_Temple_20210501_02.jpg"
     },
     {
       "id": "ninja-experience-cafe-asakusa-in-tokyo",
@@ -16732,7 +17296,11 @@
       "lng": 139.7918297,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/ninja-experience-cafe-asakusa-in-tokyo.jpg"
+      "image": "/images/lieux-photos/ninja-experience-cafe-asakusa-in-tokyo.jpg",
+      "photo": "/images/lieux-photos/ninja-experience-cafe-asakusa-in-tokyo.jpg",
+      "photo_author": "Lauren Livingston laurenlivingston",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Foggy_Cityscape_(Unsplash).jpg"
     },
     {
       "id": "intermediatheque",
@@ -16754,7 +17322,11 @@
       "lng": 139.7646866,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/intermediatheque.jpg"
+      "image": "/images/lieux-photos/intermediatheque.jpg",
+      "photo": "/images/lieux-photos/intermediatheque.jpg",
+      "photo_author": "Saigen Jiro",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:%E4%BC%9D%E3%82%A2%E3%82%A4%E3%83%B3%E3%82%B7%E3%83%A5%E3%82%BF%E3%82%A4%E3%83%B3%E3%83%BB%E3%82%A8%E3%83%AC%E3%83%99%E3%83%BC%E3%82%BF%E3%83%BC.JPG"
     },
     {
       "id": "tokiwaso-manga-museum",
@@ -16776,7 +17348,11 @@
       "lng": 139.6859984,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/tokiwaso-manga-museum.jpg"
+      "image": "/images/lieux-photos/tokiwaso-manga-museum.jpg",
+      "photo": "/images/lieux-photos/tokiwaso-manga-museum.jpg",
+      "photo_author": "Asanagi",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Nihon_Kajo_Puplishing_headquarters_2026-04-26.jpg"
     },
     {
       "id": "tokyo-station-marunouchi-building",
@@ -16798,7 +17374,9 @@
       "lng": 139.76599439999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/tokyo-station-marunouchi-building.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/tokyo-station-marunouchi-building.jpg",
+      "image_fallback": true
     },
     {
       "id": "asakura-museum-of-sculpture",
@@ -16820,7 +17398,11 @@
       "lng": 139.76852499999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/asakura-museum-of-sculpture.jpg"
+      "image": "/images/lieux-photos/asakura-museum-of-sculpture.jpg",
+      "photo": "/images/lieux-photos/asakura-museum-of-sculpture.jpg",
+      "photo_author": "Abasaa",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Ryusen-ji_(Yanaka,_Taito).JPG"
     },
     {
       "id": "the-seiko-museum-ginza",
@@ -16842,7 +17424,9 @@
       "lng": 139.7644252,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/the-seiko-museum-ginza.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/the-seiko-museum-ginza.jpg",
+      "image_fallback": true
     },
     {
       "id": "moheji-shinmaru-build",
@@ -16865,7 +17449,11 @@
       "lng": 139.7642658,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/moheji-shinmaru-build.jpg"
+      "image": "/images/lieux-photos/moheji-shinmaru-build.jpg",
+      "photo": "/images/lieux-photos/moheji-shinmaru-build.jpg",
+      "photo_author": "Bernard Spragg. NZ from Christchurch, New Zealand",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Tokyo_Station._(53219153729).jpg"
     },
     {
       "id": "hibi-hare-bare-shinjuku",
@@ -16888,7 +17476,9 @@
       "lng": 139.7060359,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/hibi-hare-bare-shinjuku.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/hibi-hare-bare-shinjuku.jpg",
+      "image_fallback": true
     },
     {
       "id": "ikebukuro-no-kaze",
@@ -16911,7 +17501,9 @@
       "lng": 139.7135342,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/ikebukuro-no-kaze.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/ikebukuro-no-kaze.jpg",
+      "image_fallback": true
     },
     {
       "id": "izumo-ikebukuro",
@@ -16934,7 +17526,9 @@
       "lng": 139.7097689,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/izumo-ikebukuro.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/izumo-ikebukuro.jpg",
+      "image_fallback": true
     },
     {
       "id": "torasuzu",
@@ -16957,7 +17551,9 @@
       "lng": 139.79693369999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/torasuzu.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/torasuzu.jpg",
+      "image_fallback": true
     },
     {
       "id": "sakaba-totoya",
@@ -16980,7 +17576,9 @@
       "lng": 139.7941251,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/sakaba-totoya.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/sakaba-totoya.jpg",
+      "image_fallback": true
     },
     {
       "id": "tsukada-nojo-akihabara-chuo-dori",
@@ -17003,7 +17601,9 @@
       "lng": 139.7716177,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/tsukada-nojo-akihabara-chuo-dori.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/tsukada-nojo-akihabara-chuo-dori.jpg",
+      "image_fallback": true
     },
     {
       "id": "yamaka-sakaba",
@@ -17026,7 +17626,11 @@
       "lng": 139.7944332,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/yamaka-sakaba.jpg"
+      "image": "/images/lieux-photos/yamaka-sakaba.jpg",
+      "photo": "/images/lieux-photos/yamaka-sakaba.jpg",
+      "photo_author": "Clay Banks claybanks1989",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Local_restaurant_in_Tokyo_(Unsplash).jpg"
     },
     {
       "id": "fukumimi-shinjuku",
@@ -17049,7 +17653,11 @@
       "lng": 139.7067186,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/fukumimi-shinjuku.jpg"
+      "image": "/images/lieux-photos/fukumimi-shinjuku.jpg",
+      "photo": "/images/lieux-photos/fukumimi-shinjuku.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Tokyu_Stay_Shinjuku.jpg"
     },
     {
       "id": "kinka-sushi-bar-izakaya",
@@ -17072,7 +17680,11 @@
       "lng": 139.6987412,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/kinka-sushi-bar-izakaya.jpg"
+      "image": "/images/lieux-photos/kinka-sushi-bar-izakaya.jpg",
+      "photo": "/images/lieux-photos/kinka-sushi-bar-izakaya.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Shibuya_Parco.jpg"
     },
     {
       "id": "kushikatsu-tanaka-tsukiji",
@@ -17095,7 +17707,9 @@
       "lng": 139.772934,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/kushikatsu-tanaka-tsukiji.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/kushikatsu-tanaka-tsukiji.jpg",
+      "image_fallback": true
     },
     {
       "id": "master-s-dream-house",
@@ -17118,7 +17732,9 @@
       "lng": 139.76977449999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/master-s-dream-house.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/master-s-dream-house.jpg",
+      "image_fallback": true
     },
     {
       "id": "kushiyaki-bistro-fukumimi-ginza",
@@ -17141,7 +17757,9 @@
       "lng": 139.7651867,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/kushiyaki-bistro-fukumimi-ginza.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/kushiyaki-bistro-fukumimi-ginza.jpg",
+      "image_fallback": true
     },
     {
       "id": "muscle-bar-macho-macho-shinjuku",
@@ -17164,7 +17782,9 @@
       "lng": 139.6984566,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/muscle-bar-macho-macho-shinjuku.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/muscle-bar-macho-macho-shinjuku.jpg",
+      "image_fallback": true
     },
     {
       "id": "izumo-asakusa-yokocho",
@@ -17187,7 +17807,11 @@
       "lng": 139.79368879999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/izumo-asakusa-yokocho.jpg"
+      "image": "/images/lieux-photos/izumo-asakusa-yokocho.jpg",
+      "photo": "/images/lieux-photos/izumo-asakusa-yokocho.jpg",
+      "photo_author": "Matthide127",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:20240117_Asakusa_Rockza_13.29.32.jpg"
     },
     {
       "id": "zekkocho-teppen",
@@ -17210,7 +17834,11 @@
       "lng": 139.69688829999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/zekkocho-teppen.jpg"
+      "image": "/images/lieux-photos/zekkocho-teppen.jpg",
+      "photo": "/images/lieux-photos/zekkocho-teppen.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Streetviews_around_Shinjuku_(20125).jpg"
     },
     {
       "id": "shintoku-tsukada-nojo-akihabara-manseiba",
@@ -17233,7 +17861,11 @@
       "lng": 139.7714216,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/shintoku-tsukada-nojo-akihabara-manseiba.jpg"
+      "image": "/images/lieux-photos/shintoku-tsukada-nojo-akihabara-manseiba.jpg",
+      "photo": "/images/lieux-photos/shintoku-tsukada-nojo-akihabara-manseiba.jpg",
+      "photo_author": "Matthide127",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:20240119_Edion_Akiba_17.06.45.jpg"
     },
     {
       "id": "voyager-stand-shibuya-music-bar",
@@ -17256,7 +17888,9 @@
       "lng": 139.6954865,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/voyager-stand-shibuya-music-bar.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/voyager-stand-shibuya-music-bar.jpg",
+      "image_fallback": true
     },
     {
       "id": "yakiton-daio-ueno",
@@ -17279,7 +17913,11 @@
       "lng": 139.7749339,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/yakiton-daio-ueno.jpg"
+      "image": "/images/lieux-photos/yakiton-daio-ueno.jpg",
+      "photo": "/images/lieux-photos/yakiton-daio-ueno.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Ameyoko_June_2022.jpg"
     },
     {
       "id": "izakaya-ikunara-orenchi-kuru",
@@ -17302,7 +17940,11 @@
       "lng": 139.7096065,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/izakaya-ikunara-orenchi-kuru.jpg"
+      "image": "/images/lieux-photos/izakaya-ikunara-orenchi-kuru.jpg",
+      "photo": "/images/lieux-photos/izakaya-ikunara-orenchi-kuru.jpg",
+      "photo_author": "Asanagi",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:TUC_Shop_Ikebukuro_Ebisu-dori_branch_2023-10-01.jpg"
     },
     {
       "id": "akihabara-electric-town",
@@ -17324,7 +17966,11 @@
       "lng": 139.7713799,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/akihabara-electric-town.jpg"
+      "image": "/images/lieux-photos/akihabara-electric-town.jpg",
+      "photo": "/images/lieux-photos/akihabara-electric-town.jpg",
+      "photo_author": "Jmho",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Akiba_denkigai.jpg"
     },
     {
       "id": "nintendo-tokyo-shibuya-japan",
@@ -17346,7 +17992,11 @@
       "lng": 139.6986385,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/nintendo-tokyo-shibuya-japan.jpg"
+      "image": "/images/lieux-photos/nintendo-tokyo-shibuya-japan.jpg",
+      "photo": "/images/lieux-photos/nintendo-tokyo-shibuya-japan.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Shibuya_PARCO_4.jpg"
     },
     {
       "id": "kindal-nakameguro-second-hand-store",
@@ -17368,7 +18018,11 @@
       "lng": 139.696449,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/kindal-nakameguro-second-hand-store.jpg"
+      "image": "/images/lieux-photos/kindal-nakameguro-second-hand-store.jpg",
+      "photo": "/images/lieux-photos/kindal-nakameguro-second-hand-store.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Walk_in_Nakameguro_2.jpg"
     },
     {
       "id": "flour-water-nakameguro",
@@ -17390,7 +18044,9 @@
       "lng": 139.6967534,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/flour-water-nakameguro.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/flour-water-nakameguro.jpg",
+      "image_fallback": true
     },
     {
       "id": "mixthinks-harajuku-store",
@@ -17412,7 +18068,11 @@
       "lng": 139.7038071,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/mixthinks-harajuku-store.jpg"
+      "image": "/images/lieux-photos/mixthinks-harajuku-store.jpg",
+      "photo": "/images/lieux-photos/mixthinks-harajuku-store.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Street_views_around_Harajuku.jpg"
     },
     {
       "id": "mardi-mercredi-daikanyama",
@@ -17434,7 +18094,11 @@
       "lng": 139.7027647,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/mardi-mercredi-daikanyama.jpg"
+      "image": "/images/lieux-photos/mardi-mercredi-daikanyama.jpg",
+      "photo": "/images/lieux-photos/mardi-mercredi-daikanyama.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%22Cirty_library%22_in_Daikanyama.jpg"
     },
     {
       "id": "trefacstyle-shimokitazawa-east-exit",
@@ -17456,7 +18120,11 @@
       "lng": 139.66881740000002,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/trefacstyle-shimokitazawa-east-exit.jpg"
+      "image": "/images/lieux-photos/trefacstyle-shimokitazawa-east-exit.jpg",
+      "photo": "/images/lieux-photos/trefacstyle-shimokitazawa-east-exit.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Walk_in_Shimokitazawa_7.jpg"
     },
     {
       "id": "traveler-s-factory-nakameguro",
@@ -17478,7 +18146,11 @@
       "lng": 139.6972329,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/traveler-s-factory-nakameguro.jpg"
+      "image": "/images/lieux-photos/traveler-s-factory-nakameguro.jpg",
+      "photo": "/images/lieux-photos/traveler-s-factory-nakameguro.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E6%9D%B1%E4%BA%AC%E5%92%8C%E6%9C%8D%E6%9F%93%E8%89%B2%E7%BE%8E%E8%A1%93%E5%B0%88%E9%96%80%E5%AD%B8%E6%A0%A1.jpg"
     },
     {
       "id": "treasure-factory-style-shimokitazawa",
@@ -17500,7 +18172,9 @@
       "lng": 139.6684277,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/treasure-factory-style-shimokitazawa.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/treasure-factory-style-shimokitazawa.jpg",
+      "image_fallback": true
     },
     {
       "id": "matcha-stand-maruni-tokyo-tsukiji",
@@ -17522,7 +18196,9 @@
       "lng": 139.7710357,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/matcha-stand-maruni-tokyo-tsukiji.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/matcha-stand-maruni-tokyo-tsukiji.jpg",
+      "image_fallback": true
     },
     {
       "id": "tsukiji-peppers-cafe",
@@ -17544,7 +18220,11 @@
       "lng": 139.77014,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/tsukiji-peppers-cafe.jpg"
+      "image": "/images/lieux-photos/tsukiji-peppers-cafe.jpg",
+      "photo": "/images/lieux-photos/tsukiji-peppers-cafe.jpg",
+      "photo_author": "経済特区",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E7%AF%89%E5%9C%B0%E3%83%9A%E3%83%83%E3%83%91%E3%83%BC%E3%82%BA%E3%82%AB%E3%83%95%E3%82%A720240817143057_IMG_1027_01.jpg"
     },
     {
       "id": "yanakana-macha-stand",
@@ -17566,7 +18246,9 @@
       "lng": 139.7650782,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/yanakana-macha-stand.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/yanakana-macha-stand.jpg",
+      "image_fallback": true
     },
     {
       "id": "gyumon-halal-wagyu-ramen-shibuya",
@@ -17588,7 +18270,11 @@
       "lng": 139.704161,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/gyumon-halal-wagyu-ramen-shibuya.jpg"
+      "image": "/images/lieux-photos/gyumon-halal-wagyu-ramen-shibuya.jpg",
+      "photo": "/images/lieux-photos/gyumon-halal-wagyu-ramen-shibuya.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Details_of_Shibuya_Hikarie_(42234).jpg"
     },
     {
       "id": "age-3-ginza",
@@ -17610,7 +18296,11 @@
       "lng": 139.77129449999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/age-3-ginza.jpg"
+      "image": "/images/lieux-photos/age-3-ginza.jpg",
+      "photo": "/images/lieux-photos/age-3-ginza.jpg",
+      "photo_author": "Redd Angelo reddangelo16",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:On_our_way_to_tsukiji_fish_market_in_Tokyo_(Unsplash).jpg"
     },
     {
       "id": "gyopao-gyoza-roppongi",
@@ -17632,7 +18322,11 @@
       "lng": 139.7321399,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/gyopao-gyoza-roppongi.jpg"
+      "image": "/images/lieux-photos/gyopao-gyoza-roppongi.jpg",
+      "photo": "/images/lieux-photos/gyopao-gyoza-roppongi.jpg",
+      "photo_author": "経済特区",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E8%82%89%E6%B1%81%E6%B0%B4%E9%A4%83%E5%AD%90_%E9%A4%83%E5%8C%85_%E5%85%AD%E6%9C%AC%E6%9C%A8%E4%BA%A4%E5%B7%AE%E7%82%B920250621_02.jpg"
     },
     {
       "id": "tsukishima-monja-kuuya-shibuya",
@@ -17654,7 +18348,11 @@
       "lng": 139.7014739,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/tsukishima-monja-kuuya-shibuya.jpg"
+      "image": "/images/lieux-photos/tsukishima-monja-kuuya-shibuya.jpg",
+      "photo": "/images/lieux-photos/tsukishima-monja-kuuya-shibuya.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E8%BF%91%E6%B1%9F%E7%89%9B_2.jpg"
     },
     {
       "id": "maidreamin-heaven-s-gate-live-restaurant",
@@ -17676,7 +18374,11 @@
       "lng": 139.7724623,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/maidreamin-heaven-s-gate-live-restaurant.jpg"
+      "image": "/images/lieux-photos/maidreamin-heaven-s-gate-live-restaurant.jpg",
+      "photo": "/images/lieux-photos/maidreamin-heaven-s-gate-live-restaurant.jpg",
+      "photo_author": "Matthide127",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:20240118_Akihabara_Station_Electric_Town.jpg"
     },
     {
       "id": "gyukatsu-motomura-shibuya-branch",
@@ -17698,7 +18400,11 @@
       "lng": 139.7039981,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/gyukatsu-motomura-shibuya-branch.jpg"
+      "image": "/images/lieux-photos/gyukatsu-motomura-shibuya-branch.jpg",
+      "photo": "/images/lieux-photos/gyukatsu-motomura-shibuya-branch.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Shibuya_Stream_during_covid_3.jpg"
     },
     {
       "id": "ramen-kamo-to-negi-ueno-okachimachi-main",
@@ -17720,7 +18426,11 @@
       "lng": 139.7752537,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/ramen-kamo-to-negi-ueno-okachimachi-main.jpg"
+      "image": "/images/lieux-photos/ramen-kamo-to-negi-ueno-okachimachi-main.jpg",
+      "photo": "/images/lieux-photos/ramen-kamo-to-negi-ueno-okachimachi-main.jpg",
+      "photo_author": "Matthide127",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:20240119_Okachimachi_Ekimae-d%C5%8Dri_10.30.51.jpg"
     },
     {
       "id": "mipig-cafe-harajuku",
@@ -17742,7 +18452,11 @@
       "lng": 139.7042806,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/mipig-cafe-harajuku.jpg"
+      "image": "/images/lieux-photos/mipig-cafe-harajuku.jpg",
+      "photo": "/images/lieux-photos/mipig-cafe-harajuku.jpg",
+      "photo_author": "らいちょうざるそば",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E3%83%96%E3%83%A9%E3%83%BC%E3%83%A0%E3%82%B9%E3%81%AE%E5%B0%8F%E5%BE%84%E3%80%812024%E5%B9%B48%E6%9C%8829%E6%97%A5%E6%92%AE%E5%BD%B1.jpg"
     },
     {
       "id": "samoyed-cafe-moffu-harajuku-samoyed-loun",
@@ -17764,7 +18478,11 @@
       "lng": 139.7074793,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/samoyed-cafe-moffu-harajuku-samoyed-loun.jpg"
+      "image": "/images/lieux-photos/samoyed-cafe-moffu-harajuku-samoyed-loun.jpg",
+      "photo": "/images/lieux-photos/samoyed-cafe-moffu-harajuku-samoyed-loun.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Harajuku_walk_-98172.jpeg"
     },
     {
       "id": "owl-cafe-tokyo",
@@ -17786,7 +18504,11 @@
       "lng": 139.7748397,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/owl-cafe-tokyo.jpg"
+      "image": "/images/lieux-photos/owl-cafe-tokyo.jpg",
+      "photo": "/images/lieux-photos/owl-cafe-tokyo.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E5%8A%A0%E8%B3%80%E9%9B%BB%E5%AD%90%E6%9C%AC%E7%A4%BE.jpg"
     },
     {
       "id": "halal-wagyu-ramen-shinjuku-tei-tokyo-shi",
@@ -17808,7 +18530,9 @@
       "lng": 139.706456,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/halal-wagyu-ramen-shinjuku-tei-tokyo-shi.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/halal-wagyu-ramen-shinjuku-tei-tokyo-shi.jpg",
+      "image_fallback": true
     },
     {
       "id": "harajuku-kawaii-land-kyun-kyun-animal-pe",
@@ -17830,7 +18554,11 @@
       "lng": 139.7049582,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/harajuku-kawaii-land-kyun-kyun-animal-pe.jpg"
+      "image": "/images/lieux-photos/harajuku-kawaii-land-kyun-kyun-animal-pe.jpg",
+      "photo": "/images/lieux-photos/harajuku-kawaii-land-kyun-kyun-animal-pe.jpg",
+      "photo_author": "Asanagi",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Harajuku_RUIDO_2026-01-15.jpg"
     },
     {
       "id": "wagyu-halal-steak-hamburger-ramen-japane",
@@ -17852,7 +18580,9 @@
       "lng": 139.705805,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/wagyu-halal-steak-hamburger-ramen-japane.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/wagyu-halal-steak-hamburger-ramen-japane.jpg",
+      "image_fallback": true
     },
     {
       "id": "age-3-asakusa",
@@ -17874,7 +18604,11 @@
       "lng": 139.79446339999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/age-3-asakusa.jpg"
+      "image": "/images/lieux-photos/age-3-asakusa.jpg",
+      "photo": "/images/lieux-photos/age-3-asakusa.jpg",
+      "photo_author": "経済特区",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Asakusa_Hanayashiki2025070_03.jpg"
     },
     {
       "id": "afuri-harajuku",
@@ -17896,7 +18630,11 @@
       "lng": 139.7038019,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/afuri-harajuku.jpg"
+      "image": "/images/lieux-photos/afuri-harajuku.jpg",
+      "photo": "/images/lieux-photos/afuri-harajuku.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Imperial_station_site,_in_Harajuku_5.jpg"
     },
     {
       "id": "tsujita-kanda-suehirocho",
@@ -17918,7 +18656,9 @@
       "lng": 139.77106659999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/tsujita-kanda-suehirocho.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/tsujita-kanda-suehirocho.jpg",
+      "image_fallback": true
     },
     {
       "id": "godaime-wagyu-tokyo",
@@ -17940,7 +18680,9 @@
       "lng": 139.7689083,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/godaime-wagyu-tokyo.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/godaime-wagyu-tokyo.jpg",
+      "image_fallback": true
     },
     {
       "id": "owl-village-cafe-harajuku",
@@ -17962,7 +18704,11 @@
       "lng": 139.70347529999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/owl-village-cafe-harajuku.jpg"
+      "image": "/images/lieux-photos/owl-village-cafe-harajuku.jpg",
+      "photo": "/images/lieux-photos/owl-village-cafe-harajuku.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Buildings_in_Shibuya-ku_18.jpg"
     },
     {
       "id": "pignic-cafe-asakusa-mini-pig-cafe",
@@ -17984,7 +18730,11 @@
       "lng": 139.7948321,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/pignic-cafe-asakusa-mini-pig-cafe.jpg"
+      "image": "/images/lieux-photos/pignic-cafe-asakusa-mini-pig-cafe.jpg",
+      "photo": "/images/lieux-photos/pignic-cafe-asakusa-mini-pig-cafe.jpg",
+      "photo_author": "Vitor Coelho Nisida from São Paulo, Brasil",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:-i---i-_(53027655627).jpg"
     },
     {
       "id": "matsue-shibuya-scramble-square-store",
@@ -18006,7 +18756,9 @@
       "lng": 139.7020523,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/matsue-shibuya-scramble-square-store.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/matsue-shibuya-scramble-square-store.jpg",
+      "image_fallback": true
     },
     {
       "id": "tsujita-ginza",
@@ -18028,7 +18780,11 @@
       "lng": 139.7673806,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/tsujita-ginza.jpg"
+      "image": "/images/lieux-photos/tsujita-ginza.jpg",
+      "photo": "/images/lieux-photos/tsujita-ginza.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E7%B4%99%E3%83%91%E3%83%AB%E3%83%97%E4%BC%9A%E9%A4%A8_Japan_Technical_Association_of_the_Pulp_and_Paper_Industry.jpg"
     },
     {
       "id": "in-akihabara-there-is-no-problem-even-if",
@@ -18050,7 +18806,9 @@
       "lng": 139.7716676,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/Lieux/in-akihabara-there-is-no-problem-even-if.jpg"
+      "image": "/images/villes/tokyo.jpg",
+      "image_original": "/images/Lieux/in-akihabara-there-is-no-problem-even-if.jpg",
+      "image_fallback": true
     },
     {
       "id": "halal-wagyu-ramen-shinjuku-tei-ginza-tok",
@@ -18072,7 +18830,11 @@
       "lng": 139.7585554,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/halal-wagyu-ramen-shinjuku-tei-ginza-tok.jpg"
+      "image": "/images/lieux-photos/halal-wagyu-ramen-shinjuku-tei-ginza-tok.jpg",
+      "photo": "/images/lieux-photos/halal-wagyu-ramen-shinjuku-tei-ginza-tok.jpg",
+      "photo_author": "妖精書士",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Recruit_GINZA8_building.jpg"
     },
     {
       "id": "kobe-beef-daia-asakusa-don-kihoute-store",
@@ -18094,7 +18856,11 @@
       "lng": 139.79309899999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/kobe-beef-daia-asakusa-don-kihoute-store.jpg"
+      "image": "/images/lieux-photos/kobe-beef-daia-asakusa-don-kihoute-store.jpg",
+      "photo": "/images/lieux-photos/kobe-beef-daia-asakusa-don-kihoute-store.jpg",
+      "photo_author": "Matthide127",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:20250109_Asakusa_Rockza_12.24.44.jpg"
     },
     {
       "id": "afuri-karakurenai-harajuku",
@@ -18116,7 +18882,1724 @@
       "lng": 139.70656449999998,
       "site_web": "",
       "a_proximite": [],
-      "image": "/images/lieux-photos/afuri-karakurenai-harajuku.jpg"
+      "image": "/images/lieux-photos/afuri-karakurenai-harajuku.jpg",
+      "photo": "/images/lieux-photos/afuri-karakurenai-harajuku.jpg",
+      "photo_author": "Syced",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Athleta_2.jpg"
+    },
+    {
+      "id": "tenryu-ji",
+      "villeId": "kyoto",
+      "nom": "Tenryu-ji",
+      "nom_jp": "天龍寺",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "⛩️",
+      "interets": [
+        "culture",
+        "nature"
+      ],
+      "quartier": "Arashiyama",
+      "description": "Temple zen classé UNESCO à l'entrée d'Arashiyama, célèbre pour son jardin Sogen-chi qui utilise les montagnes environnantes comme décor naturel.",
+      "conseil": "Combine avec la bambouseraie juste derrière (sortie nord du jardin) — évite de refaire le trajet en sens inverse.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 35.0159,
+      "lng": 135.6742,
+      "saison_ideale": "automne",
+      "horaires": "8h30–17h00",
+      "acces": "Station Saga-Arashiyama (JR) ou Arashiyama (Randen), 5 min à pied",
+      "prix_detail": "500¥ (jardin), +300¥ pour les bâtiments",
+      "site_web": "tenryuji.com",
+      "a_proximite": [
+        "arashiyama"
+      ],
+      "image": "/images/lieux-photos/tenryu-ji.jpg",
+      "photo": "/images/lieux-photos/tenryu-ji.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%A4%A9%E9%BE%8D%E5%AF%BA"
+    },
+    {
+      "id": "sanjusangendo",
+      "villeId": "kyoto",
+      "nom": "Sanjusangendo",
+      "nom_jp": "三十三間堂",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "🙏",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Higashiyama",
+      "description": "Le plus long bâtiment en bois du Japon, abritant 1001 statues dorées de Kannon alignées dans une pénombre saisissante.",
+      "conseil": "Photos interdites à l'intérieur — profites-en pour vraiment regarder plutôt que de shooter en passant.",
+      "duree": "45min",
+      "budget": "¥",
+      "lat": 34.9877,
+      "lng": 135.7717,
+      "saison_ideale": "",
+      "horaires": "8h00–17h00 (16h30 nov-mars)",
+      "acces": "Station Keihan Shichijo, 7 min à pied",
+      "prix_detail": "600¥",
+      "site_web": "sanjusangendo.jp",
+      "a_proximite": [
+        "kiyomizu-dera"
+      ],
+      "image": "/images/lieux-photos/sanjusangendo.jpg",
+      "photo": "/images/lieux-photos/sanjusangendo.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E4%B8%89%E5%8D%81%E4%B8%89%E9%96%93%E5%A0%82"
+    },
+    {
+      "id": "philosophers-path",
+      "villeId": "kyoto",
+      "nom": "Chemin du Philosophe",
+      "nom_jp": "哲学の道",
+      "type": "faire",
+      "categorie": "Promenade",
+      "emoji": "🌸",
+      "interets": [
+        "culture",
+        "nature"
+      ],
+      "quartier": "Higashiyama",
+      "description": "Sentier bordé de cerisiers longeant un canal entre Ginkaku-ji et Nanzen-ji, nommé d'après un philosophe qui s'y promenait chaque jour.",
+      "conseil": "Marche-le dans le sens Ginkaku-ji → Nanzen-ji pour enchaîner naturellement sur les autres temples de Higashiyama.",
+      "duree": "1h",
+      "budget": "Gratuit",
+      "lat": 35.0212,
+      "lng": 135.7955,
+      "saison_ideale": "printemps",
+      "horaires": "24h/24",
+      "acces": "Bus 5 ou 32 arrêt Ginkakuji-michi, puis à pied",
+      "prix_detail": "Gratuit",
+      "site_web": "",
+      "a_proximite": [
+        "ginkaku-ji-kyoto",
+        "nanzen-ji"
+      ],
+      "image": "/images/lieux-photos/philosophers-path.jpg",
+      "photo": "/images/lieux-photos/philosophers-path.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%93%B2%E5%AD%A6%E3%81%AE%E9%81%93"
+    },
+    {
+      "id": "nanzen-ji",
+      "villeId": "kyoto",
+      "nom": "Nanzen-ji",
+      "nom_jp": "南禅寺",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "⛩️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Higashiyama",
+      "description": "Grand temple zen surmonté d'un imposant aqueduc de brique datant de l'ère Meiji, qui traverse encore le site aujourd'hui.",
+      "conseil": "Grimpe sur l'aqueduc (accessible librement) pour la photo la plus insolite de Kyoto — brique occidentale sur fond de temple japonais.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 35.0117,
+      "lng": 135.7936,
+      "saison_ideale": "automne",
+      "horaires": "8h40–17h00 (16h30 déc-fév)",
+      "acces": "Station Keage (Tozai Line), 10 min à pied",
+      "prix_detail": "600¥ (Hojo), 500¥ (jardin Sanmon)",
+      "site_web": "nanzenji.or.jp",
+      "a_proximite": [
+        "philosophers-path"
+      ],
+      "image": "/images/lieux-photos/nanzen-ji.jpg",
+      "photo": "/images/lieux-photos/nanzen-ji.jpg",
+      "photo_author": "ほっきー",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E5%8D%97%E7%A6%85%E5%AF%BA_%E6%B3%95%E5%A0%82_2025.jpg"
+    },
+    {
+      "id": "higashi-honganji",
+      "villeId": "kyoto",
+      "nom": "Higashi Honganji",
+      "nom_jp": "東本願寺",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "⛩️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Shimogyo",
+      "description": "Immense temple en bois près de la gare de Kyoto, siège de l'école bouddhiste Jodo Shinshu, reconstruit à la fin du XIXe siècle après un incendie.",
+      "conseil": "Facile à intercaler entre la gare et le reste de la ville — 10 min à pied, gratuit, aucune réservation.",
+      "duree": "30min",
+      "budget": "Gratuit",
+      "lat": 34.9917,
+      "lng": 135.7585,
+      "saison_ideale": "",
+      "horaires": "5h50–17h30 (mars-oct), 6h20–16h30 (nov-fév)",
+      "acces": "Station JR Kyoto, 7 min à pied",
+      "prix_detail": "Entrée gratuite",
+      "site_web": "higashihonganji.or.jp",
+      "a_proximite": [
+        "kyoto-ramen-koji"
+      ],
+      "image": "/images/lieux-photos/higashi-honganji.jpg",
+      "photo": "/images/lieux-photos/higashi-honganji.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%9C%AC%E9%A1%98%E5%AF%BA"
+    },
+    {
+      "id": "pontocho",
+      "villeId": "kyoto",
+      "nom": "Ruelle de Pontocho",
+      "nom_jp": "先斗町",
+      "type": "manger",
+      "categorie": "Ruelle gastronomique",
+      "emoji": "🏮",
+      "interets": [
+        "gastro",
+        "lifestyle"
+      ],
+      "quartier": "Pontocho",
+      "description": "Ruelle pavée et lanternée le long de la rivière Kamo, bordée de restaurants traditionnels allant du yakitori abordable au kaiseki raffiné.",
+      "conseil": "En été, cherche les terrasses \"kawadoko\" suspendues au-dessus de la rivière — réservation conseillée, très demandées.",
+      "duree": "1-2h",
+      "budget": "¥¥",
+      "lat": 35.0069,
+      "lng": 135.7706,
+      "saison_ideale": "été",
+      "horaires": "Restaurants généralement 17h00–23h00",
+      "acces": "Station Kawaramachi (Hankyu) ou Gion-Shijo (Keihan), 3 min à pied",
+      "prix_detail": "Variable selon l'établissement",
+      "site_web": "",
+      "a_proximite": [
+        "gion",
+        "kamogawa"
+      ],
+      "image": "/images/lieux-photos/pontocho.jpg",
+      "photo": "/images/lieux-photos/pontocho.jpg",
+      "photo_author": "HAGAT hOMSZE",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:JP_%E6%97%A5%E6%9C%AC_Japan_%E4%BA%AC%E9%83%BD_Kyoto_morning_walk_1052am_%E9%AB%98%E7%80%A8%E5%B7%9D_Kawara_June_2026_N13P_813.jpg"
+    },
+    {
+      "id": "kyoto-imperial-palace",
+      "villeId": "kyoto",
+      "nom": "Parc du Palais impérial de Kyoto",
+      "nom_jp": "京都御苑",
+      "type": "voir",
+      "categorie": "Parc / Palais",
+      "emoji": "🏯",
+      "interets": [
+        "culture",
+        "nature"
+      ],
+      "quartier": "Kamigyo",
+      "description": "Vaste parc public entourant l'ancien palais impérial, résidence des empereurs jusqu'au transfert de la capitale à Tokyo en 1869.",
+      "conseil": "Le parc se visite librement en continu — c'est le Sento Gosho (résidence retraitée) juste à côté qui demande une réservation.",
+      "duree": "1-2h",
+      "budget": "Gratuit",
+      "lat": 35.0254,
+      "lng": 135.7622,
+      "saison_ideale": "printemps",
+      "horaires": "Parc : 24h/24, Palais : 9h00–17h00",
+      "acces": "Station Marutamachi (Karasuma Line) ou Imadegawa, 5 min à pied",
+      "prix_detail": "Gratuit",
+      "site_web": "sankan.kunaicho.go.jp",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/kyoto-imperial-palace.jpg",
+      "photo": "/images/lieux-photos/kyoto-imperial-palace.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E4%BA%AC%E9%83%BD%E5%BE%A1%E8%8B%91"
+    },
+    {
+      "id": "yasaka-shrine",
+      "villeId": "kyoto",
+      "nom": "Sanctuaire Yasaka",
+      "nom_jp": "八坂神社",
+      "type": "voir",
+      "categorie": "Sanctuaire",
+      "emoji": "⛩️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Gion",
+      "description": "Sanctuaire shinto emblématique à l'entrée de Gion, illuminé de lanternes le soir, hôte du grand festival Gion Matsuri en juillet.",
+      "conseil": "Passe-y en fin de journée : les lanternes s'allument à la tombée de la nuit et le site se vide des groupes de touristes du jour.",
+      "duree": "30min",
+      "budget": "Gratuit",
+      "lat": 35.0037,
+      "lng": 135.7786,
+      "saison_ideale": "été",
+      "horaires": "24h/24",
+      "acces": "Arrêt de bus Gion, ou 5 min à pied depuis Kiyomizu-dera",
+      "prix_detail": "Gratuit",
+      "site_web": "yasaka-jinja.or.jp",
+      "a_proximite": [
+        "gion",
+        "kiyomizu-dera"
+      ],
+      "image": "/images/lieux-photos/yasaka-shrine.jpg",
+      "photo": "/images/lieux-photos/yasaka-shrine.jpg",
+      "photo_author": "HAGAT hOMSZE",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:JP_%E6%97%A5%E6%9C%AC_Japan_%E4%BA%AC%E9%83%BD_Kyoto_%E5%85%AB%E9%98%AA%E7%A5%9E%E7%A4%BE_Yasaka-Jinja_Shrine_1542pm_June_2026_N13P_232.jpg"
+    },
+    {
+      "id": "kyoto-manga-museum",
+      "villeId": "kyoto",
+      "nom": "Musée international du manga de Kyoto",
+      "nom_jp": "京都国際マンガミュージアム",
+      "type": "faire",
+      "categorie": "Musée",
+      "emoji": "📚",
+      "interets": [
+        "anime",
+        "culture"
+      ],
+      "quartier": "Nakagyō",
+      "description": "Ancienne école reconvertie en musée du manga, avec près de 300 000 volumes en libre accès sur des étagères longues de 200 mètres.",
+      "conseil": "Amène de quoi t'installer sur la pelouse extérieure — beaucoup de visiteurs y lisent des heures, allongés au soleil.",
+      "duree": "2h",
+      "budget": "¥",
+      "lat": 35.014,
+      "lng": 135.7583,
+      "saison_ideale": "",
+      "horaires": "10h00–18h00 (fermé le mercredi)",
+      "acces": "Station Karasuma-Oike (Karasuma/Tozai Line), 2 min à pied",
+      "prix_detail": "1200¥",
+      "site_web": "kyotomm.jp",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/kyoto-manga-museum.jpg",
+      "photo": "/images/lieux-photos/kyoto-manga-museum.jpg",
+      "photo_author": "NatsuTV",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E4%BA%AC%E9%83%BD%E5%B8%82%E5%96%B6%E5%9C%B0%E4%B8%8B%E9%89%84%E4%B8%B8%E5%A4%AA%E7%94%BA%E9%A7%855%E7%95%AA%E5%87%BA%E5%85%A5%E5%8F%A3.jpg"
+    },
+    {
+      "id": "kamogawa",
+      "villeId": "kyoto",
+      "nom": "Rives de la Kamogawa",
+      "nom_jp": "鴨川",
+      "type": "faire",
+      "categorie": "Balade urbaine",
+      "emoji": "🌊",
+      "interets": [
+        "lifestyle",
+        "nature"
+      ],
+      "quartier": "Centre",
+      "description": "Rivière traversant Kyoto du nord au sud, dont les berges herbeuses servent de lieu de promenade, de pique-nique et de rendez-vous du soir.",
+      "conseil": "Observe l'espacement quasi mathématique entre les couples assis sur la berge — une convention tacite kyotoïte que personne ne transgresse.",
+      "duree": "1h",
+      "budget": "Gratuit",
+      "lat": 35.0092,
+      "lng": 135.7717,
+      "saison_ideale": "été",
+      "horaires": "24h/24",
+      "acces": "Stations Sanjo, Shijo ou Gion-Shijo, accès direct",
+      "prix_detail": "Gratuit",
+      "site_web": "",
+      "a_proximite": [
+        "pontocho",
+        "gion"
+      ],
+      "image": "/images/lieux-photos/kamogawa.jpg",
+      "photo": "/images/lieux-photos/kamogawa.jpg",
+      "photo_author": "User:Megapixie",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Walrus_-_Kamogawa_Seaworld_-_1.jpg"
+    },
+    {
+      "id": "kodai-ji",
+      "villeId": "kyoto",
+      "nom": "Kodai-ji",
+      "nom_jp": "高台寺",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "🎋",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Higashiyama",
+      "description": "Temple fondé par la veuve d'un grand seigneur du XVIe siècle en sa mémoire, connu pour ses jardins zen et ses illuminations nocturnes saisonnières.",
+      "conseil": "Vérifie les dates d'illumination nocturne (printemps et automne) — l'expérience change radicalement du site visité de jour.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 35.0011,
+      "lng": 135.7822,
+      "saison_ideale": "automne",
+      "horaires": "9h00–17h30 (illuminations jusqu'à 22h en saison)",
+      "acces": "5 min à pied depuis Yasaka Shrine",
+      "prix_detail": "600¥",
+      "site_web": "kodaiji.com",
+      "a_proximite": [
+        "yasaka-shrine",
+        "kiyomizu-dera"
+      ],
+      "image": "/images/lieux-photos/kodai-ji.jpg",
+      "photo": "/images/lieux-photos/kodai-ji.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E9%AB%98%E5%8F%B0%E5%AF%BA"
+    },
+    {
+      "id": "kyoto-ramen-koji",
+      "villeId": "kyoto",
+      "nom": "Kyoto Ramen Koji",
+      "nom_jp": "京都拉麺小路",
+      "type": "manger",
+      "categorie": "Food court",
+      "emoji": "🍜",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Kyoto Station",
+      "description": "Étage entier de la gare de Kyoto réunissant une dizaine d'échoppes de ramen venues de tout le Japon, pour comparer les styles régionaux en une soirée.",
+      "conseil": "Distributeurs de tickets à l'entrée de chaque échoppe (souvent en japonais seul) — pointe le plat sur la photo si besoin, personne ne s'en formalise.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 34.9858,
+      "lng": 135.7588,
+      "saison_ideale": "",
+      "horaires": "11h00–22h00",
+      "acces": "10e étage de la gare de Kyoto, accès direct",
+      "prix_detail": "800-1200¥ le bol",
+      "site_web": "",
+      "a_proximite": [
+        "higashi-honganji"
+      ],
+      "image": "/images/lieux-photos/kyoto-ramen-koji.jpg",
+      "photo": "/images/lieux-photos/kyoto-ramen-koji.jpg",
+      "photo_author": "Suttawee Tantiwongchai kahonoii",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kyoto_Station,_Kyoto,_Japan_(Unsplash).jpg"
+    },
+    {
+      "id": "kurama-kibune",
+      "villeId": "kyoto",
+      "nom": "Kurama et Kibune",
+      "nom_jp": "鞍馬・貴船",
+      "type": "faire",
+      "categorie": "Randonnée & village de montagne",
+      "emoji": "🏔️",
+      "interets": [
+        "nature",
+        "culture"
+      ],
+      "quartier": "Kurama",
+      "description": "Excursion d'une demi-journée au nord de Kyoto : randonnée entre le temple de montagne Kurama-dera et le village fluvial de Kibune, réputé pour ses restaurants sur pilotis.",
+      "conseil": "Prends le train jusqu'à Kurama, marche jusqu'à Kibune (2h environ), puis redescends en train depuis Kibuneguchi — sens unique, plus agréable que l'aller-retour.",
+      "duree": "Demi-journée",
+      "budget": "¥¥",
+      "lat": 35.1136,
+      "lng": 135.7717,
+      "saison_ideale": "été",
+      "horaires": "Temple : 9h00–16h15",
+      "acces": "Ligne Eizan depuis Demachiyanagi (30 min)",
+      "prix_detail": "300¥ (don d'entrée Kurama-dera)",
+      "site_web": "",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/kurama-kibune.jpg",
+      "photo": "/images/lieux-photos/kurama-kibune.jpg",
+      "photo_author": "Hahifuheho",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Eiden_903_inside.JPG"
+    },
+    {
+      "id": "usj",
+      "villeId": "osaka",
+      "nom": "Universal Studios Japan",
+      "nom_jp": "ユニバーサル・スタジオ・ジャパン",
+      "type": "faire",
+      "categorie": "Parc à thème",
+      "emoji": "🎢",
+      "interets": [
+        "anime",
+        "lifestyle"
+      ],
+      "quartier": "Konohana",
+      "description": "Parc à thème avec le Super Nintendo World grandeur nature et une zone Harry Potter parmi les plus abouties au monde.",
+      "conseil": "Achète l'Express Pass à l'avance en ligne — les files pour Nintendo World dépassent facilement 2h sans lui, surtout le week-end.",
+      "duree": "Journée complète",
+      "budget": "¥¥¥",
+      "lat": 34.6654,
+      "lng": 135.4323,
+      "saison_ideale": "",
+      "horaires": "9h00–19h00 (variable selon saison)",
+      "acces": "Station Universal City (JR Yumesaki Line depuis Nishikujo)",
+      "prix_detail": "Env. 8600¥ le billet 1 jour",
+      "site_web": "usj.co.jp",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/usj.jpg",
+      "photo": "/images/lieux-photos/usj.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%83%A6%E3%83%8B%E3%83%90%E3%83%BC%E3%82%B5%E3%83%AB%E3%83%BB%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%AA%E3%83%BB%E3%82%B8%E3%83%A3%E3%83%91%E3%83%B3"
+    },
+    {
+      "id": "umeda-sky-building",
+      "villeId": "osaka",
+      "nom": "Umeda Sky Building",
+      "nom_jp": "梅田スカイビル",
+      "type": "voir",
+      "categorie": "Observatoire",
+      "emoji": "🏙️",
+      "interets": [
+        "lifestyle"
+      ],
+      "quartier": "Umeda",
+      "description": "Deux tours reliées par un observatoire circulaire suspendu à 173 mètres de haut, avec vue à 360° sur Osaka et ses environs.",
+      "conseil": "Vas-y au coucher du soleil — tu profites de la vue de jour puis de la ville illuminée, sans repayer l'entrée.",
+      "duree": "1h",
+      "budget": "¥¥",
+      "lat": 34.7054,
+      "lng": 135.49,
+      "saison_ideale": "",
+      "horaires": "9h30–22h30",
+      "acces": "Station Osaka/Umeda, 7 min à pied",
+      "prix_detail": "1500¥",
+      "site_web": "kuchu-teien.com",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/umeda-sky-building.jpg",
+      "photo": "/images/lieux-photos/umeda-sky-building.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%A2%85%E7%94%B0%E3%82%B9%E3%82%AB%E3%82%A4%E3%83%93%E3%83%AB"
+    },
+    {
+      "id": "kaiyukan",
+      "villeId": "osaka",
+      "nom": "Aquarium Kaiyukan",
+      "nom_jp": "海遊館",
+      "type": "faire",
+      "categorie": "Aquarium",
+      "emoji": "🐋",
+      "interets": [
+        "lifestyle"
+      ],
+      "quartier": "Tempozan",
+      "description": "L'un des plus grands aquariums du monde, organisé autour d'un immense bassin central reproduisant l'écosystème du Pacifique, avec requins-baleines.",
+      "conseil": "La visite descend en spirale du sommet vers le bassin profond — prends l'escalator jusqu'en haut sans t'arrêter, puis redescends tranquillement.",
+      "duree": "2h",
+      "budget": "¥¥",
+      "lat": 34.6547,
+      "lng": 135.429,
+      "saison_ideale": "",
+      "horaires": "10h00–20h00 (variable)",
+      "acces": "Station Osakako (Chuo Line), 5 min à pied",
+      "prix_detail": "2400¥",
+      "site_web": "kaiyukan.com",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/kaiyukan.jpg",
+      "photo": "/images/lieux-photos/kaiyukan.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E6%B5%B7%E9%81%8A%E9%A4%A8"
+    },
+    {
+      "id": "den-den-town",
+      "villeId": "osaka",
+      "nom": "Den Den Town",
+      "nom_jp": "日本橋（でんでんタウン）",
+      "type": "acheter",
+      "categorie": "Quartier otaku",
+      "emoji": "🎮",
+      "interets": [
+        "anime",
+        "lifestyle"
+      ],
+      "quartier": "Nipponbashi",
+      "description": "Équivalent osakan d'Akihabara : rue dense en boutiques de manga, figurines, jeux vidéo rétro et électronique, plus détendue et moins touristique.",
+      "conseil": "Moins bondé qu'Akihabara à Tokyo — bon plan pour du matériel d'occasion à prix plus doux, surtout en jeux vidéo rétro.",
+      "duree": "1-2h",
+      "budget": "¥¥",
+      "lat": 34.6626,
+      "lng": 135.5062,
+      "saison_ideale": "",
+      "horaires": "Boutiques généralement 11h00–20h00",
+      "acces": "Station Nippombashi (Sennichimae/Sakaisuji Line), sortie 5",
+      "prix_detail": "Variable",
+      "site_web": "",
+      "a_proximite": [
+        "kuromon",
+        "shinsaibashi"
+      ],
+      "image": "/images/lieux-photos/den-den-town.jpg",
+      "photo": "/images/lieux-photos/den-den-town.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://en.wikipedia.org/wiki/Den%20Den%20Town"
+    },
+    {
+      "id": "namba-yasaka",
+      "villeId": "osaka",
+      "nom": "Sanctuaire Namba Yasaka",
+      "nom_jp": "難波八阪神社",
+      "type": "voir",
+      "categorie": "Sanctuaire",
+      "emoji": "🦁",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Namba",
+      "description": "Petit sanctuaire connu pour son immense scène en forme de tête de lion géante, sensée avaler les mauvais esprits.",
+      "conseil": "Passage rapide (15-20 min) à combiner avec Dotonbori et Shinsaibashi tout proches — ne mérite pas un détour dédié seul.",
+      "duree": "30min",
+      "budget": "Gratuit",
+      "lat": 34.6614,
+      "lng": 135.4998,
+      "saison_ideale": "",
+      "horaires": "24h/24 (bureau du sanctuaire 9h-17h)",
+      "acces": "Station Namba, 10 min à pied",
+      "prix_detail": "Gratuit",
+      "site_web": "",
+      "a_proximite": [
+        "dotonbori",
+        "shinsaibashi"
+      ],
+      "image": "/images/lieux-photos/namba-yasaka.jpg",
+      "photo": "/images/lieux-photos/namba-yasaka.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E9%9B%A3%E6%B3%A2%E5%85%AB%E9%98%AA%E7%A5%9E%E7%A4%BE"
+    },
+    {
+      "id": "tsutenkaku",
+      "villeId": "osaka",
+      "nom": "Tour Tsutenkaku",
+      "nom_jp": "通天閣",
+      "type": "voir",
+      "categorie": "Tour panoramique",
+      "emoji": "🗼",
+      "interets": [
+        "lifestyle",
+        "culture"
+      ],
+      "quartier": "Shinsekai",
+      "description": "Tour emblématique du quartier rétro de Shinsekai, dont la statue dorée de Billiken au sommet est réputée porter chance si on lui frotte les pieds.",
+      "conseil": "Combine avec une virée okonomiyaki/kushikatsu à Shinsekai juste en dessous — la tour seule ne justifie pas le déplacement.",
+      "duree": "1h",
+      "budget": "¥¥",
+      "lat": 34.6523,
+      "lng": 135.5062,
+      "saison_ideale": "",
+      "horaires": "9h00–21h00 (dernière entrée 20h30)",
+      "acces": "Station Ebisucho, 5 min à pied",
+      "prix_detail": "1000¥ environ",
+      "site_web": "tsutenkaku.co.jp",
+      "a_proximite": [
+        "shinsekai"
+      ],
+      "image": "/images/lieux-photos/tsutenkaku.jpg",
+      "photo": "/images/lieux-photos/tsutenkaku.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E9%80%9A%E5%A4%A9%E9%96%A3"
+    },
+    {
+      "id": "abeno-harukas",
+      "villeId": "osaka",
+      "nom": "Abeno Harukas",
+      "nom_jp": "あべのハルカス",
+      "type": "voir",
+      "categorie": "Observatoire",
+      "emoji": "🏙️",
+      "interets": [
+        "lifestyle"
+      ],
+      "quartier": "Abeno",
+      "description": "Plus haute tour du Japon (300m), avec un observatoire à ciel ouvert au 60e étage offrant une vue dégagée sur tout le Kansai.",
+      "conseil": "Par temps très clair, on distingue le mont Fuji à l'horizon depuis le pont extérieur du 60e étage — vérifie la météo avant d'y monter.",
+      "duree": "1-2h",
+      "budget": "¥¥",
+      "lat": 34.6459,
+      "lng": 135.5133,
+      "saison_ideale": "",
+      "horaires": "9h00–22h00",
+      "acces": "Station Tennoji, accès direct depuis la gare",
+      "prix_detail": "2000¥ environ",
+      "site_web": "abenoharukas-300.jp",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/abeno-harukas.jpg",
+      "photo": "/images/lieux-photos/abeno-harukas.jpg",
+      "photo_author": "Loggieloggie",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Osaka_Skyline_from_Abeno_Harukas_20260505_115626_UTC%2B9_75_mm.jpg"
+    },
+    {
+      "id": "tenjinbashisuji",
+      "villeId": "osaka",
+      "nom": "Rue commerçante Tenjinbashisuji",
+      "nom_jp": "天神橋筋商店街",
+      "type": "acheter",
+      "categorie": "Rue commerçante",
+      "emoji": "🛍️",
+      "interets": [
+        "lifestyle",
+        "gastro"
+      ],
+      "quartier": "Kita",
+      "description": "Rue commerçante couverte la plus longue du Japon (2,6 km), mélange de petites échoppes traditionnelles et de commerces du quotidien.",
+      "conseil": "Descends-la progressivement du nord au sud plutôt que d'essayer de la parcourir en entier — elle change nettement de caractère section par section.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 34.7024,
+      "lng": 135.5153,
+      "saison_ideale": "",
+      "horaires": "Variable selon boutiques, généralement 10h00–20h00",
+      "acces": "Station Minami-Morimachi ou Ogimachi, accès direct",
+      "prix_detail": "Variable",
+      "site_web": "",
+      "a_proximite": [
+        "osaka-tenmangu"
+      ],
+      "image": "/images/lieux-photos/tenjinbashisuji.jpg",
+      "photo": "/images/lieux-photos/tenjinbashisuji.jpg",
+      "photo_author": "Sorrysorry",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Osaka_International_School_of_Culture_and_Language.jpeg"
+    },
+    {
+      "id": "osaka-tenmangu",
+      "villeId": "osaka",
+      "nom": "Sanctuaire Osaka Tenmangu",
+      "nom_jp": "大阪天満宮",
+      "type": "voir",
+      "categorie": "Sanctuaire",
+      "emoji": "⛩️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Kita",
+      "description": "Sanctuaire dédié à Sugawara no Michizane, divinité des études, où les élèves viennent prier avant les examens ; hôte du grand festival Tenjin Matsuri.",
+      "conseil": "Si tu passes en juillet, vérifie les dates du Tenjin Matsuri (24-25) — l'un des trois plus grands festivals du Japon, avec bateaux illuminés sur la rivière.",
+      "duree": "30min",
+      "budget": "Gratuit",
+      "lat": 34.6996,
+      "lng": 135.5147,
+      "saison_ideale": "",
+      "horaires": "9h00–17h00",
+      "acces": "Station Minami-Morimachi ou Ogimachi, 3 min à pied",
+      "prix_detail": "Gratuit",
+      "site_web": "tenjinsan.com",
+      "a_proximite": [
+        "tenjinbashisuji"
+      ],
+      "image": "/images/lieux-photos/osaka-tenmangu.jpg",
+      "photo": "/images/lieux-photos/osaka-tenmangu.jpg",
+      "photo_author": "Sorrysorry",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Tentoku-ji_Osaka.jpeg"
+    },
+    {
+      "id": "kofuku-ji",
+      "villeId": "nara",
+      "nom": "Kofuku-ji",
+      "nom_jp": "興福寺",
+      "type": "voir",
+      "categorie": "Temple",
+      "emoji": "🏯",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Centre",
+      "description": "Temple fondé au VIIe siècle, dont la pagode à cinq étages est devenue le symbole visuel de Nara, visible depuis presque tout le parc.",
+      "conseil": "Le musée du trésor (Kokuhokan) abrite la fameuse statue d'Ashura à trois visages — l'une des sculptures bouddhiques les plus célèbres du Japon.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 34.6851,
+      "lng": 135.83,
+      "saison_ideale": "",
+      "horaires": "9h00–17h00",
+      "acces": "Station Kintetsu-Nara, 5 min à pied",
+      "prix_detail": "500¥ (Kokuhokan), pagode extérieure gratuite",
+      "site_web": "kohfukuji.com",
+      "a_proximite": [
+        "nara-park"
+      ],
+      "image": "/images/lieux-photos/kofuku-ji.jpg",
+      "photo": "/images/lieux-photos/kofuku-ji.jpg",
+      "photo_author": "Mont Blank rich",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E5%A5%88%E8%89%AF%E5%9C%B0%E6%96%B9%E8%A3%81%E5%88%A4%E6%89%80.jpg"
+    },
+    {
+      "id": "isuien",
+      "villeId": "nara",
+      "nom": "Jardin Isuien",
+      "nom_jp": "依水園",
+      "type": "voir",
+      "categorie": "Jardin",
+      "emoji": "🌸",
+      "interets": [
+        "culture",
+        "nature"
+      ],
+      "quartier": "Centre",
+      "description": "Jardin japonais en deux parties datant des époques Edo et Meiji, utilisant la pagode voisine de Todai-ji comme arrière-plan emprunté (shakkei).",
+      "conseil": "Le café Sanshuen à l'intérieur du jardin sert un déjeuner simple avec vue directe sur l'étang — bon moment pour souffler après Todai-ji.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 34.69,
+      "lng": 135.8377,
+      "saison_ideale": "automne",
+      "horaires": "9h30–16h30 (fermé mardi)",
+      "acces": "5 min à pied depuis Todai-ji",
+      "prix_detail": "1200¥",
+      "site_web": "",
+      "a_proximite": [
+        "todai-ji",
+        "nara-national-museum"
+      ],
+      "image": "/images/lieux-photos/isuien.jpg",
+      "photo": "/images/lieux-photos/isuien.jpg",
+      "photo_author": "Drivephotographer",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E5%A4%A7%E4%BB%8F%E6%B1%A0(%E5%A5%88%E8%89%AF).jpg"
+    },
+    {
+      "id": "naramachi",
+      "villeId": "nara",
+      "nom": "Naramachi",
+      "nom_jp": "ならまち",
+      "type": "faire",
+      "categorie": "Quartier historique",
+      "emoji": "🏮",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Naramachi",
+      "description": "Ancien quartier marchand aux maisons de bois traditionnelles (machiya), aujourd'hui rempli de cafés, boutiques d'artisanat et petits musées.",
+      "conseil": "Cherche les poupées rouges suspendues (migawari-zaru) aux avant-toits — un porte-bonheur protecteur propre au quartier, chaque maison en a au moins une.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 34.6779,
+      "lng": 135.828,
+      "saison_ideale": "",
+      "horaires": "Libre accès, boutiques 10h-18h",
+      "acces": "15 min à pied depuis la gare JR Nara",
+      "prix_detail": "Gratuit (accès au quartier)",
+      "site_web": "",
+      "a_proximite": [
+        "kofuku-ji"
+      ],
+      "image": "/images/lieux-photos/naramachi.jpg",
+      "photo": "/images/lieux-photos/naramachi.jpg",
+      "photo_author": "Abasaa",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Naramachi_Monogatari-kan_Hall.JPG"
+    },
+    {
+      "id": "wakakusa-yama",
+      "villeId": "nara",
+      "nom": "Mont Wakakusa",
+      "nom_jp": "若草山",
+      "type": "faire",
+      "categorie": "Randonnée",
+      "emoji": "⛰️",
+      "interets": [
+        "nature"
+      ],
+      "quartier": "Est",
+      "description": "Colline herbeuse dominant Nara, accessible en 30-40 min de marche, offrant une vue d'ensemble sur le parc aux daims et la ville.",
+      "conseil": "Ouverte seulement de mi-mars à début décembre — vérifie le calendrier avant de t'y rendre, elle ferme en dehors de cette période.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 34.6875,
+      "lng": 135.8497,
+      "saison_ideale": "automne",
+      "horaires": "9h00–17h00 (mi-mars à début déc. uniquement)",
+      "acces": "20 min à pied depuis Todai-ji",
+      "prix_detail": "150¥",
+      "site_web": "",
+      "a_proximite": [
+        "todai-ji",
+        "kasuga"
+      ],
+      "image": "/images/lieux-photos/wakakusa-yama.jpg",
+      "photo": "/images/lieux-photos/wakakusa-yama.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E8%8B%A5%E8%8D%89%E5%B1%B1"
+    },
+    {
+      "id": "nara-national-museum",
+      "villeId": "nara",
+      "nom": "Musée national de Nara",
+      "nom_jp": "奈良国立博物館",
+      "type": "faire",
+      "categorie": "Musée",
+      "emoji": "🖼️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Centre",
+      "description": "Musée consacré à l'art bouddhique japonais, avec une riche collection de statues, peintures et objets rituels du VIIe au XIVe siècle.",
+      "conseil": "Va-y début octobre si tu peux : l'exposition annuelle Shoso-in présente des trésors impériaux du VIIIe siècle normalement gardés hors de vue toute l'année.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 34.6837,
+      "lng": 135.8383,
+      "saison_ideale": "",
+      "horaires": "9h30–17h00 (fermé lundi)",
+      "acces": "5 min à pied depuis le parc de Nara",
+      "prix_detail": "700¥",
+      "site_web": "narahaku.go.jp",
+      "a_proximite": [
+        "nara-park",
+        "isuien"
+      ],
+      "image": "/images/lieux-photos/nara-national-museum.jpg",
+      "photo": "/images/lieux-photos/nara-national-museum.jpg",
+      "photo_author": "名古屋太郎",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Nara_National_Museum_by_Emperor_Shomu.jpg"
+    },
+    {
+      "id": "itsukushima-shrine",
+      "villeId": "hiroshima",
+      "nom": "Sanctuaire Itsukushima",
+      "nom_jp": "厳島神社",
+      "type": "voir",
+      "categorie": "Sanctuaire",
+      "emoji": "⛩️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Miyajima",
+      "description": "Sanctuaire shinto bâti sur pilotis au-dessus de la mer, dont le célèbre torii orange semble flotter à marée haute.",
+      "conseil": "Vérifie les horaires de marée avant d'y aller : à marée basse, tu peux marcher jusqu'au pied du torii ; à marée haute, il flotte — deux expériences très différentes.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 34.296,
+      "lng": 132.3199,
+      "saison_ideale": "",
+      "horaires": "6h30–18h00 (variable selon saison)",
+      "acces": "Ferry depuis Miyajimaguchi (10 min), puis 5 min à pied",
+      "prix_detail": "300¥ (sanctuaire)",
+      "site_web": "itsukushimajinja.jp",
+      "a_proximite": [
+        "miyajima"
+      ],
+      "image": "/images/lieux-photos/itsukushima-shrine.jpg",
+      "photo": "/images/lieux-photos/itsukushima-shrine.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%8E%B3%E5%B3%B6%E7%A5%9E%E7%A4%BE"
+    },
+    {
+      "id": "hiroshima-castle",
+      "villeId": "hiroshima",
+      "nom": "Château de Hiroshima",
+      "nom_jp": "広島城",
+      "type": "voir",
+      "categorie": "Château",
+      "emoji": "🏯",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Naka",
+      "description": "Château reconstruit en béton en 1958 après sa destruction lors du bombardement atomique de 1945, avec un musée du samouraï à l'intérieur.",
+      "conseil": "Le dernier étage offre une vue sur le parc de la Paix depuis l'autre côté — utile pour visualiser la distance depuis l'épicentre de la bombe.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 34.4028,
+      "lng": 132.4594,
+      "saison_ideale": "",
+      "horaires": "9h00–18h00 (17h nov-mars)",
+      "acces": "15 min à pied depuis la gare de Hiroshima",
+      "prix_detail": "370¥",
+      "site_web": "rijo-castle.jp",
+      "a_proximite": [
+        "peace-park"
+      ],
+      "image": "/images/lieux-photos/hiroshima-castle.jpg",
+      "photo": "/images/lieux-photos/hiroshima-castle.jpg",
+      "photo_author": "Photos of Japan",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Hiroshima_Castle_Aug_24_459pm.jpg"
+    },
+    {
+      "id": "mazda-museum",
+      "villeId": "hiroshima",
+      "nom": "Musée Mazda",
+      "nom_jp": "マツダミュージアム",
+      "type": "faire",
+      "categorie": "Visite d'usine",
+      "emoji": "🚗",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Fuchu",
+      "description": "Visite guidée gratuite de l'usine et du musée du constructeur automobile, né à Hiroshima et intimement lié à sa reconstruction d'après-guerre.",
+      "conseil": "Réservation obligatoire à l'avance en ligne (places limitées) — les visites en anglais/japonais alternent selon les jours, vérifie le créneau.",
+      "duree": "1-2h",
+      "budget": "Gratuit",
+      "lat": 34.3703,
+      "lng": 132.5188,
+      "saison_ideale": "",
+      "horaires": "Visites sur réservation, généralement 9h et 13h30 en semaine",
+      "acces": "Station Mukainada (JR), navette gratuite depuis la gare",
+      "prix_detail": "Gratuit (réservation obligatoire)",
+      "site_web": "mazda.com/museum",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/mazda-museum.jpg",
+      "photo": "/images/lieux-photos/mazda-museum.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%84%E3%83%80%E3%83%9F%E3%83%A5%E3%83%BC%E3%82%B8%E3%82%A2%E3%83%A0"
+    },
+    {
+      "id": "hondori",
+      "villeId": "hiroshima",
+      "nom": "Galerie marchande Hondori",
+      "nom_jp": "本通り",
+      "type": "acheter",
+      "categorie": "Rue commerçante",
+      "emoji": "🛍️",
+      "interets": [
+        "lifestyle",
+        "gastro"
+      ],
+      "quartier": "Naka",
+      "description": "Artère commerçante couverte au centre de Hiroshima, mélange de boutiques, restaurants et cafés, animée du matin au soir.",
+      "conseil": "Cherche les petites échoppes d'okonomiyaki à emporter le long de la rue — moins connues que Okonomimura mais tout aussi bonnes, sans la file d'attente.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 34.3939,
+      "lng": 132.4576,
+      "saison_ideale": "",
+      "horaires": "Boutiques 10h00–20h00 environ",
+      "acces": "10 min à pied depuis le château de Hiroshima",
+      "prix_detail": "Variable",
+      "site_web": "",
+      "a_proximite": [
+        "hiroshima-castle",
+        "peace-park"
+      ],
+      "image": "/images/villes/hiroshima.jpg",
+      "image_original": "/images/lieux-photos/hondori.jpg",
+      "image_fallback": true
+    },
+    {
+      "id": "mitaki-dera",
+      "villeId": "hiroshima",
+      "nom": "Mitaki-dera",
+      "nom_jp": "三瀧寺",
+      "type": "voir",
+      "categorie": "Temple de montagne",
+      "emoji": "🍁",
+      "interets": [
+        "culture",
+        "nature"
+      ],
+      "quartier": "Nishi",
+      "description": "Temple bouddhiste niché dans une forêt de montagne à l'ouest de Hiroshima, autour de trois cascades qui lui donnent son nom, particulièrement recherché en automne.",
+      "conseil": "Peu fréquenté malgré sa proximité avec le centre — bonne échappée si Hiroshima commence à te sembler trop chargée en histoire et en monde.",
+      "duree": "1-2h",
+      "budget": "Gratuit",
+      "lat": 34.4133,
+      "lng": 132.4394,
+      "saison_ideale": "automne",
+      "horaires": "8h00–17h00",
+      "acces": "Station JR Mitaki, 15 min de marche en montée",
+      "prix_detail": "Gratuit (don libre)",
+      "site_web": "",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/mitaki-dera.jpg",
+      "photo": "/images/lieux-photos/mitaki-dera.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E4%B8%89%E7%80%A7%E5%AF%BA"
+    },
+    {
+      "id": "momiji-manju",
+      "villeId": "hiroshima",
+      "nom": "Momiji Manju de Miyajima",
+      "nom_jp": "もみじ饅頭",
+      "type": "manger",
+      "categorie": "Spécialité locale",
+      "emoji": "🍁",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Miyajima",
+      "description": "Petit gâteau en forme de feuille d'érable fourré à la pâte de haricot rouge, spécialité incontournable de l'île, vendu frais dans toute la rue commerçante.",
+      "conseil": "Cherche les échoppes qui les font cuire sous tes yeux dans des moules en forme de feuille — bien meilleurs tièdes et frais que ceux emballés en boîte.",
+      "duree": "30min",
+      "budget": "¥",
+      "lat": 34.2967,
+      "lng": 132.32,
+      "saison_ideale": "",
+      "horaires": "9h00–17h00 environ (variable)",
+      "acces": "Rue commerçante Omotesando, entre le ferry et le sanctuaire",
+      "prix_detail": "150-200¥ pièce",
+      "site_web": "",
+      "a_proximite": [
+        "miyajima",
+        "itsukushima-shrine"
+      ],
+      "image": "/images/lieux-photos/momiji-manju.jpg",
+      "photo": "/images/lieux-photos/momiji-manju.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E3%82%82%E3%81%BF%E3%81%98%E9%A5%85%E9%A0%AD"
+    },
+    {
+      "id": "hakone-shrine",
+      "villeId": "hakone",
+      "nom": "Sanctuaire Hakone",
+      "nom_jp": "箱根神社",
+      "type": "voir",
+      "categorie": "Sanctuaire",
+      "emoji": "⛩️",
+      "interets": [
+        "culture",
+        "nature"
+      ],
+      "quartier": "Lac Ashi",
+      "description": "Sanctuaire niché dans la forêt au bord du lac Ashi, dont le torii rouge planté dans l'eau est l'une des images les plus photographiées de Hakone.",
+      "conseil": "Le torii dans l'eau se photographie mieux tôt le matin, avant l'arrivée des bateaux de croisière — lumière plus douce et moins de monde sur la jetée.",
+      "duree": "1h",
+      "budget": "Gratuit",
+      "lat": 35.2016,
+      "lng": 139.0286,
+      "saison_ideale": "automne",
+      "horaires": "9h00–16h00 (accès extérieur libre)",
+      "acces": "Bus depuis Hakone-Yumoto (40 min) arrêt Motohakone-ko",
+      "prix_detail": "Gratuit",
+      "site_web": "hakonejinja.or.jp",
+      "a_proximite": [
+        "lac-ashi-croisiere"
+      ],
+      "image": "/images/lieux-photos/hakone-shrine.jpg",
+      "photo": "/images/lieux-photos/hakone-shrine.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E7%AE%B1%E6%A0%B9%E7%A5%9E%E7%A4%BE"
+    },
+    {
+      "id": "lac-ashi-croisiere",
+      "villeId": "hakone",
+      "nom": "Croisière sur le lac Ashi",
+      "nom_jp": "芦ノ湖遊覧船",
+      "type": "faire",
+      "categorie": "Croisière",
+      "emoji": "🚢",
+      "interets": [
+        "nature",
+        "lifestyle"
+      ],
+      "quartier": "Togendai / Moto-Hakone",
+      "description": "Traversée en bateau (parfois en réplique de galion pirate) du lac de cratère volcanique de Hakone, avec vue sur le mont Fuji par temps clair.",
+      "conseil": "Combine-la avec le téléphérique d'Owakudani dans le même sens pour former une boucle complète — c'est l'itinéraire classique du \"Hakone Round Course\".",
+      "duree": "30min-1h",
+      "budget": "¥¥",
+      "lat": 35.2058,
+      "lng": 139.0233,
+      "saison_ideale": "hiver",
+      "horaires": "9h30–17h00 environ (variable selon saison)",
+      "acces": "Ports de Togendai, Hakone-machi ou Moto-Hakone",
+      "prix_detail": "1200¥ environ (aller simple)",
+      "site_web": "hakone-kankosen.co.jp",
+      "a_proximite": [
+        "hakone-shrine",
+        "hakone-ropeway"
+      ],
+      "image": "/images/lieux-photos/lac-ashi-croisiere.jpg",
+      "photo": "/images/lieux-photos/lac-ashi-croisiere.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E8%8A%A6%E3%83%8E%E6%B9%96%E9%81%8A%E8%A6%A7%E8%88%B9"
+    },
+    {
+      "id": "hakone-ropeway",
+      "villeId": "hakone",
+      "nom": "Téléphérique de Hakone",
+      "nom_jp": "箱根ロープウェイ",
+      "type": "faire",
+      "categorie": "Téléphérique",
+      "emoji": "🚡",
+      "interets": [
+        "nature"
+      ],
+      "quartier": "Owakudani",
+      "description": "Téléphérique panoramique survolant la vallée volcanique active d'Owakudani, avec vue sur le mont Fuji par temps clair et arrêt aux fumerolles.",
+      "conseil": "Ferme parfois temporairement en cas de pic d'activité volcanique (gaz sulfureux) — vérifie le statut en ligne avant de t'y rendre, surtout si Owakudani est ta priorité.",
+      "duree": "45min",
+      "budget": "¥¥",
+      "lat": 35.2419,
+      "lng": 139.0233,
+      "saison_ideale": "hiver",
+      "horaires": "9h00–17h00",
+      "acces": "Depuis Sounzan (funiculaire) ou Togendai (côté lac)",
+      "prix_detail": "1500¥ environ (Sounzan-Togendai)",
+      "site_web": "hakoneropeway.co.jp",
+      "a_proximite": [
+        "owakudani",
+        "lac-ashi-croisiere"
+      ],
+      "image": "/images/lieux-photos/hakone-ropeway.jpg",
+      "photo": "/images/lieux-photos/hakone-ropeway.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E7%AE%B1%E6%A0%B9%E3%83%AD%E3%83%BC%E3%83%97%E3%82%A6%E3%82%A7%E3%82%A4"
+    },
+    {
+      "id": "gora-park",
+      "villeId": "hakone",
+      "nom": "Parc de Gora",
+      "nom_jp": "強羅公園",
+      "type": "voir",
+      "categorie": "Jardin à la française",
+      "emoji": "🌷",
+      "interets": [
+        "nature",
+        "lifestyle"
+      ],
+      "quartier": "Gora",
+      "description": "Jardin à la française en terrasses sur les pentes de Gora, avec serre tropicale, roseraie et une maison de thé pour une cérémonie du thé simplifiée.",
+      "conseil": "La cérémonie du thé à la maison Kien s'improvise sans réservation — bonne première approche pour qui n'a jamais essayé, moins formelle qu'à Kyoto.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 35.2419,
+      "lng": 139.0575,
+      "saison_ideale": "printemps",
+      "horaires": "9h00–17h00",
+      "acces": "Station Gora (funiculaire depuis Gora), 2 min à pied",
+      "prix_detail": "550¥",
+      "site_web": "hakone-tozan.co.jp/gorapark",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/gora-park.jpg",
+      "photo": "/images/lieux-photos/gora-park.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%BC%B7%E7%BE%85%E5%85%AC%E5%9C%92"
+    },
+    {
+      "id": "sugi-namiki",
+      "villeId": "hakone",
+      "nom": "Allée des cryptomères (Hakone Kyu-Kaido)",
+      "nom_jp": "杉並木",
+      "type": "faire",
+      "categorie": "Nature",
+      "emoji": "🌲",
+      "interets": [
+        "nature"
+      ],
+      "quartier": "Moto-Hakone",
+      "description": "Ancienne route Tokaido bordée de plus de 400 cryptomères plantés au XVIIe siècle, aujourd'hui promenade ombragée le long du lac Ashi.",
+      "conseil": "Marche-la tôt le matin ou en fin de journée — c'est l'un des seuls endroits de Hakone où l'on croise vraiment peu de monde même en haute saison.",
+      "duree": "1h",
+      "budget": "Gratuit",
+      "lat": 35.1975,
+      "lng": 139.0264,
+      "saison_ideale": "",
+      "horaires": "24h/24",
+      "acces": "Depuis Moto-Hakone, à pied le long du lac",
+      "prix_detail": "Gratuit",
+      "site_web": "",
+      "a_proximite": [
+        "hakone-shrine"
+      ],
+      "image": "/images/lieux-photos/sugi-namiki.jpg",
+      "photo": "/images/lieux-photos/sugi-namiki.jpg",
+      "photo_author": "Quercus acuta",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:View_of_Mount_HakoneKomagatake_from_Onshi-Hakone-Koen_Park.jpg"
+    },
+    {
+      "id": "kanazawa-castle",
+      "villeId": "kanazawa",
+      "nom": "Parc du Château de Kanazawa",
+      "nom_jp": "金沢城公園",
+      "type": "voir",
+      "categorie": "Château",
+      "emoji": "🏯",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Centre",
+      "description": "Vaste parc autour des bâtiments reconstruits du château, ancien fief du puissant clan Maeda, juste en face du jardin Kenroku-en.",
+      "conseil": "L'entrée du parc est gratuite, seuls certains bâtiments intérieurs (Gojukken Nagaya) sont payants — fais au moins le tour extérieur même sans payer.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 36.5638,
+      "lng": 136.6592,
+      "saison_ideale": "printemps",
+      "horaires": "7h00–18h00 (parc), 9h00–16h30 (bâtiments)",
+      "acces": "10 min à pied depuis Kenroku-en",
+      "prix_detail": "Parc gratuit, 320¥ (Gojukken Nagaya)",
+      "site_web": "pref.ishikawa.jp/siro-niwa",
+      "a_proximite": [
+        "kenroku-en"
+      ],
+      "image": "/images/lieux-photos/kanazawa-castle.jpg",
+      "photo": "/images/lieux-photos/kanazawa-castle.jpg",
+      "photo_author": "Fg2",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Kanazawa-M-5954.jpg"
+    },
+    {
+      "id": "omicho-market",
+      "villeId": "kanazawa",
+      "nom": "Marché Omicho",
+      "nom_jp": "近江町市場",
+      "type": "manger",
+      "categorie": "Marché",
+      "emoji": "🦀",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Centre",
+      "description": "Marché couvert vieux de 300 ans, réputé pour ses fruits de mer de la mer du Japon — crabe de neige, oursin, thon — à déguster sur place ou en sushi.",
+      "conseil": "Beaucoup d'étals proposent une brochette de sashimi à manger debout pour quelques centaines de yens — meilleur moyen de goûter sans s'engager sur un repas complet.",
+      "duree": "1-2h",
+      "budget": "¥¥",
+      "lat": 36.5697,
+      "lng": 136.6533,
+      "saison_ideale": "hiver",
+      "horaires": "9h00–17h00 (variable selon échoppes)",
+      "acces": "Station JR Kanazawa, 15 min à pied ou bus",
+      "prix_detail": "Variable",
+      "site_web": "ohmicho-ichiba.com",
+      "a_proximite": [
+        "kanazawa-castle"
+      ],
+      "image": "/images/lieux-photos/omicho-market.jpg",
+      "photo": "/images/lieux-photos/omicho-market.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E8%BF%91%E6%B1%9F%E7%94%BA%E5%B8%82%E5%A0%B4"
+    },
+    {
+      "id": "kanazawa-21st-century-museum",
+      "villeId": "kanazawa",
+      "nom": "Musée d'art contemporain du XXIe siècle",
+      "nom_jp": "金沢21世紀美術館",
+      "type": "faire",
+      "categorie": "Musée",
+      "emoji": "🎨",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Centre",
+      "description": "Musée circulaire entièrement vitré, dont l'œuvre la plus célèbre — une piscine en trompe-l'œil — permet de voir les visiteurs \"sous l'eau\" depuis le sous-sol.",
+      "conseil": "L'œuvre 'Swimming Pool' de Leandro Erlich (la piscine) demande parfois un billet séparé et une file dédiée — vérifie à l'accueil dès l'arrivée si elle t'intéresse.",
+      "duree": "1-2h",
+      "budget": "¥¥",
+      "lat": 36.5605,
+      "lng": 136.658,
+      "saison_ideale": "",
+      "horaires": "10h00–18h00 (fermé lundi)",
+      "acces": "5 min à pied depuis Kenroku-en",
+      "prix_detail": "Zones gratuites libres, expos payantes ~450-1200¥",
+      "site_web": "kanazawa21.jp",
+      "a_proximite": [
+        "kenroku-en",
+        "kanazawa-castle"
+      ],
+      "image": "/images/lieux-photos/kanazawa-21st-century-museum.jpg",
+      "photo": "/images/lieux-photos/kanazawa-21st-century-museum.jpg",
+      "photo_author": "Aspere",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kanazawa_City_Hall_260123.jpg"
+    },
+    {
+      "id": "nagamachi",
+      "villeId": "kanazawa",
+      "nom": "Quartier des samouraïs de Nagamachi",
+      "nom_jp": "長町武家屋敷跡",
+      "type": "faire",
+      "categorie": "Quartier historique",
+      "emoji": "🗡️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Nagamachi",
+      "description": "Ancien quartier résidentiel des samouraïs de rang moyen du clan Maeda, avec ses murs d'argile ocre et ses canaux préservés depuis l'époque Edo.",
+      "conseil": "La résidence Nomura-ke, seule demeure de samouraï ouverte au public avec son jardin, mérite le petit billet d'entrée — les rues extérieures seules restent assez impersonnelles.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 36.5636,
+      "lng": 136.6497,
+      "saison_ideale": "",
+      "horaires": "Libre accès (rues), 8h30–17h30 (Nomura-ke)",
+      "acces": "10 min à pied depuis la gare de Kanazawa",
+      "prix_detail": "550¥ (résidence Nomura-ke)",
+      "site_web": "",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/nagamachi.jpg",
+      "photo": "/images/lieux-photos/nagamachi.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E9%95%B7%E7%94%BA%E6%AD%A6%E5%AE%B6%E5%B1%8B%E6%95%B7%E8%B7%A1"
+    },
+    {
+      "id": "nishi-chaya",
+      "villeId": "kanazawa",
+      "nom": "Quartier Nishi Chaya",
+      "nom_jp": "西茶屋街",
+      "type": "faire",
+      "categorie": "Quartier historique",
+      "emoji": "🏮",
+      "interets": [
+        "culture",
+        "lifestyle"
+      ],
+      "quartier": "Nishi",
+      "description": "Le plus petit et le moins fréquenté des trois quartiers de geishas historiques de Kanazawa, avec ses maisons de bois à treillis encore en activité le soir.",
+      "conseil": "Beaucoup moins de monde qu'Higashi Chaya — meilleure option si tu ne veux visiter qu'un seul quartier de geishas et éviter les foules.",
+      "duree": "45min",
+      "budget": "Gratuit",
+      "lat": 36.5522,
+      "lng": 136.6486,
+      "saison_ideale": "",
+      "horaires": "Libre accès (rues)",
+      "acces": "15 min à pied depuis Kanazawa Station, ou bus",
+      "prix_detail": "Gratuit (rues)",
+      "site_web": "",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/nishi-chaya.jpg",
+      "photo": "/images/lieux-photos/nishi-chaya.jpg",
+      "photo_author": "TTTNIS",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Nishi_Chaya-gai.jpg"
+    },
+    {
+      "id": "kanazawa-gold-leaf",
+      "villeId": "kanazawa",
+      "nom": "Feuille d'or de Kanazawa",
+      "nom_jp": "金箔",
+      "type": "acheter",
+      "categorie": "Artisanat",
+      "emoji": "✨",
+      "interets": [
+        "lifestyle",
+        "gastro"
+      ],
+      "quartier": "Higashi",
+      "description": "Kanazawa produit environ 99% de la feuille d'or du Japon — cosmétiques, objets laqués et glaces recouvertes d'or se trouvent dans tout le quartier Higashi Chaya.",
+      "conseil": "La glace au matcha recouverte d'une feuille d'or entière (Hakuichi) est devenue LE cliché Instagram de Kanazawa — amusant une fois, clairement pour la photo plus que le goût.",
+      "duree": "30min-1h",
+      "budget": "¥¥",
+      "lat": 36.5715,
+      "lng": 136.6655,
+      "saison_ideale": "",
+      "horaires": "9h00–18h00 environ",
+      "acces": "Quartier Higashi Chaya, 20 min à pied depuis la gare",
+      "prix_detail": "Glace ~900¥, objets laqués variable",
+      "site_web": "hakuichi.co.jp",
+      "a_proximite": [
+        "higashi-chaya"
+      ],
+      "image": "/images/lieux-photos/kanazawa-gold-leaf.jpg",
+      "photo": "/images/lieux-photos/kanazawa-gold-leaf.jpg",
+      "photo_author": "Photogoddle",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Gold_Leaf_Buddha.png"
+    },
+    {
+      "id": "takayama-morning-market",
+      "villeId": "takayama",
+      "nom": "Marché matinal de Miyagawa",
+      "nom_jp": "宮川朝市",
+      "type": "manger",
+      "categorie": "Marché matinal",
+      "emoji": "🥬",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Miyagawa",
+      "description": "Marché en plein air le long de la rivière Miyagawa, tenu par des agricultrices locales depuis des générations, vendant légumes, pickles et snacks à grignoter en marchant.",
+      "conseil": "Vas-y tôt (avant 9h) — les meilleurs produits partent vite et l'ambiance authentique du marché s'estompe à mesure que les groupes de touristes arrivent.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 36.144,
+      "lng": 137.254,
+      "saison_ideale": "",
+      "horaires": "7h00–12h00 environ (variable saison)",
+      "acces": "10 min à pied depuis la gare de Takayama",
+      "prix_detail": "Variable, snacks 100-400¥",
+      "site_web": "",
+      "a_proximite": [
+        "takayama-old-town"
+      ],
+      "image": "/images/lieux-photos/takayama-morning-market.jpg",
+      "photo": "/images/lieux-photos/takayama-morning-market.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%AE%AE%E5%B7%9D%E6%9C%9D%E5%B8%82"
+    },
+    {
+      "id": "hida-folk-village",
+      "villeId": "takayama",
+      "nom": "Village folklorique de Hida (Hida no Sato)",
+      "nom_jp": "飛騨の里",
+      "type": "voir",
+      "categorie": "Musée en plein air",
+      "emoji": "🏚️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Nishinoisshiki",
+      "description": "Musée en plein air regroupant une trentaine de fermes traditionnelles au toit de chaume gassho-zukuri, déplacées de toute la région pour préserver l'architecture rurale de Hida.",
+      "conseil": "Bonne alternative si tu ne prévois pas d'aller jusqu'à Shirakawa-go — même style architectural, sans le trajet ni la foule du site classé UNESCO.",
+      "duree": "1-2h",
+      "budget": "¥",
+      "lat": 36.1364,
+      "lng": 137.2364,
+      "saison_ideale": "hiver",
+      "horaires": "8h30–17h00",
+      "acces": "20 min à pied depuis la gare, ou bus",
+      "prix_detail": "700¥",
+      "site_web": "hidanosato-tpo.jp",
+      "a_proximite": [],
+      "image": "/images/lieux-photos/hida-folk-village.jpg",
+      "photo": "/images/lieux-photos/hida-folk-village.jpg",
+      "photo_author": "Syuhei.h",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:01021.jpg"
+    },
+    {
+      "id": "takayama-jinya",
+      "villeId": "takayama",
+      "nom": "Takayama Jinya",
+      "nom_jp": "高山陣屋",
+      "type": "voir",
+      "categorie": "Bâtiment historique",
+      "emoji": "🏯",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Sanmachi",
+      "description": "Seul bâtiment administratif de l'époque Edo encore intact au Japon, ancien siège du gouvernement local direct du shogunat dans la région de Hida.",
+      "conseil": "La salle des interrogatoires et la chambre de torture, conservées en l'état, en font l'une des visites les plus concrètes sur le fonctionnement réel du pouvoir féodal.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 36.1397,
+      "lng": 137.253,
+      "saison_ideale": "",
+      "horaires": "8h45–17h00 (16h30 nov-fév)",
+      "acces": "5 min à pied depuis la vieille ville de Takayama",
+      "prix_detail": "440¥",
+      "site_web": "jinya.gifu.jp",
+      "a_proximite": [
+        "takayama-old-town"
+      ],
+      "image": "/images/lieux-photos/takayama-jinya.jpg",
+      "photo": "/images/lieux-photos/takayama-jinya.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E9%AB%98%E5%B1%B1%E9%99%A3%E5%B1%8B"
+    },
+    {
+      "id": "hida-beef-skewer",
+      "villeId": "takayama",
+      "nom": "Brochettes de bœuf de Hida",
+      "nom_jp": "飛騨牛串",
+      "type": "manger",
+      "categorie": "Street food",
+      "emoji": "🥩",
+      "interets": [
+        "gastro"
+      ],
+      "quartier": "Sanmachi",
+      "description": "Bœuf de Hida, l'une des viandes marbrées les plus réputées du Japon avec le wagyu de Kobe, servi en brochette grillée à emporter dans les rues de la vieille ville.",
+      "conseil": "Cherche la mention 'A5' sur les panneaux — le grade le plus élevé du bœuf japonais, souvent proposé aux côtés d'une version moins chère mais toujours locale.",
+      "duree": "30min",
+      "budget": "¥¥",
+      "lat": 36.1414,
+      "lng": 137.2528,
+      "saison_ideale": "",
+      "horaires": "10h00–16h00 environ",
+      "acces": "Vieille ville de Takayama (Sanmachi Suji)",
+      "prix_detail": "500-900¥ la brochette",
+      "site_web": "",
+      "a_proximite": [
+        "takayama-old-town",
+        "takayama-jinya"
+      ],
+      "image": "/images/lieux-photos/hida-beef-skewer.jpg",
+      "photo": "/images/lieux-photos/hida-beef-skewer.jpg",
+      "photo_author": "EXECUTOR",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Takayama_Station.jpg"
+    },
+    {
+      "id": "ujigami-jinja",
+      "villeId": "uji",
+      "nom": "Ujigami Jinja",
+      "nom_jp": "宇治上神社",
+      "type": "voir",
+      "categorie": "Sanctuaire",
+      "emoji": "⛩️",
+      "interets": [
+        "culture"
+      ],
+      "quartier": "Uji",
+      "description": "Le plus ancien bâtiment shinto encore debout au Japon, classé UNESCO, dont le sanctuaire principal daterait du XIe siècle.",
+      "conseil": "Modeste et rapide à visiter (15-20 min), mais sa valeur historique dépasse largement sa taille — ne le zappe pas en pensant que Byodo-in suffit.",
+      "duree": "30min",
+      "budget": "Gratuit",
+      "lat": 34.8911,
+      "lng": 135.8087,
+      "saison_ideale": "",
+      "horaires": "9h00–16h30",
+      "acces": "10 min à pied depuis Byodo-in, de l'autre côté de la rivière",
+      "prix_detail": "Gratuit",
+      "site_web": "",
+      "a_proximite": [
+        "byodo-in",
+        "uji-bridge"
+      ],
+      "image": "/images/lieux-photos/ujigami-jinja.jpg",
+      "photo": "/images/lieux-photos/ujigami-jinja.jpg",
+      "photo_author": "Wikipedia",
+      "photo_licence": "voir source",
+      "source": "https://ja.wikipedia.org/wiki/%E5%AE%87%E6%B2%BB%E4%B8%8A%E7%A5%9E%E7%A4%BE"
+    },
+    {
+      "id": "uji-bridge",
+      "villeId": "uji",
+      "nom": "Pont d'Uji",
+      "nom_jp": "宇治橋",
+      "type": "faire",
+      "categorie": "Balade",
+      "emoji": "🌉",
+      "interets": [
+        "culture",
+        "nature"
+      ],
+      "quartier": "Uji",
+      "description": "L'un des plus anciens ponts du Japon (VIIe siècle dans sa première version), traversant la rivière Uji réputée pour la qualité de son eau utilisée dans la culture du thé.",
+      "conseil": "S'arrête à la petite avancée en bois côté amont (Sawarabi-no-michi) — c'est de là que, selon la légende, on puisait l'eau pour le thé impérial.",
+      "duree": "30min",
+      "budget": "Gratuit",
+      "lat": 34.8908,
+      "lng": 135.8062,
+      "saison_ideale": "",
+      "horaires": "24h/24",
+      "acces": "Au centre d'Uji, entre la gare et Byodo-in",
+      "prix_detail": "Gratuit",
+      "site_web": "",
+      "a_proximite": [
+        "byodo-in",
+        "ujigami-jinja"
+      ],
+      "image": "/images/lieux-photos/uji-bridge.jpg",
+      "photo": "/images/lieux-photos/uji-bridge.jpg",
+      "photo_author": "Hachiro Onoue",
+      "photo_licence": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Ujibashi_Danpi.jpg"
+    },
+    {
+      "id": "taiho-an",
+      "villeId": "uji",
+      "nom": "Maison de thé Taiho-an",
+      "nom_jp": "対鳳庵",
+      "type": "faire",
+      "categorie": "Cérémonie du thé",
+      "emoji": "🍵",
+      "interets": [
+        "gastro",
+        "culture"
+      ],
+      "quartier": "Uji",
+      "description": "Maison de thé municipale au bord de la rivière, proposant une cérémonie du thé matcha courte et accessible sans réservation ni connaissance préalable.",
+      "conseil": "Compte 30-40 min, en petit groupe assis sur tatami — une hôtesse guide chaque étape, aucune expérience préalable nécessaire.",
+      "duree": "45min",
+      "budget": "¥",
+      "lat": 34.8896,
+      "lng": 135.806,
+      "saison_ideale": "",
+      "horaires": "10h00–16h00 (fermé lundi)",
+      "acces": "2 min à pied depuis le pont d'Uji",
+      "prix_detail": "1000¥ environ (thé + wagashi)",
+      "site_web": "",
+      "a_proximite": [
+        "uji-bridge",
+        "uji-matcha"
+      ],
+      "image": "/images/lieux-photos/taiho-an.jpg",
+      "photo": "/images/lieux-photos/taiho-an.jpg",
+      "photo_author": "おいでやす千年の都",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E5%AE%87%E6%B2%BB%E5%B8%82%E5%96%B6%E8%8C%B6%E5%AE%A4_%E5%AF%BE%E9%B3%B3%E5%BA%B5_01.jpg"
+    },
+    {
+      "id": "koko-en",
+      "villeId": "himeji",
+      "nom": "Jardin Koko-en",
+      "nom_jp": "好古園",
+      "type": "voir",
+      "categorie": "Jardin",
+      "emoji": "🎍",
+      "interets": [
+        "culture",
+        "nature"
+      ],
+      "quartier": "Himeji",
+      "description": "Neuf jardins japonais distincts aménagés côte à côte sur l'ancien emplacement des résidences de samouraïs, juste à côté du château de Himeji.",
+      "conseil": "Billet combiné avec le château légèrement moins cher que les deux séparément — prends-le directement à l'entrée du château si tu comptes faire les deux.",
+      "duree": "1h",
+      "budget": "¥",
+      "lat": 34.8407,
+      "lng": 134.6912,
+      "saison_ideale": "automne",
+      "horaires": "9h00–17h00 (16h nov-fév)",
+      "acces": "Juste à l'ouest du château de Himeji",
+      "prix_detail": "310¥ (450¥ combiné avec le château)",
+      "site_web": "himeji-machishin.jp/ryokuchi/koko_en",
+      "a_proximite": [
+        "himeji-castle"
+      ],
+      "image": "/images/lieux-photos/koko-en.jpg",
+      "photo": "/images/lieux-photos/koko-en.jpg",
+      "photo_author": "Drivephotographer",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Himeji_Castle_Hyakken_Gallery.jpg"
+    },
+    {
+      "id": "himeji-egret-street",
+      "villeId": "himeji",
+      "nom": "Rue Miyuki (Egret Street)",
+      "nom_jp": "みゆき通り",
+      "type": "acheter",
+      "categorie": "Rue commerçante",
+      "emoji": "🛍️",
+      "interets": [
+        "lifestyle",
+        "gastro"
+      ],
+      "quartier": "Himeji",
+      "description": "Rue commerçante piétonne reliant la gare de Himeji au château, mêlant boutiques locales, restaurants et cafés sur près d'un kilomètre.",
+      "conseil": "Vise-la pour le déjeuner en allant vers le château depuis la gare — évite de chercher un restaurant une fois sur place, l'offre autour du château est plus limitée.",
+      "duree": "30min-1h",
+      "budget": "¥",
+      "lat": 34.8285,
+      "lng": 134.6934,
+      "saison_ideale": "",
+      "horaires": "Boutiques 10h00–19h00 environ",
+      "acces": "Sortie nord de la gare de Himeji, mène directement au château",
+      "prix_detail": "Variable",
+      "site_web": "",
+      "a_proximite": [
+        "himeji-castle"
+      ],
+      "image": "/images/lieux-photos/himeji-egret-street.jpg",
+      "photo": "/images/lieux-photos/himeji-egret-street.jpg",
+      "photo_author": "Tokumeigakarinoaoshima",
+      "photo_licence": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Himeji_FORuS.JPG"
     }
   ],
   "voyages_preconcus": [

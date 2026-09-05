@@ -1,0 +1,36 @@
+import { ArrowLeft, Heart } from "lucide-react";
+import { SpeakButton } from "../../tts.jsx";
+
+function Section({ C, title, children }) {
+  if (!children) return null;
+  return <section style={{marginTop:24}}><div style={{fontSize:10,color:C.t3,letterSpacing:".16em",textTransform:"uppercase",marginBottom:8}}>{title}</div><div style={{fontSize:14,color:C.t2,lineHeight:1.75}}>{children}</div></section>;
+}
+
+export function SearchResultDetail({ C, result, favorite, onToggleFavorite, onBack }) {
+  const item = result.raw || {};
+  const expression = result.kind === "expr";
+  const japanese = expression ? item.expression : item.nom_jp;
+  const title = expression ? item.traduction : (item.traduction || item.nom || result.title);
+  const subtitle = item.romaji || result.sub;
+  const description = expression ? item.contexte : item.description;
+  return <div style={{position:"fixed",inset:0,zIndex:210,background:C.bg,overflowY:"auto"}}>
+    <header style={{position:"sticky",top:0,zIndex:2,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"48px 18px 12px",background:C.navBg,backdropFilter:"blur(18px)",borderBottom:`1px solid ${C.border}`}}>
+      <button onClick={onBack} aria-label="Retour" style={{width:36,height:36,borderRadius:18,border:`1px solid ${C.border}`,background:C.s1,color:C.text,display:"grid",placeItems:"center",cursor:"pointer"}}><ArrowLeft size={18}/></button>
+      <div style={{fontSize:10,color:result.color,letterSpacing:".16em",textTransform:"uppercase"}}>{result.type}</div>
+      <button onClick={onToggleFavorite} aria-label={favorite?"Retirer des favoris":"Ajouter aux favoris"} style={{width:36,height:36,borderRadius:18,border:`1px solid ${C.border}`,background:C.s1,color:favorite?C.red:C.t3,display:"grid",placeItems:"center",cursor:"pointer"}}><Heart size={18} fill={favorite?"currentColor":"none"}/></button>
+    </header>
+    <main style={{padding:"34px 22px 80px"}}>
+      <div style={{minHeight:190,borderRadius:28,padding:"30px 24px",background:`linear-gradient(145deg,${result.color}20,${C.s1})`,border:`1px solid ${result.color}35`,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center"}}>
+        <div style={{fontSize:38,marginBottom:12}}>{result.emoji}</div>
+        {japanese&&<div style={{fontFamily:"'Noto Serif JP',serif",fontSize:japanese.length>8?28:42,color:C.text,lineHeight:1.25}}>{japanese}</div>}
+        {subtitle&&<div style={{color:result.color,fontSize:13,marginTop:8}}>{subtitle}</div>}
+        {japanese&&<div style={{marginTop:14}}><SpeakButton C={C} text={japanese} size={38} color={result.color}/></div>}
+      </div>
+      <h1 style={{fontFamily:"'Noto Serif JP',serif",fontSize:25,color:C.text,margin:"28px 0 0",lineHeight:1.3}}>{title}</h1>
+      <Section C={C} title={expression?"Sens et usage":"Découvrir"}>{description}</Section>
+      <Section C={C} title="Exemple">{item.exemple_jp&&<><div style={{color:C.text,fontFamily:"'Noto Serif JP',serif",fontSize:17}}>{item.exemple_jp}</div><div style={{marginTop:5}}>{item.exemple_fr}</div></>}</Section>
+      <Section C={C} title="Le savais-tu ?">{item.fun_fact}</Section>
+      {item.moment&&<div style={{display:"inline-flex",marginTop:22,padding:"7px 12px",borderRadius:999,background:`${result.color}16`,color:result.color,fontSize:12}}>Moment idéal : {item.moment}</div>}
+    </main>
+  </div>;
+}

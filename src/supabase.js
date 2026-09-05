@@ -102,6 +102,33 @@ export async function saveTripsCloud(userId, trips){
   return !error;
 }
 
+export async function uploadMemoryPhoto(userId, blob){
+  if(!supabaseEnabled || !userId || !blob) return null;
+  const path=`${userId}/${crypto.randomUUID()}.jpg`;
+  const { error }=await supabase.storage.from("memory-photos").upload(path,blob,{contentType:"image/jpeg",upsert:false,cacheControl:"31536000"});
+  return error ? null : path;
+}
+export async function createMemoryPhotoUrl(path){
+  if(!supabaseEnabled || !path) return null;
+  const {data,error}=await supabase.storage.from("memory-photos").createSignedUrl(path,3600);
+  return error ? null : data?.signedUrl||null;
+}
+export async function deleteMemoryPhoto(path){
+  if(!supabaseEnabled || !path || path.startsWith("data:")) return true;
+  const {error}=await supabase.storage.from("memory-photos").remove([path]);
+  return !error;
+}
+export async function fetchCloudBackup(userId){
+  if(!supabaseEnabled||!userId)return null;
+  const {data,error}=await supabase.from("user_backups").select("payload,updated_at").eq("user_id",userId).maybeSingle();
+  return error||!data ? null : data;
+}
+export async function saveCloudBackup(userId,payload){
+  if(!supabaseEnabled||!userId||!payload)return false;
+  const {error}=await supabase.from("user_backups").upsert({user_id:userId,payload,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+  return !error;
+}
+
 export async function fetchDailyFeed({ limit = 50 } = {}){
   if(!supabaseEnabled) return [];
   const { data, error } = await supabase
@@ -162,7 +189,7 @@ export async function sendTutorMessage({ message, scenarioId, niveau, conversati
   if(error){
     let payload = null;
     try { payload = await error.context?.json?.(); } catch { /* réponse non-JSON ou déjà consommée */ }
-    if(payload?.error === "limit_reached") return { limitReached: true, limit: payload.limit };
+    if(payload?.error === "limit_reached") return { limitReached: true, limit: payload.limit, period:payload.period };
     if(payload?.error === "premium_required") return { premiumRequired: true, limit: payload.limit };
     throw error;
   }
@@ -183,6 +210,7 @@ export async function sendItineraryGenerate({ lieux, days, rythme }){
     let payload = null;
     try { payload = await error.context?.json?.(); } catch { /* réponse non-JSON ou déjà consommée */ }
     if(payload?.error === "premium_required") return { premiumRequired: true };
+    if(payload?.error === "cost_limit") return { costLimit:true, quota:payload };
     throw error;
   }
   return data;
@@ -221,4 +249,15 @@ export async function sendCarnetRender(html){
     throw error;
   }
   return { blob: data };
+}
+
+/** Supprime définitivement l'utilisateur authentifié et ses données liées. */
+export async function deleteRemoteAccount(){
+  if(!supabaseEnabled) return { ok:true, localOnly:true };
+  const { data, error } = await supabase.functions.invoke("delete-account", {
+    body: {},
+    timeout: 15000,
+  });
+  if(error) throw error;
+  return { ok: data?.ok === true };
 }

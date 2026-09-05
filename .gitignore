@@ -1,9 +1,26 @@
-node_modules
-dist
+# Dependencies and generated web output
+node_modules/
+dist/
+
+# Local configuration and secrets
 .env
-.env.local
+.env.*
+!.env.example
+*.jks
+*.keystore
+key.properties
+
+# Editor and operating-system files
 .DS_Store
-.mp4
+*.swp
+*.swo
+.idea/
+.vscode/
+.claude/
+
+# Generated media and archives
+*.mp4
+*.tar.gz
 
 # Capacitor / Android build artifacts
 android/.gradle/
@@ -14,18 +31,10 @@ android/.idea/
 android/local.properties
 *.iml
 
-# Gros fichiers / données brutes
-*.tar.gz
-
-# iOS (pour plus tard)
+# iOS build artifacts
 ios/App/Pods/
 ios/App/build/
-
-*.jks
-*.keystore
 android/app/release/
-src/App.jsx.backup
-src/.App.jsx.swp
-*.swp
-*.keystore
-key.properties
+
+# Supabase CLI state
+supabase/.temp/

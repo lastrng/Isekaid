@@ -24,11 +24,12 @@ const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const REVENUECAT_SECRET_KEY = Deno.env.get("REVENUECAT_SECRET_KEY") ?? "";
 const REVENUECAT_ENTITLEMENT_ID = Deno.env.get("REVENUECAT_ENTITLEMENT_ID") || "premium";
 const TUTOR_MODEL = Deno.env.get("TUTOR_MODEL") || "claude-haiku-4-5-20251001";
-// Plafond anti-abus (même les premium l'atteignent un jour) — inchangé depuis la Phase 3.
-const DAILY_LIMIT = parseInt(Deno.env.get("TUTOR_DAILY_LIMIT") || "30", 10);
+// Plafonds conservateurs : le tuteur est le principal coût variable de l'app.
+const DAILY_LIMIT = parseInt(Deno.env.get("TUTOR_DAILY_LIMIT") || "20", 10);
+const MONTHLY_LIMIT = parseInt(Deno.env.get("TUTOR_MONTHLY_LIMIT") || "300", 10);
 // Palier gratuit (Phase 4) : au-delà, il faut être premium pour continuer.
-const FREE_DAILY_LIMIT = parseInt(Deno.env.get("TUTOR_FREE_DAILY_LIMIT") || "8", 10);
-const HISTORY_LIMIT = parseInt(Deno.env.get("TUTOR_HISTORY_LIMIT") || "20", 10);
+const FREE_DAILY_LIMIT = parseInt(Deno.env.get("TUTOR_FREE_DAILY_LIMIT") || "5", 10);
+const HISTORY_LIMIT = parseInt(Deno.env.get("TUTOR_HISTORY_LIMIT") || "12", 10);
 
 // Vérifie l'entitlement premium directement auprès de RevenueCat (jamais via
 // un booléen envoyé par le client, spoofable). app_user_id = l'id Supabase,
@@ -135,7 +136,7 @@ async function callAnthropic(system: string, messages: { role: string; content: 
     },
     body: JSON.stringify({
       model: TUTOR_MODEL,
-      max_tokens: 1024,
+      max_tokens: 512,
       system,
       messages,
       tools: [RESPONSE_TOOL],
@@ -205,16 +206,18 @@ Deno.serve(async (req: Request) => {
     // gratuit) : pas d'appel RevenueCat, juste le comptage du jour.
     const startOfDay = new Date();
     startOfDay.setUTCHours(0, 0, 0, 0);
-    const { count: usedToday, error: countErr } = await supabase
-      .from("tutor_messages")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", userId)
-      .eq("role", "user")
-      .gte("created_at", startOfDay.toISOString());
-    if (countErr) {
+    const startOfMonth = new Date(Date.UTC(startOfDay.getUTCFullYear(),startOfDay.getUTCMonth(),1));
+    const [{count:usedToday,error:dayCountErr},{count:usedMonth,error:monthCountErr}] = await Promise.all([
+      supabase.from("tutor_messages").select("id",{count:"exact",head:true}).eq("user_id",userId).eq("role","user").gte("created_at",startOfDay.toISOString()),
+      supabase.from("tutor_messages").select("id",{count:"exact",head:true}).eq("user_id",userId).eq("role","user").gte("created_at",startOfMonth.toISOString()),
+    ]);
+    if (dayCountErr || monthCountErr) {
       return new Response(JSON.stringify({ error: "db_error" }), { status: 500, headers: jsonHeaders });
     }
     const used = usedToday ?? 0;
+    if((usedMonth??0)>=MONTHLY_LIMIT){
+      return new Response(JSON.stringify({error:"limit_reached",limit:MONTHLY_LIMIT,period:"month",remainingToday:0}),{status:429,headers:jsonHeaders});
+    }
     if (used >= FREE_DAILY_LIMIT) {
       const premium = await isPremiumUser(supabase, userId);
       if (!premium) {
@@ -365,6 +368,9 @@ Deno.serve(async (req: Request) => {
         correction,
         suggestions,
         remainingToday: Math.max(0, DAILY_LIMIT - (usedToday ?? 0) - 1),
+        usedToday: (usedToday??0)+1,
+        usedMonth: (usedMonth??0)+1,
+        monthlyLimit: MONTHLY_LIMIT,
       }),
       { status: 200, headers: jsonHeaders },
     );
