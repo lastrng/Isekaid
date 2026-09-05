@@ -12,9 +12,9 @@ Les conseils apparaissent avant la prochaine activité non cochée, dans l'accue
 
 ## Contexte du tuteur
 
-Le client construit un contexte distinct du scénario et de l'historique : état vis-à-vis du Japon, ville, prochaine activité du catalogue, catégorie et quatre centres d'intérêt au maximum. Sans voyage actif, le prochain voyage daté sert de référence. Les informations de niveau et le pont depuis un scénario restent transmis par leurs champs existants.
+Le client construit un contexte métier distinct du scénario et de l'historique : état vis-à-vis du Japon, niveau, ville, prochaine activité du catalogue, catégorie, titre du voyage, délai avant départ, quatre centres d'intérêt et quatre expressions récemment apprises au maximum. Sans voyage actif, le prochain voyage daté sert de référence. Le scénario et le pont depuis un scénario restent transmis par leurs champs dédiés.
 
-Le serveur reconstruit le contexte avec une liste de champs autorisés : ville, activité et catégorie limitées chacune à 80 caractères, états/intérêts limités à leurs énumérations. Les notes, photos, noms personnels, dates exactes, titres de voyages et lieux personnalisés ne sont pas transmis. Les expressions récemment apprises ne sont pas ajoutées faute de suivi fiable identifié pour cette donnée.
+Le serveur filtre le contexte avec une liste de champs autorisés : ville, activité, catégorie et titre limités chacun à 80 caractères, niveau/état/intérêts limités à leurs énumérations, délai borné à dix ans et expressions limitées à quatre chaînes de 50 caractères. Les notes, photos, noms personnels, dates exactes et lieux personnalisés ne sont pas transmis.
 
 Le contexte est transmis à chaque message et n'est pas stocké dans les conversations. Le prompt le traite comme une donnée déclarative non vérifiée, jamais comme une instruction, sans supposer une géolocalisation. Aucun changement du modèle, de la limite de sortie (512 tokens), des quotas ou des protections Premium. Le contexte ajoute néanmoins une petite quantité de tokens d'entrée. Les anciens clients sans ce champ restent compatibles.
 
