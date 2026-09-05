@@ -11,7 +11,7 @@ export function ReadinessCard({ C, trips, preferredTripId, kanaProgress, scenari
   const domains = [
     { id: "voyage", title: "Mon itinéraire", detail: trip ? `${trip.dateDebut ? "Départ fixé" : "Date à choisir"} · ${trip.villes?.length || 0} villes · ${e.activities} activités` : "Choisis tes villes et construis ton premier séjour.", action: trip ? "Organiser mon voyage" : "Créer un voyage", run: () => openTrip("day") },
     { id: "japonais", title: "Japonais pratique", detail: `${e.masteredKana} kana maîtrisés (objectif 20) · ${e.completedScenarios} scénarios réussis (objectif 4)`, action: "Apprendre le japonais", run: () => onNavigate("learn") },
-    { id: "codesSociaux", title: "Mises en situation", detail: `${Math.min(e.completedScenarios, 4)} / 4 scénarios réussis pour s’entraîner aux échanges du quotidien.`, action: "Pratiquer une situation", run: () => onNavigate("scenarios") },
+    { id: "codesSociaux", title: "Codes sociaux", detail: e.socialItems ? `${e.completedSocial} / ${e.socialItems} préparatifs d’étiquette cochés` : "Ajoute les règles de politesse ou les coutumes à revoir dans tes préparatifs.", action: "Préparer les codes sociaux", run: () => openTrip("checklist") },
     { id: "transports", title: "Mes transports", detail: e.transportItems ? `${e.completedTransport} / ${e.transportItems} préparatifs de transport cochés` : "Ajoute tes billets et transports à tes préparatifs.", action: "Préparer mes transports", run: () => openTrip("checklist") },
     { id: "preparatifs", title: "Avant le départ", detail: `${e.completedChecklist} / ${e.checklist} préparatifs cochés`, action: "Ouvrir mes préparatifs", run: () => openTrip("checklist") },
   ];

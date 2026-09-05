@@ -28,3 +28,9 @@ test("un voyage annulé ne contribue jamais au passeport",()=>{
   const summary=buildMyJapanSummary({cities:[{id:"tokyo",region:"Kantō"}],trips:[{status:"cancelled",jours:[{villeId:"tokyo",activites:[{lieuId:"senso",fait:true}]}]}]});
   assert.equal(summary.visitedPlaces,0); assert.equal(summary.visitedCities,0); assert.equal(summary.stamps.length,0);
 });
+
+test("les jours exigent une activité effectuée et les régions utilisent leur catalogue",()=>{
+  const summary=buildMyJapanSummary({regionsCatalog:[{id:"kanto"},{id:"kansai"}],trips:[{status:"completed",jours:[{activites:[{fait:true}]},{activites:[]}]}]});
+  assert.equal(summary.completedDays,1);
+  assert.equal(summary.collections.find(item=>item.id==="regions").total,2);
+});

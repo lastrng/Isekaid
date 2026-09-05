@@ -16,7 +16,8 @@ function blobToDataUrl(blob){
 export function useMyJapanProfile({db,session}){
   const [trips,setTrips]=useState(()=>loadTrips());
   const [syncTick,setSyncTick]=useState(0);
-  const summary=useMemo(()=>buildMyJapanSummary({trips,cities:db?.villes||[],places:db?.lieux||[]}),[db,trips]);
+  useEffect(()=>{const reload=()=>{setTrips(loadTrips());setSyncTick(t=>t+1);};window.addEventListener("isekaid:trips-synced",reload);return()=>window.removeEventListener("isekaid:trips-synced",reload);},[]);
+  const summary=useMemo(()=>buildMyJapanSummary({trips,cities:db?.villes||[],places:db?.lieux||[],regionsCatalog:db?.regions||[]}),[db,trips]);
   const persistTrips=useCallback(next=>{setTrips(next);saveTrips(next);},[]);
 
   const resolveTrip=useCallback((tripId,didTravel)=>{

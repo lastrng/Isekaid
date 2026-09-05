@@ -5,7 +5,7 @@ import { MemoryJournal } from "./MemoryJournal.jsx";
 
 export function MyJapanSection({C,summary,onResolveTrip,onMemoryPhoto,onMemoryNote,getMemoryPhotoUrl,syncStatus,onSyncNow}) {
   const [openTrip,setOpenTrip]=useState(null);
-  const stats=[[summary.completedTrips,"voyages"],[summary.completedDays,"jours"],[summary.visitedPlaces,"lieux faits"],[summary.visitedCities,"villes"],[summary.visitedRegions,"régions"],[summary.stamps.length,"tampons"]];
+  const stats=[[summary.completedTrips,"voyages"],[summary.completedDays,"jours avec activité"],[summary.visitedPlaces,"lieux faits"],[summary.visitedCities,"villes"],[summary.visitedRegions,"régions"],[summary.stamps.length,"tampons"]];
   return <section aria-labelledby="my-japan-title" style={{marginBottom:18}}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:10}}><h2 id="my-japan-title" style={{fontSize:16,color:C.text,margin:0,fontFamily:"'Noto Serif JP',serif"}}>Mon Japon</h2><span style={{fontSize:10,color:C.t3}}>Données vérifiées</span></div>
     <div style={{padding:14,background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow}}>

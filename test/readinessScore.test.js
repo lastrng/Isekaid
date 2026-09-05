@@ -27,3 +27,11 @@ test("chaque catégorie et le total restent bornés", () => {
   assert.ok(Object.values(result.categories).every(value=>value>=0 && value<=100));
   assert.ok(result.global>=0 && result.global<=100);
 });
+
+test("une date ou des scénarios généraux ne prouvent pas les transports ou les codes sociaux",()=>{
+  const result=calculateReadinessScore({trip:{dateDebut:"2026-10-01"},scenarioProgress:{done:["a","b","c","d"]}});
+  assert.equal(result.categories.transports,0);
+  assert.equal(result.categories.codesSociaux,0);
+  const prepared=calculateReadinessScore({trip:{checklist:[{texte:"Revoir les codes sociaux",fait:true},{texte:"Politesse au restaurant",fait:false}]}});
+  assert.equal(prepared.categories.codesSociaux,50);
+});

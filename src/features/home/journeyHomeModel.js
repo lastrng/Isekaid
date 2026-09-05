@@ -8,7 +8,7 @@ export function buildJourneyHome({ user, trips = [], db = {}, currentDate = new 
   if (context.state === "in_japan") return null;
   const preparationTrips = trips.filter(trip => !["cancelled","completed"].includes(trip.status) && getTripTiming(trip,currentDate)?.status!=="past");
   const trip = context.nextTrip?.trip || preparationTrips[0];
-  const summary = buildMyJapanSummary({trips,cities:db.villes,places:db.lieux,currentDate});
+  const summary = buildMyJapanSummary({trips,cities:db.villes,places:db.lieux,regionsCatalog:db.regions,currentDate});
   const planning = Boolean(context.nextTrip) || ["planning","soon"].includes(context.state) || (trip && !["returned","japan_lover"].includes(context.state));
   if (!planning && !["returned","japan_lover"].includes(context.state) && !summary.completedTrips && !summary.awaitingConfirmation.length) return null;
   const mode = planning ? "planning" : "returned";

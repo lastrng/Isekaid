@@ -1,3 +1,7 @@
+import { syncTripSnapshot } from "./services/sync/syncTripSnapshot.js";
+import { mergeTripSnapshots } from "./services/sync/tripSnapshots.js";
+import { withTripDeletions, recordTripDeletions, loadTripSyncBase, saveTripSyncBase, preserveTripConflict } from "./services/sync/tripSyncState.js";
+import { readJson, writeJson } from "./lib/storage.js";
 import { createClient } from "@supabase/supabase-js";
 import { Capacitor } from "@capacitor/core";
 
@@ -92,14 +96,39 @@ export async function saveProgress(userId, patch){
 }
 export async function fetchTrips(userId){
   if(!supabaseEnabled) return null;
-  const { data, error } = await supabase.from("progress").select("trips").eq("user_id", userId).single();
+  const { data, error } = await supabase.from("progress").select("trips,trip_deletions").eq("user_id", userId).single();
   if(error || !data) return null;
-  return data.trips || null;
+  const snapshot=[...(data.trips||[]),...(data.trip_deletions||[])];
+  recordTripDeletions(snapshot);
+  return snapshot;
 }
 export async function saveTripsCloud(userId, trips){
   if(!supabaseEnabled) return false;
-  const { error } = await supabase.from("progress").update({ trips, updated_at: new Date().toISOString() }).eq("user_id", userId);
-  return !error;
+  try {
+    const merged=await syncTripSnapshot({local:withTripDeletions(trips),base:loadTripSyncBase(userId),
+      onConflict:trip=>preserveTripConflict(userId,trip),
+      read:async()=>{
+        const {data,error}=await supabase.from("progress").select("trips,trip_deletions,updated_at").eq("user_id",userId).single();
+        if(error) throw error;
+        return {...data,trips:[...(data.trips||[]),...(data.trip_deletions||[])]};
+      },
+      compareAndSet:async(version,next)=>{
+        let query=supabase.from("progress").update({trips:next.filter(trip=>!trip.deletedAt),trip_deletions:next.filter(trip=>trip.deletedAt),updated_at:new Date(Math.max(Date.now(),(Date.parse(version)||0)+1)).toISOString()}).eq("user_id",userId);
+        query=version===null?query.is("updated_at",null):query.eq("updated_at",version);
+        const {data,error}=await query.select("user_id");
+        if(error) throw error;
+        return data?.length===1;
+      },
+    });
+    if(!merged)return false;
+    recordTripDeletions(merged);
+    const current=withTripDeletions(readJson("isekaid_trips_v1",[]));
+    const next=mergeTripSnapshots(current,merged,{base:trips,onConflict:trip=>preserveTripConflict(userId,trip)});
+    if(!writeJson("isekaid_trips_v1",next))return false;
+    if(!saveTripSyncBase(userId,merged))return false;
+    globalThis.window?.dispatchEvent(new Event("isekaid:trips-synced"));
+    return true;
+  } catch { return false; }
 }
 
 export async function uploadMemoryPhoto(userId, blob){

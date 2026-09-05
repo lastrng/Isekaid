@@ -1,3 +1,4 @@
+import { markTripDeleted } from "./services/sync/tripSyncState.js";
 import { JourneyHome } from "./features/home/JourneyHome.jsx";
 import { buildJourneyHome } from "./features/home/journeyHomeModel.js";
 import { ActivityContext } from "./features/travel/ActivityContext.jsx";
@@ -4869,6 +4870,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   const villeById = useMemo(()=>Object.fromEntries(villes.map(v=>[v.id,v])), [villes]);
 
   const [trips, setTrips] = useState(()=>loadTrips());
+  useEffect(()=>{const reload=()=>setTrips(loadTrips());window.addEventListener("isekaid:trips-synced",reload);return()=>window.removeEventListener("isekaid:trips-synced",reload);},[]);
   // vues : "home" | "browse" (préconçus) | "create" | "trip" | "sos"
   const [view, setView] = useState(typeof initialView==="string" ? initialView : initialView?.tripId ? "trip" : "home");
   const [activeTripId, setActiveTripId] = useState(initialView?.tripId || null);
@@ -4966,7 +4968,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   // Point de passage commun création manuelle + auto-génération (KeptPlacesScreen.onGenerate)
   const createTrip = (trip)=>{ persist([...trips, trip]); trackProductEvent("trip_created",{days:trip.jours?.length||0,source:trip.source?"template":trip.generation?"generated":"manual"}); setActiveTripId(trip.id); setView("trip"); setTripCelebration(true); sfx.playComplete(); };
   const updateTrip = (updated)=>{ persist(trips.map(t=>t.id===updated.id?updated:t)); };
-  const deleteTrip = (id)=>{ persist(trips.filter(t=>t.id!==id)); setActiveTripId(null); setView("home"); };
+  const deleteTrip = (id)=>{ markTripDeleted(id); persist(trips.filter(t=>t.id!==id)); setActiveTripId(null); setView("home"); };
   const keptLieux = (favs||[]).filter(f=>f.type==="lieu").map(f=>f.item);
   const addKeptLieuToTrip = (lieu, tripId, dayIndex)=>{
     persist(trips.map(t=>{

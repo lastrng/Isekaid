@@ -1,6 +1,6 @@
 import { getTripLifecycleStatus, TRIP_STATUS } from "../../entities/trip/tripLifecycle.js";
 
-export function buildMyJapanSummary({ trips = [], cities = [], places = [], currentDate = new Date() } = {}) {
+export function buildMyJapanSummary({ trips = [], cities = [], places = [], regionsCatalog = [], currentDate = new Date() } = {}) {
   const cityById = new Map(cities.map(city=>[city.id,city]));
   const placeById = new Map(places.map(place=>[place.id,place]));
   const completedTrips = trips.filter(trip=>getTripLifecycleStatus(trip,currentDate)===TRIP_STATUS.COMPLETED);
@@ -39,14 +39,14 @@ export function buildMyJapanSummary({ trips = [], cities = [], places = [], curr
   }).sort((a,b)=>String(b.startDate||"").localeCompare(String(a.startDate||"")));
   return {
     completedTrips:completedTrips.length,
-    completedDays:completedTrips.reduce((sum,trip)=>sum+(trip.jours?.length || 0),0),
+    completedDays:completedTrips.reduce((sum,trip)=>sum+(trip.jours||[]).filter(day=>(day.activites||[]).some(activity=>activity.fait===true)).length,0),
     visitedCities:visitedCityIds.size,
     visitedRegions:regions.size,
     visitedPlaces:visitedPlaceIds.size,
     cityIds:[...visitedCityIds], regionNames:[...regions], placeIds:[...visitedPlaceIds], stamps, completedTripDetails, memories,
     collections:[
       {id:"cities",label:"Villes",emoji:"🏙️",count:visitedCityIds.size,total:null},
-      {id:"regions",label:"Régions",emoji:"🗾",count:regions.size,total:47},
+      {id:"regions",label:"Régions",emoji:"🗾",count:regions.size,total:regionsCatalog.length || null},
       {id:"places",label:"Lieux",emoji:"⛩️",count:visitedPlaceIds.size,total:null},
       {id:"stamps",label:"Tampons",emoji:"🔴",count:stamps.length,total:null},
     ],

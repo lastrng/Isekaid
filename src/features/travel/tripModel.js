@@ -1,3 +1,4 @@
+import { withTripDeletions } from "../../services/sync/tripSyncState.js";
 // Modèle pur et persistance locale du domaine Voyage.
 // Ce module ne dépend pas de React et peut être testé indépendamment des écrans.
 import { readJson, writeJson } from "../../lib/storage.js";
@@ -6,7 +7,7 @@ const TRIPS_KEY = "isekaid_trips_v1";
 const FREE_TRIP_LIMIT = 1;
 function loadTrips(){
   const trips = readJson(TRIPS_KEY, []);
-  return Array.isArray(trips) ? trips.map(normalizeTrip) : [];
+  return Array.isArray(trips) ? withTripDeletions(trips).filter(trip=>!trip.deletedAt).map(normalizeTrip) : [];
 }
 function saveTrips(trips){ return writeJson(TRIPS_KEY, trips); }
 function makeTripId(){ return "trip_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }

@@ -1,3 +1,4 @@
+import { TripConflicts } from "../my-japan/TripConflicts.jsx";
 import { useState } from "react";
 import * as sfx from "../../sfx.js";
 import { NiveauInfo, estimateNiveau } from "../../Tutor.jsx";
@@ -114,6 +115,7 @@ export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount
           ))}
         </div>
 
+        {session?.user && <TripConflicts C={C} userId={session.user.id}/>}
         <MyJapanSection C={C} summary={myJapan} onResolveTrip={resolveMyJapanTrip} onMemoryPhoto={changeMemoryPhoto} onMemoryNote={changeMemoryNote} getMemoryPhotoUrl={getMemoryPhotoUrl} syncStatus={session?.user?profileSyncStatus:null} onSyncNow={retryProfileSync}/>
 
         {/* Ma collection (favoris) */}

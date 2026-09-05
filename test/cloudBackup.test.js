@@ -22,3 +22,9 @@ test("restaure uniquement les clés applicatives autorisées",()=>{
   assert.equal(target.getItem("token"),null);
   assert.equal(backupFingerprint({a:1}),backupFingerprint({a:1}));
 });
+
+test("une ancienne sauvegarde ne retire pas une suppression locale",()=>{
+  const target=storage({isekaid_deleted_trips_v1:JSON.stringify([{id:"deleted",deletedAt:"2026-09-05"}])});
+  restoreCloudBackup({version:1,values:{isekaid_deleted_trips_v1:"[]"}},target);
+  assert.equal(JSON.parse(target.getItem("isekaid_deleted_trips_v1"))[0].id,"deleted");
+});

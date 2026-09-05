@@ -13,14 +13,16 @@ export function calculateReadinessScore({ trip, kanaProgress, scenarioProgress, 
   const completedChecklist = checklist.filter(item => item.fait).length;
   const transportItems = checklist.filter(item => /jr pass|suica|pasmo|transport|train|avion|billet/i.test(item.texte || ""));
   const completedTransport = transportItems.filter(item => item.fait).length;
+  const socialItems = checklist.filter(item => item.category==="codesSociaux" || /codes sociaux|étiquette|etiquette|savoir.vivre|politesse|coutumes/i.test(item.texte || ""));
+  const completedSocial = socialItems.filter(item=>item.fait).length;
   const completedScenarios = new Set(scenarioProgress?.done || []).size;
   const completedPath = new Set(pathProgress?.completed || []).size;
 
   const categories = {
     voyage: percent((Number(Boolean(trip)) + Number(Boolean(trip?.dateDebut)) + Number((trip?.villes?.length || 0) > 0) + clamp(activities.length / Math.max(1, days.length * 2))) / 4),
     japonais: percent((clamp(masteredKana(kanaProgress) / 20) * 0.7) + (clamp(completedScenarios / 4) * 0.3)),
-    codesSociaux: percent(clamp(completedScenarios / 4)),
-    transports: percent(transportItems.length ? completedTransport / transportItems.length : (trip?.dateDebut ? 0.25 : 0)),
+    codesSociaux: percent(socialItems.length ? completedSocial / socialItems.length : 0),
+    transports: percent(transportItems.length ? completedTransport / transportItems.length : 0),
     preparatifs: percent(checklist.length ? completedChecklist / checklist.length : 0),
   };
   // Même poids par domaine : aucun domaine ne peut masquer un angle mort.
@@ -28,6 +30,6 @@ export function calculateReadinessScore({ trip, kanaProgress, scenarioProgress, 
   return {
     global,
     categories,
-    evidence: { days:days.length, activities:activities.length, checklist:checklist.length, completedChecklist, transportItems:transportItems.length, completedTransport, masteredKana:masteredKana(kanaProgress), completedScenarios, completedPath },
+    evidence: { days:days.length, activities:activities.length, checklist:checklist.length, completedChecklist, transportItems:transportItems.length, completedTransport, socialItems:socialItems.length, completedSocial, masteredKana:masteredKana(kanaProgress), completedScenarios, completedPath },
   };
 }
