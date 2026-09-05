@@ -11,6 +11,50 @@ function countLearnedKana(progress) {
   return Object.values(progress).filter(item => (item?.level || item?.box || 0) >= 3).length;
 }
 
+/**
+ * Builds the unlocked passport collection from actions recorded in trips.
+ * Every stamp carries its unlock rule and evidence so the collection can be
+ * extended without inventing rewards unrelated to the user's activity.
+ */
+export function buildPassportStamps({ visitedCityIds = [], cityById = new Map(), regions = new Set(), completedTrips = [] } = {}) {
+  const stamps = [];
+  for (const cityId of visitedCityIds) {
+    const city = cityById.get(cityId);
+    stamps.push({
+      id: `city:${cityId}`,
+      type: "city",
+      cityId,
+      label: `${city?.nom || cityId} Stamp`,
+      emoji: city?.emoji || "🗾",
+      unlockedBy: "place_or_day_completed",
+      evidence: { cityId },
+    });
+  }
+  for (const region of regions) {
+    stamps.push({
+      id: `region:${region}`,
+      type: "region",
+      region,
+      label: `${region} Stamp`,
+      emoji: "🗾",
+      unlockedBy: "region_discovered",
+      evidence: { region },
+    });
+  }
+  for (const trip of completedTrips) {
+    stamps.push({
+      id: `trip:${trip.id}`,
+      type: "trip",
+      tripId: trip.id,
+      label: `${trip.titre || "Voyage au Japon"} · accompli`,
+      emoji: "🎒",
+      unlockedBy: "trip_completed",
+      evidence: { tripId: trip.id },
+    });
+  }
+  return stamps;
+}
+
 export function buildMyJapanSummary({ trips = [], cities = [], places = [], regionsCatalog = [], expressionProgress, kanaProgress, favorites, currentDate = new Date() } = {}) {
   const cityById = new Map(cities.map(city=>[city.id,city]));
   const placeById = new Map(places.map(place=>[place.id,place]));
@@ -36,10 +80,7 @@ export function buildMyJapanSummary({ trips = [], cities = [], places = [], regi
   const datedCompletedTrips = completedTrips.map(trip=>getTripDateRange(trip)).filter(Boolean);
   const daysInJapanKnown = completedTrips.length === datedCompletedTrips.length && completedTrips.length > 0;
   const daysInJapan = daysInJapanKnown ? datedCompletedTrips.reduce((sum, range)=>sum + range.duration, 0) : null;
-  const stamps = [...visitedCityIds].map(id=>{
-    const city = cityById.get(id);
-    return { id:`city:${id}`, cityId:id, label:`${city?.nom || id} Stamp`, emoji:city?.emoji || "🗾", unlockedBy:"place_completed" };
-  });
+  const stamps = buildPassportStamps({ visitedCityIds, cityById, regions, completedTrips });
   const memories = [];
   const completedTripDetails = completedTrips.map(trip=>{
     const done = (trip.jours||[]).flatMap(day=>(day.activites||[]).filter(activity=>activity.fait===true).map(activity=>({activity,day})));

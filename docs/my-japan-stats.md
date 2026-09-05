@@ -34,3 +34,16 @@ Le modèle accepte déjà les progressions de kana et les favoris sans imposer d
 nouveau schéma Supabase. Les villes pourront être enrichies progressivement
 avec une préfecture, puis les collections pourront agréger souvenirs,
 apprentissages et régions sans modifier les données historiques.
+
+## Passeport et tampons
+
+`buildPassportStamps` produit des tampons déverrouillés par des preuves issues
+des voyages :
+
+- un tampon de ville après une activité ou une journée marquée comme faite ;
+- un tampon de région lorsqu’une ville de cette région est découverte ;
+- un tampon de voyage lorsqu’un voyage est confirmé comme effectué.
+
+Chaque tampon expose `type`, `unlockedBy` et `evidence` afin d’ajouter d’autres
+collections plus tard sans attribuer de récompense sur la seule consultation
+d’un écran.

@@ -8,7 +8,10 @@ test("ne considère comme visités que les lieux explicitement terminés", () =>
   assert.equal(summary.completedDays,1);
   assert.equal(summary.visitedPlaces,1);
   assert.deepEqual(summary.placeIds,["senso"]);
-  assert.equal(summary.stamps[0].label,"Tokyo Stamp");
+  assert.equal(summary.stamps.find(stamp=>stamp.type==="city").label,"Tokyo Stamp");
+  assert.equal(summary.stamps.find(stamp=>stamp.type==="city").unlockedBy,"place_or_day_completed");
+  assert.equal(summary.stamps.find(stamp=>stamp.type==="region").label,"Kantō Stamp");
+  assert.equal(summary.stamps.find(stamp=>stamp.type==="trip").unlockedBy,"trip_completed");
   assert.equal(summary.completedTripDetails[0].places[0].name,"Sensō-ji");
   assert.equal(summary.completedTripDetails[0].notes,1);
   assert.equal(summary.memories[0].note,"Très tôt");
