@@ -1,3 +1,4 @@
+import { syncProgress, rememberProgressBase } from "./services/sync/progressSync.js";
 import { syncTripSnapshot } from "./services/sync/syncTripSnapshot.js";
 import { mergeTripSnapshots } from "./services/sync/tripSnapshots.js";
 import { withTripDeletions, recordTripDeletions, loadTripSyncBase, saveTripSyncBase, preserveTripConflict } from "./services/sync/tripSyncState.js";
@@ -88,11 +89,30 @@ export async function handleOAuthCallback(url){
 export async function fetchProgress(userId){
   const { data, error } = await supabase.from("progress").select("*").eq("user_id", userId).single();
   if(error) return null;
+  if(!rememberProgressBase(userId,data)) return null;
   return data;
 }
 export async function saveProgress(userId, patch){
-  const { error } = await supabase.from("progress").update({ ...patch, updated_at: new Date().toISOString() }).eq("user_id", userId);
-  return !error;
+  if(!supabaseEnabled)return false;
+  try {
+    const merged=await syncProgress({userId,local:patch,
+      read:async()=>{
+        const {data,error}=await supabase.from("progress").select("profile,favorites,kana_progress,scenarios,path,mission,streak,unlocks,settings,updated_at").eq("user_id",userId).single();
+        if(error)throw error;
+        return data;
+      },
+      compareAndSet:async(version,snapshot)=>{
+        let query=supabase.from("progress").update({...snapshot,updated_at:new Date(Math.max(Date.now(),(Date.parse(version)||0)+1)).toISOString()}).eq("user_id",userId);
+        query=version===null?query.is("updated_at",null):query.eq("updated_at",version);
+        const {data,error}=await query.select("user_id");
+        if(error)throw error;
+        return data?.length===1;
+      },
+    });
+    if(!merged)return false;
+    globalThis.window?.dispatchEvent(new CustomEvent("isekaid:progress-synced",{detail:{userId,submitted:patch,merged}}));
+    return true;
+  } catch { return false; }
 }
 export async function fetchTrips(userId){
   if(!supabaseEnabled) return null;

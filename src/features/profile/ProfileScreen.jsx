@@ -1,3 +1,4 @@
+import { ProgressConflicts } from "./ProgressConflicts.jsx";
 import { TripConflicts } from "../my-japan/TripConflicts.jsx";
 import { useState } from "react";
 import * as sfx from "../../sfx.js";
@@ -7,7 +8,7 @@ import { MyJapanSection } from "../my-japan/MyJapanSection.jsx";
 import { useMyJapanProfile } from "../my-japan/useMyJapanProfile.js";
 import { Bell, ChevronLeft, ChevronRight, Crown, Flame, Heart, LogOut, RotateCcw, Sparkles, Trash2, Type, Volume2 } from "lucide-react";
 
-export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,session,streak,favs,toggleFav,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent,script,setScript,onBack,onOpenLieu,onOpenTradition,onOpenDetail}){
+export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount,onLogout,onRestoreProgress,session,streak,favs,toggleFav,rank,kanaProgress,unlocks,scenProgress,onShowTour,pathProgress,isPremium,onOpenPremium,accent,chooseAccent,script,setScript,onBack,onOpenLieu,onOpenTradition,onOpenDetail}){
   const {SectionCard,SectionTitle,iconTileStyle,computeAchievements}=ui;
   const [reminders,setRemindersState] = useState(()=>{ try { return localStorage.getItem("isekaid_reminders_v1")!=="off"; } catch { return true; } });
   const [dailyReminder,setDailyReminder] = useState(()=>loadDailyReminder());
@@ -115,6 +116,7 @@ export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount
           ))}
         </div>
 
+        {session?.user && <ProgressConflicts C={C} userId={session.user.id} onRestore={onRestoreProgress}/>}
         {session?.user && <TripConflicts C={C} userId={session.user.id}/>}
         <MyJapanSection C={C} summary={myJapan} onResolveTrip={resolveMyJapanTrip} onMemoryPhoto={changeMemoryPhoto} onMemoryNote={changeMemoryNote} getMemoryPhotoUrl={getMemoryPhotoUrl} syncStatus={session?.user?profileSyncStatus:null} onSyncNow={retryProfileSync}/>
 

@@ -25,7 +25,7 @@ Migration additive appliquée : `20260905170000_add_trip_deletions.sql`. Les rè
 
 ## Limites et restauration
 
-Le lot ne résout pas les conflits champ par champ du profil, des favoris, de la progression ou de la sauvegarde globale. Les anciens clients peuvent encore effectuer des écritures sans comparaison de version. Les suppressions antérieures à ce lot, sans trace disponible, ne peuvent pas être reconstituées.
+Ce premier lot concernait les voyages. Le profil, les favoris et la progression ont depuis été traités dans `progress-conflicts.md` ; la sauvegarde globale reste distincte. Les anciens clients peuvent encore effectuer des écritures sans comparaison de version. Les suppressions antérieures à ce lot, sans trace disponible, ne peuvent pas être reconstituées.
 
 Point de restauration vérifié avant modification : tag `backup-before-offline-20260905` (`cab8874`). Copier l'ancien code sans écraser le travail actuel avec `git worktree add --detach /tmp/isekaid-before-offline backup-before-offline-20260905`. La colonne additive peut rester en place lors d'un rollback applicatif ; ne pas supprimer ses traces.
 

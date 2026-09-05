@@ -10,7 +10,7 @@ const MAX_BACKUP_BYTES=2_000_000;
 function appKeys(storage=globalThis.localStorage){
   const keys=[];
   if(!storage) return keys;
-  for(let i=0;i<storage.length;i+=1){const key=storage.key(i);if(key?.startsWith("isekaid_")&&!EXCLUDED_KEYS.has(key)&&!key.startsWith("isekaid_trip_sync_base_"))keys.push(key);}
+  for(let i=0;i<storage.length;i+=1){const key=storage.key(i);if(key?.startsWith("isekaid_")&&!EXCLUDED_KEYS.has(key)&&!key.startsWith("isekaid_trip_sync_base_")&&!key.startsWith("isekaid_progress_sync_base_"))keys.push(key);}
   return keys.sort();
 }
 
@@ -30,8 +30,8 @@ export function backupFingerprint(backup){
 export function restoreCloudBackup(backup,storage=globalThis.localStorage){
   if(!backup?.values||backup.version!==1||!storage)return false;
   for(const [key,value] of Object.entries(backup.values)){
-    if(key.startsWith("isekaid_")&&!EXCLUDED_KEYS.has(key)&&!key.startsWith("isekaid_trip_sync_base_")&&typeof value==="string"){
-      if(key==="isekaid_deleted_trips_v1" || key.startsWith("isekaid_trip_conflicts_")){
+    if(key.startsWith("isekaid_")&&!EXCLUDED_KEYS.has(key)&&!key.startsWith("isekaid_trip_sync_base_")&&!key.startsWith("isekaid_progress_sync_base_")&&typeof value==="string"){
+      if(key==="isekaid_deleted_trips_v1" || key.startsWith("isekaid_trip_conflicts_") || key.startsWith("isekaid_progress_conflicts_")){
         try {
           const existing=JSON.parse(storage.getItem(key)||"[]");
           const incoming=JSON.parse(value);

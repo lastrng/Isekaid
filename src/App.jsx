@@ -1,3 +1,5 @@
+import { preserveProgressCopy } from "./services/sync/progressSync.js";
+import { mergeProgress, sameValue } from "./services/sync/progressMerge.js";
 import { markTripDeleted } from "./services/sync/tripSyncState.js";
 import { JourneyHome } from "./features/home/JourneyHome.jsx";
 import { buildJourneyHome } from "./features/home/journeyHomeModel.js";
@@ -8300,7 +8302,7 @@ export default function IsekaidApp(){
           if(p.streak && Object.keys(p.streak).length){ setStreak(p.streak); saveStreak(p.streak); }
           if(p.unlocks && Object.keys(p.unlocks).length){ setUnlocks(p.unlocks); saveUnlocks(p.unlocks); }
           if(p.scenarios && Object.keys(p.scenarios).length){ setScenProgress(p.scenarios); saveScenarioProgress(p.scenarios); }
-          if(Array.isArray(p.favorites) && p.favorites.length){ setFavs(p.favorites); saveFavs(p.favorites); }
+          if(Array.isArray(p.favorites)){ setFavs(p.favorites); saveFavs(p.favorites); }
           if(p.kana_progress && Object.keys(p.kana_progress).length){ setKanaProgress(p.kana_progress); saveKanaProgress(p.kana_progress); }
           if(p.profile && p.profile.name){
             const normalizedProfile = normalizeProfile(p.profile);
@@ -8329,6 +8331,52 @@ export default function IsekaidApp(){
   },[session?.user?.id,flushProgressMutations]);
 
   useCloudBackup({userId:session?.user?.id,ready:cloudProfileChecked});
+
+  useEffect(()=>{
+    const receive=event=>{
+      const {userId,submitted,merged}=event.detail||{};
+      if(userId!==session?.user?.id || !merged)return;
+      const apply=(field,setter,save)=>{
+        if(!Object.hasOwn(merged,field))return;
+        setter(previous=>{
+          let next=mergeProgress(submitted,{[field]:previous},merged).snapshot[field];
+          if(field==="profile")next=normalizeProfile(next)||previous;
+          if(sameValue(previous,next))return previous;
+          save(next);
+          return next;
+        });
+      };
+      apply("profile",setUser,saveProfile);
+      apply("favorites",setFavs,saveFavs);
+      apply("kana_progress",setKanaProgress,saveKanaProgress);
+      apply("scenarios",setScenProgress,saveScenarioProgress);
+      apply("path",setPathProgress,savePathProgress);
+      apply("mission",setMission,saveMission);
+      apply("streak",setStreak,saveStreak);
+      apply("unlocks",setUnlocks,saveUnlocks);
+      const setting=(key,setter,save)=>{
+        if(!Object.hasOwn(merged.settings||{},key))return;
+        setter(previous=>{
+          const next=mergeProgress({settings:submitted.settings},{settings:{...submitted.settings,[key]:previous}},{settings:merged.settings}).snapshot.settings[key];
+          if(sameValue(previous,next))return previous;
+          save(next);return next;
+        });
+      };
+      setting("dark",setDark,saveTheme);setting("accent",setAccent,saveAccent);setting("script",setScript,saveScript);
+    };
+    window.addEventListener("isekaid:progress-synced",receive);
+    return()=>window.removeEventListener("isekaid:progress-synced",receive);
+  },[session?.user?.id]);
+
+  const restoreProgressCopy=async patch=>{
+    if(!session?.user)throw new Error("session_required");
+    const current={profile:user,favorites:favs,kana_progress:kanaProgress,scenarios:scenProgress,path:pathProgress,mission,streak,unlocks,settings:{dark,accent,script,introSeen:introSeen(),premium}};
+    if(!preserveProgressCopy(session.user.id,current,Object.keys(patch)))throw new Error("storage_full");
+    const restored={...current,...patch};
+    if(!enqueueMutation({type:"progress",userId:session.user.id,payload:restored}))throw new Error("storage_full");
+    window.dispatchEvent(new CustomEvent("isekaid:progress-synced",{detail:{userId:session.user.id,submitted:current,merged:restored}}));
+    await flushProgressMutations();
+  };
 
   // Push progress to cloud (debounced) whenever it changes and user is logged in
   const syncRef = useRef(null);
@@ -8589,7 +8637,7 @@ export default function IsekaidApp(){
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} onGoTab={setTab} backRef={inScreenBackRef} initialCategoryFilter={pendingExploreCategory} onInitialCategoryConsumed={()=>setPendingExploreCategory(null)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)} kanaProgress={kanaProgress} pathProgress={pathProgress} onGoTab={setTab}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
-              {tab==="profile"   &&<Suspense fallback={<div style={{padding:28,color:C.t3}}>Chargement de Mon Japon…</div>}><ProfileScreen ui={{SectionCard,SectionTitle,iconTileStyle,computeAchievements}} C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} session={session} streak={streak} favs={favs} toggleFav={toggleFav} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/></Suspense>}
+              {tab==="profile"   &&<Suspense fallback={<div style={{padding:28,color:C.t3}}>Chargement de Mon Japon…</div>}><ProfileScreen ui={{SectionCard,SectionTitle,iconTileStyle,computeAchievements}} C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} onRestoreProgress={restoreProgressCopy} session={session} streak={streak} favs={favs} toggleFav={toggleFav} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/></Suspense>}
               {tab==="voyage"    &&<VoyageScreen    C={C} dark={dark} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef} initialView={pendingTravelView} onInitialViewConsumed={()=>setPendingTravelView(null)}/>}
               {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} journeyContext={buildTutorJourneyContext({user,trips:loadTrips(),db})} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
               </div>
