@@ -30,3 +30,11 @@ test("un catalogue absent au premier rendu ne fige pas un Daily vide", () => {
   assert.equal(empty.activities.length, 0);
   assert.ok(ready.activities.length > 0);
 });
+
+test("le Daily privilégie un lieu du voyage puis la saison", () => {
+  const travel = buildDailyRitual({ db, date: "2026-09-06", travelContext: { relatedPlaces: [{ id: "fushimi", nom: "Fushimi Inari", description: "Torii" }] } });
+  assert.equal(travel.activities[0].type, "place");
+  assert.equal(travel.activities[0].title, "Fushimi Inari");
+  const seasonal = buildDailyRitual({ db, date: "2026-09-06", travelContext: { seasonalPlaces: [{ id: "nara", nom: "Nara", description: "Parc" }] } });
+  assert.equal(seasonal.activities[0].label, "Saison japonaise");
+});

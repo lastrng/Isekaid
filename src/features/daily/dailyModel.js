@@ -53,10 +53,23 @@ function contentItems(db = {}) {
   return { culture, expressions, situations, food };
 }
 
+function placeItem(place, index, seasonal = false) {
+  return {
+    id: place.id || `place-${index}`,
+    type: "place",
+    label: seasonal ? "Saison japonaise" : "Dans ton voyage",
+    title: place.nom || "Un lieu à découvrir",
+    summary: place.description || place.quartier || "Une étape à relier à ton itinéraire.",
+    raw: place,
+  };
+}
+
 export function buildDailyRitual({ db = {}, date = new Date(), travelContext = null } = {}) {
   const dateKey = typeof date === "string" ? date : dayKey(date);
   const pools = contentItems(db);
-  const culturePool = travelContext?.related?.length ? [...pools.culture, ...travelContext.related] : pools.culture;
+  const travelPlaces = (travelContext?.relatedPlaces || []).map((place, index) => placeItem(place, index, false));
+  const seasonalPlaces = (travelContext?.seasonalPlaces || []).map((place, index) => placeItem(place, index, true));
+  const culturePool = travelPlaces.length ? travelPlaces : seasonalPlaces.length ? seasonalPlaces : pools.culture;
   const discover = pick(culturePool.length ? culturePool : pools.food, dateKey, 1);
   const learn = pick(pools.expressions, dateKey, 2);
   const practice = pick(pools.situations.length ? pools.situations : [...pools.food, ...pools.culture], dateKey, 3);
