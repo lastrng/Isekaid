@@ -6,7 +6,7 @@ export function buildHomeJourneyContext({user,trips=[],currentDate=new Date()}={
   const activeTrip=getActiveTrip(trips,currentDate);
   const currentDay=activeTrip?getCurrentTripDay(activeTrip,currentDate):null;
   const nextActivity=getNextActivity(currentDay);
-  const nextTrip=trips.map(trip=>({trip,timing:getTripTiming(trip,currentDate)}))
+  const nextTrip=trips.filter(trip=>!["cancelled","completed"].includes(trip.status)).map(trip=>({trip,timing:getTripTiming(trip,currentDate)}))
     .filter(item=>item.timing?.status==="upcoming")
     .sort((a,b)=>a.timing.daysUntil-b.timing.daysUntil)[0];
   return {state,activeTrip,currentDay,nextActivity,nextTrip};

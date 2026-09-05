@@ -37,6 +37,7 @@ export function getTripTiming(trip, currentDate = new Date()) {
 
 export function getActiveTrip(trips, currentDate = new Date()) {
   const candidates = (Array.isArray(trips) ? trips : [])
+    .filter(trip => !["cancelled", "completed"].includes(trip?.status))
     .map(trip => ({ trip, timing: getTripTiming(trip, currentDate) }))
     .filter(item => item.timing?.status === "active")
     .sort((a, b) => b.timing.start - a.timing.start);
@@ -65,6 +66,8 @@ export function getJapanJourneyState(user, trips, currentDate = new Date(), loca
     return JAPAN_RELATIONSHIP.IN_JAPAN;
   }
   const timings = (Array.isArray(trips) ? trips : [])
+    .filter(trip => trip?.status !== "cancelled")
+    .filter(trip => trip?.status !== "completed" || getTripTiming(trip,currentDate)?.status === "past")
     .map(trip => getTripTiming(trip, currentDate))
     .filter(Boolean);
   if (timings.some(timing => timing.status === "active")) return JAPAN_RELATIONSHIP.IN_JAPAN;

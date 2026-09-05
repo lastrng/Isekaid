@@ -23,7 +23,7 @@ import { getRelatedContent } from "./entities/content/relatedContent";
 import { getTripLifecycleStatus, TRIP_STATUS } from "./entities/trip/tripLifecycle";
 import { buildSearchIndex, searchCatalog } from "./data/searchIndex";
 import { disableDailyReminder, enableDailyReminder, loadDailyReminder, supportsDailyReminder } from "./features/reminders/dailyReminder";
-import { calculateReadinessScore } from "./features/readiness/readinessScore";
+import { ReadinessCard } from "./features/readiness/ReadinessCard";
 import { buildHomeJourneyContext, getHomePrimaryAction } from "./features/home/homeContext";
 import { MyJapanSection } from "./features/my-japan/MyJapanSection";
 import { useMyJapanProfile } from "./features/my-japan/useMyJapanProfile";
@@ -1473,7 +1473,7 @@ function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
   );
 }
 
-function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,onOpenSos,isPremium,onOpenLieu,onOpenTradition,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem,onOpenWeeklyTarget,kanaProgress,scenProgress,pathProgress}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,onOpenSos,onOpenTrip,isPremium,onOpenLieu,onOpenTradition,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem,onOpenWeeklyTarget,kanaProgress,scenProgress,pathProgress}){
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   // Cibles du spotlight (Système 4.a, voir SECTION_INTRO_STEPS.home) : une
@@ -1549,7 +1549,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   const seasonLieux = useMemo(()=>seasonalLieux(db, seasonKey), [db, seasonKey]);
   const journeyContext = useMemo(()=>buildHomeJourneyContext({user,trips:loadTrips()}),[user]);
   const contextCopy = useMemo(()=>getHomePrimaryAction(journeyContext,db?.lieux||[]),[journeyContext,db]);
-  const readiness = useMemo(()=>calculateReadinessScore({trip:journeyContext.activeTrip || journeyContext.nextTrip?.trip,kanaProgress,scenarioProgress:scenProgress,pathProgress}), [journeyContext.activeTrip,journeyContext.nextTrip?.trip,kanaProgress,scenProgress,pathProgress]);
+  const preparationTrips = loadTrips().filter(trip=>!["cancelled","completed"].includes(trip.status) && tripTiming(trip)?.status!=="past");
   const inJapanMode = journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN;
   // Le premier tour montre encore les zones historiques une fois. Ensuite,
   // préparation et voyage privilégient uniquement les actions immédiates.
@@ -1594,12 +1594,13 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
 
       {/* Actions rapides — chevauche l'en-tête (comme HomeScreen.tsx) */}
       <div style={{padding:"0 20px",marginTop:-24,marginBottom:4,position:"relative",zIndex:2}}>
-        <button onClick={()=>onGoTab(contextCopy.tab)} className="lift" style={{width:"100%",marginBottom:12,padding:"16px 17px",display:"flex",alignItems:"center",gap:13,textAlign:"left",cursor:"pointer",background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow}}>
+        <button onClick={()=>contextCopy.tab==="voyage" && (journeyContext.activeTrip || journeyContext.nextTrip?.trip) ? onOpenTrip((journeyContext.activeTrip || journeyContext.nextTrip.trip).id,"day") : onGoTab(contextCopy.tab)} className="lift" style={{width:"100%",marginBottom:12,padding:"16px 17px",display:"flex",alignItems:"center",gap:13,textAlign:"left",cursor:"pointer",background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow}}>
           <span style={{fontSize:30}}>{contextCopy.emoji}</span>
           <span style={{flex:1,minWidth:0}}><span style={{display:"block",fontSize:9,color:C.red,letterSpacing:".14em",fontWeight:700}}>{contextCopy.eyebrow}</span><span style={{display:"block",fontSize:15,color:C.text,fontWeight:650,marginTop:3}}>{contextCopy.title}</span><span style={{display:"block",fontSize:11,color:C.t2,lineHeight:1.4,marginTop:2}}>{contextCopy.text}</span></span>
           <ChevronRight size={19} color={C.red}/>
         </button>
-        {[JAPAN_RELATIONSHIP.PLANNING,JAPAN_RELATIONSHIP.SOON].includes(journeyContext.state)&&<div style={{marginBottom:12,padding:"13px 15px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:16,boxShadow:C.shadow}}><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}><span style={{fontSize:12,fontWeight:650,color:C.text}}>Prêt pour le Japon</span><span style={{fontSize:15,fontWeight:750,color:C.red}}>{readiness.global}%</span></div><div style={{height:6,background:C.s2,borderRadius:99,overflow:"hidden"}}><div style={{height:"100%",width:`${readiness.global}%`,background:C.red,borderRadius:99}}/></div><div style={{display:"flex",justifyContent:"space-between",gap:5,marginTop:8,fontSize:9,color:C.t3}}>{[["Voyage",readiness.categories.voyage],["Japonais",readiness.categories.japonais],["Codes",readiness.categories.codesSociaux],["Transport",readiness.categories.transports],["Prépa",readiness.categories.preparatifs]].map(([label,value])=><span key={label} title={`${label} : ${value}%`}>{label} {value}%</span>)}</div></div>}
+        {(preparationTrips.length>0 || [JAPAN_RELATIONSHIP.PLANNING,JAPAN_RELATIONSHIP.SOON].includes(journeyContext.state))&&!inJapanMode&&<ReadinessCard C={C} trips={preparationTrips} preferredTripId={journeyContext.nextTrip?.trip?.id} kanaProgress={kanaProgress} scenarioProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab}/>}
+
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
           <button onClick={()=>journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?onOpenSos():onGoTab("tutor")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
             <div style={iconTileStyle(journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?C.red:C.indigo, 38, 12)}>{journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?<AlertCircle size={18} color={C.red}/>:<MessageSquare size={18} color={C.indigo}/>}</div>
@@ -4861,9 +4862,21 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
 
   const [trips, setTrips] = useState(()=>loadTrips());
   // vues : "home" | "browse" (préconçus) | "create" | "trip" | "sos"
-  const [view, setView] = useState(initialView || "home");
-  useEffect(()=>{ if(initialView){ setView(initialView); onInitialViewConsumed?.(); } },[initialView,onInitialViewConsumed]);
-  const [activeTripId, setActiveTripId] = useState(null);
+  const [view, setView] = useState(typeof initialView==="string" ? initialView : initialView?.tripId ? "trip" : "home");
+  const [activeTripId, setActiveTripId] = useState(initialView?.tripId || null);
+  const [initialTripSub, setInitialTripSub] = useState(initialView?.sub || "day");
+  useEffect(()=>{
+    if(!initialView) return;
+    if(initialView==="new") {
+      if(trips.length >= FREE_TRIP_LIMIT && !isPremium) { setView("home"); setShowPremium(true); }
+      else setView("wizard");
+      setInitialTripSub("day");
+    } else if(typeof initialView==="string") { setView(initialView); setInitialTripSub("day"); }
+    else if(trips.some(trip=>trip.id===initialView.tripId)) {
+      setActiveTripId(initialView.tripId); setInitialTripSub(initialView.sub || "day"); setView("trip");
+    } else { setView("home"); }
+    onInitialViewConsumed?.();
+  },[initialView,onInitialViewConsumed,trips,isPremium]);
   const [previewPreco, setPreviewPreco] = useState(null); // voyage préconçu en aperçu visuel
   const [showPremium, setShowPremium] = useState(false);
   const [showIntro, setShowIntro] = useState(()=>!sectionIntroSeen("voyage"));
@@ -4876,7 +4889,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   useInScreenBack(backRef, ()=>{
     if(showPremium){ setShowPremium(false); return true; }
     if(previewPreco){ setPreviewPreco(null); return true; }
-    if(view!=="home"){ setView("home"); setActiveTripId(null); return true; }
+    if(view!=="home"){ setView("home"); setActiveTripId(null); setInitialTripSub("day"); return true; }
     return false;
   });
   const voyageTourTargets = useMemo(()=>[createRef,precoRef], []); // identité stable, voir HomeScreen
@@ -5014,9 +5027,9 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   if(view==="trip" && activeTrip){
     return (
       <>
-        <VoyageTrip C={C} dark={dark} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
+        <VoyageTrip key={activeTrip.id} initialSub={initialTripSub} C={C} dark={dark} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
           isFav={isFav} toggleFav={toggleFav}
-          onBack={()=>setView("home")} onUpdate={updateTrip} onDelete={deleteTrip}/>
+          onBack={()=>{setInitialTripSub("day");setView("home");}} onUpdate={updateTrip} onDelete={deleteTrip}/>
         {tripCelebration && <CelebrationOverlay C={C} emoji="🗾" title="Voyage créé !" subtitle={activeTrip.titre} color={acc.accent} onDone={()=>setTripCelebration(false)}/>}
       </>
     );
@@ -5066,7 +5079,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
                 [TRIP_STATUS.AWAITING_CONFIRMATION]:"À confirmer",[TRIP_STATUS.COMPLETED]:"Terminé",
                 [TRIP_STATUS.CANCELLED]:"Annulé",
               }[lifecycle];
-              const checklistDone = (t.checklist||[]).filter(c=>c.done).length;
+              const checklistDone = (t.checklist||[]).filter(c=>c.fait).length;
               const checklistTotal = (t.checklist||[]).length;
               return(
                 <div key={t.id} className="lift" onClick={()=>{setActiveTripId(t.id);setView("trip");}} style={{...cardSoftStyle(C,{background:C.s1,boxShadow:C.shadow}),marginBottom:12,padding:16,cursor:"pointer",position:"relative"}}>
@@ -6141,7 +6154,7 @@ function activityPeriod(index,total){
   return "Soirée";
 }
 
-function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOpenPremium, isFav, toggleFav, onBack, onUpdate, onDelete}){
+function VoyageTrip({C, dark, initialSub="day", trip, db, villeById, script, user, isPremium, onOpenPremium, isFav, toggleFav, onBack, onUpdate, onDelete}){
   // Mémoïsé : `trip.customLieux || []` créerait un nouveau tableau à CHAQUE
   // rendu quand customLieux est absent, ce qui invaliderait lieuById puis
   // dayPoints (voir plus bas) en cascade à chaque re-rendu, même sans
@@ -6157,7 +6170,7 @@ function VoyageTrip({C, dark, trip, db, villeById, script, user, isPremium, onOp
   const initialTiming = useMemo(()=>tripTiming(trip), [trip.id, trip.dateDebut, trip.jours.length]);
   const [dayIdx, setDayIdx] = useState(()=>initialTiming?.status==="active" ? initialTiming.dayNumber-1 : 0);
   // sous-vues : "day" | "catalogue" | "detail" | "checklist" | "addcustom"
-  const [sub, setSub] = useState("day");
+  const [sub, setSub] = useState(initialSub==="checklist"?"checklist":"day");
   const [catType, setCatType] = useState("tout");
   const [detailId, setDetailId] = useState(null);
   const [noteEdit, setNoteEdit] = useState(null); // id d'étape en édition de note
@@ -7788,6 +7801,7 @@ export default function IsekaidApp(){
   const setTab = (t)=>{
     withViewTransition(()=> flushSync(()=> setTabRaw(t)));
   };
+  const openTripFromHome = (tripId,sub="day")=>{ setPendingTravelView(tripId ? {tripId,sub} : "new"); setTab("voyage"); };
   const openSos = ()=>{ setPendingTravelView("sos"); setTab("voyage"); };
   const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
   const [dark,setDark]=useState(()=>loadTheme());
@@ -8559,7 +8573,7 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className={supportsViewTransitions()?"":"screen-in"} style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} onOpenSos={openSos} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} onOpenSos={openSos} onOpenTrip={openTripFromHome} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} onGoTab={setTab} backRef={inScreenBackRef} initialCategoryFilter={pendingExploreCategory} onInitialCategoryConsumed={()=>setPendingExploreCategory(null)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)} kanaProgress={kanaProgress} pathProgress={pathProgress} onGoTab={setTab}/>}
