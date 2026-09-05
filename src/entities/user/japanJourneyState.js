@@ -29,9 +29,11 @@ export function getTripDateRange(trip) {
   const start = localDate(trip?.dateDebut);
   if (!start) return null;
   const explicitEnd = localDate(trip?.dateFin);
-  const duration = Math.max(1, Array.isArray(trip?.jours) ? trip.jours.length : Number(trip?.dureeJours) || 1);
-  const end = explicitEnd || new Date(start.valueOf() + (duration - 1) * DAY_MS);
-  return { start, end: end < start ? start : end, duration };
+  const fallbackDuration = Math.max(1, Array.isArray(trip?.jours) ? trip.jours.length : Number(trip?.dureeJours) || 1);
+  const end = explicitEnd || new Date(start.valueOf() + (fallbackDuration - 1) * DAY_MS);
+  const safeEnd = end < start ? start : end;
+  const duration = explicitEnd ? Math.round((safeEnd - start) / DAY_MS) + 1 : fallbackDuration;
+  return { start, end: safeEnd, duration };
 }
 
 export function getTripTiming(trip, currentDate = new Date()) {

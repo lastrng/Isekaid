@@ -34,3 +34,30 @@ test("les jours exigent une activité effectuée et les régions utilisent leur 
   assert.equal(summary.completedDays,1);
   assert.equal(summary.collections.find(item=>item.id==="regions").total,2);
 });
+
+test("calcule les jours au Japon uniquement pour les voyages datés et garde les préfectures inconnues", () => {
+  const dated = buildMyJapanSummary({ currentDate: new Date("2026-09-05"), cities: [{ id: "tokyo", nom: "Tokyo", region: "Kantō", prefecture: "Tokyo" }], trips: [{ status: "completed", dateDebut: "2026-08-01", dateFin: "2026-08-05", jours: [{ villeId: "tokyo", activites: [{ lieuId: "x", fait: true }] }] }], expressionProgress: { hello: { learned: true }, bye: { learned: false } } });
+  assert.equal(dated.daysInJapan, 5);
+  assert.equal(dated.daysInJapanKnown, true);
+  assert.equal(dated.visitedPrefectures, 1);
+  assert.deepEqual(dated.prefectureNames, ["Tokyo"]);
+  assert.equal(dated.learnedExpressions, 1);
+  const unknown = buildMyJapanSummary({ currentDate: new Date("2026-09-05"), cities: [{ id: "kyoto", nom: "Kyoto", region: "Kansai" }], trips: [{ status: "completed", jours: [{ villeId: "kyoto", activites: [{ fait: true }] }] }] });
+  assert.equal(unknown.daysInJapan, null);
+  assert.equal(unknown.daysInJapanKnown, false);
+  assert.equal(unknown.visitedPrefectures, null);
+  assert.equal(unknown.learnedExpressions, null);
+});
+
+test("agrège les favoris et apprentissages seulement quand les sources sont fournies", () => {
+  const summary = buildMyJapanSummary({ favorites: [{ id: "a" }, { id: "b" }], kanaProgress: { a: { level: 3 }, i: { level: 1 } }, expressionProgress: ["いただきます"] });
+  assert.equal(summary.favoritesCount, 2);
+  assert.equal(summary.learnedKana, 1);
+  assert.equal(summary.learnedExpressions, 1);
+  assert.equal(summary.collections.find(item => item.id === "favorites").count, 2);
+  assert.equal(summary.collections.find(item => item.id === "learning").count, 2);
+  const unknown = buildMyJapanSummary();
+  assert.equal(unknown.favoritesCount, null);
+  assert.equal(unknown.learnedKana, null);
+  assert.equal(unknown.collections.some(item => item.id === "learning"), false);
+});

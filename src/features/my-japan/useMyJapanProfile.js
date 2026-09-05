@@ -13,11 +13,11 @@ function blobToDataUrl(blob){
   return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);});
 }
 
-export function useMyJapanProfile({db,session}){
+export function useMyJapanProfile({db,session,expressionProgress,kanaProgress,favorites}){
   const [trips,setTrips]=useState(()=>loadTrips());
   const [syncTick,setSyncTick]=useState(0);
   useEffect(()=>{const reload=()=>{setTrips(loadTrips());setSyncTick(t=>t+1);};window.addEventListener("isekaid:trips-synced",reload);return()=>window.removeEventListener("isekaid:trips-synced",reload);},[]);
-  const summary=useMemo(()=>buildMyJapanSummary({trips,cities:db?.villes||[],places:db?.lieux||[],regionsCatalog:db?.regions||[]}),[db,trips]);
+  const summary=useMemo(()=>buildMyJapanSummary({trips,cities:db?.villes||[],places:db?.lieux||[],regionsCatalog:db?.regions||[],expressionProgress,kanaProgress,favorites}),[db,trips,expressionProgress,kanaProgress,favorites]);
   const persistTrips=useCallback(next=>{setTrips(next);saveTrips(next);},[]);
 
   const resolveTrip=useCallback((tripId,didTravel)=>{

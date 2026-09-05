@@ -1,6 +1,17 @@
 import { getTripLifecycleStatus, TRIP_STATUS } from "../../entities/trip/tripLifecycle.js";
+import { getTripDateRange } from "../../entities/user/japanJourneyState.js";
 
-export function buildMyJapanSummary({ trips = [], cities = [], places = [], regionsCatalog = [], currentDate = new Date() } = {}) {
+function countLearnedExpressions(progress) {
+  if (progress === null || progress === undefined) return null;
+  if (Array.isArray(progress)) return progress.filter(Boolean).length;
+  return Object.values(progress).filter(item => item === true || item?.learned === true || (item?.level || 0) >= 3).length;
+}
+function countLearnedKana(progress) {
+  if (progress === null || progress === undefined) return null;
+  return Object.values(progress).filter(item => (item?.level || item?.box || 0) >= 3).length;
+}
+
+export function buildMyJapanSummary({ trips = [], cities = [], places = [], regionsCatalog = [], expressionProgress, kanaProgress, favorites, currentDate = new Date() } = {}) {
   const cityById = new Map(cities.map(city=>[city.id,city]));
   const placeById = new Map(places.map(place=>[place.id,place]));
   const completedTrips = trips.filter(trip=>getTripLifecycleStatus(trip,currentDate)===TRIP_STATUS.COMPLETED);
@@ -17,6 +28,14 @@ export function buildMyJapanSummary({ trips = [], cities = [], places = [], regi
     }
   }
   const regions = new Set([...visitedCityIds].map(id=>cityById.get(id)?.region).filter(Boolean));
+  const prefectureValues = [...visitedCityIds].map(id=>cityById.get(id)?.prefecture || cityById.get(id)?.prefectureId).filter(Boolean);
+  const prefecturesKnown = visitedCityIds.size === 0 || prefectureValues.length === visitedCityIds.size;
+  const learnedExpressions = countLearnedExpressions(expressionProgress);
+  const learnedKana = countLearnedKana(kanaProgress);
+  const favoritesCount = Array.isArray(favorites) ? favorites.length : null;
+  const datedCompletedTrips = completedTrips.map(trip=>getTripDateRange(trip)).filter(Boolean);
+  const daysInJapanKnown = completedTrips.length === datedCompletedTrips.length && completedTrips.length > 0;
+  const daysInJapan = daysInJapanKnown ? datedCompletedTrips.reduce((sum, range)=>sum + range.duration, 0) : null;
   const stamps = [...visitedCityIds].map(id=>{
     const city = cityById.get(id);
     return { id:`city:${id}`, cityId:id, label:`${city?.nom || id} Stamp`, emoji:city?.emoji || "🗾", unlockedBy:"place_completed" };
@@ -43,12 +62,22 @@ export function buildMyJapanSummary({ trips = [], cities = [], places = [], regi
     visitedCities:visitedCityIds.size,
     visitedRegions:regions.size,
     visitedPlaces:visitedPlaceIds.size,
+    visitedPrefectures: prefecturesKnown ? new Set(prefectureValues).size : null,
+    prefectureNames: prefecturesKnown ? [...new Set(prefectureValues)] : [],
+    prefecturesKnown,
+    daysInJapan, daysInJapanKnown,
+    learnedExpressions, learnedExpressionsKnown: learnedExpressions !== null,
+    learnedKana, learnedKanaKnown: learnedKana !== null,
+    favoritesCount, favoritesKnown: favoritesCount !== null,
     cityIds:[...visitedCityIds], regionNames:[...regions], placeIds:[...visitedPlaceIds], stamps, completedTripDetails, memories,
     collections:[
       {id:"cities",label:"Villes",emoji:"🏙️",count:visitedCityIds.size,total:null},
       {id:"regions",label:"Régions",emoji:"🗾",count:regions.size,total:regionsCatalog.length || null},
       {id:"places",label:"Lieux",emoji:"⛩️",count:visitedPlaceIds.size,total:null},
       {id:"stamps",label:"Tampons",emoji:"🔴",count:stamps.length,total:null},
+      ...(prefecturesKnown && prefectureValues.length ? [{id:"prefectures",label:"Préfectures",emoji:"🗾",count:new Set(prefectureValues).size,total:null}] : []),
+      ...(favoritesCount !== null ? [{id:"favorites",label:"Favoris",emoji:"♥️",count:favoritesCount,total:null}] : []),
+      ...(learnedKana !== null || learnedExpressions !== null ? [{id:"learning",label:"Apprentissages",emoji:"🈶",count:(learnedKana || 0) + (learnedExpressions || 0),total:null}] : []),
     ],
     awaitingConfirmation,
   };
