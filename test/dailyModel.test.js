@@ -38,3 +38,9 @@ test("le Daily privilégie un lieu du voyage puis la saison", () => {
   const seasonal = buildDailyRitual({ db, date: "2026-09-06", travelContext: { seasonalPlaces: [{ id: "nara", nom: "Nara", description: "Parc" }] } });
   assert.equal(seasonal.activities[0].label, "Saison japonaise");
 });
+
+test("les traditions saisonnières du catalogue alimentent le Daily", () => {
+  const seasonal = buildDailyRitual({ db: { ...db, traditions: [{ id: "momiji", nom: "Momijigari", saison: "automne", tagline: "Feuilles rouges" }] }, date: "2026-09-06", travelContext: { seasonKey: "automne" } });
+  assert.equal(seasonal.activities[0].type, "tradition");
+  assert.equal(seasonal.activities[0].label, "Saison japonaise");
+});

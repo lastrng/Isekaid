@@ -50,7 +50,15 @@ function contentItems(db = {}) {
     summary: item.description || item.fun_fact || "Une découverte gourmande du Japon.",
     raw: item,
   }));
-  return { culture, expressions, situations, food };
+  const traditions = (db.traditions || []).map((item, index) => ({
+    id: item.id || `tradition-${index}`,
+    type: "tradition",
+    label: "Tradition japonaise",
+    title: item.nom || item.titre || "Une tradition japonaise",
+    summary: item.tagline || item.description || item.contenu || "Un geste et une histoire à découvrir.",
+    raw: item,
+  }));
+  return { culture, expressions, situations, food, traditions };
 }
 
 function placeItem(place, index, seasonal = false) {
@@ -69,7 +77,9 @@ export function buildDailyRitual({ db = {}, date = new Date(), travelContext = n
   const pools = contentItems(db);
   const travelPlaces = (travelContext?.relatedPlaces || []).map((place, index) => placeItem(place, index, false));
   const seasonalPlaces = (travelContext?.seasonalPlaces || []).map((place, index) => placeItem(place, index, true));
-  const culturePool = travelPlaces.length ? travelPlaces : seasonalPlaces.length ? seasonalPlaces : pools.culture;
+  const seasonalTraditions = pools.traditions.filter(item => !travelContext?.seasonKey || item.raw?.saison === travelContext.seasonKey).map(item => ({ ...item, label: "Saison japonaise" }));
+  const seasonalPool = [...seasonalPlaces, ...seasonalTraditions];
+  const culturePool = travelPlaces.length ? travelPlaces : seasonalPool.length ? seasonalPool : pools.culture;
   const discover = pick(culturePool.length ? culturePool : pools.food, dateKey, 1);
   const learn = pick(pools.expressions, dateKey, 2);
   const practice = pick(pools.situations.length ? pools.situations : [...pools.food, ...pools.culture], dateKey, 3);
