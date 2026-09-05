@@ -45,9 +45,11 @@ import { mergeTripSnapshots } from "./services/sync/tripSnapshots";
 import { useCloudBackup } from "./services/sync/useCloudBackup";
 import { trackProductEvent } from "./services/analytics/analytics";
 import { enqueueMutation, flushPendingMutations, loadPendingMutations } from "./services/sync/pendingMutations";
+import { cacheCriticalOfflineData } from "./services/sync/offlineStrategy.js";
 import { SearchResultDetail } from "./features/search/SearchResultDetail";
 import { SosJapan } from "./features/sos/SosJapan";
 import { DailyRitual } from "./features/daily/DailyRitual.jsx";
+import { loadDailyRitual } from "./features/daily/dailyModel.js";
 import { ExploreEditorialHero } from "./features/explore/ExploreEditorialHero.jsx";
 import {
   dayKey,
@@ -8487,6 +8489,17 @@ export default function IsekaidApp(){
     setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
     return ()=>{ cancelled = true; };
   },[contentLoadAttempt]);
+
+  // Prépare hors connexion les ressources critiques déjà disponibles localement.
+  useEffect(()=>{
+    if(!db) return;
+    cacheCriticalOfflineData({
+      daily:loadDailyRitual({db}),
+      sos:SOS_CATEGORIES,
+      essentialPhrases:(db.expressions||[]).slice(0,24),
+      contextualContent:[...(db.traditions||[]).slice(0,12),...(db.codes_sociaux||[]).slice(0,12)],
+    });
+  },[db]);
 
   // Persist theme whenever it changes
   useEffect(()=>{ saveTheme(dark); },[dark]);

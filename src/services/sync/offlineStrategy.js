@@ -1,6 +1,31 @@
+import { readJson, writeJson } from "../../lib/storage.js";
+
 export const OFFLINE_PRIORITY = Object.freeze([
   "activeTrip", "tripDays", "savedPlaces", "checklist", "sos", "essentialPhrases", "contextualContent", "progress",
 ]);
+
+const OFFLINE_CONTENT_KEY = "isekaid_offline_content_v1";
+
+/** Cache local des ressources critiques déjà connues, sans appel réseau. */
+export function cacheCriticalOfflineData({ daily = null, sos = [], essentialPhrases = [], contextualContent = [] } = {}) {
+  const payload = {
+    version: 1,
+    cachedAt: new Date().toISOString(),
+    daily,
+    sos: Array.isArray(sos) ? sos : [],
+    essentialPhrases: Array.isArray(essentialPhrases) ? essentialPhrases.slice(0, 24) : [],
+    contextualContent: Array.isArray(contextualContent) ? contextualContent.slice(0, 24) : [],
+  };
+  return writeJson(OFFLINE_CONTENT_KEY, payload);
+}
+
+export function loadCriticalOfflineData() {
+  return readJson(OFFLINE_CONTENT_KEY, null);
+}
+
+export function hasCriticalOfflineData(data = loadCriticalOfflineData()) {
+  return Boolean(data?.version === 1 && data?.daily?.activities?.length && data?.sos?.length && data?.essentialPhrases?.length);
+}
 
 /** Décrit les capacités locales sans inspecter le réseau ni lancer de synchronisation. */
 export function getOfflineCapabilities({ trip = null, days = [], savedPlaces = [], sos = [], essentialPhrases = [], contextualContent = [], progress = null } = {}) {
@@ -22,3 +47,5 @@ export function summarizeOfflineSync({ online = true, pending = 0, lastSyncedAt 
   if (pending) return { state: "pending", label: `${pending} modification${pending > 1 ? "s" : ""} à synchroniser`, pending, lastSyncedAt };
   return { state: "synced", label: lastSyncedAt ? "Données synchronisées" : "Données conservées sur cet appareil", pending: 0, lastSyncedAt };
 }
+
+export { OFFLINE_CONTENT_KEY };
