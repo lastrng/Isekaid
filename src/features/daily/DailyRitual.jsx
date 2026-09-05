@@ -14,6 +14,11 @@ export function DailyRitual({ C, db, date, timeZone, travelContext, streak, onOp
   useEffect(() => {
     if (db) setRitual(loadDailyRitual({ db, date: dateKey, travelContext }));
   }, [db, dateKey, travelContext]);
+  useEffect(() => {
+    const refresh = () => setRitual(loadDailyRitual({ db, date: dateKey, travelContext }));
+    window.addEventListener("isekaid:daily-synced", refresh);
+    return () => window.removeEventListener("isekaid:daily-synced", refresh);
+  }, [db, dateKey, travelContext]);
   const progress = dailyProgress(ritual);
   const today = useMemo(() => new Date(`${dateKey}T12:00:00`).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }), [dateKey]);
   const complete = activity => {

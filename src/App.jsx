@@ -50,6 +50,7 @@ import { SearchResultDetail } from "./features/search/SearchResultDetail";
 import { SosJapan } from "./features/sos/SosJapan";
 import { DailyRitual } from "./features/daily/DailyRitual.jsx";
 import { loadDailyRitual } from "./features/daily/dailyModel.js";
+import { writeJson } from "./lib/storage.js";
 import { ExploreEditorialHero } from "./features/explore/ExploreEditorialHero.jsx";
 import {
   dayKey,
@@ -8349,7 +8350,8 @@ export default function IsekaidApp(){
             if(s.accent){ setAccent(s.accent); saveAccent(s.accent); }
             if(s.script){ setScript(s.script); saveScript(s.script); }
             if(s.introSeen){ markIntroSeen(); }
-            if(s.premium && s.premium.active){ setPremium(s.premium); savePremium(s.premium); }
+          if(s.premium && s.premium.active){ setPremium(s.premium); savePremium(s.premium); }
+          if(s.daily?.date){ writeJson("isekaid_daily_ritual_v1", s.daily); window.dispatchEvent(new Event("isekaid:daily-synced")); }
           }
         }
       } catch { /* hors-ligne/erreur réseau : on route avec ce qu'on a localement */ }
@@ -8393,6 +8395,7 @@ export default function IsekaidApp(){
         });
       };
       setting("dark",setDark,saveTheme);setting("accent",setAccent,saveAccent);setting("script",setScript,saveScript);
+      setting("daily", value=>{ writeJson("isekaid_daily_ritual_v1", value); window.dispatchEvent(new Event("isekaid:daily-synced")); }, ()=>{});
     };
     window.addEventListener("isekaid:progress-synced",receive);
     return()=>window.removeEventListener("isekaid:progress-synced",receive);
@@ -8415,14 +8418,14 @@ export default function IsekaidApp(){
     clearTimeout(syncRef.current);
     const snapshot = {
       streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user, path:pathProgress, mission,
-      settings: { dark, accent, script, introSeen: introSeen(), premium }
+      settings: { dark, accent, script, introSeen: introSeen(), premium, daily: loadDailyRitual({db}) }
     };
     enqueueMutation({type:"progress",userId:session.user.id,payload:snapshot});
     syncRef.current = setTimeout(()=>{
       flushProgressMutations();
     }, 800);
     return ()=> clearTimeout(syncRef.current);
-  },[streak, unlocks, scenProgress, favs, kanaProgress, user, pathProgress, mission, dark, accent, script, premium, session?.user?.id,cloudProfileChecked,flushProgressMutations]);
+  },[streak, unlocks, scenProgress, favs, kanaProgress, user, pathProgress, mission, dark, accent, script, premium, db, session?.user?.id,cloudProfileChecked,flushProgressMutations]);
 
   useEffect(()=>{
     if(!session?.user) return;
