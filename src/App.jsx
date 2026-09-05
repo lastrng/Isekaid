@@ -40,6 +40,7 @@ import { buildHomeJourneyContext, getHomePrimaryAction } from "./features/home/h
 import { MyJapanSection } from "./features/my-japan/MyJapanSection";
 import { useMyJapanProfile } from "./features/my-japan/useMyJapanProfile";
 import { favId, loadFavs, saveFavs } from "./features/profile/favorites.js";
+import { haversineKm, tripDayMetrics } from "./features/travel/tripDayModel.js";
 import { mergeTripSnapshots } from "./services/sync/tripSnapshots";
 import { useCloudBackup } from "./services/sync/useCloudBackup";
 import { trackProductEvent } from "./services/analytics/analytics";
@@ -5787,17 +5788,6 @@ const MAP_TILE_URL_DARK  = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{
 const JAPAN_DEFAULT_CENTER = [36.5, 138];
 const JAPAN_DEFAULT_ZOOM = 5;
 
-// Distance à vol d'oiseau entre deux lieux (km) — pas de service de routing
-// (payant), juste de la trigo sur les coordonnées déjà en base. `null` si
-// l'un des deux lieux n'a pas de coordonnées (repli textuel côté appelant).
-function haversineKm(a, b){
-  if(!a || !b || typeof a.lat!=="number" || typeof a.lng!=="number" || typeof b.lat!=="number" || typeof b.lng!=="number") return null;
-  const R = 6371, toRad = d=>d*Math.PI/180;
-  const dLat = toRad(b.lat-a.lat), dLng = toRad(b.lng-a.lng);
-  const s = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLng/2)**2;
-  return 2*R*Math.asin(Math.sqrt(s));
-}
-
 function DayMap({ C, points, selectedId, onSelectPin, onOpenDetail, onRemove, onAdd, variant="card", dark=false, pinPopup=true, pointLabel="lieu" }){
   const containerRef = useRef(null);
   const instanceRef = useRef(null);
@@ -6161,23 +6151,6 @@ function TripBottomSheet({ C, containerH, tabs, activeTab, onTabChange, children
   );
 }
 
-function tripDurationMinutes(value){
-  const text=String(value||"").toLowerCase();
-  const hour=Number(text.match(/([\d.,]+)\s*h/)?.[1]?.replace(",","."))||0;
-  const mins=Number(text.match(/([\d.,]+)\s*min/)?.[1]?.replace(",","."))||0;
-  if(hour||mins) return Math.round(hour*60+mins);
-  const range=text.match(/(\d+)\s*[-–]\s*(\d+)/);
-  if(range) return Math.round((Number(range[1])+Number(range[2]))/2)*60;
-  return 90;
-}
-function tripDayMetrics(day, lieuById){
-  const places=(day?.activites||[]).map(a=>lieuById[a.lieuId]).filter(Boolean);
-  const visitMinutes=places.reduce((sum,p)=>sum+tripDurationMinutes(p.duree),0);
-  let km=0;
-  for(let i=1;i<places.length;i++) km+=haversineKm(places[i-1],places[i])||0;
-  const totalMinutes=visitMinutes+Math.max(0,places.length-1)*25;
-  return { places, km, totalMinutes, overloaded:places.length>4||totalMinutes>9*60 };
-}
 function activityPeriod(index,total){
   const ratio=total<=1?0:index/total;
   if(ratio<0.34) return "Matin";
