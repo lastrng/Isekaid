@@ -13,7 +13,7 @@ export function DreamHome({ C, user, db, currentDate, onNavigate, onOpenLieu, on
       <span style={{ color: C.red, fontSize: 12 }}>Découvrir ce lieu →</span>
     </button>
     <div aria-label="Actions recommandées" style={{ display: "grid", gap: 8 }}>
-      {model.recommendations.filter(item => item.id !== "inspiration").map(item => <button key={item.id} onClick={() => open(item)} style={{ ...card, padding: 13, boxShadow: "none" }}><strong style={{ fontSize: 13 }}>{item.title}</strong><span style={{ display: "block", color: C.t3, fontSize: 11, marginTop: 3 }}>{item.text} →</span></button>)}
+      {model.recommendations.filter(item => item.id !== "inspiration").slice(0, 4).map(item => <button key={item.id} onClick={() => open(item)} style={{ ...card, minHeight:44, padding: 13, boxShadow: "none" }}><strong style={{ fontSize: 13 }}>{item.title}</strong><span style={{ display: "block", color: C.t3, fontSize: 11, marginTop: 3 }}>{item.text} →</span></button>)}
     </div>
   </section>;
 }

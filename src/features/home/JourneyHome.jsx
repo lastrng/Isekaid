@@ -16,7 +16,8 @@ export function JourneyHome({ C, model, kanaProgress, scenProgress, pathProgress
     </button>
     {planning && <ReadinessCard C={C} trips={model.preparationTrips} preferredTripId={model.trip?.id} kanaProgress={kanaProgress} scenarioProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onNavigate}/>}
     <div aria-label="Actions recommandées" style={{ display: "grid", gap: 8 }}>
-      {model.recommendations?.slice(0, 5).map(item => <button key={item.id} onClick={() => openRecommendation(item)} style={{ ...card, padding: 13, boxShadow: "none" }}><strong style={{ fontSize: 13 }}>{item.title}</strong><span style={{ display: "block", color: C.t3, fontSize: 11, marginTop: 3 }}>{item.text} →</span></button>)}
+      <div style={{fontSize:10,fontWeight:700,letterSpacing:".12em",color:C.t3}}>À FAIRE MAINTENANT</div>
+      {model.recommendations?.slice(0, 4).map(item => <button key={item.id} onClick={() => openRecommendation(item)} style={{ ...card, minHeight:44, padding: 13, boxShadow: "none" }}><strong style={{ fontSize: 13 }}>{item.title}</strong><span style={{ display: "block", color: C.t3, fontSize: 11, marginTop: 3 }}>{item.text} →</span></button>)}
     </div>
     <p style={{fontSize:10,color:C.t3,textAlign:"center",margin:0}}>Ton Japon commence avant le départ et continue après ton retour.</p>
   </div>;
