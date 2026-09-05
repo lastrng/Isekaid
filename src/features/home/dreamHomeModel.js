@@ -10,9 +10,13 @@ export function buildDreamHome({ user = {}, db = {}, currentDate = new Date() } 
   const places = db.lieux || [];
   const matching = places.filter(place => (place.interets || []).some(interest => interests.has(interest)));
   const seed = dayFormat.format(currentDate);
-  return {
+  const result = {
     place: dailyPick(matching.length ? matching : places, seed),
     tradition: dailyPick(db.traditions || [], `${seed}:culture`),
     personalized: matching.length > 0,
   };
+  // Keep the historical model shape enumerable for callers that persisted it.
+  Object.defineProperty(result, "recommendations", { value: getHomeRecommendations({ context: { state: "dreaming" }, hasInspiration: Boolean(matching.length || places.length) }), enumerable: false });
+  return result;
 }
+import { getHomeRecommendations } from "./homeRecommendations.js";
