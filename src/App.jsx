@@ -39,6 +39,7 @@ import { ReadinessCard } from "./features/readiness/ReadinessCard";
 import { buildHomeJourneyContext, getHomePrimaryAction } from "./features/home/homeContext";
 import { MyJapanSection } from "./features/my-japan/MyJapanSection";
 import { useMyJapanProfile } from "./features/my-japan/useMyJapanProfile";
+import { favId, loadFavs, saveFavs } from "./features/profile/favorites.js";
 import { mergeTripSnapshots } from "./services/sync/tripSnapshots";
 import { useCloudBackup } from "./services/sync/useCloudBackup";
 import { trackProductEvent } from "./services/analytics/analytics";
@@ -7809,20 +7810,6 @@ function titleForXP(days){
 }
 
 // ─── Favorites (collection) ───────────────────────────────────────────────────
-const FAV_KEY = "isekaid_favs_v1";
-function loadFavs(){
-  try { const raw=localStorage.getItem(FAV_KEY); return raw?JSON.parse(raw):[]; }
-  catch { return []; }
-}
-function saveFavs(list){
-  try { localStorage.setItem(FAV_KEY, JSON.stringify(list)); } catch {}
-}
-// Build a stable id for any content item
-function favId(type, item){
-  const label = item.expression || item.titre || item.nom_jp || item.nom || "";
-  return `${type}:${label}`;
-}
-
 export default function IsekaidApp(){
   const [screen,setScreen]=useState("splash");
   const [tab,setTabRaw]=useState("home");
