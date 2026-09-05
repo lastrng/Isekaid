@@ -258,7 +258,8 @@ Deno.serve(async (req: Request) => {
     if (knownVilleIds.size > days) {
       return new Response(JSON.stringify({ error: "too_many_cities_for_days" }), { status: 400, headers: jsonHeaders });
     }
-    const {data:quota,error:usageError}=await supabase.rpc("reserve_ai_usage",{p_feature:"itinerary",p_daily_limit:DAILY_GENERATION_LIMIT,p_monthly_limit:MONTHLY_GENERATION_LIMIT});
+    // Les limites sont détenues par la RPC et ne viennent jamais du client.
+    const {data:quota,error:usageError}=await supabase.rpc("reserve_ai_usage",{p_feature:"itinerary"});
     if(usageError) return new Response(JSON.stringify({error:"usage_unavailable"}), {status:503,headers:jsonHeaders});
     if(!quota?.allowed) return new Response(JSON.stringify({error:"cost_limit",...quota}), {status:429,headers:jsonHeaders});
 

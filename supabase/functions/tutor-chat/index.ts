@@ -188,8 +188,10 @@ Deno.serve(async (req: Request) => {
 
     const body = await req.json().catch(() => null);
     const message = safeString(body?.message).trim();
-    const scenarioId = safeString(body?.scenarioId) || "libre";
-    const niveau = safeString(body?.niveau) || "débutant";
+    const requestedScenario = safeString(body?.scenarioId);
+    const scenarioId = TUTOR_SCENARIOS.some((scenario) => scenario.id === requestedScenario) ? requestedScenario : "libre";
+    const requestedNiveau = safeString(body?.niveau);
+    const niveau = Object.hasOwn(NIVEAU_INSTRUCTIONS, requestedNiveau) ? requestedNiveau : "débutant";
     let conversationId = safeString(body?.conversationId) || null;
     // Pont Scénarios scriptés → Tuteur : contexte optionnel, uniquement
     // consommé à la création de la conversation (voir plus bas), persisté
@@ -201,6 +203,9 @@ Deno.serve(async (req: Request) => {
 
     if (!message) {
       return new Response(JSON.stringify({ error: "empty_message" }), { status: 400, headers: jsonHeaders });
+    }
+    if (message.length > 2000) {
+      return new Response(JSON.stringify({ error: "message_too_large" }), { status: 413, headers: jsonHeaders });
     }
 
     // ── Garde-fou serveur : gating freemium, indépendant du client ──────────
