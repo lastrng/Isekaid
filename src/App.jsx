@@ -1,3 +1,5 @@
+import { JapanModeHome } from "./features/japan-mode/JapanModeHome.jsx";
+import { buildJapanMode, toggleTodayActivity } from "./features/japan-mode/japanModeModel.js";
 import { preserveProgressCopy } from "./services/sync/progressSync.js";
 import { mergeProgress, sameValue } from "./services/sync/progressMerge.js";
 import { markTripDeleted } from "./services/sync/tripSyncState.js";
@@ -1479,7 +1481,14 @@ function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
   );
 }
 
-function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,onOpenSos,onOpenTrip,isPremium,onOpenLieu,onOpenTradition,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem,onOpenWeeklyTarget,kanaProgress,scenProgress,pathProgress}){
+function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onSearch,onProfile,mission,onTask,onGoTab,onOpenSos,onOpenTrip,onOpenPhrases,onToggleToday,isPremium,onOpenLieu,onOpenTradition,dueReviewCount,hasKanaProgress,onStartReview,onIntroDone,rank,onOpenPremium,weeklyProgress,onToggleWeeklyItem,onOpenWeeklyTarget,kanaProgress,scenProgress,pathProgress}){
+  const [homeTrips,setHomeTrips]=useState(()=>loadTrips());
+  useEffect(()=>{
+    const refresh=()=>setHomeTrips(loadTrips());
+    const timer=setInterval(refresh,60000);
+    window.addEventListener("isekaid:trips-synced",refresh);window.addEventListener("focus",refresh);window.addEventListener("storage",refresh);
+    return()=>{clearInterval(timer);window.removeEventListener("isekaid:trips-synced",refresh);window.removeEventListener("focus",refresh);window.removeEventListener("storage",refresh);};
+  },[]);
   const [streakFlip, setStreakFlip] = useState(false); // false=flamme, true=titre
   const [recoOpen, setRecoOpen] = useState(false);
   // Cibles du spotlight (Système 4.a, voir SECTION_INTRO_STEPS.home) : une
@@ -1553,11 +1562,12 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   const seasonKey = currentSeasonKey();
   const seasonAccent = SEASON_ACCENT[seasonKey];
   const seasonLieux = useMemo(()=>seasonalLieux(db, seasonKey), [db, seasonKey]);
-  const journeyContext = useMemo(()=>buildHomeJourneyContext({user,trips:loadTrips()}),[user]);
+  const journeyContext = useMemo(()=>buildHomeJourneyContext({user,trips:homeTrips}),[user,homeTrips]);
   const contextCopy = useMemo(()=>getHomePrimaryAction(journeyContext,db?.lieux||[]),[journeyContext,db]);
   const preparationTrips = loadTrips().filter(trip=>!["cancelled","completed"].includes(trip.status) && tripTiming(trip)?.status!=="past");
   const inJapanMode = journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN;
-  const journeyHome = useMemo(()=>buildJourneyHome({user,trips:loadTrips(),db}),[user,db]);
+  const japanMode = useMemo(()=>buildJapanMode(homeTrips,db),[homeTrips,db]);
+  const journeyHome = useMemo(()=>buildJourneyHome({user,trips:homeTrips,db}),[user,db,homeTrips]);
   // Le premier tour montre encore les zones historiques une fois. Ensuite,
   // préparation et voyage privilégient uniquement les actions immédiates.
   const focusedTravelHome = homeIntroStage===null && [JAPAN_RELATIONSHIP.PLANNING,JAPAN_RELATIONSHIP.SOON,JAPAN_RELATIONSHIP.IN_JAPAN].includes(journeyContext.state);
@@ -1599,7 +1609,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
         </div>
       </div>
 
-      {journeyHome && homeIntroStage===null ? <JourneyHome C={C} model={journeyHome} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition}/> : <>
+      {inJapanMode && homeIntroStage===null ? <JapanModeHome C={C} model={japanMode} db={db} onOpenTrip={onOpenTrip} onSos={onOpenSos} onPhrases={onOpenPhrases} onToggle={onToggleToday} onTutor={()=>onGoTab("tutor")}/> : journeyHome && homeIntroStage===null ? <JourneyHome C={C} model={journeyHome} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition}/> : <>
       {/* Actions rapides — chevauche l'en-tête (comme HomeScreen.tsx) */}
       <div style={{padding:"0 20px",marginTop:-24,marginBottom:4,position:"relative",zIndex:2}}>
         <button onClick={()=>contextCopy.tab==="voyage" && (journeyContext.activeTrip || journeyContext.nextTrip?.trip) ? onOpenTrip((journeyContext.activeTrip || journeyContext.nextTrip.trip).id,"day") : onGoTab(contextCopy.tab)} className="lift" style={{width:"100%",marginBottom:12,padding:"16px 17px",display:"flex",alignItems:"center",gap:13,textAlign:"left",cursor:"pointer",background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow}}>
@@ -1618,7 +1628,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
               <div style={{fontSize:11,color:C.t3}}>{journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN?"Aide immédiate":"Parler japonais"}</div>
             </div>
           </button>
-          <button onClick={()=>onGoTab(inJapanMode?"scenarios":"explore")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
+          <button onClick={()=>inJapanMode?onOpenPhrases():onGoTab("explore")} className="lift" style={{...cardSoftStyle(C),background:C.s1,boxShadow:C.shadow,padding:14,display:"flex",alignItems:"center",gap:10,textAlign:"left",cursor:"pointer",border:`1px solid ${C.border}`}}>
             <div style={iconTileStyle(C.green, 38, 12)}>{inJapanMode?<MessageSquare size={18} color={C.green}/>:<Compass size={18} color={C.green}/>}</div>
             <div>
               <div style={{fontSize:13,fontWeight:500,color:C.text}}>{inJapanMode?"Phrases utiles":"Explorer"}</div>
@@ -4896,9 +4906,11 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   const landingRef = useRef(null); // conteneur scrollable, non utilisé comme cible de spotlight (trop grand : le surlignage sort de l'écran une fois scrollé)
   const createRef = useRef(null); // cible spotlight étape 1 (voir SECTION_INTRO_STEPS.voyage)
   const precoRef = useRef(null); // cible spotlight étape 2
+  const sosBackRef=useRef(null);
   // Retour matériel/geste : ferme d'abord la modale Premium/l'aperçu
   // d'itinéraire, sinon revient à l'accueil Voyage plutôt qu'à Home directement.
   useInScreenBack(backRef, ()=>{
+    if(view==="sos" && sosBackRef.current?.())return true;
     if(showPremium){ setShowPremium(false); return true; }
     if(previewPreco){ setPreviewPreco(null); return true; }
     if(view!=="home"){ setView("home"); setActiveTripId(null); setInitialTripSub("day"); return true; }
@@ -4981,7 +4993,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   };
 
   // ─── Vue : assistant de création (questions → génération IA) ───
-  if(view==="sos") return <SosJapan C={C} onBack={()=>setView("home")}/>;
+  if(view==="sos") return <SosJapan C={C} backRef={sosBackRef} onBack={()=>setView("home")}/>;
   if(view==="wizard"){
     return <VoyageWizard C={C} villes={villes} lieux={lieux} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
               onCancel={()=>setView("home")} onManual={()=>setView("create")}
@@ -7815,6 +7827,16 @@ export default function IsekaidApp(){
     withViewTransition(()=> flushSync(()=> setTabRaw(t)));
   };
   const openTripFromHome = (tripId,sub="day")=>{ setPendingTravelView(tripId ? {tripId,sub} : "new"); setTab("voyage"); };
+  const openEssentialPhrases=()=>{setPendingLearnMode("situations");setTab("learn");};
+  const toggleTodayFromHome=(tripId,activityId)=>{
+    const next=toggleTodayActivity(loadTrips(),tripId,activityId);
+    if(!saveTrips(next))throw new Error("storage_full");
+    window.dispatchEvent(new Event("isekaid:trips-synced"));
+    if(session?.user&&supabaseEnabled){
+      if(!enqueueMutation({type:"trips",userId:session.user.id,payload:next}))throw new Error("queue_full");
+      flushPendingMutations({trips:mutation=>saveTripsCloud(mutation.userId,mutation.payload)});
+    }
+  };
   const openSos = ()=>{ setPendingTravelView("sos"); setTab("voyage"); };
   const [user,setUser]=useState(()=>loadProfile());   // read saved profile immediately
   const [dark,setDark]=useState(()=>loadTheme());
@@ -8632,7 +8654,7 @@ export default function IsekaidApp(){
           <>
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className={supportsViewTransitions()?"":"screen-in"} style={{height:"100%"}}>
-              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} onOpenSos={openSos} onOpenTrip={openTripFromHome} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress}/>}
+              {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} onOpenSos={openSos} onOpenTrip={openTripFromHome} onOpenPhrases={openEssentialPhrases} onToggleToday={toggleTodayFromHome} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress}/>}
 {tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} onGoTab={setTab} backRef={inScreenBackRef} initialCategoryFilter={pendingExploreCategory} onInitialCategoryConsumed={()=>setPendingExploreCategory(null)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)} kanaProgress={kanaProgress} pathProgress={pathProgress} onGoTab={setTab}/>}
