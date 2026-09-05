@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { ActivityContext } from "../travel/ActivityContext.jsx";
+import { getOfflineCapabilities, summarizeOfflineSync } from "../../services/sync/offlineStrategy.js";
 
-export function JapanModeHome({C,model,db,onOpenTrip,onSos,onPhrases,onToggle,onTutor}) {
+export function JapanModeHome({C,model,db,pendingMutations=0,onOpenTrip,onSos,onPhrases,onToggle,onTutor}) {
   const [online,setOnline]=useState(()=>globalThis.navigator?.onLine!==false);
   const [error,setError]=useState("");
   useEffect(()=>{const update=()=>setOnline(navigator.onLine);window.addEventListener("online",update);window.addEventListener("offline",update);return()=>{window.removeEventListener("online",update);window.removeEventListener("offline",update);};},[]);
   const toggle=id=>{try{onToggle(model.trip.id,id);setError("");}catch{setError("Impossible d’enregistrer cette modification. Réessaie.");}};
   const button={padding:14,borderRadius:14,border:`1px solid ${C.border}`,color:C.text,background:C.s1,textAlign:"left",cursor:"pointer",fontSize:12};
+  const offline = getOfflineCapabilities({ trip: model.trip, days: model.trip?.jours, sos: model.recommendations.filter(item => item.id === "sos"), essentialPhrases: model.recommendations.filter(item => item.id === "phrases"), contextualContent: model.place ? [model.place] : [], progress: model.progress });
+  const sync = summarizeOfflineSync({ online, pending: pendingMutations });
   return <div style={{padding:"0 20px 110px",marginTop:-24,position:"relative",zIndex:2,display:"grid",gap:13}}>
     <section style={{...button,cursor:"default",padding:18}}>
       <div style={{fontSize:10,color:C.red,fontWeight:700,letterSpacing:".14em"}}>MODE JAPON {!online&&"· HORS CONNEXION"}</div>
@@ -21,6 +24,6 @@ export function JapanModeHome({C,model,db,onOpenTrip,onSos,onPhrases,onToggle,on
     <div aria-label="Actions recommandées" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>{model.recommendations.slice(1, 4).map(item => <button key={item.id} onClick={() => item.id === "sos" ? onSos() : item.id === "phrases" ? onPhrases() : onOpenTrip(model.trip?.id, "day")} style={{...button,background:item.id === "sos" ? C.red : C.s1,color:item.id === "sos" ? "#fff" : C.text,fontWeight:item.id === "sos" ? 700 : 400}}>{item.title}<br/><span style={{fontSize:10,fontWeight:400,color:item.id === "sos" ? "#fff" : C.t3}}>{item.text}</span></button>)}</div>
     {model.active && <p style={{ margin: 0, fontSize: 10, color: C.t3 }}>Mode Japon activé par les dates de ton voyage. La localisation n’est pas nécessaire.</p>}
     <ActivityContext C={C} db={db} trips={model.trip ? [model.trip] : []} place={model.place} onTutor={online?onTutor:undefined}/>
-    <details style={{fontSize:11,color:C.t2,lineHeight:1.6}}><summary>Ce qui reste disponible sans connexion</summary><p>Ton programme enregistré, les cases à cocher, les textes des lieux, les phrases et SOS restent accessibles dans l’application Android. Les modifications sont gardées sur ce téléphone avant synchronisation.</p><p>Les fonds de carte, certaines images et le tuteur demandent une connexion. L’audio dépend des voix installées sur ton téléphone.</p></details>
+    <details style={{fontSize:11,color:C.t2,lineHeight:1.6}}><summary>{sync.label} · ce qui reste disponible sans connexion</summary><p>{offline.activeTrip ? "Ton voyage actif, ses journées et sa checklist" : "Les données de voyage apparaîtront ici après leur enregistrement"} restent consultables sur ce téléphone. {offline.sos ? "SOS Japon" : "SOS Japon"}, les phrases essentielles et les conseils déjà chargés ne dépendent pas d’un appel réseau.</p><p>Les modifications locales sont placées dans la file de synchronisation existante dès que nécessaire. Les fonds de carte, certaines images et le tuteur demandent une connexion. L’audio dépend des voix installées sur ton téléphone.</p></details>
   </div>;
 }
