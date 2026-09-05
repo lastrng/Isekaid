@@ -31,6 +31,7 @@ import { clearStoredNamespace } from "./lib/storage";
 import { JAPAN_RELATIONSHIP, normalizeProfile } from "./entities/user/profileModel";
 import { getActiveTrip, getDailyProgress, getNextActivity, getTripTiming } from "./entities/user/japanJourneyState";
 import { BottomNav } from "./app/navigation/BottomNav";
+import { resolveDestination } from "./app/navigation/destinations.js";
 import { getTripLifecycleStatus, TRIP_STATUS } from "./entities/trip/tripLifecycle";
 import { buildSearchIndex, searchCatalog } from "./data/searchIndex";
 import { disableDailyReminder, enableDailyReminder, loadDailyReminder, supportsDailyReminder } from "./features/reminders/dailyReminder";
@@ -7832,7 +7833,11 @@ export default function IsekaidApp(){
   // état ; repli synchrone (aucune régression) si l'API/l'appareil ne suit
   // pas — .screen-in prend alors le relais visuellement.
   const setTab = (t)=>{
-    withViewTransition(()=> flushSync(()=> setTabRaw(t)));
+    // Une seule frontière pour les destinations publiques et les routes
+    // historiques internes : les deep-links gardent leur écran, tandis qu'un
+    // alias inconnu retombe proprement sur Aujourd'hui.
+    const destination = resolveDestination(t);
+    withViewTransition(()=> flushSync(()=> setTabRaw(destination)));
   };
   const openTripFromHome = (tripId,sub="day")=>{ setPendingTravelView(tripId ? {tripId,sub} : "new"); setTab("voyage"); };
   const openEssentialPhrases=()=>{setPendingLearnMode("situations");setTab("learn");};

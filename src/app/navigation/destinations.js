@@ -7,8 +7,9 @@ const ALIASES = Object.freeze({
 });
 
 export function resolveDestination(value, fallback = "home") {
-  if (PRIMARY_DESTINATIONS.includes(value)) return value;
-  return ALIASES[value] || fallback;
+  const normalized = typeof value === "string" ? value.trim().toLowerCase() : "";
+  if (PRIMARY_DESTINATIONS.includes(normalized)) return normalized;
+  return ALIASES[normalized] || fallback;
 }
 
 export function isPrimaryDestination(value) { return PRIMARY_DESTINATIONS.includes(value); }

@@ -13,6 +13,12 @@ test("conserve les destinations historiques comme routes internes",()=>{
   assert.equal(isPrimaryDestination("learn"),false);
 });
 
+test("normalise les alias entrants sans casser les destinations internes",()=>{
+  assert.equal(resolveDestination(" Voyager "),"voyage");
+  assert.equal(resolveDestination("MON_JAPON"),"profile");
+  assert.equal(resolveDestination("route-inconnue"),"home");
+});
+
 import { primaryDestination } from "../src/app/navigation/destinations.js";
 test("les écrans d'apprentissage restent rattachés à Découvrir", () => {
   for (const route of ["learn", "scenarios", "tutor", "daily"]) assert.equal(primaryDestination(route), "explore");
