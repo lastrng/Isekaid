@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "check": "npm test && npm run build",
     "test": "node --test && node scripts/validate-project.mjs && npm run content:audit",
+    "test:models": "node --test test/japanJourneyState.test.js test/readinessScore.test.js test/homeRecommendations.test.js test/onboardingModel.test.js test/japanModeModel.test.js test/offlineStrategy.test.js test/pendingMutations.test.js",
     "content:audit": "node scripts/audit-content.mjs",
     "content:enrich": "node scripts/content-pack-travel.mjs && node scripts/complete-place-content.mjs && npm run content:audit",
     "android:sync": "npm run build && cap sync android",
