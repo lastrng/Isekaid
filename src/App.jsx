@@ -1,3 +1,5 @@
+import { TravelDocuments } from "./features/travel/TravelDocuments.jsx";
+import { DreamHome } from "./features/home/DreamHome.jsx";
 import { JapanModeHome } from "./features/japan-mode/JapanModeHome.jsx";
 import { buildJapanMode, toggleTodayActivity } from "./features/japan-mode/japanModeModel.js";
 import { preserveProgressCopy } from "./services/sync/progressSync.js";
@@ -1609,7 +1611,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
         </div>
       </div>
 
-      {inJapanMode && homeIntroStage===null ? <JapanModeHome C={C} model={japanMode} db={db} onOpenTrip={onOpenTrip} onSos={onOpenSos} onPhrases={onOpenPhrases} onToggle={onToggleToday} onTutor={()=>onGoTab("tutor")}/> : journeyHome && homeIntroStage===null ? <JourneyHome C={C} model={journeyHome} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition}/> : <>
+      {inJapanMode && homeIntroStage===null ? <JapanModeHome C={C} model={japanMode} db={db} onOpenTrip={onOpenTrip} onSos={onOpenSos} onPhrases={onOpenPhrases} onToggle={onToggleToday} onTutor={()=>onGoTab("tutor")}/> : journeyHome && homeIntroStage===null ? <JourneyHome C={C} model={journeyHome} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition}/> : homeIntroStage===null ? <DreamHome C={C} user={user} db={db} currentDate={new Date()} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition} onOpenTrip={onOpenTrip}/> : <>
       {/* Actions rapides — chevauche l'en-tête (comme HomeScreen.tsx) */}
       <div style={{padding:"0 20px",marginTop:-24,marginBottom:4,position:"relative",zIndex:2}}>
         <button onClick={()=>contextCopy.tab==="voyage" && (journeyContext.activeTrip || journeyContext.nextTrip?.trip) ? onOpenTrip((journeyContext.activeTrip || journeyContext.nextTrip.trip).id,"day") : onGoTab(contextCopy.tab)} className="lift" style={{width:"100%",marginBottom:12,padding:"16px 17px",display:"flex",alignItems:"center",gap:13,textAlign:"left",cursor:"pointer",background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow}}>
@@ -4959,12 +4961,14 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
 
   // ── Persistance locale + push cloud debounce ──
   const persist = (next)=>{
-    setTrips(next); saveTrips(next);
+    if(!saveTrips(next)){ window.alert("Le stockage est plein ou indisponible. La modification n’a pas été enregistrée."); return false; }
+    setTrips(next);
     if(session?.user && supabaseEnabled){
       clearTimeout(pushTimer.current);
       enqueueMutation({type:"trips",userId:session.user.id,payload:next});
       pushTimer.current = setTimeout(flushTripMutations, 1200);
     }
+    return true;
   };
   const activeTrip = trips.find(t=>t.id===activeTripId);
   const currentActiveTrip = useMemo(()=>getActiveTrip(trips), [trips]);
@@ -4981,7 +4985,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   };
   // Point de passage commun création manuelle + auto-génération (KeptPlacesScreen.onGenerate)
   const createTrip = (trip)=>{ persist([...trips, trip]); trackProductEvent("trip_created",{days:trip.jours?.length||0,source:trip.source?"template":trip.generation?"generated":"manual"}); setActiveTripId(trip.id); setView("trip"); setTripCelebration(true); sfx.playComplete(); };
-  const updateTrip = (updated)=>{ persist(trips.map(t=>t.id===updated.id?updated:t)); };
+  const updateTrip = (updated)=>persist(trips.map(t=>t.id===updated.id?{...updated,updatedAt:new Date().toISOString()}:t));
   const deleteTrip = (id)=>{ markTripDeleted(id); persist(trips.filter(t=>t.id!==id)); setActiveTripId(null); setView("home"); };
   const keptLieux = (favs||[]).filter(f=>f.type==="lieu").map(f=>f.item);
   const addKeptLieuToTrip = (lieu, tripId, dayIndex)=>{
@@ -6706,6 +6710,8 @@ function VoyageTrip({C, dark, initialSub="day", trip, db, villeById, script, use
   }
 
   // ─── Sous-vue : check-list ───
+  if(sub==="documents") return <TravelDocuments C={C} trip={trip} onUpdate={onUpdate} onBack={()=>setSub("day")}/>;
+
   if(sub==="checklist"){
     const cl = trip.checklist||[];
     const done = cl.filter(c=>c.fait).length;
@@ -6836,6 +6842,7 @@ function VoyageTrip({C, dark, initialSub="day", trip, db, villeById, script, use
             )}
 
             <div style={{display:"flex",gap:8,marginBottom:20}}>
+              <button onClick={()=>setSub("documents")} style={{flex:1,background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,padding:"11px",color:C.text,fontSize:12,fontWeight:600,cursor:"pointer"}}>Documents</button>
               <button onClick={()=>setShareOpen(true)} style={{flex:1,background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,padding:"11px",color:C.text,fontSize:12,fontWeight:600,cursor:"pointer"}}>↗ Partager</button>
               <button onClick={()=>setSub("checklist")} style={{flex:1,background:C.s2,border:`1px solid ${C.border}`,borderRadius:12,padding:"11px",color:C.text,fontSize:12,fontWeight:600,cursor:"pointer"}}>✅ Préparatifs</button>
             </div>

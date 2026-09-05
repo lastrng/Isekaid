@@ -23,3 +23,11 @@ test("le Mode Japon et les voyages annulés ne sont pas remplacés par ces accue
   assert.equal(buildJourneyHome({currentDate,trips:[{dateDebut:"2026-09-05",jours:[{}]}]}),null);
   assert.equal(buildJourneyHome({currentDate,trips:[{status:"cancelled",dateDebut:"2026-08-01",jours:[{}]}]}),null);
 });
+
+test("affiche le compte à rebours de l'onboarding sans fabriquer un voyage", () => {
+  const model = buildJourneyHome({ currentDate, user: { plannedDeparture: "2026-09-20" } });
+  assert.equal(model.mode, "planning");
+  assert.equal(model.daysUntil, 15);
+  assert.equal(model.title, "J-15 avant le Japon");
+  assert.equal(model.trip, undefined);
+});

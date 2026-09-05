@@ -1,5 +1,5 @@
 import { buildHomeJourneyContext } from "./homeContext.js";
-import { getTripTiming } from "../../entities/user/japanJourneyState.js";
+import { getTripTiming, getPlannedDepartureTiming } from "../../entities/user/japanJourneyState.js";
 import { buildMyJapanSummary } from "../my-japan/myJapanModel.js";
 import { buildJapanGraph, relatedToActivity } from "../../entities/content/japanGraph.js";
 
@@ -19,8 +19,8 @@ export function buildJourneyHome({ user, trips = [], db = {}, currentDate = new 
   const related = relatedToActivity(anchor,buildJapanGraph(db),{limit:50}).find(item=>item.kind==="tradition" || (item.kind==="place"&&!visitedIds.has(item.sourceId)));
   const memory = summary.memories.find(item=>item.tripId===recent?.id && item.note);
   return {mode,trip,preparationTrips,summary,recent,memory,related,
-    daysUntil:context.nextTrip?.timing.daysUntil ?? null,
-    title:planning ? (context.nextTrip ? `J-${context.nextTrip.timing.daysUntil} avant le Japon` : trip ? "Ton voyage prend forme" : "Prépare ton premier séjour") : summary.awaitingConfirmation.length ? "Ton retour du Japon" : "Le voyage continue ici",
+    daysUntil:context.nextTrip?.timing.daysUntil ?? getPlannedDepartureTiming(user,currentDate)?.daysUntil ?? null,
+    title:planning ? (context.nextTrip || getPlannedDepartureTiming(user,currentDate) ? `J-${context.nextTrip?.timing.daysUntil ?? getPlannedDepartureTiming(user,currentDate).daysUntil} avant le Japon` : trip ? "Ton voyage prend forme" : "Prépare ton premier séjour") : summary.awaitingConfirmation.length ? "Ton retour du Japon" : "Le voyage continue ici",
     description:planning ? (trip?.titre || "Des premières envies à ton itinéraire, une étape à la fois.") : recent ? `${recent.title} · ${recent.completedPlaces} activités marquées comme faites` : "Retrouve tes souvenirs et garde un lien avec le Japon.",
   };
 }

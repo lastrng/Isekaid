@@ -44,3 +44,28 @@ test("retourne le voyage actif et son jour courant sans dépendre de React", () 
   assert.equal(getTripTiming(trip, new Date(2026, 8, 5)).dayNumber, 2);
   assert.equal(getCurrentTripDay(trip, new Date(2026, 8, 5)).num, 2);
 });
+
+test("prend en compte l'onboarding et les projets sans date sans inventer de séjour", () => {
+  const now = new Date("2026-09-05T10:00:00Z");
+  assert.equal(getJapanJourneyState({ plannedDeparture: "2026-09-20" }, [], now), "soon");
+  assert.equal(getJapanJourneyState({ plannedDeparture: "2026-12-20" }, [], now), "planning");
+  assert.equal(getJapanJourneyState({ plannedDeparture: "2026-09-05" }, [], now), "soon");
+  assert.equal(getJapanJourneyState({ plannedDeparture: "2026-09-01" }, [], now), "dreaming");
+  assert.equal(getJapanJourneyState({ japanRelationship: "japan_lover" }, [{ id: "draft", jours: [] }], now), "planning");
+  assert.equal(getJapanJourneyState({ plannedDeparture: "2026-09-20" }, [datedTrip("2026-12-20")], now), "planning");
+});
+
+test("le retour dure 90 jours puis devient un lien durable au Japon", () => {
+  const trip = datedTrip("2026-06-01", 1);
+  assert.equal(getJapanJourneyState({}, [trip], new Date("2026-08-30T00:00:00Z")), "returned");
+  assert.equal(getJapanJourneyState({}, [trip], new Date("2026-08-31T00:00:00Z")), "japan_lover");
+  assert.equal(getJapanJourneyState({}, [trip, { id: "draft" }], new Date("2026-09-05T00:00:00Z")), "planning");
+});
+
+test("les frontières de journée utilisent Tokyo et rejettent les dates impossibles", () => {
+  const trip = datedTrip("2026-09-06", 2);
+  assert.equal(getTripTiming(trip, new Date("2026-09-05T14:59:59Z")).status, "upcoming");
+  assert.equal(getTripTiming(trip, new Date("2026-09-05T15:00:00Z")).dayNumber, 1);
+  assert.equal(getTripTiming(trip, new Date("2026-09-06T15:00:00Z")).dayNumber, 2);
+  assert.equal(getTripTiming(datedTrip("2026-02-30")), null);
+});

@@ -71,14 +71,12 @@ export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount
   return(
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       <div style={{padding:"50px 20px 110px"}}>
-        {/* Retour — Profil n'est pas un onglet de la barre du bas (contrairement
-            à Home/Explorer/Scénarios/Apprendre/Voyage) : il a besoin de son
-            propre bouton retour, comme Tuteur ou le feed du jour. */}
         {onBack && (
           <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:16,display:"flex",alignItems:"center",gap:5}}>
             <ChevronLeft size={14}/> Accueil
           </button>
         )}
+        <h1 style={{ color: C.text, fontFamily: "'Noto Serif JP',serif", fontSize: 24, margin: "0 0 18px" }}>Mon Japon</h1>
         {/* Carte identité — centrée, comme ProfileScreen.tsx (bolt) */}
         <SectionCard C={C} style={{display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center",padding:20,marginBottom:16}}>
           <div style={{width:80,height:80,borderRadius:"50%",background:C.s2,border:`2px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:user.emojiAvatar?34:26,fontFamily:"'Noto Serif JP',serif",color:C.red,marginBottom:12,overflow:"hidden"}}>
@@ -96,25 +94,6 @@ export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount
             </span>
           )}
         </SectionCard>
-
-        {/* 2 tuiles stats — streak / niveau (XP retiré : redondant avec le
-            streak, dont il n'était qu'un alias — voir computeXP) */}
-        {/* Niveau : même calcul que "Niveau estimé" du Tuteur IA (estimateNiveau)
-            — auparavant cette tuile affichait le niveau déclaré à l'onboarding
-            (échelle différente : Débutant/Intermédiaire/Avancé, jamais recalculé),
-            ce qui contredisait le Tuteur (Débutant/Faux-débutant/Intermédiaire). */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
-          {[
-            {Icon:Flame, label:"Streak", value:`${streak?.count||0}j`, color:C.red},
-            {Icon:Sparkles, label:"Niveau", value:<NiveauInfo C={C} niveau={estimateNiveau(kanaProgress, scenProgress, streak, user?.level)}/>, color:C.indigo},
-          ].map(s=>(
-            <SectionCard key={s.label} C={C} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"14px 8px"}}>
-              <div style={iconTileStyle(s.color, 34, 10)}><s.Icon size={17} color={s.color}/></div>
-              <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:700,fontSize:14,color:C.text}}>{s.value}</div>
-              <div style={{fontSize:10,color:C.t3}}>{s.label}</div>
-            </SectionCard>
-          ))}
-        </div>
 
         {session?.user && <ProgressConflicts C={C} userId={session.user.id} onRestore={onRestoreProgress}/>}
         {session?.user && <TripConflicts C={C} userId={session.user.id}/>}
@@ -165,6 +144,27 @@ export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount
           </SectionCard>
         )}
 
+        <details style={{ marginBottom: 18, color: C.text }}>
+          <summary style={{ padding: "15px 0", cursor: "pointer", fontWeight: 650 }}>Ma progression et mes badges</summary>
+        {/* 2 tuiles stats — streak / niveau (XP retiré : redondant avec le
+            streak, dont il n'était qu'un alias — voir computeXP) */}
+        {/* Niveau : même calcul que "Niveau estimé" du Tuteur IA (estimateNiveau)
+            — auparavant cette tuile affichait le niveau déclaré à l'onboarding
+            (échelle différente : Débutant/Intermédiaire/Avancé, jamais recalculé),
+            ce qui contredisait le Tuteur (Débutant/Faux-débutant/Intermédiaire). */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+          {[
+            {Icon:Flame, label:"Streak", value:`${streak?.count||0}j`, color:C.red},
+            {Icon:Sparkles, label:"Niveau", value:<NiveauInfo C={C} niveau={estimateNiveau(kanaProgress, scenProgress, streak, user?.level)}/>, color:C.indigo},
+          ].map(s=>(
+            <SectionCard key={s.label} C={C} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"14px 8px"}}>
+              <div style={iconTileStyle(s.color, 34, 10)}><s.Icon size={17} color={s.color}/></div>
+              <div style={{fontFamily:"'Noto Serif JP',serif",fontWeight:700,fontSize:14,color:C.text}}>{s.value}</div>
+              <div style={{fontSize:10,color:C.t3}}>{s.label}</div>
+            </SectionCard>
+          ))}
+        </div>
+
         {(()=>{
           const achievements = computeAchievements({ streak, unlocks, scenProgress, kanaProgress, favs, pathProgress });
           const earned = achievements.filter(a=>a.unlocked).length;
@@ -195,6 +195,8 @@ export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount
           );
         })()}
 
+        </details>
+
         {/* Bannière Premium — calquée sur ProfileScreen.tsx (bolt) */}
         <button onClick={onOpenPremium} className="lift" style={{width:"100%",marginBottom:16,padding:16,borderRadius:20,cursor:"pointer",textAlign:"left",background:isPremium?`linear-gradient(135deg,${C.gold}22,${C.red}0d)`:`linear-gradient(90deg,${C.gold}22,${C.gold}0d)`,border:`1px solid ${C.gold}44`,display:"flex",alignItems:"center",gap:14}}>
           <Crown size={24} color={C.gold} style={{flexShrink:0}}/>
@@ -205,6 +207,8 @@ export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount
           <ChevronRight size={20} color={C.gold}/>
         </button>
 
+        <details style={{ marginBottom: 18, color: C.text }}>
+          <summary style={{ padding: "15px 0", cursor: "pointer", fontWeight: 650 }}>Mes préférences et mon compte</summary>
         {/* Préférences — carte à séparateurs, comme ProfileScreen.tsx (bolt) */}
         <SectionTitle C={C} title="Préférences"/>
         <SectionCard C={C} style={{padding:0,marginBottom:16}}>
@@ -233,6 +237,7 @@ export function ProfileScreen({ui,C,user,dark,setDark,db,onReset,onDeleteAccount
         </SectionCard>
 
         <div style={{textAlign:"center",fontSize:11,color:C.t3,paddingBottom:4}}>Isekai'd v1.0.0 — Le Japon, un peu chaque jour</div>
+        </details>
       </div>
     </div>
   );

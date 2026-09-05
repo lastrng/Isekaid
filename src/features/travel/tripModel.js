@@ -1,3 +1,4 @@
+import { getTripTiming } from "../../entities/user/japanJourneyState.js";
 import { withTripDeletions } from "../../services/sync/tripSyncState.js";
 // Modèle pur et persistance locale du domaine Voyage.
 // Ce module ne dépend pas de React et peut être testé indépendamment des écrans.
@@ -252,17 +253,11 @@ function tripTitleFromWizard(villeById, villeIds, days){
 }
 
 function tripTiming(trip, now = new Date()) {
-  if (!trip?.dateDebut) return null;
-  const [year, month, day] = trip.dateDebut.split("-").map(Number);
-  if (!year || !month || !day) return null;
-  const start = new Date(year, month - 1, day);
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const offset = Math.round((start - today) / 86400000);
-  const duration = Math.max(1, trip.jours?.length || 1);
-  if (offset > 0) return { status: "upcoming", daysUntil: offset };
-  const dayNumber = Math.abs(offset) + 1;
-  if (dayNumber <= duration) return { status: "active", dayNumber, duration };
-  return { status: "past", daysSince: dayNumber - duration };
+  const timing = getTripTiming(trip, now);
+  if (!timing) return null;
+  if (timing.status === "upcoming") return { status: "upcoming", daysUntil: timing.daysUntil };
+  if (timing.status === "active") return { status: "active", dayNumber: timing.dayNumber, duration: timing.duration };
+  return { status: "past", daysSince: timing.daysSince };
 }
 
 // Tags d'intérêt tels qu'ils existent réellement sur les lieux du catalogue

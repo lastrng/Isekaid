@@ -12,3 +12,10 @@ test("conserve les destinations historiques comme routes internes",()=>{
   assert.equal(resolveDestination("mon_japon"),"profile");
   assert.equal(isPrimaryDestination("learn"),false);
 });
+
+import { primaryDestination } from "../src/app/navigation/destinations.js";
+test("les écrans d'apprentissage restent rattachés à Découvrir", () => {
+  for (const route of ["learn", "scenarios", "tutor", "daily"]) assert.equal(primaryDestination(route), "explore");
+  assert.equal(primaryDestination("voyage"), "voyage");
+  assert.equal(primaryDestination("mon_japon"), "profile");
+});

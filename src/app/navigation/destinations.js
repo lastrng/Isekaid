@@ -12,3 +12,10 @@ export function resolveDestination(value, fallback = "home") {
 }
 
 export function isPrimaryDestination(value) { return PRIMARY_DESTINATIONS.includes(value); }
+
+// Preserve the internal destination while retaining its parent in the bottom bar.
+export function primaryDestination(value) {
+  const destination = resolveDestination(value);
+  if (["learn", "scenarios", "tutor", "daily"].includes(destination)) return "explore";
+  return destination;
+}
