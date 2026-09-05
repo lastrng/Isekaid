@@ -35,3 +35,16 @@ test("une date ou des scénarios généraux ne prouvent pas les transports ou le
   const prepared=calculateReadinessScore({trip:{checklist:[{texte:"Revoir les codes sociaux",fait:true},{texte:"Politesse au restaurant",fait:false}]}});
   assert.equal(prepared.categories.codesSociaux,50);
 });
+
+test("utilise les hébergements, le vocabulaire et les contenus réellement connus", () => {
+  const result = calculateReadinessScore({
+    trip: { dateDebut: "2026-10-01", villes: ["tokyo"], jours: [{ activites: [{ id: "a" }] }], hebergements: [{ villeId: "tokyo" }], checklist: [{ texte: "Assurance voyage", fait: true }] },
+    vocabularyProgress: { arigato: { learned: true }, eki: { learned: false } },
+    contentProgress: { "onsen-rules": { viewed: true } },
+  });
+  assert.equal(result.categories.voyage, 100);
+  assert.equal(result.evidence.lodgingKnown, true);
+  assert.equal(result.evidence.learnedVocabulary, 1);
+  assert.equal(result.evidence.contentViewed, 1);
+  assert.equal(result.evidence.emergencyItems, 1);
+});

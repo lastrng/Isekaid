@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { calculateReadinessScore } from "./readinessScore.js";
 
-export function ReadinessCard({ C, trips, preferredTripId, kanaProgress, scenarioProgress, pathProgress, onOpenTrip, onNavigate }) {
+export function ReadinessCard({ C, trips, preferredTripId, kanaProgress, vocabularyProgress, scenarioProgress, pathProgress, contentProgress, onOpenTrip, onNavigate }) {
   const [selectedId, setSelectedId] = useState(preferredTripId || trips[0]?.id || "");
   const [expanded, setExpanded] = useState(false);
   const trip = trips.find(item => item.id === selectedId) || trips[0];
-  const score = calculateReadinessScore({ trip, kanaProgress, scenarioProgress, pathProgress });
+  const score = calculateReadinessScore({ trip, kanaProgress, vocabularyProgress, scenarioProgress, pathProgress, contentProgress });
   const e = score.evidence;
   const openTrip = sub => onOpenTrip(trip?.id, sub);
   const domains = [
-    { id: "voyage", title: "Mon itinéraire", detail: trip ? `${trip.dateDebut ? "Départ fixé" : "Date à choisir"} · ${trip.villes?.length || 0} villes · ${e.activities} activités` : "Choisis tes villes et construis ton premier séjour.", action: trip ? "Organiser mon voyage" : "Créer un voyage", run: () => openTrip("day") },
-    { id: "japonais", title: "Japonais pratique", detail: `${e.masteredKana} kana maîtrisés (objectif 20) · ${e.completedScenarios} scénarios réussis (objectif 4)`, action: "Apprendre le japonais", run: () => onNavigate("learn") },
+    { id: "voyage", title: "Mon itinéraire", detail: trip ? `${trip.dateDebut ? "Départ fixé" : "Date à choisir"} · ${trip.villes?.length || 0} villes · ${e.activities} activités${e.lodgingKnown ? " · hébergement renseigné" : ""}` : "Choisis tes villes et construis ton premier séjour.", action: trip ? "Organiser mon voyage" : "Créer un voyage", run: () => openTrip("day") },
+    { id: "japonais", title: "Japonais pratique", detail: `${e.masteredKana} kana maîtrisés · ${e.learnedVocabulary} mots/expressions appris · ${e.completedScenarios} scénarios réussis`, action: "Apprendre le japonais", run: () => onNavigate("learn") },
     { id: "codesSociaux", title: "Codes sociaux", detail: e.socialItems ? `${e.completedSocial} / ${e.socialItems} préparatifs d’étiquette cochés` : "Ajoute les règles de politesse ou les coutumes à revoir dans tes préparatifs.", action: "Préparer les codes sociaux", run: () => openTrip("checklist") },
     { id: "transports", title: "Mes transports", detail: e.transportItems ? `${e.completedTransport} / ${e.transportItems} préparatifs de transport cochés` : "Ajoute tes billets et transports à tes préparatifs.", action: "Préparer mes transports", run: () => openTrip("checklist") },
-    { id: "preparatifs", title: "Avant le départ", detail: `${e.completedChecklist} / ${e.checklist} préparatifs cochés`, action: "Ouvrir mes préparatifs", run: () => openTrip("checklist") },
+    { id: "preparatifs", title: "Avant le départ", detail: `${e.completedChecklist} / ${e.checklist} préparatifs cochés${e.emergencyItems ? ` · ${e.emergencyItems} liés aux urgences` : ""}${e.contentViewed ? ` · ${e.contentViewed} contenu essentiel consulté` : ""}`, action: "Ouvrir mes préparatifs", run: () => openTrip("checklist") },
   ];
   const next = [...domains].sort((a, b) => score.categories[a.id] - score.categories[b.id])[0];
   const buttonStyle = { padding: "10px 12px", borderRadius: 11, border: `1px solid ${C.border}`, background: C.s2, color: C.text, fontSize: 12, cursor: "pointer" };
