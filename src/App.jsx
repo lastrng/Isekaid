@@ -1,3 +1,4 @@
+import { clearAccountDocumentFiles } from "./features/travel/documentFiles.js";
 import { TravelDocuments } from "./features/travel/TravelDocuments.jsx";
 import { DreamHome } from "./features/home/DreamHome.jsx";
 import { JapanModeHome } from "./features/japan-mode/JapanModeHome.jsx";
@@ -5055,7 +5056,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   if(view==="trip" && activeTrip){
     return (
       <>
-        <VoyageTrip key={activeTrip.id} initialSub={initialTripSub} C={C} dark={dark} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
+        <VoyageTrip documentOwner={session?.user?.id || "guest"} key={activeTrip.id} initialSub={initialTripSub} C={C} dark={dark} trip={activeTrip} db={db} villeById={villeById} script={script} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
           isFav={isFav} toggleFav={toggleFav}
           onBack={()=>{setInitialTripSub("day");setView("home");}} onUpdate={updateTrip} onDelete={deleteTrip}/>
         {tripCelebration && <CelebrationOverlay C={C} emoji="🗾" title="Voyage créé !" subtitle={activeTrip.titre} color={acc.accent} onDone={()=>setTripCelebration(false)}/>}
@@ -6182,7 +6183,7 @@ function activityPeriod(index,total){
   return "Soirée";
 }
 
-function VoyageTrip({C, dark, initialSub="day", trip, db, villeById, script, user, isPremium, onOpenPremium, isFav, toggleFav, onBack, onUpdate, onDelete}){
+function VoyageTrip({C, dark, documentOwner, initialSub="day", trip, db, villeById, script, user, isPremium, onOpenPremium, isFav, toggleFav, onBack, onUpdate, onDelete}){
   // Mémoïsé : `trip.customLieux || []` créerait un nouveau tableau à CHAQUE
   // rendu quand customLieux est absent, ce qui invaliderait lieuById puis
   // dayPoints (voir plus bas) en cascade à chaque re-rendu, même sans
@@ -6710,7 +6711,7 @@ function VoyageTrip({C, dark, initialSub="day", trip, db, villeById, script, use
   }
 
   // ─── Sous-vue : check-list ───
-  if(sub==="documents") return <TravelDocuments C={C} trip={trip} onUpdate={onUpdate} onBack={()=>setSub("day")}/>;
+  if(sub==="documents") return <TravelDocuments C={C} trip={trip} owner={documentOwner} onUpdate={onUpdate} onBack={()=>setSub("day")}/>;
 
   if(sub==="checklist"){
     const cl = trip.checklist||[];
@@ -8634,6 +8635,8 @@ export default function IsekaidApp(){
         return;
       }
     }
+    try { await clearAccountDocumentFiles(session?.user?.id || "guest"); }
+    catch { alert("Le nettoyage des documents locaux a échoué. Efface les données de l’application sur cet appareil pour les retirer."); }
     clearStoredNamespace();
     setUser(null); setSession(null); setScreen("auth"); setTab("home");
   };
