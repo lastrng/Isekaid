@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildJapanMode, toggleTodayActivity } from "../src/features/japan-mode/japanModeModel.js";
+import { buildJapanMode, isJapanModeActive, toggleTodayActivity } from "../src/features/japan-mode/japanModeModel.js";
 
 const currentDate=new Date(2026,8,5,12);
 const trips=[{id:"t",dateDebut:"2026-09-04",customLieux:[{id:"custom",nom:"Mon étape"}],jours:[{num:1,activites:[{id:"yesterday",fait:false}]},{num:2,activites:[{id:"a",lieuId:"custom",fait:false},{id:"b",lieuId:"temple",fait:false}]}]}];
@@ -22,4 +22,11 @@ test("refuse de cocher un autre jour ou un voyage annulé",()=>{
   assert.throws(()=>toggleTodayActivity(trips,"t","yesterday",currentDate));
   assert.throws(()=>toggleTodayActivity([{...trips[0],status:"cancelled"}],"t","a",currentDate));
   assert.equal(buildJapanMode([],{},currentDate).trip,null);
+});
+test("active le mode uniquement dans la fenêtre datée du séjour", () => {
+  const trip = { id: "dated", dateDebut: "2026-09-05", dateFin: "2026-09-07", jours: [{}, {}, {}] };
+  assert.equal(isJapanModeActive([trip], new Date("2026-09-04T14:00:00Z")), false);
+  assert.equal(isJapanModeActive([trip], new Date("2026-09-06T12:00:00Z")), true);
+  assert.equal(isJapanModeActive([trip], new Date("2026-09-07T15:00:00Z")), false);
+  assert.equal(buildJapanMode([trip], {}, new Date("2026-09-08" )).locationRequired, false);
 });

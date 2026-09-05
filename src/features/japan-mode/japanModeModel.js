@@ -1,13 +1,17 @@
 import { getActiveTrip, getCurrentTripDay, getDailyProgress, getNextActivity } from "../../entities/user/japanJourneyState.js";
 import { getHomeRecommendations } from "../home/homeRecommendations.js";
 
+export function isJapanModeActive(trips, currentDate = new Date()) {
+  return Boolean(getActiveTrip(trips, currentDate));
+}
+
 export function buildJapanMode(trips, db={}, currentDate=new Date()) {
   const trip=getActiveTrip(trips,currentDate);
   const day=trip?getCurrentTripDay(trip,currentDate):null;
   const places=new Map([...(db.lieux||[]),...(trip?.customLieux||[])].map(place=>[place.id,place]));
   const next=getNextActivity(day);
   const context = { state: trip ? "in_japan" : "dreaming", nextActivity: next };
-  return {trip,day,progress:getDailyProgress(day),next,place:places.get(next?.lieuId), recommendations:getHomeRecommendations({ context }),
+  return {trip,day,progress:getDailyProgress(day),next,place:places.get(next?.lieuId), active:Boolean(trip), locationRequired:false, recommendations:getHomeRecommendations({ context }),
     activities:(day?.activites||[]).map(activity=>({...activity,place:places.get(activity.lieuId)}))};
 }
 
