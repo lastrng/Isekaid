@@ -48,6 +48,7 @@ import { enqueueMutation, flushPendingMutations, loadPendingMutations } from "./
 import { SearchResultDetail } from "./features/search/SearchResultDetail";
 import { SosJapan } from "./features/sos/SosJapan";
 import { DailyRitual } from "./features/daily/DailyRitual.jsx";
+import { ExploreEditorialHero } from "./features/explore/ExploreEditorialHero.jsx";
 import {
   dayKey,
   isNewGreetingDay,
@@ -1979,6 +1980,8 @@ function ExploreScreen({C,db,isFav,toggleFav,wikiMap,onWikiTap,script,streak,isU
           <span style={{fontSize:13,color:C.t3}}>Rechercher une tradition, un mot, un lieu…</span>
         </button>
       </div>
+
+      <ExploreEditorialHero C={C} db={db} />
 
       <div style={{padding:"12px 20px 0",display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
         <button onClick={()=>onGoTab?.("learn")} style={{padding:13,borderRadius:15,border:`1px solid ${C.border}`,background:C.s1,color:C.text,textAlign:"left",cursor:"pointer"}}><BookOpen size={18} color={C.gold}/><span style={{display:"block",fontSize:12,fontWeight:650,marginTop:7}}>Apprendre</span><span style={{display:"block",fontSize:10,color:C.t3,marginTop:2}}>Kana et expressions</span></button>
