@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildJapanGraph, relatedToActivity } from "../src/entities/content/japanGraph.js";
+import { buildJapanGraph, getContextualContent, relatedToActivity } from "../src/entities/content/japanGraph.js";
 
 test("relie le catalogue par thème, ville et proximité sans proposer le lieu lui-même", () => {
   const place={id:"shrine",nom:"Sanctuaire",villeId:"kyoto",a_proximite:["near"]};
@@ -48,4 +48,21 @@ test("normalise les régions et accepte des relations explicites sans thème com
   assert.ok(results.some(node => node.id === "region:kansai"));
   assert.ok(!results.some(node => node.id === "place:custom"));
   assert.deepEqual(relatedToActivity(place, graph, { purpose: "unknown" }), []);
+});
+
+test("récupère les conseils just-in-time par caractéristiques sans logique dans le composant", () => {
+  const graph = buildJapanGraph({ lieux: [], traditions: [], codes_sociaux: [], vie_quotidienne: [] });
+  for (const [activity, expected] of [[{ type: "onsen" }, "tip:onsen-rules"], [{ categorie: "Sanctuaire shinto" }, "tip:shrine-etiquette"], [{ type: "restaurant" }, "tip:restaurant-tips"], [{ type: "shinkansen" }, "tip:train-car"]]) {
+    const results = getContextualContent(activity, graph);
+    assert.ok(results.some(item => item.id === expected), `${expected} absent`);
+    assert.ok(results.every(item => ["tip", "code", "daily"].includes(item.kind)));
+  }
+  assert.deepEqual(getContextualContent(null, graph), []);
+});
+
+test("préfère la relation explicite d'une activité à une simple ressemblance textuelle", () => {
+  const graph = buildJapanGraph({ lieux: [], codes_sociaux: [{ id: "custom", titre: "Conseil", themeIds: ["food"] }] });
+  const result = getContextualContent({ type: "restaurant", relatedContent: ["code:custom"] }, graph, { limit: 1 });
+  assert.equal(result[0].id, "code:custom");
+  assert.equal(result[0].reason, "Lié à ce lieu");
 });

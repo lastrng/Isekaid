@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { buildJapanGraph, relatedToActivity } from "../../entities/content/japanGraph.js";
+import { buildJapanGraph, getContextualContent, relatedToActivity } from "../../entities/content/japanGraph.js";
 import { SpeakButton } from "../../tts.jsx";
 
 export function ActivityContext({ C, db, place, trips = [], onTutor }) {
@@ -9,7 +9,7 @@ export function ActivityContext({ C, db, place, trips = [], onTutor }) {
     { id: "before", title: "À savoir" },
     { id: "speak", title: "Phrases utiles" },
     { id: "explore", title: "Découvrir" },
-  ].map(group => ({ ...group, items: relatedToActivity(place, graph, { purpose: group.id, limit: 4 }) })).filter(group => group.items.length), [place, graph]);
+  ].map(group => ({ ...group, items: group.id === "before" ? getContextualContent(place, graph, { limit: 4 }) : relatedToActivity(place, graph, { purpose: group.id, limit: 4 }) })).filter(group => group.items.length), [place, graph]);
   const active = groups.find(group => group.id === selected) || groups[0];
   if (!active) return null;
   const items = active.items;

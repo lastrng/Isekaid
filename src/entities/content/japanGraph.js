@@ -28,8 +28,18 @@ const PURPOSE_KINDS = {
   personal: ["trip", "memory"],
 };
 export function graphThemes(item = {}) {
-  const text = normalize([item.nom,item.titre,item.title,item.categorie,item.description,item.resume,item.contexte,item.summary,...(item.tags || []),...(item.interets || [])].join(" "));
+  const text = normalize([item.nom,item.titre,item.title,item.type,item.categorie,item.description,item.conseil,item.resume,item.contexte,item.summary,...(item.tags || []),...(item.contextTags || []),...(item.caracteristiques || []),...(item.interets || [])].join(" "));
   return [...new Set([...(item.themeIds || []), ...Object.entries(THEMES).filter(([,words]) => words.some(word => new RegExp(`(?:^|[^a-z])${word}s?(?=$|[^a-z])`).test(text))).map(([id]) => id)])];
+}
+
+/** Retourne les conseils courts pertinents avant une activité ou un lieu. */
+export function getContextualContent(activity, graph, { limit = 3 } = {}) {
+  const target = activity?.place || activity?.lieu || activity;
+  if (!target) return [];
+  return relatedToActivity(target, graph, { purpose: "before", limit: Math.max(limit, 20) })
+    .filter(node => node.kind === "tip" || node.kind === "code" || node.kind === "daily")
+    .sort((a, b) => (b.reason === "Lié à ce lieu" ? 1 : 0) - (a.reason === "Lié à ce lieu" ? 1 : 0) || (b.kind === "tip" ? 1 : 0) - (a.kind === "tip" ? 1 : 0) || b.score - a.score || a.id.localeCompare(b.id))
+    .slice(0, limit);
 }
 
 export function buildJapanGraph(db = {}, { trips = [], memories = [] } = {}) {
