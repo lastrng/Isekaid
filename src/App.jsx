@@ -1161,14 +1161,14 @@ function getHomeAlert({ streak, mission }){
 // le répéter ici créait le doublon diagnostiqué en Phase 1. Priorité restante :
 // Japon du jour non ouvert aujourd'hui > voyage en préparation (checklist
 // incomplète) > "tout est fait" (seulement si la mission l'est aussi) > masqué.
-function ResumeCard({C, mission, latestFeed, today, onGoTab, onTask}){
+function ResumeCard({C, mission, latestFeed, today, trips = [], onGoTab, onTask}){
   const todaysMissions = mission ? missionsForDay(mission) : [];
   const doneIds = mission?.done || [];
   const missionPending = todaysMissions.some(t=>!doneIds.includes(t.id));
 
   const feedUnseen = !!latestFeed && isFeedNew(latestFeed.id);
 
-  const activeTrip = loadTrips().find(t=>{
+  const activeTrip = trips.find(t=>{
     const cl = t.checklist || [];
     return cl.length>0 && cl.some(c=>!c.fait);
   });
@@ -1570,7 +1570,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   const seasonLieux = useMemo(()=>seasonalLieux(db, seasonKey), [db, seasonKey]);
   const journeyContext = useMemo(()=>buildHomeJourneyContext({user,trips:homeTrips}),[user,homeTrips]);
   const contextCopy = useMemo(()=>getHomePrimaryAction(journeyContext,db?.lieux||[]),[journeyContext,db]);
-  const preparationTrips = loadTrips().filter(trip=>!["cancelled","completed"].includes(trip.status) && tripTiming(trip)?.status!=="past");
+  const preparationTrips = useMemo(()=>homeTrips.filter(trip=>!["cancelled","completed"].includes(trip.status) && tripTiming(trip)?.status!=="past"),[homeTrips]);
   const inJapanMode = journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN;
   const japanMode = useMemo(()=>buildJapanMode(homeTrips,db),[homeTrips,db]);
   const journeyHome = useMemo(()=>buildJourneyHome({user,trips:homeTrips,db}),[user,db,homeTrips]);
@@ -1674,7 +1674,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
         {/* Continue ton activité — carte unique, comme HomeScreen.tsx (bolt) */}
         {!inJapanMode&&<div ref={progressonsRef}>
           <SectionTitle C={C} title="Continue ton activité"/>
-          <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} onGoTab={onGoTab} onTask={onTask}/>
+          <ResumeCard C={C} mission={mission} latestFeed={latestFeed} today={today} trips={homeTrips} onGoTab={onGoTab} onTask={onTask}/>
         </div>}
 
         {/* Le Japon du jour — slider avec l'article du jour + les autres
