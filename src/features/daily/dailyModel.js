@@ -48,7 +48,10 @@ function relevance(item, personalization = {}) {
   terms.push(...(GOAL_TERMS[context.goal] || []));
   const normalizedTerms = terms.map(value => String(value).toLowerCase());
   if (!normalizedTerms.length) return 0;
-  const text = `${item.label} ${item.title} ${item.summary} ${item.raw?.categorie || ""}`.toLowerCase();
+  const raw = item.raw || {};
+  const related = [raw.tags, raw.tag, raw.themes, raw.themeIds, raw.cityId, raw.regionId, raw.categorie, raw.category, raw.type, raw.interets]
+    .flatMap(value => Array.isArray(value) ? value : [value]).filter(Boolean).join(" ");
+  const text = `${item.label} ${item.title} ${item.summary} ${related}`.toLowerCase();
   return normalizedTerms.reduce((score, term) => score + (text.includes(term) ? 1 : 0), 0);
 }
 
