@@ -35,3 +35,13 @@ test("garde la mission la plus récente et n'accepte pas de colonnes arbitraires
   assert.equal(result.snapshot.mission.day,"2026-09-06");
   assert.equal(result.snapshot.user_id,undefined);assert.equal(result.snapshot.trips,undefined);
 });
+test("fusionne les activités Daily cochées sur deux appareils",()=>{
+  const base={settings:{daily:{date:"2026-09-06",activities:[{id:"a",done:false},{id:"b",done:false}]}}};
+  const local={settings:{daily:{date:"2026-09-06",activities:[{id:"a",done:true},{id:"b",done:false}]}}};
+  const remote={settings:{daily:{date:"2026-09-06",activities:[{id:"a",done:false},{id:"b",done:true}]}}};
+  const result=mergeProgress(base,local,remote);
+  const activities=result.snapshot.settings.daily.activities;
+  assert.equal(activities.find(item=>item.id==="a").done,true);
+  assert.equal(activities.find(item=>item.id==="b").done,true);
+  assert.equal(result.conflicts.length,0);
+});

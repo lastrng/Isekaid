@@ -25,7 +25,7 @@ export function DailyRitual({ C, db, date, timeZone, travelContext, streak, onOp
     if (activity.done) return onOpenActivity?.(activity);
     const next = completeDailyActivity(ritual, activity.id);
     setRitual(next);
-    onDailyComplete?.({ firstActivity: progress.done === 0, complete: dailyProgress(next).complete });
+    onDailyComplete?.({ firstActivity: progress.done === 0, complete: dailyProgress(next).complete, ritual: next });
     onOpenActivity?.(activity);
   };
   const hero = ritual.activities[0];

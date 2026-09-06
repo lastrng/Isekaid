@@ -11,6 +11,10 @@ const identity = value => object(value)&&value.id ? `id:${value.id}` : JSON.stri
 function merge(base,local,remote,path,conflicts) {
   if(sameValue(local,remote)||sameValue(remote,base))return local;
   if(sameValue(local,base))return remote;
+  // Une activité Daily cochée est un fait monotone : si un appareil l'a
+  // terminée, la fusion la conserve terminée sans créer de conflit artificiel.
+  if(/^settings\.daily\.activities\.[^.]+\.done$/.test(path)) return local === true || remote === true;
+  if(path === "settings.daily.completedAt") return local || remote || null;
   if(path==="mission" && local?.day!==remote?.day) return String(local?.day||"")>String(remote?.day||"")?local:remote;
   // Les champs d'une révision SRS et d'un streak forment une observation
   // indivisible : ne pas fabriquer un score en mélangeant leurs compteurs.
