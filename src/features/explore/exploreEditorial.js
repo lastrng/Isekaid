@@ -11,8 +11,8 @@ function hash(value) {
 
 function normalize(item, type, index) {
   if (!item) return null;
-  if (type === "food") return { id: item.id || `repas-${index}`, type, label: "Gastronomie", title: item.romaji || item.nom_jp || "Une saveur japonaise", summary: item.description || item.fun_fact || "Une découverte gourmande du Japon.", raw: item };
-  return { id: item.id || `culture-${index}`, type: "culture", label: item.tag || "Japon contemporain", title: item.titre || "Une histoire du Japon", summary: item.insight || item.contenu || "Une découverte japonaise en quelques minutes.", raw: item };
+  if (type === "food") return { id: item.id || `repas-${index}`, type, label: "Gastronomie", title: item.romaji || item.nom_jp || "Une saveur japonaise", summary: item.description || item.fun_fact || "Une découverte gourmande du Japon.", body: [item.description, item.fun_fact].filter(Boolean).join("\n\n"), imageKey: item.imageKey || `repas:${item.id || index}`, raw: item };
+  return { id: item.id || `culture-${index}`, type: "culture", label: item.tag || "Japon contemporain", title: item.titre || "Une histoire du Japon", summary: item.insight || item.contenu || "Une découverte japonaise en quelques minutes.", body: item.contenu || item.insight || "Une découverte japonaise en quelques minutes.", imageKey: item.imageKey || `culture:culture-${index + 1}`, raw: item };
 }
 
 export function editorialPools(db = {}) {
