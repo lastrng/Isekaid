@@ -17,7 +17,7 @@ import { useDailyFeed } from "./dailyFeedHook.js";
 import { JapanNewsCard } from "./JapanNews";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 import { speakJP, SpeakButton, stopSpeak } from "./tts";
-import { TutorEntryCard, TutorScreen, estimateNiveau, NiveauInfo } from "./Tutor";
+import { estimateNiveau } from "./features/companion/niveau.js";
 import { DiscoveriesScreen, useLatestUnlockedDiscovery, DiscoveryTeaserCard, isDiscoveryNew, useExploreDiscoveries, requiredDay } from "./ExploreDiscoveries";
 import { scenarioTutorTarget, buildBridgeContext } from "./scenarioTutorBridge";
 import { MOTION_CSS_VARS, withViewTransition, supportsViewTransitions } from "./motion";
@@ -121,6 +121,7 @@ const DailyFeedScreen = lazy(()=>import("./DailyFeed.jsx").then(module=>({defaul
 const TravelDocuments = lazy(()=>import("./features/travel/TravelDocuments.jsx").then(module=>({default:module.TravelDocuments})));
 const SearchResultDetail = lazy(()=>import("./features/search/SearchResultDetail.jsx").then(module=>({default:module.SearchResultDetail})));
 const SosJapan = lazy(()=>import("./features/sos/SosJapan.jsx").then(module=>({default:module.SosJapan})));
+const TutorScreen = lazy(()=>import("./Tutor.jsx").then(module=>({default:module.TutorScreen})));
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -8704,7 +8705,7 @@ export default function IsekaidApp(){
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
               {tab==="profile"   &&<Suspense fallback={<div style={{padding:28,color:C.t3}}>Chargement de Mon Japon…</div>}><ProfileScreen ui={{SectionCard,SectionTitle,iconTileStyle,computeAchievements}} C={C} user={user} dark={dark} setDark={setDark} db={db} onReset={resetProfile} onDeleteAccount={deleteAccount} onLogout={logout} onRestoreProgress={restoreProgressCopy} session={session} streak={streak} favs={favs} toggleFav={toggleFav} rank={rank} kanaProgress={kanaProgress} unlocks={unlocks} scenProgress={scenProgress} onShowTour={replayIntro} pathProgress={pathProgress} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} accent={accent} chooseAccent={chooseAccent} script={script} setScript={setScript} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})}/></Suspense>}
               {tab==="voyage"    &&<VoyageScreen    C={C} dark={dark} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} onOpenLieu={(l)=>setSpotlightLieu(l)} onIntroDone={tourIndex!==null?advanceTour:undefined} backRef={inScreenBackRef} initialView={pendingTravelView} onInitialViewConsumed={()=>setPendingTravelView(null)}/>}
-              {tab==="tutor"     &&<TutorScreen     C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} journeyContext={buildTutorJourneyContext({user,trips:loadTrips(),db,recentExpressions:user?.recentExpressions})} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/>}
+              {tab==="tutor"     &&<Suspense fallback={<div style={{padding:28,color:C.t3}}>Chargement du tuteur…</div>}><TutorScreen C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} journeyContext={buildTutorJourneyContext({user,trips:loadTrips(),db,recentExpressions:user?.recentExpressions})} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={()=>setTab("home")}/></Suspense>}
               </div>
             </div>
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
