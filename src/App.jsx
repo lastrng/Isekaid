@@ -55,6 +55,7 @@ import { ExploreEditorialHero } from "./features/explore/ExploreEditorialHero.js
 import { OfflineStatus } from "./components/OfflineStatus.jsx";
 import {
   dayKey,
+  getStreakCalendar,
   isNewGreetingDay,
   loadStreak,
   markGreetingSeenToday,
@@ -954,8 +955,7 @@ function StreakSection({C,streak,isPremium}){
   const count = streak?.count || 0;
   const best  = streak?.best  || 0;
   const freezes = streak?.freezes || 0;
-  const dow=new Date().getDay(), todayIdx=dow===0?6:dow-1;
-  const days=["L","M","M","J","V","S","D"];
+  const calendar = getStreakCalendar(streak, new Date());
 
   // "Bientôt : X" reste purement textuel (sous le compteur) — la jauge visuelle
   // de progression est désormais uniquement celle des paliers de streak.
@@ -1009,14 +1009,12 @@ function StreakSection({C,streak,isPremium}){
       })()}
       {/* Weekly view — fill the last `count` days up to today */}
       <div style={{display:"flex",gap:5,justifyContent:"space-between",marginBottom:16}}>
-        {days.map((lbl,i)=>{
-          const isToday=i===todayIdx;
-          // a past day this week is "done" if it's within the current streak window
-          const daysAgo = todayIdx - i;
-          const done = daysAgo>0 && daysAgo < count;
+        {calendar.map(day=>{
+          const isToday=day.today;
+          const done = day.active;
           return(
-            <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-              <div style={{fontSize:9,color:C.t3}}>{lbl}</div>
+            <div key={day.key} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+              <div style={{fontSize:9,color:C.t3}}>{day.label}</div>
               <div style={{width:"100%",maxWidth:34,aspectRatio:"1",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:isToday?C.gold:done?"rgba(201,168,76,0.12)":C.s2,border:`1px solid ${isToday?"transparent":done?"rgba(201,168,76,0.28)":C.border}`,fontSize:11}}>
                 {done&&<span style={{color:C.gold}}>✓</span>}
                 {isToday&&<span style={{color:"#fff",fontSize:14}}>🔥</span>}

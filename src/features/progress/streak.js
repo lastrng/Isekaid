@@ -36,6 +36,19 @@ function nextStreakMilestone(count){
   return STREAK_MILESTONES.find(m=>m.day>count) || null;
 }
 
+export function getStreakCalendar(streak, currentDate = new Date()) {
+  const date = currentDate instanceof Date ? currentDate : new Date(currentDate);
+  const today = dayKey(date);
+  const weekday = date.getDay() === 0 ? 6 : date.getDay() - 1;
+  const dates = Array.isArray(streak?.activityDates) ? new Set(streak.activityDates) : new Set();
+  return Array.from({ length: 7 }, (_, index) => {
+    const value = new Date(date);
+    value.setDate(date.getDate() - (weekday - index));
+    const key = dayKey(value);
+    return { key, label: ["L", "M", "M", "J", "V", "S", "D"][index], today: key === today, active: dates.has(key) };
+  });
+}
+
 // Returns { count, best, last, freezes, lastFreezeRecharge } updated for "today"
 // Streak consécutif avec 1 joker rechargeable (1 tous les 7 jours actifs).
 function touchStreak(){
@@ -43,7 +56,7 @@ function touchStreak(){
   let s = loadStreak();
   const prevCount = s?.count || 0;
   if(!s || !s.last){
-    s = { count:1, best:1, last:today, freezes:1, freezeBase:0 };
+    s = { count:1, best:1, last:today, freezes:1, freezeBase:0, activityDates:[today] };
   } else if(s.last === today){
     // déjà compté aujourd'hui — rien à faire
   } else {
@@ -62,6 +75,7 @@ function touchStreak(){
     s.last = today;
     if(s.count > (s.best||0)) s.best = s.count;
   }
+  s.activityDates = [...new Set([...(s.activityDates || []), today])].sort().slice(-400);
   // Recharge d'un joker tous les 7 jours de streak (max 2 en réserve)
   const base = s.freezeBase || 0;
   if(s.count - base >= 7){
