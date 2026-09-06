@@ -58,6 +58,16 @@ function personalizedPool(items, personalization, seed) {
   return best.length ? best : items;
 }
 
+function personalizationKey(context) {
+  const value = context || {};
+  return JSON.stringify({
+    interests: Array.isArray(value.interests) ? [...value.interests].sort() : [],
+    goal: value.goal || null,
+    places: (value.relatedPlaces || []).map(place => place.id).filter(Boolean).sort(),
+    season: value.seasonKey || null,
+  });
+}
+
 function contentItems(db = {}) {
   const culture = (db.culture || []).map((item, index) => ({
     id: item.id || `culture-${index}`,
@@ -131,16 +141,17 @@ export function buildDailyRitual({ db = {}, date = new Date(), travelContext = n
     kind: index === 0 ? "discover" : index === 1 ? "learn" : "practice",
     done: false,
   }));
-  return { version: 1, date: dateKey, activities, completedAt: null, offlineReady: activities.length > 0, lastSyncedAt: activities.length > 0 ? new Date().toISOString() : null };
+  return { version: 1, date: dateKey, personalizationKey: personalizationKey({ ...travelContext, ...personalization }), activities, completedAt: null, offlineReady: activities.length > 0, lastSyncedAt: activities.length > 0 ? new Date().toISOString() : null };
 }
 
-export function loadDailyRitual({ db = {}, date = new Date(), travelContext = null } = {}) {
+export function loadDailyRitual({ db = {}, date = new Date(), travelContext = null, personalization = travelContext } = {}) {
   const dateKey = typeof date === "string" ? date : dayKey(date);
   const saved = readJson(DAILY_KEY, null);
   const pools = contentItems(db);
   const hasContent = Object.values(pools).some(items => items.length > 0);
-  if (saved?.date === dateKey && Array.isArray(saved.activities) && (saved.activities.length > 0 || !hasContent)) return saved;
-  const next = buildDailyRitual({ db, date: dateKey, travelContext });
+  const expectedKey = personalizationKey({ ...travelContext, ...personalization });
+  if (saved?.date === dateKey && saved?.personalizationKey === expectedKey && Array.isArray(saved.activities) && (saved.activities.length > 0 || !hasContent)) return saved;
+  const next = buildDailyRitual({ db, date: dateKey, travelContext, personalization });
   if (hasContent) writeJson(DAILY_KEY, next);
   return next;
 }
