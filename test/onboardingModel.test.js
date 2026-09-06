@@ -33,3 +33,8 @@ test("les données facultatives restent inconnues et les valeurs invalides sont 
   assert.throws(() => buildOnboardingProfile({ relationship: "returned", departureDate: "2026-02-30" }));
   assert.equal(normalizeProfile({ plannedDeparture: "2026-02-30", plannedDurationDays: "abc" }).plannedDeparture, null);
 });
+
+test("refuse une relation inconnue lorsqu'un profil est construit hors UI", () => {
+  assert.throws(() => buildOnboardingProfile({ relationship: "unknown", why: ["culture"], level: "beginner" }), /Choisis où tu en es/);
+  assert.ok(validateOnboardingTravel({ relationship: "unknown" }));
+});
