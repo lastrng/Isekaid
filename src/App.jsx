@@ -50,6 +50,7 @@ import { loadDailyRitual } from "./features/daily/dailyModel.js";
 import { writeJson } from "./lib/storage.js";
 import { ExploreEditorialHero } from "./features/explore/ExploreEditorialHero.jsx";
 import { OfflineStatus } from "./components/OfflineStatus.jsx";
+import { SOS_CATEGORIES } from "./features/sos/sosData.js";
 import {
   dayKey,
   getStreakCalendar,
