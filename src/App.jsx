@@ -1,5 +1,4 @@
 import { clearAccountDocumentFiles } from "./features/travel/documentFiles.js";
-import { TravelDocuments } from "./features/travel/TravelDocuments.jsx";
 import { DreamHome } from "./features/home/DreamHome.jsx";
 import { JapanModeHome } from "./features/japan-mode/JapanModeHome.jsx";
 import { buildJapanMode, toggleTodayActivity } from "./features/japan-mode/japanModeModel.js";
@@ -46,8 +45,6 @@ import { useCloudBackup } from "./services/sync/useCloudBackup";
 import { trackProductEvent } from "./services/analytics/analytics";
 import { enqueueMutation, flushPendingMutations, loadPendingMutations } from "./services/sync/pendingMutations";
 import { cacheCriticalOfflineData, getCachedOfflineTravel } from "./services/sync/offlineStrategy.js";
-import { SearchResultDetail } from "./features/search/SearchResultDetail";
-import { SosJapan } from "./features/sos/SosJapan";
 import { DailyRitual } from "./features/daily/DailyRitual.jsx";
 import { loadDailyRitual } from "./features/daily/dailyModel.js";
 import { writeJson } from "./lib/storage.js";
@@ -121,6 +118,9 @@ const ProfileScreen = lazy(()=>import("./features/profile/ProfileScreen").then(m
 const PremiumPage = lazy(()=>import("./features/premium/PremiumPage").then(module=>({default:module.PremiumPage})));
 const Onboarding = lazy(()=>import("./features/onboarding/Onboarding").then(module=>({default:module.Onboarding})));
 const DailyFeedScreen = lazy(()=>import("./DailyFeed.jsx").then(module=>({default:module.DailyFeedScreen})));
+const TravelDocuments = lazy(()=>import("./features/travel/TravelDocuments.jsx").then(module=>({default:module.TravelDocuments})));
+const SearchResultDetail = lazy(()=>import("./features/search/SearchResultDetail.jsx").then(module=>({default:module.SearchResultDetail})));
+const SosJapan = lazy(()=>import("./features/sos/SosJapan.jsx").then(module=>({default:module.SosJapan})));
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -5025,7 +5025,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   };
 
   // ─── Vue : assistant de création (questions → génération IA) ───
-  if(view==="sos") return <SosJapan C={C} backRef={sosBackRef} onBack={()=>setView("home")}/>;
+  if(view==="sos") return <Suspense fallback={<div style={{padding:28,color:C.t3}}>Chargement de l’aide…</div>}><SosJapan C={C} backRef={sosBackRef} onBack={()=>setView("home")}/></Suspense>;
   if(view==="wizard"){
     return <VoyageWizard C={C} villes={villes} lieux={lieux} user={user} isPremium={isPremium} onOpenPremium={onOpenPremium}
               onCancel={()=>setView("home")} onManual={()=>setView("create")}
@@ -6714,7 +6714,7 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", trip, db, villeBy
   }
 
   // ─── Sous-vue : check-list ───
-  if(sub==="documents") return <TravelDocuments C={C} trip={trip} owner={documentOwner} onUpdate={onUpdate} onBack={()=>setSub("day")}/>;
+  if(sub==="documents") return <Suspense fallback={<div style={{padding:28,color:C.t3}}>Chargement des documents…</div>}><TravelDocuments C={C} trip={trip} owner={documentOwner} onUpdate={onUpdate} onBack={()=>setSub("day")}/></Suspense>;
 
   if(sub==="checklist"){
     const cl = trip.checklist||[];
@@ -8730,7 +8730,7 @@ export default function IsekaidApp(){
                 {spotlightDetail.type==="region" && <RegionDetail C={C} r={spotlightDetail.item} onBack={()=>setSpotlightDetail(null)} fav={isFav&&isFav("region",spotlightDetail.item)} onFav={toggleFav&&(()=>toggleFav("region",spotlightDetail.item))} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script}/>}
               </div>
             )}
-            {searchResultDetail && <SearchResultDetail C={C} result={searchResultDetail} favorite={isFav(searchResultDetail.kind,searchResultDetail.raw)} onToggleFavorite={()=>toggleFav(searchResultDetail.kind,searchResultDetail.raw)} onBack={()=>setSearchResultDetail(null)}/>}
+            {searchResultDetail && <Suspense fallback={<div style={{padding:28,color:C.t3}}>Chargement du résultat…</div>}><SearchResultDetail C={C} result={searchResultDetail} favorite={isFav(searchResultDetail.kind,searchResultDetail.raw)} onToggleFavorite={()=>toggleFav(searchResultDetail.kind,searchResultDetail.raw)} onBack={()=>setSearchResultDetail(null)}/></Suspense>}
             {showPremiumPage && <Suspense fallback={null}><PremiumPage C={C} isPremium={isPremium} premium={premium} onActivate={activatePremium} onCancel={cancelPremium} onClose={()=>setShowPremiumPage(false)} onRedeemCode={redeemCode} billingError={billingError} billingBusy={billingBusy} liveOfferings={liveOfferings} onRestore={restorePremium}/></Suspense>}
             {/* Achievement unlocked */}
             {newAchievement && <AchievementPopup C={C} achievement={newAchievement} onClose={()=>setNewAchievement(null)}/>}
