@@ -27,6 +27,37 @@ function pick(items, seed, offset = 0) {
   return items[(hash(`${seed}:${offset}`) % items.length + items.length) % items.length];
 }
 
+const INTEREST_TERMS = {
+  gastro: ["gastronomie", "repas", "restaurant", "ramen", "sushi", "izakaya", "food"],
+  langue: ["japonais", "expression", "situation", "communication"],
+  culture: ["culture", "tradition", "histoire", "coutume"],
+  anime: ["anime", "manga", "pop", "jeu", "musique", "mode", "urbain"],
+  voyage: ["voyage", "région", "lieu", "ville", "transport"],
+  lifestyle: ["vie", "quotidien", "onsen", "konbini", "social"],
+};
+const GOAL_TERMS = {
+  travel: ["voyage", "lieu", "région", "ville", "transport"],
+  learn: ["japonais", "expression", "situation", "culture"],
+  imm: ["culture", "tradition", "histoire", "quotidien"],
+  live: ["vie", "quotidien", "social", "expression"],
+};
+
+function relevance(item, personalization = {}) {
+  const context = personalization || {};
+  const terms = (context.interests || []).flatMap(value => INTEREST_TERMS[value] || [value]);
+  terms.push(...(GOAL_TERMS[context.goal] || []));
+  const normalizedTerms = terms.map(value => String(value).toLowerCase());
+  if (!normalizedTerms.length) return 0;
+  const text = `${item.label} ${item.title} ${item.summary} ${item.raw?.categorie || ""}`.toLowerCase();
+  return normalizedTerms.reduce((score, term) => score + (text.includes(term) ? 1 : 0), 0);
+}
+
+function personalizedPool(items, personalization, seed) {
+  const ranked = items.map((item, index) => ({ item, index, score: relevance(item, personalization) })).sort((a, b) => b.score - a.score || a.index - b.index);
+  const best = ranked.filter(entry => entry.score > 0).map(entry => entry.item);
+  return best.length ? best : items;
+}
+
 function contentItems(db = {}) {
   const culture = (db.culture || []).map((item, index) => ({
     id: item.id || `culture-${index}`,
@@ -82,17 +113,18 @@ function placeItem(place, index, seasonal = false) {
   };
 }
 
-export function buildDailyRitual({ db = {}, date = new Date(), travelContext = null } = {}) {
+export function buildDailyRitual({ db = {}, date = new Date(), travelContext = null, personalization = travelContext } = {}) {
   const dateKey = typeof date === "string" ? date : dayKey(date);
   const pools = contentItems(db);
   const travelPlaces = (travelContext?.relatedPlaces || []).map((place, index) => placeItem(place, index, false));
   const seasonalPlaces = (travelContext?.seasonalPlaces || []).map((place, index) => placeItem(place, index, true));
   const seasonalTraditions = pools.traditions.filter(item => !travelContext?.seasonKey || item.raw?.saison === travelContext.seasonKey).map(item => ({ ...item, label: "Saison japonaise" }));
   const seasonalPool = [...seasonalPlaces, ...seasonalTraditions];
-  const culturePool = travelPlaces.length ? travelPlaces : seasonalPool.length ? seasonalPool : pools.culture;
+  const genericPool = personalization?.interests?.includes("gastro") ? [...pools.culture, ...pools.food] : [...pools.culture, ...pools.traditions];
+  const culturePool = travelPlaces.length ? travelPlaces : seasonalPool.length ? seasonalPool : personalizedPool(genericPool, personalization, dateKey);
   const discover = pick(culturePool.length ? culturePool : pools.food, dateKey, 1);
-  const learn = pick(pools.expressions, dateKey, 2);
-  const practice = pick(pools.situations.length ? pools.situations : [...pools.food, ...pools.culture], dateKey, 3);
+  const learn = pick(personalizedPool(pools.expressions, personalization, dateKey), dateKey, 2);
+  const practice = pick(personalizedPool(pools.situations.length ? pools.situations : [...pools.food, ...pools.culture], personalization, dateKey), dateKey, 3);
   const activities = [discover, learn, practice].filter(Boolean).map((item, index) => ({
     ...item,
     id: `${dateKey}:${item.type}:${item.id}:${index}`,

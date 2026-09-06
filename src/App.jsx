@@ -1581,7 +1581,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
     const ids = new Set((trip?.jours||[]).flatMap(day=>(day.activites||[]).map(activity=>activity.lieuId)).filter(Boolean));
     const relatedPlaces = (db.lieux||[]).filter(place=>ids.has(place.id));
     const seasonalPlaces = (db.lieux||[]).filter(place=>place.saison_ideale===seasonKey);
-    return {...journeyContext, relatedPlaces, seasonalPlaces, seasonKey};
+    return {...journeyContext, relatedPlaces, seasonalPlaces, seasonKey, interests:user?.why || [], goal:user?.goal || null};
   },[db,journeyContext,seasonKey]);
   const contextCopy = useMemo(()=>getHomePrimaryAction(journeyContext,db?.lieux||[]),[journeyContext,db]);
   const preparationTrips = useMemo(()=>homeTrips.filter(trip=>!["cancelled","completed"].includes(trip.status) && tripTiming(trip)?.status!=="past"),[homeTrips]);

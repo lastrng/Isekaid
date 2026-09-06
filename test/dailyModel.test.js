@@ -51,3 +51,8 @@ test("la clé Daily respecte le fuseau horaire et le cache est offline-ready", (
   assert.equal(dailyDateKey(instant, "America/Los_Angeles"), "2026-09-05");
   assert.equal(isDailyOfflineReady(buildDailyRitual({ db, date: "2026-09-06" })), true);
 });
+
+test("la personnalisation privilégie les contenus correspondant aux intérêts", () => {
+  const personalized = buildDailyRitual({ db: { ...db, culture: [{ id: "plain", titre: "Histoire ancienne", tag: "Histoire", contenu: "Chronique" }], repas: [{ id: "ramen", romaji: "Ramen", description: "Gastronomie japonaise" }] }, date: "2026-09-06", personalization: { interests: ["gastro"] } });
+  assert.equal(personalized.activities[0].type, "gastronomie");
+});
