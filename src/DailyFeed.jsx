@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { fetchDailyFeed } from "./supabase";
+import React, { useState } from "react";
+import { useDailyFeed } from "./dailyFeedHook.js";
 import { Sparkles } from "lucide-react";
 
 /* ============================================================
@@ -42,26 +42,6 @@ function loadSeen(){
 function markFeedSeen(id){
   if(!id) return;
   try { localStorage.setItem(SEEN_KEY, JSON.stringify({ ...loadSeen(), feedId: id })); } catch {}
-}
-
-/* Petit hook de chargement partagé (exporté : réutilisé par HomeScreen
-   pour le bloc "Reprendre où j'en étais" et le badge "Nouveau") */
-export function useDailyFeed(limit){
-  const [items, setItems] = useState(null);   // null = en cours, [] = vide
-  const [error, setError] = useState(false);
-  useEffect(() => {
-    let alive = true;
-    (async () => {
-      try {
-        const data = await fetchDailyFeed({ limit });
-        if(alive) setItems(data);
-      } catch {
-        if(alive){ setItems([]); setError(true); }
-      }
-    })();
-    return () => { alive = false; };
-  }, [limit]);
-  return { items, error };
 }
 
 /* ============================================================
@@ -124,6 +104,8 @@ export function HomeDailyCard({ C, onOpen }){
     </div>
   );
 }
+
+export { useDailyFeed };
 
 /* ============================================================
    Écran feed complet

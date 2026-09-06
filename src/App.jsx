@@ -14,7 +14,7 @@ import * as sfx from "./sfx.js";
 import { buildCarnetHTML } from "./carnet.js";
 import { useState, useEffect, useRef, useMemo, useCallback, Fragment, lazy, Suspense } from "react";
 import { supabase, supabaseEnabled, signUpEmail, signInEmail, signInGoogle, signOut, getSession, onAuthChange, fetchProgress, saveProgress, fetchTrips, saveTripsCloud, handleOAuthCallback, fetchTutorConversations, sendItineraryGenerate, sendCarnetRender, redeemPremiumCode, deleteRemoteAccount } from "./supabase";
-import { DailyFeedScreen, useDailyFeed } from "./DailyFeed";
+import { useDailyFeed } from "./dailyFeedHook.js";
 import { JapanNewsCard } from "./JapanNews";
 import { isNativePlatform, initRevenueCat, checkPremiumStatus, getOfferings, purchasePlan, restorePurchases, identifyUser, logoutRevenueCat } from "./purchases";
 import { speakJP, SpeakButton, stopSpeak } from "./tts";
@@ -120,6 +120,7 @@ let LIEU_EDITORIAL = {};
 const ProfileScreen = lazy(()=>import("./features/profile/ProfileScreen").then(module=>({default:module.ProfileScreen})));
 const PremiumPage = lazy(()=>import("./features/premium/PremiumPage").then(module=>({default:module.PremiumPage})));
 const Onboarding = lazy(()=>import("./features/onboarding/Onboarding").then(module=>({default:module.Onboarding})));
+const DailyFeedScreen = lazy(()=>import("./DailyFeed.jsx").then(module=>({default:module.DailyFeedScreen})));
 
 // ─── Themes ───────────────────────────────────────────────────────────────────
 // t3 recalculé pour ≥4.5:1 (WCAG AA) sur bg — voir diagnostic Phase 1.
@@ -8697,7 +8698,7 @@ export default function IsekaidApp(){
             <div style={{position:"absolute",inset:"0 0 72px 0",overflow:"hidden"}}>
               <div key={tab} className={supportsViewTransitions()?"":"screen-in"} style={{height:"100%"}}>
               {tab==="home"      &&<HomeScreen      C={C} user={user} db={db} streak={streak} isFav={isFav} toggleFav={toggleFav} favs={favs} wikiMap={wikiMap} onWikiTap={setWikiEntry} onSearch={()=>setShowSearch(true)} onProfile={()=>setTab("profile")} mission={mission} onTask={completeTask} onGoTab={setTab} onOpenSos={openSos} onOpenTrip={openTripFromHome} onOpenPhrases={openEssentialPhrases} onToggleToday={toggleTodayFromHome} isPremium={isPremium} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress} onStartReview={startReviewFromHome} onIntroDone={tourIndex!==null?advanceTour:undefined} rank={rank} onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual} onOpenWeeklyTarget={openWeeklyTarget} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onDailyComplete={completeDailyRitual}/>}
-{tab==="daily" && <DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/>}
+{tab==="daily" && <Suspense fallback={<div style={{padding:28,color:C.t3}}>Chargement du Daily…</div>}><DailyFeedScreen C={C} script={script} onBack={()=>setTab("home")}/></Suspense>} 
               {tab==="explore"   &&<ExploreScreen   C={C} db={db} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} isUnlocked={isUnlocked} unlockCategory={unlockCategory} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} onIntroDone={tourIndex!==null?advanceTour:undefined} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} onGoTab={setTab} backRef={inScreenBackRef} initialCategoryFilter={pendingExploreCategory} onInitialCategoryConsumed={()=>setPendingExploreCategory(null)}/>}
               {tab==="scenarios" &&<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} onIntroDone={tourIndex!==null?advanceTour:undefined} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)} kanaProgress={kanaProgress} pathProgress={pathProgress} onGoTab={setTab}/>}
               {tab==="learn"     &&<LearnScreen     C={C} script={script} db={db} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} onIntroDone={tourIndex!==null?advanceTour:undefined}/>}
