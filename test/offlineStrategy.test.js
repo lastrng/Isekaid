@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { cacheCriticalOfflineData, getOfflineCapabilities, hasCriticalOfflineData, loadCriticalOfflineData, OFFLINE_PRIORITY, summarizeOfflineSync } from "../src/services/sync/offlineStrategy.js";
+import { cacheCriticalOfflineData, getCachedOfflineTravel, getOfflineCapabilities, hasCriticalOfflineData, loadCriticalOfflineData, OFFLINE_PRIORITY, summarizeOfflineSync } from "../src/services/sync/offlineStrategy.js";
 
 test("décrit les capacités critiques à partir des données réellement présentes", () => {
   const result = getOfflineCapabilities({ trip: { checklist: [] }, days: [{}], sos: ["lost"], essentialPhrases: [], contextualContent: [{ id: "tip" }], progress: {} });
@@ -17,9 +17,11 @@ test("expose l'état de synchronisation sans masquer une file en attente", () =>
 
 test("met en cache les ressources critiques pour une lecture hors connexion", () => {
   globalThis.localStorage = { value: null, getItem() { return this.value; }, setItem(_key, value) { this.value = value; } };
-  assert.equal(cacheCriticalOfflineData({ daily: { activities: [{ id: "d" }] }, sos: [{ id: "lost" }], essentialPhrases: [{ id: "p" }], contextualContent: [{ id: "c" }] }), true);
+  assert.equal(cacheCriticalOfflineData({ daily: { activities: [{ id: "d" }] }, activeTrip: { id: "trip" }, tripDays: [{ num: 1 }], savedPlaces: [{ id: "place" }], checklist: [{ fait: false }], sos: [{ id: "lost" }], essentialPhrases: [{ id: "p" }], contextualContent: [{ id: "c" }] }), true);
   const cached = loadCriticalOfflineData();
   assert.equal(hasCriticalOfflineData(cached), true);
   assert.equal(cached.essentialPhrases.length, 1);
+  assert.equal(getCachedOfflineTravel(cached).trip.id, "trip");
+  assert.equal(getCachedOfflineTravel(cached).places[0].id, "place");
   delete globalThis.localStorage;
 });

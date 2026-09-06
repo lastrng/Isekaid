@@ -7,11 +7,16 @@ export const OFFLINE_PRIORITY = Object.freeze([
 const OFFLINE_CONTENT_KEY = "isekaid_offline_content_v1";
 
 /** Cache local des ressources critiques déjà connues, sans appel réseau. */
-export function cacheCriticalOfflineData({ daily = null, sos = [], essentialPhrases = [], contextualContent = [] } = {}) {
+export function cacheCriticalOfflineData({ daily = null, activeTrip = null, tripDays = [], savedPlaces = [], checklist = [], progress = null, sos = [], essentialPhrases = [], contextualContent = [] } = {}) {
   const payload = {
     version: 1,
     cachedAt: new Date().toISOString(),
     daily,
+    activeTrip,
+    tripDays: Array.isArray(tripDays) ? tripDays : [],
+    savedPlaces: Array.isArray(savedPlaces) ? savedPlaces : [],
+    checklist: Array.isArray(checklist) ? checklist : [],
+    progress: progress && typeof progress === "object" ? progress : null,
     sos: Array.isArray(sos) ? sos : [],
     essentialPhrases: Array.isArray(essentialPhrases) ? essentialPhrases.slice(0, 24) : [],
     contextualContent: Array.isArray(contextualContent) ? contextualContent.slice(0, 24) : [],
@@ -25,6 +30,15 @@ export function loadCriticalOfflineData() {
 
 export function hasCriticalOfflineData(data = loadCriticalOfflineData()) {
   return Boolean(data?.version === 1 && data?.daily?.activities?.length && data?.sos?.length && data?.essentialPhrases?.length);
+}
+
+export function getCachedOfflineTravel(data = loadCriticalOfflineData()) {
+  return {
+    trip: data?.activeTrip || null,
+    days: Array.isArray(data?.tripDays) ? data.tripDays : [],
+    places: Array.isArray(data?.savedPlaces) ? data.savedPlaces : [],
+    checklist: Array.isArray(data?.checklist) ? data.checklist : [],
+  };
 }
 
 /** Décrit les capacités locales sans inspecter le réseau ni lancer de synchronisation. */

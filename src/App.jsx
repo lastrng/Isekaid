@@ -8496,8 +8496,15 @@ export default function IsekaidApp(){
   // Prépare hors connexion les ressources critiques déjà disponibles localement.
   useEffect(()=>{
     if(!db) return;
+    const activeTrip = getActiveTrip(loadTrips(), new Date());
+    const placeIds = new Set((activeTrip?.jours||[]).flatMap(day=>(day.activites||[]).map(activity=>activity.lieuId)).filter(Boolean));
     cacheCriticalOfflineData({
       daily:loadDailyRitual({db}),
+      activeTrip,
+      tripDays:activeTrip?.jours || [],
+      savedPlaces:(db.lieux||[]).filter(place=>placeIds.has(place.id)),
+      checklist:activeTrip?.checklist || [],
+      progress:{streak:loadStreak(), cachedAt:new Date().toISOString()},
       sos:SOS_CATEGORIES,
       essentialPhrases:(db.expressions||[]).slice(0,24),
       contextualContent:[...(db.traditions||[]).slice(0,12),...(db.codes_sociaux||[]).slice(0,12)],
