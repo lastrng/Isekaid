@@ -45,7 +45,7 @@ import { mergeTripSnapshots } from "./services/sync/tripSnapshots";
 import { useCloudBackup } from "./services/sync/useCloudBackup";
 import { trackProductEvent } from "./services/analytics/analytics";
 import { enqueueMutation, flushPendingMutations, loadPendingMutations } from "./services/sync/pendingMutations";
-import { cacheCriticalOfflineData } from "./services/sync/offlineStrategy.js";
+import { cacheCriticalOfflineData, getCachedOfflineTravel } from "./services/sync/offlineStrategy.js";
 import { SearchResultDetail } from "./features/search/SearchResultDetail";
 import { SosJapan } from "./features/sos/SosJapan";
 import { DailyRitual } from "./features/daily/DailyRitual.jsx";
@@ -1586,7 +1586,8 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
   const contextCopy = useMemo(()=>getHomePrimaryAction(journeyContext,db?.lieux||[]),[journeyContext,db]);
   const preparationTrips = useMemo(()=>homeTrips.filter(trip=>!["cancelled","completed"].includes(trip.status) && tripTiming(trip)?.status!=="past"),[homeTrips]);
   const inJapanMode = journeyContext.state===JAPAN_RELATIONSHIP.IN_JAPAN;
-  const japanMode = useMemo(()=>buildJapanMode(homeTrips,db),[homeTrips,db]);
+  const offlineTravel = getCachedOfflineTravel();
+  const japanMode = useMemo(()=>buildJapanMode(homeTrips.length ? homeTrips : (offlineTravel.trip ? [offlineTravel.trip] : []), db || {lieux:offlineTravel.places}),[homeTrips,db,offlineTravel.trip,offlineTravel.places]);
   const journeyHome = useMemo(()=>buildJourneyHome({user,trips:homeTrips,db}),[user,db,homeTrips]);
   // Le premier tour montre encore les zones historiques une fois. Ensuite,
   // préparation et voyage privilégient uniquement les actions immédiates.
@@ -1637,7 +1638,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
       </div>
 
       {!inJapanMode && <DailyRitual C={C} db={db} timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone} travelContext={dailyTravelContext} streak={streak} onOpenActivity={openDailyActivity} onDailyComplete={onDailyComplete}/>}
-      {inJapanMode && homeIntroStage===null ? <JapanModeHome C={C} model={japanMode} db={db} pendingMutations={loadPendingMutations().length} onOpenTrip={onOpenTrip} onSos={onOpenSos} onPhrases={onOpenPhrases} onToggle={onToggleToday} onTutor={()=>onGoTab("tutor")}/> : journeyHome && homeIntroStage===null ? <JourneyHome C={C} model={journeyHome} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition}/> : homeIntroStage===null ? <DreamHome C={C} user={user} db={db} currentDate={new Date()} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition} onOpenTrip={onOpenTrip}/> : <>
+      {inJapanMode && homeIntroStage===null ? <JapanModeHome C={C} model={japanMode} db={db || {lieux:offlineTravel.places}} pendingMutations={loadPendingMutations().length} onOpenTrip={onOpenTrip} onSos={onOpenSos} onPhrases={onOpenPhrases} onToggle={onToggleToday} onTutor={()=>onGoTab("tutor")}/> : journeyHome && homeIntroStage===null ? <JourneyHome C={C} model={journeyHome} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onOpenTrip={onOpenTrip} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition}/> : homeIntroStage===null ? <DreamHome C={C} user={user} db={db} currentDate={new Date()} onNavigate={onGoTab} onOpenLieu={onOpenLieu} onOpenTradition={onOpenTradition} onOpenTrip={onOpenTrip}/> : <>
       {/* Actions rapides — chevauche l'en-tête (comme HomeScreen.tsx) */}
       <div style={{padding:"0 20px",marginTop:-24,marginBottom:4,position:"relative",zIndex:2}}>
         <button onClick={()=>contextCopy.tab==="voyage" && (journeyContext.activeTrip || journeyContext.nextTrip?.trip) ? onOpenTrip((journeyContext.activeTrip || journeyContext.nextTrip.trip).id,"day") : onGoTab(contextCopy.tab)} className="lift" style={{width:"100%",marginBottom:12,padding:"16px 17px",display:"flex",alignItems:"center",gap:13,textAlign:"left",cursor:"pointer",background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow}}>
