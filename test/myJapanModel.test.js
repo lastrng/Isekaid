@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildMyJapanSummary } from "../src/features/my-japan/myJapanModel.js";
+import { buildMyJapanSummary, getTravelAnniversaries } from "../src/features/my-japan/myJapanModel.js";
 
 test("ne considère comme visités que les lieux explicitement terminés", () => {
   const summary=buildMyJapanSummary({currentDate:new Date(2026,8,5),cities:[{id:"tokyo",nom:"Tokyo",region:"Kantō",emoji:"🗼"}],places:[{id:"senso",nom:"Sensō-ji",emoji:"⛩️"}],trips:[{id:"trip1",titre:"Tokyo",dateDebut:"2026-08-01",jours:[{villeId:"tokyo",activites:[{lieuId:"senso",fait:true,note:"Très tôt"},{lieuId:"ueno",fait:false}]}]}]});
@@ -65,4 +65,18 @@ test("agrège les favoris et apprentissages seulement quand les sources sont fou
   assert.equal(unknown.favoritesCount, null);
   assert.equal(unknown.learnedKana, null);
   assert.equal(unknown.collections.some(item => item.id === "learning"), false);
+});
+
+test("calcule les badges thématiques et les anniversaires avec des preuves", () => {
+  const summary = buildMyJapanSummary({
+    currentDate: new Date("2026-09-06"),
+    trips: [{ id: "tokyo", titre: "Tokyo", status: "completed", dateDebut: "2025-09-06", jours: [{ villeId: "tokyo", activites: [{ lieuId: "ramen", fait: true, note: "Excellent ramen" }] }] }],
+    cities: [{ id: "tokyo", nom: "Tokyo", region: "Kantō" }],
+    places: [{ id: "ramen", nom: "Ramen shop" }],
+    expressionProgress: ["a", "b", "c", "d", "e"],
+  });
+  assert.ok(summary.badges.some(badge => badge.id === "first_trip"));
+  assert.ok(summary.badges.some(badge => badge.id === "ramen_rookie"));
+  assert.equal(summary.anniversaries[0].yearsAgo, 1);
+  assert.equal(getTravelAnniversaries([{ id: "future", dateDebut: "2026-09-06" }], new Date("2026-09-06")).length, 0);
 });

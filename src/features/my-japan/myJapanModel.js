@@ -11,6 +11,34 @@ function countLearnedKana(progress) {
   return Object.values(progress).filter(item => (item?.level || item?.box || 0) >= 3).length;
 }
 
+export const PASSPORT_BADGES = Object.freeze([
+  { id: "first_trip", label: "Première aventure", description: "Terminer un premier voyage", emoji: "🎒", check: summary => summary.completedTrips >= 1 },
+  { id: "ramen_rookie", label: "Ramen Rookie", description: "Visiter ou enregistrer un lieu lié aux ramen", emoji: "🍜", check: summary => summary.memories.some(memory => /ramen/i.test(`${memory.placeName} ${memory.note}`)) },
+  { id: "sumimasen_master", label: "Sumimasen Master", description: "Apprendre au moins 5 expressions", emoji: "🈶", check: summary => (summary.learnedExpressions || 0) >= 5 },
+  { id: "city_collector", label: "Explorateur de villes", description: "Découvrir 3 villes japonaises", emoji: "🗾", check: summary => summary.visitedCities >= 3 },
+  { id: "japan_addict", label: "Japan Addict", description: "Maintenir une série quotidienne de 30 jours", emoji: "🔥", check: (_summary, context) => Math.max(context.streak?.count || 0, context.streak?.best || 0) >= 30 },
+]);
+
+export function buildPassportBadges(summary, context = {}) {
+  return PASSPORT_BADGES.filter(definition => definition.check(summary, context)).map(({ check, ...badge }) => badge);
+}
+
+export function getTravelAnniversaries(trips = [], currentDate = new Date()) {
+  const date = currentDate instanceof Date ? currentDate : new Date(currentDate);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return trips.filter(trip => {
+    if (!trip?.dateDebut || trip.status === TRIP_STATUS.CANCELLED) return false;
+    const start = new Date(`${trip.dateDebut}T12:00:00`);
+    return !Number.isNaN(start.getTime()) && start.getMonth() + 1 === month && start.getDate() === day && start.getFullYear() < date.getFullYear();
+  }).map(trip => ({
+    tripId: trip.id,
+    title: trip.titre || "Voyage au Japon",
+    yearsAgo: date.getFullYear() - new Date(`${trip.dateDebut}T12:00:00`).getFullYear(),
+    date: trip.dateDebut,
+  }));
+}
+
 /**
  * Builds the unlocked passport collection from actions recorded in trips.
  * Every stamp carries its unlock rule and evidence so the collection can be
@@ -105,7 +133,7 @@ export function buildMyJapanSummary({ trips = [], cities = [], places = [], regi
       places:done.map(({activity})=>({id:activity.lieuId,name:placeById.get(activity.lieuId)?.nom||"Lieu visité",emoji:placeById.get(activity.lieuId)?.emoji||"📍"})),
     };
   }).sort((a,b)=>String(b.startDate||"").localeCompare(String(a.startDate||"")));
-  return {
+  const summary = {
     completedTrips:completedTrips.length,
     completedDays:completedTrips.reduce((sum,trip)=>sum+(trip.jours||[]).filter(day=>(day.activites||[]).some(activity=>activity.fait===true)).length,0),
     visitedCities:visitedCityIds.size,
@@ -131,4 +159,7 @@ export function buildMyJapanSummary({ trips = [], cities = [], places = [], regi
     ],
     awaitingConfirmation,
   };
+  summary.badges = buildPassportBadges(summary);
+  summary.anniversaries = getTravelAnniversaries(trips, currentDate);
+  return summary;
 }
