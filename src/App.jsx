@@ -8030,12 +8030,20 @@ export default function IsekaidApp(){
       return m;
     });
   };
-  const completeDailyRitual = ({ firstActivity } = {})=>{
-    if(!firstActivity) return;
-    const s = touchStreak();
-    setStreak(s);
-    setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
-    completeTask("daily");
+  const completeDailyRitual = ({ firstActivity, ritual } = {})=>{
+    if(session?.user && ritual){
+      enqueueMutation({type:"progress",userId:session.user.id,payload:{
+        streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user, path:pathProgress, mission,
+        settings:{dark,accent,script,introSeen:introSeen(),premium,daily:ritual}
+      }});
+      flushProgressMutations();
+    }
+    if(firstActivity){
+      const s = touchStreak();
+      setStreak(s);
+      setDailyInfo({ milestone: s.milestone, frozenUsed: s.frozenUsed });
+      completeTask("daily");
+    }
   };
   // Défi de la semaine — état levé ici (comme `mission`) pour que les items
   // liés à une vraie action (scenario réussi, favori ajouté) se cochent au
