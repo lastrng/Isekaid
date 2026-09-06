@@ -9,7 +9,7 @@
 // jamais de minuterie automatique (navigation par boutons, comme Onboarding).
 // ─────────────────────────────────────────────────────────────────────────────
 import { useState } from "react";
-import { Home, Compass, Drama, BookOpen, Plane } from "lucide-react";
+import { Home, Compass, Plane, UserRound } from "lucide-react";
 import { m, LazyMotion, AnimatePresence, loadDomAnimationFeatures, usePrefersReducedMotion, DUR } from "./motion";
 
 // Fond clair, identique au reste de l'app (identité crème/rouge/or) — comme
@@ -17,19 +17,16 @@ import { m, LazyMotion, AnimatePresence, loadDomAnimationFeatures, usePrefersRed
 const BG = "#FDFBF7";
 const INK = "#12121F";
 
-// Couleur + icône par pilier, alignées sur le mapping exact du prototype
-// bolt.new (PillarTour) : un accent par pilier, cohérent avec BottomNav.
+// Présentation alignée sur les quatre espaces actuels de l'application.
 const CHAPTERS = [
-  { id:"home",      kanji:"家", label:"HOME",      jp:"きみの一日",   Icon:Home,
-    color:"#B83838", promise:"Ton rendez-vous quotidien avec le Japon." },
-  { id:"explore",   kanji:"探", label:"EXPLORER",  jp:"日本を知る",   Icon:Compass,
-    color:"#4276A0", promise:"La culture japonaise, un jour à la fois." },
-  { id:"learn",     kanji:"学", label:"APPRENDRE", jp:"一歩ずつ",     Icon:BookOpen,
-    color:"#C9A961", promise:"Apprends le japonais qui te servira vraiment." },
-  { id:"scenarios", kanji:"場", label:"SCÉNARIOS", jp:"その場で話す", Icon:Drama,
-    color:"#5E9659", promise:"Mets-toi en situation — on te corrige, en douceur." },
-  { id:"voyage",    kanji:"旅", label:"VOYAGE",    jp:"夢の旅へ",     Icon:Plane,
-    color:"#D96B86", promise:"Prépare le voyage dont tu rêves." },
+  { id:"today", kanji:"今日", label:"AUJOURD’HUI", jp:"今日の日本", Icon:Home,
+    color:"#B83838", promise:"Ton Japon, un peu chaque jour.", detail:"Une découverte, une expression et une situation pour créer un rituel court et satisfaisant." },
+  { id:"travel", kanji:"旅", label:"VOYAGER", jp:"夢の旅へ", Icon:Plane,
+    color:"#D96B86", promise:"Prépare et vis ton voyage.", detail:"Itinéraire, journées, carte, checklist et outils utiles avant le départ comme sur place." },
+  { id:"explore", kanji:"探", label:"DÉCOUVRIR", jp:"日本を知る", Icon:Compass,
+    color:"#4276A0", promise:"Comprends le Japon dans toute sa richesse.", detail:"Culture, gastronomie, régions, japonais pratique, traditions et contenus reliés entre eux." },
+  { id:"my-japan", kanji:"私", label:"MON JAPON", jp:"わたしの日本", Icon:UserRound,
+    color:"#C9A961", promise:"Garde une trace de ce qui devient ton Japon.", detail:"Progression, souvenirs, voyages passés, tampons et découvertes à collectionner." },
 ];
 
 export function FeatureIntroScreen({ onDone }){
@@ -93,6 +90,10 @@ export function FeatureIntroScreen({ onDone }){
               <m.div {...rise} transition={{duration:dur(0.5), ease:[0.22,1,0.36,1], delay:reduced?0:0.38}}
                 style={{fontSize:15,color:"rgba(26,20,16,0.65)",lineHeight:1.5,maxWidth:280}}>
                 {ch.promise}
+              </m.div>
+              <m.div {...rise} transition={{duration:dur(0.5), ease:[0.22,1,0.36,1], delay:reduced?0:0.46}}
+                style={{fontSize:12,color:"rgba(26,20,16,0.5)",lineHeight:1.55,maxWidth:300,marginTop:12}}>
+                {ch.detail}
               </m.div>
             </m.div>
           </AnimatePresence>
