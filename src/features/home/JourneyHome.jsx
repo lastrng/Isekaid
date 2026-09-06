@@ -6,7 +6,7 @@ export function JourneyHome({ C, model, kanaProgress, scenProgress, pathProgress
   const related = model.related;
   const openRecommendation = action => action.id === "journal" ? onNavigate("profile") : action.id === "new_trip" ? onOpenTrip(null) : onNavigate(action.tab);
   const openRelated = () => related.kind === "tradition" ? onOpenTradition(related.raw) : onOpenLieu(related.raw);
-  return <div style={{padding:"0 20px 110px",marginTop:-24,position:"relative",zIndex:2,display:"grid",gap:14}}>
+  return <div style={{padding:"0 20px 110px",marginTop:14,position:"relative",zIndex:2,display:"grid",gap:14}}>
     <button onClick={()=>planning?onOpenTrip(model.trip?.id,"day"):onNavigate("profile")} style={{...card,padding:21}}>
       <span style={{display:"block",fontSize:10,letterSpacing:".13em",color:C.red,fontWeight:700}}>{planning?"AVANT LE DÉPART":"APRÈS LE VOYAGE"}</span>
       <h2 style={{fontFamily:"'Noto Serif JP',serif",fontSize:23,fontWeight:600,margin:"9px 0",lineHeight:1.35}}>{model.title}</h2>

@@ -5,7 +5,7 @@ export function DreamHome({ C, user, db, currentDate, onNavigate, onOpenLieu, on
   const model = useMemo(() => buildDreamHome({ user, db, currentDate }), [user, db, currentDate]);
   const card = { width: "100%", padding: 19, textAlign: "left", borderRadius: 18, border: `1px solid ${C.border}`, background: C.s1, color: C.text, boxShadow: C.shadow, cursor: "pointer" };
   const open = action => action.id === "inspiration" ? (model.place ? onOpenLieu(model.place) : onNavigate("explore")) : action.id === "new_trip" ? onOpenTrip(null) : onNavigate(action.tab);
-  return <section aria-label="Ton Japon commence ici" style={{ padding: "0 20px 110px", marginTop: -24, position: "relative", display: "grid", gap: 14 }}>
+  return <section aria-label="Ton Japon commence ici" style={{ padding: "0 20px 110px", marginTop: 14, position: "relative", display: "grid", gap: 14 }}>
     <button style={card} onClick={() => model.place ? onOpenLieu(model.place) : onNavigate("explore")}>
       <span style={{ color: C.red, fontSize: 11 }}>{model.personalized ? "SELON TES ENVIES" : "UNE ENVIE D’ÉVASION"}</span>
       <h2 style={{ fontFamily: "'Noto Serif JP',serif", fontSize: 23, margin: "10px 0" }}>{model.place?.nom || "Imagine ton Japon"}</h2>
