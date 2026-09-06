@@ -52,6 +52,7 @@ import { DailyRitual } from "./features/daily/DailyRitual.jsx";
 import { loadDailyRitual } from "./features/daily/dailyModel.js";
 import { writeJson } from "./lib/storage.js";
 import { ExploreEditorialHero } from "./features/explore/ExploreEditorialHero.jsx";
+import { OfflineStatus } from "./components/OfflineStatus.jsx";
 import {
   dayKey,
   isNewGreetingDay,
@@ -1630,6 +1631,7 @@ function HomeScreen({C,user,db,streak,isFav,toggleFav,favs,wikiMap,onWikiTap,onS
           </div>
           <div style={{textAlign:"right"}}>
             <div style={{fontSize:14,fontWeight:600,color:"#FDFBF7"}}>{rank?.emoji} {rank?.title}</div>
+            <OfflineStatus C={{...C, t3:"rgba(253,251,247,.75)", gold:"#C9A961"}} />
           </div>
         </div>
       </div>
@@ -8509,6 +8511,7 @@ export default function IsekaidApp(){
       essentialPhrases:(db.expressions||[]).slice(0,24),
       contextualContent:[...(db.traditions||[]).slice(0,12),...(db.codes_sociaux||[]).slice(0,12)],
     });
+    window.dispatchEvent(new Event("isekaid:offline-cache-updated"));
   },[db]);
 
   // Persist theme whenever it changes
