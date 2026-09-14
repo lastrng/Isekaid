@@ -31,3 +31,19 @@ test("affiche le compte à rebours de l'onboarding sans fabriquer un voyage", ()
   assert.equal(model.title, "J-15 avant le Japon");
   assert.equal(model.trip, undefined);
 });
+
+test("prépare le prochain lieu, une recommandation et du japonais utile", () => {
+  const model = buildJourneyHome({
+    currentDate,
+    trips:[{id:"next",titre:"Tokyo",dateDebut:"2026-09-15",checklist:[{texte:"Vérifier le passeport",fait:false}],jours:[{num:1,titre:"Arrivée",activites:[{id:"a",lieuId:"station"}]}]}],
+    db:{lieux:[{id:"station",nom:"Gare de Tokyo",categorie:"transport"}],situations:[{id:"train",titre:"Prendre le train",phrases:[{jp:"駅はどこですか",romaji:"Eki wa doko desu ka",fr:"Où est la gare ?"}]}]},
+  });
+  assert.equal(model.nextStep.place.nom, "Gare de Tokyo");
+  assert.equal(model.preparationRecommendation, "Vérifier le passeport");
+  assert.equal(model.usefulJapanese.jp, "駅はどこですか");
+});
+
+test("le retour propose les quatre gestes de mémoire attendus", () => {
+  const model = buildJourneyHome({currentDate,trips:[{id:"past",status:"completed",dateDebut:"2026-08-01",jours:[]}]});
+  assert.deepEqual(model.returnActions.map(action=>action.id), ["journal","visited_places","stamps","memories"]);
+});

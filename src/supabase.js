@@ -5,6 +5,7 @@ import { withTripDeletions, recordTripDeletions, loadTripSyncBase, saveTripSyncB
 import { readJson, writeJson } from "./lib/storage.js";
 import { createClient } from "@supabase/supabase-js";
 import { Capacitor } from "@capacitor/core";
+import { normalizeSessionResponse } from "./services/auth/sessionModel.js";
 
 const URL = import.meta.env.VITE_SUPABASE_URL;
 const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -48,8 +49,7 @@ export async function signOut(){
 export async function getSession(){
   if(!supabaseEnabled) return { session: null, error: null };
   try {
-    const { data } = await supabase.auth.getSession();
-    return { session: data.session, error: null };
+    return normalizeSessionResponse(await supabase.auth.getSession());
   } catch (e) {
     // Hors ligne (ou refresh du token impossible) : on ne bloque jamais l'appelant.
     console.warn("[supabase] getSession a échoué (probablement hors ligne):", e?.message);
@@ -154,21 +154,29 @@ export async function saveTripsCloud(userId, trips){
   } catch { return false; }
 }
 
-export async function uploadMemoryPhoto(userId, blob){
-  if(!supabaseEnabled || !userId || !blob) return null;
-  const path=`${userId}/${crypto.randomUUID()}.jpg`;
+function storageSegment(value){
+  const segment=String(value||"").replace(/[^a-zA-Z0-9_-]/g,"-").slice(0,120);
+  if(!segment)throw new Error("invalid_storage_path");
+  return segment;
+}
+export async function uploadMemoryPhoto(userId,{tripId,activityId,photoId,blob}){
+  if(!supabaseEnabled || !userId || !(blob instanceof Blob)) throw new Error("photo_upload_unavailable");
+  const path=`${storageSegment(userId)}/trips/${storageSegment(tripId)}/places/${storageSegment(activityId)}/${storageSegment(photoId)}.jpg`;
   const { error }=await supabase.storage.from("memory-photos").upload(path,blob,{contentType:"image/jpeg",upsert:false,cacheControl:"31536000"});
-  return error ? null : path;
+  if(error)throw new Error("photo_upload_failed",{cause:error});
+  return path;
 }
 export async function createMemoryPhotoUrl(path){
   if(!supabaseEnabled || !path) return null;
   const {data,error}=await supabase.storage.from("memory-photos").createSignedUrl(path,3600);
-  return error ? null : data?.signedUrl||null;
+  if(error)throw new Error("photo_read_failed",{cause:error});
+  return data?.signedUrl||null;
 }
 export async function deleteMemoryPhoto(path){
   if(!supabaseEnabled || !path || path.startsWith("data:")) return true;
   const {error}=await supabase.storage.from("memory-photos").remove([path]);
-  return !error;
+  if(error)throw new Error("photo_delete_failed",{cause:error});
+  return true;
 }
 export async function fetchCloudBackup(userId){
   if(!supabaseEnabled||!userId)return null;
@@ -267,10 +275,9 @@ export async function sendItineraryGenerate({ lieux, days, rythme }){
   }
   return data;
 }
-// Invoque l'Edge Function carnet-render : transforme le HTML déjà assemblé
-// côté client (voir src/carnet.js, buildCarnetHTML) en PDF via le microservice
-// weasyprint du VPS. Réponse "application/pdf" → supabase-js la renvoie en
-// Blob dans `data` (content-type non-JSON/texte).
+// carnet-render reçoit uniquement l'identifiant d'un voyage terminé. La fonction
+// vérifie l'ownership, rassemble les souvenirs privés côté serveur et renvoie une
+// URL signée temporaire vers le PDF privé (jamais du HTML fourni par le client).
 // Invoque l'Edge Function redeem-premium-code : valide le code d'invitation
 // côté serveur (jamais comparé en clair dans le bundle client) et, si valide,
 // l'enregistre dans premium_grants — reconnu par itinerary-generate,
@@ -289,18 +296,20 @@ export async function redeemPremiumCode(code){
   return { ok: !!data?.ok };
 }
 
-export async function sendCarnetRender(html){
+export async function sendCarnetRender({tripId,force=false}){
   const { data, error } = await supabase.functions.invoke("carnet-render", {
-    body: { html },
-    timeout: 30000,
+    body: { tripId, ...(force?{force:true}:{}) },
+    timeout: 90000,
   });
   if(error){
     let payload = null;
     try { payload = await error.context?.json?.(); } catch { /* réponse non-JSON ou déjà consommée */ }
     if(payload?.error === "premium_required") return { premiumRequired: true };
+    const known=payload?.error;
+    if(known) throw new Error(known,{cause:error});
     throw error;
   }
-  return { blob: data };
+  return data;
 }
 
 /** Supprime définitivement l'utilisateur authentifié et ses données liées. */
@@ -311,5 +320,13 @@ export async function deleteRemoteAccount(){
     timeout: 15000,
   });
   if(error) throw error;
-  return { ok: data?.ok === true };
+  const ok=data?.ok === true;
+  if(ok){
+    // La fonction distante a déjà révoqué les sessions. Le scope local force
+    // ici la suppression immédiate du JWT persisté par supabase-js, même si
+    // l'identité distante n'existe déjà plus (les 401/404 sont tolérés par le SDK).
+    const {error:signOutError}=await supabase.auth.signOut({scope:"local"});
+    if(signOutError) console.warn("[supabase] purge de session locale incomplète:",signOutError.message);
+  }
+  return { ok };
 }

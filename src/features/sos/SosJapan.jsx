@@ -23,7 +23,7 @@ export function SosJapan({ C, onBack, backRef }) {
   const items = category?.phrases || [];
   const chooseCategory = item => { trackProductEvent("sos_opened",{category:item.id}); setCategory(item); };
   return <div style={{height:"100%",overflowY:"auto",background:C.bg,paddingBottom:40}}>
-    <header style={{position:"sticky",top:0,zIndex:5,display:"flex",alignItems:"center",gap:12,padding:"48px 18px 14px",background:`${C.bg}f2`,borderBottom:`1px solid ${C.border}`}}>
+    <header style={{position:"sticky",top:0,zIndex:5,display:"flex",alignItems:"center",gap:12,padding:"calc(18px + env(safe-area-inset-top, 0px)) 18px 14px",background:`${C.bg}f2`,borderBottom:`1px solid ${C.border}`}}>
       <button aria-label="Retour" onClick={()=>category?setCategory(null):onBack()} style={{width:36,height:36,borderRadius:18,border:`1px solid ${C.border}`,background:C.s1,color:C.text}}><ChevronLeft size={20}/></button>
       <div><div style={{fontSize:10,color:C.red,fontWeight:800,letterSpacing:".16em"}}>UTILISABLE HORS LIGNE</div><div style={{fontSize:20,color:C.text,fontWeight:700}}>SOS Japon</div></div>
     </header>

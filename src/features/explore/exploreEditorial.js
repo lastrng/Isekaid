@@ -18,8 +18,9 @@ function normalize(item, type, index) {
 export function editorialPools(db = {}) {
   const culture = (db.culture || []).map((item, index) => normalize(item, "culture", index));
   const food = (db.repas || []).map((item, index) => normalize(item, "food", index));
+  const tradition = culture.filter(item => /tradition|rituel|fête|artisan|shinto|temple|saison/i.test(`${item.label} ${item.title} ${item.summary}`));
   const contemporary = culture.filter(item => /pop|anime|manga|jeu|musique|mode|urbain|contemporain|gacha|karaoke/i.test(`${item.label} ${item.title} ${item.summary}`));
-  return { culture, food, contemporary: contemporary.length ? contemporary : culture };
+  return { culture, food, tradition: tradition.length ? tradition : culture, contemporary: contemporary.length ? contemporary : culture };
 }
 
 export function loadSeenEditorial() { return readJson(SEEN_KEY, []); }
@@ -40,7 +41,8 @@ export function pickEditorial(pool, date = new Date(), salt = "daily", { unseenO
 export function buildExploreEditorial({ db, date = new Date() } = {}) {
   const pools = editorialPools(db);
   return {
-    featured: pickEditorial([...pools.culture, ...pools.food], date, "featured"),
+    featured: pickEditorial(pools.tradition, date, "tradition"),
+    tradition: pickEditorial(pools.tradition, date, "tradition"),
     gastronomy: pickEditorial(pools.food, date, "gastronomy"),
     contemporary: pickEditorial(pools.contemporary, date, "contemporary"),
     pools,

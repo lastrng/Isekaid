@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildJapanGraph, getContextualContent, relatedToActivity } from "../src/entities/content/japanGraph.js";
+import { buildActivityConnections, buildJapanGraph, buildPrefectureConnections, buildTripConnections, getContextualContent, relatedToActivity } from "../src/entities/content/japanGraph.js";
 
 test("relie le catalogue par thème, ville et proximité sans proposer le lieu lui-même", () => {
   const place={id:"shrine",nom:"Sanctuaire",villeId:"kyoto",a_proximite:["near"]};
@@ -36,7 +36,7 @@ test("les liens éditoriaux ciblent des contenus existants et filtrent par inten
   assert.ok(before.every(node => ["tip", "code", "daily"].includes(node.kind)));
   const phrases = relatedToActivity(place, graph, { purpose: "speak" });
   assert.ok(phrases.some(node => node.id === "situation:restaurant"));
-  assert.ok(phrases.every(node => ["phrase", "situation"].includes(node.kind)));
+  assert.ok(phrases.every(node => ["phrase", "situation", "scenario"].includes(node.kind)));
 });
 
 test("normalise les régions et accepte des relations explicites sans thème commun", () => {
@@ -65,4 +65,33 @@ test("préfère la relation explicite d'une activité à une simple ressemblance
   const result = getContextualContent({ type: "restaurant", relatedContent: ["code:custom"] }, graph, { limit: 1 });
   assert.equal(result[0].id, "code:custom");
   assert.equal(result[0].reason, "Lié à ce lieu");
+});
+
+test("relie une préfecture à ses lieux, une spécialité réelle et du japonais pertinent",()=>{
+  const db={
+    villes:[{id:"kyoto",nom:"Kyoto",region:"Kansai"}],
+    lieux:[{id:"fushimi",nom:"Fushimi Inari",villeId:"kyoto",categorie:"Sanctuaire shinto"}],
+    regions:[{id:"kansai",nom:"Kansai",specialites:["Kaiseki de Kyoto"]}],
+    expressions:[{expression:"写真を撮ってもいいですか",traduction:"Puis-je prendre une photo ?",contexte:"Dans un sanctuaire"}],
+  };
+  const prefecture={id:"kyoto",nameFr:"Kyoto",capital:"Kyoto",region:"Kansai",cities:[db.villes[0]]};
+  const groups=buildPrefectureConnections(prefecture,buildJapanGraph(db));
+  assert.ok(groups.find(group=>group.id==="places").items.some(item=>item.sourceId==="fushimi"));
+  assert.equal(groups.find(group=>group.id==="specialties").items[0].title,"Kaiseki de Kyoto");
+  assert.equal(groups.find(group=>group.id==="language").items[0].target.pillar,"learn");
+});
+
+test("les recommandations d’activité et d’itinéraire reposent sur les mêmes règles",()=>{
+  const db={
+    lieux:[{id:"ramen",nom:"Restaurant de ramen",categorie:"Restaurant"},{id:"onsen",nom:"Onsen",categorie:"Bain thermal"}],
+    scenarios:[{id:"restaurant",titre:"Au restaurant"},{id:"train",titre:"Prendre le train"}],
+    codes_sociaux:[{id:"onsen-lavage",titre:"Se laver avant le bain"}],
+  };
+  const graph=buildJapanGraph(db);
+  assert.equal(buildActivityConnections(db.lieux[0],graph)[0].actionTitle,"Apprendre à commander au restaurant");
+  assert.equal(buildActivityConnections(db.lieux[1],graph)[0].target.kind,"code");
+  const oneTrain=buildTripConnections({id:"one",jours:[{activites:[{lieuId:"ramen",arrivee:{mode:"train"}}]}]},graph);
+  assert.equal(oneTrain.some(item=>item.connectionId.endsWith("train-learning")),false);
+  const several=buildTripConnections({id:"several",jours:[{activites:[{lieuId:"ramen",arrivee:{mode:"train"}},{lieuId:"onsen",arrivee:{mode:"Shinkansen"}}]}]},graph);
+  assert.ok(several.some(item=>item.actionTitle==="Japonais : prendre le train"&&item.target.scenarioId==="train"));
 });

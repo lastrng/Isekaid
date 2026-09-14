@@ -18,12 +18,12 @@ const NHK_BASE = "https://www3.nhk.or.jp";
 const CACHE_KEY = "isekaid_japan_news_v2"; // v2 : flux passé de l'anglais au français
 const CACHE_TTL = 30 * 60 * 1000; // 30 min — actu, pas besoin de plus frais
 
-function readCache(){
+function readCache({allowStale=false}={}){
   try {
     const raw = localStorage.getItem(CACHE_KEY);
     if(!raw) return null;
     const { items, ts } = JSON.parse(raw);
-    if(!items || Date.now() - ts > CACHE_TTL) return null;
+    if(!items || (!allowStale && Date.now() - ts > CACHE_TTL)) return null;
     return items;
   } catch { return null; }
 }
@@ -48,17 +48,21 @@ async function openExternalUrl(url){
 }
 
 export function useJapanNews(limit = 3){
-  const [items, setItems] = useState(() => readCache());
+  const [items, setItems] = useState(() => readCache({allowStale:true}));
   const [error, setError] = useState(false);
+  const [retry,setRetry] = useState(0);
+  useEffect(()=>{const reconnect=()=>setRetry(value=>value+1);window.addEventListener("online",reconnect);return()=>window.removeEventListener("online",reconnect);},[]);
   useEffect(() => {
-    if(items) return; // cache encore valide
+    const fresh=readCache();
+    if(fresh){setItems(fresh);return;}
     let alive = true;
     (async () => {
       try {
         const res = await fetch(NHK_NEWS_URL);
         if(!res.ok) throw new Error("bad status");
         const json = await res.json();
-        const news = (json.data || []).slice(0, limit).map(n => ({
+        const japanNews=(json.data || []).filter(n=>n.categories?.name==="JAPAN");
+        const news = (japanNews.length?japanNews:(json.data || [])).slice(0, limit).map(n => ({
           id: n.id,
           title: n.title,
           description: n.description,
@@ -66,13 +70,13 @@ export function useJapanNews(limit = 3){
           image: n.thumbnails?.middle ? NHK_BASE + n.thumbnails.middle : null,
           updatedAt: Number(n.updated_at) || null,
         }));
-        if(alive){ setItems(news); writeCache(news); }
+        if(alive){ setItems(news); setError(false); writeCache(news); }
       } catch {
         if(alive){ setItems([]); setError(true); }
       }
     })();
     return () => { alive = false; };
-  }, [limit]);
+  }, [limit,retry]);
   return { items, error };
 }
 
@@ -80,18 +84,18 @@ export function useJapanNews(limit = 3){
    HomeDailyCard / DiscoveryTeaserCard (image + badge overlay, ou badge
    texte si pas d'image). Ouvre l'article dans le navigateur in-app. */
 export function JapanNewsCard({ C }){
-  const { items } = useJapanNews(1);
+  const { items, error } = useJapanNews(1);
   const latest = items && items[0];
-  if(!latest) return null;
+  if(!latest) return <div role="status" style={{minHeight:104,padding:"17px",borderRadius:18,border:`1px solid ${C.border}`,background:C.s1,color:C.t3,fontSize:11,lineHeight:1.5}}>{error?"L’actualité n’est pas joignable pour le moment. La prochaine connexion la remettra à jour.":"Chargement de l’actualité japonaise…"}</div>;
 
   const surface = C.s1 || "#161f38";
   const border = C.border || "rgba(255,255,255,.12)";
 
   return (
-    <div
+    <button type="button"
       onClick={() => openExternalUrl(latest.url)}
       className="lift"
-      style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${border}`,background:surface,boxShadow:C.shadow||"none",position:"relative"}}
+      style={{width:"100%",padding:0,cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${border}`,background:surface,boxShadow:C.shadow||"none",position:"relative",textAlign:"left"}}
     >
       {latest.image && (
         <div style={{position:"relative",width:"100%",aspectRatio:"16 / 9",background:C.bg}}>
@@ -114,6 +118,6 @@ export function JapanNewsCard({ C }){
           <span style={{fontSize:11,color:C.t3}}>{relativeNews(latest.updatedAt)}</span>
         </div>
       </div>
-    </div>
+    </button>
   );
 }

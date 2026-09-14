@@ -26,11 +26,11 @@ function loadStreak(){
 // déblocages de contenu de UNLOCK_SCHEDULE) — réutilise la modale
 // DailyWelcome existante (champ `milestone`) pour la célébration.
 const STREAK_MILESTONES = [
-  { day:3,   label:"3 jours d'affilée",     emoji:"🔥" },
-  { day:7,   label:"1 semaine complète",    emoji:"⭐" },
-  { day:14,  label:"2 semaines de suite",   emoji:"🎖️" },
+  { day:3,   label:"3 jours de régularité", emoji:"🔥" },
+  { day:7,   label:"1 semaine de rendez-vous", emoji:"⭐" },
+  { day:14,  label:"2 semaines de pratique", emoji:"🎖️" },
   { day:30,  label:"1 mois de régularité",  emoji:"🏅" },
-  { day:100, label:"100 jours, légendaire", emoji:"🏆" },
+  { day:100, label:"100 jours avec le Japon", emoji:"🏆" },
 ];
 function nextStreakMilestone(count){
   return STREAK_MILESTONES.find(m=>m.day>count) || null;
@@ -56,11 +56,14 @@ function touchStreak(){
   let s = loadStreak();
   const prevCount = s?.count || 0;
   if(!s || !s.last){
-    s = { count:1, best:1, last:today, freezes:1, freezeBase:0, activityDates:[today] };
+    s = { count:1, best:1, last:today, freezes:1, freezeBase:0, freezeBaseTotal:0, totalActiveDays:1, activityDates:[today] };
   } else if(s.last === today){
     // déjà compté aujourd'hui — rien à faire
   } else {
     const gap = daysBetween(s.last, today);
+    s.totalActiveDays = Math.max(s.totalActiveDays||0,new Set(s.activityDates||[]).size,s.count||0) + 1;
+    s.frozenUsed = false;
+    s.streakRestarted = false;
     if(gap === 1){
       s.count += 1;                       // jour consécutif
     } else if(gap === 2 && (s.freezes||0) > 0){
@@ -69,18 +72,21 @@ function touchStreak(){
       s.count += 1;
       s.frozenUsed = true;
     } else {
-      s.count = 1;                        // streak cassé
-      s.frozenUsed = false;
+      s.count = 1;                        // la série repart, l'historique reste acquis
+      s.streakRestarted = true;
     }
     s.last = today;
     if(s.count > (s.best||0)) s.best = s.count;
   }
   s.activityDates = [...new Set([...(s.activityDates || []), today])].sort().slice(-400);
-  // Recharge d'un joker tous les 7 jours de streak (max 2 en réserve)
-  const base = s.freezeBase || 0;
-  if(s.count - base >= 7){
+  s.totalActiveDays = Math.max(s.totalActiveDays||0,new Set(s.activityDates).size,s.count||0);
+  // Recharge tous les 7 jours réellement actifs, même après une pause : une
+  // série interrompue ne détruit donc pas les efforts déjà fournis.
+  const base = s.freezeBaseTotal ?? s.freezeBase ?? 0;
+  if(s.totalActiveDays - base >= 7){
     s.freezes = Math.min((s.freezes||0) + 1, 2);
-    s.freezeBase = s.count;
+    s.freezeBaseTotal = s.totalActiveDays;
+    s.freezeBase = s.count; // compatibilité avec les sauvegardes antérieures
   }
   if(s.freezes === undefined) s.freezes = 1;
   // Palier franchi aujourd'hui (compteur qui vient de changer + tombe pile sur un palier)

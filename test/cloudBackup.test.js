@@ -7,12 +7,13 @@ function storage(initial={}){
   return {get length(){return values.size;},key:i=>[...values.keys()][i]??null,getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,String(v)),values};
 }
 
-test("sauvegarde les données utilisateur mais pas les secrets techniques",()=>{
-  const source=storage({isekaid_weekly_v1:"{\"done\":1}",isekaid_pending_mutations_v1:"secret",isekaid_premium_v1:"fake",other:"x"});
+test("sauvegarde les données utilisateur mais pas les secrets ou états onboarding d’autres comptes",()=>{
+  const source=storage({isekaid_weekly_v1:"{\"done\":1}",isekaid_pending_mutations_v1:"secret",isekaid_premium_v1:"fake",isekaid_onboarding_state_v2_accountA:"private",other:"x"});
   const backup=createCloudBackup(source);
   assert.equal(backup.values.isekaid_weekly_v1,"{\"done\":1}");
   assert.equal(backup.values.isekaid_pending_mutations_v1,undefined);
   assert.equal(backup.values.isekaid_premium_v1,undefined);
+  assert.equal(backup.values.isekaid_onboarding_state_v2_accountA,undefined);
 });
 
 test("restaure uniquement les clés applicatives autorisées",()=>{
@@ -21,6 +22,12 @@ test("restaure uniquement les clés applicatives autorisées",()=>{
   assert.equal(target.getItem("isekaid_ach_v1"),"[1]");
   assert.equal(target.getItem("token"),null);
   assert.equal(backupFingerprint({a:1}),backupFingerprint({a:1}));
+});
+
+test("ne restaure jamais l’état onboarding rattaché à un autre compte",()=>{
+  const target=storage();
+  restoreCloudBackup({version:1,values:{isekaid_onboarding_state_v2_accountA:"private"}},target);
+  assert.equal(target.getItem("isekaid_onboarding_state_v2_accountA"),null);
 });
 
 test("une ancienne sauvegarde ne retire pas une suppression locale",()=>{

@@ -1,0 +1,27 @@
+.onboarding-shell{height:100%;min-height:0;display:flex;flex-direction:column;background:#fdf9f1;color:#271f1a;font-family:Inter,'Noto Sans JP',sans-serif;overflow:hidden}
+.onboarding-header{display:flex;align-items:center;justify-content:space-between;padding:calc(12px + env(safe-area-inset-top,0px)) 24px 8px;flex-shrink:0}
+.onboarding-brand{font-size:12px;font-weight:750;letter-spacing:.2em;color:#9e3f39}
+.onboarding-skip,.onboarding-back{min-height:44px;padding:10px;border:0;background:transparent;color:#6f655d;font:inherit;font-size:14px}
+.onboarding-progress{display:flex;gap:6px;padding:0 24px 8px;flex-shrink:0}
+.onboarding-progress span{height:3px;flex:1;border-radius:3px;background:#e6ddd0}.onboarding-progress .is-active{background:#aa443e}
+.onboarding-step{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:18px 24px 24px;animation:onboarding-enter .2s ease both}
+.onboarding-art{height:170px;max-width:340px;position:relative;margin:0 auto 28px;display:grid;place-items:center;border-bottom:1px solid #e7dacb;background:radial-gradient(ellipse at bottom,#f0e2cc66,transparent 70%)}
+.onboarding-art-sun{position:absolute;width:110px;height:110px;border-radius:50%;background:#ead1c6;right:12%;top:12px}
+.onboarding-art-paper{width:130px;height:145px;box-sizing:border-box;position:relative;transform:rotate(-7deg);border:1px solid #dfd0ba;border-radius:5px 15px 15px 5px;border-left:5px solid #aa443e;background:#fffcf5;box-shadow:8px 12px 25px #68472b14;display:flex;align-items:center;flex-direction:column;gap:10px;color:#aa443e;padding:15px}
+.onboarding-art-label{font-size:7px;letter-spacing:.12em;color:#6f655d}.onboarding-art-rule{width:65%;height:1px;background:#d6c5a5}.onboarding-art-rule.short{width:40%}
+.onboarding-art-stamp{position:absolute;right:20%;bottom:14px;border:1px solid #9b752d;padding:6px 10px;border-radius:50%;transform:rotate(9deg);font:28px Georgia,'Noto Serif JP',serif;color:#9b752d;background:#fdf9f1}
+.onboarding-art--today .onboarding-art-paper{transform:rotate(4deg)}.onboarding-art--travel .onboarding-art-paper{transform:rotate(-4deg);width:180px;height:120px}.onboarding-art--learn .onboarding-art-sun{background:#e5dfcf}
+.onboarding-eyebrow{margin:0 0 10px;color:#9e3f39;letter-spacing:.12em;font-size:11px;font-weight:700}
+.onboarding-step h1{margin:0;max-width:420px;font:400 clamp(29px,8vw,38px)/1.12 Georgia,'Noto Serif JP',serif;letter-spacing:-.035em;outline:none}
+.onboarding-description{color:#6f655d;font-size:15px;line-height:1.65;max-width:440px;margin:16px 0 20px}
+.onboarding-sequence{display:grid;gap:0;padding:0;margin:20px 0;list-style:none;counter-reset:moment}
+.onboarding-sequence li{counter-increment:moment;padding:10px 0;border-top:1px solid #e6ddd0;font-size:13px;line-height:1.4}.onboarding-sequence li:before{content:'0' counter(moment);color:#9b752d;font-size:11px;margin-right:14px}
+.onboarding-tags{display:flex;flex-wrap:wrap;gap:8px}.onboarding-tags span{padding:9px 12px;border-radius:999px;background:#fff;border:1px solid #e6ddd0;color:#6f655d;font-size:13px}
+.onboarding-panels{display:grid;gap:14px}.onboarding-panels>div{border-left:2px solid #a6423c;padding-left:14px}.onboarding-panels h2{font:400 21px Georgia,serif;margin:0 0 6px}.onboarding-panels p{color:#6f655d;font-size:14px;line-height:1.5;margin:0}
+.onboarding-footer{display:flex;gap:9px;flex-wrap:wrap;padding:12px 24px max(20px,env(safe-area-inset-bottom,0px));border-top:1px solid #e9dfd3;background:#fdf9f1;flex-shrink:0}.onboarding-back{border:1px solid #ded3c6;border-radius:999px;padding-inline:18px}.onboarding-next{flex:1;min-height:50px;border:0;border-radius:999px;background:#aa443e;color:#fff;font:650 14px Inter,sans-serif;padding:12px 18px}.onboarding-next:disabled{opacity:.6}.onboarding-error{width:100%;margin:0;color:#9e3f39;font-size:13px}
+.onboarding-shell button{cursor:pointer}.onboarding-shell button:focus-visible{outline:3px solid #9b752d;outline-offset:2px}
+@keyframes onboarding-enter{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.onboarding-step{animation:none}}
+@media(max-width:360px),(max-height:650px){.onboarding-art{height:120px;margin-bottom:18px}.onboarding-art-paper{height:110px;width:110px;padding:10px;gap:7px}.onboarding-art-sun{height:80px;width:80px}.onboarding-step{padding-top:12px}.onboarding-description{margin:12px 0 16px}}
+@media(min-width:600px){.onboarding-step{padding-inline:max(24px,calc((100% - 440px)/2))}}
+@media(max-height:480px){.onboarding-art{display:none}.onboarding-step{padding-top:8px}.onboarding-step h1{font-size:28px}}

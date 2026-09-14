@@ -1,0 +1,8 @@
+.context-guide-host{scroll-margin-top:calc(12px + env(safe-area-inset-top,0px));padding:10px 0}
+.context-guide-host[data-guide=discover],.context-guide-host[data-guide=travel]{margin-inline:20px}
+.context-guide{position:static;transform:none;width:auto;display:block;box-sizing:border-box;max-width:480px;margin:0 auto;background:#fdf9f1;color:#271f1a;border:1px solid #c7aa81;border-radius:16px;padding:18px;box-shadow:0 6px 20px #68472b0a;font-family:Inter,sans-serif;animation:guide-enter .18s ease}
+.context-guide .context-guide-label{font-size:10px;letter-spacing:.12em;color:#9e3f39;margin:0 0 7px;text-transform:uppercase}
+.context-guide h2{font:400 23px/1.2 Georgia,serif;margin:0 0 10px}.context-guide p{font-size:14px;line-height:1.6;color:#6f655d;margin:0}
+.context-guide>button{min-height:44px;min-width:96px;background:#aa443e;color:white;border:0;border-radius:999px;padding:10px 20px;margin-top:14px;font:600 14px Inter,sans-serif;cursor:pointer}.context-guide button:focus-visible{outline:3px solid #9b752d;outline-offset:3px}
+@keyframes guide-enter{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.context-guide{animation:none}}

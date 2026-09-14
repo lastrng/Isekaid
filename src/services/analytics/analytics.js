@@ -1,5 +1,7 @@
 const ALLOWED_EVENTS = new Set([
-  "onboarding_completed","trip_created","trip_started","trip_completed","place_added","place_completed",
+  "onboarding_started","onboarding_step_viewed","onboarding_skipped","onboarding_completed",
+  "guide_today_completed","guide_travel_completed","guide_learn_completed","guide_discover_completed","guide_myJapan_completed",
+  "trip_created","trip_started","trip_completed","place_added","place_completed",
   "scenario_completed","kana_session_completed","sos_opened","tutor_started","favorite_added","readiness_score_changed",
 ]);
 

@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
-import { buildJapanGraph, getContextualContent, relatedToActivity } from "../../entities/content/japanGraph.js";
+import { buildActivityConnections, buildJapanGraph, getContextualContent, relatedToActivity } from "../../entities/content/japanGraph.js";
+import { ContextualConnections } from "../shared/ContextualConnections.jsx";
 import { SpeakButton } from "../../tts.jsx";
 
-export function ActivityContext({ C, db, place, trips = [], onTutor }) {
+export function ActivityContext({ C, db, place, trips = [], onTutor, onOpenConnection }) {
   const graph = useMemo(() => buildJapanGraph(db, { trips }), [db, trips]);
   const [selected, setSelected] = useState("before");
+  const connections=useMemo(()=>buildActivityConnections(place,graph),[place,graph]);
   const groups = useMemo(() => [
     { id: "before", title: "À savoir" },
     { id: "speak", title: "Phrases utiles" },
@@ -15,6 +17,7 @@ export function ActivityContext({ C, db, place, trips = [], onTutor }) {
   const items = active.items;
   return <section style={{ marginBottom: 16, padding: 14, borderRadius: 16, border: `1px solid ${C.border}`, background: C.s1 }}>
     <h3 style={{ margin: "0 0 8px", fontSize: 13, color: C.text }}>Autour de {place.nom}</h3>
+    <div style={{marginBottom:10}}><ContextualConnections C={C} title="Passer à l’action" connections={connections} onOpen={onOpenConnection} compact/></div>
     <div role="group" aria-label="Contenus liés à cette activité" style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
       {groups.map(group => <button key={group.id} aria-pressed={active.id === group.id} onClick={() => setSelected(group.id)} style={{ padding: "10px 12px", borderRadius: 12, border: `1px solid ${C.border}`, background: active.id === group.id ? C.s2 : C.s1, color: C.text, fontWeight: active.id === group.id ? 700 : 400 }}>{group.title}</button>)}
     </div>

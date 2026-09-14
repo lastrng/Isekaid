@@ -2,14 +2,32 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  addPrefecturePlanToTrip,
   autoPickVilles,
   deriveEtapesFromJours,
   normalizeTrip,
   pickCandidateLieux,
   tripFromGenerated,
+  tripFromPreconcu,
   tripTiming,
   validateGeneratedItinerary,
 } from "../src/features/travel/tripModel.js";
+
+test("une préfecture planifiée est ajoutée une seule fois sans devenir une visite",()=>{
+  const trip={id:"trip-1",plannedPrefectures:[],jours:[]};
+  const intent={prefectureId:"tokyo",prefectureName:"Tokyo",cityIds:["tokyo"]};
+  const planned=addPrefecturePlanToTrip(trip,intent);
+  assert.equal(planned.plannedPrefectures.length,1);
+  assert.equal(planned.plannedPrefectures[0].prefectureId,"tokyo");
+  assert.equal(Object.hasOwn(planned.plannedPrefectures[0],"visited"),false);
+  assert.equal(addPrefecturePlanToTrip(planned,intent),planned);
+});
+
+test("une préfecture accepte des villes référencées par leur identifiant",()=>{
+  const trip={id:"trip-1",plannedPrefectures:[],jours:[]};
+  const planned=addPrefecturePlanToTrip(trip,{prefectureId:"kyoto",prefectureName:"Kyoto",cityIds:["kyoto","uji",null]});
+  assert.deepEqual(planned.plannedPrefectures[0].cityIds,["kyoto","uji"]);
+});
 
 test("deriveEtapesFromJours regroupe uniquement les villes contiguës", () => {
   const result = deriveEtapesFromJours([
@@ -78,6 +96,12 @@ test("tripFromGenerated produit le modèle persistant v2", () => {
   assert.equal(trip.jours[0].recit, "Un récit développé");
   assert.equal(trip.jours[0].conseilDuJour, "Un conseil");
   assert.equal(trip.checklist.length, 9);
+});
+
+test("un voyage préconçu conserve les transports utiles aux recommandations contextuelles",()=>{
+  const trip=tripFromPreconcu({id:"rail",titre:"En train",villes:["tokyo"],jours:[{num:1,villeId:"tokyo",etapes:[{lieuId:"ueno",heure:"9:00",arrivee:{mode:"train",duree:"10 min"}}]}]});
+  assert.deepEqual(trip.jours[0].activites[0].arrivee,{mode:"train",duree:"10 min"});
+  assert.equal(trip.jours[0].activites[0].heure,"9:00");
 });
 
 test("validateGeneratedItinerary élimine hallucinations, doublons et incohérences", () => {

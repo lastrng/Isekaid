@@ -15,7 +15,11 @@ function loadTrips(){
   if (completed.changed) writeJson(TRIPS_KEY, completed.trips);
   return completed.trips;
 }
-function saveTrips(trips){ return writeJson(TRIPS_KEY, trips); }
+function saveTrips(trips){
+  const saved=writeJson(TRIPS_KEY,trips);
+  if(saved)globalThis.window?.dispatchEvent(new Event("isekaid:trips-synced"));
+  return saved;
+}
 function makeTripId(){ return "trip_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 function makeStepId(){ return "s_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
 function makeEtapeId(){ return "e_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
@@ -52,7 +56,8 @@ function normalizeTrip(trip){
   if(!trip) return trip;
   if(trip.modelVersion===2){
     const jours = (trip.jours||[]).map(ensureDayEditorial);
-    return jours.every((day,i)=>day===trip.jours[i]) ? trip : {...trip, jours};
+    const plannedPrefectures=Array.isArray(trip.plannedPrefectures)?trip.plannedPrefectures:[];
+    return jours.every((day,i)=>day===trip.jours[i])&&plannedPrefectures===trip.plannedPrefectures ? trip : {...trip,jours,plannedPrefectures};
   }
   const jours = (trip.jours||[]).map(j=>({
     ...j, activites: j.activites || j.etapes || [], etapes: undefined,
@@ -64,10 +69,19 @@ function normalizeTrip(trip){
     ...trip,
     modelVersion: 2,
     customLieux: trip.customLieux || [],
+    plannedPrefectures:trip.plannedPrefectures||[],
     checklist: trip.checklist || [],
     etapes,
     jours: joursWithEtapeId,
   };
+}
+
+function addPrefecturePlanToTrip(trip,prefecture){
+  if(!trip||!prefecture?.prefectureId)return trip;
+  const current=trip.plannedPrefectures||[];
+  if(current.some(item=>item.prefectureId===prefecture.prefectureId))return trip;
+  const plan={prefectureId:prefecture.prefectureId,prefectureName:prefecture.prefectureName||prefecture.prefectureId,cityIds:Array.isArray(prefecture.cityIds)?prefecture.cityIds.filter(Boolean):[],addedAt:new Date().toISOString()};
+  return {...trip,plannedPrefectures:[...current,plan],updatedAt:new Date().toISOString()};
 }
 
 // Check-list de préparatifs par défaut (inspirée d'un vrai voyage)
@@ -82,7 +96,7 @@ function tripFromPreconcu(p){
   const rawJours = p.jours.map(j=>({
     num: j.num, date:"", villeId: j.villeId, titre: j.titre||"",
     recit: j.recit||"", conseilDuJour: j.conseilDuJour||"",
-    activites: (j.etapes||[]).map(e=>({ id: makeStepId(), lieuId: e.lieuId, note:"" }))
+    activites: (j.etapes||[]).map(e=>({ id: makeStepId(), lieuId: e.lieuId, note:"", heure:e.heure||"", arrivee:e.arrivee||null }))
   }));
   const { etapes, jours } = deriveEtapesFromJours(rawJours);
   return {
@@ -297,6 +311,7 @@ export {
   TRIP_RYTHME_OPTIONS,
   TRIP_SAISON_OPTIONS,
   autoPickVilles,
+  addPrefecturePlanToTrip,
   deriveEtapesFromJours,
   loadTrips,
   makeEtapeId,

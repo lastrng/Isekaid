@@ -1,3 +1,4 @@
+import { mergeOnboardingStates } from "../../features/onboarding/state/onboardingState.js";
 export const PROGRESS_FIELDS = ["profile","favorites","kana_progress","scenarios","path","mission","streak","unlocks","settings"];
 const object = value => value !== null && typeof value === "object" && !Array.isArray(value);
 function canonical(value) {
@@ -9,6 +10,7 @@ export const sameValue = (a,b) => JSON.stringify(canonical(a))===JSON.stringify(
 const identity = value => object(value)&&value.id ? `id:${value.id}` : JSON.stringify(canonical(value));
 
 function merge(base,local,remote,path,conflicts) {
+  if(path==="settings.onboarding")return mergeOnboardingStates(local,remote);
   if(sameValue(local,remote)||sameValue(remote,base))return local;
   if(sameValue(local,base))return remote;
   // Une activité Daily cochée est un fait monotone : si un appareil l'a
@@ -51,5 +53,8 @@ function merge(base,local,remote,path,conflicts) {
 export function mergeProgress(base={},local={},remote={}) {
   const conflicts=[];
   const snapshot=Object.fromEntries(PROGRESS_FIELDS.filter(field=>Object.hasOwn(local,field)).map(field=>[field,merge(base[field],local[field],remote[field],field,conflicts)]));
+  if(snapshot.settings&&(local.settings?.onboarding||remote.settings?.onboarding)){
+    snapshot.settings={...snapshot.settings,onboarding:mergeOnboardingStates(local.settings?.onboarding,remote.settings?.onboarding)};
+  }
   return {snapshot,conflicts};
 }

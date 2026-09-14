@@ -162,5 +162,6 @@ export {
   loadKanaProgress,
   recordKana,
   saveKanaProgress,
+  shuffle,
   srsStats,
 };

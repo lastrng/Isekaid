@@ -1,0 +1,7 @@
+.personalization{padding:24px 20px;color:var(--isekaid-ink);font:14px/1.6 Inter,sans-serif}
+.personalization h1{font:30px/1.2 Georgia,serif}.personalization p{color:var(--isekaid-muted)}
+.personalization label,.personalization fieldset{display:block;margin:22px 0;border:0;padding:0}
+.personalization input,.personalization select{display:block;box-sizing:border-box;width:100%;min-height:48px;margin-top:8px;padding:12px;background:var(--isekaid-paper,#fff);color:inherit;border:1px solid #b9afa2;border-radius:12px;font:16px Inter,sans-serif}
+.personalization button{min-height:44px;padding:10px 14px;border:1px solid #b9afa2;border-radius:12px;background:var(--isekaid-paper,#fff);color:inherit;font:14px Inter,sans-serif}
+.personalization-choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.personalization-choices [aria-pressed=true]{background:#aa443e;color:#fff;border-color:#aa443e}
+.personalization .personalization-save{width:100%;background:#aa443e;color:#fff;border:0;border-radius:999px;margin-bottom:24px}.personalization :focus-visible{outline:3px solid #9b752d;outline-offset:3px}

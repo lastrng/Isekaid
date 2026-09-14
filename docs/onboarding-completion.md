@@ -1,5 +1,7 @@
 # Onboarding contextuel
 
+> Archive historique de septembre 2026. Le flow actif est documenté dans [onboarding-v2.md](./onboarding-v2.md) ; les quatre questions et le tour décrits ci-dessous ont été remplacés.
+
 Sauvegarde vérifiée avant modification : `backup-before-onboarding-completion-20260905`
 (commit `15689f20f675104e4963e37ef25b1cc07f836ef0`, arbre propre).
 Revenir à cet état dans un autre dossier :

@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
 import { currentSeasonKey, SEASON_ACCENT } from "../../lib/seasons.js";
+import { ALWAYS_FREE_PROMISES, PREMIUM_BENEFITS } from "./premiumAccess.js";
 
 const PREMIUM_PLANS = [
   { id:"annual",  label:"Annuel",  price:"29,99 €", per:"/ an",  sub:"soit 2,50 €/mois", badge:"Le plus avantageux · -37%", highlight:true },
   { id:"monthly", label:"Mensuel", price:"3,99 €",  per:"/ mois", sub:"sans engagement", badge:null, highlight:false },
 ];
-const PREMIUM_PERKS = [
-  { emoji:"🚫", title:"Sans publicité", desc:"Profite de l'app sans aucune interruption." },
-  { emoji:"🗺️", title:"Voyages illimités", desc:"Planifie autant de voyages que tu veux, plus de limite." },
-  { emoji:"✨", title:"Itinéraire automatique", desc:"Laisse l'app organiser tes lieux gardés en itinéraire jour par jour." },
-  { emoji:"🔓", title:"Tout le contenu débloqué", desc:"Accède immédiatement à toutes les sections, sans attendre les paliers de streak." },
-  { emoji:"🧑‍🏫", title:"Tuteur illimité", desc:"Discute sans limite avec ton tuteur de japonais, au lieu des 8 messages gratuits par jour." },
-  { emoji:"📍", title:"Lieux personnalisés", desc:"Ajoute tes propres adresses à tes itinéraires." },
-];
-
-export function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClose, onRedeemCode, billingError, billingBusy, liveOfferings, onRestore}){
+export function PremiumPage({C, isPremium, premium, onActivate, onClose, onRedeemCode, billingError, billingBusy, liveOfferings, onRestore}){
   const [sel, setSel] = useState("annual");
   const acc = SEASON_ACCENT[currentSeasonKey()];
   const [codeOpen,setCodeOpen] = useState(false);
@@ -40,8 +32,8 @@ export function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClos
   if(isPremium){
     return(
       <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
-        <div style={{padding:"50px 22px 40px",textAlign:"center"}}>
-          <button onClick={onClose} style={{position:"absolute",top:48,left:18,background:C.s1,border:`1px solid ${C.border}`,borderRadius:"50%",width:34,height:34,color:C.t2,fontSize:18,cursor:"pointer"}}>×</button>
+        <div style={{padding:"calc(24px + env(safe-area-inset-top, 0px)) 22px calc(32px + env(safe-area-inset-bottom, 0px))",textAlign:"center"}}>
+          <button aria-label="Fermer Premium" onClick={onClose} style={{position:"absolute",top:"calc(18px + env(safe-area-inset-top, 0px))",left:18,background:C.s1,border:`1px solid ${C.border}`,borderRadius:"50%",width:38,height:38,color:C.t2,fontSize:18,cursor:"pointer"}}>×</button>
           <div style={{fontSize:60,margin:"20px 0 16px"}}>🌸</div>
           <div style={{fontSize:13,color:C.gold,letterSpacing:".2em",textTransform:"uppercase",marginBottom:8}}>Membre Premium</div>
           <div style={{fontSize:24,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:12}}>Merci de ton soutien 🙏</div>
@@ -49,15 +41,15 @@ export function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClos
             Tu profites de tous les avantages Isekai'd Premium. {premium?.plan==="code" ? <>Accès débloqué via <b style={{color:C.text}}>code d'invitation</b> 🎟️</> : <>Ton abonnement <b style={{color:C.text}}>{premium?.plan==="annual"?"annuel":"mensuel"}</b> est actif.</>}
           </div>
           <div style={{maxWidth:360,margin:"0 auto"}}>
-            {PREMIUM_PERKS.map((p,i)=>(
+            {PREMIUM_BENEFITS.map((p,i)=>(
               <div key={i} style={{display:"flex",alignItems:"center",gap:14,padding:"14px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:10,textAlign:"left"}}>
                 <span style={{fontSize:26}}>{p.emoji}</span>
-                <div><div style={{fontSize:14,color:C.text,fontWeight:500}}>{p.title}</div><div style={{fontSize:11,color:C.t2}}>{p.desc}</div></div>
+                <div><div style={{fontSize:14,color:C.text,fontWeight:500}}>{p.title}</div><div style={{fontSize:11,color:C.t2}}>{p.description}</div></div>
                 <span style={{marginLeft:"auto",color:C.green,fontSize:18}}>✓</span>
               </div>
             ))}
           </div>
-          <button onClick={onCancel} style={{marginTop:24,background:"transparent",border:"none",color:C.t3,fontSize:12,cursor:"pointer",textDecoration:"underline"}}>Gérer / annuler l'abonnement</button>
+          <button onClick={onClose} style={{marginTop:24,background:"transparent",border:`1px solid ${C.border}`,borderRadius:999,padding:"11px 20px",color:C.t2,fontSize:12,cursor:"pointer"}}>Fermer</button>
         </div>
       </div>
     );
@@ -66,23 +58,28 @@ export function PremiumPage({C, isPremium, premium, onActivate, onCancel, onClos
   return(
     <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
       {/* Hero */}
-      <div style={{padding:"54px 22px 28px",background:`linear-gradient(160deg,rgba(201,70,61,0.18),${acc.soft} 60%,transparent)`,position:"relative",textAlign:"center",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
-        <button onClick={onClose} style={{position:"absolute",top:48,left:18,background:"rgba(0,0,0,0.25)",border:"none",borderRadius:"50%",width:34,height:34,color:"#fff",fontSize:18,cursor:"pointer"}}>×</button>
+      <div style={{padding:"calc(28px + env(safe-area-inset-top, 0px)) 22px 28px",background:`linear-gradient(160deg,rgba(201,70,61,0.18),${acc.soft} 60%,transparent)`,position:"relative",textAlign:"center",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
+        <button aria-label="Fermer Premium" onClick={onClose} style={{position:"absolute",top:"calc(18px + env(safe-area-inset-top, 0px))",left:18,background:"rgba(0,0,0,0.25)",border:"none",borderRadius:"50%",width:38,height:38,color:"#fff",fontSize:18,cursor:"pointer"}}>×</button>
         <div style={{fontSize:54,marginBottom:10}}>異</div>
         <div style={{fontSize:11,color:C.gold,letterSpacing:".25em",textTransform:"uppercase",marginBottom:8}}>Isekai'd Premium</div>
-        <div style={{fontSize:25,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:10,lineHeight:1.3}}>Vis le Japon<br/>sans limite</div>
-        <div style={{fontSize:13,color:C.t2,lineHeight:1.6,maxWidth:300,margin:"0 auto"}}>Débloque tout le potentiel d'Isekai'd et soutiens le développement de l'app.</div>
+        <div style={{fontSize:25,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:10,lineHeight:1.3}}>Va plus loin<br/>dans ton Japon</div>
+        <div style={{fontSize:13,color:C.t2,lineHeight:1.6,maxWidth:320,margin:"0 auto"}}>Des outils avancés pour préparer, pratiquer et conserver tes voyages — les essentiels restent gratuits.</div>
       </div>
 
-      <div style={{padding:"6px 22px 40px",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
+      <div style={{padding:"6px 22px calc(40px + env(safe-area-inset-bottom, 0px))",maxWidth:480,margin:"0 auto",boxSizing:"border-box"}}>
         {/* Avantages */}
         <div style={{margin:"18px 0 26px"}}>
-          {PREMIUM_PERKS.map((p,i)=>(
+          {PREMIUM_BENEFITS.map((p,i)=>(
             <div key={i} className="lift" style={{display:"flex",alignItems:"center",gap:14,padding:"15px 16px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,marginBottom:10}}>
               <div style={{width:46,height:46,borderRadius:12,background:acc.soft,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{p.emoji}</div>
-              <div><div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:2}}>{p.title}</div><div style={{fontSize:12,color:C.t2,lineHeight:1.45}}>{p.desc}</div></div>
+              <div><div style={{fontSize:15,color:C.text,fontWeight:600,marginBottom:2}}>{p.title}</div><div style={{fontSize:12,color:C.t2,lineHeight:1.45}}>{p.description}</div></div>
             </div>
           ))}
+        </div>
+
+        <div style={{padding:"16px",borderRadius:16,background:`${C.green}0f`,border:`1px solid ${C.green}35`,margin:"0 0 26px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:C.green,marginBottom:9}}>Toujours inclus gratuitement</div>
+          {ALWAYS_FREE_PROMISES.map(item=><div key={item} style={{display:"flex",gap:8,fontSize:11,color:C.t2,lineHeight:1.45,marginTop:6}}><span style={{color:C.green}}>✓</span><span>{item}</span></div>)}
         </div>
 
         {/* Plans */}

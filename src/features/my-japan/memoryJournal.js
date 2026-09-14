@@ -2,8 +2,8 @@ export function filterMemories(memories, { query = "", tripId = "", photosOnly =
   const normalize = text => String(text || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   const words = normalize(query).trim().split(/\s+/).filter(Boolean);
   return memories.filter(memory => (!tripId || memory.tripId === tripId)
-    && (!photosOnly || Boolean(memory.photo))
-    && words.every(word => normalize(`${memory.placeName} ${memory.tripTitle} ${memory.note}`).includes(word)));
+    && (!photosOnly || Boolean(memory.photos?.length || memory.photo))
+    && words.every(word => normalize(`${memory.placeName} ${memory.tripTitle} ${memory.note} ${(memory.photos||[]).map(photo=>photo.caption).join(" ")}`).includes(word)));
 }
 
 export function setMemoryNote(trips, memory, note) {

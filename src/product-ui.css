@@ -1,0 +1,787 @@
+:root {
+  --isekaid-space-1: 4px;
+  --isekaid-space-2: 8px;
+  --isekaid-space-3: 12px;
+  --isekaid-space-4: 16px;
+  --isekaid-space-5: 20px;
+  --isekaid-space-6: 24px;
+  --isekaid-space-7: 28px;
+  --isekaid-space-8: 32px;
+  --isekaid-space-10: 40px;
+  --isekaid-serif: "Noto Serif JP", "Iowan Old Style", Georgia, serif;
+  --isekaid-sans: Inter, "Noto Sans JP", "Helvetica Neue", sans-serif;
+  --isekaid-ease: cubic-bezier(.22, 1, .36, 1);
+  --isekaid-ease-soft: cubic-bezier(.2, .7, .2, 1);
+  --isekaid-radius-card: 20px;
+  --isekaid-radius-control: 13px;
+  --isekaid-route-height: calc(68px + env(safe-area-inset-bottom, 0px));
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+button, input, textarea, select { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+button:disabled { cursor: default; }
+input::placeholder, textarea::placeholder { color: var(--isekaid-muted); opacity: .82; }
+
+.isekaid-shell {
+  isolation: isolate;
+  color: var(--isekaid-text);
+  background:
+    radial-gradient(circle at 8% 5%, color-mix(in srgb, var(--isekaid-gold) 7%, transparent), transparent 25%),
+    linear-gradient(180deg, color-mix(in srgb, var(--isekaid-surface-2) 38%, transparent), transparent 22%),
+    var(--isekaid-bg);
+  font-family: var(--isekaid-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.isekaid-route-stack::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .16;
+  background-image: radial-gradient(color-mix(in srgb, var(--isekaid-text) 14%, transparent) .55px, transparent .55px);
+  background-size: 10px 10px;
+  mask-image: linear-gradient(to bottom, #000, transparent 32%);
+}
+
+.isekaid-route-stack > section { position: relative; z-index: 1; }
+.isekaid-route-stack > section[hidden] { display: none !important; }
+.isekaid-route-enter { animation: isekaid-route-enter .34s var(--isekaid-ease) both; }
+
+.isekaid-card {
+  position: relative;
+  border: 1px solid var(--isekaid-border);
+  border-radius: var(--isekaid-radius-card);
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--isekaid-surface) 98%, var(--isekaid-gold)), var(--isekaid-surface));
+  color: var(--isekaid-text);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--isekaid-text) 4%, transparent),
+    0 8px 22px color-mix(in srgb, var(--isekaid-text) 4.5%, transparent);
+}
+
+.isekaid-card--paper {
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--isekaid-surface) 95%, var(--isekaid-gold)), var(--isekaid-surface) 58%);
+}
+
+.isekaid-card--paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: .18;
+  background-image: radial-gradient(color-mix(in srgb, var(--isekaid-text) 20%, transparent) .45px, transparent .5px);
+  background-size: 8px 8px;
+  mask-image: linear-gradient(125deg, #000, transparent 60%);
+}
+
+.isekaid-card--passport {
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--isekaid-red) 24%, var(--isekaid-border));
+  background:
+    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--isekaid-red) 12%, transparent), transparent 42%),
+    var(--isekaid-surface);
+}
+
+.isekaid-card--passport::after {
+  content: "";
+  position: absolute;
+  right: -32px;
+  bottom: -37px;
+  width: 112px;
+  height: 112px;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--isekaid-red) 22%, transparent);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 7px color-mix(in srgb, var(--isekaid-red) 7%, transparent),
+    0 0 0 12px color-mix(in srgb, var(--isekaid-red) 4%, transparent);
+}
+
+.isekaid-card--passport > * { position: relative; z-index: 1; }
+
+.isekaid-card--quiet {
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--isekaid-text) 3%, transparent);
+}
+
+.isekaid-interactive {
+  transform: translateZ(0);
+  transition: transform .2s var(--isekaid-ease), box-shadow .2s ease, border-color .2s ease, background-color .2s ease;
+}
+
+@media (hover: hover) {
+  .isekaid-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 9px 26px color-mix(in srgb, var(--isekaid-text) 9%, transparent);
+  }
+}
+
+.isekaid-interactive:active { transform: scale(.985); }
+.isekaid-shell button:focus-visible,
+.isekaid-shell input:focus-visible,
+.isekaid-shell textarea:focus-visible,
+.isekaid-shell select:focus-visible {
+  outline: 2px solid var(--isekaid-red);
+  outline-offset: 3px;
+}
+
+.isekaid-editorial-header {
+  min-height: 112px;
+  padding: calc(22px + env(safe-area-inset-top, 0px)) 20px 18px;
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  border-bottom: 1px solid var(--isekaid-border);
+  background: color-mix(in srgb, var(--isekaid-bg) 91%, transparent);
+  backdrop-filter: blur(16px) saturate(1.2);
+}
+
+.isekaid-editorial-header__back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin: 0 0 8px -7px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--isekaid-muted);
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.isekaid-editorial-header__back:hover { color: var(--isekaid-text); }
+
+.isekaid-editorial-header__row { display: flex; align-items: center; gap: 11px; }
+.isekaid-editorial-header__leading {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  flex: 0 0 42px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--isekaid-gold) 32%, var(--isekaid-border));
+  border-radius: 50% 50% 46% 54%;
+  background: color-mix(in srgb, var(--isekaid-gold) 8%, var(--isekaid-surface));
+  font-size: 20px;
+}
+
+.isekaid-editorial-header::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  bottom: -1px;
+  width: 42px;
+  height: 2px;
+  background: var(--isekaid-red);
+}
+
+.isekaid-eyebrow {
+  color: var(--isekaid-red);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: .17em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.isekaid-title {
+  margin: 5px 0 0;
+  color: var(--isekaid-text);
+  font-family: var(--isekaid-serif);
+  font-size: clamp(22px, 6vw, 27px);
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.isekaid-subtitle {
+  max-width: 32em;
+  margin: 5px 0 0;
+  color: var(--isekaid-muted);
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+.isekaid-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 24px 2px 11px;
+}
+
+.isekaid-section-heading h2 {
+  margin: 3px 0 0;
+  color: var(--isekaid-text);
+  font-family: var(--isekaid-serif);
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.isekaid-chip {
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 1px solid var(--isekaid-border);
+  border-radius: 999px;
+  background: var(--isekaid-surface);
+  color: var(--isekaid-muted);
+  cursor: pointer;
+  font-size: 10.5px;
+  transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+}
+
+.isekaid-chip[aria-pressed="true"] {
+  border-color: var(--isekaid-red);
+  background: color-mix(in srgb, var(--isekaid-red) 9%, var(--isekaid-surface));
+  color: var(--isekaid-red);
+}
+
+.isekaid-empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 164px;
+  padding: 30px 22px;
+  border: 1px dashed color-mix(in srgb, var(--isekaid-muted) 36%, transparent);
+  border-radius: var(--isekaid-radius-card);
+  background:
+    radial-gradient(circle at 50% 36%, color-mix(in srgb, var(--isekaid-gold) 9%, transparent), transparent 32%),
+    color-mix(in srgb, var(--isekaid-surface) 78%, transparent);
+  color: var(--isekaid-muted);
+  text-align: center;
+}
+
+.isekaid-empty-state__mark {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+  border: 1px solid color-mix(in srgb, var(--isekaid-red) 42%, transparent);
+  border-radius: 50%;
+  color: var(--isekaid-red);
+  font-family: var(--isekaid-serif);
+  font-size: 17px;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--isekaid-red) 5%, transparent);
+  transform: rotate(-4deg);
+}
+
+.isekaid-empty-state strong { color: var(--isekaid-text); font-family: var(--isekaid-serif); font-size: 15px; }
+.isekaid-empty-state p { max-width: 280px; margin: 7px 0 0; font-size: 11px; line-height: 1.6; }
+.isekaid-empty-state__action {
+  min-height: 38px;
+  margin-top: 14px;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--isekaid-red);
+  color: #fff;
+  cursor: pointer;
+  font-size: 10.5px;
+  font-weight: 750;
+}
+
+.isekaid-skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--isekaid-surface-2) 88%, var(--isekaid-text));
+}
+
+.isekaid-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--isekaid-text) 8%, transparent), transparent);
+  animation: isekaid-shimmer 1.55s ease-in-out infinite;
+}
+
+.isekaid-screen-enter { animation: isekaid-rise .38s var(--isekaid-ease) both; }
+.today-active-step { animation: today-step-in .24s var(--isekaid-ease) both; }
+.today-step-slider { position: relative; }
+.today-step-slider__arrow {
+  position: absolute;
+  top: calc(50% + 4px);
+  z-index: 2;
+  width: 42px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--isekaid-text);
+  opacity: .2;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.today-step-slider__arrow--previous { left: -12px; }
+.today-step-slider__arrow--next { right: -12px; }
+.today-step-slider__arrow:focus-visible,
+.today-step-slider__arrow:hover { opacity: .58; }
+.today-step-slider__arrow:active { opacity: .75; transform: translateY(-50%) scale(.94); }
+.explore-story-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 42px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: color-mix(in srgb, var(--isekaid-surface) 72%, transparent);
+  color: var(--isekaid-text);
+  opacity: .34;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.explore-story-arrow--previous { left: 0; border-radius: 0 99px 99px 0; }
+.explore-story-arrow--next { right: 0; border-radius: 99px 0 0 99px; }
+.explore-story-arrow:focus-visible,
+.explore-story-arrow:hover { opacity: .72; }
+.isekaid-stagger > * { animation: isekaid-rise .36s var(--isekaid-ease) both; }
+.isekaid-stagger > *:nth-child(2) { animation-delay: 45ms; }
+.isekaid-stagger > *:nth-child(3) { animation-delay: 90ms; }
+.isekaid-stagger > *:nth-child(4) { animation-delay: 135ms; }
+.isekaid-stagger > *:nth-child(n+5) { animation-delay: 170ms; }
+
+.isekaid-bottom-nav {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--isekaid-nav-bg) 84%, transparent), var(--isekaid-nav-bg) 40%);
+  box-shadow:
+    0 -1px 0 color-mix(in srgb, var(--isekaid-text) 2%, transparent),
+    0 -14px 34px color-mix(in srgb, var(--isekaid-text) 5%, transparent);
+}
+
+.isekaid-bottom-nav button { min-height: 56px; }
+
+.isekaid-bottom-nav__icon {
+  width: 34px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 48% 52% 46% 54%;
+  transition: transform .2s var(--isekaid-ease), background-color .2s ease;
+}
+
+.isekaid-bottom-nav button[aria-current="page"] .isekaid-bottom-nav__icon {
+  background: color-mix(in srgb, var(--isekaid-red) 10%, transparent);
+  transform: translateY(-1px);
+}
+
+.isekaid-journey-art {
+  position: relative;
+  min-height: 132px;
+  overflow: hidden;
+  border-radius: calc(var(--isekaid-radius-card) - 1px) calc(var(--isekaid-radius-card) - 1px) 14px 14px;
+  background: color-mix(in srgb, var(--isekaid-gold) 8%, var(--isekaid-surface));
+}
+
+.isekaid-journey-art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 59%;
+  filter: saturate(.88) contrast(.98);
+}
+
+.isekaid-journey-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 54%, color-mix(in srgb, var(--isekaid-surface) 42%, transparent));
+}
+
+.isekaid-journey-art--compact { min-height: 92px; }
+
+.isekaid-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Voyage garde l'allure d'un carnet : une colonne, peu de métriques et une
+   seule action dominante. Les sous-outils restent dans leurs écrans dédiés. */
+.travel-dashboard {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--isekaid-bg);
+  color: var(--isekaid-text);
+  font-family: var(--isekaid-sans);
+  overscroll-behavior-y: contain;
+}
+
+.travel-dashboard__header {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  min-height: 92px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: calc(20px + env(safe-area-inset-top, 0px)) 20px 14px;
+  border-bottom: 1px solid var(--isekaid-border);
+  background: color-mix(in srgb, var(--isekaid-bg) 91%, transparent);
+  backdrop-filter: blur(16px) saturate(1.15);
+}
+
+.travel-dashboard__header h1 { margin: 0; font: 650 22px/1.2 var(--isekaid-serif); }
+.travel-dashboard__header p { margin: 4px 0 0; color: var(--isekaid-muted); font-size: 11.5px; }
+.travel-dashboard__quiet-action,
+.travel-dashboard__text-action,
+.travel-dashboard__new {
+  min-height: 40px;
+  border: 0;
+  background: transparent;
+  color: var(--isekaid-red);
+  cursor: pointer;
+  font-size: 10.5px;
+  font-weight: 750;
+}
+.travel-dashboard__quiet-action { padding: 7px 3px 3px 10px; }
+.travel-dashboard__new {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 38px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--isekaid-red);
+  color: #fff;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--isekaid-red) 22%, transparent);
+}
+.travel-dashboard__content { display: grid; gap: 20px; padding: 18px 20px calc(104px + env(safe-area-inset-bottom, 0px)); }
+.travel-dashboard__content > section { min-width: 0; }
+.travel-dashboard__network { display: flex; align-items: center; gap: 7px; margin: -2px 1px -7px; color: var(--isekaid-muted); font-size: 10px; }
+
+.travel-dashboard__section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 0 2px 9px; }
+.travel-dashboard__section-heading h2 { margin: 3px 0 0; font: 650 17px/1.3 var(--isekaid-serif); }
+
+.travel-dashboard__trip-card,
+.travel-dashboard__empty,
+.travel-dashboard__post,
+.travel-dashboard__active-hero,
+.travel-dashboard__next-stop { padding: 19px; }
+.travel-dashboard__trip-card h2,
+.travel-dashboard__empty h2,
+.travel-dashboard__post h2,
+.travel-dashboard__active-hero h2,
+.travel-dashboard__next-stop h2 { margin: 7px 0 0; font: 650 clamp(20px, 5.6vw, 24px)/1.25 var(--isekaid-serif); text-wrap: balance; }
+.travel-dashboard__summary { margin: 7px 0 0; color: var(--isekaid-muted); font-size: 11.5px; }
+.travel-dashboard__timing { margin: 15px 0 0; color: var(--isekaid-text); font-size: 12px; font-weight: 650; }
+.travel-dashboard__progress-label { display: flex; justify-content: space-between; margin: 15px 1px 6px; color: var(--isekaid-muted); font-size: 10.5px; }
+.travel-dashboard__progress-label strong { color: var(--isekaid-text); font-size: 11px; }
+.travel-dashboard__progress { height: 6px; overflow: hidden; border-radius: 99px; background: var(--isekaid-surface-3); }
+.travel-dashboard__progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--isekaid-red), var(--isekaid-gold)); transition: width .28s var(--isekaid-ease); }
+
+.travel-dashboard__primary {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 17px;
+  padding: 10px 15px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--isekaid-red);
+  color: #fff;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-style: normal;
+  font-weight: 750;
+}
+.travel-dashboard__primary--secondary { margin-top: 8px; border: 1px solid var(--isekaid-border); background: var(--isekaid-surface); color: var(--isekaid-text); }
+
+.travel-dashboard__next { width: 100%; min-height: 124px; display: flex; align-items: flex-start; gap: 13px; padding: 17px; color: var(--isekaid-text); text-align: left; cursor: pointer; }
+.travel-dashboard__next-icon { width: 38px; height: 38px; display: grid; flex: 0 0 38px; place-items: center; border-radius: 50%; background: color-mix(in srgb, var(--isekaid-red) 10%, var(--isekaid-surface)); color: var(--isekaid-red); }
+.travel-dashboard__next > span:last-child { min-width: 0; }
+.travel-dashboard__next strong { display: block; font: 650 15px/1.35 var(--isekaid-serif); }
+.travel-dashboard__next small { display: block; margin-top: 5px; color: var(--isekaid-muted); font-size: 10.5px; line-height: 1.5; }
+.travel-dashboard__next em { display: block; margin-top: 12px; color: var(--isekaid-red); font-size: 10.5px; font-style: normal; font-weight: 750; }
+
+.travel-dashboard__tools { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; }
+.travel-dashboard__tools button { min-height: 64px; display: flex; align-items: center; gap: 9px; padding: 12px 13px; border: 1px solid var(--isekaid-border); border-radius: 15px; background: var(--isekaid-surface); color: var(--isekaid-text); cursor: pointer; text-align: left; }
+.travel-dashboard__tools svg { flex: 0 0 auto; color: var(--isekaid-red); }
+.travel-dashboard__tools span { font-size: 11px; font-weight: 700; line-height: 1.25; }
+
+.travel-dashboard__sos,
+.travel-dashboard__saved,
+.travel-dashboard__other-link { width: 100%; min-height: 66px; display: flex; align-items: center; gap: 11px; padding: 12px 14px; border: 1px solid color-mix(in srgb, var(--isekaid-red) 35%, var(--isekaid-border)); border-radius: 16px; background: color-mix(in srgb, var(--isekaid-red) 7%, var(--isekaid-surface)); color: var(--isekaid-text); cursor: pointer; text-align: left; }
+.travel-dashboard__sos-icon { width: 38px; height: 38px; display: grid; flex: 0 0 38px; place-items: center; border-radius: 12px; background: var(--isekaid-red); color: #fff; }
+.travel-dashboard__sos > span:nth-child(2), .travel-dashboard__saved > span { min-width: 0; flex: 1; }
+.travel-dashboard__sos strong, .travel-dashboard__saved strong { display: block; font-size: 12px; }
+.travel-dashboard__sos small, .travel-dashboard__saved small { display: block; margin-top: 2px; color: var(--isekaid-muted); font-size: 9.5px; line-height: 1.4; }
+.travel-dashboard__saved { border-color: var(--isekaid-border); background: var(--isekaid-surface); }
+.travel-dashboard__saved > svg:first-child { color: var(--isekaid-red); }
+
+.travel-dashboard__other { padding-top: 1px; }
+.travel-dashboard__other .travel-dashboard__section-heading { align-items: center; margin-bottom: 9px; }
+.travel-dashboard__other-link { min-height: 48px; border-color: var(--isekaid-border); background: transparent; color: var(--isekaid-muted); font-size: 10.5px; }
+.travel-dashboard__other-link svg { margin-left: auto; }
+
+.travel-dashboard__empty p,
+.travel-dashboard__post > p,
+.travel-dashboard__active-hero > p,
+.travel-dashboard__next-stop > p { margin: 7px 0 0; color: var(--isekaid-muted); font-size: 11px; line-height: 1.55; }
+.travel-dashboard__templates { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+.travel-dashboard__template { min-width: 0; min-height: 96px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; padding: 11px; border: 1px solid var(--isekaid-border); border-radius: 15px; background: var(--isekaid-surface); color: var(--isekaid-text); cursor: pointer; text-align: left; }
+.travel-dashboard__template > span { margin-bottom: auto; font-size: 20px; }
+.travel-dashboard__template strong { width: 100%; overflow: hidden; font-size: 10.5px; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+.travel-dashboard__template small { margin-top: 2px; color: var(--isekaid-muted); font-size: 8.5px; }
+
+.travel-dashboard__active-hero { background: radial-gradient(circle at 100% 0,color-mix(in srgb,var(--isekaid-red) 15%,transparent),transparent 48%),var(--isekaid-surface); }
+.travel-dashboard__active-hero h2 { text-transform: capitalize; }
+.travel-dashboard__offline { display: inline-flex; align-items: center; gap: 5px; margin-top: 12px; padding: 5px 8px; border-radius: 99px; background: color-mix(in srgb, var(--isekaid-green) 9%, var(--isekaid-surface-2)); color: var(--isekaid-green); font-size: 9px; font-weight: 750; }
+.travel-dashboard__next-time { color: var(--isekaid-red); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.travel-dashboard__following { overflow: hidden; border-top: 1px solid var(--isekaid-border); border-bottom: 1px solid var(--isekaid-border); }
+.travel-dashboard__following div { display: flex; align-items: center; gap: 11px; min-height: 48px; padding: 9px 2px; border-top: 1px solid var(--isekaid-border); }
+.travel-dashboard__following div:first-child { border-top: 0; }
+.travel-dashboard__following span { min-width: 42px; color: var(--isekaid-red); font-size: 10px; font-weight: 750; }
+.travel-dashboard__following strong { font-size: 11.5px; font-weight: 650; }
+.travel-dashboard__active-tools { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; }
+.travel-dashboard__active-tools button { min-width: 0; min-height: 62px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 8px 2px; border: 1px solid var(--isekaid-border); border-radius: 13px; background: var(--isekaid-surface); color: var(--isekaid-text); cursor: pointer; }
+.travel-dashboard__active-tools span { font-size: 8.5px; line-height: 1.2; }
+.travel-dashboard__active-tools .travel-dashboard__active-tools-sos { border-color: var(--isekaid-red); background: var(--isekaid-red); color: #fff; }
+
+.travel-dashboard__post-stats { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 16px; }
+.travel-dashboard__post-stats span { color: var(--isekaid-muted); font-size: 9.5px; }
+.travel-dashboard__post-stats strong { color: var(--isekaid-text); font-size: 14px; }
+.travel-dashboard__confirm { margin-top: 16px; padding: 12px; border-radius: 13px; background: var(--isekaid-surface-2); }
+.travel-dashboard__confirm > strong { font-size: 11px; }
+.travel-dashboard__confirm > div { display: flex; gap: 7px; margin-top: 9px; }
+.travel-dashboard__confirm button { min-height: 38px; flex: 1; border: 1px solid var(--isekaid-border); border-radius: 10px; background: var(--isekaid-surface); color: var(--isekaid-text); cursor: pointer; font-size: 10px; }
+.travel-dashboard__confirm button:first-child { border-color: var(--isekaid-green); background: var(--isekaid-green); color: #fff; }
+
+.trip-date-control { margin: -6px 0 16px; padding: 11px 12px; border: 1px solid var(--isekaid-border); border-radius: 12px; background: var(--isekaid-surface-2); }
+.trip-date-control span { display: block; margin-bottom: 6px; color: var(--isekaid-muted); font-size: 9px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+.trip-date-control input { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid var(--isekaid-border); border-radius: 10px; background: var(--isekaid-surface); color: var(--isekaid-text); }
+
+/* Mon Japon : le tableau principal reste un carnet personnel compact. Les
+   listes et réglages vivent dans des pages secondaires chargées à la demande. */
+.my-japan-screen {
+  height: 100%;
+  overflow-y: auto;
+  color: var(--isekaid-text);
+  font-family: var(--isekaid-sans);
+  overscroll-behavior-y: contain;
+}
+.my-japan-screen-content { padding: calc(18px + env(safe-area-inset-top, 0px)) 20px calc(104px + env(safe-area-inset-bottom, 0px)); }
+.my-japan-dashboard { display: grid; gap: 19px; }
+.my-japan-dashboard > section { min-width: 0; }
+.my-japan-header, .my-japan-detail-header { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.my-japan-header h1, .my-japan-detail-header h1 { margin: 2px 0 0; font: 650 23px/1.2 var(--isekaid-serif); }
+.my-japan-kicker { font-size: 8.5px; font-weight: 850; letter-spacing: .16em; text-transform: uppercase; }
+.my-japan-icon-button { width: 44px; height: 44px; display: grid; flex: 0 0 44px; place-items: center; padding: 0; border: 1px solid; border-radius: 50%; cursor: pointer; }
+.my-japan-detail-header { justify-content: flex-start; margin-bottom: 17px; }
+.my-japan-passport-top { padding: 16px; border-bottom: 1px solid; }
+.my-japan-identity { display: flex; align-items: center; gap: 11px; margin-top: 9px; }
+.my-japan-avatar { width: 48px; height: 48px; display: grid; flex: 0 0 48px; place-items: center; overflow: hidden; border: 1px solid; border-radius: 15px; font-size: 19px; font-weight: 800; }
+.my-japan-avatar--large { width: 58px; height: 58px; flex-basis: 58px; font-size: 22px; }
+.my-japan-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.my-japan-name { display: block; overflow: hidden; font: 650 15px/1.3 var(--isekaid-serif); text-overflow: ellipsis; white-space: nowrap; }
+.my-japan-rank { display: block; margin-top: 3px; font-size: 9.5px; }
+.my-japan-streak { flex: 0 0 auto; padding: 7px 9px; border-radius: 99px; font-size: 10px; }
+.my-japan-passport-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); padding: 12px 8px 10px; }
+.my-japan-passport-stats > div { min-width: 0; padding: 2px 7px; text-align: center; }
+.my-japan-passport-stats > div + div { border-left: 1px solid var(--isekaid-border); }
+.my-japan-passport-stats strong, .my-japan-passport-stats small { display: block; }
+.my-japan-passport-stats strong { font-size: 14px; }
+.my-japan-passport-stats small { margin-top: 2px; overflow: hidden; font-size: 8.5px; text-overflow: ellipsis; white-space: nowrap; }
+.my-japan-card-link { width: 100%; min-height: 42px; display: flex; align-items: center; justify-content: center; gap: 4px; border: 0; border-top: 1px solid; background: transparent; cursor: pointer; font-size: 10.5px; font-weight: 750; }
+.my-japan-collection-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.my-japan-collection-grid button { min-width: 0; min-height: 55px; display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 7px; padding: 10px 11px; border: 1px solid; border-radius: 14px; cursor: pointer; text-align: left; }
+.my-japan-collection-grid button span { font-size: 17px; }
+.my-japan-collection-grid button strong { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.my-japan-collection-grid button b { font-size: 11px; }
+.my-japan-text-link { min-height: 40px; display: flex; align-items: center; gap: 3px; margin: 5px 0 -7px auto; padding: 6px 0 0 8px; border: 0; background: transparent; cursor: pointer; font-size: 10px; font-weight: 750; }
+.my-japan-text-link--flush { margin: 0; padding: 0; }
+.my-japan-memory-title { font: 650 16px/1.35 var(--isekaid-serif); }
+.my-japan-memory-date { margin-top: 3px; font-size: 9.5px; }
+.my-japan-memory-meta { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-top: 11px; font-size: 9.5px; }
+.my-japan-primary-link { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; margin-top: 13px; padding: 9px 13px; border: 0; border-radius: 99px; color: #fff; cursor: pointer; font-size: 10.5px; font-weight: 750; }
+.my-japan-primary-link--wide { width: 100%; min-height: 44px; }
+.my-japan-action-row { width: 100%; min-height: 61px; display: flex; align-items: center; gap: 10px; padding: 10px 1px; border: 0; background: transparent; cursor: pointer; text-align: left; }
+.my-japan-action-icon { width: 30px; height: 30px; display: grid; flex: 0 0 30px; place-items: center; border-radius: 50%; background: var(--isekaid-surface-2); font-size: 16px; }
+.my-japan-action-row strong, .my-japan-action-row small { display: block; }
+.my-japan-action-row strong { font-size: 11.5px; }
+.my-japan-action-row strong b { float: right; font-weight: 600; }
+.my-japan-action-row small { margin-top: 2px; font-size: 8.8px; line-height: 1.35; }
+.my-japan-sync-alert { width: 100%; min-height: 50px; display: flex; align-items: center; gap: 9px; padding: 9px 11px; border: 1px solid; border-radius: 13px; cursor: pointer; text-align: left; }
+.my-japan-sync-alert > span { flex: 1; }
+.my-japan-sync-alert strong, .my-japan-sync-alert small { display: block; }
+.my-japan-sync-alert strong { font-size: 10.5px; }
+.my-japan-sync-alert small { margin-top: 1px; font-size: 8.8px; }
+.my-japan-detail-page { min-height: 100%; animation: isekaid-route-enter .24s var(--isekaid-ease) both; }
+.my-japan-page-intro { margin: -7px 1px 14px; font-size: 11px; line-height: 1.55; }
+.my-japan-detail-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.my-japan-detail-stat { min-height: 76px; display: flex; flex-direction: column; justify-content: center; padding: 12px; border: 1px solid; border-radius: 15px; }
+.my-japan-detail-stat strong { font: 650 17px/1.25 var(--isekaid-serif); }
+.my-japan-detail-stat span { margin-top: 3px; font-size: 9px; line-height: 1.3; }
+.my-japan-passport-streak { margin-top: 14px; padding-top: 11px; border-top: 1px solid; font-size: 11px; font-weight: 700; }
+.my-japan-collection-row { width: 100%; min-height: 52px; display: grid; grid-template-columns: 27px minmax(0,1fr) auto 18px; align-items: center; gap: 7px; padding: 8px 0; border: 0; background: transparent; cursor: pointer; text-align: left; }
+.my-japan-collection-row > span { font-size: 18px; }
+.my-japan-collection-row > strong { font-size: 11px; }
+.my-japan-collection-row > b { font-size: 10px; }
+.my-japan-collection-content { padding: 0 0 8px 34px; }
+.my-japan-collection-content > p { margin: 1px 0 10px; font-size: 10px; }
+.my-japan-favorite-row { min-height: 50px; display: grid; grid-template-columns: minmax(0,1fr) 34px 16px; align-items: center; gap: 6px; }
+.my-japan-favorite-open { min-width: 0; min-height: 46px; display: grid; grid-template-columns: 24px minmax(0,1fr); align-items: center; gap: 6px; padding: 0; border: 0; background: transparent; cursor: pointer; text-align: left; }
+.my-japan-favorite-open:disabled { cursor: default; }
+.my-japan-favorite-open > span:nth-child(2) { min-width: 0; }
+.my-japan-favorite-row strong, .my-japan-favorite-row small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.my-japan-favorite-row strong { font-size: 10.5px; }
+.my-japan-favorite-row small { margin-top: 2px; font-size: 8.5px; }
+.my-japan-favorite-row button { width: 34px; height: 34px; border: 0; background: transparent; cursor: pointer; }
+.my-japan-memory-list { display: grid; gap: 8px; }
+.my-japan-memory-list > button { min-height: 61px; display: flex; align-items: center; gap: 9px; padding: 11px 12px; border: 1px solid; border-radius: 15px; cursor: pointer; text-align: left; }
+.my-japan-memory-list > button > span { flex: 1; min-width: 0; }
+.my-japan-memory-list strong, .my-japan-memory-list small { display: block; }
+.my-japan-memory-list strong { font-size: 11.5px; }
+.my-japan-memory-list small { margin-top: 3px; font-size: 9px; }
+.my-japan-stamp-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.my-japan-stamp-grid strong, .my-japan-stamp-grid small { display: block; }
+.my-japan-stamp-grid strong { font-size: 9.5px; line-height: 1.3; }
+.my-japan-stamp-grid small { margin-top: 3px; font-size: 8.5px; }
+.my-japan-stamp { width: 52px; height: 52px; display: grid; place-items: center; margin: 0 auto 7px; border: 2px dashed; border-radius: 50%; font-size: 22px; }
+.my-japan-simple-row { min-height: 48px; display: grid; grid-template-columns: 28px 1fr auto; align-items: center; gap: 7px; }
+.my-japan-simple-row strong { font-size: 10.5px; }
+.my-japan-simple-row b { font-size: 10px; }
+.my-japan-badge-list { display: grid; gap: 8px; }
+.my-japan-badge-list > div { display: grid; grid-template-columns: 42px minmax(0,1fr); align-items: center; gap: 10px; }
+.my-japan-badge-list strong, .my-japan-badge-list small { display: block; }
+.my-japan-badge-list strong { font-size: 11.5px; }
+.my-japan-badge-list small { margin-top: 3px; font-size: 9px; line-height: 1.35; }
+.my-japan-badge-emoji { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; font-size: 20px; }
+.my-japan-settings-row { width: 100%; min-height: 58px; display: flex; align-items: center; gap: 11px; padding: 10px 13px; border: 0; background: transparent; cursor: default; text-align: left; }
+button.my-japan-settings-row { cursor: pointer; }
+.my-japan-settings-row > span { flex: 1; min-width: 0; }
+.my-japan-settings-row strong, .my-japan-settings-row small { display: block; }
+.my-japan-settings-row strong { font-size: 11px; }
+.my-japan-settings-row small { margin-top: 2px; font-size: 8.8px; line-height: 1.35; }
+.my-japan-switch { width: 42px; height: 24px; flex: 0 0 42px; padding: 2px; border: 0; border-radius: 99px; cursor: pointer; }
+.my-japan-switch span { width: 20px; height: 20px; display: block; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .2s var(--isekaid-ease); }
+.my-japan-script-choice { display: flex; gap: 4px; }
+.my-japan-script-choice button { width: 34px; height: 34px; border: 1px solid; border-radius: 9px; cursor: pointer; }
+.my-japan-version { padding: 20px 0 3px; text-align: center; font-size: 9px; }
+.my-japan-data-status { display: flex; align-items: flex-start; gap: 10px; }
+.my-japan-data-status span { min-width: 0; }
+.my-japan-data-status strong, .my-japan-data-status small { display: block; }
+.my-japan-data-status strong { font-size: 12px; }
+.my-japan-data-status small { margin-top: 3px; font-size: 9.5px; line-height: 1.45; }
+.memory-entry-list { display: grid; gap: 14px; }
+.memory-entry { padding: 14px; border: 1px solid; border-radius: 16px; }
+.memory-entry-heading strong, .memory-entry-heading small { display: block; }
+.memory-entry-heading strong { font-size: 13px; }
+.memory-entry-heading small { margin-top: 4px; font-size: 10px; }
+.memory-subheading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 16px 0 9px; }
+.memory-subheading strong { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+.memory-subheading span { font-size: 9px; }
+.memory-photo-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+.memory-photo-tile { min-width: 0; padding: 7px; border: 1px solid; border-radius: 12px; }
+.memory-photo-frame { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; border-radius: 8px; display: grid; place-items: center; }
+.memory-photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+.memory-photo-cover, .memory-photo-pending { position: absolute; left: 5px; max-width: calc(100% - 10px); padding: 3px 6px; border-radius: 99px; color: #fff; font-size: 7px; line-height: 1.2; }
+.memory-photo-cover { top: 5px; }
+.memory-photo-pending { bottom: 5px; background: rgba(28,20,16,.78); }
+.memory-photo-caption { width: 100%; min-height: 34px; padding: 8px 2px 5px; border: 0; background: transparent; text-align: left; font-size: 9px; line-height: 1.35; cursor: pointer; }
+.memory-photo-caption-form label { display: block; padding-top: 7px; font-size: 9px; }
+.memory-photo-caption-form input { box-sizing: border-box; width: 100%; margin-top: 4px; padding: 8px; border: 1px solid; border-radius: 8px; font: inherit; }
+.memory-photo-caption-form > div { display: flex; gap: 5px; margin-top: 6px; }
+.memory-photo-actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+.memory-photo-actions button:disabled { opacity: .35; cursor: default !important; }
+.memory-add-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+.memory-add-actions > * { flex: 1 1 145px; }
+.memory-photo-status, .memory-photo-error { margin: 8px 0 0; font-size: 9px; line-height: 1.4; }
+.memory-note-section { padding-top: 15px; margin-top: 15px; border-top: 1px solid var(--isekaid-border); }
+.memory-note-section > strong { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+.memory-note-section p { margin: 8px 0 10px; font-size: 11px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.memory-note-section label { display: block; margin-top: 8px; font-size: 10px; line-height: 1.4; }
+.memory-note-section textarea { box-sizing: border-box; display: block; width: 100%; margin-top: 6px; padding: 10px; border: 1px solid; border-radius: 10px; resize: vertical; font: inherit; font-size: 12px; }
+.memory-note-controls { display: flex; align-items: center; gap: 7px; margin-top: 7px; }
+.memory-note-controls small { margin-right: auto; }
+.memory-filter { display: flex; align-items: center; gap: 7px; margin: 12px 0; font-size: 11px; }
+
+@keyframes isekaid-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes isekaid-route-enter {
+  from { opacity: .35; transform: translateX(7px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes isekaid-shimmer { to { transform: translateX(100%); } }
+
+@keyframes today-step-in {
+  from { opacity: .45; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .isekaid-shell {
+    width: 100vw !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .isekaid-shell {
+    width: min(100vw, 760px) !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+  }
+  .isekaid-editorial-header { min-height: 88px; padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
+}
+
+@media (max-width: 350px) {
+  .isekaid-editorial-header { padding-left: 16px; padding-right: 16px; }
+  .isekaid-editorial-header::after { left: 16px; }
+  .isekaid-section-heading { margin-top: 20px; }
+  .isekaid-bottom-nav button span { font-size: 9px !important; }
+}
+
+@media (max-width: 380px) {
+  .travel-dashboard__content, .travel-dashboard__header { padding-left: 16px; padding-right: 16px; }
+  .travel-dashboard__active-tools { gap: 4px; }
+  .travel-dashboard__active-tools button { min-height: 58px; }
+  .travel-dashboard__active-tools span { font-size: 8px; }
+  .my-japan-screen-content { padding-left: 16px; padding-right: 16px; }
+  .my-japan-script-choice button { width: 31px; }
+}
+
+@media (min-width: 412px) and (max-width: 600px) {
+  .today-session, .today-travel { padding-left: 22px !important; padding-right: 22px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .isekaid-screen-enter, .isekaid-route-enter, .isekaid-stagger > *, .isekaid-skeleton::after, .today-active-step, .my-japan-detail-page { animation: none !important; }
+  .isekaid-interactive, .isekaid-chip { transition: none !important; }
+  .travel-dashboard__progress span { transition: none !important; }
+  .my-japan-switch span { transition: none !important; }
+}

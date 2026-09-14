@@ -6,20 +6,12 @@
 // d'Explorer (traditions, codes sociaux…) qui est du JSON statique packagé
 // au build, ceci suit le pattern dynamique déjà en place pour DailyFeed.jsx.
 //
-// Déblocage : pas par catégorie entière comme LOCKABLE (App.jsx), mais item
-// par item — la Nième découverte générée se débloque au Nième palier de
-// DISCOVERY_UNLOCK_DAYS. Au-delà du 14e palier (jour 30), tout ce qui est
-// généré depuis est débloqué (même philosophie que FULL_FREE_DAY=30).
+// Toutes les découvertes de base sont accessibles. La date de publication
+// sert uniquement à choisir la suggestion du jour, jamais à créer un paywall.
 // ─────────────────────────────────────────────────────────────────────────────
 import { useState, useEffect } from "react";
 import { fetchExploreDiscoveries } from "./supabase";
 import { SpeakButton } from "./tts";
-
-export const DISCOVERY_UNLOCK_DAYS = [1,2,3,5,7,10,12,15,18,20,22,25,27,30];
-
-export function requiredDay(index){
-  return index < DISCOVERY_UNLOCK_DAYS.length ? DISCOVERY_UNLOCK_DAYS[index] : 30;
-}
 
 export function useExploreDiscoveries(){
   const [items, setItems] = useState(null); // null = chargement, [] = vide
@@ -31,20 +23,12 @@ export function useExploreDiscoveries(){
   return items;
 }
 
-// La dernière découverte débloquée par le streak actuel — c'est celle-là
-// qu'on tease dans "Nouveau aujourd'hui" sur l'accueil (App.jsx), pas
-// forcément la plus récemment générée : le déblocage est personnel (streak),
-// pas calendaire, contrairement au reste de la section.
-export function useLatestUnlockedDiscovery(streak, isPremium){
+// Nom conservé pour compatibilité : la suggestion correspond désormais à la
+// dernière découverte publiée et ne dépend plus du streak ni de Premium.
+export function useLatestUnlockedDiscovery(){
   const items = useExploreDiscoveries();
   if(!items || items.length === 0) return null;
-  const bestStreak = Math.max(streak?.count||0, streak?.best||0);
-  let unlockedCount = 0;
-  for(let i=0;i<items.length;i++){
-    if(isPremium || bestStreak >= requiredDay(i)) unlockedCount = i+1;
-    else break;
-  }
-  return unlockedCount > 0 ? items[unlockedCount-1] : null;
+  return items[items.length-1];
 }
 
 // Pastille "Nouveau" — même convention que le reste de l'app (App.jsx :
@@ -94,10 +78,15 @@ export function DiscoveryTeaserCard({C, discovery, isNew, onOpen}){
   );
 }
 
-export function DiscoveriesScreen({C, streak, isPremium, onBack}){
+export function DiscoveriesScreen({C, onBack, backRef}){
   const items = useExploreDiscoveries();
   const [selected, setSelected] = useState(null);
-  const bestStreak = Math.max(streak?.count||0, streak?.best||0);
+  useEffect(()=>{
+    if(!backRef)return;
+    const pop=()=>{if(selected){setSelected(null);return true;}return false;};
+    backRef.current=pop;
+    return()=>{if(backRef.current===pop)backRef.current=null;};
+  },[backRef,selected]);
 
   if(selected){
     return <DiscoveryDetail C={C} d={selected} onBack={()=>setSelected(null)}/>;
@@ -105,7 +94,7 @@ export function DiscoveriesScreen({C, streak, isPremium, onBack}){
 
   return (
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-      <div style={{padding:"50px 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
+      <div style={{padding:"calc(24px + env(safe-area-inset-top, 0px)) 20px 12px",background:C.bg,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10}}>
         {onBack && <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>発見 · DÉCOUVERTES</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>Découvertes du jour</div>
@@ -120,37 +109,27 @@ export function DiscoveriesScreen({C, streak, isPremium, onBack}){
             La première découverte arrive bientôt 🎌
           </div>
         )}
-        {items && items.map((d,i)=>{
-          const day = requiredDay(i);
-          const unlocked = isPremium || bestStreak >= day;
-          return (
-            <div key={d.id} className={unlocked?"lift":undefined} onClick={()=>unlocked && setSelected(d)} style={{
+        {items && items.map(d=>(
+            <div key={d.id} className="lift" onClick={()=>setSelected(d)} style={{
               background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"16px 16px",
-              display:"flex",alignItems:"center",gap:14,cursor:unlocked?"pointer":"default",
-              boxShadow:unlocked?"0 2px 10px rgba(0,0,0,0.03)":"none",opacity:unlocked?1:0.75,
+              display:"flex",alignItems:"center",gap:14,cursor:"pointer",
+              boxShadow:"0 2px 10px rgba(0,0,0,0.03)",
             }}>
-              {unlocked && d.image_url ? (
+              {d.image_url ? (
                 <img src={d.image_url} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}} style={{width:56,height:56,borderRadius:16,objectFit:"cover",flexShrink:0}}/>
               ) : (
-                <span style={{fontSize:unlocked?28:20,flexShrink:0,width:56,height:56,borderRadius:"50%",background:unlocked?C.s2:`${C.gold}1a`,display:"flex",alignItems:"center",justifyContent:"center"}}>{unlocked?"🎴":"🔒"}</span>
+                <span style={{fontSize:28,flexShrink:0,width:56,height:56,borderRadius:"50%",background:C.s2,display:"flex",alignItems:"center",justifyContent:"center"}}>🎴</span>
               )}
               <div style={{flex:1,minWidth:0}}>
-                {unlocked ? (
-                  <>
-                    <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
-                      <span style={{fontSize:15,color:C.text,fontWeight:500}}>{d.title}</span>
-                      {d.kanji && <span style={{fontSize:12,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{d.kanji}</span>}
-                    </div>
-                    <div style={{fontSize:12,color:C.t2,lineHeight:1.45}}>{d.subtitle}</div>
-                  </>
-                ) : (
-                  <div style={{fontSize:13,color:C.t3}}>Accessible après {day} jour{day>1?"s":""} de streak</div>
-                )}
+                <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
+                  <span style={{fontSize:15,color:C.text,fontWeight:500}}>{d.title}</span>
+                  {d.kanji && <span style={{fontSize:12,color:C.t3,fontFamily:"'Noto Serif JP',serif"}}>{d.kanji}</span>}
+                </div>
+                <div style={{fontSize:12,color:C.t2,lineHeight:1.45}}>{d.subtitle}</div>
               </div>
-              {unlocked && <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>}
+              <div style={{fontSize:18,color:C.t3,flexShrink:0}}>›</div>
             </div>
-          );
-        })}
+        ))}
       </div>
     </div>
   );
@@ -165,7 +144,7 @@ function DiscoveryDetail({C, d, onBack}){
           <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.1),rgba(15,11,8,0.55))"}}/>
         </div>
       )}
-      <div style={{padding:"50px 20px 24px",background:`linear-gradient(160deg,rgba(201,70,61,0.1) 0%,transparent 90%)`}}>
+      <div style={{padding:"calc(24px + env(safe-area-inset-top, 0px)) 20px 24px",background:`linear-gradient(160deg,rgba(201,70,61,0.1) 0%,transparent 90%)`}}>
         <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:20}}>
           ‹ Découvertes
         </button>

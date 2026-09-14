@@ -18,6 +18,8 @@ export function saveFavs(list) {
 }
 
 export function favId(type, item) {
-  const label = item?.expression || item?.titre || item?.nom_jp || item?.nom || "";
+  const label = type==="prefecture"
+    ? item?.id || item?.slug || item?.nameFr || item?.name || ""
+    : item?.expression || item?.titre || item?.nom_jp || item?.nom || "";
   return `${type}:${label}`;
 }

@@ -10,6 +10,7 @@ import { supabaseEnabled, fetchTutorConversations, fetchTutorMessages, sendTutor
 import { TUTOR_SCENARIOS, getTutorScenario } from "./tutorScenarios";
 import { SpeakButton } from "./tts";
 import { trackProductEvent } from "./services/analytics/analytics.js";
+import { getPremiumAccess, PREMIUM_FEATURES } from "./features/premium/premiumAccess.js";
 
 // Niveau estimé à partir de ce que l'utilisateur a déjà accompli ailleurs
 // dans l'app (maîtrise SRS des kana, scénarios de dialogue réussis, meilleur
@@ -94,11 +95,16 @@ export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isP
   const [activeConversationId, setActiveConversationId] = useState(null);
   const [bridgeContext, setBridgeContext] = useState(initialBridge?.bridgeContext || null);
   const niveau = estimateNiveau(kanaProgress, scenProgress, streak, selfReportedLevel);
+  const extraMessagesAccess=getPremiumAccess(PREMIUM_FEATURES.TUTOR_EXTRA_MESSAGES,{isPremium});
 
   useEffect(()=>{
-    if(initialBridge) onBridgeConsumed?.();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+    if(!initialBridge) return;
+    setActiveScenarioId(initialBridge.tutorScenarioId || null);
+    setActiveConversationId(null);
+    setBridgeContext(initialBridge.bridgeContext || null);
+    setView("chat");
+    onBridgeConsumed?.();
+  },[initialBridge,onBridgeConsumed]);
 
   const openScenario = (scenarioId)=>{
     setActiveScenarioId(scenarioId);
@@ -132,7 +138,7 @@ export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isP
   return (
     <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
       {/* En-tête — Header.tsx (bolt) */}
-      <div style={{padding:"50px 20px 14px",background:`${C.bg}e6`,backdropFilter:"blur(10px)",borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10,display:"flex",alignItems:"center",gap:10}}>
+      <div style={{padding:"calc(24px + env(safe-area-inset-top, 0px)) 20px 14px",background:`${C.bg}e6`,backdropFilter:"blur(10px)",borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:10,display:"flex",alignItems:"center",gap:10}}>
         {onBack && (
           <button onClick={onBack} aria-label="Retour" style={{width:34,height:34,borderRadius:"50%",border:"none",background:"transparent",color:C.t2,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>‹</button>
         )}
@@ -153,10 +159,10 @@ export function TutorScreen({C, session, kanaProgress, scenProgress, streak, isP
         </div>
 
         {/* Limite quotidienne */}
-        {!isPremium && (
+        {!extraMessagesAccess.allowed && (
           <div style={{...card,background:`linear-gradient(135deg,${C.indigo}14,transparent)`,border:`1px solid ${C.indigo}33`,padding:16}}>
             <div style={{fontSize:13,fontWeight:500,color:C.text,marginBottom:3}}>Tuteur gratuit</div>
-            <div style={{fontSize:12,color:C.t2,marginBottom:10}}>8 messages par jour · Premium débloque l'illimité</div>
+            <div style={{fontSize:12,color:C.t2,marginBottom:10}}>Quelques messages chaque jour pour essayer · Premium élargit les quotas</div>
             <button onClick={onOpenPremium} style={{background:"none",border:"none",color:C.indigo,fontSize:13,fontWeight:600,cursor:"pointer",padding:0}}>Passer Premium →</button>
           </div>
         )}
@@ -270,6 +276,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, journey
   const [errorDetail, setErrorDetail] = useState(null); // message technique brut, pour diagnostic
   const [freeLimit, setFreeLimit] = useState(5);
   const [usage, setUsage] = useState(null);
+  const extraMessagesAccess=getPremiumAccess(PREMIUM_FEATURES.TUTOR_EXTRA_MESSAGES,{isPremium});
   const scrollRef = useRef(null);
 
   useEffect(()=>{
@@ -325,7 +332,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, journey
         romaji: res.romaji || "", correction: res.correction || "",
       }]);
       setSuggestions(Array.isArray(res.suggestions) ? res.suggestions : []);
-      setUsage({usedToday:res.usedToday||0,dailyLimit:isPremium?20:freeLimit,usedMonth:res.usedMonth||0,monthlyLimit:res.monthlyLimit||300});
+      setUsage({usedToday:res.usedToday||0,dailyLimit:res.dailyLimit||(extraMessagesAccess.allowed?20:freeLimit),usedMonth:res.usedMonth||0,monthlyLimit:res.monthlyLimit||300});
       onMissionTrigger?.("tutor");
     } catch(e){
       console.error("[tutor] échec envoi message:", e);
@@ -403,7 +410,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, journey
               Tu as utilisé tes {freeLimit} messages gratuits du jour 🎌
             </div>
             <div style={{fontSize:12.5,color:C.t2,lineHeight:1.6,marginBottom:14}}>
-              Premium débloque le tuteur illimité, tous les scénarios et l'historique complet de tes conversations.
+              Premium élargit les quotas de conversation et donne accès aux outils avancés du tuteur. Les scénarios guidés et l’apprentissage de base restent accessibles.
             </div>
             <button onClick={onOpenPremium} style={{width:"100%",boxSizing:"border-box",padding:"12px",background:C.red,border:"none",borderRadius:12,color:"#fff",fontSize:13.5,fontWeight:700,cursor:"pointer"}}>
               Passer Premium

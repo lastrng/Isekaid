@@ -1,25 +1,121 @@
-import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { AlertTriangle, ChevronRight, Settings } from "lucide-react";
 
-import { MemoryJournal } from "./MemoryJournal.jsx";
+import { ProductCard, SectionHeading } from "../shared/ProductUI.jsx";
 
-export function MyJapanSection({C,summary,onResolveTrip,onMemoryPhoto,onMemoryNote,getMemoryPhotoUrl,syncStatus,onSyncNow}) {
-  const [openTrip,setOpenTrip]=useState(null);
-  const stats=[[summary.completedTrips,"voyages"],[summary.daysInJapanKnown?summary.daysInJapan:"—","jours au Japon"],[summary.visitedPlaces,"lieux faits"],[summary.visitedCities,"villes"],[summary.visitedPrefectures===null?"—":summary.visitedPrefectures,"préfectures"],[summary.learnedExpressionsKnown?summary.learnedExpressions:"—","expressions apprises"]];
-  return <section aria-labelledby="my-japan-title" style={{marginBottom:18}}>
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:10}}><h2 id="my-japan-title" style={{fontSize:16,color:C.text,margin:0,fontFamily:"'Noto Serif JP',serif"}}>Mon Japon</h2><span style={{fontSize:10,color:C.t3}}>Données vérifiées</span></div>
-    <div style={{padding:14,background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,boxShadow:C.shadow}}>
-      {syncStatus&&<div style={{display:"flex",alignItems:"center",gap:9,padding:"10px 11px",marginBottom:12,borderRadius:12,background:C.s2}}><span aria-hidden style={{width:8,height:8,borderRadius:"50%",background:syncStatus.hasError?C.red:syncStatus.pending?C.gold:C.green}}/><div style={{flex:1,minWidth:0}}><div style={{fontSize:11,fontWeight:650,color:C.text}}>{syncStatus.hasError?"Synchronisation interrompue":syncStatus.pending?`${syncStatus.pending} élément${syncStatus.pending>1?"s":""} à synchroniser`:"Sauvegarde cloud à jour"}</div><div style={{fontSize:9,color:C.t3,marginTop:2}}>{syncStatus.lastSyncedAt?`Dernière sauvegarde ${new Date(syncStatus.lastSyncedAt).toLocaleString("fr-FR")}`:"Première sauvegarde en attente"}</div></div>{syncStatus.pending>0&&<button onClick={onSyncNow} style={{border:0,borderRadius:9,padding:"7px 9px",background:C.s1,color:C.red,fontSize:10}}>Réessayer</button>}</div>}
-      {summary.awaitingConfirmation.length>0&&<div style={{padding:13,marginBottom:12,borderRadius:14,background:`${C.gold}12`,border:`1px solid ${C.gold}40`}}><div style={{fontSize:12,fontWeight:700,color:C.text,marginBottom:4}}>Voyage à confirmer</div><div style={{fontSize:10,color:C.t2,lineHeight:1.5,marginBottom:10}}>Une date passée ne suffit pas pour compter un voyage comme vécu.</div>{summary.awaitingConfirmation.map(trip=><div key={trip.id} style={{paddingTop:9,borderTop:`1px solid ${C.border}`}}><div style={{fontSize:12,color:C.text,fontWeight:600}}>{trip.title}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginTop:8}}><button onClick={()=>onResolveTrip?.(trip.id,true)} style={{padding:9,border:0,borderRadius:10,background:C.green,color:"#fff",fontSize:11}}>Oui, effectué</button><button onClick={()=>onResolveTrip?.(trip.id,false)} style={{padding:9,border:`1px solid ${C.border}`,borderRadius:10,background:C.s1,color:C.t2,fontSize:11}}>Non / annulé</button></div></div>)}</div>}
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,textAlign:"center"}}>{stats.map(([value,label])=><div key={label} style={{padding:"10px 4px",background:C.s2,borderRadius:12}}><div style={{fontSize:18,fontWeight:750,color:C.text}}>{value}</div><div style={{fontSize:9,color:C.t3,marginTop:2}}>{label}</div></div>)}</div>
-      {summary.regionNames.length>0&&<div style={{display:"flex",gap:6,flexWrap:"wrap",marginTop:12}}>{summary.regionNames.map(region=><span key={region} style={{padding:"4px 9px",fontSize:10,color:C.t2,background:C.s2,borderRadius:99}}>{region}</span>)}</div>}
-      {summary.stamps.length>0&&<><div style={{fontSize:10,fontWeight:700,color:C.t3,letterSpacing:".12em",marginTop:16,marginBottom:9}}>PASSEPORT</div><div style={{display:"flex",gap:9,overflowX:"auto",paddingBottom:4}}>{summary.stamps.map(stamp=><div key={stamp.id} style={{flexShrink:0,width:72,textAlign:"center"}}><div style={{width:54,height:54,margin:"0 auto 5px",borderRadius:"50%",border:`2px dashed ${C.red}`,background:`${C.red}10`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:25}}>{stamp.emoji}</div><div style={{fontSize:9,color:C.t2,lineHeight:1.25}}>{stamp.label}</div></div>)}</div></>}
-      {summary.badges?.length>0&&<><div style={{fontSize:10,fontWeight:700,color:C.t3,letterSpacing:".12em",marginTop:16,marginBottom:9}}>BADGES</div><div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:4}}>{summary.badges.map(badge=><div key={badge.id} title={badge.description} style={{flexShrink:0,width:92,padding:9,borderRadius:12,background:C.s2,border:`1px solid ${C.border}`,textAlign:"center"}}><div style={{fontSize:22}}>{badge.emoji}</div><div style={{fontSize:10,color:C.text,fontWeight:650,lineHeight:1.2,marginTop:4}}>{badge.label}</div></div>)}</div></>}
-      {summary.anniversaries?.length>0&&<div style={{marginTop:15,padding:12,borderRadius:14,background:`${C.gold}12`,border:`1px solid ${C.gold}35`}}><div style={{fontSize:10,color:C.gold,letterSpacing:".12em",fontWeight:700}}>SOUVENIR DU JOUR</div>{summary.anniversaries.map(item=><div key={item.tripId} style={{fontSize:12,color:C.text,marginTop:5}}>Il y a {item.yearsAgo} an{item.yearsAgo>1?"s":""}, tu partais pour <strong>{item.title}</strong>.</div>)}</div>}
-      {summary.collections?.length>0&&<><div style={{fontSize:10,fontWeight:700,color:C.t3,letterSpacing:".12em",marginTop:17,marginBottom:8}}>COLLECTIONS</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>{summary.collections.map(collection=><div key={collection.id} style={{padding:12,borderRadius:14,background:`linear-gradient(145deg,${C.s2},${C.s1})`,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:10}}><span style={{fontSize:24}}>{collection.emoji}</span><span><strong style={{display:"block",fontSize:16,color:C.text}}>{collection.count}{collection.total?` / ${collection.total}`:""}</strong><span style={{fontSize:10,color:C.t3}}>{collection.label}</span></span></div>)}</div></>}
-      {summary.completedTripDetails.length>0&&<><div style={{fontSize:10,fontWeight:700,color:C.t3,letterSpacing:".12em",marginTop:17,marginBottom:8}}>VOYAGES PASSÉS</div>{summary.completedTripDetails.map(trip=>{const open=openTrip===trip.id;return <div key={trip.id} style={{borderTop:`1px solid ${C.border}`,padding:"11px 2px"}}><button onClick={()=>setOpenTrip(open?null:trip.id)} style={{width:"100%",display:"flex",alignItems:"center",gap:10,border:0,background:"transparent",color:C.text,textAlign:"left",padding:0}}><span style={{fontSize:21}}>🗾</span><span style={{flex:1}}><span style={{display:"block",fontSize:13,fontWeight:650}}>{trip.title}</span><span style={{display:"block",fontSize:10,color:C.t3,marginTop:2}}>{trip.days} jours · {trip.completedPlaces} lieux réalisés{trip.notes?` · ${trip.notes} notes`:""}</span></span>{open?<ChevronUp size={17}/>:<ChevronDown size={17}/>}</button>{open&&<div style={{padding:"10px 0 0 31px"}}>{trip.cities.length>0&&<div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:8}}>{trip.cities.map(city=><span key={city.id} style={{fontSize:10,color:C.t2}}>{city.emoji} {city.name}</span>)}</div>}{trip.places.length>0?<div style={{fontSize:11,color:C.t2,lineHeight:1.7}}>{trip.places.map(place=><div key={place.id}>{place.emoji} {place.name}</div>)}</div>:<div style={{fontSize:11,color:C.t3}}>Aucun lieu n’avait été marqué comme fait.</div>}</div>}</div>})}</>}
-      <MemoryJournal C={C} memories={summary.memories} getPhotoUrl={getMemoryPhotoUrl} onPhoto={onMemoryPhoto} onNote={onMemoryNote}/>
-      {summary.visitedPlaces===0&&<div style={{fontSize:11,color:C.t3,lineHeight:1.5,marginTop:11,textAlign:"center"}}>Marque un lieu comme fait dans une journée pour commencer ton passeport.</div>}
+function ActionRow({ C, children, detail, onClick, icon, last = false }) {
+  return <button type="button" onClick={onClick} className="my-japan-action-row" style={{ borderBottom: last ? "none" : `1px solid ${C.border}`, color: C.text }}>
+    <span className="my-japan-action-icon" aria-hidden>{icon}</span>
+    <span style={{ flex: 1, minWidth: 0 }}>
+      <strong>{children}</strong>
+      {detail && <small style={{ color: C.t3 }}>{detail}</small>}
+    </span>
+    <ChevronRight size={17} color={C.t3}/>
+  </button>;
+}
+
+function formatTripDates(trip) {
+  if (!trip?.startDate) return "Voyage terminé";
+  const formatter = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", year: "numeric" });
+  const start = formatter.format(new Date(`${trip.startDate}T12:00:00`));
+  if (!trip.endDate || trip.endDate === trip.startDate) return start;
+  return `${start} – ${formatter.format(new Date(`${trip.endDate}T12:00:00`))}`;
+}
+
+export function MyJapanHeader({ C, onSettings }) {
+  return <header className="my-japan-header">
+    <div>
+      <div className="my-japan-kicker" style={{ color: C.red }}>私の日本</div>
+      <h1 style={{ color: C.text }}>Mon Japon</h1>
     </div>
+    <button type="button" className="my-japan-icon-button" style={{ background: C.s1, borderColor: C.border, color: C.text }} onClick={onSettings} aria-label="Ouvrir Profil et réglages">
+      <Settings size={20}/>
+    </button>
+  </header>;
+}
+
+function PassportSummary({ C, summary, user, rank, streak, onOpen }) {
+  const stats = [
+    [`${summary.visitedPrefectures || 0}/${summary.prefectureTotal || 47}`, "Préfectures visitées"],
+    [summary.savedPlaces || 0, "Lieux"],
+    [summary.completedTrips || 0, "Voyages"],
+  ];
+  return <ProductCard C={C} className="my-japan-passport" style={{ padding: 0, overflow: "hidden", background: `linear-gradient(145deg,${C.s1},${C.s2})` }}>
+    <div className="my-japan-passport-top" style={{ background: `linear-gradient(135deg,${C.red}18,transparent 68%)`, borderBottomColor: C.border }}>
+      <div className="my-japan-kicker" style={{ color: C.red }}>PASSEPORT ISEKAI'D</div>
+      <div className="my-japan-identity">
+        <div className="my-japan-avatar" style={{ background: C.s1, borderColor: C.border, color: C.red }}>
+          {user?.photo ? <img src={user.photo} alt="" referrerPolicy="no-referrer"/> : user?.emojiAvatar || (user?.name || "V")[0].toUpperCase()}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <strong className="my-japan-name" style={{ color: C.text }}>{user?.name || "Mon Japon"}</strong>
+          <span className="my-japan-rank" style={{ color: C.t3 }}>{rank?.emoji || "🌱"} {rank?.title || "Curieux du Japon"}</span>
+        </div>
+        <div className="my-japan-streak" style={{ background: `${C.red}10`, color: C.red }} aria-label={`${streak?.count || 0} jours de série`}>
+          🔥 <strong>{streak?.count || 0}</strong> j
+        </div>
+      </div>
+    </div>
+    <div className="my-japan-passport-stats">
+      {stats.map(([value, label]) => <div key={label}><strong style={{ color: C.text }}>{value}</strong><small style={{ color: C.t3 }}>{label}</small></div>)}
+    </div>
+    <button type="button" className="my-japan-card-link" style={{ color: C.red, borderTopColor: C.border }} onClick={onOpen}>Voir mon passeport <ChevronRight size={15}/></button>
+  </ProductCard>;
+}
+
+function CollectionsSummary({ C, summary, onOpen }) {
+  return <section>
+    <SectionHeading C={C} eyebrow="Mes collections" title="Ce que j’ai gardé"/>
+    <div className="my-japan-collection-grid">
+      {(summary.dashboardCollections || []).map(collection => <button key={collection.id} type="button" onClick={onOpen} style={{ background: C.s1, borderColor: C.border, color: C.text }}>
+        <span aria-hidden>{collection.emoji}</span><strong>{collection.label}</strong><b style={{ color: collection.count ? C.red : C.t3 }}>{collection.count}</b>
+      </button>)}
+    </div>
+    <button type="button" className="my-japan-text-link" style={{ color: C.red }} onClick={onOpen}>Voir toutes mes collections <ChevronRight size={15}/></button>
+  </section>;
+}
+
+function MemoriesSummary({ C, summary, onOpen, onOpenTravel }) {
+  const memory = summary.latestMemory;
+  return <section>
+    <SectionHeading C={C} eyebrow="Mes souvenirs" title={memory ? "Mon histoire au Japon" : "La suite de mon histoire"}/>
+    {memory ? <ProductCard C={C} style={{ padding: 15 }}>
+      <div className="my-japan-memory-title" style={{ color: C.text }}>{memory.title}</div>
+      <div className="my-japan-memory-date" style={{ color: C.t3 }}>{formatTripDates(memory)}</div>
+      <div className="my-japan-memory-meta" style={{ color: C.t2 }}>
+        <span>{memory.completedPlaces} lieu{memory.completedPlaces > 1 ? "x" : ""} visité{memory.completedPlaces > 1 ? "s" : ""}</span>
+        <span>{memory.visitedPrefectures || 0} préfecture{memory.visitedPrefectures > 1 ? "s" : ""}</span>
+        <span>{memory.daysInJapan || memory.days || 0} jour{(memory.daysInJapan || memory.days) > 1 ? "s" : ""}</span>
+      </div>
+      <button type="button" className="my-japan-primary-link" style={{ background: C.red }} onClick={onOpen}>Voir mon carnet <ChevronRight size={15}/></button>
+    </ProductCard> : <ProductCard C={C} style={{ padding: 15 }}>
+      <strong style={{ color: C.text, fontSize: 13 }}>Ton histoire au Japon commencera ici.</strong>
+      <p style={{ color: C.t2, fontSize: 11, lineHeight: 1.55, margin: "6px 0 12px" }}>Après ton premier voyage, retrouve ton itinéraire, tes lieux visités et ton carnet.</p>
+      <button type="button" className="my-japan-text-link my-japan-text-link--flush" style={{ color: C.red }} onClick={onOpenTravel}>Voir mon voyage <ChevronRight size={15}/></button>
+    </ProductCard>}
+  </section>;
+}
+
+function AchievementsSummary({ C, summary, onStamps, onBadges }) {
+  const next = summary.nextBadge;
+  return <section>
+    <SectionHeading C={C} eyebrow="Mes accomplissements" title="Les étapes qui comptent"/>
+    <ProductCard C={C} style={{ padding: "0 13px" }}>
+      <ActionRow C={C} icon="🔴" detail="Tampons de voyage et d’apprentissage" onClick={onStamps}>Tampons <b style={{ color: C.t3 }}>{summary.stamps?.length || 0}</b></ActionRow>
+      <ActionRow C={C} icon="🏅" detail={next ? `Prochain : ${next.label}` : "Tous les badges sont débloqués"} onClick={onBadges} last>Badges <b style={{ color: C.t3 }}>{summary.badges?.length || 0}/{summary.badgeProgress?.length || 0}</b></ActionRow>
+    </ProductCard>
+  </section>;
+}
+
+export function MyJapanSection({ C, summary, user, rank, streak, collectionsRef, guideRef, syncStatus, onNavigate, onOpenTravel }) {
+  const needsSync = Boolean(syncStatus?.hasError || syncStatus?.pending);
+  return <section aria-label="Ce que j’ai gardé, vécu et accompli" className="my-japan-dashboard">
+    <MyJapanHeader C={C} onSettings={() => onNavigate("settings")}/>
+    {needsSync && <button type="button" className="my-japan-sync-alert" style={{ background: `${C.gold}12`, borderColor: `${C.gold}55`, color: C.text }} onClick={() => onNavigate("data-sync")}>
+      <AlertTriangle size={17} color={C.gold}/><span><strong>{syncStatus.hasError ? "Synchronisation nécessaire" : "Synchronisation en attente"}</strong><small style={{ color: C.t3 }}>Résoudre dans Données & synchronisation</small></span><ChevronRight size={16} color={C.t3}/>
+    </button>}
+    <div ref={guideRef}><PassportSummary C={C} summary={summary} user={user} rank={rank} streak={streak} onOpen={() => onNavigate("passport")}/></div>
+    <div ref={collectionsRef}><CollectionsSummary C={C} summary={summary} onOpen={() => onNavigate("collections")}/></div>
+    <MemoriesSummary C={C} summary={summary} onOpen={() => onNavigate("memories")} onOpenTravel={onOpenTravel}/>
+    <AchievementsSummary C={C} summary={summary} onStamps={() => onNavigate("stamps")} onBadges={() => onNavigate("badges")}/>
   </section>;
 }

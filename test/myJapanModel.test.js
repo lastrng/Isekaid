@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildMyJapanSummary, getTravelAnniversaries } from "../src/features/my-japan/myJapanModel.js";
+import { buildMyJapanSummary, getTravelAnniversaries, STAMP_TYPE_DEFINITIONS } from "../src/features/my-japan/myJapanModel.js";
 
 test("ne considère comme visités que les lieux explicitement terminés", () => {
   const summary=buildMyJapanSummary({currentDate:new Date(2026,8,5),cities:[{id:"tokyo",nom:"Tokyo",region:"Kantō",emoji:"🗼"}],places:[{id:"senso",nom:"Sensō-ji",emoji:"⛩️"}],trips:[{id:"trip1",titre:"Tokyo",dateDebut:"2026-08-01",jours:[{villeId:"tokyo",activites:[{lieuId:"senso",fait:true,note:"Très tôt"},{lieuId:"ueno",fait:false}]}]}]});
@@ -10,7 +10,7 @@ test("ne considère comme visités que les lieux explicitement terminés", () =>
   assert.deepEqual(summary.placeIds,["senso"]);
   assert.equal(summary.stamps.find(stamp=>stamp.type==="city").label,"Tokyo Stamp");
   assert.equal(summary.stamps.find(stamp=>stamp.type==="city").unlockedBy,"place_or_day_completed");
-  assert.equal(summary.stamps.find(stamp=>stamp.type==="region").label,"Kantō Stamp");
+  assert.equal(summary.stamps.find(stamp=>stamp.type==="prefecture").label,"Tokyo · Préfecture");
   assert.equal(summary.stamps.find(stamp=>stamp.type==="trip").unlockedBy,"trip_completed");
   assert.equal(summary.completedTripDetails[0].places[0].name,"Sensō-ji");
   assert.equal(summary.completedTripDetails[0].notes,1);
@@ -67,6 +67,19 @@ test("agrège les favoris et apprentissages seulement quand les sources sont fou
   assert.equal(unknown.collections.some(item => item.id === "learning"), false);
 });
 
+test("sépare les préfectures découvertes des préfectures physiquement visitées",()=>{
+  const summary=buildMyJapanSummary({
+    prefectureProgress:{version:1,entries:{tokyo:{discovered:true},kyoto:{discovered:true}}},
+    cities:[{id:"tokyo",prefecture:"Tokyo"},{id:"kyoto",prefecture:"Kyoto"}],
+    trips:[{status:"completed",jours:[{villeId:"tokyo",activites:[{fait:true}]},{villeId:"kyoto",activites:[{fait:false}]}]}],
+  });
+  assert.equal(summary.discoveredPrefectures,2);
+  assert.equal(summary.visitedPrefectures,1);
+  assert.equal(summary.prefectureTotal,47);
+  assert.equal(summary.collections.find(item=>item.id==="prefectures_discovered").count,2);
+  assert.equal(summary.collections.find(item=>item.id==="prefectures_visited").count,1);
+});
+
 test("calcule les badges thématiques et les anniversaires avec des preuves", () => {
   const summary = buildMyJapanSummary({
     currentDate: new Date("2026-09-06"),
@@ -79,4 +92,41 @@ test("calcule les badges thématiques et les anniversaires avec des preuves", ()
   assert.ok(summary.badges.some(badge => badge.id === "ramen_rookie"));
   assert.equal(summary.anniversaries[0].yearsAgo, 1);
   assert.equal(getTravelAnniversaries([{ id: "future", dateDebut: "2026-09-06" }], new Date("2026-09-06")).length, 0);
+});
+
+test("structure Mon Japon en passeport, collections, souvenirs et accomplissements",()=>{
+  const favorites=[
+    {type:"lieu",item:{id:"ramen",nom:"Ramen-ya"}},
+    {type:"culture",item:{id:"tea",titre:"La cérémonie du thé"}},
+    {type:"repas",item:{id:"soba",nom:"Soba"}},
+    {type:"prefecture",item:{id:"tokyo",nameFr:"Tokyo"}},
+    {type:"expr",item:{id:"thanks",expression:"ありがとう"}},
+  ];
+  const kanaProgress=Object.fromEntries(Array.from({length:10},(_,index)=>[`kana-${index}`,{level:3}]));
+  const summary=buildMyJapanSummary({
+    currentDate:new Date("2026-09-10T12:00:00"),favorites,kanaProgress,streak:{count:30,best:30},
+    prefectureProgress:{version:1,entries:{tokyo:{discovered:true}}},
+    cities:[{id:"tokyo",nom:"Tokyo",region:"Kantō",prefecture:"Tokyo"}],
+    places:[{id:"ramen",nom:"Ramen-ya"}],
+    trips:[
+      {id:"future",titre:"Plus tard",dateDebut:"2026-10-01",dateFin:"2026-10-03",jours:[]},
+      {id:"active",titre:"Maintenant",dateDebut:"2026-09-09",dateFin:"2026-09-12",jours:[]},
+      {id:"past",titre:"Tokyo vécu",status:"completed",dateDebut:"2026-08-01",dateFin:"2026-08-02",jours:[{num:1,villeId:"tokyo",activites:[{id:"a",lieuId:"ramen",fait:true,note:"Très bon"}]}]},
+    ],
+  });
+  assert.equal(summary.savedPlaces,1);
+  assert.deepEqual(summary.favoriteCollections.map(collection=>collection.count),[1,1,1,1,1]);
+  assert.equal(summary.collectionSchema.supportsCustomCollections,true);
+  assert.equal(summary.tripCollections.upcoming[0].id,"future");
+  assert.equal(summary.tripCollections.current[0].id,"active");
+  assert.equal(summary.tripCollections.completed[0].id,"past");
+  assert.equal(summary.carnets[0].tripId,"past");
+  assert.equal("prefectures" in summary,false);
+  assert.deepEqual(summary.dashboardCollections.map(collection=>[collection.label,collection.count]),[["Lieux",1],["Contenus",1],["Saveurs",1],["Expressions",1]]);
+  assert.equal(summary.latestMemory.id,"past");
+  assert.equal(summary.latestMemory.visitedPrefectures,1);
+  assert.ok(summary.stamps.some(stamp=>stamp.type==="prefecture"&&stamp.prefectureId==="tokyo"));
+  assert.ok(summary.stamps.some(stamp=>stamp.type==="learning"&&stamp.id==="learning:kana-10"));
+  assert.ok(summary.badges.some(badge=>badge.id==="japan_addict"));
+  assert.deepEqual(STAMP_TYPE_DEFINITIONS.map(type=>type.id),["prefecture","city","culture","learning","trip","special"]);
 });
