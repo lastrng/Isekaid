@@ -30,7 +30,10 @@ import { MOTION_CSS_VARS, withViewTransition, supportsViewTransitions } from "./
 import { flushSync, createPortal } from "react-dom";
 import { FeatureIntroScreen } from "./FeatureIntro";
 import { CelebrationOverlay } from "./Celebration";
-import { alignWords, extractSituationJP, jpMain, jpSub } from "./lib/japaneseText";
+import { alignWords, extractSituationJP, jpMain } from "./lib/japaneseText";
+import { ImageWithFallback } from "./components/ImageWithFallback.jsx";
+import { JapaneseDisplayContext, JapaneseSubtitle, Romaji, useJapaneseDisplay } from "./components/JapaneseDisplay.jsx";
+import { effectiveJapaneseScript, loadShowRomaji, saveShowRomaji } from "./lib/japanesePreferences.js";
 import { currentSeasonKey, seasonalLieux, SEASON_ACCENT } from "./lib/seasons";
 import { clearStoredNamespace } from "./lib/storage";
 import { normalizeProfile } from "./entities/user/profileModel";
@@ -677,7 +680,7 @@ function WikiPanel({C, entry, onClose, script}) {
         <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:14}}>
           <div>
             <div style={{fontSize:26,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{jpMain(entry, script)}</div>
-            <div style={{fontSize:12,color:color,fontStyle:"italic",marginBottom:2}}>{jpSub(entry, script)}</div>
+            <JapaneseSubtitle entry={entry} script={script} style={{fontSize:12,color:color,fontStyle:"italic",marginBottom:2}}/>
             <div style={{fontSize:16,fontWeight:500,color:C.text}}>{entry.mot}</div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
@@ -687,19 +690,15 @@ function WikiPanel({C, entry, onClose, script}) {
         </div>
         {/* Divider */}
         <div style={{height:1,background:C.border,marginBottom:14}}/>
-        {/* Image (Wikimedia Commons) si disponible */}
-        {entry.image && (
-          <div style={{marginBottom:14}}>
-            <img src={entry.image} alt={entry.mot} loading="lazy"
-              style={{width:"100%",height:180,objectFit:"cover",borderRadius:12,display:"block",background:C.s2}}
-              onError={(e)=>{ e.target.parentNode.style.display="none"; }}/>
-            {(entry.author || entry.licence) && (
+        {/* Image Wikimedia, avec repère visuel conservé hors ligne ou en cas d'échec. */}
+        <div style={{marginBottom:14}}>
+          <ImageWithFallback src={entry.image} emoji={entry.emoji || "📖"} alt={entry.mot} style={{width:"100%",height:180,borderRadius:12,background:`linear-gradient(135deg,${color}18,${C.s2})`,fontSize:48}}/>
+          {entry.image && (entry.author || entry.licence) && (
               <div style={{fontSize:9,color:C.t3,marginTop:5,textAlign:"right"}}>
                 {entry.author && `Photo : ${entry.author}`}{entry.author && entry.licence && " · "}{entry.licence && `${entry.licence}`} · Wikimedia Commons
               </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
         {/* Definition */}
         <p style={{fontSize:14,color:C.t2,lineHeight:1.8,margin:0}}>{entry.definition}</p>
         {/* Close */}
@@ -753,6 +752,7 @@ function LieuSpotlightDetail({C, db, lieu, onClose, isFav, toggleFav, onOpenConn
     <div style={{position:"fixed",inset:0,zIndex:200,background:C.bg,overflowY:"auto"}}>
       {/* Média en tête : vidéo si dispo, sinon photo */}
       <div style={{position:"relative",width:"100%",maxWidth:480,margin:"0 auto",height:280,background:C.s2}}>
+        <div aria-hidden style={{position:"absolute",inset:0,display:"grid",placeItems:"center",fontSize:56}}>{lieu.emoji || "📍"}</div>
         {video ? (
           <video src={video} autoPlay muted loop playsInline controls
             onError={(e)=>{ e.target.style.display="none"; e.target.nextSibling && (e.target.nextSibling.style.display="block"); }}
@@ -761,9 +761,6 @@ function LieuSpotlightDetail({C, db, lieu, onClose, isFav, toggleFav, onOpenConn
         {photo && (
           <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}}
             style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:video?"none":"block"}}/>
-        )}
-        {!photo && !video && (
-          <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:64}}>{lieu.emoji}</div>
         )}
         <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.15) 0%,transparent 30%,rgba(15,11,8,0.7) 100%)",pointerEvents:"none"}}/>
         <button onClick={onClose} style={{position:"absolute",top:44,left:16,width:34,height:34,borderRadius:"50%",border:"none",background:"rgba(0,0,0,0.5)",color:"#fff",fontSize:16,cursor:"pointer",backdropFilter:"blur(4px)"}}>‹</button>
@@ -833,7 +830,7 @@ function LieuSpotlightDetail({C, db, lieu, onClose, isFav, toggleFav, onOpenConn
         {video && photo && (
           <div style={{marginBottom:8}}>
             <div style={{fontSize:10,color:C.t3,letterSpacing:".15em",textTransform:"uppercase",marginBottom:8}}>📷 Photo</div>
-            <img src={photo} alt="" loading="lazy" style={{width:"100%",borderRadius:14,objectFit:"cover",maxHeight:220}}/>
+            <ImageWithFallback src={photo} emoji={lieu.emoji || "📍"} style={{width:"100%",height:220,borderRadius:14,background:C.s2,fontSize:54}}/>
             {(lieu.photo_author||lieu.photo_licence) && (
               <div style={{fontSize:9,color:C.t3,marginTop:4,textAlign:"right"}}>{lieu.photo_author}{lieu.photo_author&&lieu.photo_licence&&" · "}{lieu.photo_licence} · Wikimedia</div>
             )}
@@ -882,6 +879,7 @@ function DailyPlaceSpotlight({C, db, today, lieu: lieuProp, isNew, isFav, toggle
   return (
     <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(lieu)} style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${C.border}`,boxShadow:C.shadow||"none",position:"relative",background:C.s1}}>
       <div style={{position:"relative",width:"100%",height:220,background:C.s2}}>
+        <div aria-hidden style={{position:"absolute",inset:0,display:"grid",placeItems:"center",fontSize:56}}>{lieu.emoji || "📍"}</div>
         {video ? (
           <video src={video} autoPlay muted loop playsInline preload="metadata"
             onError={(e)=>{ e.target.style.display="none"; e.target.nextSibling && (e.target.nextSibling.style.display="block"); }}
@@ -891,9 +889,6 @@ function DailyPlaceSpotlight({C, db, today, lieu: lieuProp, isNew, isFav, toggle
         {photo && (
           <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}}
             style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:video?"none":"block"}}/>
-        )}
-        {!photo && !video && (
-          <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{lieu.emoji}</div>
         )}
         <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.05) 40%,rgba(15,11,8,0.75) 100%)"}}/>
         {/* Pastille de type — même gabarit que les cartes voisines de la
@@ -929,12 +924,7 @@ function DailySlideCard({C, emoji, label, title, subtitle, photo, fallbackEmoji,
   return (
     <div onClick={onClick} className="lift" style={{cursor:"pointer",flexShrink:0,width:172,scrollSnapAlign:"start",borderRadius:16,overflow:"hidden",border:`1px solid ${C.border}`,boxShadow:C.shadow||"none",background:C.s1}}>
       <div style={{position:"relative",width:"100%",height:172,background:C.s2}}>
-        {photo ? (
-          <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}}
-            style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
-        ) : (
-          <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:40}}>{fallbackEmoji}</div>
-        )}
+        <ImageWithFallback src={photo} emoji={fallbackEmoji || emoji} style={{position:"absolute",inset:0,width:"100%",height:"100%",fontSize:40,background:C.s2}}/>
         <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.05) 35%,rgba(15,11,8,0.8) 100%)"}}/>
         <div style={{position:"absolute",top:8,left:8,right:8,display:"flex",alignItems:"center",gap:5,background:"rgba(0,0,0,.55)",backdropFilter:"blur(4px)",color:"#fff",fontSize:9,fontWeight:700,letterSpacing:".08em",padding:"4px 8px",borderRadius:999,width:"fit-content"}}>
           {emoji} {label}
@@ -1756,7 +1746,7 @@ function VieDetail({C,v,onBack,fav,onFav,read,onMarkRead,wikiMap,onWikiTap,scrip
           <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:6}}>‹ Vie quotidienne</button>
           <div style={{display:"flex",gap:7}}><ReadingProgressButton C={C} read={read} onMarkRead={onMarkRead} compact/>{onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}</div>
         </div>
-        <div style={{fontSize:54,marginBottom:8}}>{v.emoji}</div>
+        <div style={{fontSize:54,marginBottom:8}}>{v.emoji || "🏙️"}</div>
         <span style={{fontSize:9,padding:"3px 9px",background:"rgba(123,155,181,0.12)",border:"1px solid rgba(123,155,181,0.3)",borderRadius:20,color:"#5B7E9B",letterSpacing:".05em"}}>{v.categorie}</span>
         <div style={{fontSize:28,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginTop:8,marginBottom:2}}>{v.titre}</div>
         <div style={{fontSize:15,color:C.t3,fontFamily:"'Noto Serif JP',serif",marginBottom:10}}>{v.nom_jp}</div>
@@ -1791,7 +1781,7 @@ function VieDetail({C,v,onBack,fav,onFav,read,onMarkRead,wikiMap,onWikiTap,scrip
               {v.vocabulaire.map((w,i)=>(
                 <div key={i} style={{paddingBottom:i<v.vocabulaire.length-1?11:0,borderBottom:i<v.vocabulaire.length-1?`1px solid ${C.border}`:"none"}}>
                   <div style={{fontSize:16,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(w, script)}</div>
-                  <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:2}}>{jpSub(w, script)}</div>
+                  <JapaneseSubtitle entry={w} script={script} style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:2}}/>
                   <div style={{fontSize:12,color:C.t2}}>{w.fr}</div>
                 </div>
               ))}
@@ -1827,7 +1817,8 @@ function VieScreen({C,db,isFav,toggleFav,readingProgress,onMarkRead,wikiMap,onWi
       <div style={{padding:"calc(24px + env(safe-area-inset-top, 0px)) 20px 12px"}}>
         {onBack && <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>暮 · VIE QUOTIDIENNE</div>
-        <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nichijō seikatsu":script==="kana"?"にちじょうせいかつ":"日常生活"}</div>
+<div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nichijō seikatsu":script==="kana"?"にちじょうせいかつ":"日常生活"}</div>
+          {script!=="romaji"&&<Romaji style={{fontSize:12,color:C.t2,marginBottom:5}}>Nichijō seikatsu</Romaji>}
         <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Vivre le Japon au jour le jour</div>
       </div>
 
@@ -1847,7 +1838,7 @@ function VieScreen({C,db,isFav,toggleFav,readingProgress,onMarkRead,wikiMap,onWi
       <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
         {filtered.map((v,i)=>(
           <div key={i} onClick={()=>setSelected(v)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",animation:"fadeUp .4s ease"}}>
-            <span style={{fontSize:30,flexShrink:0}}>{v.emoji}</span>
+            <span style={{fontSize:30,flexShrink:0}}>{v.emoji || "🏙️"}</span>
             <div style={{flex:1,minWidth:0}}>
               <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
                 <span style={{fontSize:15,color:C.text,fontWeight:500}}>{v.titre}</span>
@@ -1922,7 +1913,7 @@ function RegionDetail({C,r,onBack,fav,onFav,read,onMarkRead,wikiMap,onWikiTap,sc
       </div>
       <div style={{padding:"0 20px"}}>
         <RegionHero C={C} r={r} height={210}>
-          <div style={{fontSize:40,marginBottom:6}}>{r.emoji}</div>
+          <div style={{fontSize:40,marginBottom:6}}>{r.emoji || "🗾"}</div>
           <div style={{fontSize:11,color:"rgba(255,255,255,0.8)",letterSpacing:".2em",marginBottom:4,textTransform:"uppercase"}}>📍 {r.position}</div>
           <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:400,color:"#fff",lineHeight:1.1}}>{r.nom}</div>
           <div style={{fontSize:14,color:"rgba(255,255,255,0.9)",fontStyle:"italic",marginTop:4}}>{r.tagline}</div>
@@ -2001,6 +1992,7 @@ function RegionsScreen({C,db,isFav,toggleFav,readingProgress,onMarkRead,wikiMap,
         {onBack && <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>地 · RÉGIONS</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nihon no chihō":script==="kana"?"にほんのちほう":"日本の地方"}</div>
+          {script!=="romaji"&&<Romaji style={{fontSize:12,color:C.t2,marginBottom:5}}>Nihon no chihō</Romaji>}
         <div style={{fontSize:13,color:C.t2}}>Les 8 grandes régions du Japon</div>
       </div>
 
@@ -2059,7 +2051,7 @@ function RegionsScreen({C,db,isFav,toggleFav,readingProgress,onMarkRead,wikiMap,
             <RegionHero C={C} r={r} height={120}>
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between"}}>
                 <div>
-                  <div style={{fontSize:26,marginBottom:2}}>{r.emoji}</div>
+                  <div style={{fontSize:26,marginBottom:2}}>{r.emoji || "🗾"}</div>
                   <div style={{fontSize:20,fontFamily:"'Noto Serif JP',serif",fontWeight:400,color:"#fff",lineHeight:1.1}}>{r.nom}</div>
                   <div style={{fontSize:11,color:"rgba(255,255,255,0.85)",fontStyle:"italic",marginTop:2}}>{r.tagline}</div>
                 </div>
@@ -2107,7 +2099,7 @@ function CodeDetail({C,c,onBack,fav,onFav,read,onMarkRead,wikiMap,onWikiTap,scri
           <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:6}}>‹ Codes sociaux</button>
           <div style={{display:"flex",gap:7}}><ReadingProgressButton C={C} read={read} onMarkRead={onMarkRead} compact/>{onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}</div>
         </div>
-        <div style={{fontSize:54,marginBottom:8}}>{c.emoji}</div>
+        <div style={{fontSize:54,marginBottom:8}}>{c.emoji || "👥"}</div>
         <div style={{display:"flex",gap:7,marginBottom:8}}>
           <span style={{fontSize:9,padding:"3px 9px",background:"rgba(201,70,61,0.1)",border:"1px solid rgba(201,70,61,0.22)",borderRadius:20,color:C.red,letterSpacing:".05em"}}>{c.categorie}</span>
           <span style={{fontSize:9,padding:"3px 9px",background:C.s2,border:`1px solid ${C.border}`,borderRadius:20,color:C.t2}}>{c.niveau}</span>
@@ -2155,6 +2147,7 @@ function CodesScreen({C,db,isFav,toggleFav,readingProgress,onMarkRead,wikiMap,on
         {onBack && <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>礼 · CODES SOCIAUX</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Anmoku no rūru":script==="kana"?"あんもくのルール":"暗黙のルール"}</div>
+          {script!=="romaji"&&<Romaji style={{fontSize:12,color:C.t2,marginBottom:5}}>Anmoku no rūru</Romaji>}
         <div style={{fontSize:13,color:C.t2,marginBottom:18}}>Les règles invisibles à connaître</div>
       </div>
 
@@ -2174,7 +2167,7 @@ function CodesScreen({C,db,isFav,toggleFav,readingProgress,onMarkRead,wikiMap,on
       <div style={{padding:"0 20px 110px",display:"flex",flexDirection:"column",gap:11}}>
         {filtered.map((c,i)=>(
           <div key={i} onClick={()=>setSelected(c)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",animation:"fadeUp .4s ease"}}>
-            <span style={{fontSize:30,flexShrink:0}}>{c.emoji}</span>
+            <span style={{fontSize:30,flexShrink:0}}>{c.emoji || "👥"}</span>
             <div style={{flex:1,minWidth:0}}>
               <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
                 <span style={{fontSize:15,color:C.text,fontWeight:500}}>{c.titre}</span>
@@ -2209,7 +2202,7 @@ function TraditionDetail({C,t,onBack,fav,onFav,read,onMarkRead,wikiMap,onWikiTap
       {/* Photo bannière, si disponible */}
       {photo && (
         <div style={{width:"100%",height:200,overflow:"hidden",position:"relative"}}>
-          <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.parentNode.style.display="none";}} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+          <ImageWithFallback src={photo} emoji={t.emoji || "⛩️"} style={{width:"100%",height:"100%",background:C.s2,fontSize:54}}/>
           <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.1),rgba(15,11,8,0.55))"}}/>
         </div>
       )}
@@ -2221,7 +2214,7 @@ function TraditionDetail({C,t,onBack,fav,onFav,read,onMarkRead,wikiMap,onWikiTap
           </button>
           <div style={{display:"flex",gap:7}}><ReadingProgressButton C={C} read={read} onMarkRead={onMarkRead} compact/>{onFav&&<FavButton C={C} active={fav} onClick={onFav}/>}</div>
         </div>
-        <div style={{fontSize:54,marginBottom:8}}>{t.emoji}</div>
+        <div style={{fontSize:54,marginBottom:8}}>{t.emoji || "⛩️"}</div>
         <div style={{fontSize:11,color:C.red,letterSpacing:".2em",marginBottom:6,textTransform:"uppercase"}}>{t.mois}</div>
         <div style={{fontSize:30,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:2}}>{t.nom}</div>
         <div style={{fontSize:15,color:C.t3,fontFamily:"'Noto Serif JP',serif",marginBottom:10}}>{t.nom_jp}</div>
@@ -2303,7 +2296,7 @@ function HistoireScreen({C, db, script, readingProgress, onMarkRead, onBack, bac
         <div style={{padding:"20px 20px 110px"}}>
           {/* Bannière thème */}
           <div className="lift" style={{padding:"20px",background:`linear-gradient(135deg,${acc.soft},transparent)`,border:`1px solid ${C.border}`,borderRadius:16,marginBottom:20,textAlign:"center"}}>
-            <div style={{fontSize:52,marginBottom:8}}>{h.emoji}</div>
+            <div style={{fontSize:52,marginBottom:8}}>{h.emoji || "📜"}</div>
             <div style={{fontSize:12,color:acc.accent,letterSpacing:".15em",textTransform:"uppercase"}}>{h.theme}</div>
           </div>
           {/* Résumé */}
@@ -2341,7 +2334,7 @@ function HistoireScreen({C, db, script, readingProgress, onMarkRead, onBack, bac
             {histoire.map((h,i)=>(
               <div key={h.id} className="lift" onClick={()=>setSelected(h)} style={{display:"flex",gap:14,cursor:"pointer",paddingLeft:4}}>
                 {/* Dot sur la timeline */}
-                <div style={{flexShrink:0,width:36,height:36,borderRadius:"50%",background:i===histoire.length-1?acc.accent:C.s1,border:`2px solid ${i===histoire.length-1?acc.accent:C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,zIndex:1}}>{h.emoji}</div>
+                <div style={{flexShrink:0,width:36,height:36,borderRadius:"50%",background:i===histoire.length-1?acc.accent:C.s1,border:`2px solid ${i===histoire.length-1?acc.accent:C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,zIndex:1}}>{h.emoji || "📜"}</div>
                 {/* Carte */}
                 <div style={{flex:1,background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,padding:"12px 14px",marginBottom:0}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}}>
@@ -2382,6 +2375,7 @@ function TraditionsScreen({C,db,isFav,toggleFav,readingProgress,onMarkRead,wikiM
         {onBack && <button onClick={onBack} style={{background:"transparent",border:"none",color:C.t2,fontSize:13,cursor:"pointer",padding:0,marginBottom:8}}>‹ Explorer</button>}
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>暦 · TRADITIONS</div>
         <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text,marginBottom:3}}>{script==="romaji"?"Nenchū gyōji":script==="kana"?"ねんちゅうぎょうじ":"年中行事"}</div>
+          {script!=="romaji"&&<Romaji style={{fontSize:12,color:C.t2,marginBottom:5}}>Nenchū gyōji</Romaji>}
       </div>
 
       {/* Season selector */}
@@ -2421,10 +2415,7 @@ function TraditionsScreen({C,db,isFav,toggleFav,readingProgress,onMarkRead,wikiM
             background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,padding:"16px 16px",
             display:"flex",alignItems:"center",gap:14,cursor:"pointer",boxShadow:"0 2px 10px rgba(0,0,0,0.03)"
           }}>
-            {photo ? (
-              <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";e.target.nextSibling.style.display="flex";}} style={{width:56,height:56,borderRadius:14,objectFit:"cover",flexShrink:0}}/>
-            ) : null}
-            <span style={{fontSize:32,flexShrink:0,display:photo?"none":"flex",width:photo?0:"auto"}}>{t.emoji}</span>
+            <ImageWithFallback src={photo} emoji={t.emoji || "⛩️"} style={{width:56,height:56,borderRadius:14,background:C.s2,fontSize:32}}/>
             <div style={{flex:1,minWidth:0}}>
               <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
                 <span style={{fontSize:15,color:C.text,fontWeight:500}}>{t.nom}</span>
@@ -2497,10 +2488,7 @@ function ScenarioApprofondir({C, s, links, onBack, onOpenItem}){
           const tagline = item.tagline || item.resume;
           return(
             <div key={i} className="lift" onClick={()=>onOpenItem(type,item)} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:18,padding:"16px 16px",display:"flex",alignItems:"center",gap:14,cursor:"pointer",boxShadow:"0 2px 10px rgba(0,0,0,0.03)"}}>
-              {photo ? (
-                <img src={photo} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";e.target.nextSibling.style.display="flex";}} style={{width:52,height:52,borderRadius:14,objectFit:"cover",flexShrink:0}}/>
-              ) : null}
-              <span style={{fontSize:28,flexShrink:0,display:photo?"none":"flex",width:photo?0:"auto"}}>{item.emoji}</span>
+              <ImageWithFallback src={photo} emoji={item.emoji || "🎋"} style={{width:52,height:52,borderRadius:14,background:C.s2,fontSize:28}}/>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontSize:9,color:meta.color,letterSpacing:".1em",marginBottom:3,textTransform:"uppercase"}}>{meta.label}</div>
                 <div style={{display:"flex",flexWrap:"wrap",alignItems:"baseline",gap:8,marginBottom:3}}>
@@ -2538,9 +2526,8 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
       .map(l=>{ const item=(db?.[l.type]||[]).find(x=>x.id===l.id); return item ? {type:l.type,item} : null; })
       .filter(Boolean);
   }, [s.id, db]);
-  // Romaji masqué par défaut dès le niveau Intermédiaire (mais affichable)
-  const hideRomajiByLevel = s.niveau==="Intermédiaire" || s.niveau==="Avancé";
-  const [showRomaji,setShowRomaji] = useState(!hideRomajiByLevel);
+  // La préférence de lecture est commune à tous les niveaux.
+  const {showRomaji,setShowRomaji}=useJapaneseDisplay();
   const etape = s.etapes[step];
   // Réplique japonaise à écouter dans la Situation (voir extractSituationJP) —
   // toujours la forme kanji/kana native, indépendamment du script d'affichage
@@ -2694,14 +2681,15 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
               : script==="kana" && etape.situation_kana ? etape.situation_kana
               : etape.situation}
           </div>
+          {script!=="romaji"&&<Romaji style={{fontSize:12,color:C.t2,marginTop:6}}>{etape.situation_romaji}</Romaji>}
         </div>
 
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,gap:10}}>
-          <div style={{fontSize:13,color:C.t2,fontWeight:500,flex:1}}>{etape.question}</div>
+        <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",justifyContent:"space-between",marginBottom:14,gap:10}}>
+          <div style={{fontSize:13,color:C.t2,fontWeight:500,flexBasis:"100%"}}>{etape.question}</div>
           <button onClick={playAllChoices} className="pop-press" style={{flexShrink:0,display:"flex",alignItems:"center",gap:5,fontSize:11,padding:"5px 11px",background:playingIdx!==null?C.indigo:"transparent",border:`1px solid ${playingIdx!==null?C.indigo:C.border}`,borderRadius:16,color:playingIdx!==null?"#fff":C.t3,cursor:"pointer",whiteSpace:"nowrap"}}>
             {playingIdx!==null ? <>⏸ Arrêter</> : <>🔊 Écouter les réponses</>}
           </button>
-          {hideRomajiByLevel && (
+          {(
             <button onClick={()=>setShowRomaji(v=>!v)} className="pop-press" style={{flexShrink:0,fontSize:11,padding:"5px 11px",background:showRomaji?C.s2:"transparent",border:`1px solid ${showRomaji?C.red+"55":C.border}`,borderRadius:16,color:showRomaji?C.red:C.t3,cursor:"pointer",whiteSpace:"nowrap"}}>
               {showRomaji ? "あ Masquer rōmaji" : "A Afficher rōmaji"}
             </button>
@@ -2726,7 +2714,7 @@ function ScenarioPlay({C, s, script, onExit, onComplete, alreadyDone, onOpenTuto
                 <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
                   <div style={{flex:1,minWidth:0}}>
                     {c.jp && <div style={{fontSize:15,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(c, script)}</div>}
-                    {c.jp && showRomaji && jpSub(c, script) && <div style={{fontSize:11,color:C.t3,fontStyle:"italic",marginBottom:3}}>{jpSub(c, script)}</div>}
+                    {c.jp && <JapaneseSubtitle entry={c} script={script} style={{fontSize:11,color:C.t3,fontStyle:"italic",marginBottom:3}}/>}
                     {/* Traduction FR masquée tant que non répondu — sinon il suffit de
                         reconnaître la bonne phrase française pour la situation, sans
                         avoir besoin de comprendre le japonais. Révélée pour les 4 choix
@@ -3249,7 +3237,7 @@ function savePathProgress(p){ try { localStorage.setItem(PATH_KEY, JSON.stringif
 // ─── Générateur d'image partageable (Canvas natif) ───────────────────────────
 // Dessine une fiche de situation en image PNG (carré 1:1 ou vertical 9:16),
 // façon carrousel éditorial, avec la marque Isekai'd. Pensé pour le japonais.
-function generateSituationImage(situation, { format="square", script="kana" } = {}){
+function generateSituationImage(situation, { format="square", script="kana", showRomaji=true } = {}){
   return new Promise((resolve)=>{
     const W = 1080;
     const H = format==="story" ? 1920 : 1080;
@@ -3291,7 +3279,7 @@ function generateSituationImage(situation, { format="square", script="kana" } = 
     const maxPhrases = format==="story" ? 6 : 3;
     const phrases = (situation.phrases||[]).slice(0, maxPhrases);
     const jpField = (p)=> script==="romaji" ? p.romaji : (script==="kanji" ? p.jp : (p.kana||p.jp));
-    const subField = (p)=> script==="romaji" ? "" : p.romaji;
+    const subField = (p)=> script==="romaji" || !showRomaji ? "" : p.romaji;
 
     phrases.forEach((p)=>{
       // filet
@@ -3368,6 +3356,7 @@ async function shareImageBlob(blob, filename="isekaid.png", shareText=""){
 
 // Modale de partage : choix du format + aperçu + actions
 function ShareSheet({ C, situation, script, onClose }){
+  const {showRomaji}=useJapaneseDisplay();
   const [format, setFormat] = useState("square");
   const [busy, setBusy] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -3377,17 +3366,17 @@ function ShareSheet({ C, situation, script, onClose }){
   useEffect(()=>{
     let alive = true; let lastUrl = null;
     setBusy(true);
-    generateSituationImage(situation, { format, script }).then(blob=>{
+    generateSituationImage(situation, { format, script, showRomaji }).then(blob=>{
       if(!alive || !blob) return;
       lastUrl = URL.createObjectURL(blob);
       setPreviewUrl(lastUrl); setBusy(false);
     });
     return ()=>{ alive=false; if(lastUrl) URL.revokeObjectURL(lastUrl); };
-  }, [format, situation, script]);
+  }, [format, situation, script, showRomaji]);
 
   const doShare = async ()=>{
     setBusy(true);
-    const blob = await generateSituationImage(situation, { format, script });
+    const blob = await generateSituationImage(situation, { format, script, showRomaji });
     const res = await shareImageBlob(blob, `isekaid-${situation.id}.png`, `${situation.titre} — appris avec Isekai'd 🎌`);
     setStatus(res); setBusy(false);
     if(res==="shared" || res==="downloaded") setTimeout(onClose, 900);
@@ -3438,7 +3427,10 @@ function SituationDetail({C, s, onBack, script}){
   // "Uniquement rōmaji" : bascule locale à l'écran, indépendante du réglage
   // de script global (Profil) — désactive le surlignage mot-à-mot (pas de
   // découpage rōmaji par mot dans les données), juste la lecture romanisée.
-  const [romajiOnly, setRomajiOnly] = useState(false);
+  const {showRomaji,setShowRomaji}=useJapaneseDisplay();
+  const [localRomajiOnly, setLocalRomajiOnly] = useState(false);
+  const romajiOnly=showRomaji&&localRomajiOnly;
+  const setRomajiOnly=()=>{if(!showRomaji)setShowRomaji(true);setLocalRomajiOnly(!romajiOnly);};
   // Mot actif par phrase (index de phrase → index de mot dans `mots`), pour
   // synchroniser le surlignage JP↔FR de chaque ligne indépendamment des autres.
   const [activeWords, setActiveWords] = useState({});
@@ -3486,7 +3478,7 @@ function SituationDetail({C, s, onBack, script}){
           simple si la phrase n'a pas encore de découpage `mots`. */}
       <div style={{padding:"0 24px 110px"}}>
         {s.phrases.map((p,i)=>{
-          const align = !romajiOnly ? alignWords(p.mots, p.fr) : null;
+          const align = !romajiOnly && script!=="romaji" ? alignWords(p.mots, p.fr) : null;
           const active = activeWords[i] ?? null;
           const setActive = (w)=> setActiveWords(a=>({...a, [i]: w}));
           return(
@@ -3501,7 +3493,7 @@ function SituationDetail({C, s, onBack, script}){
                   ) : (
                     <div style={{fontSize:21,fontFamily:"'Noto Serif JP',serif",color:ink,marginBottom:5,lineHeight:1.35}}>{jpMain(p, script)}</div>
                   )}
-                  {!romajiOnly && <div style={{fontSize:13,color:inkSoft,fontStyle:"italic",fontFamily:"'Noto Serif JP',serif"}}>{align ? p.romaji : jpSub(p, script)}</div>}
+                  {!romajiOnly && <JapaneseSubtitle entry={p} script={align ? "kanji" : script} style={{fontSize:13,color:inkSoft,fontStyle:"italic",fontFamily:"'Noto Serif JP',serif"}}/>}
                 </div>
                 <SpeakButton C={C} text={p.jp} color={accent}/>
               </div>
@@ -3621,7 +3613,10 @@ function ComprehensionRead({ C, db, script, onRecord, onComplete }){
   const [showTrad, setShowTrad] = useState(false);
   // "Uniquement rōmaji" : bascule locale, indépendante du réglage de script
   // global (Profil) — voir même pattern dans SituationDetail.
-  const [romajiOnly, setRomajiOnly] = useState(false);
+  const {showRomaji,setShowRomaji}=useJapaneseDisplay();
+  const [localRomajiOnly, setLocalRomajiOnly] = useState(false);
+  const romajiOnly=showRomaji&&localRomajiOnly;
+  const setRomajiOnly=()=>{if(!showRomaji)setShowRomaji(true);setLocalRomajiOnly(!romajiOnly);};
   // Mot actif pour le surlignage interactif JP↔FR (voir alignWords/AlignedRow) —
   // un seul exercice affiché à la fois, donc un seul état suffit ici.
   const [activeWord, setActiveWord] = useState(null);
@@ -3674,7 +3669,7 @@ function ComprehensionRead({ C, db, script, onRecord, onComplete }){
   // Surlignage interactif JP↔FR (voir alignWords/AlignedRow) : nécessite
   // `exo.mots` (pas encore enrichi sur tous les textes) et le texte natif —
   // désactivé en mode "rōmaji seul" (pas de découpage rōmaji par mot).
-  const align = !romajiOnly ? alignWords(exo.mots, exo.traduction) : null;
+  const align = !romajiOnly && script!=="romaji" ? alignWords(exo.mots, exo.traduction) : null;
 
   return(
     <div ref={topRef} style={{scrollMarginTop:60}}>
@@ -3693,6 +3688,7 @@ function ComprehensionRead({ C, db, script, onRecord, onComplete }){
         ) : (
           <div style={{fontSize:18,lineHeight:1.9,color:C.text,fontFamily:"'Noto Serif JP',serif"}}>{mainText}</div>
         )}
+        {!romajiOnly && script!=="romaji"&&<Romaji style={{fontSize:13,color:C.t2,lineHeight:1.7,marginTop:8}}>{exo.texte_romaji}</Romaji>}
         <button onClick={()=>speakJP(exo.texte_jp)} style={{marginTop:12,padding:"7px 14px",background:"rgba(91,155,213,0.12)",border:"none",borderRadius:20,color:"#5B9BD5",fontSize:12,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6}}>🔊 Écouter</button>
       </div>
 
@@ -3757,18 +3753,17 @@ function ComprehensionListen({ C, db, onComplete }){
   const [level, setLevel] = useState("Débutant");
   const exos = allExos.filter(e=>e.niveau===level);
   const [idx, setIdx] = useState(0);
-  // Révélation en 3 temps : kana d'abord (lecture pure), rōmaji et traduction
-  // FR en options séparées — jamais tout donné d'un coup, sinon l'exercice
-  // d'écoute ne teste plus rien (donner la traduction = donner la réponse).
+  // La transcription d'écoute reste révélable volontairement. Une fois
+  // ouverte, elle respecte l'aide romaji globale ; le français reste séparé.
   const [revealed, setRevealed] = useState(false); // texte (kana) caché par défaut
-  const [showRomaji, setShowRomaji] = useState(false);
+  const {showRomaji,setShowRomaji}=useJapaneseDisplay();
   const [showTrad, setShowTrad] = useState(false);
   const [answers, setAnswers] = useState({});
   // Mot actif pour le surlignage interactif JP↔FR (voir alignWords/AlignedRow).
   const [activeWord, setActiveWord] = useState(null);
   const topRef = useRef(null);
   useEffect(()=>{ if(topRef.current) topRef.current.scrollIntoView({block:"start"}); }, [idx, level]);
-  useEffect(()=>{ setIdx(0); setAnswers({}); setRevealed(false); setShowRomaji(false); setShowTrad(false); setActiveWord(null); }, [level]);
+  useEffect(()=>{ setIdx(0); setAnswers({}); setRevealed(false); setShowTrad(false); setActiveWord(null); }, [level]);
   const exo = exos[idx];
   // Nécessite `exo.mots` (pas encore enrichi sur tous les textes) — repli
   // silencieux sur l'affichage simple sinon.
@@ -3799,7 +3794,7 @@ function ComprehensionListen({ C, db, onComplete }){
   const score = exo.questions.filter((q,qi)=>answers[qi]===q.correct).length;
   // Mission "comp" validée à la vraie complétion d'un exercice d'écoute.
   useEffect(()=>{ if(allAnswered) onComplete && onComplete(); }, [allAnswered]);
-  const next = ()=>{ setAnswers({}); setRevealed(false); setShowRomaji(false); setShowTrad(false); setActiveWord(null); if(idx+1<exos.length) setIdx(idx+1); else setIdx(0); };
+  const next = ()=>{ setAnswers({}); setRevealed(false); setShowTrad(false); setActiveWord(null); if(idx+1<exos.length) setIdx(idx+1); else setIdx(0); };
 
   return(
     <div ref={topRef} style={{scrollMarginTop:60}}>
@@ -3834,7 +3829,7 @@ function ComprehensionListen({ C, db, onComplete }){
             <button onClick={()=>setShowRomaji(v=>!v)} className="pop-press" style={{padding:"6px 12px",borderRadius:16,border:`1px solid ${showRomaji?"#9A6A8A":C.border}`,background:showRomaji?"#9A6A8A":"transparent",color:showRomaji?"#fff":C.t2,fontSize:11,fontWeight:500,cursor:"pointer"}}>あ Rōmaji</button>
             <button onClick={()=>setShowTrad(v=>!v)} className="pop-press" style={{padding:"6px 12px",borderRadius:16,border:`1px solid ${showTrad?"#9A6A8A":C.border}`,background:showTrad?"#9A6A8A":"transparent",color:showTrad?"#fff":C.t2,fontSize:11,fontWeight:500,cursor:"pointer"}}>🇫🇷 Traduction</button>
           </div>
-          {showRomaji && <div style={{fontSize:13,color:C.t2,fontStyle:"italic",marginTop:10}}>{exo.audio_romaji}</div>}
+          <Romaji style={{fontSize:13,color:C.t2,fontStyle:"italic",marginTop:10}}>{exo.audio_romaji}</Romaji>
           {showTrad && (
             align ? (
               <AlignedRow segs={align.frSegs} active={activeWord} setActive={setActiveWord} activeColor="#9A6A8A"
@@ -3972,7 +3967,10 @@ function LearnScreen({C,script,db,user,favs,readingProgress,prefectureProgress,s
   // Palier "phrases" du parcours guidé : bascule locale rōmaji + mot actif par
   // phrase pour le surlignage interactif (voir alignWords/AlignedRow, même
   // mécanisme que SituationDetail — ces paliers réutilisent les mêmes phrases).
-  const [pathRomajiOnly,setPathRomajiOnly] = useState(false);
+  const {showRomaji,setShowRomaji}=useJapaneseDisplay();
+  const [localPathRomajiOnly,setLocalPathRomajiOnly] = useState(false);
+  const pathRomajiOnly=showRomaji&&localPathRomajiOnly;
+  const setPathRomajiOnly=()=>{if(!showRomaji)setShowRomaji(true);setLocalPathRomajiOnly(!pathRomajiOnly);};
   const [pathPhraseActive,setPathPhraseActive] = useState({});
   const [checkpoint,setCheckpoint] = useState(null); // active checkpoint step
   // null = choix | "path" | "alphabets" | "situations" | "read" | "listen" | "review"
@@ -4142,7 +4140,7 @@ function LearnScreen({C,script,db,user,favs,readingProgress,prefectureProgress,s
                   sur l'affichage simple si la phrase n'a pas de `mots`. */}
               <div style={{display:"flex",flexDirection:"column",gap:9}}>
                 {sit.phrases.map((p,i)=>{
-                  const align = !pathRomajiOnly ? alignWords(p.mots, p.fr) : null;
+                  const align = !pathRomajiOnly && script!=="romaji" ? alignWords(p.mots, p.fr) : null;
                   const active = pathPhraseActive[i] ?? null;
                   const setActive = (w)=> setPathPhraseActive(a=>({...a, [i]: w}));
                   return(
@@ -4158,7 +4156,7 @@ function LearnScreen({C,script,db,user,favs,readingProgress,prefectureProgress,s
                         )}
                         <SpeakButton C={C} text={p.jp} color={C.gold} size={26}/>
                       </div>
-                      {!pathRomajiOnly && <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:3}}>{align ? p.romaji : jpSub(p, script)}</div>}
+                      {!pathRomajiOnly && <JapaneseSubtitle entry={p} script={align ? "kanji" : script} style={{fontSize:11,color:C.gold,fontStyle:"italic",marginBottom:3}}/>}
                       {align ? (
                         <AlignedRow segs={align.frSegs} active={active} setActive={setActive} activeColor={C.gold}
                           style={{display:"block",fontSize:13,color:C.t2}}/>
@@ -4247,6 +4245,7 @@ function LearnScreen({C,script,db,user,favs,readingProgress,prefectureProgress,s
         <div style={{fontSize:10,color:C.t3,letterSpacing:".3em",marginBottom:5}}>学 · APPRENDRE</div>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div style={{fontSize:22,fontFamily:"'Noto Serif JP',serif",fontWeight:300,color:C.text}}>{script==="romaji"?"Nihongo wo manabu":script==="kana"?"にほんごをまなぶ":"日本語を学ぶ"}</div>
+          {script!=="romaji"&&<Romaji style={{fontSize:12,color:C.t2,marginBottom:5}}>Nihongo wo manabu</Romaji>}
           {learnMode && <button onClick={closeLearnLayer} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"6px 13px",color:C.t2,fontSize:12,cursor:"pointer",whiteSpace:"nowrap"}}>‹ Menu</button>}
         </div>
       </div>
@@ -4458,6 +4457,7 @@ function LearnScreen({C,script,db,user,favs,readingProgress,prefectureProgress,s
               {s.phrases?.[0] && (
                 <div style={{padding:"10px 13px",background:C.s2,borderRadius:10,borderLeft:`2px solid ${C.red}`}}>
                   <div style={{fontSize:14,fontFamily:"'Noto Serif JP',serif",color:C.text,marginBottom:2}}>{jpMain(s.phrases[0], script)}</div>
+                  <JapaneseSubtitle entry={s.phrases[0]} script={script} style={{fontSize:12,color:C.t2,marginBottom:3}}/>
                   <div style={{fontSize:11,color:C.t3,fontStyle:"italic"}}>{s.phrases[0].fr}</div>
                 </div>
               )}
@@ -4586,7 +4586,7 @@ function ItineraryCard({ C, trip, lieuById, villeById, onClose, onAdopt, onOpenL
                   <div className="lift" onClick={()=>onOpenLieu&&onOpenLieu(l.id)} style={{flex:1,minWidth:0,background:C.s1,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden",cursor:"pointer",marginBottom:2}}>
                     <div style={{height:110,position:"relative",background:`linear-gradient(135deg,${C.red}22,${C.s2})`,display:"flex",alignItems:"center",justifyContent:"center"}}>
                       {/* Emoji de fallback, toujours présent en arrière-plan */}
-                      <span style={{fontSize:44,opacity:0.5}}>{l.emoji}</span>
+                      <span style={{fontSize:44,opacity:0.5}}>{l.emoji || "📍"}</span>
                       {img && <img src={img} alt={l.nom} loading="lazy" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}} onError={(e)=>{e.target.style.display="none";}}/>}
                     </div>
                     <div style={{padding:"11px 13px"}}>
@@ -6369,8 +6369,7 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", backRef, trip, db
       <div style={{height:"100%",overflowY:"auto",background:C.bg,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>
         {/* Bannière image / emoji */}
         <div style={{height:150,background:`linear-gradient(135deg,${C.red}44,${C.s2})`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
-          <img src={l.photo || l.image} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
-          {!l.photo && <span style={{fontSize:58,position:"relative",textShadow:"0 2px 12px rgba(0,0,0,0.4)"}}>{l.emoji}</span>}
+          <ImageWithFallback src={l.photo || l.image} emoji={l.emoji || "📍"} style={{position:"absolute",inset:0,width:"100%",height:"100%",fontSize:58}}/>
           <button onClick={closeCurrentScreen} style={{position:"absolute",top:44,left:16,fontSize:12,color:"#fff",background:"rgba(0,0,0,0.45)",border:"none",padding:"6px 13px",borderRadius:16,cursor:"pointer"}}>‹ Retour</button>
           {isFav && toggleFav && (
             <div style={{position:"absolute",top:44,right:16}} onClick={()=>toggleFav("lieu",l)}>
@@ -7170,6 +7169,15 @@ function AuthScreen({C,onSkip}){
   const [busy,setBusy] = useState(false);
   const [msg,setMsg] = useState(null);
 
+  useEffect(()=>{
+    const showOAuthError=event=>{
+      setBusy(false);
+      setMsg({type:"err",text:`Erreur Google: ${event.detail || "connexion interrompue"}`});
+    };
+    window.addEventListener("isekaid:oauth-error",showOAuthError);
+    return()=>window.removeEventListener("isekaid:oauth-error",showOAuthError);
+  },[]);
+
   const submitEmail = async ()=>{
     if(!email || !pw){ setMsg({type:"err",text:"Renseigne email et mot de passe."}); return; }
     setBusy(true); setMsg(null);
@@ -7280,10 +7288,7 @@ function SearchScreen({C, db, script, trips = [], onClose, onOpenResult, initial
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",margin:"0 3px 8px"}}><h2 style={{fontSize:10,color:C.t3,letterSpacing:".14em",textTransform:"uppercase",margin:0}}>{group.label}</h2><span style={{fontSize:9,color:C.t3}}>{group.items.length}</span></div>
             <div style={{display:"flex",flexDirection:"column",gap:8}}>{group.items.map(it=>(
             <button type="button" key={it.id} onClick={()=>{ onOpenResult(it); onClose(); }} style={{display:"flex",alignItems:"center",gap:13,padding:"13px 14px",width:"100%",background:C.s1,border:`1px solid ${C.border}`,borderRadius:12,cursor:"pointer",textAlign:"left"}}>
-              {it.kind==="wiki" && it.raw?.image ? (
-                <img src={it.raw.image} alt={it.title} loading="lazy" style={{width:42,height:42,borderRadius:10,objectFit:"cover",flexShrink:0,background:C.s2}} onError={(e)=>{ e.target.style.display="none"; e.target.nextSibling && (e.target.nextSibling.style.display="flex"); }}/>
-              ) : null}
-              <span style={{fontSize:24,flexShrink:0,...(it.kind==="wiki" && it.raw?.image ? {display:"none",width:42,height:42,alignItems:"center",justifyContent:"center"} : {})}}>{it.emoji}</span>
+              {it.kind==="wiki" ? <ImageWithFallback src={it.raw?.image} emoji={it.emoji || "📖"} alt={it.title} style={{width:42,height:42,borderRadius:10,background:C.s2,fontSize:24}}/> : <span aria-hidden style={{width:42,height:42,display:"grid",placeItems:"center",fontSize:24,flexShrink:0}}>{it.emoji || "🎋"}</span>}
               <div style={{flex:1,minWidth:0}}>
                 <div style={{display:"flex",alignItems:"baseline",gap:7,marginBottom:2}}>
                   <span style={{fontSize:14,color:C.text,fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{it.title}</span>
@@ -7851,7 +7856,7 @@ export default function IsekaidApp(){
     if(session?.user && ritual){
       enqueueMutation({type:"progress",userId:session.user.id,payload:{
         streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user, path:pathProgress, mission,
-        settings:{dark,accent,script,introSeen:introSeen(),onboarding:onboardingState,premium,daily:ritual}
+        settings:{dark,accent,script:scriptPreference,showRomaji,introSeen:introSeen(),onboarding:onboardingState,premium,daily:ritual}
       }});
       flushProgressMutations();
     }
@@ -7989,7 +7994,9 @@ export default function IsekaidApp(){
     }
   },[streak, xp, unlocks, scenProgress, kanaProgress, favs, pathProgress, db]);
   const [wikiMap,setWikiMap]=useState({});
-  const [script,setScript]=useState(()=>loadScript());
+  const [scriptPreference,setScript]=useState(()=>loadScript());
+  const [showRomaji,setShowRomaji]=useState(()=>loadShowRomaji());
+  const script=effectiveJapaneseScript(scriptPreference,showRomaji);
 
   // ── Bilan hebdomadaire ──────────────────────────────────────────────────
   // Détecte le passage à une nouvelle semaine ISO (mêmes bornes que le Défi
@@ -8050,22 +8057,33 @@ export default function IsekaidApp(){
     }
   },[db, kanaProgress, scenProgress, streak, discoveriesForRecap, session?.user?.id]);
 
-  // Intercepte le deep link app.isekaid://login-callback après connexion Google (natif).
+  // Intercepte le deep link app.isekaid://login-callback après connexion Google
+  // aussi bien à chaud que lors d'un redémarrage de l'app par Android.
   useEffect(()=>{
     let listener = null;
+    let cancelled = false;
+    const handledUrls = new Set();
+    const receiveOAuthUrl = async url=>{
+      if(cancelled || !url?.includes("login-callback") || handledUrls.has(url))return;
+      handledUrls.add(url);
+      try {
+        const sess = await handleOAuthCallback(url);
+        if(!cancelled && sess)setSession(sess);
+      } catch(error) {
+        console.warn("[supabase] retour OAuth Google échoué:",error?.message);
+        window.dispatchEvent(new CustomEvent("isekaid:oauth-error",{detail:error?.message}));
+      }
+    };
     const setup = async ()=>{
       try {
         const { App: CapApp } = await import("@capacitor/app");
-        listener = await CapApp.addListener("appUrlOpen", async ({ url })=>{
-          if(url && url.includes("login-callback")){
-            const sess = await handleOAuthCallback(url);
-            if(sess) setSession(sess);
-          }
-        });
+        listener = await CapApp.addListener("appUrlOpen",({url})=>receiveOAuthUrl(url));
+        const launch = await CapApp.getLaunchUrl();
+        await receiveOAuthUrl(launch?.url);
       } catch { /* hors natif — pas de Capacitor App */ }
     };
     setup();
-    return ()=>{ listener?.remove?.(); };
+    return ()=>{ cancelled=true;listener?.remove?.(); };
   },[]);
 
   // Bouton/geste retour Android (le swipe-retour déclenche le même événement natif) :
@@ -8245,6 +8263,7 @@ export default function IsekaidApp(){
             if(typeof s.dark==="boolean"){ setDark(s.dark); saveTheme(s.dark); }
             if(s.accent){ setAccent(s.accent); saveAccent(s.accent); }
             if(s.script){ setScript(s.script); saveScript(s.script); }
+            if(typeof s.showRomaji==="boolean"){setShowRomaji(s.showRomaji);saveShowRomaji(s.showRomaji);}
             if(s.introSeen){ markIntroSeen(); }
             if(s.onboarding){const restored=saveOnboardingState(session.user.id,mergeOnboardingStates(loadOnboardingState(session.user.id),s.onboarding));if(restored)setOnboardingState(restored);}
           if(s.premium && s.premium.active){ setPremium(s.premium); savePremium(s.premium); }
@@ -8293,6 +8312,7 @@ export default function IsekaidApp(){
         });
       };
       setting("dark",setDark,saveTheme);setting("accent",setAccent,saveAccent);setting("script",setScript,saveScript);
+      setting("showRomaji",setShowRomaji,saveShowRomaji);
       setting("daily", value=>{ writeJson("isekaid_daily_ritual_v1", value); window.dispatchEvent(new Event("isekaid:daily-synced")); }, ()=>{});
       if(merged.settings?.onboarding){const restored=saveOnboardingState(userId,mergeOnboardingStates(loadOnboardingState(userId),merged.settings.onboarding));if(restored)setOnboardingState(restored);}
     };
@@ -8302,7 +8322,7 @@ export default function IsekaidApp(){
 
   const restoreProgressCopy=async patch=>{
     if(!session?.user)throw new Error("session_required");
-    const current={profile:user,favorites:favs,kana_progress:kanaProgress,scenarios:scenProgress,path:pathProgress,mission,streak,unlocks,settings:{dark,accent,script,introSeen:introSeen(),onboarding:onboardingState,premium}};
+    const current={profile:user,favorites:favs,kana_progress:kanaProgress,scenarios:scenProgress,path:pathProgress,mission,streak,unlocks,settings:{dark,accent,script:scriptPreference,showRomaji,introSeen:introSeen(),onboarding:onboardingState,premium}};
     if(!preserveProgressCopy(session.user.id,current,Object.keys(patch)))throw new Error("storage_full");
     const restored={...current,...patch};
     if(!enqueueMutation({type:"progress",userId:session.user.id,payload:restored}))throw new Error("storage_full");
@@ -8317,14 +8337,14 @@ export default function IsekaidApp(){
     clearTimeout(syncRef.current);
     const snapshot = {
       streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user, path:pathProgress, mission,
-      settings: { dark, accent, script, introSeen: introSeen(), onboarding:onboardingState, premium, daily: loadDailyRitual({db}) }
+      settings: { dark, accent, script:scriptPreference, showRomaji, introSeen: introSeen(), onboarding:onboardingState, premium, daily: loadDailyRitual({db}) }
     };
     enqueueMutation({type:"progress",userId:session.user.id,payload:snapshot});
     syncRef.current = setTimeout(()=>{
       flushProgressMutations();
     }, 800);
     return ()=> clearTimeout(syncRef.current);
-  },[streak, unlocks, scenProgress, favs, kanaProgress, user, pathProgress, mission, dark, accent, script, onboardingState, premium, db, session?.user?.id,cloudProfileChecked,flushProgressMutations]);
+  },[streak, unlocks, scenProgress, favs, kanaProgress, user, pathProgress, mission, dark, accent, scriptPreference, showRomaji, onboardingState, premium, db, session?.user?.id,cloudProfileChecked,flushProgressMutations]);
 
   useEffect(()=>{
     if(!session?.user) return;
@@ -8422,7 +8442,8 @@ export default function IsekaidApp(){
 
   // Persist theme whenever it changes
   useEffect(()=>{ saveTheme(dark); },[dark]);
-  useEffect(()=>{ saveScript(script); },[script]);
+  useEffect(()=>{ saveScript(scriptPreference); },[scriptPreference]);
+  useEffect(()=>{ saveShowRomaji(showRomaji); },[showRomaji]);
 
   // When splash finishes: decide auth → onboarding → app
   // On attend que authChecked soit true (getSession() résolu) avant de décider.
@@ -8560,6 +8581,7 @@ export default function IsekaidApp(){
 
   if(accountStorageError)return <main className="onboarding-shell" style={{minHeight:"100dvh",padding:24,boxSizing:"border-box"}}><h1>Le changement de compte attendra un instant</h1><p role="alert">Le stockage de cet appareil est plein ou indisponible. Tes données restent conservées. Libère de l’espace, puis réessaie.</p><button className="onboarding-next" style={{flex:"none"}} onClick={()=>window.location.reload()}>Réessayer</button></main>;
   return(
+    <JapaneseDisplayContext.Provider value={{showRomaji,setShowRomaji}}>
     <div style={{width:"100%",height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:"#080604",fontFamily:"'Noto Sans JP','Helvetica Neue',sans-serif"}}>
       <style>{CSS}</style>
       <div className="isekaid-shell" style={{"--isekaid-bg":C.bg,"--isekaid-surface":C.s1,"--isekaid-surface-2":C.s2,"--isekaid-surface-3":C.s3,"--isekaid-text":C.text,"--isekaid-muted":C.t3,"--isekaid-border":C.border,"--isekaid-red":C.red,"--isekaid-gold":C.gold,"--isekaid-green":C.green,"--isekaid-nav-bg":C.navBg,width:"min(100vw,390px)",height:"min(100dvh,844px)",position:"relative",overflow:"hidden",overscrollBehavior:"none",borderRadius:"clamp(0px,calc((100vw - 390px)*999),44px)",boxShadow:"0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(0,0,0,.08)",transition:"background .3s"}}>
@@ -8640,5 +8662,6 @@ export default function IsekaidApp(){
         )}
       </div>
     </div>
+    </JapaneseDisplayContext.Provider>
   );
 }

@@ -1,3 +1,4 @@
+import { ImageWithFallback } from "../../components/ImageWithFallback.jsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { buildExploreEditorial, markEditorialSeen } from "./exploreEditorial.js";
@@ -28,7 +29,7 @@ export function ExploreEditorialHero({ C, db, images = {}, date = new Date(), on
   useEffect(()=>{if(index>=slides.length)setIndex(0);},[index,slides.length]);
   useEffect(()=>{if(reducedMotion||paused||slides.length<2)return;const timer=setTimeout(()=>goTo(index+1),6500);return()=>clearTimeout(timer);},[index,paused,reducedMotion,slides.length]);
 
-  const illustration=item=>{const src=item&&(item.raw?.image||item.raw?.photo||images[item.imageKey]);return src?<img src={src} alt="" loading="lazy" style={{width:"100%",height:154,objectFit:"cover",display:"block"}}/>:<div aria-hidden style={{height:112,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48,background:`linear-gradient(135deg, ${C.red}22, ${C.gold}22)`}}>{item?.raw?.emoji||(item?.type==="food"?"🍜":"🎋")}</div>;};
+  const illustration=item=><ImageWithFallback src={item&&(item.raw?.image||item.raw?.photo||images[item.imageKey])} emoji={item?.raw?.emoji||(item?.type==="food"?"🍜":"🎋")} style={{width:"100%",height:154,fontSize:48,background:`linear-gradient(135deg, ${C.red}22, ${C.gold}22)`}}/>;
   const onTouchEnd=event=>{if(touchStartX.current===null)return;const delta=(event.changedTouches?.[0]?.clientX||0)-touchStartX.current;touchStartX.current=null;if(Math.abs(delta)>42)goTo(index+(delta<0?1:-1));};
 
   if(!current)return null;

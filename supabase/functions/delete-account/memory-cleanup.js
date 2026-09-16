@@ -1,12 +1,43 @@
-// Les photos créées par l'application sont des fichiers à la racine du dossier utilisateur.
-export async function removeAccountMemoryPhotos(storage, userId) {
-  const bucket = storage.from("memory-photos");
-  while (true) {
-    const { data: files, error: listError } = await bucket.list(userId, { limit: 1000 });
-    if (listError) throw listError;
-    if (!files?.length) return;
-    const { error } = await bucket.remove(files.map(file => `${userId}/${file.name}`));
-    if (error) throw error;
-    // Repartir du début : le lot précédent a été supprimé.
+async function listStorageTree(bucket, prefix) {
+  const files=[];
+  let offset=0;
+  const seenPages=new Set();
+  while(true){
+    const {data,error}=await bucket.list(prefix,{limit:100,offset,sortBy:{column:"name",order:"asc"}});
+    if(error)throw error;
+    if(!data?.length)break;
+    const signature=data.map(item=>`${item.name}:${item.id||"folder"}`).join("|");
+    // Defensive fallback for storage adapters that ignore `offset`: return the
+    // page already collected so the caller can delete it, then list again.
+    if(seenPages.has(signature))break;
+    seenPages.add(signature);
+    for(const item of data){
+      const path=`${prefix}/${item.name}`;
+      if(item.id||item.metadata||/\.[a-z0-9]+$/i.test(item.name))files.push(path);
+      else files.push(...await listStorageTree(bucket,path));
+    }
+    if(data.length<100)break;
+    offset+=data.length;
   }
+  return files;
+}
+
+export async function removeAccountStorageTree(storage, bucketName, userId) {
+  const bucket=storage.from(bucketName);
+  while(true){
+    const files=await listStorageTree(bucket,userId);
+    if(!files.length)break;
+    for(let index=0;index<files.length;index+=100){
+      const {error}=await bucket.remove(files.slice(index,index+100));
+      if(error)throw error;
+    }
+  }
+}
+
+export function removeAccountMemoryPhotos(storage,userId) {
+  return removeAccountStorageTree(storage,"memory-photos",userId);
+}
+
+export function removeAccountTravelJournals(storage,userId) {
+  return removeAccountStorageTree(storage,"travel-journals",userId);
 }

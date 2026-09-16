@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDailyFeed } from "./dailyFeedHook.js";
 import { Sparkles } from "lucide-react";
+import { Romaji } from "./components/JapaneseDisplay.jsx";
 
 /* ============================================================
    Le Japon du jour — feed quotidien
@@ -189,7 +190,7 @@ function FeedCard({ C, item, surface, border }){
         {hasKanji && (
           <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 6 }}>
             <span style={{ fontSize: 30, fontWeight: 800, color: C.gold }}>{item.kanji}</span>
-            {item.romaji && <span style={{ fontSize: 14, fontStyle: "italic", color: C.t2 || C.t3 }}>{item.romaji}</span>}
+            <Romaji as="span" style={{ fontSize: 14, fontStyle: "italic", color: C.t2 || C.t3 }}>{item.romaji}</Romaji>
           </div>
         )}
 

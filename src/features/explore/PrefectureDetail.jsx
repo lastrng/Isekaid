@@ -1,3 +1,4 @@
+import { ImageWithFallback } from "../../components/ImageWithFallback.jsx";
 import { Check, Heart, MapPinned, Plane } from "lucide-react";
 import { useMemo } from "react";
 import { buildJapanGraph, buildPrefectureConnections } from "../../entities/content/japanGraph.js";
@@ -23,10 +24,13 @@ function EditorialSection({C,title,value,children}){
   return <section style={{padding:"16px 15px",borderRadius:17,border:`1px solid ${C.border}`,background:C.s1}}><h2 style={{fontFamily:"'Noto Serif JP',serif",fontSize:16,color:C.text,margin:"0 0 8px"}}>{title}</h2>{present?(children||<ContentValue C={C} value={value}/>):<p style={{margin:0,fontSize:11,color:C.t3,lineHeight:1.55}}>Contenu éditorial à venir.</p>}</section>;
 }
 
-function PrefectureMark({prefecture}){
-  const mark=prefecture.symbol||prefecture.flag;
-  if(isImageSource(mark))return <img src={mark} alt="" style={{width:104,height:104,objectFit:"contain"}}/>;
-  return <span>{mark||prefecture.nameJa.slice(0,1)}</span>;
+export function PrefectureMark({prefecture,size=104}){
+  const symbol=typeof prefecture.symbol==="string"?prefecture.symbol.trim():prefecture.symbol;
+  const flag=typeof prefecture.flag==="string"?prefecture.flag.trim():prefecture.flag;
+  const mark=symbol||flag;
+  if(isImageSource(mark))return <ImageWithFallback src={mark} emoji={prefecture.emoji || "🗾"} style={{width:size,height:size,fontSize:size*.7}} imageStyle={{objectFit:"contain"}}/>;
+  const fallback=typeof prefecture.emoji==="string"&&prefecture.emoji.trim()?prefecture.emoji:"🗾";
+  return <span aria-hidden style={{display:"grid",placeItems:"center",width:size,height:size,fontSize:size*.7}}>{mark||fallback}</span>;
 }
 
 function LinkedCards({C,items,onOpenPlace,empty}){
@@ -44,8 +48,9 @@ export function PrefectureDetail({C,db,prefecture,onBack,onToggleFavorite,onAddT
   const hasOverview=hasContent(prefecture.shortDescription)||hasContent(prefecture.description);
   const connections=useMemo(()=>buildPrefectureConnections(prefecture,buildJapanGraph(db)),[db,prefecture]);
   return <div style={{height:"100%",overflowY:"auto",background:C.bg}}>
-    <header style={{minHeight:235,padding:"calc(18px + env(safe-area-inset-top, 0px)) 20px 22px",position:"relative",overflow:"hidden",background:prefecture.heroImage?`linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.75)),url(${prefecture.heroImage}) center/cover`:`linear-gradient(145deg,${C.red}25,${C.s1} 60%,${C.gold}18)`}}>
-      <button onClick={onBack} style={{padding:0,border:0,background:"none",color:prefecture.heroImage?"#fff":C.t2,fontSize:12,cursor:"pointer"}}>‹ Les 47 préfectures</button>
+    <header style={{minHeight:235,padding:"calc(18px + env(safe-area-inset-top, 0px)) 20px 22px",position:"relative",overflow:"hidden",background:`linear-gradient(145deg,${C.red}25,${C.s1} 60%,${C.gold}18)`}}>
+      {prefecture.heroImage&&<><ImageWithFallback src={prefecture.heroImage} emoji={prefecture.emoji || "🗾"} style={{position:"absolute",inset:0,width:"100%",height:"100%",fontSize:64,background:C.s2}}/><div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.75))",pointerEvents:"none"}}/></>}
+      <button onClick={onBack} style={{position:"relative",padding:0,border:0,background:"none",color:prefecture.heroImage?"#fff":C.t2,fontSize:12,cursor:"pointer"}}>‹ Les 47 préfectures</button>
       <div aria-hidden style={{position:"absolute",right:16,bottom:-8,fontFamily:"'Noto Serif JP',serif",fontSize:92,color:prefecture.heroImage?"#fff":C.red,opacity:.1}}><PrefectureMark prefecture={prefecture}/></div>
       <div style={{position:"absolute",left:20,right:20,bottom:21}}><div style={{fontSize:10,color:prefecture.heroImage?"#fff":C.red,letterSpacing:".15em",fontWeight:700}}>{prefecture.region} · {String(prefecture.number).padStart(2,"0")}/47</div><h1 style={{fontFamily:"'Noto Serif JP',serif",fontSize:29,color:prefecture.heroImage?"#fff":C.text,margin:"7px 0 1px"}}>{prefecture.nameFr}</h1><div style={{fontFamily:"'Noto Serif JP',serif",fontSize:16,color:prefecture.heroImage?"rgba(255,255,255,.82)":C.t2}}>{prefecture.nameJa} <span style={{fontSize:11}}>· {prefecture.nameKana}</span></div><div style={{fontSize:10.5,color:prefecture.heroImage?"rgba(255,255,255,.74)":C.t3,marginTop:6}}>Capitale · {prefecture.capital}</div></div>
     </header>

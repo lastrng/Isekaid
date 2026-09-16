@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "lint": "eslint src/features/onboarding src/features/profile/ProfileScreen.jsx src/features/profile/ProfileSettings.jsx src/services/auth/accountStorage.js src/services/sync/cloudBackup.js src/services/sync/progressMerge.js src/FeatureIntro.jsx src/App.jsx",
+    "lint": "eslint src",
+    "qa:daily-reading": "node scripts/qa-daily-reading.mjs",
     "qa:onboarding": "node scripts/qa-onboarding.mjs",
     "qa:onboarding:production": "node scripts/qa-onboarding-production.mjs",
     "dev": "vite",

@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabaseEnabled, fetchTutorConversations, fetchTutorMessages, sendTutorMessage } from "./supabase";
 import { TUTOR_SCENARIOS, getTutorScenario } from "./tutorScenarios";
 import { SpeakButton } from "./tts";
+import { useJapaneseDisplay } from "./components/JapaneseDisplay.jsx";
 import { trackProductEvent } from "./services/analytics/analytics.js";
 import { getPremiumAccess, PREMIUM_FEATURES } from "./features/premium/premiumAccess.js";
 
@@ -458,16 +459,16 @@ function UserBubble({C, text}){
 }
 
 function TutorBubble({C, m}){
-  const [showRomaji, setShowRomaji] = useState(true);
+  const {showRomaji}=useJapaneseDisplay();
   return (
     <div style={{display:"flex",justifyContent:"flex-start",marginBottom:14}}>
       <div style={{maxWidth:"82%"}}>
         <div style={{display:"flex",alignItems:"flex-start",gap:8,padding:"11px 14px",background:C.s1,border:`1px solid ${C.border}`,borderRadius:"16px 16px 16px 4px"}}>
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontSize:15,color:C.text,lineHeight:1.6}}>{m.content_jp}</div>
-            {m.romaji && (
-              <div onClick={()=>setShowRomaji(v=>!v)} style={{fontSize:11.5,color:C.t3,marginTop:3,cursor:"pointer",fontStyle:"italic"}}>
-                {showRomaji ? m.romaji : "romaji ›"}
+            {m.romaji && showRomaji && (
+              <div lang="ja-Latn" data-romaji style={{fontSize:11.5,color:C.t3,marginTop:3,fontStyle:"italic"}}>
+                {m.romaji}
               </div>
             )}
             {m.content_fr && (

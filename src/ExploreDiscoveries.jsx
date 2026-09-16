@@ -12,6 +12,8 @@
 import { useState, useEffect } from "react";
 import { fetchExploreDiscoveries } from "./supabase";
 import { SpeakButton } from "./tts";
+import { ImageWithFallback } from "./components/ImageWithFallback.jsx";
+import { Romaji } from "./components/JapaneseDisplay.jsx";
 
 export function useExploreDiscoveries(){
   const [items, setItems] = useState(null); // null = chargement, [] = vide
@@ -55,18 +57,13 @@ export function DiscoveryTeaserCard({C, discovery, isNew, onOpen}){
       onClick={()=>{ markDiscoverySeen(discovery.slug); onOpen && onOpen(); }}
       style={{cursor:"pointer",borderRadius:18,overflow:"hidden",border:`1px solid ${border}`,background:surface,boxShadow:C.shadow||"none",position:"relative"}}
     >
-      {discovery.image_url && (
-        <div style={{position:"relative",width:"100%",aspectRatio:"16 / 9",background:C.bg}}>
-          <img src={discovery.image_url} alt={discovery.title||"Découverte du jour"} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
-          <div style={{position:"absolute",top:10,left:10,background:"rgba(0,0,0,.55)",backdropFilter:"blur(4px)",color:"#fff",fontSize:10,fontWeight:700,letterSpacing:".12em",padding:"5px 10px",borderRadius:999}}>
-            🎴 DÉCOUVERTE DU JOUR
-          </div>
+      <div style={{position:"relative",width:"100%",aspectRatio:"16 / 9",background:C.bg}}>
+        <ImageWithFallback src={discovery.image_url} emoji={discovery.emoji || "🎴"} style={{width:"100%",height:"100%",fontSize:48,background:`linear-gradient(135deg,${C.red}18,${C.s2})`}}/>
+        <div style={{position:"absolute",top:10,left:10,background:"rgba(0,0,0,.55)",backdropFilter:"blur(4px)",color:"#fff",fontSize:10,fontWeight:700,letterSpacing:".12em",padding:"5px 10px",borderRadius:999}}>
+          🎴 DÉCOUVERTE DU JOUR
         </div>
-      )}
+      </div>
       <div style={{padding:"14px 16px"}}>
-        {!discovery.image_url && (
-          <div style={{fontSize:10,color:C.gold,letterSpacing:".14em",marginBottom:6,textTransform:"uppercase"}}>🎴 DÉCOUVERTE DU JOUR</div>
-        )}
         <div style={{display:"flex",alignItems:"center",gap:6}}>
           <div style={{fontSize:16,fontWeight:800,color:C.text,lineHeight:1.25}}>{discovery.title}</div>
           {isNew && <span aria-label="Nouveau" style={{width:7,height:7,borderRadius:"50%",background:C.gold,flexShrink:0}}/>}
@@ -115,11 +112,7 @@ export function DiscoveriesScreen({C, onBack, backRef}){
               display:"flex",alignItems:"center",gap:14,cursor:"pointer",
               boxShadow:"0 2px 10px rgba(0,0,0,0.03)",
             }}>
-              {d.image_url ? (
-                <img src={d.image_url} alt="" loading="lazy" onError={(e)=>{e.target.style.display="none";}} style={{width:56,height:56,borderRadius:16,objectFit:"cover",flexShrink:0}}/>
-              ) : (
-                <span style={{fontSize:28,flexShrink:0,width:56,height:56,borderRadius:"50%",background:C.s2,display:"flex",alignItems:"center",justifyContent:"center"}}>🎴</span>
-              )}
+              <ImageWithFallback src={d.image_url} emoji={d.emoji || "🎴"} style={{width:56,height:56,borderRadius:16,background:C.s2,fontSize:28}}/>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:3}}>
                   <span style={{fontSize:15,color:C.text,fontWeight:500}}>{d.title}</span>
@@ -140,7 +133,7 @@ function DiscoveryDetail({C, d, onBack}){
     <div style={{height:"100%",overflowY:"auto",background:C.bg,animation:"fadeIn .3s ease"}}>
       {d.image_url && (
         <div style={{width:"100%",height:200,overflow:"hidden",position:"relative"}}>
-          <img src={d.image_url} alt="" loading="lazy" onError={(e)=>{e.target.parentNode.style.display="none";}} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+          <ImageWithFallback src={d.image_url} emoji={d.emoji || "🎴"} style={{width:"100%",height:"100%",background:C.s2,fontSize:54}}/>
           <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(0,0,0,0.1),rgba(15,11,8,0.55))"}}/>
         </div>
       )}
@@ -148,6 +141,7 @@ function DiscoveryDetail({C, d, onBack}){
         <button onClick={onBack} style={{background:C.s1,border:`1px solid ${C.border}`,borderRadius:20,padding:"7px 14px",color:C.t2,fontSize:12,cursor:"pointer",marginBottom:20}}>
           ‹ Découvertes
         </button>
+        {!d.image_url && <ImageWithFallback emoji={d.emoji || "🎴"} style={{width:64,height:64,fontSize:44,marginBottom:12}}/>}
         {d.category && (
           <div style={{fontSize:11,color:C.red,letterSpacing:".2em",marginBottom:6,textTransform:"uppercase"}}>{d.category}</div>
         )}
@@ -157,7 +151,7 @@ function DiscoveryDetail({C, d, onBack}){
         </div>
         {(d.kanji || d.romaji) && (
           <div style={{fontSize:14,color:C.t3,fontFamily:"'Noto Serif JP',serif",marginTop:4}}>
-            {d.kanji}{d.kanji && d.romaji ? " · " : ""}{d.romaji}
+            {d.kanji}<Romaji as="span">{d.romaji && `${d.kanji ? " · " : ""}${d.romaji}`}</Romaji>
           </div>
         )}
         {d.subtitle && <div style={{fontSize:14,color:C.t2,fontStyle:"italic",lineHeight:1.5,marginTop:10}}>{d.subtitle}</div>}

@@ -67,7 +67,8 @@ const RESULT_META = Object.freeze({
 
 export function discoveryResult(type, item) {
   const meta = RESULT_META[type] || RESULT_META.culture;
-  return {...meta,emoji:item?.emoji||meta.emoji,title:item?.titre||item?.nom||item?.romaji||item?.nom_jp||"Découverte du Japon",sub:item?.nom_jp||item?.tag||item?.categorie||"",summary:item?.resume||item?.tagline||item?.description||item?.insight||"",raw:item};
+  const emoji=typeof item?.emoji==="string"&&item.emoji.trim()?item.emoji:meta.emoji;
+  return {...meta,emoji,title:item?.titre||item?.nom||item?.romaji||item?.nom_jp||"Découverte du Japon",sub:item?.nom_jp||item?.tag||item?.categorie||"",summary:item?.resume||item?.tagline||item?.description||item?.insight||"",raw:item};
 }
 
 export function catalogItems(db = {}, catalog = "gastronomy") {

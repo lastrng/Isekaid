@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Compass, Crown, Flame, Search, WifiOff } from "lucide-react";
+import { Romaji } from "../../components/JapaneseDisplay.jsx";
 
 function useOnlineStatus() {
   const [online, setOnline] = useState(() => globalThis.navigator?.onLine !== false);
@@ -23,6 +24,7 @@ export function TodayHeader({ C, user, greeting, streak, progress, isPremium, on
     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,...(animate?{animation:"fadeUp var(--dur-cinematic,.45s) var(--ease-smooth,ease) both"}:{})}}>
       <div style={{minWidth:0}}>
         <div style={{fontSize:11,color:"rgba(253,251,247,.72)",marginBottom:2}}>今日も、少しずつ</div>
+        <Romaji style={{fontSize:11,color:"rgba(253,251,247,.85)",marginBottom:4}}>Kyō mo, sukoshi zutsu</Romaji>
         <div style={{fontFamily:"'Noto Serif JP',serif",fontSize:19,fontWeight:650,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{greeting || (user?.name && user.name !== "Voyageur" ? `Bonjour, ${user.name}` : "Bonjour")}</div>
       </div>
       <div style={{display:"flex",gap:7,flexShrink:0}}>

@@ -50,6 +50,27 @@ for (const name of ["expressions", "repas", "proverbes"]) {
   }
 }
 
+// Dans l'interface française, 円 est transcrit « yen » pour éviter que la
+// lecture japonaise « en » ressemble à un mot tronqué. Le contrôle reste lié
+// au caractère monétaire afin de préserver 縁 (En, le lien ou le destin).
+function auditCurrencyRomaji(value, path = "data") {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => auditCurrencyRomaji(item, `${path}[${index}]`));
+    return;
+  }
+  if (!value || typeof value !== "object") return;
+  for (const [romajiField, japaneseField] of [["romaji","jp"],["texte_romaji","texte_jp"],["audio_romaji","audio_jp"]]) {
+    const japanese = value[japaneseField];
+    const romaji = value[romajiField];
+    if (typeof japanese !== "string" || typeof romaji !== "string") continue;
+    const currencyCount = [...japanese.matchAll(/円/g)].length;
+    const yenCount = [...romaji.matchAll(/\byen\b/gi)].length;
+    if (currencyCount && yenCount < currencyCount) errors.push(`${path}.${romajiField} doit transcrire chaque 円 par « yen »`);
+  }
+  Object.entries(value).forEach(([key, item]) => auditCurrencyRomaji(item, `${path}.${key}`));
+}
+auditCurrencyRomaji(data);
+
 const cityIds = new Set((data.villes || []).map(({ id }) => id));
 for (const place of data.lieux || []) {
   if (!cityIds.has(place.villeId)) errors.push(`${place.id} référence la ville absente ${place.villeId}`);

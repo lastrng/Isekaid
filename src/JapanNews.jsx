@@ -1,3 +1,4 @@
+import { ImageWithFallback } from "./components/ImageWithFallback.jsx";
 import { useEffect, useState } from "react";
 
 /* ============================================================
@@ -99,7 +100,7 @@ export function JapanNewsCard({ C }){
     >
       {latest.image && (
         <div style={{position:"relative",width:"100%",aspectRatio:"16 / 9",background:C.bg}}>
-          <img src={latest.image} alt={latest.title} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+          <ImageWithFallback src={latest.image} emoji="📰" style={{width:"100%",height:"100%",fontSize:48,background:C.s2}}/>
           <div style={{position:"absolute",top:10,left:10,background:"rgba(0,0,0,.55)",backdropFilter:"blur(4px)",color:"#fff",fontSize:10,fontWeight:700,letterSpacing:".12em",padding:"5px 10px",borderRadius:999}}>
             🗞️ ACTU JAPON
           </div>

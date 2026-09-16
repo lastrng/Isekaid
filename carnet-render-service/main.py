@@ -11,12 +11,20 @@
 import os
 
 from flask import Flask, Response, abort, request
-from weasyprint import HTML
+from weasyprint import HTML, default_url_fetcher
 
 app = Flask(__name__)
 
 RENDER_TOKEN = os.environ.get("CARNET_RENDER_TOKEN", "")
-MAX_HTML_BYTES = 3 * 1024 * 1024  # 3 Mo — doit rester cohérent avec l'Edge Function
+MAX_HTML_BYTES = 65 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = MAX_HTML_BYTES + 1024
+
+
+def private_asset_fetcher(url):
+    """Le renderer ne doit jamais devenir un proxy HTTP ou un lecteur de fichiers."""
+    if not url.startswith("data:"):
+        raise ValueError("Seules les ressources intégrées sont autorisées")
+    return default_url_fetcher(url)
 
 
 @app.post("/render")
@@ -35,7 +43,7 @@ def render():
     if len(html.encode("utf-8")) > MAX_HTML_BYTES:
         abort(413, "HTML trop volumineux")
 
-    pdf_bytes = HTML(string=html).write_pdf()
+    pdf_bytes = HTML(string=html, url_fetcher=private_asset_fetcher).write_pdf()
     return Response(pdf_bytes, mimetype="application/pdf")
 
 

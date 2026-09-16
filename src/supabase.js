@@ -13,7 +13,10 @@ const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY;
 export const supabaseEnabled = Boolean(URL && ANON);
 export const supabase = supabaseEnabled
   ? createClient(URL, ANON, {
-      auth: { detectSessionInUrl: false, persistSession: true, autoRefreshToken: true },
+      // Le navigateur revient de Google avec la session dans l'URL. Supabase
+      // doit la consommer avant que l'app ne décide d'afficher l'écran Auth.
+      // En natif, le callback arrive par appUrlOpen et reste traité ci-dessous.
+      auth: { detectSessionInUrl: true, persistSession: true, autoRefreshToken: true },
     })
   : null;
 
@@ -63,28 +66,25 @@ export function onAuthChange(cb){
 }
 export async function handleOAuthCallback(url){
   if(!supabaseEnabled) return null;
-  try {
-    try { const { Browser } = await import("@capacitor/browser"); await Browser.close(); } catch {}
-    const urlObj = new window.URL(url);
-    const code = urlObj.searchParams.get("code");
-    if(code){
-      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-      if(error) throw error;
-      return data.session;
-    }
-    const hashParams = new URLSearchParams(urlObj.hash.replace("#", ""));
-    const accessToken = hashParams.get("access_token");
-    const refreshToken = hashParams.get("refresh_token");
-    if(accessToken){
-      const { data, error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken || "" });
-      if(error) throw error;
-      return data.session;
-    }
-    return null;
-  } catch(e){
-    console.warn("[supabase] handleOAuthCallback échoué:", e?.message);
-    return null;
+  try { const { Browser } = await import("@capacitor/browser"); await Browser.close(); } catch {}
+  const urlObj = new URL(url);
+  const hashParams = new URLSearchParams(urlObj.hash.replace("#", ""));
+  const oauthError = urlObj.searchParams.get("error_description") || urlObj.searchParams.get("error") || hashParams.get("error_description") || hashParams.get("error");
+  if(oauthError) throw new Error(oauthError);
+  const code = urlObj.searchParams.get("code");
+  if(code){
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    if(error) throw error;
+    return data.session;
   }
+  const accessToken = hashParams.get("access_token");
+  const refreshToken = hashParams.get("refresh_token");
+  if(accessToken){
+    const { data, error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken || "" });
+    if(error) throw error;
+    return data.session;
+  }
+  throw new Error("Réponse Google incomplète");
 }
 export async function fetchProgress(userId){
   // Le profil ne doit pas recevoir les colonnes de voyages, suppressions ou

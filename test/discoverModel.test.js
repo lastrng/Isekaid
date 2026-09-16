@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DISCOVER_SECTIONS, JAPAN_PREFECTURES, buildDiscoverHome, catalogItems, prefecturesWithContent, relatedDiscoveries } from "../src/features/explore/discoverModel.js";
+import { DISCOVER_SECTIONS, JAPAN_PREFECTURES, buildDiscoverHome, catalogItems, discoveryResult, prefecturesWithContent, relatedDiscoveries } from "../src/features/explore/discoverModel.js";
 
 test("l'architecture expose les six univers et tous les sous-thèmes attendus",()=>{
   assert.deepEqual(DISCOVER_SECTIONS.map(section=>section.id),["culture","society","gastronomy","history","pop","practical"]);
@@ -35,4 +35,10 @@ test("les contenus liés excluent la fiche courante et partagent un thème réel
   const related=relatedDiscoveries({vie_quotidienne:[source.raw,{id:"gare",titre:"À la gare",description:"Prendre le train"}],repas:[{id:"ramen",romaji:"Ramen",description:"Bouillon"}]},source);
   assert.equal(related[0].raw.id,"gare");
   assert.ok(related.every(item=>item.raw.id!=="train"));
+});
+
+test("chaque découverte reçoit un emoji de secours selon son type",()=>{
+  assert.equal(discoveryResult("repas",{id:"ramen",emoji:""}).emoji,"🍜");
+  assert.equal(discoveryResult("lieu",{id:"temple",emoji:"   "}).emoji,"📍");
+  assert.equal(discoveryResult("culture",{id:"manga"}).emoji,"🎋");
 });

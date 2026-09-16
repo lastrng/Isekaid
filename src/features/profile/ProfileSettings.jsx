@@ -4,6 +4,7 @@ import { ProductCard, SectionHeading } from "../shared/ProductUI.jsx";
 import { TripConflicts } from "../my-japan/TripConflicts.jsx";
 import { DetailHeader } from "../my-japan/MyJapanDetailPages.jsx";
 import { ProgressConflicts } from "./ProgressConflicts.jsx";
+import { useJapaneseDisplay } from "../../components/JapaneseDisplay.jsx";
 
 function Switch({ C, on, onClick, label }) {
   return <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={event => { event.stopPropagation(); onClick?.(); }} className="my-japan-switch" style={{ background: on ? C.red : C.s3 }}><span style={{ transform: `translateX(${on ? 20 : 0}px)` }}/></button>;
@@ -19,6 +20,7 @@ function SettingsRow({ C, Icon, label, sub, control, onClick, danger = false, la
 }
 
 export function ProfileSettingsPage({ C, user, session, dark, setDark, reminders, setReminders, dailyReminder, reminderSupported, reminderError, toggleDailyReminder, soundOn, toggleSound, script, setScript, isPremium, onOpenPremium, syncStatus, onDataSync, onShowTour, onLogout, onPersonalize, onDeleteAccount, onBack }) {
+  const {showRomaji,setShowRomaji}=useJapaneseDisplay();
   const syncLabel = !session?.user ? "Données conservées sur cet appareil" : syncStatus?.hasError ? "Intervention nécessaire" : syncStatus?.pending ? `${syncStatus.pending} élément${syncStatus.pending > 1 ? "s" : ""} en attente` : "Synchronisation à jour";
   return <div className="my-japan-detail-page">
     <DetailHeader C={C} eyebrow="Mon compte" title="Profil & réglages" onBack={onBack}/>
@@ -41,7 +43,8 @@ export function ProfileSettingsPage({ C, user, session, dark, setDark, reminders
       <SettingsRow C={C} Icon={Bell} label="Alerte streak dans l’app" sub="Rappel discret sur Aujourd’hui" control={<Switch C={C} on={reminders} onClick={() => setReminders(value => !value)} label="Activer l’alerte de streak"/>}/>
       <SettingsRow C={C} Icon={Bell} label="Rappel quotidien" sub={!reminderSupported ? "Disponible dans l’application mobile" : reminderError === "permission_denied" ? "Autorisation refusée dans les réglages du téléphone" : `Chaque jour à ${String(dailyReminder.hour).padStart(2,"0")}:${String(dailyReminder.minute).padStart(2,"0")}`} control={<Switch C={C} on={dailyReminder.enabled} onClick={toggleDailyReminder} label="Activer le rappel quotidien"/>}/>
       <SettingsRow C={C} Icon={Volume2} label="Son" sub="Jingles de réussite, streak et niveau" control={<Switch C={C} on={soundOn} onClick={toggleSound} label="Activer les sons"/>}/>
-      <SettingsRow C={C} Icon={Type} label="Affichage du japonais" sub="Kana, kanji ou transcription" last control={<div className="my-japan-script-choice">{[{id:"kana",label:"あ"},{id:"kanji",label:"漢"},{id:"romaji",label:"A"}].map(option => <button type="button" key={option.id} aria-label={`Écriture ${option.id}`} aria-pressed={script === option.id} onClick={() => setScript(option.id)} style={{ borderColor: script === option.id ? C.red : C.border, background: script === option.id ? `${C.red}14` : "transparent", color: script === option.id ? C.red : C.t3 }}>{option.label}</button>)}</div>}/>
+      <SettingsRow C={C} Icon={Type} label="Afficher le romaji" sub="La prononciation en lettres latines, partout où elle est disponible" control={<Switch C={C} on={showRomaji} onClick={()=>setShowRomaji(value=>!value)} label="Afficher le romaji"/>}/>
+      <SettingsRow C={C} Icon={Type} label="Affichage du japonais" sub="Kana, kanji ou transcription" last control={<div className="my-japan-script-choice">{[{id:"kana",label:"あ"},{id:"kanji",label:"漢"},{id:"romaji",label:"A"}].map(option => <button type="button" key={option.id} aria-label={`Écriture ${option.id}`} aria-pressed={script === option.id} onClick={() => {setScript(option.id);if(option.id==="romaji")setShowRomaji(true);}} style={{ borderColor: script === option.id ? C.red : C.border, background: script === option.id ? `${C.red}14` : "transparent", color: script === option.id ? C.red : C.t3 }}>{option.label}</button>)}</div>}/>
     </ProductCard>
 
     <SectionHeading C={C} eyebrow="Isekaid" title="Aide et compte"/>

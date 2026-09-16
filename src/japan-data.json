@@ -7359,7 +7359,7 @@
       "vocabulaire": [
         {
           "jp": "全部百円ですか？",
-          "romaji": "Zenbu hyaku-en desu ka?",
+          "romaji": "Zenbu hyaku-yen desu ka?",
           "fr": "Tout est à 100 yens ?",
           "kana": "ぜんぶ ひゃくえん です か?"
         },
@@ -10245,7 +10245,7 @@
         },
         {
           "jp": "会費は3000円です",
-          "romaji": "Kaihi wa sanzen-en desu",
+          "romaji": "Kaihi wa sanzen-yen desu",
           "fr": "La cotisation est de 3000 yens",
           "kana": "かいひ は さんぜんえん です"
         },
@@ -12662,7 +12662,7 @@
             },
             {
               "jp": "おいくらまんえんですか",
-              "romaji": "O-ikura man'en desu ka",
+              "romaji": "O-ikura man-yen desu ka",
               "kana": "おいくら まんえん です か",
               "fr": "Combien de dizaines de milliers ?",
               "correct": false,
@@ -14273,7 +14273,7 @@
           "choix": [
             {
               "jp": "せんごひゃくえんですね",
-              "romaji": "Sen gohyaku en desu ne",
+              "romaji": "Sen gohyaku yen desu ne",
               "kana": "せん ごひゃく えん です ね",
               "fr": "1500 yens, c'est ça ?",
               "correct": true,
@@ -14281,7 +14281,7 @@
             },
             {
               "jp": "せんごひゃくえんですか",
-              "romaji": "Sen gohyaku en desu ka",
+              "romaji": "Sen gohyaku yen desu ka",
               "kana": "せん ごひゃく えん です か",
               "fr": "1500 yens ?",
               "correct": false,
@@ -21704,7 +21704,7 @@
       "niveau": "Débutant",
       "emoji": "🏪",
       "texte_jp": "いらっしゃいませ。こちらのおにぎりは200円です。お弁当は500円です。温めますか？",
-      "texte_romaji": "Irasshaimase. Kochira no onigiri wa 200 en desu. Obentō wa 500 en desu. Atatamemasu ka?",
+      "texte_romaji": "Irasshaimase. Kochira no onigiri wa 200 yen desu. Obentō wa 500 yen desu. Atatamemasu ka?",
       "traduction": "Bienvenue. Cet onigiri coûte 200 yens. Le bentō coûte 500 yens. Voulez-vous que je le réchauffe ?",
       "questions": [
         {
@@ -21920,7 +21920,7 @@
       "niveau": "Débutant",
       "emoji": "🚉",
       "texte_jp": "東京駅から京都駅まで、新幹線で約2時間半かかります。指定席は5000円です。自由席は4000円です。",
-      "texte_romaji": "Tōkyō-eki kara Kyōto-eki made, shinkansen de yaku ni-jikan-han kakarimasu. Shiteiseki wa 5000 en desu. Jiyūseki wa 4000 en desu.",
+      "texte_romaji": "Tōkyō-eki kara Kyōto-eki made, shinkansen de yaku ni-jikan-han kakarimasu. Shiteiseki wa 5000 yen desu. Jiyūseki wa 4000 yen desu.",
       "texte_kana": "とうきょうえき から きょうとえき まで、しんかんせん で やく にじかんはん かかります。していせき は ５０００えん です。じゆうせき は ４０００えん です。",
       "traduction": "De la gare de Tokyo à celle de Kyoto, le Shinkansen met environ 2h30. Une place réservée coûte 5000 yens. Une place libre, 4000 yens.",
       "questions": [
@@ -21978,7 +21978,7 @@
       "niveau": "Intermédiaire",
       "emoji": "🍱",
       "texte_jp": "本日のランチセットは、ラーメンと餃子で900円です。ドリンクは別料金です。11時から14時まで注文できます。",
-      "texte_romaji": "Honjitsu no ranchi setto wa, rāmen to gyōza de 900 en desu. Dorinku wa betsu ryōkin desu. 11-ji kara 14-ji made chūmon dekimasu.",
+      "texte_romaji": "Honjitsu no ranchi setto wa, rāmen to gyōza de 900 yen desu. Dorinku wa betsu ryōkin desu. 11-ji kara 14-ji made chūmon dekimasu.",
       "texte_kana": "ほんじつ の らんち せっと は、らーめん と ぎょうざ で ９００えん です。どりんく は べつりょうきん です。１１じ から １４じ まで ちゅうもん できます。",
       "traduction": "Le menu du jour, c'est ramen + gyoza pour 900 yens. Les boissons sont en supplément. On peut commander de 11h à 14h.",
       "questions": [
@@ -22027,7 +22027,7 @@
       "titre": "Au konbini",
       "emoji": "🏪",
       "texte_jp": "いらっしゃいませ。袋はいりますか？はい、3円です。",
-      "texte_romaji": "Irasshaimase. Fukuro wa irimasu ka? Hai, 3 en desu.",
+      "texte_romaji": "Irasshaimase. Fukuro wa irimasu ka? Hai, 3 yen desu.",
       "texte_kana": "いらっしゃいませ。ふくろ は いります か？はい、３えん です。",
       "traduction": "Bienvenue. Voulez-vous un sac ? Oui, ça fait 3 yens.",
       "questions": [
@@ -22123,7 +22123,7 @@
       "titre": "Le menu",
       "emoji": "🍜",
       "texte_jp": "ラーメン 800円。チャーハン 600円。餃子 400円。お茶は無料です。",
-      "texte_romaji": "Rāmen 800 en. Chāhan 600 en. Gyōza 400 en. Ocha wa muryō desu.",
+      "texte_romaji": "Rāmen 800 yen. Chāhan 600 yen. Gyōza 400 yen. Ocha wa muryō desu.",
       "texte_kana": "らーめん ８００えん。ちゃーはん ６００えん。ぎょうざ ４００えん。おちゃ は むりょう です。",
       "traduction": "Ramen 800 yens. Riz frit 600 yens. Gyoza 400 yens. Le thé est gratuit.",
       "questions": [
@@ -22315,7 +22315,7 @@
       "titre": "La liste de courses",
       "emoji": "🛒",
       "texte_jp": "卵、牛乳、パン、りんごを買います。全部で1000円ぐらいです。",
-      "texte_romaji": "Tamago, gyūnyū, pan, ringo wo kaimasu. Zenbu de 1000 en gurai desu.",
+      "texte_romaji": "Tamago, gyūnyū, pan, ringo wo kaimasu. Zenbu de 1000 yen gurai desu.",
       "texte_kana": "たまご、ぎゅうにゅう、ぱん、りんご を かいます。ぜんぶ で １０００えん ぐらい です。",
       "traduction": "J'achète des œufs, du lait, du pain et des pommes. En tout, environ 1000 yens.",
       "questions": [
@@ -22399,7 +22399,7 @@
       "titre": "Au café",
       "emoji": "☕",
       "texte_jp": "コーヒーは350円です。ケーキは450円です。セットは700円です。",
-      "texte_romaji": "Kōhī wa 350 en desu. Kēki wa 450 en desu. Setto wa 700 en desu.",
+      "texte_romaji": "Kōhī wa 350 yen desu. Kēki wa 450 yen desu. Setto wa 700 yen desu.",
       "texte_kana": "こーひー は ３５０えん です。けーき は ４５０えん です。せっと は ７００えん です。",
       "traduction": "Le café coûte 350 yens. Le gâteau 450 yens. Le menu (set) 700 yens.",
       "questions": [
@@ -22583,7 +22583,7 @@
       "titre": "Réservation d'hôtel",
       "emoji": "🏨",
       "texte_jp": "ご予約ありがとうございます。チェックインは午後3時から、チェックアウトは午前11時までです。朝食は別料金で1500円です。",
-      "texte_romaji": "Go-yoyaku arigatō gozaimasu. Chekku-in wa gogo 3-ji kara, chekku-auto wa gozen 11-ji made desu. Chōshoku wa betsu ryōkin de 1500 en desu.",
+      "texte_romaji": "Go-yoyaku arigatō gozaimasu. Chekku-in wa gogo 3-ji kara, chekku-auto wa gozen 11-ji made desu. Chōshoku wa betsu ryōkin de 1500 yen desu.",
       "texte_kana": "ごよやく ありがとうございます。ちぇっくいん は ごご３じ から、ちぇっくあうと は ごぜん１１じ まで です。ちょうしょく は べつりょうきん で １５００えん です。",
       "traduction": "Merci pour votre réservation. Le check-in est à partir de 15h, le check-out jusqu'à 11h. Le petit-déjeuner est en supplément à 1500 yens.",
       "questions": [
@@ -23489,7 +23489,7 @@
       "titre": "Brève économique",
       "emoji": "📈",
       "texte_jp": "円安の影響で、訪日外国人観光客が急増している。観光業界にとっては追い風だが、輸入品の価格上昇により、国内の家計には負担が増している。",
-      "texte_romaji": "En'yasu no eikyō de, hōnichi gaikokujin kankōkyaku ga kyūzō shite iru. Kankō gyōkai ni totte wa oikaze da ga, yunyūhin no kakaku jōshō ni yori, kokunai no kakei ni wa futan ga mashite iru.",
+      "texte_romaji": "Yen-yasu no eikyō de, hōnichi gaikokujin kankōkyaku ga kyūzō shite iru. Kankō gyōkai ni totte wa oikaze da ga, yunyūhin no kakaku jōshō ni yori, kokunai no kakei ni wa futan ga mashite iru.",
       "texte_kana": "えんやす の えいきょう で、ほうにち がいこくじん かんこうきゃく が きゅうぞう して いる。かんこう ぎょうかい に とって は おいかぜ だ が、ゆにゅうひん の かかく じょうしょう に より、こくない の かけい に は ふたん が まして いる。",
       "traduction": "En raison de la faiblesse du yen, le nombre de touristes étrangers au Japon explose. C'est un vent favorable pour le tourisme, mais la hausse du prix des produits importés pèse de plus en plus sur les ménages du pays.",
       "questions": [
@@ -23501,7 +23501,7 @@
             "Nouveaux vols"
           ],
           "correct": 0,
-          "feedback": "円安 (en'yasu) = yen faible."
+          "feedback": "円安 (yen-yasu) = yen faible."
         },
         {
           "q": "Quel est l'inconvénient mentionné ?",
@@ -24321,7 +24321,7 @@
       "titre": "Combien ça coûte ?",
       "emoji": "💴",
       "audio_jp": "これはいくらですか？500円です。じゃあ、これをください。",
-      "audio_romaji": "Kore wa ikura desu ka? 500 en desu. Jā, kore wo kudasai.",
+      "audio_romaji": "Kore wa ikura desu ka? 500 yen desu. Jā, kore wo kudasai.",
       "audio_kana": "これ は いくら です か？５００えん です。じゃあ、これ を ください。",
       "traduction": "Combien ça coûte ? 500 yens. Bon, je prends ça.",
       "questions": [

@@ -53,8 +53,12 @@ test("les routes internes sont conservées séparément de leur espace parent",(
 
 test("le deep link OAuth Android reste un schéma personnalisé valide",()=>{
   const manifest=readFileSync(new URL("../android/app/src/main/AndroidManifest.xml",import.meta.url),"utf8");
+  const app=readFileSync(new URL("../src/App.jsx",import.meta.url),"utf8");
+  const auth=readFileSync(new URL("../src/supabase.js",import.meta.url),"utf8");
   assert.match(manifest,/android:scheme="app\.isekaid" android:host="login-callback"/);
   assert.doesNotMatch(manifest,/intent-filter android:autoVerify="true"/);
+  assert.match(app,/CapApp\.getLaunchUrl\(\)/);
+  assert.match(auth,/detectSessionInUrl:\s*true/);
 });
 
 test("l'historique restitue chaque écran précédent dans l'ordre inverse",()=>{

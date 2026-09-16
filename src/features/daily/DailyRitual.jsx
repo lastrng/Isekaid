@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, BookOpen, Brain, Check, ChevronLeft, ChevronRight, Clock3, Pause, Play, Sparkles, Target } from "lucide-react";
 import { ProductCard, productTheme } from "../shared/ProductUI.jsx";
+import { JapaneseSubtitle, Romaji } from "../../components/JapaneseDisplay.jsx";
 import {
   answerDailyQuestion,
   completeDailyActivity,
@@ -28,15 +29,28 @@ function CompletedNote({ C }) {
   return <div role="status" style={{display:"flex",alignItems:"center",gap:7,minHeight:44,marginTop:12,color:C.green,fontSize:12,fontWeight:750}}><Check size={16}/>Étape terminée</div>;
 }
 
-function ActivityPreview({ C, activity, script, onComplete, onAnswer, onOpen }) {
+function QuizFeedback({C,activity}) {
+  const feedbackRef=useRef(null);
+  useEffect(()=>{
+    feedbackRef.current?.focus({preventScroll:true});
+    feedbackRef.current?.scrollIntoView({block:"nearest",behavior:"auto"});
+  },[]);
+  return <div ref={feedbackRef} tabIndex={-1} role="status" aria-live="polite" style={{marginTop:14,padding:14,borderRadius:12,background:C.s2,color:C.text,fontSize:13,lineHeight:1.6}}>
+    <strong>{activity.answerCorrect ? "Bonne réponse !" : "La bonne réponse"}</strong>
+    <div>{activity.question?.answer}</div>
+    {activity.question?.explanation&&<p style={{margin:"8px 0 0",color:C.t2}}>{activity.question.explanation}</p>}
+  </div>;
+}
+
+function ActivityPreview({ C, activity, script, onComplete, onAnswer, onOpen, onContinue }) {
   const meta = STEP_META[activity.kind] || STEP_META.discover;
   const item = activity.raw || {};
   if (activity.kind === "learn") {
-    const main = script === "romaji" ? item.romaji : script === "kanji" ? (item.expression || item.kana) : (item.kana || item.expression);
-    const secondary = script === "romaji" ? (item.kana || item.expression) : item.romaji;
+    const japanese = item.expression || item.jp || item.kana;
+    const main = script === "romaji" ? (item.romaji || japanese) : script === "kanji" ? (japanese || item.romaji) : (item.kana || japanese || item.romaji);
     return <>
-      <div lang={script === "romaji" ? "fr" : "ja"} style={{fontFamily:"'Noto Serif JP',serif",fontSize:main?.length>14?24:29,color:C.text,lineHeight:1.3}}>{main || activity.title}</div>
-      {secondary&&<div style={{fontSize:11,color:C.t3,marginTop:3}}>{secondary}</div>}
+      <div lang={script === "romaji" ? "ja-Latn" : "ja"} style={{fontFamily:"'Noto Serif JP',serif",fontSize:main?.length>14?24:29,color:C.text,lineHeight:1.3}}>{main || activity.title}</div>
+      <JapaneseSubtitle entry={item} script={script} jpField="expression" style={{fontSize:12,color:C.t2,marginTop:3}}/>
       <div style={{fontSize:14,fontWeight:700,color:C.red,marginTop:9}}>{item.traduction || activity.summary}</div>
       {activity.done?<CompletedNote C={C}/>:<PrimaryAction color={meta.color} onClick={onComplete}>{meta.cta}</PrimaryAction>}
     </>;
@@ -44,12 +58,16 @@ function ActivityPreview({ C, activity, script, onComplete, onAnswer, onOpen }) 
   if (activity.kind === "understand") {
     return <>
       <div style={{fontFamily:"'Noto Serif JP',serif",fontSize:17,color:C.text,lineHeight:1.45}}>{activity.question?.prompt || activity.title}</div>
+      <Romaji style={{fontSize:13,color:C.t2,marginTop:5}}>{item.romaji}</Romaji>
       <div style={{display:"grid",gap:7,marginTop:12}}>{(activity.question?.choices || []).map(choice=>{
         const correct = activity.done && choice === activity.question?.answer;
         const selected = activity.done && choice === activity.selectedAnswer;
-        return <button type="button" disabled={activity.done} key={choice} onClick={()=>onAnswer(choice)} style={{minHeight:44,padding:"10px 12px",borderRadius:12,border:`1px solid ${correct?C.green:selected?C.red:C.border}`,background:correct?`${C.green}12`:selected?`${C.red}10`:C.s2,color:C.text,textAlign:"left",fontSize:12,lineHeight:1.35,cursor:activity.done?"default":"pointer"}}>{choice}</button>;
+        return <button type="button" disabled={activity.done} key={choice} onClick={()=>onAnswer(choice)} style={{minHeight:44,padding:"10px 12px",borderRadius:12,border:`1px solid ${correct?C.green:selected?C.red:C.border}`,background:correct?`${C.green}12`:selected?`${C.red}10`:C.s2,color:C.text,textAlign:"left",fontSize:12,lineHeight:1.35,cursor:activity.done?"default":"pointer"}}>{choice}{correct ? " — Bonne réponse" : selected ? " — Ta réponse" : ""}</button>;
       })}</div>
-      {activity.done&&<CompletedNote C={C}/>}
+      {activity.done&&<>
+        <QuizFeedback C={C} activity={activity}/>
+        <PrimaryAction color={meta.color} onClick={onContinue}>Continuer</PrimaryAction>
+      </>}
     </>;
   }
   return <>
@@ -95,6 +113,7 @@ export function DailyRitual({ C, db, date, timeZone, travelContext, userContext,
   const initialStep = getCurrentDailyStep(ritual);
   const [selectedIndex,setSelectedIndex] = useState(()=>Math.min(initialStep.index,Math.max(0,ritual.activities.length-1)));
   const [autoPaused,setAutoPaused] = useState(false);
+  const [feedbackActivityId,setFeedbackActivityId] = useState(null);
   const [hovered,setHovered] = useState(false);
   const touchStartX = useRef(null);
   const reducedMotion = useReducedMotion();
@@ -103,6 +122,8 @@ export function DailyRitual({ C, db, date, timeZone, travelContext, userContext,
     const count=ritual.activities.length;
     if(!count)return;
     setSelectedIndex((index+count)%count);
+    setAutoPaused(true);
+    setFeedbackActivityId(null);
   },[ritual.activities.length]);
 
   useEffect(() => {
@@ -118,9 +139,9 @@ export function DailyRitual({ C, db, date, timeZone, travelContext, userContext,
     if (next === ritual) return;
     setRitual(next);
     const nextStep=getCurrentDailyStep(next);
-    if(nextStep.activity)setSelectedIndex(nextStep.index);
+    if(nextStep.activity&&!feedbackActivityId)setSelectedIndex(nextStep.index);
     onDailyComplete?.({ firstActivity:false, complete:dailyProgress(next).complete, ritual:next });
-  }, [completedMissionIds, onDailyComplete, ritual]);
+  }, [completedMissionIds, onDailyComplete, ritual, feedbackActivityId]);
 
   const progress = dailyProgress(ritual);
   const duration = dailySessionMinutes(ritual);
@@ -136,10 +157,10 @@ export function DailyRitual({ C, db, date, timeZone, travelContext, userContext,
     setSelectedIndex(Math.min(nextStep.index,ritual.activities.length-1));
   },[ritual.date]);
   useEffect(()=>{
-    if(progress.complete || ritual.activities.length<2 || autoPaused || hovered || reducedMotion)return;
-    const timer=setTimeout(()=>goTo(selectedIndex+1),6000);
+    if(progress.complete || ritual.activities[selectedIndex]?.kind === "understand" || ritual.activities.length<2 || autoPaused || hovered || reducedMotion)return;
+    const timer=setTimeout(()=>setSelectedIndex(index=>(index+1)%ritual.activities.length),6000);
     return()=>clearTimeout(timer);
-  },[autoPaused,goTo,hovered,progress.complete,reducedMotion,ritual.activities.length,selectedIndex]);
+  },[autoPaused,hovered,progress.complete,reducedMotion,ritual.activities,selectedIndex]);
   useEffect(() => {
     onProgressChange?.({ ...progress, activities:ritual.activities.map(({ kind, done }) => ({ kind, done })) });
   }, [onProgressChange, progress.complete, progress.done, progress.percent, progress.total, ritual.activities]);
@@ -161,12 +182,17 @@ export function DailyRitual({ C, db, date, timeZone, travelContext, userContext,
     const next = answerDailyQuestion(ritual, activity.id, choice);
     if (next !== ritual) {
       notify(next, before);
-      const nextStep=getCurrentDailyStep(next);
-      if(nextStep.activity)setSelectedIndex(nextStep.index);
+      setAutoPaused(true);
+      setFeedbackActivityId(activity.id);
     }
   };
 
   const selectedActivity=ritual.activities[selectedIndex] || current.activity;
+  // Older saved quizzes only stored expressionId. Resolve reading help from
+  // their original expression, never from today's new recommendation.
+  const previewActivity=selectedActivity?.kind === "understand" && !selectedActivity.raw?.romaji
+    ? {...selectedActivity,raw:{...db?.expressions?.find((item,index)=>(item.id || `expression-${index}`)===selectedActivity.raw?.expressionId),...selectedActivity.raw}}
+    : selectedActivity;
   const meta = selectedActivity ? (STEP_META[selectedActivity.kind] || STEP_META.discover) : STEP_META.discover;
   const SelectedIcon = meta.Icon;
   const onTouchEnd = event=>{
@@ -187,9 +213,10 @@ export function DailyRitual({ C, db, date, timeZone, travelContext, userContext,
     {!ritual.activities.length ? <ProductCard C={C} variant="quiet" style={{padding:18,marginTop:13}}>
       <div style={{fontFamily:"'Noto Serif JP',serif",fontSize:17,color:C.text}}>Ta session se prépare</div>
       <div style={{fontSize:12,color:C.t2,lineHeight:1.5,marginTop:5}}>Ton contenu local reste intact. Reviens dans un instant ou reconnecte-toi pour charger les découvertes du jour.</div>
-    </ProductCard> : progress.complete ? <ProductCard C={C} variant="quiet" style={{padding:"18px 17px",marginTop:13,background:`${C.green}0D`,borderColor:`${C.green}38`}}>
+    </ProductCard> : progress.complete && !feedbackActivityId ? <ProductCard C={C} variant="quiet" style={{padding:"18px 17px",marginTop:13,background:`${C.green}0D`,borderColor:`${C.green}38`}}>
       <div style={{display:"flex",alignItems:"center",gap:12}}><span style={{width:38,height:38,borderRadius:"50%",background:`${C.green}16`,color:C.green,display:"grid",placeItems:"center",flexShrink:0}}><Check size={20}/></span><div><div style={{fontFamily:"'Noto Serif JP',serif",fontSize:18,fontWeight:650,color:C.text}}>Ta session du jour est terminée</div><div style={{fontSize:11,color:C.t2,marginTop:3}}>{duration} min · {streakCount>0?"streak maintenu · ":""}{progress.done} étapes accomplies</div></div></div>
       <div aria-label="Quatre étapes terminées" style={{display:"grid",gridTemplateColumns:`repeat(${ritual.activities.length},1fr)`,gap:4,marginTop:14}}>{ritual.activities.map(activity=><span key={activity.id} style={{height:3,borderRadius:4,background:C.green}}/>)}</div>
+      {ritual.activities.some(activity=>activity.kind==="understand")&&<PrimaryAction color={C.green} onClick={()=>{const index=ritual.activities.findIndex(activity=>activity.kind==="understand");setSelectedIndex(index);setFeedbackActivityId(ritual.activities[index].id);setAutoPaused(true);}}>Revoir la réponse du quiz</PrimaryAction>}
     </ProductCard> : <>
       <DailyNavigation C={C} activities={ritual.activities} selectedIndex={selectedIndex} onSelect={goTo}/>
       <div role="region" aria-roledescription="carrousel" aria-label="Activités de la session" className="today-step-slider" style={{touchAction:"pan-y"}} onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)} onTouchStart={event=>{touchStartX.current=event.touches?.[0]?.clientX ?? null;}} onTouchEnd={onTouchEnd}>
@@ -198,7 +225,7 @@ export function DailyRitual({ C, db, date, timeZone, travelContext, userContext,
           <div style={{display:"flex",alignItems:"center",gap:8,color:meta.color}}><SelectedIcon size={17}/><span style={{fontSize:10,fontWeight:850,letterSpacing:".12em"}}>0{selectedIndex+1} · {meta.label.toUpperCase()}</span></div>
           <span style={{fontSize:10,color:C.t3}}>{selectedActivity.durationMinutes || 1} min</span>
         </div>
-        <ActivityPreview C={C} activity={selectedActivity} script={script} onComplete={()=>complete(selectedActivity)} onAnswer={choice=>answer(selectedActivity,choice)} onOpen={()=>onOpenActivity?.(selectedActivity)}/>
+        <ActivityPreview C={C} activity={previewActivity} script={script} onComplete={()=>complete(selectedActivity)} onAnswer={choice=>answer(selectedActivity,choice)} onOpen={()=>onOpenActivity?.(selectedActivity)} onContinue={()=>{setFeedbackActivityId(null);if(current.activity)goTo(current.index);}}/>
       </ProductCard>
       <button type="button" onClick={()=>goTo(selectedIndex-1)} aria-label="Étape précédente" className="today-step-slider__arrow today-step-slider__arrow--previous"><ChevronLeft size={18}/></button>
       <button type="button" onClick={()=>goTo(selectedIndex+1)} aria-label="Étape suivante" className="today-step-slider__arrow today-step-slider__arrow--next"><ChevronRight size={18}/></button>

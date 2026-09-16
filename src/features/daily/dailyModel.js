@@ -170,7 +170,16 @@ function recommendationItem(node) {
   if (!node?.raw) return null;
   const type = ({food:"gastronomie",phrase:"expression",daily:"daily_life",code:"social_code"})[node.kind] || node.kind;
   const label = ({food:"Gastronomie",phrase:"Japonais",situation:"Situation réelle",scenario:"Situation réelle",tradition:"Tradition japonaise",history:"Histoire",code:"Société",daily:"Vie quotidienne",region:"Territoires",place:"Dans ton voyage",culture:"Culture"})[node.kind] || "Pour toi";
-  return { id:node.sourceId, type, label, title:node.title, summary:shortText(node.summary), raw:node.raw };
+  // Les nœuds du graphe peuvent avoir un titre éditorial français. Pour
+  // l'étape Apprendre, la graphie japonaise (ou sa lecture) doit rester le
+  // contenu principal et la traduction seulement son explication.
+  const title = node.kind === "phrase"
+    ? (node.raw.expression || node.raw.kana || node.raw.jp || node.raw.romaji || node.title)
+    : node.title;
+  const summary = node.kind === "phrase"
+    ? (node.raw.traduction || node.summary)
+    : node.summary;
+  return { id:node.sourceId, type, label, title, summary:shortText(summary), raw:node.raw };
 }
 
 function buildUnderstandingActivity(learn, expressions, dateKey) {
@@ -197,7 +206,7 @@ function buildUnderstandingActivity(learn, expressions, dateKey) {
       answer,
       explanation: shortText(learn.raw.contexte || `« ${learn.raw.romaji || learn.title} » signifie « ${answer} ».`, 320),
     },
-    raw: { expressionId: learn.id },
+    raw: { expressionId: learn.id, expression: learn.raw.expression, kana: learn.raw.kana, romaji: learn.raw.romaji },
   };
 }
 
@@ -254,7 +263,7 @@ export function buildDailyRitual({ db = {}, date = new Date(), travelContext = n
   }));
   const complete = activities.length > 0 && activities.every(item => item.done);
   return {
-    version: 2,
+    version: 3,
     date: dateKey,
     personalizationKey: userContext?.fingerprint || personalizationKey({ ...travelContext, ...personalization }),
     activities,
@@ -271,7 +280,7 @@ export function loadDailyRitual({ db = {}, date = new Date(), travelContext = nu
   const hasContent = Object.values(pools).some(items => items.length > 0);
   // Une fois générée, la session ne change plus jusqu'au lendemain, même si
   // le profil, le voyage actif ou la saison sont resynchronisés entre-temps.
-  if (saved?.date === dateKey && saved?.version >= 2 && Array.isArray(saved.activities) && (saved.activities.length > 0 || !hasContent)) {
+  if (saved?.date === dateKey && saved?.version >= 3 && Array.isArray(saved.activities) && (saved.activities.length > 0 || !hasContent)) {
     // Un snapshot peut avoir été préparé par la synchronisation avant que la
     // mission du jour ne soit disponible. On complète alors uniquement cette
     // étape manquante sans jamais remplacer les contenus déjà choisis.
@@ -286,7 +295,7 @@ export function loadDailyRitual({ db = {}, date = new Date(), travelContext = nu
     }
     return saved;
   }
-  // Hors ligne, une session v1 déjà en cache reste préférable à un écran vide.
+  // Hors ligne, une ancienne session déjà en cache reste préférable à un écran vide.
   if (saved?.date === dateKey && Array.isArray(saved.activities) && !hasContent) return saved;
   const next = buildDailyRitual({ db, date: dateKey, travelContext, personalization, userContext, mission });
   if (saved?.date === dateKey && Array.isArray(saved.activities)) {

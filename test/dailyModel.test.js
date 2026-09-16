@@ -38,7 +38,7 @@ test("la session quotidienne contient les quatre temps en 3 à 8 minutes",()=>{
     date:"2026-09-06",
     mission:{id:"like_card",trigger:"fav",label:"Sauvegarder un lieu",hint:"Découvrir",targetTab:"explore"},
   });
-  assert.equal(ritual.version,2);
+  assert.equal(ritual.version,3);
   assert.deepEqual(ritual.activities.map(item=>item.kind),["discover","learn","understand","mission"]);
   assert.equal(dailySessionMinutes(ritual)>=3,true);
   assert.equal(dailySessionMinutes(ritual)<=8,true);
@@ -102,8 +102,26 @@ test("la réponse au mini-quiz et la mission sont persistées dans la progressio
   assert.equal(savedQuiz.done,true);
   assert.equal(savedQuiz.answerCorrect,true);
   assert.equal(savedQuiz.selectedAnswer,quiz.question.answer);
+  assert.equal(savedQuiz.question.explanation,quiz.question.explanation);
+  assert.equal(answerDailyQuestion(answered,quiz.id,quiz.question.answer),answered);
   const missionDone = syncDailyMissionProgress(answered,["do_review"]);
   assert.equal(missionDone.activities.find(item=>item.kind==="mission").done,true);
+});
+
+test("le quiz garde la lecture de son expression et ignore les réponses invalides",()=>{
+  const catalog={...db,expressions:[{id:"reading",expression:"ありがとう",kana:"ありがとう",romaji:"Arigatō",traduction:"Merci",contexte:"Pour remercier."},{id:"other",expression:"はい",romaji:"Hai",traduction:"Oui"}]};
+  const ritual=buildDailyRitual({db:catalog,date:"2026-09-06"});
+  const quiz=ritual.activities.find(item=>item.kind==="understand");
+  const learn=ritual.activities.find(item=>item.kind==="learn");
+  assert.equal(quiz.raw.romaji,learn.raw.romaji);
+  assert.equal(quiz.raw.expression,learn.raw.expression);
+  assert.equal(answerDailyQuestion(ritual,quiz.id,"hors du QCM"),ritual);
+  const wrong=quiz.question.choices.find(choice=>choice!==quiz.question.answer);
+  const answered=answerDailyQuestion(ritual,quiz.id,wrong);
+  const saved=answered.activities.find(item=>item.id===quiz.id);
+  assert.equal(saved.answerCorrect,false);
+  assert.equal(saved.selectedAnswer,wrong);
+  assert.equal(saved.question.answer,quiz.question.answer);
 });
 
 test("une session sauvegardée ne change pas si le contexte évolue dans la journée",()=>{
@@ -144,6 +162,17 @@ test("une mission disponible après la préparation du cache est ajoutée sans r
 test("la personnalisation privilégie les contenus correspondant aux intérêts", () => {
   const personalized = buildDailyRitual({ db: { ...db, culture: [{ id: "plain", titre: "Histoire ancienne", tag: "Histoire", contenu: "Chronique" }], repas: [{ id: "ramen", romaji: "Ramen", description: "Gastronomie japonaise" }] }, date: "2026-09-06", personalization: { interests: ["gastro"] } });
   assert.equal(personalized.activities[0].type, "gastronomie");
+});
+
+test("l'expression personnalisée reste affichée en japonais avec sa traduction en second",()=>{
+  const ritual=buildDailyRitual({
+    db,
+    date:"2026-09-16",
+    userContext:{generatedFor:"2026-09-16",fingerprint:"test",interestThemeIds:["language"],japaneseLevel:{index:0},favorites:{ids:[],themeIds:[]},viewedContentIds:[],progress:{completedScenarioIds:[]},trip:{cityIds:[],regionIds:[],placeIds:[],themeIds:[]},streak:{current:0}},
+  });
+  const learn=ritual.activities.find(item=>item.kind==="learn");
+  assert.equal(learn.title,learn.raw.expression || learn.raw.kana || learn.raw.romaji);
+  assert.equal(learn.summary,learn.raw.traduction);
 });
 
 test("chaque activité du rituel conserve le contenu exact à ouvrir", () => {

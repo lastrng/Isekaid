@@ -1,6 +1,7 @@
 import { ReadinessCard } from "../readiness/ReadinessCard.jsx";
 import { SpeakButton } from "../../tts.jsx";
 import { ProductCard } from "../shared/ProductUI.jsx";
+import { Romaji } from "../../components/JapaneseDisplay.jsx";
 
 export function JourneyHome({ C, model, kanaProgress, scenProgress, pathProgress, onOpenTrip, onNavigate, onOpenLieu, onOpenTradition }) {
   const planning = model.mode === "planning";
@@ -31,7 +32,7 @@ export function JourneyHome({ C, model, kanaProgress, scenProgress, pathProgress
       <div style={{display:"flex",alignItems:"center",gap:10}}>
         <div style={{flex:1,minWidth:0}}>
           <div style={{fontFamily:"'Noto Serif JP',serif",fontSize:18,fontWeight:600}}>{model.usefulJapanese.jp || model.usefulJapanese.kana}</div>
-          {model.usefulJapanese.romaji && <div style={{fontSize:11,color:C.gold,fontStyle:"italic",marginTop:2}}>{model.usefulJapanese.romaji}</div>}
+          <Romaji style={{fontSize:11,color:C.gold,fontStyle:"italic",marginTop:2}}>{model.usefulJapanese.romaji}</Romaji>
           <div style={{fontSize:12,color:C.t2,marginTop:4}}>{model.usefulJapanese.fr}</div>
         </div>
         <SpeakButton C={C} text={model.usefulJapanese.jp || model.usefulJapanese.kana} size={34}/>

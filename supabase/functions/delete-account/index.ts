@@ -1,6 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { removeAccountMemoryPhotos } from "./memory-cleanup.js";
+import { removeAccountMemoryPhotos, removeAccountTravelJournals } from "./memory-cleanup.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -35,11 +35,20 @@ Deno.serve(async (request: Request) => {
     const admin = createClient(url, serviceKey, {
       auth: { autoRefreshToken: false, persistSession: false },
     });
+    // Révoquer d'abord tous les refresh tokens du compte. Les access tokens
+    // déjà émis restent valides jusqu'à leur expiration (propriété des JWT),
+    // mais aucun appareil ne pourra prolonger sa session pendant le nettoyage.
+    const { error: signOutError } = await admin.auth.admin.signOut(token, "global");
+    if (signOutError) {
+      console.error("[delete-account] révocation des sessions impossible:", signOutError);
+      return new Response(JSON.stringify({ error: "session_revoke_failed" }), { status: 500, headers });
+    }
     // Les lignes SQL sont supprimées par leurs FK ON DELETE CASCADE, mais les
     // objets Storage ne le sont pas. Nettoyer le dossier privé avant l'identité
     // évite de conserver des souvenirs après une suppression de compte.
     try {
       await removeAccountMemoryPhotos(admin.storage, data.user.id);
+      await removeAccountTravelJournals(admin.storage, data.user.id);
     } catch (storageError) {
       console.error("[delete-account] suppression photos impossible:", storageError);
       return new Response(JSON.stringify({ error: "storage_delete_failed" }), { status: 500, headers });

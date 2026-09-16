@@ -1,0 +1,90 @@
+import assert from "node:assert/strict";
+import { chromium, expect } from "@playwright/test";
+
+const origin=process.env.QA_ORIGIN||"http://127.0.0.1:5175";
+const browser=await chromium.launch({headless:true,executablePath:process.env.QA_CHROMIUM_EXECUTABLE,args:["--no-sandbox"]});
+const errors=[];
+try {
+  const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:"reduce"});
+  page.on("pageerror",error=>{errors.push(error.message);console.error(error.message);});
+  await page.route("**/*",route=>{
+    const url=new URL(route.request().url());
+    if(url.origin!==origin || route.request().resourceType()==="image")return route.abort();
+    return route.continue();
+  });
+  await page.route(`${origin}/__qa_visuals`,route=>route.fulfill({contentType:"text/html",body:`<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div id="root"></div><script type="module">
+    import RefreshRuntime from '/@react-refresh';
+    RefreshRuntime.injectIntoGlobalHook(window);
+    window.$RefreshReg$=()=>{};window.$RefreshSig$=()=>type=>type;window.__vite_plugin_react_preamble_installed__=true;
+  </script><script type="module">
+    import React from '/node_modules/.vite/deps/react.js';
+    import ReactDOM from '/node_modules/.vite/deps/react-dom_client.js';
+    import { ImageWithFallback } from '/src/components/ImageWithFallback.jsx';
+    import { ExploreEditorialHero } from '/src/features/explore/ExploreEditorialHero.jsx';
+    import { PrefectureMark } from '/src/features/explore/PrefectureDetail.jsx';
+    import { JapanPrefectureMap } from '/src/features/explore/JapanPrefectureMap.jsx';
+    import { JAPAN_PREFECTURES } from '/src/features/explore/prefectureModel.js';
+    const root=ReactDOM.createRoot(document.getElementById('root'));
+    const h=React.createElement;
+    window.showImage=(src,emoji)=>root.render(h(ImageWithFallback,{src,emoji,style:{width:56,height:56,background:'#eee'}}));
+    window.showHero=()=>root.render(h(ExploreEditorialHero,{C:{red:'#C9463D',gold:'#9E7A1A',s1:'#fff',border:'#ddd',text:'#222',t2:'#444',t3:'#666'},db:{culture:[{id:'trad',titre:'Tradition',tag:'tradition',image:'/broken.png'},{id:'pop',titre:'Manga',tag:'pop'}],repas:[{id:'meal',romaji:'Ramen'}]}}));
+    window.showMark=()=>root.render(h(PrefectureMark,{prefecture:{symbol:'/broken-logo.svg'},size:32}));
+    window.showMap=()=>root.render(h(JapanPrefectureMap,{C:{s1:'#fff',s2:'#f5f1eb',border:'#ddd5ca',text:'#221b17',t3:'#756d67',gold:'#9E7A1A',red:'#C9463D',green:'#3A6645'},prefectures:JAPAN_PREFECTURES}));
+    window.showImage('',undefined);
+  </script></body></html>`}));
+  await page.goto(`${origin}/__qa_visuals`);
+  const fallback=page.locator('[data-image-fallback]');
+  await expect(fallback).toHaveText('🎋');
+  await expect(fallback).toBeVisible();
+  await page.evaluate(()=>window.showImage('/broken.png','⛩️'));
+  await expect(fallback).toHaveText('⛩️');
+  await expect(fallback).toBeVisible();
+  await expect(page.locator('img')).toHaveCount(0);
+  const dimensions=await page.locator('[data-content-visual]').boundingBox();
+  assert.equal(dimensions.width,56);
+  assert.equal(dimensions.height,56);
+  const valid='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56"><rect width="56" height="56" fill="red"/></svg>');
+  await page.evaluate(src=>window.showImage(src,'🎋'),valid);
+  await expect(page.locator('img')).toBeVisible();
+  await expect(fallback).toBeHidden();
+  await page.evaluate(()=>window.showImage('/second-broken.png',''));
+  await expect(fallback).toHaveText('🎋');
+  await expect(fallback).toBeVisible();
+  await page.evaluate(()=>window.showMark());
+  await expect(fallback).toHaveText('🗾');
+  await expect(fallback).toBeVisible();
+  await expect(page.locator('img')).toHaveCount(0);
+  await page.evaluate(()=>window.showHero());
+  await expect(fallback).toHaveText('🎋');
+  await expect(fallback).toBeVisible();
+  await page.getByRole('button',{name:'Gastronomie',exact:true}).click();
+  await expect(fallback).toHaveText('🍜');
+  await expect(fallback).toBeVisible();
+  await page.evaluate(()=>window.showMap());
+  await expect(page.locator('[data-japan-coastline]')).toBeVisible();
+  await expect(page.locator('[data-japan-coastline] path')).toHaveCount(5);
+  await expect(page.locator('svg g[role="button"]')).toHaveCount(47);
+  await page.screenshot({path:'/tmp/isekaid-prefecture-map.png'});
+  console.log('PASS: missing/broken images, missing emoji, retained dimensions, successful image, changed source, broken logo, editorial carousel');
+
+  // Exercise the real Discover screens with every image request failing.
+  await page.goto(origin,{waitUntil:'domcontentloaded'});
+  await page.getByRole('button',{name:'Découvrir sans compte'}).click();
+  await page.getByRole('button',{name:'Passer',exact:true}).click();
+  const nav=page.getByRole('navigation',{name:'Navigation principale'});
+  await nav.waitFor();
+  await page.locator('.context-guide button').click();
+  await nav.getByRole('button',{name:/^Découvrir —/}).click();
+  await page.locator('.context-guide button').click();
+  const hero=page.getByRole('region',{name:'Histoires du Japon'});
+  await expect(hero.locator('[data-image-fallback]')).toBeVisible();
+  await page.getByRole('button',{name:"Traditions",exact:true}).first().click();
+  await expect(page.locator('[data-image-fallback]').first()).toBeVisible();
+  await page.screenshot({path:'/tmp/isekaid-discovery-image-fallback.png'});
+  const detailEmoji=await page.locator('[data-image-fallback]').first().textContent();
+  await page.locator('[data-content-visual]').first().click();
+  await expect(page.getByText(detailEmoji,{exact:true}).first()).toBeVisible();
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  assert.deepEqual(errors,[]);
+  console.log('PASS: Discover home and tradition list/detail at 390px with image requests blocked; zero browser errors');
+} finally {await browser.close();}
