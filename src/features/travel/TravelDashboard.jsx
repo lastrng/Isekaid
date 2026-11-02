@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { BookOpen, CalendarDays, CheckSquare, ChevronRight, FileText, Map, MapPin, NotebookPen, Plus, Route, ShieldAlert, WifiOff } from "lucide-react";
 import { TRAVEL_DASHBOARD_STATE } from "./travelDashboardModel.js";
+import { PreparationProgramCard } from "./PreparationProgramCard.jsx";
 
 const ACTION_ICONS = { calendar:CalendarDays, route:Route, pin:MapPin, day:CalendarDays, check:CheckSquare, book:BookOpen, info:FileText };
 
@@ -56,8 +57,14 @@ function EssentialTools({tripId,onOpenTrip}) {
 }
 
 function PreTripDashboard(props) {
-  const {model,onOpenTrip,onAction,onCreate,onOpenAll,createRef}=props;
-  return <><PreTripCard model={model} onOpenTrip={onOpenTrip}/><NextAction action={model.nextAction} onAction={onAction}/><EssentialTools tripId={model.trip.id} onOpenTrip={onOpenTrip}/><OtherTrips createRef={createRef} count={model.otherTrips.length} onCreate={onCreate} onOpenAll={onOpenAll}/></>;
+  const {C,model,onOpenTrip,onAction,onCreate,onOpenAll,createRef,preparation}=props;
+  return <>
+    <PreTripCard model={model} onOpenTrip={onOpenTrip}/>
+    {preparation&&<PreparationProgramCard C={C} {...preparation}/>}
+    {(!preparation||!model.timing)&&<NextAction action={model.nextAction} onAction={onAction}/>}
+    <EssentialTools tripId={model.trip.id} onOpenTrip={onOpenTrip}/>
+    <OtherTrips createRef={createRef} count={model.otherTrips.length} onCreate={onCreate} onOpenAll={onOpenAll}/>
+  </>;
 }
 
 function ActiveDashboard({model,onOpenTrip,onOpenPhrases}) {

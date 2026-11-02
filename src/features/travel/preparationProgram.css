@@ -1,0 +1,34 @@
+.preparation-program { padding: 17px; min-width: 0; color: var(--isekaid-text); }
+.preparation-program__eyebrow { display: flex; align-items: center; gap: 7px; font-size: 9px; line-height: 1.5; letter-spacing: .09em; font-weight: 750; color: var(--isekaid-red); }
+.preparation-program h3 { font-family: 'Noto Serif JP', serif; font-size: 18px; line-height: 1.4; margin: 10px 0 0; }
+.preparation-program p { color: var(--isekaid-muted); font-size: 11px; line-height: 1.6; margin: 8px 0 0; overflow-wrap: anywhere; }
+.preparation-program__heading { display: flex; align-items: center; gap: 8px; }
+.preparation-program__heading h3 { flex: 1; min-width: 0; }
+.preparation-program__heading > span { flex-shrink: 0; margin-top: 10px; color: var(--isekaid-red); font-size: 12px; font-weight: 750; }
+.preparation-program .preparation-program__trip { margin-top: 5px; }
+.preparation-program__progress-label { margin-top: 15px; font-size: 10px; color: var(--isekaid-muted); }
+.preparation-program__progress { margin-top: 7px; height: 4px; background: var(--isekaid-surface-2); border-radius: 4px; overflow: hidden; }
+.preparation-program__progress > span { display: block; height: 100%; background: var(--isekaid-red); border-radius: inherit; }
+.preparation-program__next { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--isekaid-border); }
+.preparation-program__next-label { color: var(--isekaid-red); font-size: 10px; font-weight: 750; }
+.preparation-program h4 { font-size: 14px; line-height: 1.45; margin: 7px 0 0; }
+.preparation-program__duration { display: flex; align-items: center; gap: 5px; margin-top: 10px; font-size: 10px; line-height: 1.5; color: var(--isekaid-muted); }
+.preparation-program__action { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; min-height: 44px; margin-top: 12px; padding: 11px 14px; border: 0; border-radius: 13px; color: #fff; background: var(--isekaid-red); font: inherit; font-size: 12px; font-weight: 700; text-align: left; cursor: pointer; }
+.preparation-program__calendar { margin-top: 15px; border-top: 1px solid var(--isekaid-border); }
+.preparation-program__calendar > summary { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 10px; list-style: none; font-size: 11px; font-weight: 650; cursor: pointer; }
+.preparation-program__calendar > summary::-webkit-details-marker { display: none; }
+.preparation-program__calendar[open] > summary > svg { transform: rotate(180deg); }
+.preparation-program__phase { margin-top: 16px; }
+.preparation-program__phase h4 { font-size: 11px; color: var(--isekaid-muted); }
+.preparation-program__phase ol { list-style: none; padding: 0; margin: 7px 0 0; }
+.preparation-program__task { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 52px; padding: 10px 0; border: 0; border-top: 1px solid var(--isekaid-border); text-align: left; background: transparent; color: var(--isekaid-text); font: inherit; cursor: pointer; }
+.preparation-program__task-status { display: grid; place-items: center; width: 19px; flex-shrink: 0; color: var(--isekaid-green); }
+.preparation-program__task-status > span { width: 12px; height: 12px; border: 1px solid var(--isekaid-muted); border-radius: 50%; }
+.preparation-program__task-copy { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.preparation-program__task-copy strong { display: block; font-size: 11px; line-height: 1.5; font-weight: 600; }
+.preparation-program__task-copy small { display: block; font-size: 9px; line-height: 1.5; color: var(--isekaid-muted); margin-top: 3px; }
+.preparation-program__task--done .preparation-program__task-copy small { color: var(--isekaid-green); }
+.preparation-program__complete { display: flex; gap: 9px; margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--isekaid-border); }
+.preparation-program__complete > svg { color: var(--isekaid-green); flex-shrink: 0; }
+.preparation-program__complete strong { font-size: 12px; line-height: 1.5; }
+.preparation-program__action:focus-visible, .preparation-program__task:focus-visible, .preparation-program__calendar > summary:focus-visible { outline: 2px solid var(--isekaid-red); outline-offset: 3px; }

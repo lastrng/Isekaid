@@ -1,9 +1,11 @@
 import { ArrowRight, CalendarDays, Check, MapPin } from "lucide-react";
+import { PreparationProgramCard } from "../travel/PreparationProgramCard.jsx";
 
-export function TodayTravelCard({ C, model, onAction }) {
+export function TodayTravelCard({ C, model, onAction, preparation }) {
   if (!model) return null;
   const active = model.state === "active";
   const completed = model.state === "completed";
+  const showRecommendation = Boolean(model.recommendation && !(preparation && model.state === "upcoming"));
   return <section aria-labelledby="today-travel-title" className="today-travel" style={{padding:"0 20px 24px",marginTop:18,position:"relative",zIndex:2}}>
     <div style={{fontSize:10,fontWeight:750,letterSpacing:".14em",color:C.t3,margin:"0 2px 8px"}}>MON VOYAGE</div>
     <article style={{padding:"16px 16px 15px",borderRadius:20,border:`1px solid ${active?`${C.red}45`:C.border}`,background:active?`linear-gradient(145deg,${C.s1},${C.red}09)`:C.s1,boxShadow:active?C.shadow:"none"}}>
@@ -22,9 +24,10 @@ export function TodayTravelCard({ C, model, onAction }) {
       </div>}
       {model.following&&<div style={{fontSize:11,color:C.t2,marginTop:8}}>Ensuite · {model.following}</div>}
       {model.description&&<p style={{fontSize:12,color:C.t2,lineHeight:1.5,margin:"10px 0 0"}}>{model.description}</p>}
-      {model.recommendation&&<button type="button" onClick={()=>onAction?.(model.recommendation)} style={{display:"flex",alignItems:"center",gap:5,minHeight:44,padding:"8px 0 4px",border:0,background:"transparent",color:C.red,fontSize:11,fontWeight:700,textAlign:"left",cursor:"pointer"}}><span style={{color:C.t3,fontWeight:500}}>{model.recommendation.prefix} :</span> {model.recommendation.label} <ArrowRight size={13}/></button>}
+      {showRecommendation&&<button type="button" onClick={()=>onAction?.(model.recommendation)} style={{display:"flex",alignItems:"center",gap:5,minHeight:44,padding:"8px 0 4px",border:0,background:"transparent",color:C.red,fontSize:11,fontWeight:700,textAlign:"left",cursor:"pointer"}}><span style={{color:C.t3,fontWeight:500}}>{model.recommendation.prefix} :</span> {model.recommendation.label} <ArrowRight size={13}/></button>}
 
-      <button type="button" onClick={()=>onAction?.(model.primary)} style={{minHeight:44,marginTop:model.recommendation?2:12,padding:0,border:0,background:"transparent",color:C.red,fontSize:12,fontWeight:800,cursor:"pointer",display:"flex",alignItems:"center",gap:5}}>{model.primary.label}<ArrowRight size={14}/></button>
+      <button type="button" onClick={()=>onAction?.(model.primary)} style={{minHeight:44,marginTop:showRecommendation?2:12,padding:0,border:0,background:"transparent",color:C.red,fontSize:12,fontWeight:800,cursor:"pointer",display:"flex",alignItems:"center",gap:5}}>{model.primary.label}<ArrowRight size={14}/></button>
     </article>
+    {preparation&&["upcoming","draft"].includes(model.state)&&<div style={{marginTop:12}}><PreparationProgramCard C={C} {...preparation}/></div>}
   </section>;
 }

@@ -1481,7 +1481,7 @@ function ReviewTeaserCard({C, dueCount, hasStarted, onStart}){
   );
 }
 
-function HomeScreen({C,user,db,streak,favs,readingProgress,prefectureProgress,onSearch,onProfile,mission,onGoTab,onOpenTrip,isPremium,onOpenLieu,onOpenTradition,onOpenDailyArticle,onOpenDailySituation,onOpenDailyDetail,dueReviewCount,hasKanaProgress,onStartReview,showGuide,onGuideDone,onOpenWeeklyTarget,kanaProgress,scenProgress,pathProgress,script,onDailyComplete,continueActivity,onRememberContinue}){
+function HomeScreen({C,user,db,streak,favs,readingProgress,prefectureProgress,onSearch,onProfile,mission,onGoTab,onOpenTrip,isPremium,onOpenLieu,onOpenTradition,onOpenDailyArticle,onOpenDailySituation,onOpenDailyDetail,dueReviewCount,hasKanaProgress,onStartReview,showGuide,onGuideDone,onOpenWeeklyTarget,onPreparationAction,kanaProgress,scenProgress,pathProgress,script,onDailyComplete,continueActivity,onRememberContinue}){
   const [homeTrips,setHomeTrips]=useState(()=>loadTrips());
   useEffect(()=>{
     const refresh=()=>setHomeTrips(loadTrips());
@@ -1530,7 +1530,7 @@ function HomeScreen({C,user,db,streak,favs,readingProgress,prefectureProgress,on
   const [todayProgress,setTodayProgress] = useState(null);
   const currentDate = useMemo(()=>new Date(`${today}T12:00:00`),[today]);
   const continueItem = useMemo(()=>buildContinueRecommendation({saved:continueActivity,trips:homeTrips,db,dueReviewCount,hasKanaProgress,pathProgress,currentDate}),[continueActivity,homeTrips,db,dueReviewCount,hasKanaProgress,pathProgress,currentDate]);
-  const travelModel = useMemo(()=>dedupeTodayTravelRecommendation(getTodayTravelContext({trips:homeTrips,db,currentDate}),continueItem),[homeTrips,db,currentDate,continueItem]);
+  const travelModel = useMemo(()=>dedupeTodayTravelRecommendation(getTodayTravelContext({trips:homeTrips,db,currentDate:new Date()}),continueItem),[homeTrips,db,currentDate,continueItem]);
   const openDailyActivity = activity => {
     const target = dailyActivityTarget(activity);
     const remembered = continueActivityFromDaily(activity);
@@ -1577,7 +1577,7 @@ function HomeScreen({C,user,db,streak,favs,readingProgress,prefectureProgress,on
       header={{user,greeting:g.fr,streak,progress:todayProgress,isPremium,onSearch,onProfile,animate:greetAnimate}}
       daily={{db,timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,travelContext:dailyTravelContext,userContext,mission:dailyMission,completedMissionIds:mission?.done||[],script,streakCount:streak?.count||0,onOpenActivity:openDailyActivity,onDailyComplete,onProgressChange:setTodayProgress}}
       resume={{item:continueItem,onOpen:openContinueItem}}
-      travel={{model:travelModel,onAction:openTravelAction}}
+      travel={{model:travelModel,onAction:openTravelAction,preparation:{trip:travelModel.trip,db,scenarioProgress:scenProgress,readingProgress,onAction:onPreparationAction}}}
       ritualRef={ritualRef}
       travelRef={null}
     >
@@ -4623,7 +4623,7 @@ function PrefectureTripPicker({C,intent,trips,onChoose,onCreate,onBack}){
   return <div style={{height:"100%",overflowY:"auto",background:C.bg}}><header style={{padding:"calc(24px + env(safe-area-inset-top, 0px)) 20px 16px",borderBottom:`1px solid ${C.border}`}}><button onClick={onBack} style={{padding:0,border:0,background:"none",color:C.t2,fontSize:12,cursor:"pointer"}}>‹ Voyage</button><div style={{fontSize:10,color:C.red,letterSpacing:".14em",marginTop:14}}>AJOUTER À UN VOYAGE</div><h1 style={{fontFamily:"'Noto Serif JP',serif",fontSize:23,color:C.text,margin:"6px 0"}}>{intent.prefectureName}</h1><p style={{fontSize:11,color:C.t3,lineHeight:1.55,margin:0}}>Ajoute cette préfecture à la préparation d’un voyage. Cela ne la marquera pas comme visitée.</p></header><main style={{padding:"18px 20px 110px"}}>{trips.length?<><div style={{fontSize:11,fontWeight:700,color:C.t3,letterSpacing:".1em",marginBottom:9}}>CHOISIR UN VOYAGE</div><div style={{display:"grid",gap:9}}>{trips.map(trip=>{const already=(trip.plannedPrefectures||[]).some(item=>item.prefectureId===intent.prefectureId);return <button key={trip.id} disabled={already} onClick={()=>onChoose(trip.id)} style={{display:"flex",alignItems:"center",gap:11,padding:14,borderRadius:15,border:`1px solid ${already?C.green:C.border}`,background:C.s1,color:C.text,textAlign:"left",cursor:already?"default":"pointer",opacity:already?0.75:1}}><span style={{fontSize:23}}>🗾</span><span style={{flex:1}}><strong style={{display:"block",fontSize:13}}>{trip.titre}</strong><span style={{fontSize:10,color:already?C.green:C.t3}}>{already?"Déjà ajoutée à ce voyage":`${trip.jours?.length||0} jours · ajouter à la préparation`}</span></span><span style={{color:C.t3}}>{already?"✓":"›"}</span></button>;})}</div><div style={{height:1,background:C.border,margin:"20px 0"}}/></>:null}<button onClick={onCreate} style={{width:"100%",padding:13,borderRadius:999,border:0,background:C.red,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer"}}>+ Créer un voyage avec {intent.prefectureName}</button></main></div>;
 }
 
-function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPremium, isFav, toggleFav, favs, readingProgress, prefectureProgress, streak, kanaProgress, scenProgress, pathProgress, onOpenLieu, onOpenPhrases, onOpenMyJapan, onOpenConnection, showGuide, onGuideDone, backRef, initialView, onInitialViewConsumed}){
+function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPremium, isFav, toggleFav, favs, readingProgress, prefectureProgress, streak, kanaProgress, scenProgress, pathProgress, onOpenLieu, onOpenPhrases, onOpenMyJapan, onOpenConnection, onPreparationAction, showGuide, onGuideDone, backRef, initialView, onInitialViewConsumed}){
   const seasonKey = currentSeasonKey();
   const acc = SEASON_ACCENT[seasonKey];
   const villes = db?.villes || [];
@@ -4635,7 +4635,13 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   const [offlineTravel,setOfflineTravel]=useState(()=>getCachedOfflineTravel());
   const concurrentTripCount=countConcurrentTripSlots(trips);
   const canCreateTrip = getPremiumAccess(PREMIUM_FEATURES.MULTIPLE_TRIPS,{isPremium,usage:concurrentTripCount,freeLimit:FREE_TRIP_LIMIT}).allowed;
-  useEffect(()=>{const reload=()=>setTrips(loadTrips());window.addEventListener("isekaid:trips-synced",reload);return()=>window.removeEventListener("isekaid:trips-synced",reload);},[]);
+  useEffect(()=>{
+    const reload=()=>setTrips(loadTrips());
+    const timer=setInterval(reload,60000);
+    window.addEventListener("isekaid:trips-synced",reload);window.addEventListener("focus",reload);
+    document.addEventListener("visibilitychange",reload);
+    return()=>{clearInterval(timer);window.removeEventListener("isekaid:trips-synced",reload);window.removeEventListener("focus",reload);document.removeEventListener("visibilitychange",reload);};
+  },[]);
   useEffect(()=>{const reload=()=>setOfflineTravel(getCachedOfflineTravel());window.addEventListener("isekaid:offline-cache-updated",reload);window.addEventListener("storage",reload);return()=>{window.removeEventListener("isekaid:offline-cache-updated",reload);window.removeEventListener("storage",reload);};},[]);
   const [prefectureIntent,setPrefectureIntent]=useState(()=>initialView?.prefectureId?initialView:null);
   // vues : "home" | "browse" (préconçus) | "create" | "trip" | "sos"
@@ -4864,6 +4870,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
     };
     return <div style={{height:"100%",position:"relative",overflow:"hidden",background:C.bg}}>
       <div ref={setDashboardGuideRoot} style={{height:"100%"}}><TravelDashboard C={C} model={travelDashboard} templates={travelDashboard.state===TRAVEL_DASHBOARD_STATE.NO_TRIP?preconcus:[]} keptPlacesCount={keptLieux.length}
+        preparation={{trip:travelDashboard.trip,db,scenarioProgress:scenProgress,readingProgress,onAction:onPreparationAction}}
         createRef={createRef} templateRef={precoRef} sosRef={sosTourRef}
         onCreate={tryCreate} onBrowse={()=>openView("browse")} onPreviewTemplate={setPreviewPreco}
         onOpenKept={()=>openView("kept")} onOpenSos={()=>openView("sos")} onOpenAll={()=>openView("all")}
@@ -7788,6 +7795,19 @@ export default function IsekaidApp(){
     setTab(target.tab);
   };
 
+  const openPreparationAction = action=>{
+    if(!action)return;
+    if(action.kind==="trip")return openTripFromHome(action.tripId,action.sub||"day");
+    if(action.kind==="learning")return openWeeklyTarget({tab:"scenarios",scenarioId:action.scenarioId});
+    if(action.kind==="reading"){
+      const collection=action.type==="vie"?"vie_quotidienne":action.type==="code"?"codes_sociaux":null;
+      const item=collection&&(db?.[collection]||[]).find(content=>content.id===action.contentId);
+      if(!item)return;
+      rememberContinue({kind:"article",id:`${action.type}:${item.id}`,title:item.titre||item.nom,subtitle:"Un repère utile pour ton prochain voyage.",target:{tab:"explore",contentType:action.type==="vie"?"daily_life":"social_code",contentId:item.id}});
+      setSpotlightDetail({type:action.type,item});
+    }
+  };
+
   const completePathStep = (stepId)=>{
     completeTask("path");
     setPathProgress(prev=>{
@@ -8612,12 +8632,12 @@ export default function IsekaidApp(){
                 dueReviewCount={dueReviewCount} hasKanaProgress={hasKanaProgress}
                 onStartReview={startReviewFromHome} showGuide={tab==="home"&&!showWelcome&&!showPremiumPage&&!showSearch&&!newAchievement&&!weeklyRecap&&!wikiEntry&&!spotlightLieu&&!spotlightTradition&&!spotlightSituation&&!spotlightDetail&&!searchResultDetail&&!onboardingState.seenGuides.today} onGuideDone={()=>completeContextualGuide("today")}
                 onOpenPremium={()=>setShowPremiumPage(true)} weeklyProgress={weeklyProgress} onToggleWeeklyItem={toggleWeeklyItemManual}
-                onOpenWeeklyTarget={openWeeklyTarget} kanaProgress={kanaProgress} scenProgress={scenProgress}
+                onOpenWeeklyTarget={openWeeklyTarget} onPreparationAction={openPreparationAction} kanaProgress={kanaProgress} scenProgress={scenProgress}
                 pathProgress={pathProgress} script={script} onDailyComplete={completeDailyRitual}
                 continueActivity={continueActivity} onRememberContinue={rememberContinue}
               />},
               {id:"daily",label:"Rituels du jour",animate:!supportsViewTransitions(),element:<Suspense fallback={<ScreenSkeleton C={C} label="Chargement des rituels"/>}><DailyFeedScreen C={C} script={script} onBack={goBackTab}/></Suspense>},
-              {id:"voyage",animate:!supportsViewTransitions(),element:<VoyageScreen C={C} dark={dark} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} readingProgress={readingProgress} prefectureProgress={prefectureProgress} streak={streak} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenPhrases={openEssentialPhrases} onOpenMyJapan={()=>setTab("profile")} onOpenConnection={openContextualConnection} showGuide={tab==="voyage"&&!showWelcome&&!showPremiumPage&&!showSearch&&!newAchievement&&!weeklyRecap&&!wikiEntry&&!spotlightLieu&&!spotlightTradition&&!spotlightSituation&&!spotlightDetail&&!searchResultDetail&&!onboardingState.seenGuides.travel} onGuideDone={()=>completeContextualGuide("travel")} backRef={tab==="voyage"?inScreenBackRef:null} initialView={pendingTravelView} onInitialViewConsumed={()=>setPendingTravelView(null)}/>},
+              {id:"voyage",animate:!supportsViewTransitions(),element:<VoyageScreen C={C} dark={dark} user={user} db={db} script={script} session={session} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} isFav={isFav} toggleFav={toggleFav} favs={favs} readingProgress={readingProgress} prefectureProgress={prefectureProgress} streak={streak} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenPhrases={openEssentialPhrases} onOpenMyJapan={()=>setTab("profile")} onOpenConnection={openContextualConnection} onPreparationAction={openPreparationAction} showGuide={tab==="voyage"&&!showWelcome&&!showPremiumPage&&!showSearch&&!newAchievement&&!weeklyRecap&&!wikiEntry&&!spotlightLieu&&!spotlightTradition&&!spotlightSituation&&!spotlightDetail&&!searchResultDetail&&!onboardingState.seenGuides.travel} onGuideDone={()=>completeContextualGuide("travel")} backRef={tab==="voyage"?inScreenBackRef:null} initialView={pendingTravelView} onInitialViewConsumed={()=>setPendingTravelView(null)}/>},
               {id:"learn",animate:!supportsViewTransitions(),element:<LearnScreen C={C} script={script} db={db} user={user} favs={favs} readingProgress={readingProgress} prefectureProgress={prefectureProgress} streak={streak} scenProgress={scenProgress} kanaProgress={kanaProgress} onRecordKana={recordKanaResult} pathProgress={pathProgress} onCompleteStep={completePathStep} onMissionTrigger={completeTask} mission={mission} initialMode={pendingLearnMode} onInitialModeConsumed={()=>setPendingLearnMode(null)} initialSituationId={pendingLearnSituationId} onInitialSituationConsumed={()=>setPendingLearnSituationId(null)} initialLessonId={pendingLearnLessonId} onInitialLessonConsumed={()=>setPendingLearnLessonId(null)} showGuide={tab==="learn"&&!showWelcome&&!showPremiumPage&&!showSearch&&!newAchievement&&!weeklyRecap&&!wikiEntry&&!spotlightLieu&&!spotlightTradition&&!spotlightSituation&&!spotlightDetail&&!searchResultDetail&&!onboardingState.seenGuides.learn} onGuideDone={()=>completeContextualGuide("learn")} onRememberContinue={rememberContinue} onOpenConnection={openContextualConnection} onOpenPractice={()=>setTab("scenarios")} backRef={tab==="learn"?inScreenBackRef:null}/>},
               {id:"scenarios",label:"Situations réelles",animate:!supportsViewTransitions(),element:<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)} kanaProgress={kanaProgress} pathProgress={pathProgress} onGoTab={setTab} onRememberContinue={rememberContinue} backRef={tab==="scenarios"?inScreenBackRef:null}/>},
               {id:"tutor",label:"Tuteur japonais",animate:!supportsViewTransitions(),element:<Suspense fallback={<ScreenSkeleton C={C} label="Chargement du tuteur"/>}><TutorScreen C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} journeyContext={buildTutorJourneyContext({user,trips:loadTrips(),db,recentExpressions:user?.recentExpressions})} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={goBackTab}/></Suspense>},

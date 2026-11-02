@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "eslint src",
     "qa:daily-reading": "node scripts/qa-daily-reading.mjs",
+    "qa:preparation-program": "node scripts/qa-preparation-program.mjs",
     "qa:onboarding": "node scripts/qa-onboarding.mjs",
     "qa:onboarding:production": "node scripts/qa-onboarding-production.mjs",
     "dev": "vite",
