@@ -1,0 +1,52 @@
+.phrase-save { margin-top:9px; }
+.phrase-save button { display:flex; align-items:center; justify-content:center; gap:6px; min-height:40px; padding:8px 11px; max-width:100%; border:1px solid var(--isekaid-border); border-radius:11px; background:var(--isekaid-surface); color:var(--isekaid-red); font:inherit; font-size:11px; line-height:1.5; cursor:pointer; }
+.phrase-save button:disabled { color:var(--isekaid-muted); cursor:default; }
+.phrase-save p,.phrase-review__error { color:var(--isekaid-red); font-size:11px; line-height:1.5; }
+.phrase-review-entry { color:var(--isekaid-text); }
+.phrase-review-entry--home { margin:0 20px 18px; }
+.phrase-review-entry > button { display:flex; align-items:center; gap:12px; width:100%; min-height:80px; padding:14px; border:1px solid var(--isekaid-border); border-radius:16px; background:var(--isekaid-surface); color:inherit; text-align:left; font:inherit; cursor:pointer; }
+.phrase-review-entry__icon { display:grid; place-items:center; flex-shrink:0; width:40px; height:40px; border-radius:12px; background:var(--isekaid-surface-2); font-size:22px; }
+.phrase-review-entry > button > span:nth-child(2) { flex:1; min-width:0; }
+.phrase-review-entry strong { display:block; font-size:14px; line-height:1.4; }
+.phrase-review-entry small { display:block; font-size:10px; color:var(--isekaid-muted); line-height:1.6; margin-top:4px; }
+.phrase-review-entry > p { font-size:11px; color:var(--isekaid-red); }
+.phrase-review-screen { height:100%; overflow-y:auto; background:var(--isekaid-bg); color:var(--isekaid-text); font-family:Inter,sans-serif; }
+.phrase-review-screen header { padding:calc(18px + env(safe-area-inset-top,0px)) 20px 16px; border-bottom:1px solid var(--isekaid-border); }
+.phrase-review-screen header button { display:flex; align-items:center; gap:6px; min-height:40px; border:0; padding:0; color:var(--isekaid-muted); background:none; font:inherit; font-size:12px; cursor:pointer; }
+.phrase-review-screen h1 { font:600 23px/1.4 'Noto Serif JP',serif; margin:10px 0 6px; }
+.phrase-review-screen h2 { font-size:16px; line-height:1.5; margin:8px 0 12px; }
+.phrase-review-screen h3 { font-size:13px; line-height:1.5; }
+.phrase-review-screen p { font-size:12px; line-height:1.65; margin:8px 0; overflow-wrap:anywhere; white-space:pre-wrap; }
+.phrase-review-screen header p { color:var(--isekaid-muted); }
+.phrase-review-screen main { display:grid; gap:18px; padding:18px 20px calc(105px + env(safe-area-inset-bottom,0px)); }
+.phrase-review__card { padding:16px; min-width:0; border:1px solid var(--isekaid-border); border-radius:17px; background:var(--isekaid-surface); }
+.phrase-review__stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); text-align:center; margin-bottom:15px; }
+.phrase-review__stats span { font-size:10px; color:var(--isekaid-muted); line-height:1.5; }
+.phrase-review__stats strong { display:block; font-size:22px; color:var(--isekaid-text); }
+.phrase-review__primary { display:flex; justify-content:space-between; align-items:center; gap:8px; width:100%; min-height:44px; padding:12px 14px; border:0; border-radius:12px; color:#fff; background:var(--isekaid-red); font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+.phrase-review-screen .phrase-review__hint,.phrase-review-screen .phrase-review__source { color:var(--isekaid-muted); font-size:10.5px; }
+.phrase-review-screen .phrase-review__japanese { font-family:'Noto Serif JP',serif; font-size:22px; line-height:1.6; }
+.phrase-review__session-top { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; color:var(--isekaid-muted); font-size:10px; }
+.phrase-review__progress { height:4px; margin:13px 0 18px; background:var(--isekaid-surface-2); border-radius:4px; }
+.phrase-review__progress span { display:block; height:100%; background:var(--isekaid-red); border-radius:inherit; }
+.phrase-review-screen .phrase-review__question { font-size:18px; margin:18px 0 26px; }
+.phrase-review__answer { border-top:1px solid var(--isekaid-border); padding-top:12px; margin-top:18px; }
+.phrase-review__answer-line { display:flex; align-items:center; gap:8px; }
+.phrase-review__answer-line > p { flex:1; min-width:0; }
+.phrase-review__ratings { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px; }
+.phrase-review__ratings button { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px; min-height:65px; padding:11px; border:1px solid var(--isekaid-border); border-radius:12px; background:var(--isekaid-surface-2); color:var(--isekaid-text); font:inherit; font-size:12px; cursor:pointer; }
+.phrase-review__ratings button+button { color:#fff; background:var(--isekaid-red); }
+.phrase-review__ratings small { flex-basis:100%; font-size:9px; text-align:center; }
+.phrase-review__suggestions,.phrase-review__list { display:grid; gap:10px; }
+.phrase-review-screen summary { min-height:32px; font-size:12px; line-height:1.5; cursor:pointer; }
+.phrase-review__manual { display:grid; gap:12px; padding-top:15px; }
+.phrase-review__manual label { display:grid; gap:6px; font-size:11px; }
+.phrase-review__manual input,.phrase-review__manual textarea { box-sizing:border-box; width:100%; min-width:0; min-height:44px; padding:10px; border:1px solid var(--isekaid-border); border-radius:10px; color:var(--isekaid-text); background:var(--isekaid-surface-2); font:inherit; font-size:13px; }
+.phrase-review__list article { display:flex; align-items:flex-start; gap:8px; }
+.phrase-review__list article > div { flex:1; min-width:0; }
+.phrase-review__list strong { display:block; font:500 16px/1.5 'Noto Serif JP',serif; overflow-wrap:anywhere; }
+.phrase-review__list small { color:var(--isekaid-muted); font-size:10px; line-height:1.6; }
+.phrase-review__list article > button { display:grid; place-items:center; min-width:40px; min-height:40px; padding:0; border:1px solid var(--isekaid-border); border-radius:10px; background:none; color:var(--isekaid-muted); cursor:pointer; }
+.phrase-review__undo { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:11px; padding:10px; border-radius:12px; background:var(--isekaid-surface-2); }
+.phrase-review__undo button,.phrase-review__quiet { min-height:40px; padding:6px 9px; border:0; background:none; color:var(--isekaid-red); font:inherit; font-size:11px; cursor:pointer; }
+.phrase-save button:focus-visible,.phrase-review-entry button:focus-visible,.phrase-review-screen button:focus-visible { outline:2px solid var(--isekaid-red); outline-offset:3px; }

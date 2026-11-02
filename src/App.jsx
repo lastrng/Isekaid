@@ -70,6 +70,9 @@ import { isContentRead, loadContentReading, markContentRead, saveContentReading 
 import { buildPrefectures, loadPrefectureProgress, markPrefectureDiscovered, savePrefectureProgress } from "./features/explore/prefectureModel.js";
 import { TOKYO_PATH } from "./features/learn/learningCatalog.js";
 import { getExpressionExplanation } from "./features/learn/expressionExplanation.js";
+import { PhraseReviewEntry, PhraseReviewScreen, SavePhraseButton } from "./features/learn/PhraseReviews.jsx";
+import { phraseCandidate } from "./features/learn/phraseReviewModel.js";
+import { PhraseReviewContext, usePhraseReviewStore } from "./features/learn/phraseReviewStore.jsx";
 import { SOS_CATEGORIES } from "./features/sos/sosData.js";
 import { SosJapan } from "./features/sos/SosJapan.jsx";
 import { EmptyState, ScreenSkeleton } from "./features/shared/ProductUI.jsx";
@@ -1580,6 +1583,7 @@ function HomeScreen({C,user,db,streak,favs,readingProgress,prefectureProgress,on
       daily={{db,timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,travelContext:dailyTravelContext,userContext,mission:dailyMission,completedMissionIds:mission?.done||[],script,streakCount:streak?.count||0,onOpenActivity:openDailyActivity,onDailyComplete,onProgressChange:setTodayProgress}}
       resume={{item:continueItem,onOpen:openContinueItem}}
       travel={{model:travelModel,onAction:openTravelAction,preparation:{trip:travelModel.trip,db,scenarioProgress:scenProgress,readingProgress,onAction:onPreparationAction}}}
+      phraseReviews={{onOpen:()=>onOpenWeeklyTarget?.({tab:"learn",learnMode:"phrase-review"})}}
       ritualRef={ritualRef}
       travelRef={null}
     >
@@ -3506,6 +3510,7 @@ function SituationDetail({C, s, onBack, script}){
                 <div style={{fontSize:13,color:inkSoft,marginTop:8,textAlign:"right",fontFamily:"'Noto Serif JP',serif",fontStyle:"italic"}}>{p.fr}</div>
               )}
               <div style={{marginTop:10,padding:"9px 11px",borderRadius:10,background:dark?"rgba(181,112,60,.10)":"rgba(181,112,60,.08)",color:inkSoft,fontSize:11,lineHeight:1.5}}><strong style={{color:accent,fontSize:9.5,letterSpacing:".08em",textTransform:"uppercase"}}>À savoir</strong><span style={{display:"block",marginTop:3}}>{getExpressionExplanation(p,s)}</span></div>
+              <SavePhraseButton C={C} candidate={phraseCandidate(p,{sourceLabel:s.titre,situationId:s.id,explanation:getExpressionExplanation(p,s)})}/>
             </div>
           );
         })}
@@ -4072,6 +4077,8 @@ function LearnScreen({C,script,db,user,favs,readingProgress,prefectureProgress,s
   const dueChars = useMemo(()=>getDueForReview(kanaProgress, ALL_KANA), [kanaProgress, ALL_KANA]);
   useInScreenBack(backRef,closeLearnLayer);
 
+  if(learnMode==="phrase-review")return <PhraseReviewScreen C={C} db={db} trips={tripSnapshot} script={script} onBack={closeLearnLayer} onSessionComplete={()=>onMissionTrigger?.("review")}/>;
+
   // ── Checkpoint actif ──
   if(checkpoint){
     const step = checkpoint;
@@ -4267,6 +4274,7 @@ function LearnScreen({C,script,db,user,favs,readingProgress,prefectureProgress,s
             <div style={{display:"flex",flexDirection:"column",gap:14}}>
 
               <ContextualConnections C={C} title="Recommandé pour toi" connections={learningRecommendations} onOpen={onOpenConnection}/>
+              <PhraseReviewEntry C={C} onOpen={()=>{onRememberContinue?.({kind:"lesson",id:"phrase-review",title:"Mes phrases utiles",subtitle:"Reprends tes révisions espacées.",target:{tab:"learn",mode:"phrase-review"}});openLearnMode("phrase-review");}}/>
 
               {/* Révision espacée */}
               {dueChars.length > 0 && (
@@ -7562,6 +7570,8 @@ function titleForXP(days){
 
 // ─── Favorites (collection) ───────────────────────────────────────────────────
 export default function IsekaidApp(){
+  const phraseReviewStore=usePhraseReviewStore();
+  const {state:phraseReviews,restore:restorePhraseReviews}=phraseReviewStore;
   const [screen,setScreen]=useState("splash");
   const [session,setSession]=useState(null);
   const [introMode,setIntroMode]=useState("update");
@@ -7786,7 +7796,7 @@ export default function IsekaidApp(){
     }
     if(target.tab==="explore"){ setPendingExploreCategory(target.category||null); setTab("explore"); return; }
     if(target.tab==="learn"){
-      rememberContinue({kind:target.learnMode==="review"?"review":"lesson",title:target.learnMode==="review"?"Révision des kana":"Survivre à Tokyo",subtitle:"Continue ton apprentissage du japonais.",target:{tab:"learn",mode:target.learnMode||"path"}});
+      rememberContinue({kind:target.learnMode==="review"?"review":"lesson",title:target.learnMode==="review"?"Révision des kana":target.learnMode==="phrase-review"?"Mes phrases utiles":"Survivre à Tokyo",subtitle:"Continue ton apprentissage du japonais.",target:{tab:"learn",mode:target.learnMode||"path"}});
       setPendingLearnMode(target.learnMode||null); setTab("learn"); return;
     }
     setTab(target.tab);
@@ -7873,7 +7883,7 @@ export default function IsekaidApp(){
     if(session?.user && ritual){
       enqueueMutation({type:"progress",userId:session.user.id,payload:{
         streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user, path:pathProgress, mission,
-        settings:{dark,accent,script:scriptPreference,showRomaji,introSeen:introSeen(),onboarding:onboardingState,premium,daily:ritual}
+        settings:{dark,accent,script:scriptPreference,showRomaji,introSeen:introSeen(),onboarding:onboardingState,premium,daily:ritual,phraseReviews}
       }});
       flushProgressMutations();
     }
@@ -8277,6 +8287,7 @@ export default function IsekaidApp(){
           // Paramètres (thème, accent, script, parcours vu, premium)
           const s = p.settings;
           if(s){
+            if(s.phraseReviews)restorePhraseReviews(s.phraseReviews);
             if(typeof s.dark==="boolean"){ setDark(s.dark); saveTheme(s.dark); }
             if(s.accent){ setAccent(s.accent); saveAccent(s.accent); }
             if(s.script){ setScript(s.script); saveScript(s.script); }
@@ -8294,7 +8305,7 @@ export default function IsekaidApp(){
       setScreen(s => (s==="auth" || s==="loading") ? destination : s);
     })();
     return ()=>{ cancelled = true; };
-  },[session?.user?.id,flushProgressMutations,onboardingDestination]);
+  },[session?.user?.id,flushProgressMutations,onboardingDestination,restorePhraseReviews]);
 
   useCloudBackup({userId:session?.user?.id,ready:cloudProfileChecked});
 
@@ -8330,16 +8341,17 @@ export default function IsekaidApp(){
       };
       setting("dark",setDark,saveTheme);setting("accent",setAccent,saveAccent);setting("script",setScript,saveScript);
       setting("showRomaji",setShowRomaji,saveShowRomaji);
+      if(merged.settings?.phraseReviews){try{restorePhraseReviews(merged.settings.phraseReviews);}catch{/* Le carnet affiche l’erreur de stockage et conserve la copie locale. */}}
       setting("daily", value=>{ writeJson("isekaid_daily_ritual_v1", value); window.dispatchEvent(new Event("isekaid:daily-synced")); }, ()=>{});
       if(merged.settings?.onboarding){const restored=saveOnboardingState(userId,mergeOnboardingStates(loadOnboardingState(userId),merged.settings.onboarding));if(restored)setOnboardingState(restored);}
     };
     window.addEventListener("isekaid:progress-synced",receive);
     return()=>window.removeEventListener("isekaid:progress-synced",receive);
-  },[session?.user?.id]);
+  },[session?.user?.id,restorePhraseReviews]);
 
   const restoreProgressCopy=async patch=>{
     if(!session?.user)throw new Error("session_required");
-    const current={profile:user,favorites:favs,kana_progress:kanaProgress,scenarios:scenProgress,path:pathProgress,mission,streak,unlocks,settings:{dark,accent,script:scriptPreference,showRomaji,introSeen:introSeen(),onboarding:onboardingState,premium}};
+    const current={profile:user,favorites:favs,kana_progress:kanaProgress,scenarios:scenProgress,path:pathProgress,mission,streak,unlocks,settings:{dark,accent,script:scriptPreference,showRomaji,introSeen:introSeen(),onboarding:onboardingState,premium,phraseReviews}};
     if(!preserveProgressCopy(session.user.id,current,Object.keys(patch)))throw new Error("storage_full");
     const restored={...current,...patch};
     if(!enqueueMutation({type:"progress",userId:session.user.id,payload:restored}))throw new Error("storage_full");
@@ -8354,14 +8366,14 @@ export default function IsekaidApp(){
     clearTimeout(syncRef.current);
     const snapshot = {
       streak, unlocks, scenarios:scenProgress, favorites:favs, kana_progress:kanaProgress, profile:user, path:pathProgress, mission,
-      settings: { dark, accent, script:scriptPreference, showRomaji, introSeen: introSeen(), onboarding:onboardingState, premium, daily: loadDailyRitual({db}) }
+      settings: { dark, accent, script:scriptPreference, showRomaji, introSeen: introSeen(), onboarding:onboardingState, premium, daily: loadDailyRitual({db}), phraseReviews }
     };
     enqueueMutation({type:"progress",userId:session.user.id,payload:snapshot});
     syncRef.current = setTimeout(()=>{
       flushProgressMutations();
     }, 800);
     return ()=> clearTimeout(syncRef.current);
-  },[streak, unlocks, scenProgress, favs, kanaProgress, user, pathProgress, mission, dark, accent, scriptPreference, showRomaji, onboardingState, premium, db, session?.user?.id,cloudProfileChecked,flushProgressMutations]);
+  },[streak, unlocks, scenProgress, favs, kanaProgress, user, pathProgress, mission, dark, accent, scriptPreference, showRomaji, onboardingState, premium, db, session?.user?.id,cloudProfileChecked,flushProgressMutations,phraseReviews]);
 
   useEffect(()=>{
     if(!session?.user) return;
@@ -8593,11 +8605,13 @@ export default function IsekaidApp(){
     try { await clearAccountDocumentFiles(session?.user?.id || "guest"); }
     catch { alert("Le nettoyage des documents locaux a échoué. Efface les données de l’application sur cet appareil pour les retirer."); }
     clearStoredNamespace();
+    phraseReviewStore.clearLocal();
     setUser(null); setSession(null); setScreen("auth"); resetTab("home");
   };
 
   if(accountStorageError)return <main className="onboarding-shell" style={{minHeight:"100dvh",padding:24,boxSizing:"border-box"}}><h1>Le changement de compte attendra un instant</h1><p role="alert">Le stockage de cet appareil est plein ou indisponible. Tes données restent conservées. Libère de l’espace, puis réessaie.</p><button className="onboarding-next" style={{flex:"none"}} onClick={()=>window.location.reload()}>Réessayer</button></main>;
   return(
+    <PhraseReviewContext.Provider value={phraseReviewStore}>
     <JapaneseDisplayContext.Provider value={{showRomaji,setShowRomaji}}>
     <div style={{width:"100%",height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:"#080604",fontFamily:"'Noto Sans JP','Helvetica Neue',sans-serif"}}>
       <style>{CSS}</style>
@@ -8680,5 +8694,6 @@ export default function IsekaidApp(){
       </div>
     </div>
     </JapaneseDisplayContext.Provider>
+    </PhraseReviewContext.Provider>
   );
 }

@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { SavePhraseButton } from "../learn/PhraseReviews.jsx";
+import { phraseCandidate } from "../learn/phraseReviewModel.js";
 import { ArrowRight, BookOpen, Brain, Check, ChevronLeft, ChevronRight, Clock3, Pause, Play, Sparkles, Target } from "lucide-react";
 import { ProductCard, productTheme } from "../shared/ProductUI.jsx";
 import { JapaneseSubtitle, Romaji } from "../../components/JapaneseDisplay.jsx";
@@ -52,6 +54,7 @@ function ActivityPreview({ C, activity, script, onComplete, onAnswer, onOpen, on
       <div lang={script === "romaji" ? "ja-Latn" : "ja"} style={{fontFamily:"'Noto Serif JP',serif",fontSize:main?.length>14?24:29,color:C.text,lineHeight:1.3}}>{main || activity.title}</div>
       <JapaneseSubtitle entry={item} script={script} jpField="expression" style={{fontSize:12,color:C.t2,marginTop:3}}/>
       <div style={{fontSize:14,fontWeight:700,color:C.red,marginTop:9}}>{item.traduction || activity.summary}</div>
+      <SavePhraseButton C={C} candidate={phraseCandidate(item,{sourceLabel:"Expression du jour"})}/>
       {activity.done?<CompletedNote C={C}/>:<PrimaryAction color={meta.color} onClick={onComplete}>{meta.cta}</PrimaryAction>}
     </>;
   }

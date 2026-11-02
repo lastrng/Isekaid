@@ -4,6 +4,8 @@ import { SpeakButton } from "../../tts.jsx";
 import { ReadingProgressButton } from "../explore/ReadingProgressButton.jsx";
 import { relatedDiscoveries } from "../explore/discoverModel.js";
 import { Romaji } from "../../components/JapaneseDisplay.jsx";
+import { SavePhraseButton } from "../learn/PhraseReviews.jsx";
+import { phraseCandidate } from "../learn/phraseReviewModel.js";
 
 function Section({ C, title, children }) {
   if (!children) return null;
@@ -34,6 +36,7 @@ export function SearchResultDetail({ C, result, favorite, onToggleFavorite, onBa
       </div>
       <h1 style={{fontFamily:"'Noto Serif JP',serif",fontSize:25,color:C.text,margin:"28px 0 0",lineHeight:1.3}}>{title}</h1>
       <Section C={C} title={expression?"Sens et usage":"Découvrir"}>{description}</Section>
+      {expression&&<SavePhraseButton C={C} candidate={phraseCandidate(item)}/>}
       <Section C={C} title="Exemple">{item.exemple_jp&&<><div style={{color:C.text,fontFamily:"'Noto Serif JP',serif",fontSize:17}}>{item.exemple_jp}</div><div style={{marginTop:5}}>{item.exemple_fr}</div></>}</Section>
       <Section C={C} title={item.insight ? "À retenir" : "Le savais-tu ?"}>{insight}</Section>
       {item.moment&&<div style={{display:"inline-flex",marginTop:22,padding:"7px 12px",borderRadius:999,background:`${result.color}16`,color:result.color,fontSize:12}}>Moment idéal : {item.moment}</div>}

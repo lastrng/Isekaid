@@ -12,6 +12,8 @@ import { SpeakButton } from "./tts";
 import { useJapaneseDisplay } from "./components/JapaneseDisplay.jsx";
 import { trackProductEvent } from "./services/analytics/analytics.js";
 import { getPremiumAccess, PREMIUM_FEATURES } from "./features/premium/premiumAccess.js";
+import { SavePhraseButton } from "./features/learn/PhraseReviews.jsx";
+import { tutorCorrectionCandidate } from "./features/learn/phraseReviewModel.js";
 
 // Niveau estimé à partir de ce que l'utilisateur a déjà accompli ailleurs
 // dans l'app (maîtrise SRS des kana, scénarios de dialogue réussis, meilleur
@@ -377,7 +379,7 @@ function ChatView({C, niveau, scenarioId, conversationId, bridgeContext, journey
         )}
         {messages.map((m, i)=> m.role === "user"
           ? <UserBubble key={i} C={C} text={m.content_jp}/>
-          : <TutorBubble key={i} C={C} m={m}/>
+          : <TutorBubble key={i} C={C} m={m} userText={messages.slice(0,i).reverse().find(message=>message.role==="user")?.content_jp} sourceLabel={`Correction · ${scenario.titre}`}/>
         )}
         {sending && (
           <div style={{display:"flex",gap:8,alignItems:"center",color:C.t3,fontSize:12,padding:"4px 2px"}}>
@@ -458,7 +460,7 @@ function UserBubble({C, text}){
   );
 }
 
-function TutorBubble({C, m}){
+function TutorBubble({C, m, userText, sourceLabel}){
   const {showRomaji}=useJapaneseDisplay();
   return (
     <div style={{display:"flex",justifyContent:"flex-start",marginBottom:14}}>
@@ -480,6 +482,7 @@ function TutorBubble({C, m}){
         {m.correction && (
           <div style={{marginTop:6,padding:"9px 12px",background:"rgba(158,122,26,0.08)",border:"1px solid rgba(158,122,26,0.3)",borderRadius:12,fontSize:12,color:C.gold,lineHeight:1.5}}>
             <b>✏️ Correction</b> — {m.correction}
+            <SavePhraseButton C={C} candidate={tutorCorrectionCandidate(userText,m.correction,sourceLabel)} label="Revoir cette correction"/>
           </div>
         )}
       </div>

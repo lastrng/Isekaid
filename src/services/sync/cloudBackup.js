@@ -1,3 +1,5 @@
+import { mergePhraseReviews, PHRASE_REVIEWS_KEY } from "../../features/learn/phraseReviewModel.js";
+
 const META_KEY="isekaid_cloud_backup_meta_v1";
 const EXCLUDED_KEYS=new Set([
   "isekaid_pending_mutations_v1",
@@ -34,7 +36,13 @@ export function restoreCloudBackup(backup,storage=globalThis.localStorage){
   if(!backup?.values||backup.version!==1||!storage)return false;
   for(const [key,value] of Object.entries(backup.values)){
     if(key.startsWith("isekaid_")&&!EXCLUDED_KEYS.has(key)&&!EXCLUDED_PREFIXES.some(prefix=>key.startsWith(prefix))&&!key.startsWith("isekaid_trip_sync_base_")&&!key.startsWith("isekaid_progress_sync_base_")&&typeof value==="string"){
-      if(key==="isekaid_deleted_trips_v1" || key.startsWith("isekaid_trip_conflicts_") || key.startsWith("isekaid_progress_conflicts_")){
+      if(key===PHRASE_REVIEWS_KEY){
+        let incoming;
+        try{incoming=JSON.parse(value);}catch{continue;}
+        let current=null;
+        try{current=JSON.parse(storage.getItem(key)||"null");}catch{/* Une copie locale invalide peut être remplacée. */}
+        storage.setItem(key,JSON.stringify(mergePhraseReviews(current,incoming)));
+      } else if(key==="isekaid_deleted_trips_v1" || key.startsWith("isekaid_trip_conflicts_") || key.startsWith("isekaid_progress_conflicts_")){
         try {
           const existing=JSON.parse(storage.getItem(key)||"[]");
           const incoming=JSON.parse(value);
