@@ -43,9 +43,12 @@ test("deriveEtapesFromJours regroupe uniquement les villes contiguës", () => {
 
 test("tripTiming distingue avant, pendant et après le voyage", () => {
   const trip = { dateDebut: "2026-09-10", jours: [{}, {}, {}] };
-  assert.deepEqual(tripTiming(trip, new Date(2026, 8, 8, 15)), { status: "upcoming", daysUntil: 2 });
-  assert.deepEqual(tripTiming(trip, new Date(2026, 8, 11, 15)), { status: "active", dayNumber: 2, duration: 3 });
-  assert.deepEqual(tripTiming(trip, new Date(2026, 8, 14, 15)), { status: "past", daysSince: 2 });
+  // Midi au Japon : mêmes jours calendaires sur le VPS et sur une CI en UTC.
+  assert.deepEqual(tripTiming(trip, new Date("2026-09-08T03:00:00Z")), { status: "upcoming", daysUntil: 2 });
+  assert.deepEqual(tripTiming(trip, new Date("2026-09-11T03:00:00Z")), { status: "active", dayNumber: 2, duration: 3 });
+  assert.deepEqual(tripTiming(trip, new Date("2026-09-14T03:00:00Z")), { status: "past", daysSince: 2 });
+  assert.deepEqual(tripTiming(trip, new Date("2026-09-08T14:59:59Z")), { status: "upcoming", daysUntil: 2 });
+  assert.deepEqual(tripTiming(trip, new Date("2026-09-08T15:00:00Z")), { status: "upcoming", daysUntil: 1 });
 });
 
 test("normalizeTrip migre un voyage v1 de façon idempotente", () => {
