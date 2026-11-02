@@ -94,7 +94,7 @@ const DEFAULT_CHECKLIST = [
 // Construit un voyage perso à partir d'un itinéraire préconçu
 function tripFromPreconcu(p){
   const rawJours = p.jours.map(j=>({
-    num: j.num, date:"", villeId: j.villeId, titre: j.titre||"",
+    num: j.num, date:"", villeId: j.villeId, titre: j.titre||"", arriveeVille:j.arriveeVille||null,
     recit: j.recit||"", conseilDuJour: j.conseilDuJour||"",
     activites: (j.etapes||[]).map(e=>({ id: makeStepId(), lieuId: e.lieuId, note:"", heure:e.heure||"", arrivee:e.arrivee||null }))
   }));

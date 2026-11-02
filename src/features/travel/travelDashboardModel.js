@@ -1,6 +1,7 @@
 import { getCurrentTripDay, getDailyProgress, getNextActivity, getTripTiming } from "../../entities/user/japanJourneyState.js";
 import { getTripLifecycleStatus, TRIP_STATUS } from "../../entities/trip/tripLifecycle.js";
 import { calculateReadinessScore } from "../readiness/readinessScore.js";
+import { parseTime, tripDayDate, tripDayMetrics } from "./daySchedule.js";
 
 export const TRAVEL_DASHBOARD_STATE = Object.freeze({
   NO_TRIP: "NO_TRIP",
@@ -122,7 +123,7 @@ export function getTravelNextAction({ trip, db = {}, favorites = [], offlineRead
 }
 
 function minutesUntilActivity(activity, currentDate) {
-  const time = activity?.heure || activity?.time;
+  const time = activity?.time || activity?.heure;
   if (!validTime(time)) return null;
   const parts = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone:"Asia/Tokyo", hour:"2-digit", minute:"2-digit", hourCycle:"h23" }).formatToParts(currentDate).map(part => [part.type,part.value]));
   const [hour,minute] = time.split(":").map(Number);
@@ -136,11 +137,20 @@ function activeTripDetails(trip, db, currentDate) {
   const remaining = (day?.activites || []).filter(activity => activity?.fait !== true);
   const template = (db.voyages_preconcus || []).find(item => String(item.id) === String(trip.source));
   const templateDay = (template?.jours || []).find(item => Number(item.num) === Number(day?.num));
+  const scheduledDay=day?{...day,activites:(day.activites||[]).map(activity=>{
+    const source=(templateDay?.etapes||[]).find(item=>String(item.lieuId)===String(activity.lieuId));
+    return !activity.heure&&!activity.planning&&!day.planning&&source?.heure?{...activity,heure:source.heure}:activity;
+  })}:null;
+  const timing=getTripTiming(trip,currentDate);
+  const schedule=tripDayMetrics(scheduledDay,Object.fromEntries(places),{date:tripDayDate(trip,day,(timing?.dayNumber||1)-1)});
   const enrich = activity => {
     if (!activity) return null;
     const sourceStep = (templateDay?.etapes || []).find(item => String(item.lieuId) === String(activity.lieuId));
     const place = places.get(String(activity.lieuId));
-    return { ...activity, place, title:place?.nom || activity.note || "Étape du jour", time:activity.heure || activity.time || sourceStep?.heure || "" };
+    const stop=schedule.stops.find(item=>item.activity.id===activity.id);
+    const originalTime=activity.heure||(!activity.planning&&!day?.planning?sourceStep?.heure:"");
+    const time=stop?(parseTime(originalTime)===stop.startMinutes?originalTime:stop.time):originalTime||"";
+    return { ...activity, place, title:place?.nom || activity.note || "Étape du jour", time, scheduleWarnings:stop?.warnings||[] };
   };
   const next = enrich(getNextActivity(day));
   return {

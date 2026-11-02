@@ -49,7 +49,9 @@ import { buildHomeJourneyContext } from "./features/home/homeContext";
 import { MyJapanSection } from "./features/my-japan/MyJapanSection";
 import { useMyJapanProfile } from "./features/my-japan/useMyJapanProfile";
 import { favId, loadFavs, saveFavs } from "./features/profile/favorites.js";
-import { haversineKm, tripDayMetrics } from "./features/travel/tripDayModel.js";
+import { tripDayMetrics } from "./features/travel/tripDayModel.js";
+import { tripDayDate } from "./features/travel/daySchedule.js";
+import { ActivityScheduleBadge, DayPlanningScreen, DayScheduleSummary, TransferSummary } from "./features/travel/DayPlanning.jsx";
 import { mergeTripSnapshots } from "./services/sync/tripSnapshots";
 import { useCloudBackup } from "./services/sync/useCloudBackup";
 import { trackProductEvent } from "./services/analytics/analytics";
@@ -5938,7 +5940,8 @@ function TripBottomSheet({ C, containerH, tabs, activeTab, onTabChange, children
   );
 }
 
-function activityPeriod(index,total){
+function activityPeriod(index,total,startMinutes){
+  if(Number.isFinite(startMinutes))return startMinutes<720?"Matin":startMinutes<1080?"Après-midi":"Soirée";
   const ratio=total<=1?0:index/total;
   if(ratio<0.34) return "Matin";
   if(ratio<0.7) return "Après-midi";
@@ -6001,6 +6004,7 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", backRef, trip, db
     setSub("day");
   },[]);
   const [noteEdit, setNoteEdit] = useState(null); // id d'étape en édition de note
+  const [planningActivityId,setPlanningActivityId] = useState(null);
   const [moveEdit, setMoveEdit] = useState(null);
   const [replaceEtapeId, setReplaceEtapeId] = useState(null);
   const [recitExpanded, setRecitExpanded] = useState(false);
@@ -6051,7 +6055,8 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", backRef, trip, db
   const dayPoints = useMemo(()=>
     day ? day.activites.map(e=> lieuById[e.lieuId] ? {...lieuById[e.lieuId], etapeId:e.id} : null).filter(Boolean) : [],
   [day, lieuById]);
-  const dayMetrics = useMemo(()=>tripDayMetrics(day, lieuById), [day, lieuById]);
+  const scheduleDate = tripDayDate(trip,day,dayIdx);
+  const dayMetrics = useMemo(()=>tripDayMetrics(day,lieuById,{date:scheduleDate}),[day,lieuById,scheduleDate]);
   const dailyProgress = getDailyProgress(day);
   const completedCount = dailyProgress.completed;
   const nextActivity = getNextActivity(day);
@@ -6522,6 +6527,11 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", backRef, trip, db
   }
 
   // ─── Sous-vue : check-list ───
+  if(sub==="planning" && day) return <DayPlanningScreen key={`${trip.id}:${dayIdx}`} C={C} day={day} places={lieuById} date={scheduleDate} initialActivityId={planningActivityId} onBack={closeSub} onSave={updatedDay=>{
+    const jours=trip.jours.map((item,index)=>index===dayIdx?updatedDay:item);
+    if(onUpdate({...trip,jours})===false)return false;
+    closeSub();return true;
+  }}/>;
   if(sub==="documents") return <Suspense fallback={<ScreenSkeleton C={C} label="Chargement des documents"/>}><TravelDocuments C={C} trip={trip} owner={documentOwner} onUpdate={onUpdate} onBack={closeSub}/></Suspense>;
   if(sub==="practical") return <TripPracticalInfo C={C} trip={trip} db={db} onBack={closeSub}/>;
 
@@ -6735,12 +6745,7 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", backRef, trip, db
                 {nextActivity && <div style={{fontSize:12,color:C.text,marginTop:5}}>Prochaine étape : <b>{lieuById[nextActivity.lieuId]?.nom||"Lieu suivant"}</b></div>}
               </div>
             )}
-            <div style={{display:"flex",gap:7,flexWrap:"wrap",marginBottom:12}}>
-              <span style={{fontSize:10,padding:"5px 9px",background:C.s2,borderRadius:12,color:C.t2}}>📍 {dayMetrics.places.length} lieux</span>
-              <span style={{fontSize:10,padding:"5px 9px",background:C.s2,borderRadius:12,color:C.t2}}>⏱️ ≈ {Math.max(1,Math.round(dayMetrics.totalMinutes/60))} h</span>
-              <span style={{fontSize:10,padding:"5px 9px",background:C.s2,borderRadius:12,color:C.t2}}>🚶 ≈ {dayMetrics.km.toFixed(1)} km</span>
-            </div>
-            {dayMetrics.overloaded && <div style={{fontSize:11,color:C.gold,lineHeight:1.45,marginBottom:12}}>⚠️ Journée chargée : déplace une étape vers un autre jour pour garder un rythme agréable.</div>}
+            <DayScheduleSummary C={C} schedule={dayMetrics} onEdit={()=>{setPlanningActivityId(null);openSub("planning");}}/>
             {day.recit && (
               <div style={{marginBottom:12}}>
                 <div style={{fontSize:12,color:C.t2,lineHeight:1.6,display:recitExpanded?"block":"-webkit-box",WebkitLineClamp:recitExpanded?"unset":2,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{day.recit}</div>
@@ -6764,24 +6769,15 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", backRef, trip, db
                   const e = day.activites.find(a=>a.id===id);
                   if(!e) return null;
                   const l = lieuById[e.lieuId];
-                  const prevE = i>0 ? day.activites.find(a=>a.id===activiteDrag.order[i-1]) : null;
-                  const prevL = prevE ? lieuById[prevE.lieuId] : null;
-                  const km = prevL && l ? haversineKm(prevL, l) : null;
+                  const stop=dayMetrics.stops.find(item=>item.activity.id===e.id);
+                  const previousStop=i?dayMetrics.stops.find(item=>item.activity.id===activiteDrag.order[i-1]):null;
                   const dragging = activiteDrag.isDragging(e.id);
-                  const period=activityPeriod(i, activiteDrag.order.length);
-                  const previousPeriod=i?activityPeriod(i-1,activiteDrag.order.length):null;
+                  const period=activityPeriod(i,activiteDrag.order.length,stop?.startMinutes);
+                  const previousPeriod=i?activityPeriod(i-1,activiteDrag.order.length,previousStop?.startMinutes):null;
                   return(
                     <Fragment key={e.id}>
                     {period!==previousPeriod && <div style={{fontSize:10,color:C.red,fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",marginTop:i?8:0}}>{period}</div>}
-                    {i>0 && (
-                      <div style={{display:"flex",alignItems:"center",gap:7,marginLeft:31,fontSize:10,color:C.t3}}>
-                        <span>↓</span>
-                        <span>{km!=null ? `${km<1 ? Math.round(km*1000)+" m" : km.toFixed(1)+" km"} à vol d'oiseau` : "distance inconnue"}</span>
-                        {prevL && l && typeof prevL.lat==="number" && typeof l.lat==="number" && (
-                          <a href={`https://www.google.com/maps/dir/?api=1&origin=${prevL.lat},${prevL.lng}&destination=${l.lat},${l.lng}`} target="_blank" rel="noopener noreferrer" onClick={ev=>ev.stopPropagation()} style={{marginLeft:"auto",color:C.red,textDecoration:"none",fontWeight:600}}>Ouvrir dans Maps ↗</a>
-                        )}
-                      </div>
-                    )}
+                    {i>0&&<TransferSummary leg={stop?.leg} breakBefore={stop?.breakBefore}/>}
                     {(() => {
                       const handleProps = activiteDrag.dragHandleProps(e.id);
                       const rowInner = (
@@ -6806,6 +6802,7 @@ function VoyageTrip({C, dark, documentOwner, initialSub="day", backRef, trip, db
                               <button onClick={()=>removeEtape(e.id)} style={chipStyle(C,false,{padding:"5px 9px",fontSize:10,color:C.red})}>Retirer</button>
                             </div>}
                             {moveEdit===`move:${e.id}` && <div onClick={ev=>ev.stopPropagation()} style={{marginTop:8,display:"flex",gap:6,flexWrap:"wrap"}}>{trip.jours.map((j,idx)=>idx!==dayIdx&&<button key={j.num} onClick={()=>moveActivity(e.id,idx)} style={chipStyle(C,false,{padding:"5px 9px",fontSize:10})}>Jour {j.num}</button>)}</div>}
+                            <ActivityScheduleBadge stop={stop} onEdit={()=>{setPlanningActivityId(e.id);openSub("planning");}}/>
                             {/* Note */}
                             {noteEdit===e.id ? (
                               <input autoFocus defaultValue={e.note} onClick={ev=>ev.stopPropagation()} onBlur={ev=>{setNote(e.id,ev.target.value);setNoteEdit(null);}} onKeyDown={ev=>{if(ev.key==="Enter"){setNote(e.id,ev.target.value);setNoteEdit(null);}}} placeholder="Ta note..." style={{width:"100%",boxSizing:"border-box",marginTop:8,padding:"7px 9px",background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11,fontFamily:"inherit"}}/>

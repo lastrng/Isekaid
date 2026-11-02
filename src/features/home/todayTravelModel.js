@@ -1,4 +1,5 @@
 import { getCurrentTripDay, getNextActivity, getTripTiming } from "../../entities/user/japanJourneyState.js";
+import { parseTime, tripDayDate, tripDayMetrics } from "../travel/daySchedule.js";
 
 function activeTrips(trips) {
   return (Array.isArray(trips) ? trips : []).filter(trip => trip && trip.status !== "cancelled");
@@ -36,8 +37,9 @@ function activityTitle(item) {
   return item?.place?.nom || item?.activity?.titre || item?.activity?.nom || item?.day?.titre || "Ta prochaine étape";
 }
 
-function activityTime(activity) {
-  return activity?.arrivee || activity?.heure || activity?.time || null;
+function activityTime(activity,stop) {
+  if(stop)return stop.timeLabel;
+  return [activity?.heure,activity?.time,activity?.arrivee].find(value=>parseTime(value)!==null)||null;
 }
 
 function usefulLearningContext(item) {
@@ -79,6 +81,8 @@ export function getTodayTravelContext({ trips = [], db = {}, currentDate = new D
   if (active) {
     const day = getCurrentTripDay(active.trip, currentDate) || active.trip.jours?.[active.timing.dayNumber - 1] || null;
     const activities = day?.activites || [];
+    const schedule=tripDayMetrics(day,Object.fromEntries(placesFor(active.trip,db)),{date:tripDayDate(active.trip,day,active.timing.dayNumber-1)});
+    const scheduledTime=activity=>activityTime(activity,schedule.stops.find(stop=>stop.activity.id===activity?.id));
     const next = getNextActivity(day);
     const nextIndex = next ? activities.indexOf(next) : -1;
     const nextItem = next ? { day, activity: next, place: placeFor(next, active.trip, db) } : null;
@@ -88,8 +92,8 @@ export function getTodayTravelContext({ trips = [], db = {}, currentDate = new D
       state: "active",
       eyebrow: `AUJOURD’HUI À ${destinationLabel(active.trip, day, db).toUpperCase()}`,
       title: nextItem ? activityTitle(nextItem) : "Ta journée est à jour",
-      meta: nextItem ? [activityTime(next), `Jour ${day?.num || active.timing.dayNumber}`].filter(Boolean).join(" · ") : `Jour ${day?.num || active.timing.dayNumber}`,
-      following: followingItem ? `${activityTime(following) ? `${activityTime(following)} · ` : ""}${activityTitle(followingItem)}` : null,
+      meta: nextItem ? [scheduledTime(next), `Jour ${day?.num || active.timing.dayNumber}`].filter(Boolean).join(" · ") : `Jour ${day?.num || active.timing.dayNumber}`,
+      following: followingItem ? `${scheduledTime(following) ? `${scheduledTime(following)} · ` : ""}${activityTitle(followingItem)}` : null,
       recommendation: contextualRecommendation(nextItem, "Utile maintenant"),
       primary: { label: "Voir ma journée", kind: "trip", tripId: active.trip.id, sub: "day" },
       trip: active.trip,
