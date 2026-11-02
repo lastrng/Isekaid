@@ -14,23 +14,14 @@
 
 import { Capacitor } from "@capacitor/core";
 
-// Clés API RevenueCat.
-//
-// ⚠️ ACTUELLEMENT EN MODE TEST (Test Store RevenueCat).
-// La clé "test_..." permet de valider le branchement du SDK et le flux d'achat
-// SANS vrai paiement, mais elle NE fonctionne PAS avec les produits Play Store.
-//
-// → Quand les abonnements seront créés dans Play Console et importés dans
-//   RevenueCat, remplacer `android` par la vraie clé publique (préfixe "goog_")
-//   depuis : Dashboard RC → Apps → Isekaid (Play Store) → Public API Key.
+// Les clés publiques RevenueCat sont injectées par Vite au build. Ne jamais
+// embarquer de clé secrète RevenueCat dans le client.
 export const RC_KEYS = {
-  android: "test_CCsnkiRPiuDMsqymrIIVhSajRjp",  // TEST — à remplacer par "goog_..."
-  ios:     "test_CCsnkiRPiuDMsqymrIIVhSajRjp",  // TEST — à remplacer par "appl_..."
+  android: (import.meta.env.VITE_REVENUECAT_API_KEY || "").trim(),
+  ios:     (import.meta.env.VITE_REVENUECAT_IOS_API_KEY || "").trim(),
 };
 
-// Passe à false quand l'app part en production : les logs RevenueCat sont
-// verbeux et n'ont d'intérêt que pendant le développement.
-const RC_DEBUG = true;
+const RC_DEBUG = import.meta.env.DEV;
 
 // IDs des produits — doivent correspondre exactement à Play Console / App Store Connect
 // ET à la configuration dans RevenueCat (Entitlement → Products).
@@ -67,6 +58,7 @@ export async function initRevenueCat(userId = null){
     }
     const platform = Capacitor.getPlatform();
     const apiKey = platform === "ios" ? RC_KEYS.ios : RC_KEYS.android;
+    if(!apiKey) throw new Error(`Clé publique RevenueCat absente pour ${platform}`);
     await Purchases.configure({ apiKey });
     // Si l'utilisateur est connecté (Supabase), on identifie chez RevenueCat.
     // Ça permet de restaurer les achats sur plusieurs appareils.

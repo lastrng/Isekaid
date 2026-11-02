@@ -9,7 +9,7 @@ import { disableDailyReminder, enableDailyReminder, loadDailyReminder, supportsD
 import { DataSyncPage, ProfileSettingsPage } from "./ProfileSettings.jsx";
 import { Personalization } from "../onboarding/components/Personalization.jsx";
 
-export function ProfileScreen({ guide, showGuide, onGuideDone, ui, C, user, dark, setDark, db, onUpdateProfile, onDeleteAccount, onLogout, onRestoreProgress, session, streak, favs, toggleFav, rank, kanaProgress, prefectureProgress, onShowTour, isPremium, onOpenPremium, script, setScript, onOpenLieu, onOpenTradition, onOpenDetail, onOpenContent, onOpenPrefecture, onOpenTrip, onOpenTravel, backRef }) {
+export function ProfileScreen({ guide, showGuide, onGuideDone, ui, C, user, dark, setDark, db, onUpdateProfile, onDeleteAccount, onLogout, onRestoreProgress, session, streak, favs, toggleFav, rank, kanaProgress, prefectureProgress, onShowTour, isPremium, onOpenPremium, script, setScript, onOpenLieu, onOpenTradition, onOpenDetail, onOpenContent, onOpenPrefecture, onOpenTrip, onOpenTravel, missionsComplete, backRef }) {
   const { SectionIntro } = ui;
   const rootRef = useRef(null);
   const passportTourRef = useRef(null);
@@ -60,7 +60,7 @@ export function ProfileScreen({ guide, showGuide, onGuideDone, ui, C, user, dark
         setDailyReminder(await disableDailyReminder());
         return;
       }
-      const result = await enableDailyReminder(dailyReminder);
+      const result = await enableDailyReminder(dailyReminder,{missionsComplete});
       if (result.ok) setDailyReminder(result.settings);
       else setReminderError(result.reason);
     } catch (error) {

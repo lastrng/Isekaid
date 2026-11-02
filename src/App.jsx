@@ -15,6 +15,7 @@ import { ActivityContext } from "./features/travel/ActivityContext.jsx";
 import { TravelDashboard } from "./features/travel/TravelDashboard.jsx";
 import { TripPracticalInfo } from "./features/travel/TripPracticalInfo.jsx";
 import { getTravelContext, TRAVEL_DASHBOARD_STATE } from "./features/travel/travelDashboardModel.js";
+import { tripSubFromInitialView } from "./features/travel/travelInitialView.js";
 import { buildTutorJourneyContext } from "./features/companion/journeyContext.js";
 import * as sfx from "./sfx.js";
 import { useState, useEffect, useRef, useMemo, useCallback, Fragment, lazy, Suspense } from "react";
@@ -44,7 +45,7 @@ import { primaryDestination, resolveDestination } from "./app/navigation/destina
 import { popHistory, pushHistory } from "./app/navigation/history.js";
 import { getTripLifecycleStatus, resolvePastTrip, TRIP_STATUS } from "./entities/trip/tripLifecycle";
 import { buildSearchIndex, groupSearchResults, searchCatalog } from "./data/searchIndex";
-import { disableDailyReminder, enableDailyReminder, loadDailyReminder, supportsDailyReminder } from "./features/reminders/dailyReminder";
+import { disableDailyReminder, enableDailyReminder, loadDailyReminder, supportsDailyReminder, syncDailyNotifications } from "./features/reminders/dailyReminder";
 import { buildHomeJourneyContext } from "./features/home/homeContext";
 import { MyJapanSection } from "./features/my-japan/MyJapanSection";
 import { useMyJapanProfile } from "./features/my-japan/useMyJapanProfile";
@@ -70,6 +71,7 @@ import { isContentRead, loadContentReading, markContentRead, saveContentReading 
 import { buildPrefectures, loadPrefectureProgress, markPrefectureDiscovered, savePrefectureProgress } from "./features/explore/prefectureModel.js";
 import { TOKYO_PATH } from "./features/learn/learningCatalog.js";
 import { getExpressionExplanation } from "./features/learn/expressionExplanation.js";
+import { KanaStrokeAnimation } from "./features/learn/KanaStrokeAnimation.jsx";
 import { PhraseReviewEntry, PhraseReviewScreen, SavePhraseButton } from "./features/learn/PhraseReviews.jsx";
 import { phraseCandidate } from "./features/learn/phraseReviewModel.js";
 import { PhraseReviewContext, usePhraseReviewStore } from "./features/learn/phraseReviewStore.jsx";
@@ -461,7 +463,12 @@ button{font-family:inherit;}
 @keyframes slideUp{from{transform:translateX(-50%) translateY(100%)}to{transform:translateX(-50%) translateY(0)}}
 @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.85)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 @keyframes fall{0%{transform:translateY(-20px) rotate(0);opacity:0}10%{opacity:1}100%{transform:translateY(420px) rotate(540deg);opacity:0}}
-@keyframes drawReveal{0%{opacity:0;clip-path:inset(0 100% 0 0)}30%{opacity:.9}100%{opacity:.9;clip-path:inset(0 0 0 0)}}
+@keyframes kanaBrushDraw{0%{stroke-dashoffset:1;opacity:.35}8%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+.kana-stroke-animation{position:absolute;inset:10%;display:flex;align-items:center;justify-content:center;gap:0;pointer-events:none;filter:drop-shadow(0 1px 0 rgba(20,30,20,.12));}
+.kana-stroke-animation svg{width:100%;height:100%;overflow:visible;}
+.kana-stroke-animation svg+svg{margin-left:-8%;}
+.kana-brush-stroke{fill:none;stroke-width:150;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0;animation-name:kanaBrushDraw;animation-timing-function:cubic-bezier(.32,.02,.25,1);animation-fill-mode:forwards;}
+.kana-stroke-fallback{font-size:200px;font-family:'Noto Serif JP',serif;opacity:0;animation:fadeIn 1.2s ease forwards;}
 @keyframes p1{0%{transform:translateY(-10px) rotate(0);opacity:0}10%{opacity:.55}90%{opacity:.2}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 @keyframes p2{0%{transform:translateY(-10px) translateX(0) rotate(0);opacity:0}10%{opacity:.4}100%{transform:translateY(110vh) translateX(38px) rotate(-540deg);opacity:0}}
 @keyframes floatDown{0%{transform:translateY(-20px) translateX(0) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.3}100%{transform:translateY(108vh) translateX(20px) rotate(360deg);opacity:0}}
@@ -3059,9 +3066,7 @@ function DrawKanaMode({C, deck, onExit, onRecord}){
             <div style={{position:"absolute",top:"50%",left:0,right:0,height:1,borderTop:`1px dashed ${C.border}`}}/>
           </div>
           {/* Modèle — invisible tant que l'utilisateur n'a pas vérifié (test de rappel) */}
-          <div key={animKey} style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none",fontSize:200,fontFamily:"'Noto Serif JP',serif",color:C.green,opacity:revealed?1:0,zIndex:1,transition:"opacity .3s",animation:revealed?"drawReveal 1.1s ease forwards":"none"}}>
-            {card.k}
-          </div>
+          {revealed && <div key={animKey} style={{position:"absolute",inset:0,zIndex:1,pointerEvents:"none"}}><KanaStrokeAnimation kana={card.k} color={C.green}/></div>}
           {/* Canvas de tracé — fantôme (25%) au-dessus du modèle quand révélé, masquable */}
           <canvas ref={canvasRef}
             onMouseDown={start} onMouseMove={move} onMouseUp={end} onMouseLeave={end}
@@ -4657,7 +4662,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
   // vues : "home" | "browse" (préconçus) | "create" | "trip" | "sos"
   const [view, setView] = useState(typeof initialView==="string" ? initialView : initialView?.prefectureId ? "prefecture" : initialView?.tripId ? "trip" : "home");
   const [activeTripId, setActiveTripId] = useState(initialView?.tripId || null);
-  const [initialTripSub, setInitialTripSub] = useState(initialView?.sub || "day");
+  const [initialTripSub, setInitialTripSub] = useState(()=>tripSubFromInitialView(initialView));
   const viewHistoryRef=useRef([]);
   const openView=(nextView)=>{
     if(nextView===view)return;
@@ -4690,7 +4695,7 @@ function VoyageScreen({C, dark, user, db, script, session, isPremium, onOpenPrem
     } else if(initialView?.templateId){ setPreviewPreco(preconcus.find(item=>item.id===initialView.templateId)||null); setView("home"); setInitialTripSub("day"); }
     else if(typeof initialView==="string") { setView(initialView); setInitialTripSub("day"); }
     else if(trips.some(trip=>trip.id===initialView.tripId)) {
-      setActiveTripId(initialView.tripId); setInitialTripSub(initialView.sub || "day"); setView("trip");
+      setActiveTripId(initialView.tripId); setInitialTripSub(tripSubFromInitialView(initialView)); setView("trip");
     } else { setView("home"); }
     onInitialViewConsumed?.();
   },[initialView,onInitialViewConsumed,trips,canCreateTrip,preconcus]);
@@ -7854,6 +7859,13 @@ export default function IsekaidApp(){
   const [dailyInfo,setDailyInfo]=useState(null);
   const [mission,setMission]=useState(()=>loadMission());
   const [missionReward,setMissionReward]=useState(false);
+  const missionsComplete = useMemo(()=>{
+    const todays = missionsForDay(mission);
+    return todays.length > 0 && todays.every(item=>mission.done.includes(item.id));
+  },[mission]);
+  useEffect(()=>{
+    syncDailyNotifications({missionsComplete}).catch(error=>console.warn("[reminder] synchronisation impossible:",error));
+  },[missionsComplete,mission.day]);
   // Complète une mission du jour à partir d'un TRIGGER d'action (ex: "fav", "kana", "scenario").
   // On ne valide que si ce trigger correspond à l'une des missions du jour
   // (3 tirées aléatoirement, ou les 4 fixes du jour 1 — voir missionsForDay).
@@ -8653,7 +8665,7 @@ export default function IsekaidApp(){
               {id:"scenarios",label:"Situations réelles",animate:!supportsViewTransitions(),element:<ScenariosScreen C={C} script={script} db={db} scenariosDone={scenProgress.done} completeScenario={completeScenario} onOpenTutorBridge={openTutorBridge} isFav={isFav} toggleFav={toggleFav} wikiMap={wikiMap} onWikiTap={setWikiEntry} initialScenarioId={pendingScenarioId} onInitialScenarioConsumed={()=>setPendingScenarioId(null)} kanaProgress={kanaProgress} pathProgress={pathProgress} onGoTab={setTab} onRememberContinue={rememberContinue} backRef={tab==="scenarios"?inScreenBackRef:null}/>},
               {id:"tutor",label:"Tuteur japonais",animate:!supportsViewTransitions(),element:<Suspense fallback={<ScreenSkeleton C={C} label="Chargement du tuteur"/>}><TutorScreen C={C} session={session} kanaProgress={kanaProgress} scenProgress={scenProgress} streak={streak} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} selfReportedLevel={user?.level} journeyContext={buildTutorJourneyContext({user,trips:loadTrips(),db,recentExpressions:user?.recentExpressions})} initialBridge={tutorBridge} onBridgeConsumed={()=>setTutorBridge(null)} onMissionTrigger={completeTask} onBack={goBackTab}/></Suspense>},
               {id:"explore",animate:!supportsViewTransitions(),element:<ExploreScreen C={C} user={user} db={db} isFav={isFav} toggleFav={toggleFav} favs={favs} readingProgress={readingProgress} onMarkRead={markDiscoveryRead} prefectureProgress={prefectureProgress} onDiscoverPrefecture={discoverPrefecture} onAddPrefectureToTrip={openPrefectureTripPlanner} wikiMap={wikiMap} onWikiTap={setWikiEntry} script={script} streak={streak} kanaProgress={kanaProgress} scenProgress={scenProgress} pathProgress={pathProgress} showGuide={tab==="explore"&&!showWelcome&&!showPremiumPage&&!showSearch&&!newAchievement&&!weeklyRecap&&!wikiEntry&&!spotlightLieu&&!spotlightTradition&&!spotlightSituation&&!spotlightDetail&&!searchResultDetail&&!onboardingState.seenGuides.discover} onGuideDone={()=>completeContextualGuide("discover")} onSearch={()=>setShowSearch(true)} onExplore={()=>completeTask("explore")} onGoTab={setTab} onOpenResult={openSearchResult} onOpenConnection={openContextualConnection} backRef={tab==="explore"?inScreenBackRef:null} initialCategoryFilter={pendingExploreCategory} onInitialCategoryConsumed={()=>setPendingExploreCategory(null)} initialPrefectureId={pendingPrefectureId} onInitialPrefectureConsumed={()=>setPendingPrefectureId(null)}/>},
-              {id:"profile",animate:!supportsViewTransitions(),element:<Suspense fallback={<ScreenSkeleton C={C} label="Chargement de Mon Japon"/>}><ProfileScreen ui={{SectionCard,SectionTitle,SectionIntro}} guide={CONTEXTUAL_GUIDES.myJapan} showGuide={tab==="profile"&&!showWelcome&&!showPremiumPage&&!showSearch&&!newAchievement&&!weeklyRecap&&!wikiEntry&&!spotlightLieu&&!spotlightTradition&&!spotlightSituation&&!spotlightDetail&&!searchResultDetail&&!onboardingState.seenGuides.myJapan} onGuideDone={()=>completeContextualGuide("myJapan")} C={C} user={user} dark={dark} setDark={setDark} db={db} onUpdateProfile={updateProfile} onDeleteAccount={deleteAccount} onLogout={logout} onRestoreProgress={restoreProgressCopy} session={session} streak={streak} favs={favs} toggleFav={toggleFav} rank={rank} kanaProgress={kanaProgress} prefectureProgress={prefectureProgress} onShowTour={replayIntro} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} script={script} setScript={setScript} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})} onOpenContent={(type,item)=>openSearchResult(discoveryResult(type==="cult"?"culture":type,item))} onOpenPrefecture={item=>{setPendingPrefectureId(item?.id||item?.slug||"__map__");setTab("explore");}} onOpenTrip={openTripFromHome} onOpenTravel={()=>setTab("voyage")} backRef={tab==="profile"?inScreenBackRef:null}/></Suspense>},
+              {id:"profile",animate:!supportsViewTransitions(),element:<Suspense fallback={<ScreenSkeleton C={C} label="Chargement de Mon Japon"/>}><ProfileScreen ui={{SectionCard,SectionTitle,SectionIntro}} guide={CONTEXTUAL_GUIDES.myJapan} showGuide={tab==="profile"&&!showWelcome&&!showPremiumPage&&!showSearch&&!newAchievement&&!weeklyRecap&&!wikiEntry&&!spotlightLieu&&!spotlightTradition&&!spotlightSituation&&!spotlightDetail&&!searchResultDetail&&!onboardingState.seenGuides.myJapan} onGuideDone={()=>completeContextualGuide("myJapan")} C={C} user={user} dark={dark} setDark={setDark} db={db} onUpdateProfile={updateProfile} onDeleteAccount={deleteAccount} onLogout={logout} onRestoreProgress={restoreProgressCopy} session={session} streak={streak} favs={favs} toggleFav={toggleFav} rank={rank} kanaProgress={kanaProgress} prefectureProgress={prefectureProgress} onShowTour={replayIntro} isPremium={isPremium} onOpenPremium={()=>setShowPremiumPage(true)} script={script} setScript={setScript} onOpenLieu={(l)=>setSpotlightLieu(l)} onOpenTradition={(t)=>setSpotlightTradition(t)} onOpenDetail={(type,item)=>setSpotlightDetail({type,item})} onOpenContent={(type,item)=>openSearchResult(discoveryResult(type==="cult"?"culture":type,item))} onOpenPrefecture={item=>{setPendingPrefectureId(item?.id||item?.slug||"__map__");setTab("explore");}} onOpenTrip={openTripFromHome} onOpenTravel={()=>setTab("voyage")} missionsComplete={missionsComplete} backRef={tab==="profile"?inScreenBackRef:null}/></Suspense>},
               ]}
             />
             {/* Floating kanji/romaji toggle removed — now in HomeScreen header */}
